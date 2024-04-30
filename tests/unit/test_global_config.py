@@ -7,6 +7,7 @@ from unittest import mock
 import tests.unit.helpers as helpers
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework.global_config_update import _dump_with_migrated_tabs
 
 
 @pytest.mark.parametrize(
@@ -100,15 +101,16 @@ def test_global_config_logging_component(migration, tmp_path):
     render_true = os.path.join(tmp_path, "render_true.json")
     render_false = os.path.join(tmp_path, "render_false.json")
 
-    global_config.dump(render_true, rendered=True)
+    _dump_with_migrated_tabs(global_config, render_false)
+    with open(render_false) as fp:
+        render_false_dict = json.load(fp)
+
+    global_config.expand_tabs()
+    global_config.dump(render_true)
     with open(render_true) as fp:
         render_true_dict = json.load(fp)
 
     assert render_true_dict["pages"]["configuration"]["tabs"] == long_tabs
-
-    global_config.dump(render_false, rendered=False)
-    with open(render_false) as fp:
-        render_false_dict = json.load(fp)
 
     tabs = render_false_dict["pages"]["configuration"]["tabs"]
     assert tabs == short_tabs

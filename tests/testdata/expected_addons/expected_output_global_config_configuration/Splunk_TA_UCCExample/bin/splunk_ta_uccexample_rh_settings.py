@@ -83,7 +83,7 @@ model_proxy = RestModel(fields_proxy, name='proxy')
 fields_logging = [
     field.RestField(
         'loglevel',
-        required=False,
+        required=True,
         encrypted=False,
         default='INFO',
         validator=None

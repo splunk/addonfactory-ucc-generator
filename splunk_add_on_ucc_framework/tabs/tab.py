@@ -13,27 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional
 
 
 class Tab(Dict[str, Any]):
     @property
-    def name(self) -> str:
-        return self["name"]
-
-    @property
-    def title(self) -> str:
-        return self["title"]
-
-    @property
-    def entity(self) -> List[Dict[str, Any]]:
-        return self["entity"]
-
-    @property
     def tab_type(self) -> Optional[str]:
-        return self.get("type")
+        return None
 
-    def render(self) -> Dict[str, Any]:
+    def short_form(self) -> Dict[str, Any]:
         return dict(self)
 
     @classmethod

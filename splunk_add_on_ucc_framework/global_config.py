@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import copy
 import functools
 import json
 from typing import Optional, Any, List, Dict
@@ -62,34 +61,22 @@ class GlobalConfig:
         self._content = (
             yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
         )
-        self._resolve_tabs()
         self._is_global_config_yaml = is_global_config_yaml
         self._original_path = global_config_path
 
-    def dump(self, path: str, rendered: bool = False) -> None:
-        content = self.content_rendered if rendered else self._content
-
+    def dump(self, path: str) -> None:
         if self._is_global_config_yaml:
-            utils.dump_yaml_config(content, path)
+            utils.dump_yaml_config(self.content, path)
         else:
-            utils.dump_json_config(content, path)
+            utils.dump_json_config(self.content, path)
 
-    def _resolve_tabs(self) -> None:
+    def expand_tabs(self) -> None:
         for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
             self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     @property
     def content(self) -> Any:
         return self._content
-
-    @property
-    def content_rendered(self) -> Any:
-        content = copy.deepcopy(self._content)
-
-        for i, tab in enumerate(content["pages"]["configuration"]["tabs"]):
-            content["pages"]["configuration"]["tabs"][i] = tab.render()
-
-        return content
 
     @property
     def inputs(self) -> List[Any]:
@@ -110,7 +97,7 @@ class GlobalConfig:
         settings = []
         for tab in self.tabs:
             if "table" not in tab:
-                settings.append(tab.render())
+                settings.append(tab)
         return settings
 
     @property
@@ -186,8 +173,8 @@ class GlobalConfig:
 
     def has_oauth(self) -> bool:
         for tab in self.tabs:
-            if tab.name == "account":
-                for entity in tab.entity:
+            if tab["name"] == "account":
+                for entity in tab["entity"]:
                     if entity["type"] == "oauth":
                         return True
         return False
