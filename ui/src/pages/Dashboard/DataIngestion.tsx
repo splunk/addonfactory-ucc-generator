@@ -152,9 +152,6 @@ export const DataIngestionDashboard = ({
                             </Message>
                         ) : null}
                     </div>
-                    <div id="data_ingestion_last_seen_tooltip" className="invisible_before_Moving">
-                        <Tooltip content="Last event within selected timeframe" />
-                    </div>
                 </>
             </DashboardContextProvider>
         </>

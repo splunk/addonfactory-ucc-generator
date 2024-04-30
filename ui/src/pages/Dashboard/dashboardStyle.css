@@ -319,16 +319,6 @@
     display: none;
 }
 
-#data_ingestion_last_seen_tooltip {
-    max-width: 16px;
-    max-height: 16px;
-    margin: 1px 0 0 7px;
-    scale: 0.65;
-    * {
-        line-height: 16px;
-    }
-}
-
 #errors_tab_errors_list_viz {
     height: 600px;
     grid-row: 7 / 7;

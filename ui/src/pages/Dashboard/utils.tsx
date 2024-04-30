@@ -145,12 +145,6 @@ export const makeVisualAdjustmentsOnDataIngestionPage = () => {
         '#info_message_for_data_ingestion',
         '#data_ingestion_table_viz div'
     );
-
-    // waitForElementToDisplayAndMoveThemToCanvas(
-    //     '#data_ingestion_last_seen_tooltip',
-    //     '#data_ingestion_table_viz [data-test-label="Last event"] span',
-    //     true
-    // );
 };
 
 const VIEW_BY_EXTRA_LABEL_DESC: Record<string, string> = {
