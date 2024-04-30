@@ -1,3 +1,15 @@
+# [5.43.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.42.1...v5.43.0) (2024-04-30)
+
+
+### Bug Fixes
+
+* do not migrate a logging tab when defaultValue is not set ([#1157](https://github.com/splunk/addonfactory-ucc-generator/issues/1157)) ([5335f5b](https://github.com/splunk/addonfactory-ucc-generator/commit/5335f5bac383b19a6ddd0a36ee71bbfacebf552f))
+
+
+### Features
+
+* improve front for dashboard page ([#1164](https://github.com/splunk/addonfactory-ucc-generator/issues/1164)) ([efc904f](https://github.com/splunk/addonfactory-ucc-generator/commit/efc904f2eb601e4af296190435f957f7df6f4448))
+
 ## [5.42.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.42.0...v5.42.1) (2024-04-22)
 
 
