@@ -3,7 +3,7 @@
     "errors_tab_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "# Errors",
+        "markdown": "## Errors",
         "fontSize": "large"
       }
     },
@@ -41,6 +41,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
@@ -108,7 +109,7 @@
         "defaultValue": "-7d,now",
         "token": "errors_tab_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     }
   },
