@@ -72,7 +72,7 @@ class GlobalConfigValidator:
         """
         for tab in self.config_tabs:
             if "table" in tab:
-                entities = tab.entity
+                entities = tab["entity"]
                 has_name_field = False
                 for entity in entities:
                     if entity["field"] == "name":
@@ -132,7 +132,7 @@ class GlobalConfigValidator:
         and we need to throw a validation error.
         """
         for tab in self.config_tabs:
-            entities = tab.entity
+            entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
                     is_required = entity.get("required", False)
@@ -224,7 +224,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
         for tab in self.config_tabs:
-            entities = tab.entity
+            entities = tab["entity"]
             for entity in entities:
                 self._validate_entity_validators(entity)
 
@@ -362,13 +362,13 @@ class GlobalConfigValidator:
         """
         names, titles, types = [], [], []
         for tab in tabs:
-            names.append(tab.name.lower())
-            titles.append(tab.title.lower())
+            names.append(tab["name"].lower())
+            titles.append(tab["title"].lower())
 
             if tab.tab_type is not None:
                 types.append(tab.tab_type.lower())
 
-            self._validate_entity_duplicates(tab.entity)
+            self._validate_entity_duplicates(tab["entity"])
         if (
             self._find_duplicates_in_list(names)
             or self._find_duplicates_in_list(titles)
@@ -480,7 +480,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
         for tab in self.config_tabs:
-            for entity in tab.entity:
+            for entity in tab["entity"]:
                 if "placeholder" in entity.get("options", {}):
                     logger.warning(
                         f"`placeholder` option found for configuration tab '{tab['name']}' "

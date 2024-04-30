@@ -2075,7 +2075,7 @@
     },
     "PredefinedLoggingTab": {
       "type": "object",
-      "description": "Predefined Loggin tab configuration, can be used to reduce length of config",
+      "description": "Predefined Logging tab configuration, can be used to reduce length of config",
       "properties": {
         "type": {
           "type": "string",
@@ -2104,6 +2104,9 @@
           }
         },
         "defaultLevel": {
+          "type": "string"
+        },
+        "help": {
           "type": "string"
         }
       },
