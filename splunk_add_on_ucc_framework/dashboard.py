@@ -50,84 +50,80 @@ default_definition_json_filename = {
 
 data_ingestion = (
     "index=_internal source=*license_usage.log type=Usage "
-    "(s IN ({input_names})) | timechart span=1d sum(b) as Usage | "
-    'eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\"'
+    "(s IN ({input_names})) | timechart sum(b) as Usage | "
+    'rename Usage as \\"Data volume\\"'
 )
 data_ingestion_and_events = (
     "index=_internal source=*license_usage.log type=Usage "
-    "(s IN ({input_names})) | timechart span=1d sum(b) as Usage "
-    '| eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \\"Data volume\\" '
+    "(s IN ({input_names})) | timechart sum(b) as Usage "
+    '| rename Usage as \\"Data volume\\" '
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
-    '| timechart sum(n_events) as \\"Number of events\\" ] '
+    '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = (
-    "index=_internal source=*{addon_name}* ERROR | timechart span=1d count as Errors"
-)
+errors_count = "index=_internal source=*{addon_name}* ERROR | timechart count as Errors"
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
 )
 
 table_sourcetype_query = (
-    "index=_internal source=*license_usage.log type=Usage "
-    "(s IN ({input_names})) "
-    "| stats sparkline(sum(b)), sum(b) as Bytes by st "
+    "index=_internal source=*license_usage.log type=Usage (s IN ({input_names})) "
+    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st "
     "| join type=left st [search index = _internal source=*{addon_name}* action=events_ingested "
-    '| stats latest(_time) AS \\"Last seen\\", sum(n_events) by sourcetype_ingested '
-    "| rename sourcetype_ingested as st ]"
-    '| convert ctime(\\"Last seen\\") | eval GB=round(Bytes/1024/1024/1024,3) '
-    '| table st, GB, sum(n_events), sparkline(sum(b)), \\"Last seen\\" '
-    '| rename st as \\"Source type\\", GB as \\"Data volume [GB]\\", '
-    'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
+    "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
+    "sum(n_events) as events by sourcetype_ingested "
+    '| rename sourcetype_ingested as st ] | makemv delim=\\",\\" sparkevent '
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
+    '| table st, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
+    '| rename st as \\"Source type\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
+    'sparkvolume as \\"Volume trendline (Bytes)\\", sparkevent as \\"Event trendline\\"'
 )
 table_source_query = (
-    "index=_internal source=*license_usage.log type=Usage "
-    "(s IN ({input_names})) "
-    "| stats sparkline(sum(b)), sum(b) as Bytes by s "
+    "index=_internal source=*license_usage.log type=Usage (s IN ({input_names})) "
+    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by s "
     "| join type=left s [search index = _internal source=*{addon_name}* action=events_ingested "
-    '| stats latest(_time) AS \\"Last seen\\", sum(n_events) by modular_input_name '
-    "| rename modular_input_name as s ]"
-    '| convert ctime(\\"Last seen\\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)'
-    '| table s, GB, sum(n_events), sparkline(sum(b)), \\"Last seen\\" '
-    '| rename s as \\"Source\\", GB as \\"Data volume [GB]\\", '
-    'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
+    "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
+    "sum(n_events) as events by modular_input_name "
+    '| rename modular_input_name as s ] | makemv delim=\\",\\" sparkevent '
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
+    '| table s, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
+    '| rename s as \\"Source\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
+    'sparkvolume as \\"Volume trendline (Bytes)\\", sparkevent as \\"Event trendline\\"'
 )
 table_host_query = (
     "index=_internal source=*license_usage.log type=Usage "
     "(s IN ({input_names})) "
-    "| stats sparkline(sum(b)), sum(b) as Bytes by h "
-    "| join type=left h [search index = _internal source=*{addon_name}* action=events_ingested "
-    '| stats latest(_time) AS \\"Last seen\\", sum(n_events) by host | rename host as h ]'
-    '| convert ctime(\\"Last seen\\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)'
-    '| table h, GB, sparkline(sum(b)), \\"Last seen\\" '
-    '| rename h as \\"Host\\", GB as \\"Data volume [GB]\\", '
-    'sparkline(sum(b)) as \\"Data volume trend line\\"'
+    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by h "
+    "| table h, Bytes, sparkvolume "
+    '| rename h as \\"Host\\", Bytes as \\"Data volume\\", sparkvolume as \\"Volume trendline (Bytes)\\"'
 )
 table_index_query = (
-    "index=_internal source=*license_usage.log type=Usage "
-    "(s IN ({input_names})) "
-    "| stats sparkline(sum(b)), sum(b) as Bytes by idx "
+    "index=_internal source=*license_usage.log type=Usage (s IN ({input_names})) "
+    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by idx "
     "| join type=left idx [search index = _internal source=*{addon_name}* action=events_ingested "
-    '| stats latest(_time) AS \\"Last seen\\", sum(n_events) by event_index '
-    "| rename event_index as idx ]"
-    '| convert ctime(\\"Last seen\\") | eval GB=round(Bytes/1024/1024/1024,3)| eval events=sum(b)'
-    '| table idx, GB, sum(n_events), sparkline(sum(b)), \\"Last seen\\" '
-    '| rename idx as \\"Index\\", GB as \\"Data volume [GB]\\", '
-    'sum(n_events) as \\"Number of events\\", sparkline(sum(b)) as \\"Data volume trend line\\"'
+    "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
+    "sum(n_events) as events by event_index "
+    '| rename event_index as idx ] | makemv delim=\\",\\" sparkevent '
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
+    '| table idx, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
+    '| rename idx as \\"Index\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
+    'sparkvolume as \\"Volume trendline (Bytes)\\", sparkevent as \\"Event trendline\\"'
 )
 table_account_query = (
     "index = _internal source=*{addon_name}* action=events_ingested "
-    "| stats latest(_time) as ls, sum(n_events) by event_account | convert ctime(ls) "
-    "| table event_account, sum(n_events), ls "
-    '| rename event_account as \\"Account\\", sum(n_events) as \\"Number of events\\", '
-    'ls as \\"Last seen\\"'
+    "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_account "
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
+    '| table event_account, events, sparkevent, \\"Last event\\" '
+    '| rename event_account as \\"Account\\", events as \\"Number of events\\", '
+    'sparkevent as \\"Event trendline\\"'
 )
 table_input_query = (
     "index = _internal source=*{addon_name}* action=events_ingested "
-    "| stats latest(_time) as ls, sum(n_events) by event_input | convert ctime(ls) "
-    "| table event_input, sum(n_events), ls "
-    '| rename event_input as \\"Input\\", sum(n_events) as \\"Number of events\\", '
-    'ls as \\"Last seen\\"'
+    "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
+    '| table event_input, events, sparkevent, \\"Last event\\" '
+    '| rename event_input as \\"Input\\", events as \\"Number of events\\", '
+    'sparkevent as \\"Event trendline\\"'
 )
 
 errors_list_query = "index=_internal source=*{addon_name}* ERROR"

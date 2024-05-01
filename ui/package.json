@@ -21,6 +21,7 @@
     "test-storybook:update-snapshots": "yarn run test-storybook -u"
   },
   "dependencies": {
+    "@splunk/dashboard-action-buttons": "^27.0.0",
     "@splunk/dashboard-context": "^27.0.0",
     "@splunk/dashboard-core": "^27.0.0",
     "@splunk/dashboard-presets": "^27.0.0",

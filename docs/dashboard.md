@@ -190,7 +190,7 @@ Sample **dashboard_components.xml** structure:
         "defaultValue": "-7d,now",
         "token": "events_ingested_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     }
   },

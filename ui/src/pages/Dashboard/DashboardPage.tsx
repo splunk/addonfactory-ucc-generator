@@ -59,6 +59,7 @@ function DashboardPage() {
                         autoActivate
                         defaultActivePanelId="dataIngestionTabPanel"
                         id="dashboardTable"
+                        style={{ minHeight: '98vh' }}
                     >
                         {dataIngestionDef && (
                             <TabLayout.Panel label="Data ingestion" panelId="dataIngestionTabPanel">

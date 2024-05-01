@@ -3,7 +3,7 @@
     "data_ingestion_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "# Data Ingestion",
+        "markdown": "## Data Ingestion",
         "fontSize": "large"
       }
     },
@@ -42,9 +42,10 @@
       "options": {
         "xAxisVisibility": "hide",
         "seriesColors": ["#A870EF"],
-        "yAxisTitleText": "Volume[GB]"
+        "yAxisTitleText": "Volume (bytes)",
+        "xAxisTitleText": "Time"
       },
-      "title": "Data ingestion",
+      "title": "Data volume",
       "dataSources": {
         "primary": "data_ingestion_data_volume_ds"
       }
@@ -53,6 +54,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
@@ -65,6 +67,24 @@
     },
     "data_ingestion_table_viz": {
       "type": "splunk.table",
+      "context": {
+        "formattedVolume": {
+          "number": {
+            "output": "byte",
+            "base": "decimal",
+            "mantissa": 2,
+            "spaceSeparated": true
+          }
+        },
+        "formattedEvent": {
+          "number": {
+            "trimMantissa": true,
+            "average": true,
+            "mantissa": 2,
+            "spaceSeparated": false
+          }
+        }
+      },
       "dataSources": {
         "primary": "data_ingestion_table_ds"
       },
@@ -74,6 +94,14 @@
           "headerBackgroundColor": "> backgroundColor | setColorChannel(tableHeaderBackgroundColorConfig)",
           "rowColors": "> rowBackgroundColors | maxContrast(tableRowColorMaxContrast)",
           "headerColor": "> headerBackgroundColor | maxContrast(tableRowColorMaxContrast)"
+        },
+        "columnFormat": {
+          "Data volume": {
+            "data": "> table | seriesByName(\"Data volume\") | formatByType(formattedVolume)"
+          },
+          "Number of events": {
+            "data": "> table | seriesByName(\"Number of events\") | formatByType(formattedEvent)"
+          }
         },
         "count": 10
       }
@@ -138,7 +166,7 @@
         "defaultValue": "-7d,now",
         "token": "data_ingestion_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     },
     "data_ingestion_table_input": {
@@ -189,7 +217,7 @@
           "x": 20,
           "y": 500,
           "w": 300,
-          "h": 50
+          "h": 20
         }
       },
       {
