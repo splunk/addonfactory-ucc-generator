@@ -5,7 +5,7 @@ import { userEvent, within } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
-import { mockServerResponse } from '../../../mocks/server-response';
+import { mockServerResponseForInput } from '../../../mocks/server-response';
 
 const meta = {
     component: InputPage,
@@ -20,9 +20,11 @@ const meta = {
     parameters: {
         msw: {
             handlers: [
-                http.get('/servicesNS/nobody/-/:name', () => HttpResponse.json(mockServerResponse)),
+                http.get('/servicesNS/nobody/-/:name', () =>
+                    HttpResponse.json(mockServerResponseForInput)
+                ),
                 http.post('/servicesNS/nobody/-/:name', () =>
-                    HttpResponse.json(mockServerResponse)
+                    HttpResponse.json(mockServerResponseForInput)
                 ),
             ],
         },
