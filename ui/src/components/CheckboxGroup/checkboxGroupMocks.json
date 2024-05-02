@@ -66,7 +66,7 @@
                       "expand": true
                     },
                     "fields": [
-                      "field223",
+                      "requiredField",
                       "160validation"
                     ]
                   }
@@ -91,12 +91,13 @@
                     }
                   },
                   {
-                    "field": "field223",
+                    "field": "requiredField",
                     "checkbox": {
                       "label": "Required field",
                       "defaultValue": true
                     },
                     "input": {
+                      "defaultValue": 10,
                       "required": true
                     }
                   },

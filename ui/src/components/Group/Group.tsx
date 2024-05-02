@@ -11,13 +11,11 @@ const GroupWrapper = styled.div`
 const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
     span {
         button {
-            background-color: #f2f4f5;
             font-size: 14px;
 
             &:hover:not([disabled]),
             &:focus:not([disabled]),
             &:active:not([disabled]) {
-                background-color: #f2f4f5;
                 box-shadow: none;
             }
         }
@@ -33,7 +31,6 @@ const CustomGroupLabel = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 6px 10px;
-    background-color: #f2f4f5;
     font-size: 14px;
     margin-bottom: 10px;
 `;

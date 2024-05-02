@@ -322,7 +322,7 @@ This is how it looks in the UI:
 
 ![image](../images/components/checkbox_group_mixed_example.png)
 
-The component maps and unmaps values into a single field in the format `fieldName1/fieldValue2,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,rowWithoutGroup_2/3600`.
+The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
 
 ## `Multiple Select`
