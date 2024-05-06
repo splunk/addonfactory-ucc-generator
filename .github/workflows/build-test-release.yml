@@ -93,6 +93,7 @@ jobs:
 
   build:
     needs:
+      - fossa-scan
       - build-ui
     runs-on: ubuntu-latest
     steps:

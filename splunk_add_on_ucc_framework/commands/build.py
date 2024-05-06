@@ -543,6 +543,7 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config_update.handle_global_config_update(global_config)
+        global_config.expand_tabs()
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
@@ -567,7 +568,7 @@ def generate(
             "build",
             global_config_file,
         )
-        global_config.dump(output_global_config_path, rendered=True)
+        global_config.dump(output_global_config_path)
         logger.info("Copied globalConfig to output")
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:

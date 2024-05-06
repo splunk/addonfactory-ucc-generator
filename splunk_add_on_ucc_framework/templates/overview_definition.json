@@ -53,10 +53,12 @@
           "#A870EF",
           "#029ceb"
         ],
-        "yAxisTitleText": "Volume[GB]",
+        "yAxisTitleText": "Volume (bytes)",
         "overlayFields": "Number of events",
         "y2AxisTitleText": "Number of events",
+        "xAxisTitleText": "Time",
         "y2AxisLineVisibility": "show",
+        "showRoundedY2AxisLabels": true,
         "showOverlayY2Axis": true
       },
       "title": "Data ingestion",
@@ -68,6 +70,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
         "seriesColors": [
           "#A870EF"
         ],
@@ -128,7 +131,7 @@
         "defaultValue": "-7d,now",
         "token": "overview_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     }
   },
@@ -189,7 +192,7 @@
           "x": 20,
           "y": 150,
           "w": 620,
-          "h": 400
+          "h": 300
         }
       },
       {
@@ -198,7 +201,7 @@
           "x": 640,
           "y": 150,
           "w": 620,
-          "h": 400
+          "h": 300
         }
       }
     ]

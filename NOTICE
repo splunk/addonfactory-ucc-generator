@@ -7,9 +7,9 @@
 
 The following 3rd-party software packages may be used by or distributed with addonfactory-ucc-generator. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
-Date generated: 2024-4-22
+Date generated: 2024-4-30
 
-Revision ID: ff809068c5b2dd37bc2575c7408d93a6b691a4c5
+Revision ID: 3b52aebd62746ff7b104e99052da9feb033acb3c
 
 ================================================================================
 ================================================================================
@@ -1913,7 +1913,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @remix-run/router (1.15.3)
+Package Title: @remix-run/router (1.16.0)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -2144,6 +2144,14 @@ Package Title: @splunk/charting-bundle (26.0.0)
 
 * Declared Licenses *
 SEE LICENSE IN LICENSE.md
+
+
+--------------------------------------------------------------------------------
+Package Title: @splunk/dashboard-action-buttons (27.0.0)
+--------------------------------------------------------------------------------
+
+* Declared Licenses *
+SEE LICENSE IN LICENSE.md, ## **Splunk App End User License Agreement**
 
 
 --------------------------------------------------------------------------------
@@ -6773,7 +6781,7 @@ Multi-license: Apache-2.0 OR BSD-2-Clause OR BSD-3-Clause OR ISC OR MIT
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/channels (8.0.8)
+Package Title: @storybook/channels (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6801,7 +6809,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/client-logger (8.0.8)
+Package Title: @storybook/client-logger (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6829,7 +6837,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/core-events (8.0.8)
+Package Title: @storybook/core-events (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6857,7 +6865,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/csf (0.1.4)
+Package Title: @storybook/csf (0.1.5)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6919,7 +6927,7 @@ THE SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/instrumenter (8.0.8)
+Package Title: @storybook/instrumenter (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6947,7 +6955,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/preview-api (8.0.8)
+Package Title: @storybook/preview-api (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -6975,7 +6983,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/test (8.0.8)
+Package Title: @storybook/test (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -7003,7 +7011,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @storybook/types (8.0.8)
+Package Title: @storybook/types (8.0.9)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -8145,7 +8153,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: @vitest/spy (1.5.0)
+Package Title: @vitest/spy (1.5.2)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -8228,7 +8236,7 @@ See the License for the specific language governing permissions and limitations 
 
 
 --------------------------------------------------------------------------------
-Package Title: @vitest/utils (1.5.0)
+Package Title: @vitest/utils (1.5.2)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -8298,7 +8306,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 --------------------------------------------------------------------------------
-Package Title: ace-builds (1.33.0)
+Package Title: ace-builds (1.33.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -19350,7 +19358,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: react-is (18.2.0)
+Package Title: react-is (18.3.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -19445,7 +19453,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: react-router (6.22.3)
+Package Title: react-router (6.23.0)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -19479,7 +19487,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: react-router-dom (6.22.3)
+Package Title: react-router-dom (6.23.0)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -21935,7 +21943,7 @@ SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: use-sync-external-store (1.2.0)
+Package Title: use-sync-external-store (1.2.2)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -22582,7 +22590,7 @@ IN THE SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: zod (3.22.5)
+Package Title: zod (3.23.4)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -22611,6 +22619,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+
+
+* Other Licenses *
+0BSD
+
+
+Copyright (C) 2006 by Rob Landley <rob@landley.net>
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
 
@@ -31410,4 +31427,4 @@ This is a catch-all license used when we find many different proprietary license
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-Report Generated by FOSSA on 2024-4-22
+Report Generated by FOSSA on 2024-4-30

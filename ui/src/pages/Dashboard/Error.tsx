@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
-import { waitForElementToDisplayAndMoveThemToCanvas } from './utils';
+import { getActionButtons, waitForElementToDisplayAndMoveThemToCanvas } from './utils';
 
 export const ErrorDashboard = ({
     dashboardDefinition,
@@ -21,7 +21,7 @@ export const ErrorDashboard = ({
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
         >
-            <DashboardCore width="100%" height="auto" />
+            <DashboardCore width="100%" height="auto" actionMenus={getActionButtons('error')} />
         </DashboardContextProvider>
     ) : null;
 };
