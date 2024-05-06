@@ -36,6 +36,7 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework import dashboard
+from splunk_add_on_ucc_framework.auto_gen_comparator import CodeGeneratorDiffChecker
 from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import server_conf as server_conf_lib
@@ -523,6 +524,7 @@ def generate(
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
 
+    auto_gen_ignore_list = []
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
         logger.info(f"Using globalConfig file located @ {gc_path}")
@@ -601,8 +603,10 @@ def generate(
             _add_modular_input(ta_name, global_config, output_directory)
         if global_config.has_alerts():
             logger.info("Generating alerts code")
-            alert_builder.generate_alerts(
-                global_config, ta_name, internal_root_dir, output_directory
+            auto_gen_ignore_list.extend(
+                alert_builder.generate_alerts(
+                    global_config, ta_name, internal_root_dir, output_directory
+                )
             )
 
         conf_file_names = []
@@ -667,6 +671,13 @@ def generate(
     removed_list = _remove_listed_files(ignore_list)
     if removed_list:
         logger.info("Removed:\n{}".format("\n".join(removed_list)))
+
+    comparator = CodeGeneratorDiffChecker(
+        source, os.path.join(output_directory, ta_name)
+    )
+    comparator.find_common_files(auto_gen_ignore_list)
+    comparator.print_files(logger)
+
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
