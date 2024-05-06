@@ -86,6 +86,7 @@ function CustomTableRow(props) {
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
                                 inline={false}
+                                target="_blank"
                             />
                         </Tooltip>
                     )}
