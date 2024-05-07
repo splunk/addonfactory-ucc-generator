@@ -1,3 +1,18 @@
+#
+# Copyright 2024 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 from os import walk
 from os.path import sep
 from typing import List, Dict
@@ -25,7 +40,7 @@ class CodeGeneratorDiffChecker:
                 dest_all_files[file] = sep.join([root, file])
         dest_all_files["default.meta"] = sep.join([self.target_directory, "metadata"])
 
-        for file_name, file_path in dest_all_files.items():
+        for file_name in dest_all_files.keys():
             if file_name in src_all_files.keys():
                 if file_name in ingore_file_list:
                     continue
