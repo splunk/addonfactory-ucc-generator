@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
+import { variables } from '@splunk/themes';
 
 const GroupWrapper = styled.div`
     display: flex;
@@ -11,13 +12,13 @@ const GroupWrapper = styled.div`
 const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
     span {
         button {
-            background-color: #f2f4f5;
+            background-color: ${variables.neutral100};
             font-size: 14px;
 
             &:hover:not([disabled]),
             &:focus:not([disabled]),
             &:active:not([disabled]) {
-                background-color: #f2f4f5;
+                background-color: ${variables.neutral300};
                 box-shadow: none;
             }
         }
@@ -33,7 +34,7 @@ const CustomGroupLabel = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 6px 10px;
-    background-color: #f2f4f5;
+    background-color: ${variables.neutral100};
     font-size: 14px;
     margin-bottom: 10px;
 `;
