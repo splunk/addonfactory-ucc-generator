@@ -63,6 +63,7 @@ This is how the global configuration looks like without tabs:
                 "edit",
                 "enable",
                 "delete",
+                "search",
                 "clone"
             ],
             "header": [],

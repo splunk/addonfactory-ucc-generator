@@ -7,6 +7,7 @@ import Table from '@splunk/react-ui/Table';
 import ButtonGroup from '@splunk/react-ui/ButtonGroup';
 import Tooltip from '@splunk/react-ui/Tooltip';
 import Pencil from '@splunk/react-icons/Pencil';
+import Magnifier from '@splunk/react-icons/Magnifier';
 import Clone from '@splunk/react-icons/enterprise/Clone';
 import Trash from '@splunk/react-icons/enterprise/Trash';
 import styled from 'styled-components';
@@ -70,6 +71,22 @@ function CustomTableRow(props) {
                                 icon={<Clone screenReaderText={null} size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
                                 className="cloneBtn"
+                            />
+                        </Tooltip>
+                    )}
+                    {rowActions.includes('search') && (
+                        <Tooltip
+                            content={_(
+                                `Go to search for events associated with ${selectedRow.name}`
+                            )}
+                        >
+                            <ActionButtonComponent
+                                appearance="flat"
+                                icon={<Magnifier screenReaderText={null} size={1} />}
+                                to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
+                                className="searchBtn"
+                                inline={false}
+                                target="_blank"
                             />
                         </Tooltip>
                     )}
