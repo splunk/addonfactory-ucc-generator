@@ -1377,7 +1377,8 @@
                     "edit",
                     "enable",
                     "delete",
-                    "clone"
+                    "clone",
+                    "search"
                 ],
                 "header": [
                     {

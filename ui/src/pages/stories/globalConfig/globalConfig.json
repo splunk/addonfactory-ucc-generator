@@ -1351,7 +1351,7 @@
         ]
       },
       "table": {
-        "actions": ["edit", "enable", "delete", "clone"],
+        "actions": ["edit", "enable", "delete","search", "clone"],
         "header": [
           {
             "label": "Name",
