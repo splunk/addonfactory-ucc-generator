@@ -13,9 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Dict, Any
+
 from splunk_add_on_ucc_framework.entity.entity import Entity
 from splunk_add_on_ucc_framework.entity.interval_entity import IntervalEntity
-from tests.smoke.Splunk_TA_Dynatrace.lib.typing_extensions import Dict, Any
 
 
 ENTITY_TYPES = [
