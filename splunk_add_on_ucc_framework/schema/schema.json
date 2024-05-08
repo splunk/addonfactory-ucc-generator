@@ -1583,9 +1583,7 @@
       "type": "array",
       "items": {
         "type": "number"
-      },
-      "minItems": 2,
-      "maxItems": 2
+      }
     },
     "OAuthFields": {
       "type": "object",
@@ -2335,19 +2333,6 @@
         },
         "options": {
           "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "min": {
-                  "type": "number"
-                },
-                "max": {
-                  "type": "number"
-                }
-              },
-              "additionalProperties": false,
-              "required": ["min", "max"]
-            },
             {
               "type": "object",
               "properties": {

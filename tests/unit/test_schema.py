@@ -62,7 +62,7 @@ def test_logging_component_long(schema_validate, config):
 
 def test_interval_entity_correct(schema_validate, config):
     schema_validate(
-        config.with_tab_entity({"type": "interval"}).with_tab_entity(
+        config.with_tab_entity(
             {"type": "interval", "field": "interval", "label": "Interval"}
         )
     )
@@ -72,7 +72,16 @@ def test_interval_entity_correct(schema_validate, config):
     "value", [-1, 0, 0.1, 100, 100.1, "-1", "0", "0.1", "100", "100.1"]
 )
 def test_interval_entity_default_value_correct(schema_validate, config, value):
-    schema_validate(config.with_tab_entity({"type": "interval", "defaultValue": value}))
+    schema_validate(
+        config.with_tab_entity(
+            {
+                "type": "interval",
+                "field": "interval",
+                "label": "Interval",
+                "defaultValue": value,
+            }
+        )
+    )
 
 
 @pytest.mark.parametrize(
@@ -93,22 +102,25 @@ def test_interval_entity_default_value_correct(schema_validate, config, value):
 def test_interval_entity_default_value_incorrect(schema_validate, config, value):
     with pytest.raises(ValidationError):
         schema_validate(
-            config.with_tab_entity({"type": "interval", "defaultValue": value})
+            config.with_tab_entity(
+                {
+                    "type": "interval",
+                    "field": "interval",
+                    "label": "Interval",
+                    "defaultValue": value,
+                }
+            )
         )
 
 
 def test_interval_entity_options(schema_validate, config):
     schema_validate(
-        config.with_tab_entity({"type": "interval", "options": {"min": 1}})
-        .with_tab_entity({"type": "interval", "options": {"max": 3}})
-        .with_tab_entity({"type": "interval", "options": {"min": 1, "max": 3}})
-        .with_tab_entity({"type": "interval", "options": {"range": [1, 3]}})
+        config.with_tab_entity(
+            {
+                "type": "interval",
+                "field": "interval",
+                "label": "Interval",
+                "options": {"range": [1, 3]},
+            }
+        )
     )
-
-
-@pytest.mark.parametrize(
-    "value", [{"min": 123, "max": 456, "range": [1, 3]}, {"range": [1, 2, 3]}]
-)
-def test_interval_entity_options_incorrect(schema_validate, config, value):
-    with pytest.raises(ValidationError):
-        schema_validate(config.with_tab_entity({"type": "interval", "options": value}))
