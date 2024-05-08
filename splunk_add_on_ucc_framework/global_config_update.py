@@ -15,9 +15,10 @@
 #
 import copy
 import logging
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, Tuple, List, Optional
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
+from splunk_add_on_ucc_framework.entity import collapse_entity
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.tabs import resolve_tab
 
@@ -212,14 +213,44 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _dump_with_migrated_tabs(global_config, global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.6")
 
+    if _version_tuple(version) < _version_tuple("0.0.7"):
+        global_config.update_schema_version("0.0.7")
+        _dump_with_migrated_entities(global_config, global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.7")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     content = copy.deepcopy(global_config.content)
 
-    for i, tab in enumerate(content["pages"]["configuration"]["tabs"]):
+    for i, tab in enumerate(
+        content.get("pages", {}).get("configuration", {}).get("tabs", [])
+    ):
         content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
 
-    if global_config._is_global_config_yaml:
+    _dump(content, path, global_config._is_global_config_yaml)
+
+
+def _dump_with_migrated_entities(global_config: GlobalConfig, path: str) -> None:
+    content = copy.deepcopy(global_config.content)
+
+    _collapse_entities(content["pages"].get("inputs", {}).get("services"))
+    _collapse_entities(content["pages"]["configuration"].get("tabs"))
+    _collapse_entities(content.get("alerts"))
+
+    _dump(content, path, global_config._is_global_config_yaml)
+
+
+def _collapse_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
+    if items is None:
+        return
+
+    for item in items:
+        for i, entity in enumerate(item.get("entity", [])):
+            item["entity"][i] = collapse_entity(entity)
+
+
+def _dump(content: Dict[Any, Any], path: str, is_yaml: bool) -> None:
+    if is_yaml:
         utils.dump_yaml_config(content, path)
     else:
         utils.dump_json_config(content, path)

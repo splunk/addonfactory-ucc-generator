@@ -58,6 +58,10 @@ def _compare_content(
                 f"and {expected_file_path} manually for the difference."
             )
     else:
+        # remove whitespaces at the end of every line
+        actual_file_lines = list(map(str.rstrip, actual_file_lines))
+        expected_file_lines = list(map(str.rstrip, expected_file_lines))
+
         # for everything else, we use the library
         for line in difflib.unified_diff(
             actual_file_lines,
