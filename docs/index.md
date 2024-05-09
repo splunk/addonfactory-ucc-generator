@@ -30,6 +30,7 @@ The `splunk-add-on-ucc-framework`:
 
 * generates UI (`appserver` folder).
 * generates Python REST handlers to support UI CRUD operations (`bin` folder).
+* generates [inputs](./inputs/index.md) and their [helper modules](./inputs/helper.md)
 * generates OpenAPI description documents (`appserver/static/openapi.json` file) (for more information, see [here](openapi.md)).
 * generates `.conf` files (more information, see [here](dot_conf_files.md)).
 * installs Python requirements (`lib` folder).
