@@ -2224,6 +2224,10 @@
                 "type": "string",
                 "maxLength": 100
               },
+              "inputHelperModule": {
+                "type": "string",
+                "maxLength": 100
+              },
               "warning": {
                 "$ref": "#/definitions/WarningMessage"
               }

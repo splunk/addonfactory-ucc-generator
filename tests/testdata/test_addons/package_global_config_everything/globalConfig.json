@@ -675,6 +675,7 @@
             "services": [
                 {
                     "name": "example_input_one",
+                    "inputHelperModule": "helper_one",
                     "warning": {
                         "create": {
                             "message": "Some warning for account text create"
@@ -953,6 +954,7 @@
                 },
                 {
                     "name": "example_input_two",
+                    "inputHelperModule": "helper_two",
                     "entity": [
                         {
                             "type": "text",

@@ -142,6 +142,8 @@ def test_ucc_generate_with_everything():
             ("default", "data", "ui", "views", "inputs.xml"),
             ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
+            ("bin", "helper_one.py"),
+            ("bin", "helper_two.py"),
             ("bin", "example_input_one.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
@@ -457,13 +459,18 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
         )
 
-        edm1 = "Removed:"
-        edm2 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py"
-        edm3 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py"
-        edm4 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py"
+        edm_paths = {
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
+        }
+        removed = set(
+            caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
+        )
 
         assert expected_warning_msg in caplog.text
-        assert (edm1 + edm2 + edm3 + edm4) in caplog.text
+        assert edm_paths == removed
 
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
         # when custom files are provided, default files shouldn't be shipped

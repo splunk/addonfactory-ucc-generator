@@ -37,6 +37,7 @@ nav:
     - Introduction: "inputs/index.md"
     - Tabs: "inputs/tabs.md"
     - Multi-level Menu: "inputs/multilevel_menu.md"
+    - Helper Module: "inputs/helper.md"
   - Configuration:
       - "configurations/index.md"
       - Introduction: "configurations/index.md"
