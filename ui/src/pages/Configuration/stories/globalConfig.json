@@ -17,7 +17,7 @@
             }
           },
           "table": {
-            "actions": ["edit", "delete", "clone"],
+            "actions": ["edit", "delete","search", "clone"],
             "header": [
               {
                 "label": "Name",
@@ -687,7 +687,7 @@
       "title": "Inputs",
       "description": "Manage your data inputs",
       "table": {
-        "actions": ["edit", "enable", "delete", "clone"],
+        "actions": ["edit", "enable", "delete","search", "clone"],
         "header": [
           {
             "label": "Name",
