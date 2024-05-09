@@ -671,7 +671,7 @@ class TestInputPage(UccTester):
     def test_example_input_one_valid_input_interval(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies whether adding non numeric values, intreval field displays validation error"""
+        """Verifies whether adding non numeric values, interval field displays validation error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input One")
         input_page.entity1.example_account.wait_for_values()
@@ -682,7 +682,7 @@ class TestInputPage(UccTester):
         input_page.entity1.interval.set_value("abc")
         self.assert_util(
             input_page.entity1.save,
-            r"Interval must be an integer.",
+            r"Interval must be either a non-negative number or -1.",
             left_args={"expect_error": True},
         )
 
@@ -1582,7 +1582,7 @@ class TestInputPage(UccTester):
     def test_example_input_two_valid_input_interval(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies whether adding non numeric values, intreval field displays validation error"""
+        """Verifies whether adding non numeric values, interval field displays validation error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input Two")
         input_page.entity2.example_account.wait_for_values()
@@ -1590,7 +1590,7 @@ class TestInputPage(UccTester):
         input_page.entity2.interval.set_value("abc")
         self.assert_util(
             input_page.entity2.save,
-            r"Interval must be an integer.",
+            r"Interval must be either a non-negative number or -1.",
             left_args={"expect_error": True},
         )
 
