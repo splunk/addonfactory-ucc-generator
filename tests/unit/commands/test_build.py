@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from splunk_add_on_ucc_framework.commands.build import (
+    _add_modular_input,
     _get_build_output_path,
     _get_python_version_from_executable,
 )
@@ -48,3 +49,62 @@ def test_get_python_version_from_executable_nonexisting_command():
 
     with pytest.raises(CouldNotIdentifyPythonVersionException):
         _get_python_version_from_executable(target_python_version)
+
+
+@patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
+def test_add_modular_input(GlobalConfig, tmp_path):
+    ta_name = "test_ta"
+    (tmp_path / ta_name / "bin").mkdir(parents=True)
+    (tmp_path / ta_name / "default").mkdir(parents=True)
+
+    gc = GlobalConfig("", False)
+    gc.inputs = [
+        {
+            "name": "example_input_three",
+            "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
+            "inputHelperModule": "example_helper",
+            "entity": [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "validators": [
+                        {
+                            "type": "regex",
+                            "errorMsg": "...",
+                            "pattern": "^[a-zA-Z]\\w*$",
+                        },
+                        {
+                            "type": "string",
+                            "errorMsg": "Length of input name should be between 1 and 100",
+                            "minLength": 1,
+                            "maxLength": 100,
+                        },
+                    ],
+                    "field": "name",
+                    "help": "A unique name for the data input.",
+                    "required": True,
+                },
+                {
+                    "type": "text",
+                    "label": "Interval",
+                    "validators": [
+                        {
+                            "type": "regex",
+                            "errorMsg": "Interval must be an integer.",
+                            "pattern": "^\\-[1-9]\\d*$|^\\d*$",
+                        }
+                    ],
+                    "field": "interval",
+                    "help": "Time interval of the data input, in seconds.",
+                    "required": True,
+                },
+            ],
+            "title": "Example Input Three",
+        }
+    ]
+    _add_modular_input(ta_name, gc, str(tmp_path))
+
+    input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
+    helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
+    assert input_path.is_file()
+    assert helper_path.is_file()
