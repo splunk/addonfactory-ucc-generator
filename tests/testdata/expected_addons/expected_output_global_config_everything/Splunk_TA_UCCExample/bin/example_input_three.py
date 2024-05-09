@@ -1,9 +1,9 @@
 import import_declare_test
 
+import json
 import sys
 
 from splunklib import modularinput as smi
-from example_input_three_helper import stream_events, validate_input
 
 
 class EXAMPLE_INPUT_THREE(smi.Script):
@@ -28,10 +28,18 @@ class EXAMPLE_INPUT_THREE(smi.Script):
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
-        return validate_input(definition)
+        return
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
-        return stream_events(inputs, ew)
+        input_items = [{'count': len(inputs.inputs)}]
+        for input_name, input_item in inputs.inputs.items():
+            input_item['name'] = input_name
+            input_items.append(input_item)
+        event = smi.Event(
+            data=json.dumps(input_items),
+            sourcetype='example_input_three',
+        )
+        ew.write_event(event)
 
 
 if __name__ == '__main__':

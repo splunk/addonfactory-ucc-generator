@@ -141,14 +141,11 @@ def _add_modular_input(
 
         if "template" in service:
             template = service.get("template") + ".template"
-            helper_module = None
-        else:
-            helper_module = "input.module-template"
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
 
-        input_helper_module = service.get("inputHelperModule", f"{input_name}_helper")
+        input_helper_module = service.get("inputHelperModule")
 
         content = (
             utils.get_j2_env()
@@ -165,14 +162,15 @@ def _add_modular_input(
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
 
-        helper_filename = os.path.join(
-            outputdir, ta_name, "bin", f"{input_helper_module}.py"
-        )
+        if input_helper_module is not None:
+            helper_module_template = "input.module-template"
+            helper_filename = os.path.join(
+                outputdir, ta_name, "bin", f"{input_helper_module}.py"
+            )
 
-        if helper_module is not None and not os.path.exists(helper_filename):
             content = (
                 utils.get_j2_env()
-                .get_template(helper_module)
+                .get_template(helper_module_template)
                 .render(
                     input_name=input_name,
                 )

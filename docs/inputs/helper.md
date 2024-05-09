@@ -9,9 +9,9 @@ additional helper modules were introduced. Those modules must contain
 They are created if they do not exist, but they are not updated by UCC.
 A script then imports such a module and calls the two methods.
 
-Helper files are placed in the `bin` directory. The default module name is `{input_name}_helper`
-(the file: `{input_name}_helper.py`). In order to use a different module name, specify
-`inputHelperModule` parameter.
+Helper files are placed in the `bin` directory. In order to use helper files, specify
+`inputHelperModule` parameter. This will create a new file: `{inputHelperModule}.py`.
+
 
 ### Usage
 
@@ -32,10 +32,6 @@ Helper files are placed in the `bin` directory. The default module name is `{inp
 
 This will create `my_module.py` (if it does not exist) file in the `bin` directory.
 The input script `example_input_one` will import this module and call its methods.
-
-If the parameter was not specified, the default value `{name}_helper` would be used
-(in this case the value would be `example_input_one_helper` so the file would be
-named `example_input_one_helper.py`).
 
 ### Module content
 
