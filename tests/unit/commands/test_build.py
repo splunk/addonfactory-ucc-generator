@@ -52,7 +52,7 @@ def test_get_python_version_from_executable_nonexisting_command():
 
 
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
-def test_add_modular_input(GlobalConfig, tmp_path, monkeypatch):
+def test_add_modular_input(GlobalConfig, tmp_path):
     ta_name = "test_ta"
     (tmp_path / ta_name / "bin").mkdir(parents=True)
     (tmp_path / ta_name / "default").mkdir(parents=True)
@@ -62,6 +62,7 @@ def test_add_modular_input(GlobalConfig, tmp_path, monkeypatch):
         {
             "name": "example_input_three",
             "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
+            "inputHelperModule": "example_helper",
             "entity": [
                 {
                     "type": "text",
@@ -104,6 +105,6 @@ def test_add_modular_input(GlobalConfig, tmp_path, monkeypatch):
     _add_modular_input(ta_name, gc, str(tmp_path))
 
     input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
-    helper_path = tmp_path / ta_name / "bin" / "example_input_three_helper.py"
+    helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
     assert input_path.is_file()
     assert helper_path.is_file()
