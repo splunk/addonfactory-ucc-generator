@@ -1453,7 +1453,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone", "enable"]
+            "enum": ["edit", "delete", "clone", "enable", "search"]
           }
         }
       },

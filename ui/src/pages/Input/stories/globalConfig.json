@@ -385,7 +385,7 @@
       "description": "Manage your data inputs",
       "table": {
         "actions": [
-          "edit", "enable", "delete", "clone"
+          "edit", "enable", "delete","search", "clone"
         ],
         "header": [
           {
