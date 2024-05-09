@@ -1194,12 +1194,20 @@
     "@dnd-kit/utilities" "^3.2.1"
     tslib "^2.0.0"
 
-"@dnd-kit/core@^6.0.5":
+"@dnd-kit/core@^6.0.5", "@dnd-kit/core@^6.1.0":
   version "6.1.0"
   resolved "https://registry.npmjs.org/@dnd-kit/core/-/core-6.1.0.tgz#e81a3d10d9eca5d3b01cbf054171273a3fe01def"
   integrity sha512-J3cQBClB4TVxwGo3KEjssGEXNJqGVWx17aRTZ1ob0FliR5IjYgTxl5YJbKTzA6IzrtelotH19v6y7uoIRUZPSg==
   dependencies:
     "@dnd-kit/accessibility" "^3.1.0"
+    "@dnd-kit/utilities" "^3.2.2"
+    tslib "^2.0.0"
+
+"@dnd-kit/modifiers@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.npmjs.org/@dnd-kit/modifiers/-/modifiers-7.0.0.tgz#229666dd4e8b9487f348035117f993af755b3db9"
+  integrity sha512-BG/ETy3eBjFap7+zIti53f0PCLGDzNXyTmn6fSdrudORf+OH04MxrW4p5+mPu4mgMk9kM41iYONjc3DOUWTcfg==
+  dependencies:
     "@dnd-kit/utilities" "^3.2.2"
     tslib "^2.0.0"
 
@@ -1209,6 +1217,14 @@
   integrity sha512-wDkBHHf9iCi1veM834Gbk1429bd4lHX4RpAwT0y2cHLf246GAvU2sVw/oxWNpPKQNQRQaeGXhAVgrOl1IT+iyA==
   dependencies:
     "@dnd-kit/utilities" "^3.2.0"
+    tslib "^2.0.0"
+
+"@dnd-kit/sortable@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.npmjs.org/@dnd-kit/sortable/-/sortable-8.0.0.tgz#086b7ac6723d4618a4ccb6f0227406d8a8862a96"
+  integrity sha512-U3jk5ebVXe1Lr7c2wU7SBZjcWdQP+j7peHJfCspnA81enlu88Mgd7CC8Q+pub9ubP7eKVETzJW+IBAhsqbSu/g==
+  dependencies:
+    "@dnd-kit/utilities" "^3.2.2"
     tslib "^2.0.0"
 
 "@dnd-kit/utilities@3.2.1":
@@ -2726,6 +2742,29 @@
     tinycolor2 "^1.4.1"
     use-typed-event-listener "^3.0.0"
 
+"@splunk/react-ui@^4.30.0":
+  version "4.30.0"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.30.0.tgz#a74508931317a9943818596531b49ccf322ddc80"
+  integrity sha512-8mxb67724fPtYOxTinsZfbFrNbqwC2Qd67hjU8XvQIWLYodnIlmKoaKUhRQIjEtykMlrWHxzaQCvJSPSvPbmFQ==
+  dependencies:
+    "@dnd-kit/core" "^6.1.0"
+    "@dnd-kit/modifiers" "^7.0.0"
+    "@dnd-kit/sortable" "^8.0.0"
+    "@dnd-kit/utilities" "^3.2.2"
+    "@splunk/react-icons" "^4.4.0"
+    "@splunk/themes" "^0.18.0"
+    "@splunk/ui-utils" "^1.6.0"
+    commonmark "^0.30.0"
+    commonmark-react-renderer "^4.3.2"
+    decimal.js-light "^2.2.3"
+    lodash "^4.17.14"
+    moment "^2.29.4"
+    prop-types "^15.6.2"
+    react-resize-detector "^3.2.1"
+    react-spring "9.2.4"
+    tinycolor2 "^1.4.1"
+    use-typed-event-listener "^3.0.0"
+
 "@splunk/react-visualizations@^26.0.0":
   version "26.0.0"
   resolved "https://registry.npmjs.org/@splunk/react-visualizations/-/react-visualizations-26.0.0.tgz#6912f60c0b989846f3f0b6fd5c71981c0c673bb7"
@@ -2794,6 +2833,15 @@
   version "0.17.0"
   resolved "https://registry.npmjs.org/@splunk/themes/-/themes-0.17.0.tgz#7cda4208df961344010e591f993ea57d401d3ca3"
   integrity sha512-Z6xaePhdotLw2pqDaO3YAkgLRhJniDATW8Ncmct7P6nwrRm1ar6cIryM1LZHb8Tob/W4Owj6d40Zn4xmolKKPQ==
+  dependencies:
+    color-blend "^2.0.9"
+    lodash "^4.17.14"
+    tinycolor2 "^1.4.1"
+
+"@splunk/themes@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.npmjs.org/@splunk/themes/-/themes-0.18.0.tgz#896d1d7b2f62140598b2c8d8d73f43a8a6c52d84"
+  integrity sha512-NzVc3pVU/oKxmTtxb9YKRTBsn1JEh76yWkPf390lRsLlVwS4eUKh/WCUD4xkzx6aUEA/e6XhhQ7oj/Ye6Pz6VA==
   dependencies:
     color-blend "^2.0.9"
     lodash "^4.17.14"
