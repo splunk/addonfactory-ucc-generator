@@ -5,6 +5,7 @@ const { merge } = require('webpack-merge');
 const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
+const TerserPlugin = require("terser-webpack-plugin");
 
 const proxyTargetUrl = 'http://localhost:8000';
 
@@ -73,4 +74,12 @@ module.exports = merge(baseConfig, {
             return middlewares;
         },
     },
+    optimization: {
+        minimize: true,
+        minimizer: [
+          new TerserPlugin({
+            extractComments: false,
+          }),
+        ],
+      },
 });
