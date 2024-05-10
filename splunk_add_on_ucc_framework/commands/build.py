@@ -525,6 +525,8 @@ def generate(
         global_config = global_config_lib.GlobalConfig(
             config_path, is_global_config_yaml
         )
+        # handle the update of globalConfig before validating
+        global_config_update.handle_global_config_update(global_config)
         try:
             validator = global_config_validator.GlobalConfigValidator(
                 internal_root_dir, global_config
@@ -540,7 +542,6 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        global_config_update.handle_global_config_update(global_config)
         global_config.expand_tabs()
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
