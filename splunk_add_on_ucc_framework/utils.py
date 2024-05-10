@@ -48,12 +48,14 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
             os.makedirs(dest)
         files = os.listdir(src)
         for f in files:
-            recursive_overwrite(os.path.join(src, f), os.path.join(dest, f), ui_source_map)
+            recursive_overwrite(
+                os.path.join(src, f), os.path.join(dest, f), ui_source_map
+            )
     else:
         if os.path.exists(dest):
             os.remove(dest)
 
-        if(('.js.map' not in dest) or ui_source_map):
+        if (".js.map" not in dest) or ui_source_map:
             shutil.copy(src, dest)
 
 
@@ -76,7 +78,7 @@ def get_os_path(path: str) -> str:
     return path.strip(os.sep)
 
 
-def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_json_config(config: Dict[Any, Any], file_path: str)     -> None:
     with open(file_path, "w") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
         f.write("\n")
