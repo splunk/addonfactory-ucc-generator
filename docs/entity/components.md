@@ -497,6 +497,31 @@ This is how it looks in the UI:
 The Oauth type entity enables us to use Oauth2.0 for user authentication. Visit the [Oauth Support](../advanced/oauth_support.md) page to learn more.
 
 
+## `Interval`
+
+A [Text](#text) field used to specify [interval](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Inputsconf#Scripted_Input:)
+value, i.e. a number greater than or equal to 0, or -1.
+
+<h3> Options </h3>
+
+| Property | Type                         | Description             |
+|----------|------------------------------|-------------------------|
+| range    | list of numbers (2 elements) | Range of allowed values |
+
+See the following example:
+
+```json
+{
+    "type": "interval",
+    "label": "Interval",
+    "field": "interval",
+    "options": {
+      "range": [10, 20]
+    }
+}
+```
+
+
 ## `Custom`
 
 Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/custom_control.md) page to learn more.
