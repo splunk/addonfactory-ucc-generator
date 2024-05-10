@@ -259,7 +259,7 @@ from splunk_add_on_ucc_framework import main
                 "ui_source_map": False,
             },
         ),
-                (
+        (
             [
                 "--source",
                 "package",
