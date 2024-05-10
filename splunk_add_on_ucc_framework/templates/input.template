@@ -1,12 +1,17 @@
 import import_declare_test
 
-import sys
+{% if not input_helper_module -%}
 import json
+{% endif -%}
+import sys
 
 from splunklib import modularinput as smi
+{%- if input_helper_module %}
+from {{ input_helper_module }} import stream_events, validate_input
+{%- endif %}
+
 
 class {{class_name}}(smi.Script):
-
     def __init__(self):
         super({{class_name}}, self).__init__()
 
@@ -25,20 +30,27 @@ class {{class_name}}(smi.Script):
                 required_on_create=True
             )
         )
-        {% for ent in entity %}
+        {%- for ent in entity %}
         scheme.add_argument(
             smi.Argument(
                 '{{ent.get("field")}}',
                 required_on_create={{True if ent.get("required") else False}},
             )
         )
-        {% endfor %}
+        {%- endfor %}
         return scheme
 
-    def validate_input(self, definition):
+    def validate_input(self, definition: smi.ValidationDefinition):
+        {%- if input_helper_module %}
+        return validate_input(definition)
+        {%- else %}
         return
+        {%- endif %}
 
-    def stream_events(self, inputs, ew):
+    def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
+        {%- if input_helper_module %}
+        return stream_events(inputs, ew)
+        {%- else %}
         input_items = [{'count': len(inputs.inputs)}]
         for input_name, input_item in inputs.inputs.items():
             input_item['name'] = input_name
@@ -48,6 +60,7 @@ class {{class_name}}(smi.Script):
             sourcetype='{{input_name}}',
         )
         ew.write_event(event)
+        {%- endif %}
 
 
 if __name__ == '__main__':
