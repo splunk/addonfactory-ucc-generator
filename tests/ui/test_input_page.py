@@ -1061,7 +1061,7 @@ class TestInputPage(UccTester):
                 "interval": "90",
                 "index": "default",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1134,7 +1134,7 @@ class TestInputPage(UccTester):
                 "interval": "3600",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1213,7 +1213,7 @@ class TestInputPage(UccTester):
                 "interval": "180",
                 "index": "default",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1872,7 +1872,7 @@ class TestInputPage(UccTester):
                 "interval": "90",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1931,7 +1931,7 @@ class TestInputPage(UccTester):
                 "interval": "3600",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1999,7 +1999,7 @@ class TestInputPage(UccTester):
                 "interval": "180",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search |  Delete",
             },
         )
         value_to_test = {
