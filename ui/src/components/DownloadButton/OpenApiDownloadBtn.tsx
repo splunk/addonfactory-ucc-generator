@@ -9,13 +9,17 @@ function OpenApiDownloadButton() {
         text-overflow: ellipsis;
         overflow: hidden;
     `;
+
+    const StyledIcon = styled(Icon)`
+        margin-right: 4px;
+    `;
     return (
         <DownloadButton
             fileUrl={getBuildDirPath().replace('js/build', 'openapi.json')}
             fileNameAfterDownload="openapi.json"
         >
             <StyledDiv>
-                <Icon />
+                <StyledIcon />
                 <span>OpenAPI.json</span>
             </StyledDiv>
         </DownloadButton>
