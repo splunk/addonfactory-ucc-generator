@@ -1748,7 +1748,7 @@ class TestInputPage(UccTester):
         )
         self.assert_util(
             input_page.entity2.interval.get_help_text,
-            "Time interval of the data input, in seconds .",
+            "Time interval of the data input, in seconds.",
         )
         self.assert_util(
             input_page.entity2.example_checkbox.get_help_text,
