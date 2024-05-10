@@ -211,7 +211,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             verbose_file_summary_report=args.verbose,
             pip_version=args.pip_version,
             pip_legacy_resolver=args.pip_legacy_resolver,
-            ui_source_map=args.ui_source_map
+            ui_source_map=args.ui_source_map,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)

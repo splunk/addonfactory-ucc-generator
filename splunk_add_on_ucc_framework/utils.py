@@ -78,7 +78,7 @@ def get_os_path(path: str) -> str:
     return path.strip(os.sep)
 
 
-def dump_json_config(config: Dict[Any, Any], file_path: str)     -> None:
+def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
         f.write("\n")
