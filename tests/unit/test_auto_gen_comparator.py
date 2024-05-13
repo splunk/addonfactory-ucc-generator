@@ -26,7 +26,7 @@ def test_print_files_not_blank():
     exp_msg.extend([f"{idx}) {f}" for idx, f in enumerate(obj.common_files.values())])
     exp_msg.append(
         "Please refer UCC framework documentation for the latest "
-        "features that ables you to remove the above files."
+        "features that allows you to remove the above files."
     )
     exp_msg.append("-" * 120)
 
@@ -37,12 +37,15 @@ def test_print_files_not_blank():
 def test_find_common_files():
     obj = auto_gen_comparator.CodeGeneratorDiffChecker("", "")
     auto_gen_comparator.walk = MagicMock()
+    logger = MagicMock()
+
     src_dir = [("root", ["dir1", "dir2", "dir3"], ["file1", "file2", "file3", "file4"])]
     dest_dir = [("root", ["dir1", "dir2"], ["file1", "file2"])]
+
     auto_gen_comparator.walk.side_effect = [src_dir, dest_dir]
 
-    # here the ingore_file_list is empty, an add-on with no alert actions
-    obj.find_common_files()
+    # here the ignore_file_list is empty, an add-on with no alert actions
+    obj.find_common_files(logger=logger)
 
     assert obj.common_files == {"file1": "root/file1", "file2": "root/file2"}
 
@@ -50,11 +53,13 @@ def test_find_common_files():
 def test_find_common_files_with_ignore_files():
     obj = auto_gen_comparator.CodeGeneratorDiffChecker("", "")
     auto_gen_comparator.walk = MagicMock()
+    logger = MagicMock()
+
     src_dir = [("root", ["dir1", "dir2", "dir3"], ["file1", "file2", "file3", "file4"])]
     dest_dir = [("root", ["dir1", "dir2"], ["file1", "file2"])]
     auto_gen_comparator.walk.side_effect = [src_dir, dest_dir]
 
-    # here the ingore_file_list contains alert icons or alert script logic
-    obj.find_common_files(["file1", "file2"])
+    # here the ignore_file_list contains alert icons or alert script logic
+    obj.find_common_files(logger=logger, ignore_file_list=["file1", "file2"])
 
     assert obj.common_files == {}

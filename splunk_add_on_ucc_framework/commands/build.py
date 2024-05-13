@@ -675,8 +675,7 @@ def generate(
     comparator = CodeGeneratorDiffChecker(
         source, os.path.join(output_directory, ta_name)
     )
-    comparator.find_common_files(auto_gen_ignore_list)
-    comparator.print_files(logger)
+    comparator.find_common_files(logger, auto_gen_ignore_list)
 
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")

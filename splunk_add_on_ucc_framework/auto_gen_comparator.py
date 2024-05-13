@@ -25,26 +25,30 @@ class CodeGeneratorDiffChecker:
         self.target_directory = dst_dir
         self.common_files: Dict[str, str] = {}
 
-    def find_common_files(self, ingore_file_list: List[str] = []) -> None:
+    def find_common_files(
+        self, logger: Logger, ignore_file_list: List[str] = []
+    ) -> None:
         # we add these two files as they are required to be present in source code
-        ingore_file_list.extend(["app.manifest", "README.txt"])
+        ignore_file_list.extend(["app.manifest", "README.txt"])
 
         src_all_files = {}
         for root, _, files in walk(self.source_directory):
             for file in files:
                 src_all_files[file] = sep.join([root, file])
 
-        dest_all_files = {}
+        dest_all_files = []
         for root, _, files in walk(self.target_directory):
             for file in files:
-                dest_all_files[file] = sep.join([root, file])
-        dest_all_files["default.meta"] = sep.join([self.target_directory, "metadata"])
+                dest_all_files.append(file)
+        dest_all_files.append("default.meta")
 
-        for file_name in dest_all_files.keys():
+        for file_name in dest_all_files:
             if file_name in src_all_files.keys():
-                if file_name in ingore_file_list:
+                if file_name in ignore_file_list:
                     continue
                 self.common_files[file_name] = src_all_files[file_name]
+
+        self.print_files(logger)
 
     def print_files(self, logger: Logger) -> None:
         if not self.common_files:
@@ -62,7 +66,7 @@ class CodeGeneratorDiffChecker:
         )
         messages.append(
             "Please refer UCC framework documentation for the latest "
-            "features that ables you to remove the above files."
+            "features that allows you to remove the above files."
         )
         messages.append("-" * 120)
         logger.warning("\n".join(messages))
