@@ -2743,7 +2743,7 @@
     tinycolor2 "^1.4.1"
     use-typed-event-listener "^3.0.0"
 
-"@splunk/react-ui@^4.30.0":
+"@splunk/react-ui@4.30.0":
   version "4.30.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.30.0.tgz#a74508931317a9943818596531b49ccf322ddc80"
   integrity sha512-8mxb67724fPtYOxTinsZfbFrNbqwC2Qd67hjU8XvQIWLYodnIlmKoaKUhRQIjEtykMlrWHxzaQCvJSPSvPbmFQ==
