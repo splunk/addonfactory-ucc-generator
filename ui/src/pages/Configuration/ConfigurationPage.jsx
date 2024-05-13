@@ -106,7 +106,7 @@ function ConfigurationPage() {
                             <SubTitleComponent>{_(description || '')}</SubTitleComponent>
                             <SubDescription {...subDescription} />
                         </ColumnLayout.Column>
-                        <ColumnLayout.Column span={1} style={{ textAlignLast: 'right' }}>
+                        <ColumnLayout.Column span={3} style={{ textAlignLast: 'right' }}>
                             <OpenApiDownloadButton />
                         </ColumnLayout.Column>
                     </Row>
