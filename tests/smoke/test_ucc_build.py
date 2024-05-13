@@ -533,3 +533,57 @@ def test_ucc_generate_only_one_tab():
         "package",
     )
     build.generate(source=package_folder)
+
+
+def test_ucc_generate_with_ui_source_map():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_everything",
+            "package",
+        )
+        build.generate(
+            source=package_folder, output_directory=temp_dir, ui_source_map=True
+        )
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        files_to_exist = [
+            ("appserver", "static", "js", "build", "entry_page.js"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
+        ]
+        for f in files_to_exist:
+            expected_file_path = path.join(actual_folder, *f)
+            assert path.exists(expected_file_path)
+
+
+def test_ucc_generate_without_ui_source_map():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_everything",
+            "package",
+        )
+        build.generate(source=package_folder, output_directory=temp_dir)
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        files_to_exist = [
+            ("appserver", "static", "js", "build", "entry_page.js"),
+        ]
+        for f in files_to_exist:
+            expected_file_path = path.join(actual_folder, *f)
+            assert path.exists(expected_file_path)
+
+        files_to_not_exist = [
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
+        ]
+        for f in files_to_not_exist:
+            expected_file_path = path.join(actual_folder, *f)
+            assert not path.exists(expected_file_path)
