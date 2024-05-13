@@ -2721,7 +2721,7 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@4.28.2", "@splunk/react-ui@^4.17.1", "@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.25.0", "@splunk/react-ui@^4.28.2":
+"@splunk/react-ui@^4.17.1", "@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.25.0", "@splunk/react-ui@^4.28.2":
   version "4.28.2"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.28.2.tgz#91ab62a5c07d967c592df0bf6e2b1c7604c22b72"
   integrity sha512-krYWurzg/Y9G4J8pfmPusUaCIVHFldq8jS85OdsW91hHCML8ZqlK8/PyJy9loDPrxNyz48MX1pd6JqS5PVWxFA==
@@ -2743,7 +2743,7 @@
     tinycolor2 "^1.4.1"
     use-typed-event-listener "^3.0.0"
 
-"@splunk/react-ui@4.30.0":
+"@splunk/react-ui@^4.30.0":
   version "4.30.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.30.0.tgz#a74508931317a9943818596531b49ccf322ddc80"
   integrity sha512-8mxb67724fPtYOxTinsZfbFrNbqwC2Qd67hjU8XvQIWLYodnIlmKoaKUhRQIjEtykMlrWHxzaQCvJSPSvPbmFQ==
