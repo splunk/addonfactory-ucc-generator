@@ -224,8 +224,8 @@ def test_ucc_generate_with_everything():
             ("static", "appIconAlt_2x.png"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(actual_folder, *f)
-            assert path.exists(expected_file_path)
+            actual_file_path = path.join(actual_folder, *f)
+            assert path.exists(actual_file_path)
 
         # when custom files are provided, default files shouldn't be shipped
         files_should_be_absent = [
@@ -367,10 +367,10 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         )
         build.generate(source=package_folder, output_directory=temp_dir)
 
-        expected_file_path = path.join(
+        actual_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        assert not path.exists(expected_file_path)
+        assert not path.exists(actual_file_path)
 
 
 def test_ucc_build_verbose_mode(caplog):
