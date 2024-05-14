@@ -1124,6 +1124,9 @@
                 "type": "string"
               },
               "uniqueItems": true
+            },
+            "useBase64Encoding": {
+              "type": "boolean"
             }
           },
           "additionalProperties": false
@@ -1453,7 +1456,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone", "enable"]
+            "enum": ["edit", "delete", "clone", "enable", "search"]
           }
         }
       },
@@ -2215,6 +2218,10 @@
                 "maxLength": 100
               },
               "restHandlerClass": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "inputHelperModule": {
                 "type": "string",
                 "maxLength": 100
               },
