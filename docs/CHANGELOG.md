@@ -1,3 +1,19 @@
+# [5.44.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.43.0...v5.44.0) (2024-05-14)
+
+
+### Bug Fixes
+
+* **alert:** graceful handle for usage of activeResponse ([#1185](https://github.com/splunk/addonfactory-ucc-generator/issues/1185)) ([c43f38f](https://github.com/splunk/addonfactory-ucc-generator/commit/c43f38f800b6156a66b6905bdcdfcf4809f280f2))
+* **style:** fix label overflow issue for 'OpenAPI.json' button in configuration page ([#1181](https://github.com/splunk/addonfactory-ucc-generator/issues/1181)) ([917f9c9](https://github.com/splunk/addonfactory-ucc-generator/commit/917f9c9972007bddddd1d9a307f58710b85fc260))
+
+
+### Features
+
+* **auto-gen:** notify users for existing features of UCC framework  ([#1177](https://github.com/splunk/addonfactory-ucc-generator/issues/1177)) ([305dbbd](https://github.com/splunk/addonfactory-ucc-generator/commit/305dbbdeeea6726d363bf8435cb13c5e3ff128b3))
+* file input component, supports base64 encoding ([#1167](https://github.com/splunk/addonfactory-ucc-generator/issues/1167)) ([46417c2](https://github.com/splunk/addonfactory-ucc-generator/commit/46417c2351543a35c2e76b787224e3bc3963bb33))
+* helper modules for modular inputs ([#1126](https://github.com/splunk/addonfactory-ucc-generator/issues/1126)) ([fde1a33](https://github.com/splunk/addonfactory-ucc-generator/commit/fde1a33f2f9d272f2de5250bd0afbbb22ae87380)), closes [#331](https://github.com/splunk/addonfactory-ucc-generator/issues/331)
+* **search:** relocate button from dropdown to action column In input page ([#1148](https://github.com/splunk/addonfactory-ucc-generator/issues/1148)) ([696e5a9](https://github.com/splunk/addonfactory-ucc-generator/commit/696e5a92278fb79851d5927b9d5979a00eeeab0e))
+
 # [5.43.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.42.1...v5.43.0) (2024-04-30)
 
 
