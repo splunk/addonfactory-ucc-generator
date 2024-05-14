@@ -224,7 +224,7 @@ def test_ucc_generate_with_everything():
             ("static", "appIconAlt_2x.png"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
+            expected_file_path = path.join(actual_folder, *f)
             assert path.exists(expected_file_path)
 
         # when custom files are provided, default files shouldn't be shipped
@@ -310,8 +310,8 @@ def test_ucc_generate_with_configuration():
             ("static", "appIconAlt_2x.png"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert path.exists(expected_file_path)
+            actual_file_path = path.join(actual_folder, *f)
+            assert path.exists(actual_file_path)
 
 
 def test_ucc_generate_with_configuration_files_only():
