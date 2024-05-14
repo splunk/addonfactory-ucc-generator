@@ -6,6 +6,7 @@ from os import path
 from pathlib import Path
 
 from tests.smoke import helpers
+from tests.unit import helpers as unit_helpers
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
@@ -595,3 +596,29 @@ def test_ucc_generate_without_ui_source_map():
         for f in files_to_not_exist:
             expected_file_path = path.join(actual_folder, *f)
             assert not path.exists(expected_file_path)
+
+
+def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    tmp_file_gc = tmp_path / "globalConfig.json"
+    unit_helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_all_alerts.json"
+    )
+
+    build.generate(source=package_folder, config_path=str(tmp_file_gc))
+
+    # there are 2 occurrences of 'activeResponse' in 'valid_config_all_alerts.json'
+    assert (
+        caplog.messages.count(
+            "'activeResponse' is deprecated. Please use 'adaptiveResponse' instead."
+        )
+        == 2
+    )
+    assert "Updated globalConfig schema to version 0.0.4" in caplog.messages
