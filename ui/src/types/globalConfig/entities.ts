@@ -232,6 +232,7 @@ export const FileEntity = CommonEditableEntityFields.extend({
             maxFileSize: z.number().optional(),
             fileSupportMessage: z.string().optional(),
             supportedFileTypes: z.array(z.string()),
+            useBase64Encoding: z.boolean().default(false).optional(),
         })
         .optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
