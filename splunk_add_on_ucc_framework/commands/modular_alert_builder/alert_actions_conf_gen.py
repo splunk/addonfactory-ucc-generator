@@ -17,7 +17,7 @@ import json
 import logging
 from os import linesep, makedirs, path as op
 import shutil
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -64,7 +64,6 @@ class AlertActionsConfGeneration:
             "payload_format": "json",
             "icon_path": "alerticon.png",
         }
-        self.alerts_icon_list: List[str] = []
 
     def get_local_conf_file_path(self, conf_name: str) -> str:
         local_path = op.join(self._package_path, "default")
@@ -115,7 +114,6 @@ class AlertActionsConfGeneration:
                 elif k == "alert_props":
                     if alert.get("iconFileName", "alerticon.png") != "alerticon.png":
                         alert["alert_props"]["icon_path"] = alert["iconFileName"]
-                        self.alerts_icon_list.append(alert["iconFileName"])
                     else:
                         # we copy UCC framework's alerticon.png only when a custom isn't provided
                         shutil.copy(
@@ -252,13 +250,12 @@ class AlertActionsConfGeneration:
             + 'object="alert_actions.conf.spec", object_type="file"'
         )
 
-    def handle(self) -> List[str]:
+    def handle(self) -> None:
         self.add_default_settings()
         self.generate_conf()
         self.generate_spec()
         self.generate_eventtypes()
         self.generate_tags()
-        return self.alerts_icon_list
 
     def add_default_settings(self) -> None:
         for alert in self._alert_settings:
