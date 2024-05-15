@@ -1510,6 +1510,10 @@
           "type": "boolean",
           "default": true
         },
+        "searchViewDefault": {
+          "type": "boolean",
+          "default": false
+        },
         "os-dependentLibraries": {
           "type": "array",
           "items": {
@@ -1559,7 +1563,7 @@
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],
-      "description": "Meta deta regarding build",
+      "description": "Metadata regarding build",
       "additionalProperties": false
     },
     "NumberValidator": {

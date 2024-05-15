@@ -81,7 +81,8 @@
                                 ]
                             },
                             "defaultValue": "INFO",
-                            "field": "loglevel"
+                            "field": "loglevel",
+                            "required": true
                         }
                     ],
                     "title": "Logging"
@@ -206,9 +207,9 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.41.0Reda406cf",
+        "version": "5.43.0R524916e7",
         "displayName": "This is my add-on",
         "schemaVersion": "0.0.6",
-        "_uccVersion": "5.42.1"
+        "_uccVersion": "5.43.0"
     }
 }
