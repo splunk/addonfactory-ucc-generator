@@ -1,17 +1,11 @@
 import sys
 
 import pytest
+import xmldiff.main
 
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
-PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
-fields when `tostring` function is used.
-https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
-"""
-
-
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_generate_nav_default_xml():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
@@ -26,10 +20,12 @@ def test_generate_nav_default_xml():
     <view name="search"/>
 </nav>
 """
-    assert expected_result == result
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    if diff:
+        assert " ".join([str(item) for item in diff]), False
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_generate_nav_default_xml_only_configuration():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=False,
@@ -42,10 +38,31 @@ def test_generate_nav_default_xml_only_configuration():
     <view name="search"/>
 </nav>
 """
-    assert expected_result == result
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    if diff:
+        assert " ".join([str(item) for item in diff]), False
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
+def test_generate_nav_default_xml_with_search_view_default():
+    result = data_ui_generator.generate_nav_default_xml(
+        include_inputs=False,
+        include_dashboard=False,
+        search_view_default=True,
+    )
+
+    expected_result = """<?xml version="1.0" ?>
+<nav>
+    <view name="configuration"/>
+    <view default="true" name="search"/>
+</nav>
+"""
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    if diff:
+        assert " ".join([str(item) for item in diff]), False
+
+
 def test_generate_views_inputs_xml():
     result = data_ui_generator.generate_views_inputs_xml("Splunk_TA_UCCExample")
 
@@ -54,10 +71,12 @@ def test_generate_views_inputs_xml():
     <label>Inputs</label>
 </view>
 """
-    assert expected_result == result
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    if diff:
+        assert " ".join([str(item) for item in diff]), False
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_generate_views_configuration_xml():
     result = data_ui_generator.generate_views_configuration_xml("Splunk_TA_UCCExample")
 
@@ -66,10 +85,12 @@ def test_generate_views_configuration_xml():
     <label>Configuration</label>
 </view>
 """
-    assert expected_result == result
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    if diff:
+        assert " ".join([str(item) for item in diff]), False
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_generate_views_redirect_xml():
     result = data_ui_generator.generate_views_redirect_xml("Splunk_TA_UCCExample")
 
@@ -78,4 +99,7 @@ def test_generate_views_redirect_xml():
     <label>Redirect</label>
 </view>
 """
-    assert expected_result == result
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    if diff:
+        assert " ".join([str(item) for item in diff]), False

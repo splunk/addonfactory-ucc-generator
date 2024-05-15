@@ -28,17 +28,25 @@ def _pretty_print_xml(string: str) -> str:
     return minidom.parseString(string).toprettyxml(indent="    ")
 
 
-def generate_nav_default_xml(include_inputs: bool, include_dashboard: bool) -> str:
+def generate_nav_default_xml(
+    include_inputs: bool, include_dashboard: bool, search_view_default: bool = False
+) -> str:
     """
     Generates `default/data/ui/nav/default.xml` file.
     """
     nav = ET.Element("nav")
     if include_inputs:
         ET.SubElement(nav, "view", attrib={"name": "inputs"})
-    ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
+    if search_view_default is True:
+        ET.SubElement(nav, "view", attrib={"name": "configuration"})
+    else:
+        ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
     if include_dashboard:
         ET.SubElement(nav, "view", attrib={"name": "dashboard"})
-    ET.SubElement(nav, "view", attrib={"name": "search"})
+    if search_view_default is True:
+        ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
+    else:
+        ET.SubElement(nav, "view", attrib={"name": "search"})
     nav_as_string = ET.tostring(nav, encoding="unicode")
     return _pretty_print_xml(nav_as_string)
 
