@@ -39,14 +39,12 @@ def generate_nav_default_xml(
         ET.SubElement(nav, "view", attrib={"name": "inputs"})
     if search_view_default is True:
         ET.SubElement(nav, "view", attrib={"name": "configuration"})
-    else:
-        ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
-    if include_dashboard:
-        ET.SubElement(nav, "view", attrib={"name": "dashboard"})
-    if search_view_default is True:
         ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
     else:
+        ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
         ET.SubElement(nav, "view", attrib={"name": "search"})
+    if include_dashboard:
+        ET.SubElement(nav, "view", attrib={"name": "dashboard"})
     nav_as_string = ET.tostring(nav, encoding="unicode")
     return _pretty_print_xml(nav_as_string)
 
