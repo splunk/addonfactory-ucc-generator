@@ -145,7 +145,7 @@ def test_ucc_generate_with_config_param():
     check_ucc_versions()
 
 
-def test_ucc_generate_with_everything():
+def test_ucc_generate_with_everything():  # here123
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -223,6 +223,7 @@ def test_ucc_generate_with_everything():
             ("static", "appIcon_2x.png"),
             ("static", "appIconAlt.png"),
             ("static", "appIconAlt_2x.png"),
+            ("appserver", "static", "js", "build", "entry_page.js"),
         ]
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
@@ -232,6 +233,7 @@ def test_ucc_generate_with_everything():
         files_should_be_absent = [
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
@@ -567,35 +569,6 @@ def test_ucc_generate_with_ui_source_map():
         for f in files_to_exist:
             expected_file_path = path.join(actual_folder, *f)
             assert path.exists(expected_file_path)
-
-
-def test_ucc_generate_without_ui_source_map():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything",
-            "package",
-        )
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-
-        files_to_exist = [
-            ("appserver", "static", "js", "build", "entry_page.js"),
-        ]
-        for f in files_to_exist:
-            expected_file_path = path.join(actual_folder, *f)
-            assert path.exists(expected_file_path)
-
-        files_to_not_exist = [
-            ("appserver", "static", "js", "build", "entry_page.js.map"),
-        ]
-        for f in files_to_not_exist:
-            expected_file_path = path.join(actual_folder, *f)
-            assert not path.exists(expected_file_path)
 
 
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):

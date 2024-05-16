@@ -41,6 +41,7 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
     Args:
         src (str): Source of copy
         dest (str): Destination to copy
+        ui_source_map (bool): flag that decides if source map files should be copied
     """
     # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
     if os.path.isdir(src):
