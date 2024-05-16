@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import copy
 import logging
 from typing import Any, Dict, Tuple, List, Optional
 
@@ -220,24 +219,20 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
-    content = copy.deepcopy(global_config.content)
-
     for i, tab in enumerate(
-        content.get("pages", {}).get("configuration", {}).get("tabs", [])
+        global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
     ):
-        content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
+        global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
 
-    _dump(content, path, global_config._is_global_config_yaml)
+    _dump(global_config.content, path, global_config._is_global_config_yaml)
 
 
 def _dump_with_migrated_entities(global_config: GlobalConfig, path: str) -> None:
-    content = copy.deepcopy(global_config.content)
+    _collapse_entities(global_config.content["pages"].get("inputs", {}).get("services"))
+    _collapse_entities(global_config.content["pages"]["configuration"].get("tabs"))
+    _collapse_entities(global_config.content.get("alerts"))
 
-    _collapse_entities(content["pages"].get("inputs", {}).get("services"))
-    _collapse_entities(content["pages"]["configuration"].get("tabs"))
-    _collapse_entities(content.get("alerts"))
-
-    _dump(content, path, global_config._is_global_config_yaml)
+    _dump(global_config.content, path, global_config._is_global_config_yaml)
 
 
 def _collapse_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
