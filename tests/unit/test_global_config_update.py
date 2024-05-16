@@ -131,7 +131,9 @@ def test_tab_migration(tmp_path):
 
 def test_entity_migration(tmp_path):
     tmp_file_gc = tmp_path / "globalConfig.json"
-    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_expand.json")
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_only_interval_migration.json"
+    )
     assert '"type": "interval"' not in tmp_file_gc.read_text()
 
     global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)

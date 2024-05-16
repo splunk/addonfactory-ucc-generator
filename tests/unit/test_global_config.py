@@ -1,6 +1,5 @@
 import itertools
-from itertools import chain
-from typing import Any
+from typing import Any, Iterator
 
 import pytest
 from unittest import mock
@@ -100,7 +99,7 @@ def test_global_config_expand(tmp_path):
     assert count_entities(global_config, type="text", field="interval") == 3
 
 
-def all_entities(gc: global_config_lib.GlobalConfig) -> chain[Any]:
+def all_entities(gc: global_config_lib.GlobalConfig) -> Iterator[Any]:
     objects = itertools.chain(gc.tabs, gc.alerts, gc.inputs)
     return itertools.chain(*(obj["entity"] for obj in objects if "entity" in obj))
 
