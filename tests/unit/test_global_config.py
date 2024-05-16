@@ -1,5 +1,6 @@
-import json
-import os.path
+import itertools
+from itertools import chain
+from typing import Any
 
 import pytest
 from unittest import mock
@@ -7,7 +8,6 @@ from unittest import mock
 import tests.unit.helpers as helpers
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework.global_config_update import _dump_with_migrated_tabs
 
 
 @pytest.mark.parametrize(
@@ -82,35 +82,29 @@ def test_global_config_update_addon_version(global_config_only_configuration):
     assert global_config_only_configuration.version == "1.1.1"
 
 
-@pytest.mark.parametrize("migration", [True, False])
-def test_global_config_logging_component(migration, tmp_path):
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_only_logging.json"
-    )
-    with open(global_config_path) as fp:
-        global_config_content = json.load(fp)
-
-    long_tabs = global_config_content["pages"]["configuration"]["tabs"]
-    short_tabs = [{"type": "loggingTab"}]
-
-    if not migration:
-        global_config_content["pages"]["configuration"]["tabs"] = short_tabs
+def test_global_config_expand(tmp_path):
+    global_config_path = helpers.get_testdata_file_path("valid_config_expand.json")
 
     global_config = global_config_lib.GlobalConfig(global_config_path, False)
 
-    render_true = os.path.join(tmp_path, "render_true.json")
-    render_false = os.path.join(tmp_path, "render_false.json")
+    assert {"type": "loggingTab"} in global_config.tabs
+    assert count_entities(global_config, "interval") == 3
+    global_config.expand()
+    assert {"type": "loggingTab"} not in global_config.tabs
+    assert count_entities(global_config, "interval") == 0
 
-    _dump_with_migrated_tabs(global_config, render_false)
-    with open(render_false) as fp:
-        render_false_dict = json.load(fp)
+    # Find expanded logging tab
+    for tab in global_config.tabs:
+        if tab["name"] == "logging":
+            break
+    else:
+        assert False, "No logging tab"
 
-    global_config.expand_tabs()
-    global_config.dump(render_true)
-    with open(render_true) as fp:
-        render_true_dict = json.load(fp)
 
-    assert render_true_dict["pages"]["configuration"]["tabs"] == long_tabs
+def all_entities(gc: global_config_lib.GlobalConfig) -> chain[Any]:
+    objects = itertools.chain(gc.tabs, gc.alerts, gc.inputs)
+    return itertools.chain(*(obj["entity"] for obj in objects if "entity" in obj))
 
-    tabs = render_false_dict["pages"]["configuration"]["tabs"]
-    assert tabs == short_tabs
+
+def count_entities(gc: global_config_lib.GlobalConfig, type_: str) -> int:
+    return sum(1 for entity in all_entities(gc) if entity["type"] == type_)

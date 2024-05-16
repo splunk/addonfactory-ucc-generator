@@ -14,7 +14,7 @@ def test_interval_minimal_definition():
         "validators": [
             {
                 "errorMsg": "Interval must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
                 "type": "regex",
             }
         ],
@@ -29,7 +29,6 @@ def test_interval_full_definition():
         "required": True,
         "defaultValue": 15,
         "help": "Some help",
-        "tooltip": "Some tooltip",
         "options": {
             "range": [10, 20],
         },
@@ -44,12 +43,11 @@ def test_interval_full_definition():
         "type": "text",
         "defaultValue": 15,
         "help": "Some help",
-        "tooltip": "Some tooltip",
         "required": True,
         "validators": [
             {
                 "errorMsg": "Interval input must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
                 "type": "regex",
             },
             {
@@ -73,7 +71,41 @@ def test_interval_migration():
         "validators": [
             {
                 "errorMsg": "Interval must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                "type": "regex",
+            },
+        ],
+    }
+
+    expected_definition = {
+        "type": "interval",
+        "field": "interval",
+        "label": "Interval",
+        "required": True,
+        "defaultValue": 15,
+        "help": "Some help",
+        "tooltip": "Some tooltip",
+    }
+
+    entity = IntervalEntity.from_definition(definition)
+    assert entity == expected_definition
+    assert entity.long_form() == definition
+    assert entity.short_form() == expected_definition
+
+
+def test_interval_migration_with_range():
+    definition = {
+        "field": "interval",
+        "label": "Interval",
+        "type": "text",
+        "defaultValue": 15,
+        "help": "Some help",
+        "tooltip": "Some tooltip",
+        "required": True,
+        "validators": [
+            {
+                "errorMsg": "Interval must be either a non-negative number or -1.",
+                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
                 "type": "regex",
             },
             {
@@ -121,9 +153,22 @@ def test_interval_migration_wrong_field():
         "validators": [
             {
                 "errorMsg": "Other field must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
                 "type": "regex",
             },
         ],
+    }
+    assert IntervalEntity.from_definition(definition) is None
+
+
+def test_interval_migration_no_validation():
+    definition = {
+        "field": "interval",
+        "label": "Interval",
+        "type": "text",
+        "defaultValue": 15,
+        "help": "Some help",
+        "tooltip": "Some tooltip",
+        "required": True,
     }
     assert IntervalEntity.from_definition(definition) is None

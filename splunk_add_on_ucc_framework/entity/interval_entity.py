@@ -39,9 +39,6 @@ class IntervalEntity(Entity):
         options = self.get("options", {})
         range_v = options.get("range")
 
-        if range_v is None and "min" in options and "max" in options:
-            range_v = [options["min"], options["max"]]
-
         if range_v is not None:
             min_v, max_v = range_v
             definition["validators"].append(
