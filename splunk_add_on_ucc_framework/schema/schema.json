@@ -1124,6 +1124,9 @@
                 "type": "string"
               },
               "uniqueItems": true
+            },
+            "useBase64Encoding": {
+              "type": "boolean"
             }
           },
           "additionalProperties": false

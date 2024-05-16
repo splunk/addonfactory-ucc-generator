@@ -18,6 +18,7 @@ interface FileInputComponentProps {
         fileSupportMessage?: string;
         supportedFileTypes: string[];
         maxFileSize?: number;
+        useBase64Encoding?: boolean;
     };
     disabled: boolean;
     handleChange: (field: string, data: string) => void;
@@ -52,6 +53,7 @@ function FileInputComponent(props: FileInputComponentProps) {
         fileSupportMessage,
         supportedFileTypes,
         maxFileSize = FileConstants.FILE_MAX_SIZE,
+        useBase64Encoding = false,
     } = controlOptions;
 
     const fileReader = new FileReader();
@@ -80,7 +82,11 @@ function FileInputComponent(props: FileInputComponentProps) {
                 fileReader.abort();
             }
 
-            fileReader.readAsArrayBuffer(file);
+            if (useBase64Encoding) {
+                fileReader.readAsDataURL(file);
+            } else {
+                fileReader.readAsArrayBuffer(file);
+            }
 
             fileReader.onload = () => {
                 const isValid = isValidFile(
@@ -93,7 +99,22 @@ function FileInputComponent(props: FileInputComponentProps) {
                     setErrorMsg('');
                     try {
                         if (fileReader.result && typeof fileReader.result !== 'string') {
+                            // array buffer and utf-8 encoding
                             handleChange(field, textDecoder.decode(fileReader.result));
+                        } else if (
+                            fileReader.result &&
+                            typeof fileReader.result === 'string' &&
+                            fileReader.result.includes('base64,')
+                        ) {
+                            // base 64 encoding
+                            const beforeContent = fileReader.result.indexOf('base64,');
+                            const pureFileContent = fileReader.result.slice(beforeContent + 7);
+                            handleChange(field, pureFileContent);
+                        } else {
+                            // eslint-disable-next-line no-console
+                            console.log(
+                                "File could not be processed as it's format isn't recognized"
+                            );
                         }
                     } catch (err) {
                         // eslint-disable-next-line no-console

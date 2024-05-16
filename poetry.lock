@@ -313,13 +313,13 @@ packaging = "*"
 
 [[package]]
 name = "dunamai"
-version = "1.21.0"
+version = "1.21.1"
 description = "Dynamic version generation"
 optional = false
 python-versions = ">=3.5"
 files = [
-    {file = "dunamai-1.21.0-py3-none-any.whl", hash = "sha256:aceb7693e637f8114cbc547c818f746c953c8858c1023735efe3ec2d1f4b0571"},
-    {file = "dunamai-1.21.0.tar.gz", hash = "sha256:28d4bf5e8e2f3fe5d6a4de61b05c4c70afaa7c6df55fe0204bb5b6b53761e4bc"},
+    {file = "dunamai-1.21.1-py3-none-any.whl", hash = "sha256:fe303541463648b8197c495decf62cd8f15234fb6d891a5f295015e452f656c8"},
+    {file = "dunamai-1.21.1.tar.gz", hash = "sha256:d7fea28ad2faf20a6ca5ec121e5c68e55eec6b8ada23d9c387e4e7a574cc559f"},
 ]
 
 [package.dependencies]
@@ -1170,13 +1170,13 @@ docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "3.0.2"
+version = "3.1.2"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-3.0.2-py3-none-any.whl", hash = "sha256:65406a69d03b2b123f0291fde23370bcec6542ec63e2b5ccd84b0a17b7c25a61"},
-    {file = "pytest_splunk_addon_ui_smartx-3.0.2.tar.gz", hash = "sha256:82b37c7bbb277b30d89d24d5a451cdfd9358af2e50fe3761608e3160288ca932"},
+    {file = "pytest_splunk_addon_ui_smartx-3.1.2-py3-none-any.whl", hash = "sha256:c764863eb2956c0f293fe32dcff3c73ea8a31b2024b5ff729007993588ad130d"},
+    {file = "pytest_splunk_addon_ui_smartx-3.1.2.tar.gz", hash = "sha256:b1d952481a97a7eb7c39a13dd9c3a1d522e1a19a31b90766072d9aa2ad474236"},
 ]
 
 [package.dependencies]
@@ -1669,4 +1669,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "6a920a514b306fde6e35fa25055cb05731779597a1548927163144a567d93e21"
+content-hash = "71f38c7ac6bbc9706c78d3be01f762388ebf7f6d3669ca7fdcfe615c4a3c1805"
