@@ -88,17 +88,16 @@ def test_global_config_expand(tmp_path):
     global_config = global_config_lib.GlobalConfig(global_config_path, False)
 
     assert {"type": "loggingTab"} in global_config.tabs
-    assert count_entities(global_config, "interval") == 3
-    global_config.expand()
-    assert {"type": "loggingTab"} not in global_config.tabs
-    assert count_entities(global_config, "interval") == 0
+    assert count_tabs(global_config, name="logging") == 0
+    assert count_entities(global_config, type="interval") == 3
+    assert count_entities(global_config, type="text", field="interval") == 0
 
-    # Find expanded logging tab
-    for tab in global_config.tabs:
-        if tab["name"] == "logging":
-            break
-    else:
-        assert False, "No logging tab"
+    global_config.expand()
+
+    assert {"type": "loggingTab"} not in global_config.tabs
+    assert count_tabs(global_config, name="logging") == 1
+    assert count_entities(global_config, type="interval") == 0
+    assert count_entities(global_config, type="text", field="interval") == 3
 
 
 def all_entities(gc: global_config_lib.GlobalConfig) -> chain[Any]:
@@ -106,5 +105,15 @@ def all_entities(gc: global_config_lib.GlobalConfig) -> chain[Any]:
     return itertools.chain(*(obj["entity"] for obj in objects if "entity" in obj))
 
 
-def count_entities(gc: global_config_lib.GlobalConfig, type_: str) -> int:
-    return sum(1 for entity in all_entities(gc) if entity["type"] == type_)
+def count_entities(gc: global_config_lib.GlobalConfig, **kwargs: str) -> int:
+    return sum(
+        1
+        for entity in all_entities(gc)
+        if all(entity.get(k, "") == v for k, v in kwargs.items())
+    )
+
+
+def count_tabs(gc: global_config_lib.GlobalConfig, **kwargs: str) -> int:
+    return sum(
+        1 for tab in gc.tabs if all(tab.get(k, "") == v for k, v in kwargs.items())
+    )
