@@ -577,7 +577,7 @@ def _compare_interval_entities(
                         "validators": [
                             {
                                 "errorMsg": "Interval must be either a non-negative number or -1.",
-                                "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
                                 "type": "regex",
                             }
                         ],

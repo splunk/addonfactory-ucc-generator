@@ -69,7 +69,7 @@ def test_interval_entity_correct(schema_validate, config):
 
 
 @pytest.mark.parametrize(
-    "value", [-1, 0, 0.1, 100, 100.1, "-1", "0", "0.1", "100", "100.1"]
+    "value", [-1, 0, 0.1, 100, 100.1, "-1", "0", "0.1", "01", "01.1", "100", "100.1"]
 )
 def test_interval_entity_default_value_correct(schema_validate, config, value):
     schema_validate(
@@ -93,8 +93,6 @@ def test_interval_entity_default_value_correct(schema_validate, config, value):
         "-10",
         "-1.0",
         "-0.1",
-        "01",
-        "01.1",
         "1.",
         ".1",
     ],
