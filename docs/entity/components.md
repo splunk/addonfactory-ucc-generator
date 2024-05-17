@@ -519,7 +519,6 @@ See the following example:
 }
 ```
 
-
 ## `Custom`
 
 Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/custom_control.md) page to learn more.
