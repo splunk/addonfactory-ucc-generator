@@ -112,7 +112,7 @@ It takes the following parameters:
     version is version specified in `globalConfig.json` or `globalConfig.yaml`.
     A Splunkbase compatible version of SEMVER will be used by default.
 * `-o` / `--output` - [optional] output folder to store the build add-on.
-    By default, it will be saved in the `current directory/output` folder.
+   By default, it will be saved in the `current directory/output` folder.
     Absolute paths are accepted as well.
 * `--python-binary-name` - [optional] Python binary name to use when
     installing Python libraries. The default is `python3`.
@@ -121,9 +121,9 @@ It takes the following parameters:
     This option is in experimental mode. The default is `False`.
 * `--pip-version` - [optional] pip version that will be used to install python libraries. The default is `latest`.
 * `--pip-legacy-resolver` - [optional] Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver'
-  to pip install command. The default is`False`. NOTE: This flag is deprecated and will be removed from pip in the future.
-  Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead.
-- `--ui-source-map` - [optional] if present generates front-end source maps (.js.map files), that helps with code debugging.
+    to pip install command. The default is`False`. NOTE: This flag is deprecated and will be removed from pip in the future.
+    Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead.
+* `--ui-source-map` - [optional] if present generates front-end source maps (.js.map files), that helps with code debugging.
 
 #### Verbose mode
 
