@@ -145,7 +145,7 @@ def test_ucc_generate_with_config_param():
     check_ucc_versions()
 
 
-def test_ucc_generate_with_everything():  # here123
+def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
