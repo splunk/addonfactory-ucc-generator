@@ -122,7 +122,8 @@ It takes the following parameters:
 * `--pip-version` - [optional] pip version that will be used to install python libraries. The default is `latest`.
 * `--pip-legacy-resolver` - [optional] Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver' 
   to pip install command. The default is`False`. NOTE: This flag is deprecated and will be removed from pip in the future.
-Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead. 
+  Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead.
+- `--ui-source-map` - [optional] if present generates front-end source maps (.js.map files), that helps with code debugging.
 
 #### Verbose mode
 
