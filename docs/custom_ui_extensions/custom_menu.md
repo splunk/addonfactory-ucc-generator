@@ -1,4 +1,4 @@
-Custom Menu can be created when there is more than one input present on the inputs page. 
+Custom Menu can be created when there is more than one input present on the inputs page.
 
 > This feature is deprecated (will be removed in the next major version) as [`Multilevel Menu`](../inputs/multilevel_menu.md) is now ready to use if more than one input is available.
 
@@ -19,6 +19,7 @@ In addition to the multiple inputs, we can use this menu to create a custom comp
 | render   | is a method which should have logic for the custom menu, and it will be executed automatically when the inputs page is rendered. |
 
 ### Usage
+
 ```json
 {
   "inputs": {
