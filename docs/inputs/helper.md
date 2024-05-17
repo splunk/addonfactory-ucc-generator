@@ -12,7 +12,6 @@ A script then imports such a module and calls the two methods.
 Helper files are placed in the `bin` directory. In order to use helper files, specify
 `inputHelperModule` parameter. This will create a new file: `{inputHelperModule}.py`.
 
-
 ### Usage
 
 ```json

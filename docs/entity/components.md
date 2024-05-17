@@ -1,6 +1,6 @@
 # Components supported by UCC
 
-Components are used by UCC to render the Inputs and Configuration pages. See the following list of the supported components. 
+Components are used by UCC to render the Inputs and Configuration pages. See the following list of the supported components.
 
 For a detailed look at our component implementations and to interact with them in a live environment, visit our <a href="/addonfactory-ucc-generator/storybook">Storybook library</a>.
 
@@ -40,14 +40,13 @@ This is how it looks in the UI:
 
 ![image](../images/components/text_component_example.png)
 
-
 ## `Text Area`
 
 See the underlying `@splunk/react-ui` component: [`TextArea`](https://splunkui.splunk.com/Packages/react-ui/TextArea).
 
 The `textarea` component is very similar to the `text` component, but allows you to have a multi-line input for text.
 
-<h3> Options </h3>
+### Options
 
 | Property | Type   | Description                        | Default Value |
 | -------- | ------ | ---------------------------------- | ------------- |
@@ -74,18 +73,17 @@ This is how it looks in the UI:
 
 ![image](../images/components/textarea_component_example.png)
 
-
 ## `Single Select`
 
 A `singleSelect` is a feature that combines a drop-down box, and/or editable text field, giving the user multiple ways to input or select the desired information.
 
-See the underlying `@splunk/react-ui` components: [`Select`](https://splunkui.splunk.com/Packages/react-ui/Select) or [`Combo Box`](https://splunkui.splunk.com/Packages/react-ui/ComboBox) depending on the `createSearchChoice` option. 
+See the underlying `@splunk/react-ui` components: [`Select`](https://splunkui.splunk.com/Packages/react-ui/Select) or [`Combo Box`](https://splunkui.splunk.com/Packages/react-ui/ComboBox) depending on the `createSearchChoice` option.
 
 When the `createSearchChoice` option is set to true, the Singleselect component becomes a text input with auto-complete.
 
 A clear button is visible to the right of the dropdown when this field is marked as required.
 
-<h3> Options </h3>
+### Options
 
 | Property                                          | Type    | Description                                                                                                                                                                 | Default Value |
 | ------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
@@ -98,10 +96,9 @@ A clear button is visible to the right of the dropdown when this field is marked
 | labelField                                        | string  | TBD                                                                                                                                                                         | -             |
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                               | -             |
 
+### See the following example usage
 
-<h3> See the following example usage: </h3>
-
-<h4> Using referenceName option </h4>
+#### Using referenceName option
 
 ```json
 {
@@ -120,7 +117,7 @@ This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_reference.png)
 
-<h4> Using autoCompleteFields Options </h4>
+#### Using autoCompleteFields Options
 
 ```json
 {
@@ -148,7 +145,7 @@ This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_autocomplete.png)
 
-<h4> Using createSearchChoice option </h4>
+#### Using createSearchChoice option
 
 ```json
 {
@@ -177,7 +174,7 @@ This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_createSearchChoice.png)
 
-<h4> Using autoCompleteFields option with groups </h4>
+#### Using autoCompleteFields option with groups
 
 ```json
 {
@@ -222,7 +219,6 @@ This is how it looks in the UI:
 
 ![image](../images/components/selectselect_component_example_autocomplete_group.png)
 
-
 ## `Checkbox`
 
 See the underlying `@splunk/react-ui` component: [`Switch`](https://splunkui.splunk.com/Packages/react-ui/Switch).
@@ -240,7 +236,6 @@ See the following example usage:
 This is how it looks in the UI:
 
 ![image](../images/components/checkbox_component_example.png)
-
 
 ## `CheckboxGroup`
 
@@ -324,14 +319,13 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
-
 ## `Multiple Select`
 
 See the underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).
 
 Multiselect allows the user to select multiple options at once.
 
-<h3> Options </h3>
+### Options
 
 | Property                                          | Type    | Description                                                                                                                                                                                              | Default Value |
 | ------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
@@ -344,7 +338,7 @@ Multiselect allows the user to select multiple options at once.
 | denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                             | -             |
 | labelField                                        | string  | TBD                                                                                                                                                                                                      | -             |
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                             | -             |
-| [autoCompleteFields](#autoCompleteFields)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
+| [autoCompleteFields](#using-autocompletefields-options)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
 
 See the following example usage:
 
@@ -373,14 +367,13 @@ This is how it looks in the UI:
 
 ![image](../images/components/multiselect_component_example.png)
 
-
 ## `Radio Bar`
 
 See the underlying `@splunk/react-ui` component: [`RadioBar`](https://splunkui.splunk.com/Packages/react-ui/RadioBar).
 
 RadioBar is a component that provides the ability to select one option out of a group. It can be used when we need to select a field value from a few options.
 
-<h3> Options </h3>
+### Options
 
 | Property                                      | Type  | Description                                | Default Value |
 | --------------------------------------------- | ----- | ------------------------------------------ | ------------- |
@@ -421,7 +414,7 @@ See the underlying `@splunk/react-ui` component: [`Link`](https://splunkui.splun
 
 It will open the link in a new tab.
 
-<h3> Options </h3>
+### Options
 
 | Property                                     | Type   | Description                             | Default Value |
 | -------------------------------------------- | ------ | --------------------------------------- | ------------- |
@@ -460,7 +453,7 @@ The file content can be validated using in-built validators such as [string](val
 
 This feature allows you to upload a single file.
 
-<h3> Options </h3>
+### Options
 
 | Property                                                    | Type    | Description                                                                                 | Default Value |
 | ----------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------- | ------------- |
@@ -470,6 +463,7 @@ This feature allows you to upload a single file.
 | useBase64Encoding                                           | boolean | It defines used encoding for files. If true base64 will be used, if false utf-8 is applied. | false         |
 
 See the following example usage:
+
 ```json
 {
     "type": "file",
@@ -498,8 +492,8 @@ This is how it looks in the UI:
 ![image](../images/components/file_component_example.png)
 
 ## `OAuth`
-The Oauth type entity enables us to use Oauth2.0 for user authentication. Visit the [Oauth Support](../advanced/oauth_support.md) page to learn more.
 
+The Oauth type entity enables us to use Oauth2.0 for user authentication. Visit the [Oauth Support](../advanced/oauth_support.md) page to learn more.
 
 ## `Custom`
 

@@ -1,13 +1,13 @@
 # `.uccignore` file
 
-This feature can be used to remove files from the output **after** the UCC template files were copied and **before** the source of the 
+This feature can be used to remove files from the output **after** the UCC template files were copied and **before** the source of the
 add-on recursively overrides the output folder.
 
 Place it in the same folder as the `globalConfig` file to have the effect.
 
 Uccignore supports wildcard expressions, thanks to which we can find all files matching a specific pattern.
 
-e.g. for given file structure 
+e.g. for given file structure
 
 ```
 ...
@@ -25,7 +25,7 @@ e.g. for given file structure
             └── pycache.pyc
 ```  
 
-we can remove all `.pyc` files by adding `lib/**/pycache.pyc` to the .uccignore file. 
+we can remove all `.pyc` files by adding `lib/**/pycache.pyc` to the .uccignore file.
 If we want to remove all `.pyc` files just from the `3rdparty` directory, we need to change pattern to `lib/3rdparty/**/pycache.pyc`.
 If we want to remove only for one specific platform, we need to provide the exact path e.g. **`lib/3rdparty/windows/pycache.pyc`**.
 

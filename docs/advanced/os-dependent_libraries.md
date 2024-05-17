@@ -1,7 +1,6 @@
 This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
 To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries** field. This field takes the following attributes:
 
-
 | Property                                               | Type    | Description                                                                                                                                                                                                                                                                                                                        | default value |
 |--------------------------------------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
 | name<span class="required-asterisk">*</span>           | string  | is the name of the library we want to download.                                                                                                                                                                                                                                                                                           | -             |
@@ -31,9 +30,7 @@ and your pip command should look like this:<br>
 A dot in the platform part indicates that a given distribution supports several platforms.
 In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
 
-
 For more informations, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
-
 
 ### Usage
 
@@ -87,7 +84,6 @@ For more informations, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) a
 
 Running the build for the above configuration will result in the creation of the following structure:
 
-
 ```
 output
     └──<TA>
@@ -115,11 +111,11 @@ output
 
 ```  
   
-During the build process, a python script "import_declare_test.py" will be created in **output/ta_name/bin** to manipulate system paths. 
-In each input using the specified libraries, this script must be imported. 
-Currently, three operating systems are supported: **Windows**, **Linux**, and **Darwin**. 
-If, for development purposes, there is a need to create other custom manipulations on sys.path, 
-create your own script called "import_declare_test.py" and place it in the **package/bin** folder. 
+During the build process, a python script "import_declare_test.py" will be created in **output/ta_name/bin** to manipulate system paths.
+In each input using the specified libraries, this script must be imported.
+Currently, three operating systems are supported: **Windows**, **Linux**, and **Darwin**.
+If, for development purposes, there is a need to create other custom manipulations on sys.path,
+create your own script called "import_declare_test.py" and place it in the **package/bin** folder.
 This way, when building the TA, the default script will be replaced with the one created by the developer.  
 The default script for this configuration will look like this:
 
@@ -140,9 +136,9 @@ bindir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
 libdir = os.path.join(bindir, "lib")
 platform = sys.platform
 if platform.startswith("linux"):
-	sys.path.insert(0, os.path.join(libdir, "3rdparty/linux_with_deps"))
-	sys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))
+    sys.path.insert(0, os.path.join(libdir, "3rdparty/linux_with_deps"))
+    sys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))
 if platform.startswith("win"):
-	sys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))
+    sys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))
 
 ```

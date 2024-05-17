@@ -20,7 +20,6 @@ See the following example usage:
 }
 ```
 
-
 ### Regex
 
 <h3> Properties </h3>
@@ -71,7 +70,7 @@ No parameters are needed.
 
 Internally, it checks the IPV4 address using this [regex](https://github.com/splunk/addonfactory-ucc-generator/blob/main/ui/src/main/webapp/constants/preDefinedRegex.ts).
 
-### Date 
+### Date
 
 No parameters are needed.
 
