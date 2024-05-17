@@ -137,8 +137,8 @@ libdir = os.path.join(bindir, "lib")
 platform = sys.platform
 if platform.startswith("linux"):
     sys.path.insert(0, os.path.join(libdir, "3rdparty/linux_with_deps"))
-	sys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))
+    sys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))
 if platform.startswith("win"):
-	sys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))
+    sys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))
 
 ```
