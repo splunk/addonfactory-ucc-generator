@@ -41,3 +41,7 @@ repos:
     hooks:
     -   id: flake8
         exclude: (^splunk_add_on_ucc_framework/commands/init_template/|^splunk_add_on_ucc_framework/commands/imports.py)
+-   repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.40.0
+    hooks:
+    -   id: markdownlint
