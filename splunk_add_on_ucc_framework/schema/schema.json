@@ -2339,18 +2339,14 @@
           "$ref": "#/definitions/IntervalValue"
         },
         "options": {
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "range": {
-                  "$ref": "#/definitions/RangeValue"
-                }
-              },
-              "additionalProperties": false,
-              "required": ["range"]
+          "type": "object",
+          "properties": {
+            "range": {
+              "$ref": "#/definitions/RangeValue"
             }
-          ]
+          },
+          "additionalProperties": false,
+          "required": ["range"]
         },
         "help": {
           "type": "string"
