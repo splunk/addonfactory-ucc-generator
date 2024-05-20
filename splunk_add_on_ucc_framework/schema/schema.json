@@ -419,8 +419,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "options": {
           "type": "object",
@@ -462,8 +461,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "description": "The initial input value.",
@@ -559,8 +557,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "type": "string",
@@ -654,8 +651,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "description": "The initial input value.",
@@ -793,8 +789,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "type": "string",
@@ -930,8 +925,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "anyOf": [
@@ -1126,8 +1120,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "type": "string",
@@ -1190,8 +1183,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "defaultValue": {
           "type": "string",
@@ -1281,8 +1273,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "help": {
           "$ref": "#/definitions/help"
@@ -1442,8 +1433,7 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "help": {
           "$ref": "#/definitions/help"
@@ -1526,6 +1516,9 @@
           },
           {
             "$ref": "#/definitions/CustomEntity"
+          },
+          {
+            "$ref": "#/definitions/IntervalEntity"
           }
         ]
       }
@@ -1538,8 +1531,7 @@
             "type": "object",
             "properties": {
               "label": {
-                "type": "string",
-                "description": "Text displayed next to entity field"
+                "$ref": "#/definitions/entityLabel"
               },
               "children": {
                 "type": "array",
@@ -1776,14 +1768,18 @@
           "description": "Exactly: number"
         },
         "range": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
+          "$ref": "#/definitions/RangeValue"
         }
       },
       "required": ["type", "range"],
       "additionalProperties": false
+    },
+    "RangeValue": {
+      "type": "array",
+      "description": "Range of allowed values.",
+      "items": {
+        "type": "number"
+      }
     },
     "OAuthFields": {
       "type": "object",
@@ -2351,8 +2347,7 @@
           "maxLength": 50
         },
         "label": {
-          "type": "string",
-          "description": "Text displayed next to entity field"
+          "$ref": "#/definitions/entityLabel"
         },
         "field": {
           "$ref": "#/definitions/Field",
@@ -2632,6 +2627,65 @@
       "type": "boolean",
       "description": "It makes the field required on the UI when it appears. It is used only for visibility.",
       "default": false
+    },
+    "entityLabel": {
+      "type": "string",
+      "description": "Text displayed next to entity field"
+    },
+    "IntervalEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "interval",
+          "description": "Exactly: interval"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "$ref": "#/definitions/IntervalValue"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "range": {
+              "$ref": "#/definitions/RangeValue"
+            }
+          },
+          "additionalProperties": false,
+          "required": ["range"]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "tooltip": {
+          "$ref": "#/definitions/tooltip"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": ["type", "field", "label"],
+      "additionalProperties": false
+    },
+    "IntervalValue": {
+      "anyOf": [
+        {
+          "type": "number",
+          "const": -1
+        },
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$"
+        }
+      ]
     }
   },
   "type": "object",

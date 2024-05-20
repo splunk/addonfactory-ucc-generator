@@ -1,0 +1,147 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "some_page",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "defaultValue": 15,
+                            "help": "Some help",
+                            "tooltip": "Some tooltip",
+                            "required": true,
+                            "validators": [
+                                {
+                                    "errorMsg": "Interval must be either a non-negative number or -1.",
+                                    "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                                    "type": "regex"
+                                },
+                                {
+                                    "errorMsg": "Interval must be between 10 and 20",
+                                    "range": [
+                                        10,
+                                        20
+                                    ],
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ],
+                    "title": "Some page"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        },
+        "inputs": {
+            "services": [
+                {
+                    "hook": {
+                        "src": "Hook"
+                    },
+                    "name": "example_input_one",
+                    "restHandlerName": "custom_rest_handler_file_rh",
+                    "restHandlerClass": "CustomRestHandlerClass",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "defaultValue": 15,
+                            "help": "Some help",
+                            "tooltip": "Some tooltip",
+                            "required": true,
+                            "validators": [
+                                {
+                                    "errorMsg": "Interval must be either a non-negative number or -1.",
+                                    "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                                    "type": "regex"
+                                },
+                                {
+                                    "errorMsg": "Interval must be between 10 and 20",
+                                    "range": [
+                                        10,
+                                        20
+                                    ],
+                                    "type": "number"
+                                }
+                            ]
+                        }
+                    ],
+                    "title": "Example Input One"
+                }
+            ],
+            "title": "Inputs",
+            "description": "Manage your data inputs"
+        }
+    },
+    "alerts": [
+        {
+            "name": "test_alert",
+            "label": "Test Alert",
+            "description": "Description for test Alert Action",
+            "adaptiveResponse": {
+                "task": [
+                    "Create",
+                    "Update"
+                ],
+                "supportsAdhoc": true,
+                "supportsCloud": true,
+                "subject": [
+                    "endpoint"
+                ],
+                "category": [
+                    "Information Conveyance",
+                    "Information Portrayal"
+                ],
+                "technology": [
+                    {
+                        "version": [
+                            "1.0.0"
+                        ],
+                        "product": "Test Incident Update",
+                        "vendor": "Splunk"
+                    }
+                ],
+                "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
+                "sourcetype": "test:incident"
+            },
+            "entity": [
+                {
+                    "type": "text",
+                    "field": "interval",
+                    "label": "Interval",
+                    "defaultValue": 15,
+                    "help": "Some help",
+                    "tooltip": "Some tooltip",
+                    "required": true,
+                    "validators": [
+                        {
+                            "errorMsg": "Interval must be either a non-negative number or -1.",
+                            "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
+                            "type": "regex"
+                        },
+                        {
+                            "errorMsg": "Interval must be between 10 and 20",
+                            "range": [
+                                10,
+                                20
+                            ],
+                            "type": "number"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
+    }
+}

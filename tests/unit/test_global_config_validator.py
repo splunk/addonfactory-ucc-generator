@@ -166,6 +166,14 @@ def test_config_validation_when_deprecated_placeholder_is_used(caplog):
             ),
         ),
         (
+            "invalid_config_configuration_number_validator_interval_range.json",
+            False,
+            (
+                "Entity 'interval' has incorrect number validator, "
+                "it should have 2 elements under 'range' field."
+            ),
+        ),
+        (
             "invalid_config_configuration_number_validator_range_second_element_smaller_than_first.json",
             False,
             (
