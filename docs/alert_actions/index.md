@@ -5,11 +5,10 @@ title: Alert Actions
 The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.
 An add-on can have multiple alert actions based on the use cases the add-on provides. You can know more about alert actions from [this documentation](https://docs.splunk.com/Documentation/Splunk/latest/Alert/Aboutalerts).
 
-Developers are required to add alerts in the global config file to create an Alert Action. All the alerts 
+Developers are required to add alerts in the global config file to create an Alert Action. All the alerts
 (belonging to all the add-ons and apps) present on a Splunk instance would be shown in the "Trigger Actions" section when creating an alert.
 
 ### Properties
-
 
 | Property                                                                  | Type   | Description                                                                                            |
 |---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
@@ -22,9 +21,7 @@ Developers are required to add alerts in the global config file to create an Ale
 | adaptiveResponse                            | object | Define only if the alert action will be visible for AR in Splunk Enterprise Security app. Refer [this section](adaptive_response.md) for complete details. |
 | customScript | string | A Python script that would have validation and logic for alert action execution. The script should be present at `<YOUR_ADD-ON_NAME>/bin/`. Refer [this section](alert_scripts.md#custom-script-for-alert-action) for more information. |
 
-
 ### Alert Properties
-
 
 | Property                                                                  | Type   | Description                                                                                            |
 |---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
@@ -38,9 +35,7 @@ Developers are required to add alerts in the global config file to create an Ale
 | valueField                            | string | Field name to use for drop-down option values that correspond to the option labels. In some cases, you can use the same results field for the label-field and value-field. In other cases, you might need to display human-readable labels from one field and use the corresponding values from another field. Note: Applicable when a `search` property is defined. |
 | labelField                            | string | Field name to use for drop-down option labels. Labels generated from this field are visible in the drop-down interface. Note: Applicable when a `search` property is defined. |
 
-
 ### Usage
-
 
 This is how the global configuration looks like for an alert action:
 

@@ -110,15 +110,15 @@ if __name__ == "__main__":
 > UCC 5.18.0 natively supports custom REST handlers for the modular inputs.
 
 One common scenario is to delete a checkpoint after you delete an
-input in the Inputs page. Otherwise, users may face strange consequences if 
-they create an input with the same name as the input that was deleted, and this 
-newly created input will reuse the old checkpoint, because the names of 
+input in the Inputs page. Otherwise, users may face strange consequences if
+they create an input with the same name as the input that was deleted, and this
+newly created input will reuse the old checkpoint, because the names of
 the inputs are the same. We would like to avoid this situation in the add-on.
 
 This can be done without a need to modify the REST handler code
 automatically by running `ucc-gen`.
 
-See the following automatically generated REST handler code for a modular input REST 
+See the following automatically generated REST handler code for a modular input REST
 handler:
 
 ```python
@@ -174,7 +174,7 @@ if __name__ == '__main__':
     )
 ```
 
-New file needs to be created in the `bin` folder of the add-on. Let's call it 
+New file needs to be created in the `bin` folder of the add-on. Let's call it
 `splunk_ta_uccexample_delete_checkpoint_rh.py` (name can be different).
 
 And put the following content into the file.
@@ -275,12 +275,12 @@ if __name__ == '__main__':
 ```
 
 ### Native support from UCC for Configuration Page
+>
 > UCC 5.41.0 natively supports custom REST handlers for the configuration page
 
 As mentioned at the top, when the API key provided by a user in your add-on and it needs to be validated,
 you can now directly mention the name of the file that contains the validating code and the class name of it.
 Hence, your validation script now becomes something as below:
-
 
 ```python
 import import_declare_test
@@ -320,9 +320,8 @@ class CustomAccountValidator(AdminExternalHandler):
         
 ```
 
-Place the above content in a file in the `bin` folder of the add-on. Let's call it 
+Place the above content in a file in the `bin` folder of the add-on. Let's call it
 `splunk_ta_uccexample_account_validator_rh.py` (name can be different).
-
 
 Then, in globalConfig file you need to change the behaviour of the UCC to reuse
 the REST handler that was just created.

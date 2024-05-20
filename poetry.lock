@@ -328,17 +328,17 @@ packaging = ">=20.9"
 
 [[package]]
 name = "elementpath"
-version = "2.5.3"
-description = "XPath 1.0/2.0/3.0 parsers and selectors for ElementTree and lxml"
+version = "4.1.5"
+description = "XPath 1.0/2.0/3.0/3.1 parsers and selectors for ElementTree and lxml"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "elementpath-2.5.3-py3-none-any.whl", hash = "sha256:5ef1d51e8daa670f007914ff0f78ca7b2ecaa47e0ea0c5c699a29e6bc5f50385"},
-    {file = "elementpath-2.5.3.tar.gz", hash = "sha256:b8aeb6f27dddc10fb9201b62090628a846cbae8577f3544cb1075fa38d0817f6"},
+    {file = "elementpath-4.1.5-py3-none-any.whl", hash = "sha256:2ac1a2fb31eb22bbbf817f8cf6752f844513216263f0e3892c8e79782fe4bb55"},
+    {file = "elementpath-4.1.5.tar.gz", hash = "sha256:c2d6dc524b29ef751ecfc416b0627668119d8812441c555d7471da41d4bacb8d"},
 ]
 
 [package.extras]
-dev = ["Sphinx", "coverage", "flake8", "lxml", "memory-profiler", "mypy (==0.950)", "tox", "xmlschema (>=1.9.0)"]
+dev = ["Sphinx", "coverage", "flake8", "lxml", "lxml-stubs", "memory-profiler", "memray", "mypy", "tox", "xmlschema (>=2.0.0)"]
 
 [[package]]
 name = "exceptiongroup"
@@ -1139,34 +1139,31 @@ pytest = ">=5.3"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "5.2.5"
+version = "5.2.6"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon-5.2.5-py3-none-any.whl", hash = "sha256:b400f6071c847bf1ce4d410b3bd58d5f2d04372682be16642e692f7cea1ff3e0"},
-    {file = "pytest_splunk_addon-5.2.5.tar.gz", hash = "sha256:759ace16f1ee2cd1e9fe8b3e0aa589aeb187efe0a45b7799a9700d00ec2fede6"},
+    {file = "pytest_splunk_addon-5.2.6-py3-none-any.whl", hash = "sha256:eefa4b022009b4ec6cb88b6c28a128a4768114b999635e1eb225e40fec6c03e2"},
+    {file = "pytest_splunk_addon-5.2.6.tar.gz", hash = "sha256:521172594319bb1f879a2ec433c34c35c20125a84669a84c38529c3ff6879fb6"},
 ]
 
 [package.dependencies]
 addonfactory-splunk-conf-parser-lib = "*"
 defusedxml = ">=0.7.1,<0.8.0"
-Faker = ">=13.12,<19.0.0"
+Faker = ">=18.0.0,<19.0.0"
 filelock = ">=3.0,<4.0"
-jsonschema = ">=4,<5"
+jsonschema = ">=v4.17.3,<5.0.0"
 junitparser = ">=2.2.0,<3.0.0"
 pytest = ">5.4.0,<8"
 pytest-ordering = ">=0.6,<0.7"
-pytest-xdist = ">=2.3.0"
+pytest-xdist = ">=3.5.0,<4.0.0"
 requests = ">=2.31.0,<3.0.0"
 splunk-sdk = ">=1.6"
 splunksplwrapper = ">=1.1.1,<2.0.0"
 urllib3 = "<2"
-xmlschema = ">=1.11.3,<2.0.0"
+xmlschema = ">=2.5.1,<3.0.0"
 xmltodict = ">=0.13.0,<0.14.0"
-
-[package.extras]
-docker = ["lovely-pytest-docker (>=0,<1)"]
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
@@ -1623,22 +1620,22 @@ devenv = ["black", "coverage", "flake8", "zest.releaser[recommended]"]
 
 [[package]]
 name = "xmlschema"
-version = "1.11.3"
+version = "2.5.1"
 description = "An XML Schema validator and decoder"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "xmlschema-1.11.3-py3-none-any.whl", hash = "sha256:56cb8c028457fa8948587339a1c3fa75a0317472ab6710f34ba2c0cb57d6b710"},
-    {file = "xmlschema-1.11.3.tar.gz", hash = "sha256:28a135028f7ab1e0c934fc0c6717a66b2dc5f166d123dfe6ce61afc671ad113f"},
+    {file = "xmlschema-2.5.1-py3-none-any.whl", hash = "sha256:ec2b2a15c8896c1fcd14dcee34ca30032b99456c3c43ce793fdb9dca2fb4b869"},
+    {file = "xmlschema-2.5.1.tar.gz", hash = "sha256:4f7497de6c8b6dc2c28ad7b9ed6e21d186f4afe248a5bea4f54eedab4da44083"},
 ]
 
 [package.dependencies]
-elementpath = ">=2.5.0,<3.0.0"
+elementpath = ">=4.1.5,<5.0.0"
 
 [package.extras]
-codegen = ["elementpath (>=2.5.0,<3.0.0)", "jinja2"]
-dev = ["Sphinx", "coverage", "elementpath (>=2.5.0,<3.0.0)", "flake8", "jinja2", "lxml", "lxml-stubs", "memory-profiler", "mypy", "sphinx-rtd-theme", "tox"]
-docs = ["Sphinx", "elementpath (>=2.5.0,<3.0.0)", "jinja2", "sphinx-rtd-theme"]
+codegen = ["elementpath (>=4.1.5,<5.0.0)", "jinja2"]
+dev = ["Sphinx", "coverage", "elementpath (>=4.1.5,<5.0.0)", "flake8", "jinja2", "lxml", "lxml-stubs", "memory-profiler", "mypy", "sphinx-rtd-theme", "tox"]
+docs = ["Sphinx", "elementpath (>=4.1.5,<5.0.0)", "jinja2", "sphinx-rtd-theme"]
 
 [[package]]
 name = "xmltodict"

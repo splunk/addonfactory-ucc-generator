@@ -61,4 +61,3 @@ It is placed just like every other configuration tab.
     "help": "The logging level you want to use"
 }
 ```
-

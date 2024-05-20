@@ -1,14 +1,12 @@
 The Adaptive Response framework provides a mechanism for running preconfigured actions
-within the Splunk platform or by integrating with external applications. 
+within the Splunk platform or by integrating with external applications.
 These actions can be automatically triggered by correlation search results or manually
 run on an ad hoc basis from the Incident Review dashboard inside the Enterpise Security app. You can read more about this framework [here](https://docs.splunk.com/Documentation/ES/latest/Admin/Setupadaptiveresponse).
 
-In case your add-on is integrated with Enterprise Security, you can define the configurations in 
+In case your add-on is integrated with Enterprise Security, you can define the configurations in
 the alert action details in your add-on's `globalConfig` and it will create the necessary triggers for it.
 
-
 ### Adaptive Response Properties
-
 
 | Property                                                                  | Type   | Description                                                                                            |
 |---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
@@ -62,6 +60,7 @@ An example of adaptive response in globalConfig:
 ```
 
 The above would create an attribute in `output/<YOUR_ADDON_NAME>/default/alert_action.conf` as following:
+
 ```conf
 [test_alert]
 label = Test Alert
