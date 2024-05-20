@@ -204,6 +204,13 @@ class GlobalConfigValidator:
                 f"pattern provided in the 'pattern' field is not compilable."
             )
 
+    def _validate_interval(self, entity: Dict[str, Any]) -> None:
+        """
+        Validate options of the 'interval' entity
+        """
+        if "range" in entity.get("options", {}):
+            self._validate_number_validator(entity["field"], entity["options"])
+
     def _validate_entity_validators(self, entity: Dict[str, Any]) -> None:
         """
         Validates entity validators.
@@ -216,6 +223,9 @@ class GlobalConfigValidator:
                 self._validate_number_validator(entity["field"], validator)
             if validator["type"] == "regex":
                 self._validate_regex_validator(entity["field"], validator)
+
+        if entity.get("type", "") == "interval":
+            self._validate_interval(entity)
 
     def _validate_validators(self) -> None:
         """
