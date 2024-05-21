@@ -7,6 +7,7 @@ from splunk_add_on_ucc_framework.commands.build import (
     _add_modular_input,
     _get_build_output_path,
     _get_python_version_from_executable,
+    _get_and_check_global_config_path,
 )
 from splunk_add_on_ucc_framework.exceptions import (
     CouldNotIdentifyPythonVersionException,
@@ -40,6 +41,44 @@ def test_get_python_version_from_executable(mock_run):
     python_version = _get_python_version_from_executable("python3")
 
     assert python_version == target_python_version
+
+
+def test_get_and_check_global_config_path():
+    source = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "testdata", "package"
+    )
+    assert None is _get_and_check_global_config_path(source, "")
+    assert None is _get_and_check_global_config_path(source, "invalid_ext.txt")
+
+    expected_return = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        os.pardir,
+        "testdata",
+        "valid_config.json",
+    )
+    assert expected_return is _get_and_check_global_config_path(source, expected_return)
+
+    expected_return = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        os.pardir,
+        "testdata",
+        "valid_config.yaml",
+    )
+    assert expected_return is _get_and_check_global_config_path(source, expected_return)
+
+    base = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)),
+        os.pardir,
+        os.pardir,
+        "testdata",
+        "test_addons",
+        "package_global_config_everything",
+    )
+    source = os.path.join(base, "package")
+    expected_return = os.path.join(base, "globalConfig.json")
+    assert os.path.abspath(expected_return) == _get_and_check_global_config_path(
+        source, ""
+    )
 
 
 def test_get_python_version_from_executable_nonexisting_command():
