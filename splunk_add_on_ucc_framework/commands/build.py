@@ -249,7 +249,7 @@ def generate_data_ui(
     addon_name: str,
     include_inputs: bool,
     include_dashboard: bool,
-    search_view_default: bool = False,
+    default_view: str,
 ) -> None:
     # Create directories in the output folder for add-on's UI nav and views.
     os.makedirs(
@@ -273,7 +273,7 @@ def generate_data_ui(
             default_xml_content = data_ui_generator.generate_nav_default_xml(
                 include_inputs=include_inputs,
                 include_dashboard=include_dashboard,
-                search_view_default=search_view_default,
+                default_view=default_view,
             )
             default_xml_file.write(default_xml_content)
     with open(
@@ -557,7 +557,7 @@ def generate(
             ta_name,
             global_config.has_inputs(),
             global_config.has_dashboard(),
-            global_config.meta.get("searchViewDefault", False),
+            global_config.meta.get("default_view", data_ui_generator.DEFAULT_VIEW),
         )
         logger.info("Copied UCC template directory")
         global_config_file = (

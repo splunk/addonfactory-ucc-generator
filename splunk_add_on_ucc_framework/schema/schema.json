@@ -1513,9 +1513,22 @@
           "type": "boolean",
           "default": true
         },
-        "searchViewDefault": {
-          "type": "boolean",
-          "default": false
+        "defaultView": {
+          "type": "string",
+          "anyOf": [
+              {
+                "const": "inputs"
+              },
+              {
+                "const": "configuration"
+              },
+              {
+                "const": "dashboard"
+              },
+              {
+                "const": "search"
+              }
+          ]
         },
         "os-dependentLibraries": {
           "type": "array",

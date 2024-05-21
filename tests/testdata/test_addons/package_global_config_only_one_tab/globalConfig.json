@@ -36,9 +36,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.43.0R524916e7",
+        "version": "5.44.0R7f88cfdd",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.6",
-        "_uccVersion": "5.43.0"
+        "schemaVersion": "0.0.7",
+        "_uccVersion": "5.44.0"
     }
 }
