@@ -1360,6 +1360,9 @@
           },
           {
             "$ref": "#/definitions/CustomEntity"
+          },
+          {
+            "$ref": "#/definitions/IntervalEntity"
           }
         ]
       }
@@ -1577,14 +1580,17 @@
           "const": "number"
         },
         "range": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
+          "$ref": "#/definitions/RangeValue"
         }
       },
       "required": ["type", "range"],
       "additionalProperties": false
+    },
+    "RangeValue": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
     },
     "OAuthFields": {
       "type": "object",
@@ -2320,6 +2326,60 @@
       },
       "required": ["title", "services"],
       "additionalProperties": false
+    },
+    "IntervalEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "interval"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "$ref": "#/definitions/IntervalValue"
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "range": {
+              "$ref": "#/definitions/RangeValue"
+            }
+          },
+          "additionalProperties": false,
+          "required": ["range"]
+        },
+        "help": {
+          "type": "string"
+        },
+        "tooltip": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": ["type", "field", "label"],
+      "additionalProperties": false
+    },
+    "IntervalValue": {
+      "anyOf": [
+        {
+          "type": "number",
+          "const": -1
+        },
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$"
+        }
+      ]
     }
   },
   "type": "object",

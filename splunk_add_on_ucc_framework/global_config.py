@@ -21,6 +21,7 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework.entity import expand_entity
 from splunk_add_on_ucc_framework.tabs import resolve_tab
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
@@ -70,9 +71,27 @@ class GlobalConfig:
         else:
             utils.dump_json_config(self.content, path)
 
+    def expand(self) -> None:
+        self.expand_tabs()
+        self.expand_entities()
+
     def expand_tabs(self) -> None:
         for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
             self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+
+    def expand_entities(self) -> None:
+        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
+        self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
+        self._expand_entities(self._content.get("alerts"))
+
+    @staticmethod
+    def _expand_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
+        if items is None:
+            return
+
+        for item in items:
+            for i, entity in enumerate(item.get("entity", [])):
+                item["entity"][i] = expand_entity(entity)
 
     @property
     def content(self) -> Any:

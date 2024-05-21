@@ -9,6 +9,7 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _handle_xml_dashboard_update,
     _handle_alert_action_updates,
     _dump_with_migrated_tabs,
+    _dump_with_migrated_entities,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -126,3 +127,40 @@ def test_tab_migration(tmp_path):
             break
     else:
         assert False, "No tab found"
+
+
+def test_entity_migration(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_only_interval_migration.json"
+    )
+    assert '"type": "interval"' not in tmp_file_gc.read_text()
+
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc), False)
+    _dump_with_migrated_entities(global_config, global_config.original_path)
+
+    assert '"type": "interval"' in tmp_file_gc.read_text()
+
+    gc_json = json.loads(tmp_file_gc.read_text())
+
+    input_entity = gc_json["pages"]["inputs"]["services"][0]["entity"][0]
+    config_entity = gc_json["pages"]["configuration"]["tabs"][0]["entity"][0]
+    alerts_entity = gc_json["alerts"][0]["entity"][0]
+
+    assert (
+        input_entity
+        == config_entity
+        == alerts_entity
+        == {
+            "type": "interval",
+            "field": "interval",
+            "label": "Interval",
+            "defaultValue": 15,
+            "help": "Some help",
+            "tooltip": "Some tooltip",
+            "required": True,
+            "options": {
+                "range": [10, 20],
+            },
+        }
+    )
