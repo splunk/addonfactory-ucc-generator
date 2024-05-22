@@ -59,12 +59,14 @@ class GlobalConfig:
     def __init__(self, global_config_path: str) -> None:
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
-        self._is_global_config_yaml = False
-        try:
-            self._content = json.loads(config_raw)
-        except json.decoder.JSONDecodeError:
-            self._content = yaml_load(config_raw)
-            self._is_global_config_yaml = True
+        self._is_global_config_yaml = (
+            True if global_config_path.endswith(".yaml") else False
+        )
+        self._content = (
+            yaml_load(config_raw)
+            if self._is_global_config_yaml
+            else json.loads(config_raw)
+        )
         self._original_path = global_config_path
 
     def dump(self, path: str) -> None:

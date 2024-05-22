@@ -47,8 +47,8 @@ def test_get_and_check_global_config_path():
     source = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "testdata", "package"
     )
-    assert None is _get_and_check_global_config_path(source, "")
-    assert None is _get_and_check_global_config_path(source, "invalid_ext.txt")
+    assert _get_and_check_global_config_path(source, "") == ""
+    assert _get_and_check_global_config_path(source, "invalid_ext.txt") == ""
 
     expected_return = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
@@ -56,7 +56,7 @@ def test_get_and_check_global_config_path():
         "testdata",
         "valid_config.json",
     )
-    assert expected_return is _get_and_check_global_config_path(source, expected_return)
+    assert _get_and_check_global_config_path(source, expected_return) is expected_return
 
     expected_return = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
@@ -64,7 +64,7 @@ def test_get_and_check_global_config_path():
         "testdata",
         "valid_config.yaml",
     )
-    assert expected_return is _get_and_check_global_config_path(source, expected_return)
+    assert _get_and_check_global_config_path(source, expected_return) is expected_return
 
     base = os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
@@ -76,8 +76,8 @@ def test_get_and_check_global_config_path():
     )
     source = os.path.join(base, "package")
     expected_return = os.path.join(base, "globalConfig.json")
-    assert os.path.abspath(expected_return) == _get_and_check_global_config_path(
-        source, ""
+    assert _get_and_check_global_config_path(source, "") == os.path.abspath(
+        expected_return
     )
 
 

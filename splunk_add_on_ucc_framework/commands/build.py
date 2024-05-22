@@ -361,22 +361,18 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         )
 
 
-def _get_and_check_global_config_path(
-    source: str, config_path: Optional[str]
-) -> Optional[str]:
+def _get_and_check_global_config_path(source: str, config_path: Optional[str]) -> str:
     if not config_path:
         config_path = os.path.abspath(
             os.path.join(source, os.pardir, "globalConfig.json")
         )
-        if os.path.isfile(config_path):
-            return config_path
-        else:
+        if not os.path.isfile(config_path):
             config_path = os.path.abspath(
                 os.path.join(source, os.pardir, "globalConfig.yaml")
             )
-    if os.path.isfile(config_path) and config_path.endswith((".json", ".yaml")):
+    if os.path.isfile(config_path):
         return config_path
-    return None
+    return ""
 
 
 def summary_report(
