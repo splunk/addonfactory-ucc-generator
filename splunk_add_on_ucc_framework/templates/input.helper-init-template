@@ -82,7 +82,7 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
                 sourcetype,
                 len(data),
                 input_item.get("index"),
-                account=input_item.get("account")
+                account=input_item.get("account"),
             )
             log.modular_input_end(logger, normalized_input_name)
         except Exception as e:
