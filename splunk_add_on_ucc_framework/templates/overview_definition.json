@@ -71,9 +71,6 @@
       "options": {
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
-        "seriesColors": [
-          "#A870EF"
-        ],
         "yAxisTitleText": "Error count"
       },
       "title": "Errors",

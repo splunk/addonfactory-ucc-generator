@@ -46,6 +46,7 @@ default_definition_json_filename = {
     "overview": "overview_definition.json",
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
     "errors_tab": "errors_tab_definition.json",
+    "resources_tab": "resources_tab_definition.json",
 }
 
 data_ingestion = (
@@ -53,6 +54,7 @@ data_ingestion = (
     "(s IN ({input_names})) | timechart sum(b) as Usage | "
     'rename Usage as \\"Data volume\\"'
 )
+
 data_ingestion_and_events = (
     "index=_internal source=*license_usage.log type=Usage "
     "(s IN ({input_names})) | timechart sum(b) as Usage "
@@ -60,7 +62,11 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = "index=_internal source=*{addon_name}* ERROR | timechart count as Errors"
+
+errors_count = (
+    "index = _internal ERROR source=*{addon_name}* | timechart count BY exc_type"
+)
+
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -117,7 +123,7 @@ table_account_query = (
     '| rename event_account as \\"Account\\", events as \\"Number of events\\", '
     'sparkevent as \\"Event trendline\\"'
 )
-table_input_query = (
+table_input_query2 = (
     "index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
@@ -126,7 +132,22 @@ table_input_query = (
     'sparkevent as \\"Event trendline\\"'
 )
 
+table_input_query = (
+    '| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = \\"{addon_name}\\" '
+    "| table title, disabled "
+    '| rename title as \\"event_input\\" | join type=left event_input [ '
+    "search index = _internal source=*{addon_name}* action=events_ingested "
+    "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] | makemv delim=\\",\\" sparkevent '
+    '| table event_input, disabled, events, sparkevent, \\"Last event\\" '
+    '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
+)
+
 errors_list_query = "index=_internal source=*{addon_name}* ERROR"
+
+resource_cpu_query = "index=_introspection host=* source=*/resource_usage.log*"
+
+resource_memory_query = "index=_introspection host=* source=*/resource_usage.log*"
 
 
 def generate_dashboard_content(
@@ -180,6 +201,18 @@ def generate_dashboard_content(
             .render(
                 errors_count=errors_count.format(addon_name=addon_name.lower()),
                 errors_list=errors_list_query.format(addon_name=addon_name.lower()),
+            )
+        )
+
+    if definition_json_name == default_definition_json_filename["resources_tab"]:
+        content = (
+            utils.get_j2_env()
+            .get_template(definition_json_name)
+            .render(
+                resource_cpu=resource_cpu_query.format(addon_name=addon_name.lower()),
+                resource_memory=resource_memory_query.format(
+                    addon_name=addon_name.lower()
+                ),
             )
         )
 
