@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { AcceptableFormValueOrNull } from '../types/components/shareableTypes';
 
 // serviceName > specificRowName > dataForRow
-type RowDataType = Record<string, Record<string, Record<string, AcceptableFormValueOrNull>>>;
+export type RowDataType = Record<string, Record<string, Record<string, AcceptableFormValueOrNull>>>;
 
 export type TableContextProviderType = {
     rowData: RowDataType;
