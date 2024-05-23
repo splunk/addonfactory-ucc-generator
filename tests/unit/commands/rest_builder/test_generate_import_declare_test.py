@@ -40,7 +40,7 @@ def test_generate_import_declare_test_with_os_lib(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path, False)
+    global_config = gc.GlobalConfig(global_config_path)
 
     tmp_lib_path = tmp_path / "output"
     run_rest_builder_build(global_config, tmp_lib_path)
@@ -54,7 +54,7 @@ def test_generate_import_declare_test_without_os_lib(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_configuration.json"
     )
-    global_config = gc.GlobalConfig(global_config_path, False)
+    global_config = gc.GlobalConfig(global_config_path)
 
     tmp_lib_path = tmp_path / "output"
     run_rest_builder_build(global_config, tmp_lib_path)

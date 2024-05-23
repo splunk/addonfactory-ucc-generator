@@ -10,15 +10,15 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 
 @pytest.mark.parametrize(
-    "filename,is_yaml",
+    "filename",
     [
-        ("valid_config.json", False),
-        ("valid_config.yaml", True),
+        "valid_config.json",
+        "valid_config.yaml",
     ],
 )
-def test_global_config_parse(filename, is_yaml):
+def test_global_config_parse(filename):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path, is_yaml)
+    global_config = global_config_lib.GlobalConfig(global_config_path)
 
     assert global_config.namespace == "splunk_ta_uccexample"
     assert global_config.product == "Splunk_TA_UCCExample"
@@ -84,7 +84,7 @@ def test_global_config_update_addon_version(global_config_only_configuration):
 def test_global_config_expand(tmp_path):
     global_config_path = helpers.get_testdata_file_path("valid_config_expand.json")
 
-    global_config = global_config_lib.GlobalConfig(global_config_path, False)
+    global_config = global_config_lib.GlobalConfig(global_config_path)
 
     assert {"type": "loggingTab"} in global_config.tabs
     assert count_tabs(global_config, name="logging") == 0
