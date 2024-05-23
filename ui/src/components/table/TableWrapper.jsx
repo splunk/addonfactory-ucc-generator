@@ -206,16 +206,30 @@ function TableWrapper({
             arr = arr.filter((v) => v.serviceName === serviceName);
         }
 
+        const headerMapping = headers.find((header) => header.field === sortKey)?.mapping || {};
         // Sort the array based on the sort value
         const sortedArr = arr.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
-                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                const rowAValue =
+                    rowA[sortKey] === undefined
+                        ? ''
+                        : headerMapping[rowA[sortKey]] || rowA[sortKey];
+                const rowBValue =
+                    rowB[sortKey] === undefined
+                        ? ''
+                        : headerMapping[rowB[sortKey]] || rowB[sortKey];
                 return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
-                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                const rowAValue =
+                    rowA[sortKey] === undefined
+                        ? ''
+                        : headerMapping[rowA[sortKey]] || rowA[sortKey];
+                const rowBValue =
+                    rowB[sortKey] === undefined
+                        ? ''
+                        : headerMapping[rowB[sortKey]] || rowB[sortKey];
+
                 return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
@@ -239,6 +253,7 @@ function TableWrapper({
     }
 
     const [filteredData, totalElement, allFilteredData] = getRowData();
+
     return (
         <>
             <TableHeader
