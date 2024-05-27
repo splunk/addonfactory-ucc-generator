@@ -45,7 +45,7 @@
         "seriesColors": [
           "#A870EF"
         ],
-        "yAxisTitleText": "CPU consumption"
+        "yAxisTitleText": "CPU (%)"
       },
       "title": "CPU consumption",
       "dataSources": {
@@ -60,9 +60,9 @@
         "seriesColors": [
           "#A870EF"
         ],
-        "yAxisTitleText": "MEMORY consumption"
+        "yAxisTitleText": "Memory (%)"
       },
-      "title": "MEMORY consumption",
+      "title": "Memory consumption",
       "dataSources": {
         "primary": "resource_tab_memory_consumption_ds"
       }

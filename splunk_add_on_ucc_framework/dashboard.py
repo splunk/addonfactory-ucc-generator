@@ -134,20 +134,26 @@ table_input_query2 = (
 
 table_input_query = (
     '| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = \\"{addon_name}\\" '
-    "| table title, disabled "
+    '| eval Active=if(disabled=1, \\"no\\", \\"yes\\") | table title, Active '
     '| rename title as \\"event_input\\" | join type=left event_input [ '
     "search index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] | makemv delim=\\",\\" sparkevent '
-    '| table event_input, disabled, events, sparkevent, \\"Last event\\" '
+    '| table event_input, Active, events, sparkevent, \\"Last event\\" '
     '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
 )
 
 errors_list_query = "index=_internal source=*{addon_name}* ERROR"
 
-resource_cpu_query = "index=_introspection host=* source=*/resource_usage.log*"
+resource_cpu_query = (
+    "index = _introspection component=PerProcess data.args IN (*{addon_name}*) "
+    '| timechart avg(data.pct_cpu) as \\"CPU (%)\\"'
+)
 
-resource_memory_query = "index=_introspection host=* source=*/resource_usage.log*"
+resource_memory_query = (
+    "index=_introspection component=PerProcess data.args IN (*{addon_name}*) "
+    '| timechart max(data.pct_memory) as \\"Memory (%)\\"'
+)
 
 
 def generate_dashboard_content(
