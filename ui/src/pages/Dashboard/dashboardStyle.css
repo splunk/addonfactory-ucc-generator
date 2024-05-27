@@ -331,11 +331,17 @@
 
 /* resource tab */
 
+#resource_tab_label_viz {
+    min-width: 450px;
+}
+
 [data-input-id='resource_tab_input'] {
-    grid-column: 5;
+    grid-column: 6;
     align-content: flex-end;
-    grid-row: 2;
+    grid-row: 1;
     place-self: end;
+    margin-top: 32px;
+
     [data-test='input-container'] {
         display: inline-flex;
         padding: 0;
@@ -357,10 +363,10 @@
 
 #resource_tab_timerange_label_start_viz {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1;
     inline-size: fit-content;
     width: 145px;
-    margin-top: 12px;
+    margin-top: 35px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -377,12 +383,12 @@
 
 #resource_tab_timerange_label_end_viz {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1;
     inline-size: fit-content;
     margin-left: 145px;
     width: 145px;
     display: flex;
-    margin-top: 12px;
+    margin-top: 35px;
 
     [data-test='majorValue'] {
         font-size: 14px;
@@ -404,11 +410,13 @@
 }
 
 #resource_tab_cpu_consumption_viz {
-    grid-row: 3 / 6;
+    grid-row: 2 / 6;
     margin-top: 20px;
+    height: 300px;
 }
 
 #resource_tab_memory_consumption_viz {
-    grid-row: 3 / 6;
+    grid-row: 2 / 6;
     margin-top: 20px;
+    height: 300px;
 }
