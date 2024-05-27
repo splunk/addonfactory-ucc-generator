@@ -15,7 +15,7 @@ import { Mode } from '../../constants/modes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
 
-interface ITableWrapperProps {
+export interface ITableWrapperProps {
     page: string;
     serviceName: string;
     handleRequestModalOpen: () => void;
@@ -295,6 +295,7 @@ function TableWrapper({
     }
 
     const { filteredData, totalElement, allFilteredData } = getRowData();
+
     return (
         <>
             <TableHeader
