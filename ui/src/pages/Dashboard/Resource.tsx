@@ -44,7 +44,7 @@ export const ResourceDashboard = ({
                 }
             });
         };
-        // mutation is used to detect if dropdown value is changed
+        // mutation is used to detect if no data text was displayed
         // todo: do a better solution
         const observer = new MutationObserver(callback);
 
