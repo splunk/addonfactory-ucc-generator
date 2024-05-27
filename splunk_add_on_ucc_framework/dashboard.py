@@ -62,11 +62,7 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-
-errors_count = (
-    "index = _internal ERROR source=*{addon_name}* | timechart count BY exc_type"
-)
-
+errors_count = "index=_internal source=*{addon_name}* ERROR | timechart count as Errors"
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -123,20 +119,12 @@ table_account_query = (
     '| rename event_account as \\"Account\\", events as \\"Number of events\\", '
     'sparkevent as \\"Event trendline\\"'
 )
-table_input_query2 = (
-    "index = _internal source=*{addon_name}* action=events_ingested "
-    "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
-    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
-    '| table event_input, events, sparkevent, \\"Last event\\" '
-    '| rename event_input as \\"Input\\", events as \\"Number of events\\", '
-    'sparkevent as \\"Event trendline\\"'
-)
 
 table_input_query = (
     '| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = \\"{addon_name}\\" '
     '| eval Active=if(disabled=1, \\"no\\", \\"yes\\") | table title, Active '
     '| rename title as \\"event_input\\" | join type=left event_input [ '
-    "search index = _internal source=*{addon_name}* action=events_ingested "
+    "search index = _internal source=*{addon_name_lowercase}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] | makemv delim=\\",\\" sparkevent '
     '| table event_input, Active, events, sparkevent, \\"Last event\\" '
@@ -196,7 +184,9 @@ def generate_dashboard_content(
                     input_names=input_names_str, addon_name=addon_name.lower()
                 ),
                 table_account=table_account_query.format(addon_name=addon_name.lower()),
-                table_input=table_input_query.format(addon_name=addon_name.lower()),
+                table_input=table_input_query.format(
+                    addon_name=addon_name, addon_name_lowercase=addon_name.lower()
+                ),
             )
         )
 
