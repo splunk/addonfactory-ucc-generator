@@ -107,6 +107,7 @@
                             "required": true
                         }
                     ],
+                    "inputHelperModule": "{{addon_input_name}}_helper",
                     "title": "{{addon_input_name}}"
                 }
             ],
