@@ -125,6 +125,11 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             </>
         );
 
+        const isFieldRequired =
+            this.props.entity?.required === undefined
+                ? 'oauth_field' in (this.props.entity || {}) // if required is undefined use true for oauth fields and false for others
+                : this.props.entity?.required; // if required present use required
+
         return (
             this.props.display && (
                 <ControlGroupWrapper
@@ -135,6 +140,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     // @ts-expect-error property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={this?.props?.entity.field}
                     labelWidth={240}
+                    required={isFieldRequired}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>

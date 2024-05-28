@@ -4,6 +4,7 @@ import logging
 import json
 from os import path
 from pathlib import Path
+from typing import Dict, Any
 
 from tests.smoke import helpers
 from tests.unit import helpers as unit_helpers
@@ -37,53 +38,6 @@ def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
     del actual_app_conf_dict["launcher"]["version"]
     del actual_app_conf_dict["id"]["version"]
     assert expected_app_conf_dict == actual_app_conf_dict
-
-
-def _compare_logging_tabs(package_dir: str, output_dir: str) -> None:
-    with open(Path(package_dir) / os.pardir / "globalConfig.json") as fp:
-        global_config = json.load(fp)
-
-    with open(
-        Path(output_dir) / "appserver" / "static" / "js" / "build" / "globalConfig.json"
-    ) as fp:
-        static_config = json.load(fp)
-
-    tab_exists = False
-    num = 0
-
-    for num, tab in enumerate(global_config["pages"]["configuration"]["tabs"]):
-        if tab.get("type", "") == "loggingTab":
-            tab_exists = True
-            break
-
-    assert tab_exists
-
-    static_tab = static_config["pages"]["configuration"]["tabs"][num]
-
-    assert "type" not in static_tab
-    assert static_tab == {
-        "entity": [
-            {
-                "defaultValue": "INFO",
-                "field": "loglevel",
-                "label": "Log level",
-                "options": {
-                    "autoCompleteFields": [
-                        {"label": "DEBUG", "value": "DEBUG"},
-                        {"label": "INFO", "value": "INFO"},
-                        {"label": "WARNING", "value": "WARNING"},
-                        {"label": "ERROR", "value": "ERROR"},
-                        {"label": "CRITICAL", "value": "CRITICAL"},
-                    ],
-                    "disableSearch": True,
-                },
-                "type": "singleSelect",
-                "required": True,
-            }
-        ],
-        "name": "logging",
-        "title": "Logging",
-    }
 
 
 def test_ucc_generate():
@@ -223,6 +177,7 @@ def test_ucc_generate_with_everything():
             ("static", "appIcon_2x.png"),
             ("static", "appIconAlt.png"),
             ("static", "appIconAlt_2x.png"),
+            ("appserver", "static", "js", "build", "entry_page.js"),
         ]
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
@@ -232,12 +187,13 @@ def test_ucc_generate_with_everything():
         files_should_be_absent = [
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
             assert not path.exists(actual_file_path)
 
-        _compare_logging_tabs(package_folder, actual_folder)
+        _compare_expandable_tabs_and_entities(package_folder, actual_folder)
 
 
 def test_ucc_generate_with_multiple_inputs_tabs():
@@ -469,6 +425,7 @@ def test_ucc_build_verbose_mode(caplog):
         source=package_folder,
         output_directory=temp_dir,
         verbose_file_summary_report=True,
+        ui_source_map=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
@@ -543,6 +500,31 @@ def test_ucc_generate_only_one_tab():
     build.generate(source=package_folder)
 
 
+def test_ucc_generate_with_ui_source_map():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_everything",
+            "package",
+        )
+        build.generate(
+            source=package_folder, output_directory=temp_dir, ui_source_map=True
+        )
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        files_to_exist = [
+            ("appserver", "static", "js", "build", "entry_page.js"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
+        ]
+        for f in files_to_exist:
+            expected_file_path = path.join(actual_folder, *f)
+            assert path.exists(expected_file_path)
+
+
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
@@ -567,3 +549,91 @@ def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
         == 2
     )
     assert "Updated globalConfig schema to version 0.0.4" in caplog.messages
+
+
+def _compare_expandable_tabs_and_entities(package_dir: str, output_dir: str) -> None:
+    with open(Path(package_dir) / os.pardir / "globalConfig.json") as fp:
+        global_config = json.load(fp)
+
+    with open(
+        Path(output_dir) / "appserver" / "static" / "js" / "build" / "globalConfig.json"
+    ) as fp:
+        static_config = json.load(fp)
+
+    _compare_logging_tab(global_config, static_config)
+    _compare_interval_entities(global_config, static_config)
+
+
+def _compare_logging_tab(
+    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+) -> None:
+    tab_exists = False
+    num = 0
+
+    for num, tab in enumerate(global_config["pages"]["configuration"]["tabs"]):
+        if tab.get("type", "") == "loggingTab":
+            tab_exists = True
+            break
+
+    assert tab_exists
+
+    static_tab = static_config["pages"]["configuration"]["tabs"][num]
+
+    assert "type" not in static_tab
+    assert static_tab == {
+        "entity": [
+            {
+                "defaultValue": "INFO",
+                "field": "loglevel",
+                "label": "Log level",
+                "options": {
+                    "autoCompleteFields": [
+                        {"label": "DEBUG", "value": "DEBUG"},
+                        {"label": "INFO", "value": "INFO"},
+                        {"label": "WARNING", "value": "WARNING"},
+                        {"label": "ERROR", "value": "ERROR"},
+                        {"label": "CRITICAL", "value": "CRITICAL"},
+                    ],
+                    "disableSearch": True,
+                },
+                "type": "singleSelect",
+                "required": True,
+            }
+        ],
+        "name": "logging",
+        "title": "Logging",
+    }
+
+
+def _compare_interval_entities(
+    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+) -> None:
+    for lmbd in (
+        lambda x: x["pages"]["configuration"]["tabs"],
+        lambda x: x.get("alerts", []),
+        lambda x: x["pages"].get("inputs", {}).get("services", []),
+    ):
+        for item_num, item in enumerate(lmbd(global_config)):
+            for entity_num, entity in enumerate(item.get("entity", [])):
+                if entity.get("type", "") == "interval":
+                    assert entity == {
+                        "field": "interval",
+                        "help": "Time interval of the data input, in seconds.",
+                        "label": "Interval",
+                        "required": True,
+                        "type": "interval",
+                    }
+                    assert lmbd(static_config)[item_num]["entity"][entity_num] == {
+                        "field": "interval",
+                        "help": "Time interval of the data input, in seconds.",
+                        "label": "Interval",
+                        "required": True,
+                        "type": "text",
+                        "validators": [
+                            {
+                                "errorMsg": "Interval must be either a non-negative number or -1.",
+                                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                                "type": "regex",
+                            }
+                        ],
+                    }

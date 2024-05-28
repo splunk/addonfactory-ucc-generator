@@ -24,8 +24,8 @@ As of now, 3 pre-built panels are supported:
 
 The above function takes 5 positional parameters which are:
 
-* logger 
-* modular_input_name 
+* logger
+* modular_input_name
 * sourcetype
 * n_events
 * index
@@ -56,7 +56,7 @@ log.events_ingested(
 
 as a reference, you can check the input in the demo add-on described [here](quickstart.md/#initialize-new-add-on).
 
-To be able to add a monitoring dashboard page to an existing add-on, you need to adjust your 
+To be able to add a monitoring dashboard page to an existing add-on, you need to adjust your
 globalConfig file and include a new "dashboard" page there. See the following example:
 
 ```json
@@ -95,14 +95,14 @@ globalConfig file and include a new "dashboard" page there. See the following ex
 
 ## Migration path
 
-XML-based dashboard will be migrated during the build process. All the necessary changes will be made automatically. 
+XML-based dashboard will be migrated during the build process. All the necessary changes will be made automatically.
 
 ## Custom components
 
-UCC also supports adding your own components to the dashboard. 
-To do this, create a **custom_dashboard.json** file in the add-on's root directory (at the same level as globalConfig.json). 
+UCC also supports adding your own components to the dashboard.
+To do this, create a **custom_dashboard.json** file in the add-on's root directory (at the same level as globalConfig.json).
 
-This definition json file must be created according to the UDF framework standards described [here](https://splunkui.splunk.com/Packages/dashboard-docs/?path=%2FIntroduction) 
+This definition json file must be created according to the UDF framework standards described [here](https://splunkui.splunk.com/Packages/dashboard-docs/?path=%2FIntroduction)
 
 **dashboard_components.xml** location:
 
@@ -273,8 +273,8 @@ By default, the custom dashboard will be added as an additional tab under the ov
 
 ![img.png](images/custom_dashboard.png)
 
-
 It is possible to enable only a custom panel. To do this, remove the "default" element from globalConfig.json.
+
 ```json
 {
 ...

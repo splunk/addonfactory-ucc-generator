@@ -361,6 +361,20 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         )
 
 
+def _get_and_check_global_config_path(source: str, config_path: Optional[str]) -> str:
+    if not config_path:
+        config_path = os.path.abspath(
+            os.path.join(source, os.pardir, "globalConfig.json")
+        )
+        if not os.path.isfile(config_path):
+            config_path = os.path.abspath(
+                os.path.join(source, os.pardir, "globalConfig.yaml")
+            )
+    if os.path.isfile(config_path):
+        return config_path
+    return ""
+
+
 def summary_report(
     source: str,
     ta_name: str,
@@ -483,6 +497,7 @@ def generate(
     verbose_file_summary_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
+    ui_source_map: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -507,24 +522,11 @@ def generate(
     logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
-    if not config_path:
-        is_global_config_yaml = False
-        config_path = os.path.abspath(
-            os.path.join(source, os.pardir, "globalConfig.json")
-        )
-        if not os.path.isfile(config_path):
-            config_path = os.path.abspath(
-                os.path.join(source, os.pardir, "globalConfig.yaml")
-            )
-            is_global_config_yaml = True
-    else:
-        is_global_config_yaml = True if config_path.endswith(".yaml") else False
 
-    if os.path.isfile(config_path):
-        logger.info(f"Using globalConfig file located @ {config_path}")
-        global_config = global_config_lib.GlobalConfig(
-            config_path, is_global_config_yaml
-        )
+    gc_path = _get_and_check_global_config_path(source, config_path)
+    if gc_path:
+        logger.info(f"Using globalConfig file located @ {gc_path}")
+        global_config = global_config_lib.GlobalConfig(gc_path)
         # handle the update of globalConfig before validating
         global_config_update.handle_global_config_update(global_config)
         try:
@@ -542,11 +544,12 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        global_config.expand_tabs()
+        global_config.expand()
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
+            ui_source_map,
         )
         generate_data_ui(
             output_directory,
@@ -556,7 +559,7 @@ def generate(
         )
         logger.info("Copied UCC template directory")
         global_config_file = (
-            "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
+            "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
         )
         output_global_config_path = os.path.join(
             output_directory,
