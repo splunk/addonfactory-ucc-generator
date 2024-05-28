@@ -92,7 +92,7 @@
     "resource_tab_cpu_consumption_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index = _introspection component=PerProcess data.args IN (*splunk_ta_uccexample*) | timechart avg(data.pct_cpu) as \"CPU (%)\"",
+        "query": "index = _introspection component=PerProcess data.args=*splunk_ta_uccexample* | timechart avg(data.pct_cpu) as \"CPU (%)\"",
         "queryParameters": {
           "earliest": "$resource_tab_time.earliest$",
           "latest": "$resource_tab_time.latest$"
@@ -102,7 +102,7 @@
     "resource_tab_memory_consumption_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_introspection component=PerProcess data.args IN (*splunk_ta_uccexample*) | timechart max(data.pct_memory) as \"Memory (%)\"",
+        "query": "index=_introspection component=PerProcess data.args=*splunk_ta_uccexample* | timechart avg(data.pct_memory) as \"Memory (%)\"",
         "queryParameters": {
           "earliest": "$resource_tab_time.earliest$",
           "latest": "$resource_tab_time.latest$"
