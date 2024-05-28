@@ -2314,6 +2314,10 @@
               "restHandlerClass": {
                 "type": "string",
                 "maxLength": 100
+              },
+              "inputHelperModule": {
+                "type": "string",
+                "maxLength": 100
               }
             },
             "required": ["name", "title", "table", "entity"]
