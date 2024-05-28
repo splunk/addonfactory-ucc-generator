@@ -106,7 +106,7 @@
           "type": "string",
           "maxLength": 100,
           "default": "alerticon.png",
-          "description": "The name of the icon to be shown in the Alert Action UI. It has to be present in <YOUR_ADD-ON_NAME>/appserver/static/ directory. Default file name (and icon): alerticon.png that comes with UCC framework."
+          "description": "The name of the icon to be shown in the Alert Action UI. It has to be present in <YOUR_ADD-ON_NAME>/appserver/static/ directory."
         },
         "adaptiveResponse": {
           "type": "object",
@@ -2355,7 +2355,8 @@
         },
         "levels": {
           "type": "array",
-          "description": "List of all possible log levels. Default is [\"DEBUG\", \"INFO\", \"WARNING\", \"ERROR\", \"CRITICAL\"]",
+          "default": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+          "description": "List of all possible log levels.",
           "items": {
             "type": "string"
           }
