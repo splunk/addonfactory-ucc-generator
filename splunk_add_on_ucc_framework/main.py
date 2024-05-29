@@ -126,13 +126,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver' "
         "to pip install command.",
     )
-    build_parser.add_argument(
-        "--ui-source-map",
-        help="Adds front-end source-map files .js.map",
-        default=False,
-        action="store_true",
-        required=False,
-    )
 
     package_parser = subparsers.add_parser("package", description="Package an add-on")
     package_parser.add_argument(
@@ -211,7 +204,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             verbose_file_summary_report=args.verbose,
             pip_version=args.pip_version,
             pip_legacy_resolver=args.pip_legacy_resolver,
-            ui_source_map=args.ui_source_map,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)

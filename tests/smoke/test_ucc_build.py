@@ -187,7 +187,6 @@ def test_ucc_generate_with_everything():
         files_should_be_absent = [
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
-            ("appserver", "static", "js", "build", "entry_page.js.map"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
@@ -425,7 +424,6 @@ def test_ucc_build_verbose_mode(caplog):
         source=package_folder,
         output_directory=temp_dir,
         verbose_file_summary_report=True,
-        ui_source_map=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
@@ -498,31 +496,6 @@ def test_ucc_generate_only_one_tab():
         "package",
     )
     build.generate(source=package_folder)
-
-
-def test_ucc_generate_with_ui_source_map():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything",
-            "package",
-        )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, ui_source_map=True
-        )
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-
-        files_to_exist = [
-            ("appserver", "static", "js", "build", "entry_page.js"),
-            ("appserver", "static", "js", "build", "entry_page.js.map"),
-        ]
-        for f in files_to_exist:
-            expected_file_path = path.join(actual_folder, *f)
-            assert path.exists(expected_file_path)
 
 
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
