@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import argparse
+import re
 import sys
 from typing import Optional, Sequence
 import logging
@@ -35,6 +36,14 @@ logger = logging.getLogger("ucc_gen")
 # subparser being specified. Example is `--version`, the default subparser will
 # be added here as well. But this is not a big deal for now, we don't have
 # global options anyway.
+
+def config_file_type(filename: str) -> str:
+    pattern = re.compile(r".*\.(json|yaml)$")
+    if not pattern.match(filename):
+        raise argparse.ArgumentTypeError(f"Global config file should be a JSON or YAML file.")
+    return filename
+
+
 class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
     __default_subparser = None
 
@@ -47,9 +56,9 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
         if d_sp is not None and not {"-h", "--help"}.intersection(in_args):
             for x in self._subparsers._actions:  # type: ignore
                 subparser_found = (
-                    isinstance(x, argparse._SubParsersAction)
-                    and len(arg_strings) > 0
-                    and arg_strings[0] in x._name_parser_map.keys()
+                        isinstance(x, argparse._SubParsersAction)
+                        and len(arg_strings) > 0
+                        and arg_strings[0] in x._name_parser_map.keys()
                 )
                 if subparser_found:
                     break
@@ -78,7 +87,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     build_parser.add_argument(
         "--config",
-        type=str,
+        type=config_file_type,
         nargs="?",
         help="path to configuration file, defaults to globalConfig file in parent directory of source provided",
         default=None,
@@ -87,7 +96,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--ta-version",
         type=str,
         help="version of add-on, default version is version specified in the "
-        "package such as app.manifest, app.conf, and globalConfig file",
+             "package such as app.manifest, app.conf, and globalConfig file",
         default=None,
     )
     build_parser.add_argument(
@@ -124,7 +133,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store_true",
         default=False,
         help="Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver' "
-        "to pip install command.",
+             "to pip install command.",
     )
     build_parser.add_argument(
         "--ui-source-map",
