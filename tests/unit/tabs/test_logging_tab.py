@@ -6,13 +6,14 @@ from splunk_add_on_ucc_framework.tabs import LoggingTab
 @pytest.fixture
 def definition_long():
     return {
-        "type": "loggingComponent",
-        "name": "logging_other",
-        "title": "Logging other",
+        "type": "loggingTab",
+        "name": "logging",
+        "title": "Logging",
         "label": "Log level",
         "field": "loglevel",
         "levels": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         "defaultLevel": "INFO",
+        "help": "some help",
     }
 
 
@@ -41,10 +42,16 @@ def generic_tab_def():
                 },
                 "defaultValue": "INFO",
                 "field": "loglevel",
+                "required": True,
             }
         ],
         "title": "Logging",
     }
+
+
+def test_logging_long_tab(tab_long, generic_tab_def):
+    generic_tab_def["entity"][0]["help"] = "some help"
+    assert tab_long == generic_tab_def
 
 
 def test_logging_short_tab_has_default_parameters():
@@ -178,3 +185,17 @@ def test_logging_tab_different_levels():
             "CRITICAL",
         ],
     }
+
+
+def test_logging_wrong_type():
+    assert LoggingTab.from_definition({"type": "otherTab"}) is None
+
+
+def test_logging_too_many_entity_parameters(generic_tab_def):
+    generic_tab_def["entity"][0]["some_other"] = 123
+    assert LoggingTab.from_definition(generic_tab_def) is None
+
+
+def test_logging_too_many_entity_options(generic_tab_def):
+    generic_tab_def["entity"][0]["options"]["some_other"] = 123
+    assert LoggingTab.from_definition(generic_tab_def) is None
