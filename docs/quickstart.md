@@ -108,6 +108,7 @@ It takes the following parameters:
     source. The default is `package`.
 * `--config` - [optional] path to the configuration file. It defaults to
     the globalConfig file in the parent directory of the source provided.
+    Only *.json* and *.yaml* files are accepted.
 * `--ta-version` - [optional] override current version of TA. The default
     version is version specified in `globalConfig.json` or `globalConfig.yaml`.
     A Splunkbase compatible version of SEMVER will be used by default.

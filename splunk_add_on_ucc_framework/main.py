@@ -83,7 +83,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--config",
         type=config_file_type,
         nargs="?",
-        help="path to configuration file, defaults to globalConfig file in parent directory of source provided",
+        help="path to configuration file, defaults to globalConfig file in parent directory of source provided. "
+        "Only .json and .yaml files are accepted.",
         default=None,
     )
     build_parser.add_argument(
