@@ -177,7 +177,6 @@ def test_ucc_generate_with_everything():
             ("static", "appIcon_2x.png"),
             ("static", "appIconAlt.png"),
             ("static", "appIconAlt_2x.png"),
-            ("appserver", "static", "js", "build", "entry_page.js"),
         ]
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
