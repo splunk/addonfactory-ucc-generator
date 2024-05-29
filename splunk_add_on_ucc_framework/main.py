@@ -37,12 +37,6 @@ logger = logging.getLogger("ucc_gen")
 # be added here as well. But this is not a big deal for now, we don't have
 # global options anyway.
 
-def config_file_type(filename: str) -> str:
-    pattern = re.compile(r".*\.(json|yaml)$")
-    if not pattern.match(filename):
-        raise argparse.ArgumentTypeError(f"Global config file should be a JSON or YAML file.")
-    return filename
-
 
 class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
     __default_subparser = None
@@ -56,9 +50,9 @@ class DefaultSubcommandArgumentParser(argparse.ArgumentParser):
         if d_sp is not None and not {"-h", "--help"}.intersection(in_args):
             for x in self._subparsers._actions:  # type: ignore
                 subparser_found = (
-                        isinstance(x, argparse._SubParsersAction)
-                        and len(arg_strings) > 0
-                        and arg_strings[0] in x._name_parser_map.keys()
+                    isinstance(x, argparse._SubParsersAction)
+                    and len(arg_strings) > 0
+                    and arg_strings[0] in x._name_parser_map.keys()
                 )
                 if subparser_found:
                     break
@@ -96,7 +90,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--ta-version",
         type=str,
         help="version of add-on, default version is version specified in the "
-             "package such as app.manifest, app.conf, and globalConfig file",
+        "package such as app.manifest, app.conf, and globalConfig file",
         default=None,
     )
     build_parser.add_argument(
@@ -133,7 +127,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store_true",
         default=False,
         help="Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver' "
-             "to pip install command.",
+        "to pip install command.",
     )
     build_parser.add_argument(
         "--ui-source-map",
@@ -238,6 +232,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_name=args.addon_name,
         )
     return 0
+
+
+def config_file_type(filename: str) -> str:
+    pattern = re.compile(r".*\.(json|yaml)$")
+    if not pattern.match(filename):
+        msg = f"Global config file should be a JSON or YAML file. Provided: {filename}"
+        logger.error(msg)
+        raise argparse.ArgumentTypeError(msg)
+    return filename
 
 
 if __name__ == "__main__":
