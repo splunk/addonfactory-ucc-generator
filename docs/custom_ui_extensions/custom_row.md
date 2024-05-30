@@ -2,18 +2,18 @@ When a row is expanded on the Inputs table, Custom Row is utilized to incorporat
 
 ### Properties
 
-| Property          | Description |
-| ----------------- | ----------- |
-| globalConfig       | is a hierarchical object that contains the globalConfig file's properties and values. |
-| el                | is used to render a customized element on the Inputs table when a row is expanded. |
-| serviceName       | is the name of the service/tab specified in the globalConfig file. |
-| row               | it the object of the record for which the CustomRowInput constructor is called. |
+| Property     | Description                                                                           |
+| ------------ | ------------------------------------------------------------------------------------- |
+| globalConfig | is a hierarchical object that contains the globalConfig file's properties and values. |
+| el           | is used to render a customized element on the Inputs table when a row is expanded.    |
+| serviceName  | is the name of the service/tab specified in the globalConfig file.                    |
+| row          | is the object of the record for which the CustomRowInput constructor is called.       |
 
 ### Methods
 
-| Property          | Description |
-| ----------------- | ----------- |
-| render            | is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions are performed. |
+| Property | Description                                                                                                                                                    |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| render   | is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions are performed. |
 
 ### Usage
 
@@ -43,7 +43,8 @@ class CustomInputRow {
      * @param {Object} globalConfig - Global configuration.
      * @param {string} serviceName - Input service name.
      * @param {element} el - The element of the custom cell.
-     * @param {Object} row - custom row object.
+     * @param {Object} row - custom row object,
+     *     use this.row.<field_name>, where <field_name> is a field name
      */
     constructor(globalConfig, serviceName, el, row) {
         this.globalConfig = globalConfig;
@@ -58,11 +59,14 @@ class CustomInputRow {
         return this;
     }
 }
- 
+
 export default CustomInputRow;
 ```
 
-> Note: The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
+> Note:
+
+- The content should be included in the JavaScript file named by customRow.src property in globalConfig (see usage for details).
+- The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
 
 ### Output
 
