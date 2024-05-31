@@ -56,13 +56,17 @@ class OSDependentLibraryConfig:
 
 
 class GlobalConfig:
-    def __init__(self, global_config_path: str, is_global_config_yaml: bool) -> None:
+    def __init__(self, global_config_path: str) -> None:
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
-        self._content = (
-            yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
+        self._is_global_config_yaml = (
+            True if global_config_path.endswith(".yaml") else False
         )
-        self._is_global_config_yaml = is_global_config_yaml
+        self._content = (
+            yaml_load(config_raw)
+            if self._is_global_config_yaml
+            else json.loads(config_raw)
+        )
         self._original_path = global_config_path
 
     def dump(self, path: str) -> None:

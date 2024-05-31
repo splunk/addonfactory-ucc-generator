@@ -107,6 +107,7 @@
                             "required": true
                         }
                     ],
+                    "inputHelperModule": "demo_input_helper",
                     "title": "demo_input"
                 }
             ],
