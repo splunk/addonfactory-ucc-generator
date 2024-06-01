@@ -14,7 +14,8 @@ pip-wheel-metadata/UNKNOWN.dist-info/top_level.txt
 pip-wheel-metadata/UNKNOWN.dist-info/METADATA
 .vscode/settings.json
 .DS_Store
-.venv
+# Ignore multiple venv
+.venv*
 output
 # The following files should never be checked into git but can not be in the
 # ignore file due to poetry issues

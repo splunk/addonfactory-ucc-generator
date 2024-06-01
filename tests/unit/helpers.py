@@ -43,3 +43,8 @@ def copy_testdata_gc_to_tmp_file(tmp_file_gc: Path, gc_to_load: str) -> None:
 
     with open(tmp_file_gc, "w+") as file:
         file.write(data)
+
+
+def write_content_to_file(file_name: str, content: str) -> None:
+    with open(file_name, mode="w+") as f:
+        f.write(content)
