@@ -1,3 +1,15 @@
+# [5.45.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.44.0...v5.45.0) (2024-05-28)
+
+### Bug Fixes
+
+* explicitly pass required field ([#1202](https://github.com/splunk/addonfactory-ucc-generator/issues/1202)) ([a0ddbf8](https://github.com/splunk/addonfactory-ucc-generator/commit/a0ddbf896e2598afa6126d752b19aded43f34255))
+
+### Features
+
+* add built-in interval entity ([#1179](https://github.com/splunk/addonfactory-ucc-generator/issues/1179)) ([10ae8e3](https://github.com/splunk/addonfactory-ucc-generator/commit/10ae8e3304e6f7ab6a603ac089df24dbf822f236))
+* add flag to add UI source map files during the build process ([#1183](https://github.com/splunk/addonfactory-ucc-generator/issues/1183)) ([6e4944b](https://github.com/splunk/addonfactory-ucc-generator/commit/6e4944b26a6b63eb7a9cc1fde44cc201174ccbc9))
+* Improve input helper module init scripts ([#1204](https://github.com/splunk/addonfactory-ucc-generator/issues/1204)) ([9abb12c](https://github.com/splunk/addonfactory-ucc-generator/commit/9abb12c8d46588c85d8e629b3fd6d24b1e86220f))
+
 # [5.44.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.43.0...v5.44.0) (2024-05-14)
 
 ### Bug Fixes

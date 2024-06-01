@@ -91,6 +91,7 @@ export const TableLessServiceSchema = z.object({
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
     warning: WarningSchema,
+    inputHelperModule: z.string().optional(),
 });
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
