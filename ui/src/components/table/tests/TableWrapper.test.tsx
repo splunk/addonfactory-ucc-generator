@@ -96,37 +96,21 @@ it('sort items after filtering', async () => {
     const customHeader = document.querySelector('[data-test-label="Custom Text"]');
     expect(customHeader).toBeInTheDocument();
 
+    const defaultOrder = document.querySelectorAll('[data-column="custom_text"]');
+    const mappedTextDefaultOrder = Array.from(defaultOrder).map((el: Node) => el.textContent);
+    expect(mappedTextDefaultOrder).toMatchSnapshot();
+
     await userEvent.click(customHeader!);
 
     const allCustomTextsAsc = document.querySelectorAll('[data-column="custom_text"]');
     const mappedTextAsc = Array.from(allCustomTextsAsc).map((el: Node) => el.textContent);
 
-    expect(mappedTextAsc).toEqual([
-        '222222',
-        'aaaaa',
-        'testsomethingelse',
-        'two',
-        'wxyz=a',
-        'xyz=ab',
-        'xyz=ab',
-        'yz=abc',
-        'z=abcd',
-    ]);
+    expect(mappedTextAsc).toMatchSnapshot();
 
     await userEvent.click(customHeader!);
 
     const allCustomTextsDesc = document.querySelectorAll('[data-column="custom_text"]');
     const mappedTextDesc = Array.from(allCustomTextsDesc).map((el: Node) => el.textContent);
 
-    expect(mappedTextDesc).toEqual([
-        'z=abcd',
-        'yz=abc',
-        'xyz=ab',
-        'xyz=ab',
-        'wxyz=a',
-        'two',
-        'testsomethingelse',
-        'aaaaa',
-        '222222',
-    ]);
+    expect(mappedTextDesc).toMatchSnapshot();
 });

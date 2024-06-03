@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sort items after filtering 1`] = `
+[
+  "wxyz=a",
+  "xyz=ab",
+  "yz=abc",
+  "z=abcd",
+  "xyz=ab",
+  "aaaaa",
+  "two",
+  "testsomethingelse",
+  "222222",
+]
+`;
+
+exports[`sort items after filtering 2`] = `
+[
+  "222222",
+  "aaaaa",
+  "testsomethingelse",
+  "two",
+  "wxyz=a",
+  "xyz=ab",
+  "xyz=ab",
+  "yz=abc",
+  "z=abcd",
+]
+`;
+
+exports[`sort items after filtering 3`] = `
+[
+  "z=abcd",
+  "yz=abc",
+  "xyz=ab",
+  "xyz=ab",
+  "wxyz=a",
+  "two",
+  "testsomethingelse",
+  "aaaaa",
+  "222222",
+]
+`;
