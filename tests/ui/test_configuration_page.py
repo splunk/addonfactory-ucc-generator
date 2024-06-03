@@ -39,3 +39,19 @@ class TestConfigurationPage(UccTester):
             download_openapi_href,
             operator="in",
         )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.configuration
+    def test_ucc_credits_label_exists(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies the OpenAPI json download button"""
+        configuration_page = ConfigurationPage(
+            ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+        )
+        self.assert_util(
+            left="UCC",
+            operator="in",
+            right=configuration_page.ucc_credit.wait_to_display,
+        )

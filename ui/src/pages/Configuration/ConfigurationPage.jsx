@@ -1,32 +1,30 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
-import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import styled from 'styled-components';
 
 import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
-import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
+import { SubTitleComponent, TitleComponent } from '../Input/InputPageStyle';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import CustomTab from '../../components/CustomTab/CustomTab';
 import ConfigurationFormView from '../../components/ConfigurationFormView';
 import ConfigurationTable from '../../components/ConfigurationTable';
 import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownloadBtn';
 import SubDescription from '../../components/SubDescription/SubDescription';
+import UccCredit from '../../components/UCCCredit/UCCCredit';
 
-const Row = styled(ColumnLayout.Row)`
-    padding: 5px 0px;
+const StyledHeader = styled.header`
+    display: flex;
+    justify-content: space-between;
+`;
 
-    .dropdown {
-        text-align: right;
-    }
-
-    .input_button {
-        text-align: right;
-        margin-right: 0px;
-    }
+const StyledHeaderControls = styled.div`
+    align-items: center;
+    display: flex;
+    gap: 0.4rem;
 `;
 
 function ConfigurationPage() {
@@ -99,18 +97,15 @@ function ConfigurationPage() {
     return (
         <ErrorBoundary>
             <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
-                <ColumnLayout gutter={8}>
-                    <Row>
-                        <ColumnLayout.Column span={9}>
-                            <TitleComponent>{_(title)}</TitleComponent>
-                            <SubTitleComponent>{_(description || '')}</SubTitleComponent>
-                            <SubDescription {...subDescription} />
-                        </ColumnLayout.Column>
-                        <ColumnLayout.Column span={3} style={{ textAlignLast: 'right' }}>
-                            <OpenApiDownloadButton />
-                        </ColumnLayout.Column>
-                    </Row>
-                </ColumnLayout>
+                <StyledHeader>
+                    <TitleComponent>{_(title)}</TitleComponent>
+                    <StyledHeaderControls>
+                        <UccCredit />
+                        <OpenApiDownloadButton />
+                    </StyledHeaderControls>
+                </StyledHeader>
+                <SubTitleComponent>{_(description || '')}</SubTitleComponent>
+                <SubDescription {...subDescription} />
                 <TabBar activeTabId={activeTabId} onChange={handleChange}>
                     {tabs.map((tab) => (
                         <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
