@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, _CallList
 from helpers import write_content_to_file
 import pytest
 from typing import List
+from lxml import etree, objectify, html
 
 
 def test_print_files_blank():
@@ -29,6 +30,59 @@ def test_print_files_not_blank():
     assert obj.COMMON_FILES_MESSAGE_PART_1 in normalized_diffs
     assert obj.COMMON_FILES_MESSAGE_PART_2 in normalized_diffs
     assert obj.DIFFERENT_FILES_MESSAGE in normalized_diffs
+
+
+def test_deduce_gen_and_custom_content_normal():
+    obj = auto_gen_comparator.CodeGeneratorDiffChecker("", "")
+    auto_gen_comparator.walk = MagicMock()
+    logger = MagicMock()
+
+    src_dir = [
+        (
+            "root",
+            ["dir1", "dir2", "dir3"],
+            ["file1.conf", "file2.conf", "file3.xml", "file4.html"],
+        )
+    ]
+    dest_dir = [("root", ["dir1", "dir2"], ["file1.conf", "file2.conf"])]
+
+    auto_gen_comparator.walk.side_effect = [src_dir, dest_dir]
+    # mock the methods as we don't actually need to call it
+    obj._conf_file_diff_checker = MagicMock()  # type: ignore[method-assign]
+    obj._xml_file_diff_checker = MagicMock()  # type: ignore[method-assign]
+
+    # here the ignore_file_list contains alert icons or alert script logic
+    obj.deduce_gen_and_custom_content(logger=logger)
+
+    # as there are two common .conf files
+    assert obj._conf_file_diff_checker.call_count == 2
+
+
+def test_deduce_gen_and_custom_content_with_ignore_files():
+    obj = auto_gen_comparator.CodeGeneratorDiffChecker("", "")
+    auto_gen_comparator.walk = MagicMock()
+    logger = MagicMock()
+
+    src_dir = [
+        (
+            "root",
+            ["dir1", "dir2", "dir3"],
+            ["file1.conf", "file2.conf", "file3.xml", "file4.html"],
+        )
+    ]
+    dest_dir = [("root", ["dir1", "dir2"], ["file1.conf", "file2.conf"])]
+    auto_gen_comparator.walk.side_effect = [src_dir, dest_dir]
+    # mock the methods as we don't actually need to call it
+    obj._conf_file_diff_checker = MagicMock()  # type: ignore[method-assign]
+    obj._xml_file_diff_checker = MagicMock()  # type: ignore[method-assign]
+
+    # here the ignore_file_list contains alert icons or alert script logic
+    obj.deduce_gen_and_custom_content(
+        logger=logger, ignore_file_list=["file1.conf", "file2.conf"]
+    )
+
+    assert obj.common_files == {}
+    assert logger.warning.call_count == 0
 
 
 @pytest.mark.parametrize(
@@ -239,3 +293,35 @@ def __normalize_output_for_assertion(call_list_obj: _CallList) -> List[str]:
             nested_diffs.extend(diff.split("\t"))
         normalized_diffs.extend(nested_diffs)
     return normalized_diffs
+
+
+def test_remove_code_comments(tmp_path):
+    src_file = str(tmp_path / "test.xml")
+    write_content_to_file(
+        src_file,
+        """<a>
+    <b>
+        <c attrib="1">some text</c>
+        <d>some text</d>
+        <e attrib="2">
+            <!-- <f> code commented</f> -->
+            <f1> other code </f1>
+        </e>
+    </b>
+    <g>
+        <!-- simple comment, nothing else -->
+    </g>
+</a>
+""",
+    )
+    parser = etree.XMLParser(remove_comments=True)
+    src_tree = objectify.parse(src_file, parser=parser)
+    src_root = src_tree.getroot()
+    # remove all the code comments from the XML files, keep changes in-memory
+    src_tree = auto_gen_comparator.remove_code_comments("xml", src_root)
+
+    xml_str = html.tostring(src_tree, method="xml", encoding="unicode")
+
+    # code that is part of comment isn't present in the output
+    assert "simple comment, nothing else" not in xml_str
+    assert "code commented" not in xml_str
