@@ -300,6 +300,7 @@ jobs:
     if: ${{ !cancelled() }}
     needs:
       - test-ui
+      - test-unit
       - build-test-addon-openapi-client
       - storybook-screenshots
     runs-on: ubuntu-latest
