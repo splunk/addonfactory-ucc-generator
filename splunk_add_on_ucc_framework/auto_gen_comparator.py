@@ -60,6 +60,7 @@ class CodeGeneratorDiffChecker:
         - For the custom content, developer can raise enhancement request to UCC
         """
         # we add these two files as they are required to be present in source code
+        # TODO: try to implement generation of these files from globalConfig
         ignore_file_list.extend(["app.manifest", "README.txt"])
 
         src_all_files: Dict[str, str] = {}
@@ -81,7 +82,7 @@ class CodeGeneratorDiffChecker:
                     self._conf_file_diff_checker(
                         src_all_files[file_name], dest_all_files[file_name]
                     )
-                elif file_name.endswith(".xml"):
+                elif file_name.endswith((".xml", ".html")):
                     self._xml_file_diff_checker(
                         src_all_files[file_name], dest_all_files[file_name]
                     )
@@ -134,7 +135,7 @@ class CodeGeneratorDiffChecker:
     def _xml_file_diff_checker(self, src_file: str, target_file: str) -> None:
         """
         Find the difference between the source code and generated code for the
-        XML files created in package/default/data directory
+        XML or HTML files created in package/default/data directory
         """
         diff_count = len(self.different_files)
         parser = etree.XMLParser(remove_comments=True)
