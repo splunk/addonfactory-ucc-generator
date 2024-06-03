@@ -36,7 +36,7 @@ def tab(definition):
 
 
 def test_tab_object_equal_to_definition(definition, tab):
-    assert definition == tab
+    assert definition == tab == tab.short_form()
 
 
 def test_tab_parameters(tab, definition):
