@@ -5,7 +5,7 @@ import Link from '@splunk/react-ui/Link';
 import { getUnifiedConfigs } from '../../util/util';
 
 const StyledTypography = styled(Typography)`
-    font-size: 0.9em;
+    font-size: 0.8em;
 `;
 
 const UccCredit = () => {

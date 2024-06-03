@@ -46,7 +46,7 @@ class TestConfigurationPage(UccTester):
     def test_ucc_credits_label_exists(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies the OpenAPI json download button"""
+        """Verifies the UCC label is rendered on the page"""
         configuration_page = ConfigurationPage(
             ucc_smartx_selenium_helper, ucc_smartx_rest_helper
         )
