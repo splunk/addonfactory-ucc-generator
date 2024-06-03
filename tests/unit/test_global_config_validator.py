@@ -306,14 +306,12 @@ def test_config_validation_when_deprecated_placeholder_is_used(caplog):
         ),
         (
             "invalid_config_meta_default_inputs_page_but_no_inputs_defined.json",
-            False,
             (
                 'meta.defaultView == "inputs" but there is no inputs defined in globalConfig'
             ),
         ),
         (
             "invalid_config_meta_default_dashboard_page_but_no_dashboard_defined.json",
-            False,
             (
                 'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
             ),
