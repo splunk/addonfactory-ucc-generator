@@ -39,6 +39,7 @@ header:
     - "**/*.js"
     - "**/*.jsx"
     - "**/*.ts"
+    - "**/*.tsx.snap"
     - "**/*.tsx"
     - "**/*.png"
     - "ui/.husky/pre-commit"
