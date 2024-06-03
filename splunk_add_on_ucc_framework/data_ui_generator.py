@@ -20,6 +20,8 @@
 from xml.etree import ElementTree as ET
 from defusedxml import minidom
 
+DEFAULT_VIEW = "configuration"
+
 
 def _pretty_print_xml(string: str) -> str:
     """
@@ -28,17 +30,33 @@ def _pretty_print_xml(string: str) -> str:
     return minidom.parseString(string).toprettyxml(indent="    ")
 
 
-def generate_nav_default_xml(include_inputs: bool, include_dashboard: bool) -> str:
+def generate_nav_default_xml(
+    include_inputs: bool, include_dashboard: bool, default_view: str
+) -> str:
     """
     Generates `default/data/ui/nav/default.xml` file.
+
+    The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
     nav = ET.Element("nav")
     if include_inputs:
-        ET.SubElement(nav, "view", attrib={"name": "inputs"})
-    ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
+        if default_view == "inputs":
+            ET.SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
+        else:
+            ET.SubElement(nav, "view", attrib={"name": "inputs"})
+    if default_view == "configuration":
+        ET.SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
+    else:
+        ET.SubElement(nav, "view", attrib={"name": "configuration"})
     if include_dashboard:
-        ET.SubElement(nav, "view", attrib={"name": "dashboard"})
-    ET.SubElement(nav, "view", attrib={"name": "search"})
+        if default_view == "dashboard":
+            ET.SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
+        else:
+            ET.SubElement(nav, "view", attrib={"name": "dashboard"})
+    if default_view == "search":
+        ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
+    else:
+        ET.SubElement(nav, "view", attrib={"name": "search"})
     nav_as_string = ET.tostring(nav, encoding="unicode")
     return _pretty_print_xml(nav_as_string)
 

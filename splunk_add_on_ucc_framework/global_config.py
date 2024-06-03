@@ -136,7 +136,7 @@ class GlobalConfig:
         return self._content.get("alerts", [])
 
     @property
-    def meta(self) -> Dict[str, str]:
+    def meta(self) -> Dict[str, Any]:
         return self._content["meta"]
 
     @property
