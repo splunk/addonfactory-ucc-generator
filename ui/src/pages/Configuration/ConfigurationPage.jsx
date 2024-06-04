@@ -5,9 +5,10 @@ import TabBar from '@splunk/react-ui/TabBar';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import styled from 'styled-components';
 
+import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
-import { SubTitleComponent, TitleComponent } from '../Input/InputPageStyle';
+import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import CustomTab from '../../components/CustomTab/CustomTab';
 import ConfigurationFormView from '../../components/ConfigurationFormView';
@@ -16,15 +17,23 @@ import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownlo
 import SubDescription from '../../components/SubDescription/SubDescription';
 import UccCredit from '../../components/UCCCredit/UCCCredit';
 
-const StyledHeader = styled.header`
-    display: flex;
-    justify-content: space-between;
+const StyledHeaderControls = styled.div`
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
 `;
 
-const StyledHeaderControls = styled.div`
-    align-items: center;
-    display: flex;
-    gap: 0.4rem;
+const Row = styled(ColumnLayout.Row)`
+    padding: 5px 0px;
+
+    .dropdown {
+        text-align: right;
+    }
+
+    .input_button {
+        text-align: right;
+        margin-right: 0px;
+    }
 `;
 
 function ConfigurationPage() {
@@ -97,15 +106,21 @@ function ConfigurationPage() {
     return (
         <ErrorBoundary>
             <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
-                <StyledHeader>
-                    <TitleComponent>{_(title)}</TitleComponent>
-                    <StyledHeaderControls>
-                        <UccCredit />
-                        <OpenApiDownloadButton />
-                    </StyledHeaderControls>
-                </StyledHeader>
-                <SubTitleComponent>{_(description || '')}</SubTitleComponent>
-                <SubDescription {...subDescription} />
+                <ColumnLayout gutter={8}>
+                    <Row>
+                        <ColumnLayout.Column span={9}>
+                            <TitleComponent>{_(title)}</TitleComponent>
+                            <SubTitleComponent>{_(description || '')}</SubTitleComponent>
+                            <SubDescription {...subDescription} />
+                        </ColumnLayout.Column>
+                        <ColumnLayout.Column span={3} style={{ textAlignLast: 'right' }}>
+                            <StyledHeaderControls>
+                                <UccCredit />
+                                <OpenApiDownloadButton />
+                            </StyledHeaderControls>
+                        </ColumnLayout.Column>
+                    </Row>
+                </ColumnLayout>
                 <TabBar activeTabId={activeTabId} onChange={handleChange}>
                     {tabs.map((tab) => (
                         <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
