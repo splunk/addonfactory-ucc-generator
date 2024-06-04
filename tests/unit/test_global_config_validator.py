@@ -78,6 +78,7 @@ def test_config_validation_when_deprecated_placeholder_is_used(caplog):
             "invalid_config_no_configuration_tabs.json",
             "[] is too short",
         ),
+        False,
         (
             "invalid_config_no_name_field_in_configuration_tab_table.json",
             "Tab 'account' should have entity with field 'name'",
