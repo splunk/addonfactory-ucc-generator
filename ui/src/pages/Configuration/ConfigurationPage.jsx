@@ -3,9 +3,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
-import styled from 'styled-components';
-
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
+
+import styled from 'styled-components';
 import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
