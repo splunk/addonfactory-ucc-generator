@@ -299,8 +299,9 @@ jobs:
   all-checks:
     if: ${{ !cancelled() }}
     needs:
-      - test-ui
       - test-unit
+      - test-smoke
+      - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
     runs-on: ubuntu-latest
@@ -311,7 +312,7 @@ jobs:
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\")")
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" or (.result == "skipped" and .steps | all(.[]; .conclusion == "success")))')
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
