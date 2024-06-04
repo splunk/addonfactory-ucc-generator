@@ -59,54 +59,56 @@ function DashboardPage() {
     return (
         <ErrorBoundary>
             <div>
-                {overviewDef ? (
-                    <>
-                        <OverviewDashboard dashboardDefinition={overviewDef} />
-                        {/* if overview is loaded then all default tabs should be present so table is
-                        injected */}
-                        <TabLayout
-                            autoActivate
-                            defaultActivePanelId="dataIngestionTabPanel"
-                            id="dashboardTable"
-                            style={{ minHeight: '98vh' }}
-                        >
-                            {dataIngestionDef && (
-                                <TabLayout.Panel
-                                    label="Data ingestion"
-                                    panelId="dataIngestionTabPanel"
-                                >
-                                    <DataIngestionDashboard
-                                        dashboardDefinition={dataIngestionDef}
-                                    />
-                                </TabLayout.Panel>
-                            )}
+                <OverviewDashboard dashboardDefinition={overviewDef} />
+                {overviewDef ? ( // if overview is loaded then all default tabs should be present so table is injected
+                    <TabLayout
+                        autoActivate
+                        defaultActivePanelId="dataIngestionTabPanel"
+                        id="dashboardTable"
+                        style={{ minHeight: '98vh' }}
+                    >
+                        {errorDef && (
+                            <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
+                                <ErrorDashboard dashboardDefinition={errorDef} />
+                            </TabLayout.Panel>
+                        )}
+                        {resourceDef && (
+                            <TabLayout.Panel
+                                label="Resource consumption"
+                                panelId="resourceTabPanel"
+                            >
+                                <ResourceDashboard dashboardDefinition={resourceDef} />
+                            </TabLayout.Panel>
+                        )}
+                        {customDef && (
+                            <TabLayout.Panel
+                                label={
+                                    globalConfig.pages.dashboard?.settings?.custom_tab_name ||
+                                    'Custom'
+                                }
+                                panelId="customTabPanel"
+                            >
+                                <CustomDashboard dashboardDefinition={customDef} />
+                            </TabLayout.Panel>
+                        )}
 
-                            {errorDef && (
-                                <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
-                                    <ErrorDashboard dashboardDefinition={errorDef} />
-                                </TabLayout.Panel>
-                            )}
-                            {resourceDef && (
-                                <TabLayout.Panel
-                                    label="Resource consumption"
-                                    panelId="resourceTabPanel"
-                                >
-                                    <ResourceDashboard dashboardDefinition={resourceDef} />
-                                </TabLayout.Panel>
-                            )}
-                            {customDef && (
-                                <TabLayout.Panel
-                                    label={
-                                        globalConfig.pages.dashboard?.settings?.custom_tab_name ||
-                                        'Custom'
-                                    }
-                                    panelId="customTabPanel"
-                                >
-                                    <CustomDashboard dashboardDefinition={customDef} />
-                                </TabLayout.Panel>
-                            )}
-                        </TabLayout>
-                    </>
+                        {dataIngestionDef && (
+                            <TabLayout.Panel label="Data ingestion" panelId="dataIngestionTabPanel">
+                                <DataIngestionDashboard dashboardDefinition={dataIngestionDef} />
+                            </TabLayout.Panel>
+                        )}
+
+                        {errorDef && (
+                            <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
+                                <ErrorDashboard dashboardDefinition={errorDef} />
+                            </TabLayout.Panel>
+                        )}
+                        {customDef && (
+                            <TabLayout.Panel label="Custom" panelId="customTabPanel">
+                                <CustomDashboard dashboardDefinition={customDef} />
+                            </TabLayout.Panel>
+                        )}
+                    </TabLayout>
                 ) : (
                     // if overview is null then custom tab is the only displayed component
                     // so no need to show table
