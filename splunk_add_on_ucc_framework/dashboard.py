@@ -62,7 +62,9 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = "index=_internal source=*{addon_name}* ERROR | timechart count as Errors"
+errors_count = (
+    "index=_internal source=*{addon_name}* ERROR | timechart count as Errors by exc_l"
+)
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -191,12 +193,15 @@ def generate_dashboard_content(
         )
 
     if definition_json_name == default_definition_json_filename["errors_tab"]:
+        custom_types = {"label": "MyCustomType", "value": "MyCustomType"}
+
         content = (
             utils.get_j2_env()
             .get_template(definition_json_name)
             .render(
                 errors_count=errors_count.format(addon_name=addon_name.lower()),
                 errors_list=errors_list_query.format(addon_name=addon_name.lower()),
+                custom_aaa=custom_types,
             )
         )
 

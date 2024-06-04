@@ -91,7 +91,7 @@
     "errors_tab_errors_list_ds": {
       "type": "ds.search",
       "options": {
-        "query": "{{errors_list}}",
+        "query": "{{errors_list}} exc_l IN ($error_types$)",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"
@@ -108,12 +108,51 @@
       },
       "title": "Time",
       "type": "input.timerange"
+    },
+    "errors_type_input": {
+      "options": {
+                "items": [
+            {
+                "label": "All",
+                "value": "*"
+            },
+            {
+                "label": "Permission",
+                "value": "Permission"
+            },
+            {
+                "label": "Authentication",
+                "value": "Authentication"
+            },
+            {
+                "label": "Connection",
+                "value": "Connection"
+            },
+            {
+                "label": "Configuration",
+                "value": "Configuration"
+            },
+            {
+                "label": "Server",
+                "value": "Server"
+            },
+            {
+                "label": "Other",
+                "value": "Other"
+            },
+            {{custom_aaa|tojson}}],
+        "token": "error_types",
+        "defaultValue": "*"
+      },
+      "title": "Error types",
+      "type": "input.multiselect"
     }
   },
   "layout": {
     "type": "grid",
     "globalInputs": [
-      "errors_tab_input"
+      "errors_tab_input",
+      "errors_type_input"
     ],
     "structure": [
       {
