@@ -117,30 +117,26 @@
                 "value": "*"
             },
             {
-                "label": "Permission",
-                "value": "Permission"
+                "label": "Permission Error",
+                "value": "\"Permission Error\""
             },
             {
-                "label": "Authentication",
-                "value": "Authentication"
+                "label": "Authentication Error",
+                "value": "\"Authentication Error\""
             },
             {
-                "label": "Connection",
-                "value": "Connection"
+                "label": "Connection Error",
+                "value": "\"Connection Error\""
             },
             {
-                "label": "Configuration",
-                "value": "Configuration"
+                "label": "Configuration Error",
+                "value": "\"Configuration Error\""
             },
             {
-                "label": "Server",
-                "value": "Server"
-            },
-            {
-                "label": "Other",
-                "value": "Other"
-            },
-            {{custom_aaa|tojson}}],
+                "label": "Server Error",
+                "value": "\"Server Error\""
+            }
+                ],
         "token": "error_types",
         "defaultValue": "*"
       },
