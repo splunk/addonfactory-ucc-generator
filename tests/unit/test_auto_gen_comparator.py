@@ -325,3 +325,66 @@ def test_remove_code_comments(tmp_path):
     # code that is part of comment isn't present in the output
     assert "simple comment, nothing else" not in xml_str
     assert "code commented" not in xml_str
+
+
+@pytest.mark.parametrize(
+    ["src_content", "dest_content", "error_in"],
+    [
+        (
+            "<div></div>",
+            """<div class="control-group">
+    <div class="controls">
+        <span class="help-block" style="display: block; position: static; width: auto; margin-left: 0;">
+            Scripted REST endpoint to create incident at.
+            Format: /api/<API namespace>/<API ID>/<Relative path>.
+            Default: /api/namespace/id/path
+        </span>
+    </div>
+</div>
+""",
+            "dest",
+        ),
+        (
+            """<div class="control-group">
+    <div class="controls">
+        <span class="help-block" style="display: block; position: static; width: auto; margin-left: 0;">
+            Scripted REST endpoint to create incident at.
+            Format: /api/<API namespace>/<API ID>/<Relative path>.
+            Default: /api/namespace/id/path
+        </span>
+    </div>
+</div>
+""",
+            "<div></div>",
+            "src",
+        ),
+    ],
+)
+def test__xml_file_diff_checker_invalid_xml(
+    tmp_path, src_content, dest_content, error_in
+):
+    src_path = str(tmp_path / "src_xml.xml")
+    write_content_to_file(src_path, src_content)
+
+    dest_path = str(tmp_path / "dest_xml.xml")
+    write_content_to_file(dest_path, dest_content)
+
+    obj = auto_gen_comparator.CodeGeneratorDiffChecker("", "")
+    obj._xml_file_diff_checker(src_path, dest_path)
+
+    logger = MagicMock()
+    obj.print_files(logger=logger)
+
+    assert logger.warning.call_count == 1
+    assert not bool(obj.common_files)
+    assert bool(obj.different_files)
+    if error_in == "src":
+        assert (
+            obj.different_files[src_path]["repository"]
+            == "invalid XML present. Please update the source code with valid XML."
+        )
+    elif error_in == "dest":
+        assert (
+            obj.different_files[src_path]["output"]
+            == "invalid XML generated from globalConfig. Ensure necessary characters are escaped."
+        )

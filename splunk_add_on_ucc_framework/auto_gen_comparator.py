@@ -139,8 +139,22 @@ class CodeGeneratorDiffChecker:
         """
         diff_count = len(self.different_files)
         parser = etree.XMLParser(remove_comments=True)
-        src_tree = objectify.parse(src_file, parser=parser)
-        target_tree = objectify.parse(target_file, parser=parser)
+        try:
+            src_tree = objectify.parse(src_file, parser=parser)
+        except etree.XMLSyntaxError:
+            self.different_files[src_file] = {
+                "repository": "invalid XML present. Please update the source code with valid XML.",
+                "output": "[unverified]",
+            }
+            return
+        try:
+            target_tree = objectify.parse(target_file, parser=parser)
+        except etree.XMLSyntaxError:
+            self.different_files[src_file] = {
+                "repository": "[unverified]",
+                "output": "invalid XML generated from globalConfig. Ensure necessary characters are escaped.",
+            }
+            return
 
         src_root = src_tree.getroot()
         target_root = target_tree.getroot()
