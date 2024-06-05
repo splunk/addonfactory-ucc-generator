@@ -11,11 +11,11 @@ const StyledTypography = styled(Typography)`
 const UccCredit = () => {
     const unifiedConfigs = getUnifiedConfigs();
 
-    // eslint-disable-next-line no-underscore-dangle
-    const uccVersion = unifiedConfigs?.meta?._uccVersion ?? null;
     if (unifiedConfigs?.meta?.hideUCCVersion) {
         return null;
     }
+    // eslint-disable-next-line no-underscore-dangle
+    const uccVersion = unifiedConfigs?.meta?._uccVersion ?? null;
     return (
         <StyledTypography
             as="span"

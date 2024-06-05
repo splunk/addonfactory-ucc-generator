@@ -1,10 +1,9 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import Multiselect from '@splunk/react-ui/Multiselect';
 import styled from 'styled-components';
-import axios from 'axios';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { AxiosCallType, axiosCallWrapper } from '../../util/axiosCallWrapper';
 import { filterResponse } from '../../util/util';
 
 const MultiSelectWrapper = styled(Multiselect)`
@@ -84,15 +83,15 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
 
         let current = true;
-        const source = axios.CancelToken.source();
+        const abortController = new AbortController();
 
         const apiCallOptions = {
-            cancelToken: source.token,
+            signal: abortController.signal,
             handleError: true,
             params: { count: -1 },
             serviceName: '',
             endpointUrl: '',
-        };
+        } satisfies AxiosCallType;
         if (referenceName) {
             apiCallOptions.serviceName = referenceName;
         } else if (endpointUrl) {
@@ -123,7 +122,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
         // eslint-disable-next-line consistent-return
         return () => {
-            source.cancel('Operation canceled.');
+            abortController.abort('Operation canceled.');
             current = false;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps

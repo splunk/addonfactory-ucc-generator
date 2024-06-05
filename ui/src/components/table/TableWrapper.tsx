@@ -103,33 +103,46 @@ function TableWrapper({
     };
 
     const fetchInputs = () => {
+        const abortController = new AbortController();
+
         const requests =
             services?.map((service) =>
                 axiosCallWrapper({
                     serviceName: service.name,
                     params: { count: -1 },
+                    signal: abortController.signal,
                 })
             ) || [];
 
         axios
             .all(requests)
             .catch((caughtError) => {
+                if (axios.isCancel(caughtError)) {
+                    return;
+                }
                 const message = parseErrorMsg(caughtError);
 
                 generateToast(message, 'error');
                 setLoading(false);
                 setError(caughtError);
-                return Promise.reject(caughtError);
             })
             .then((response) => {
+                if (!response) {
+                    return;
+                }
                 modifyAPIResponse(response.map((res) => res.data.entry));
             });
+
+        return () => {
+            abortController.abort();
+        };
     };
 
-    useEffect(() => {
-        fetchInputs();
+    useEffect(
+        () => fetchInputs(),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        []
+    );
 
     /**
      *
