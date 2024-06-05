@@ -10,12 +10,6 @@ import { type meta as metaType } from '../../types/globalConfig/meta';
 import { mockServerResponseWithContent } from '../../mocks/server-response';
 import { server } from '../../mocks/server';
 
-const mockNavigateFn = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockNavigateFn,
-}));
-
 jest.mock('../../util/util');
 
 const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
