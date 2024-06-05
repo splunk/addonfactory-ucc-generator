@@ -19,7 +19,9 @@ import UccCredit from '../../components/UCCCredit/UCCCredit';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
+    justify-content: end;
+    flex-wrap: wrap;
     gap: 0.4rem;
 `;
 
