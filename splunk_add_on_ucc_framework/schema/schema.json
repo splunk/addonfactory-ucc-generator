@@ -1687,7 +1687,7 @@
           "description": "Version of UCC used during build process"
         },
         "hideUCCVersion": {
-          "type": "string",
+          "type": "boolean",
           "description": "Hide the label 'Made with UCC' on the Configuration page"
         },
         "checkForUpdates": {

@@ -2,6 +2,9 @@ from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from tests.ui.pages.configuration_page import ConfigurationPage
 
 import pytest
+from splunk_add_on_ucc_framework import (
+    __version__,
+)
 
 
 class TestConfigurationPage(UccTester):
@@ -50,8 +53,14 @@ class TestConfigurationPage(UccTester):
         configuration_page = ConfigurationPage(
             ucc_smartx_selenium_helper, ucc_smartx_rest_helper
         )
+        ucc_label = configuration_page.ucc_credit.wait_to_display()
         self.assert_util(
             left="UCC",
             operator="in",
-            right=configuration_page.ucc_credit.wait_to_display,
+            right=ucc_label,
+        )
+        self.assert_util(
+            left=__version__,
+            operator="in",
+            right=ucc_label,
         )
