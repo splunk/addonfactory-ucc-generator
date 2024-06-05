@@ -81,7 +81,8 @@
                                 ]
                             },
                             "defaultValue": "INFO",
-                            "field": "loglevel"
+                            "field": "loglevel",
+                            "required": true
                         }
                     ],
                     "title": "Logging"
@@ -116,19 +117,12 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "defaultValue": "300",
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
-                            "required": true
+                            "required": true,
+                            "defaultValue": "300"
                         },
                         {
                             "type": "singleSelect",
@@ -206,9 +200,9 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.41.0Reda406cf",
+        "version": "5.44.0R7f88cfdd",
         "displayName": "This is my add-on",
-        "schemaVersion": "0.0.6",
-        "_uccVersion": "5.42.1"
+        "schemaVersion": "0.0.7",
+        "_uccVersion": "5.44.0"
     }
 }
