@@ -47,6 +47,15 @@ jobs:
           fossa test --debug
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   pre-commit:
     runs-on: ubuntu-latest
@@ -143,6 +152,15 @@ jobs:
       - run: |
           poetry install
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   test-smoke:
     name: test-smoke ${{ matrix.python-version }}
@@ -173,6 +191,15 @@ jobs:
       - run: |
           poetry install
           poetry run pytest tests/smoke
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   build-test-addon:
     runs-on: ubuntu-latest
@@ -299,6 +326,8 @@ jobs:
   all-checks:
     if: ${{ !cancelled() }}
     needs:
+      - test-unit
+      - test-smoke
       - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
@@ -310,7 +339,7 @@ jobs:
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\")")
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" and (.outputs.failed // "false") != "true")')
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
