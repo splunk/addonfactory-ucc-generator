@@ -24,15 +24,19 @@ class ConfigurationPage(Page):
 
         self.title = Message(
             ucc_smartx_selenium_helper.browser,
-            Selector(select='[data-test="column"] .pageTitle'),
+            Selector(select=".pageTitle"),
         )
         self.description = Message(
             ucc_smartx_selenium_helper.browser,
-            Selector(select='[data-test="column"] .pageSubtitle'),
+            Selector(select=".pageSubtitle"),
         )
         self.download_openapi = Button(
             ucc_smartx_selenium_helper.browser,
             Selector(select='[data-test="downloadButton"]'),
+        )
+        self.ucc_credit = Message(
+            ucc_smartx_selenium_helper.browser,
+            Selector(select='[data-test="ucc-credit"]'),
         )
 
     def open(self):
