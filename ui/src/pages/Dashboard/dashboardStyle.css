@@ -160,6 +160,7 @@ body {
 }
 
 #errors_tab_errors_list_viz {
+    margin-top: 70px;
     height: 600px;
     grid-row: 7 / 7;
 }
@@ -167,6 +168,14 @@ body {
 #errors_tab_errors_count_viz {
     grid-row: 3 / 6;
     margin-top: 16px;
+}
+
+[data-input-id='errors_type_input'] {
+    grid-column: 1;
+    grid-row: 6;
+    > div {
+        margin: 16px 0;
+    }
 }
 
 /* resource tab */
