@@ -6,6 +6,7 @@ import Button from '@splunk/react-ui/Button';
 import { variables } from '@splunk/themes';
 import styled from 'styled-components';
 import QuestionCircle from '@splunk/react-icons/QuestionCircle';
+import SearchJob from '@splunk/search-job';
 
 import { getActionButtons, waitForElementToDisplayAndMoveThemToCanvas } from './utils';
 import DashboardInfoModal from '../../components/DashboardInfoModal/DashboardInfoModal';
@@ -29,12 +30,20 @@ const OpenTroubleshootingBtn = styled(OpenSearchStyledBtn)`
     margin-right: 145px;
 `;
 
+let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
+
 export const ErrorDashboard = ({
     dashboardDefinition,
 }: {
     dashboardDefinition: Record<string, unknown>;
 }) => {
     const [displayTroubleShootingModal, setDisplayTroubleShootingModal] = useState(false);
+
+    const setDashboardCoreApi = (api: {
+        updateDefinition: (arg0: Record<string, unknown>) => void;
+    }) => {
+        apiReference = api;
+    };
 
     useEffect(() => {
         waitForElementToDisplayAndMoveThemToCanvas(
@@ -56,9 +65,60 @@ export const ErrorDashboard = ({
             '#errors_tab_errors_list_viz'
         );
 
-        // call to for error types
-        // index=_internal source=*splunk_ta_uccexample* ERROR | dedup exc_l | table exc_l
-    }, []);
+        // search call to for error types
+        const mySearchJob = SearchJob.create(
+            {
+                search: 'index=_internal source=*splunk_ta_uccexample* ERROR | dedup exc_l | table exc_l',
+                earliest_time: '0', // all time
+                latest_time: 'now',
+            },
+            { cache: true, cancelOnUnload: true } // default cache 10min = 600 in seconds
+        );
+
+        const resultsSubscription = mySearchJob
+            .getResults()
+            .subscribe((results: { results?: Array<{ exc_l: string }> }) => {
+                // Do something with the results.
+                if (results?.results?.length) {
+                    // setErrorTypesFromSearch(results.results);
+
+                    const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
+
+                    copyJson.inputs.errors_type_input.options.items = [
+                        {
+                            label: 'All',
+                            value: '*',
+                        },
+                    ];
+                    results.results
+                        .sort((a, b) => {
+                            const nameA = a.exc_l.toUpperCase(); // ignore upper and lowercase
+                            const nameB = b.exc_l.toUpperCase(); // ignore upper and lowercase
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+
+                            // names must be equal
+                            return 0;
+                        })
+                        .forEach((result) =>
+                            copyJson.inputs.errors_type_input.options.items.push({
+                                label: result.exc_l,
+                                value: `"${result.exc_l}"`,
+                            })
+                        );
+
+                    apiReference?.updateDefinition(copyJson);
+                }
+            });
+
+        return () => {
+            resultsSubscription.unsubscribe();
+        };
+    }, [dashboardDefinition]);
 
     return dashboardDefinition ? (
         <DashboardContextProvider
@@ -95,7 +155,12 @@ export const ErrorDashboard = ({
                     listIntroductionText={TROUBLESHOOTING_CONFIG.LIST_INTRODUCTION_TEXT}
                     errorTypesInfo={TROUBLESHOOTING_CONFIG.BASIC_ERROR_TYPES}
                 />
-                <DashboardCore width="100%" height="auto" actionMenus={getActionButtons('error')} />
+                <DashboardCore
+                    width="100%"
+                    height="auto"
+                    actionMenus={getActionButtons('error')}
+                    dashboardCoreApiRef={setDashboardCoreApi}
+                />
             </>
         </DashboardContextProvider>
     ) : null;

@@ -30,6 +30,7 @@
     "@splunk/react-page": "^7.0.0",
     "@splunk/react-toast-notifications": "^0.11.3",
     "@splunk/react-ui": "^4.32.0",
+    "@splunk/search-job": "^3.1.0",
     "@splunk/splunk-utils": "^3.1.0",
     "@splunk/themes": "^0.19.0",
     "@splunk/ui-utils": "^1.6.0",

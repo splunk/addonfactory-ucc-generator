@@ -2889,7 +2889,7 @@
     react-event-listener "^0.6.4"
     xpath "^0.0.32"
 
-"@splunk/search-job@^3.0.0":
+"@splunk/search-job@^3.0.0", "@splunk/search-job@^3.1.0":
   version "3.1.0"
   resolved "https://registry.npmjs.org/@splunk/search-job/-/search-job-3.1.0.tgz#7e4962b55a1919fd82b78f2f2bf9c2d5c5065ece"
   integrity sha512-L2AXkZGimqdBN9A1sENWGVAD8/yzB5RNpg8ZgfBW4JCJlMKdNrAXyu69xtsvjrRuYp/gTd//65x/6AljUr4HDA==
