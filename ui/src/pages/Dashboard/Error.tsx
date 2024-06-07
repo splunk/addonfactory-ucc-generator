@@ -29,7 +29,6 @@ const OpenTroubleshootingBtn = styled(OpenSearchStyledBtn)`
     margin-right: 145px;
 `;
 
-
 export const ErrorDashboard = ({
     dashboardDefinition,
 }: {
@@ -56,6 +55,9 @@ export const ErrorDashboard = ({
             '#open_trouble_shooting_overlay',
             '#errors_tab_errors_list_viz'
         );
+
+        // call to for error types
+        // index=_internal source=*splunk_ta_uccexample* ERROR | dedup exc_l | table exc_l
     }, []);
 
     return dashboardDefinition ? (
