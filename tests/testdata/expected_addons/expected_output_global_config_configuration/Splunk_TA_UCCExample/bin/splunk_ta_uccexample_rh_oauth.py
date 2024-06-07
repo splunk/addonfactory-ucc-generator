@@ -38,6 +38,19 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
     This method checks which action is getting called and what parameters are required for the request.
     """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        session_key = self.getSessionKey()
+        log_level = conf_manager.get_log_level(
+            logger=logger,
+            session_key=session_key,
+            app_name="Splunk_TA_UCCExample",
+            conf_name="splunk_ta_uccexample_settings",
+            log_stanza="logging",
+            log_level_field="loglevel"
+        )
+        logger.set_level(log_level)
+
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
             # Add required args in supported args
