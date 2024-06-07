@@ -124,6 +124,24 @@ class GlobalConfig:
         return settings
 
     @property
+    def logging_tab(self) -> Dict[str, Any]:
+        for tab in self.tabs:
+            if tab.get("type") == "loggingTab":
+                return tab
+            elif all(
+                [
+                    len(tab.get("entity", {})) == 1,
+                    tab.get("entity", [{}])[0].get("type") == "singleSelect",
+                    tab.get("entity", [{}])[0].get("field") is not None,
+                    tab.get("entity", [{}])[0].get("options") is not None,
+                    tab.get("entity", [{}])[0].get("defaultValue", "").upper()
+                    in ("DEBUG", "INFO", "WARN", "WARNING", "ERROR", "CRITICAL"),
+                ]
+            ):
+                return tab
+        return {}
+
+    @property
     def configs(self) -> List[Any]:
         configs = []
         for tab in self.tabs:
