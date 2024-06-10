@@ -264,22 +264,22 @@ def generate_dashboard(
 
 
 def get_custom_json_content(custom_dashboard_path: str) -> Dict[Any, Any]:
-    custom_dashbaord = load_custom_json(custom_dashboard_path)
+    custom_dashboard = load_custom_json(custom_dashboard_path)
 
-    if not custom_dashbaord:
+    if not custom_dashboard:
         logger.error(
             f"Custom dashboard page set in globalConfig.json but custom content not found. "
             f"Please verify if file {custom_dashboard_path} has a proper structure "
             f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
         )
         sys.exit(1)
-    return custom_dashbaord
+    return custom_dashboard
 
 
 def load_custom_json(json_path: str) -> Dict[Any, Any]:
     try:
         with open(json_path) as dashboard_file:
-            custom_dashbaord = json.load(dashboard_file)
+            custom_dashboard = json.load(dashboard_file)
     except FileNotFoundError:
         logger.error(
             f"Custom dashboard page set in globalConfig.json but "
@@ -289,4 +289,4 @@ def load_custom_json(json_path: str) -> Dict[Any, Any]:
     except json.decoder.JSONDecodeError:
         logger.error(f"{json_path} it's not a valid json file")
         sys.exit(1)
-    return custom_dashbaord
+    return custom_dashboard

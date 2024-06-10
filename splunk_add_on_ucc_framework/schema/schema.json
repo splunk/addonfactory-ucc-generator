@@ -323,7 +323,7 @@
         "troubleshooting_url": {
           "text": {
             "type": "string",
-            "description": "Link to external TA documentation used for redirection on error dashbaord page"
+            "description": "Link to external TA documentation used for redirection on error dashboard page"
           }
         }
       },
