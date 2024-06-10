@@ -321,10 +321,9 @@
           }
         },
         "troubleshooting_url": {
-          "text": {
-            "type": "string",
-            "description": "Link to external TA documentation used for redirection on error dashboard page"
-          }
+          "type": "string",
+          "description": "Link to external TA documentation used for redirection on error dashboard page",
+          "format": "uri"
         }
       },
       "required": ["panels"],
@@ -1703,18 +1702,18 @@
         "defaultView": {
           "type": "string",
           "anyOf": [
-              {
-                "const": "inputs"
-              },
-              {
-                "const": "configuration"
-              },
-              {
-                "const": "dashboard"
-              },
-              {
-                "const": "search"
-              }
+            {
+              "const": "inputs"
+            },
+            {
+              "const": "configuration"
+            },
+            {
+              "const": "dashboard"
+            },
+            {
+              "const": "search"
+            }
           ]
         },
         "os-dependentLibraries": {
