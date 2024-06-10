@@ -188,7 +188,7 @@ body {
 }
 
 [data-test-panel-id='errorsTabPanel'] [data-test='grid-layout-canvas'] {
-    grid-template-columns: 94% 5%;
+    grid-template-columns: 94.5% 5%;
     grid-template-rows: auto auto auto auto auto;
     height: fit-content;
 }
