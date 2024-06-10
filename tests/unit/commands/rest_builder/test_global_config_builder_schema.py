@@ -54,7 +54,7 @@ def test_global_config_builder_schema_custom_rh_config(global_config_all_json):
     autospec=True,
 )
 def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
-    _ = GlobalConfigBuilderSchema(global_config_all_json)
+    GlobalConfigBuilderSchema(global_config_all_json)
 
     mock_oauth_model.assert_called_once_with(
         app_name="Splunk_TA_UCCExample",

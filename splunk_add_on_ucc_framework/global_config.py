@@ -22,7 +22,7 @@ import yaml
 
 from splunk_add_on_ucc_framework import utils
 from splunk_add_on_ucc_framework.entity import expand_entity
-from splunk_add_on_ucc_framework.tabs import resolve_tab
+from splunk_add_on_ucc_framework.tabs import resolve_tab, LoggingTab
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
@@ -126,18 +126,7 @@ class GlobalConfig:
     @property
     def logging_tab(self) -> Dict[str, Any]:
         for tab in self.tabs:
-            if tab.get("type") == "loggingTab":
-                return tab
-            elif all(
-                [
-                    len(tab.get("entity", {})) == 1,
-                    tab.get("entity", [{}])[0].get("type") == "singleSelect",
-                    tab.get("entity", [{}])[0].get("field") is not None,
-                    tab.get("entity", [{}])[0].get("options") is not None,
-                    tab.get("entity", [{}])[0].get("defaultValue", "").upper()
-                    in ("DEBUG", "INFO", "WARN", "WARNING", "ERROR", "CRITICAL"),
-                ]
-            ):
+            if LoggingTab.from_definition(tab) is not None:
                 return tab
         return {}
 
