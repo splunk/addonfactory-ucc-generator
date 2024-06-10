@@ -7,7 +7,6 @@ import P from '@splunk/react-ui/Paragraph';
 import QuestionCircle from '@splunk/react-icons/QuestionCircle';
 
 import { StyledButton } from '../../pages/EntryPageStyle';
-import { getUnifiedConfigs } from '../../util/util';
 
 const ModalWrapper = styled(Modal)`
     width: 700px;
@@ -26,7 +25,6 @@ interface DashboardInfoModalProps {
 }
 
 function DashboardInfoModal(props: DashboardInfoModalProps) {
-    const globalConfig = getUnifiedConfigs();
     return (
         <ModalWrapper open={props.open}>
             <Modal.Header
@@ -49,10 +47,10 @@ function DashboardInfoModal(props: DashboardInfoModalProps) {
                 ))}
             </Modal.Body>
             <Modal.Footer>
-                {globalConfig.pages.dashboard?.panels[0].name ? ( // to do change it into troubleshooting link
+                {props?.troubleshootingButton?.link ? ( // to do change it into troubleshooting link
                     <StyledButton
                         icon={<QuestionCircle width={16} height={16} />}
-                        to={globalConfig.pages.dashboard?.panels[0].name}
+                        to={props?.troubleshootingButton?.link}
                         label={props.troubleshootingButton?.label || 'Troubleshooting {add-on}'}
                         openInNewContext
                     />

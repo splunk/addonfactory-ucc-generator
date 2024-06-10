@@ -15,6 +15,7 @@ import {
     TROUBLESHOOTING_BTN_LABEL,
     TROUBLESHOOTING_CONFIG,
 } from './ErrorPageConfig';
+import { getUnifiedConfigs } from '../../util/util';
 
 const OpenSearchStyledBtn = styled(Button)`
     max-width: fit-content;
@@ -38,6 +39,8 @@ export const ErrorDashboard = ({
     dashboardDefinition: Record<string, unknown>;
 }) => {
     const [displayTroubleShootingModal, setDisplayTroubleShootingModal] = useState(false);
+
+    const globalConfig = getUnifiedConfigs();
 
     const setDashboardCoreApi = (api: {
         updateDefinition: (arg0: Record<string, unknown>) => void;
@@ -68,7 +71,7 @@ export const ErrorDashboard = ({
         // search call to for error types
         const mySearchJob = SearchJob.create(
             {
-                search: 'index=_internal source=*splunk_ta_uccexample* ERROR | dedup exc_l | table exc_l',
+                search: `index=_internal source=*${globalConfig.meta.restRoot}* ERROR | dedup exc_l | table exc_l`,
                 earliest_time: '0', // all time
                 latest_time: 'now',
             },
@@ -78,10 +81,7 @@ export const ErrorDashboard = ({
         const resultsSubscription = mySearchJob
             .getResults()
             .subscribe((results: { results?: Array<{ exc_l: string }> }) => {
-                // Do something with the results.
                 if (results?.results?.length) {
-                    // setErrorTypesFromSearch(results.results);
-
                     const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
 
                     copyJson.inputs.errors_type_input.options.items = [
@@ -118,7 +118,7 @@ export const ErrorDashboard = ({
         return () => {
             resultsSubscription.unsubscribe();
         };
-    }, [dashboardDefinition]);
+    }, [dashboardDefinition, globalConfig.meta.restRoot]);
 
     return dashboardDefinition ? (
         <DashboardContextProvider
@@ -154,6 +154,9 @@ export const ErrorDashboard = ({
                     infoMessage={TROUBLESHOOTING_CONFIG.INFO_MESSAGE}
                     listIntroductionText={TROUBLESHOOTING_CONFIG.LIST_INTRODUCTION_TEXT}
                     errorTypesInfo={TROUBLESHOOTING_CONFIG.BASIC_ERROR_TYPES}
+                    troubleshootingButton={{
+                        link: globalConfig.pages.dashboard?.troubleshooting_url,
+                    }}
                 />
                 <DashboardCore
                     width="100%"

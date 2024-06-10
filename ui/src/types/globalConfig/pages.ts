@@ -158,6 +158,7 @@ export const pages = z.object({
     dashboard: z
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),
+            troubleshooting_url: z.string().optional(),
         })
         .optional(),
 });
