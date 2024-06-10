@@ -114,7 +114,7 @@
   "inputs": {
     "resource_tab_input": {
       "options": {
-        "defaultValue": "-7d,now",
+        "defaultValue": "-24h,now",
         "token": "resource_tab_time"
       },
       "title": "Time",
