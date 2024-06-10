@@ -22,9 +22,9 @@ const OpenSearchStyledBtn = styled(Button)`
     font-size: ${variables.fontSize};
     align-content: flex-end;
     place-self: end;
-    grid-column: 5;
-    grid-row: 6;
-    top: 62px;
+    grid-column: 2;
+    grid-row: 4;
+    bottom: 8px;
 `;
 
 const OpenTroubleshootingBtn = styled(OpenSearchStyledBtn)`
