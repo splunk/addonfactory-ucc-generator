@@ -193,15 +193,12 @@ def generate_dashboard_content(
         )
 
     if definition_json_name == default_definition_json_filename["errors_tab"]:
-        custom_types = {"label": "MyCustomType", "value": "MyCustomType"}
-
         content = (
             utils.get_j2_env()
             .get_template(definition_json_name)
             .render(
                 errors_count=errors_count.format(addon_name=addon_name.lower()),
                 errors_list=errors_list_query.format(addon_name=addon_name.lower()),
-                custom_aaa=custom_types,
             )
         )
 
