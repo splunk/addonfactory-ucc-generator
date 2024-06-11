@@ -140,6 +140,7 @@ body {
     grid-row: 1;
     height: 20px;
     margin-top: 32px;
+    width: 600px;
 }
 
 #errors_tab_timerange_label_start_viz {
@@ -150,7 +151,7 @@ body {
 
 #errors_tab_timerange_label_end_viz {
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1;
     margin-left: 145px;
     display: flex;
     margin-top: 37px;
