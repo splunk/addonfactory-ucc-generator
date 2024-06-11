@@ -63,6 +63,7 @@ body {
 
 #data_ingestion_description_viz {
     margin-top: 32px;
+    width: 600px;
 }
 
 #data_ingestion_timerange_label_start_viz {
@@ -192,6 +193,7 @@ body {
     grid-template-columns: 94.5% 5%;
     grid-template-rows: auto auto auto auto auto;
     height: fit-content;
+    overflow-x: hidden;
 }
 
 #errors_tab_label_viz {
@@ -213,6 +215,7 @@ body {
 
 #resource_tab_description_viz {
     margin-top: 32px;
+    width: 600px;
 }
 
 #resource_tab_timerange_label_start_viz {
