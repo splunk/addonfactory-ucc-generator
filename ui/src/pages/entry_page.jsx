@@ -64,6 +64,15 @@ const url = window.location.pathname;
 const urlParts = url.substring(1).split('/');
 const page = urlParts[urlParts.length - 1];
 
+// eslint-disable-next-line no-console
+console.log(`
+UCC Framework is here 👋 If you encounter any issues or have feedback, please report them to us.
+
+For Splunkers, reach out via our Slack channel: #ucc-framework.
+For external users, join us at: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1.
+
+We appreciate your help in making UCC better! 🚀`);
+
 if (page === PAGE_INPUT) {
     layout(<InputPageComponent />, { pageTitle: messageDict[116] });
 } else if (page === PAGE_CONF) {

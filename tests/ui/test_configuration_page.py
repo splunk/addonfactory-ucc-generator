@@ -2,6 +2,9 @@ from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from tests.ui.pages.configuration_page import ConfigurationPage
 
 import pytest
+from splunk_add_on_ucc_framework import (
+    __version__,
+)
 
 
 class TestConfigurationPage(UccTester):
@@ -38,4 +41,26 @@ class TestConfigurationPage(UccTester):
             "/app/Splunk_TA_UCCExample/openapi.json",
             download_openapi_href,
             operator="in",
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.configuration
+    def test_ucc_credits_label_exists(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies the UCC label is rendered on the page"""
+        configuration_page = ConfigurationPage(
+            ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+        )
+        ucc_label = configuration_page.ucc_credit.wait_to_display()
+        self.assert_util(
+            left="UCC",
+            operator="in",
+            right=ucc_label,
+        )
+        self.assert_util(
+            left=__version__,
+            operator="in",
+            right=ucc_label,
         )

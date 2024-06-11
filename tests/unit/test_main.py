@@ -384,3 +384,33 @@ def test_package_command(mock_package, args, expected_parameters):
     main.main(args)
 
     mock_package.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "config_path,should_pass",
+    (
+        ["path/to/config.json", True],
+        ["path/to/config.yaml", True],
+        ["path/to/config_but_not_jsonnor_yaml.xyz", False],
+        ["config.yml", False],
+    ),
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.build.generate")
+def test_correct_config_argument(
+    mock_ucc_gen_generate, caplog, config_path, should_pass
+):
+    args = ["build", "--config"]
+    args.append(config_path)
+
+    if should_pass:
+        main.main(args)
+
+        args, kwargs = mock_ucc_gen_generate.call_args
+        assert kwargs["config_path"] == config_path
+
+    else:  # Failing scenario - config file is not .json nor .yaml
+        with pytest.raises(SystemExit):
+            main.main(args)
+
+        expected_msg = f" Global config file should be a JSON or YAML file. Provided: {config_path}"
+        assert expected_msg in caplog.text

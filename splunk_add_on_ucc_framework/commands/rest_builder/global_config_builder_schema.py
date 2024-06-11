@@ -115,10 +115,13 @@ class GlobalConfigBuilderSchema:
             # If we have given oauth support then we have to add endpoint for accesstoken
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
+                    log_details = self.global_config.logging_tab
                     oauth_endpoint = OAuthModelEndpointBuilder(
                         name="oauth",
                         namespace=self.global_config.namespace,
                         app_name=self.global_config.product,
+                        log_stanza=log_details.get("name"),
+                        log_level_field=log_details.get("entity", [{}])[0].get("field"),
                     )
                     self._endpoints["oauth"] = oauth_endpoint
                     self._oauth_conf_file_names.add(oauth_endpoint.conf_name)
