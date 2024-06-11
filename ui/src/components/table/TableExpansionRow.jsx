@@ -4,6 +4,7 @@ import Table from '@splunk/react-ui/Table';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
+// eslint-disable-next-line import/no-cycle
 import CustomTableControl from './CustomTableControl';
 import { getUnifiedConfigs } from '../../util/util';
 
@@ -11,7 +12,7 @@ const TableCellWrapper = styled(Table.Cell)`
     border-top: none;
 `;
 
-function getExpansionRowData(row, moreInfo) {
+export function getExpansionRowData(row, moreInfo) {
     const DefinitionLists = [];
 
     if (moreInfo?.length) {
@@ -50,6 +51,7 @@ export function getExpansionRow(colSpan, row, moreInfo) {
                             row,
                             fileName: customRow.src,
                             type: customRow.type,
+                            moreInfo,
                         })}
                     </>
                 ) : (
