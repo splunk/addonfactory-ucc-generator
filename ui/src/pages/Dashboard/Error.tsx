@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Button from '@splunk/react-ui/Button';
 import { variables } from '@splunk/themes';
 import styled from 'styled-components';
-import QuestionCircle from '@splunk/react-icons/QuestionCircle';
 import SearchJob from '@splunk/search-job';
 
 import { getActionButtons, waitForElementToDisplayAndMoveThemToCanvas } from './utils';
-import DashboardInfoModal from '../../components/DashboardInfoModal/DashboardInfoModal';
-import {
-    OPEN_SEARCH_LABEL,
-    TROUBLESHOOTING_BTN_LABEL,
-    TROUBLESHOOTING_CONFIG,
-} from './ErrorPageConfig';
+import { OPEN_SEARCH_LABEL } from './ErrorPageConfig';
 import { getUnifiedConfigs } from '../../util/util';
 
 const OpenSearchStyledBtn = styled(Button)`
@@ -27,9 +21,9 @@ const OpenSearchStyledBtn = styled(Button)`
     bottom: 8px;
 `;
 
-const OpenTroubleshootingBtn = styled(OpenSearchStyledBtn)`
-    margin-right: 145px;
-`;
+// const OpenTroubleshootingBtn = styled(OpenSearchStyledBtn)` // commented out for now but will be needed latter on
+//     margin-right: 145px;
+// `;
 
 let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
 
@@ -38,7 +32,7 @@ export const ErrorDashboard = ({
 }: {
     dashboardDefinition: Record<string, unknown>;
 }) => {
-    const [displayTroubleShootingModal, setDisplayTroubleShootingModal] = useState(false);
+    // const [displayTroubleShootingModal, setDisplayTroubleShootingModal] = useState(false); // commented out for now but will be needed latter on
 
     const globalConfig = getUnifiedConfigs();
 
@@ -63,10 +57,10 @@ export const ErrorDashboard = ({
             '#open_search_error_events_tab_with_types',
             '#errors_tab_errors_list_viz'
         );
-        waitForElementToDisplayAndMoveThemToCanvas(
-            '#open_trouble_shooting_overlay',
-            '#errors_tab_errors_list_viz'
-        );
+        // waitForElementToDisplayAndMoveThemToCanvas( // commented out for now but will be needed latter on
+        //     '#open_trouble_shooting_overlay',
+        //     '#errors_tab_errors_list_viz'
+        // );
 
         // search call to for error types
         const mySearchJob = SearchJob.create(
@@ -139,13 +133,13 @@ export const ErrorDashboard = ({
                             )?.click() // todo: no better easy way to get events table query
                     }
                 />
-                <OpenTroubleshootingBtn
+                {/* <OpenTroubleshootingBtn // commented out for now but will be needed latter on
                     id="open_trouble_shooting_overlay"
                     label={TROUBLESHOOTING_BTN_LABEL}
                     onClick={() => setDisplayTroubleShootingModal(true)}
                     icon={<QuestionCircle width={16} height={16} />}
-                />
-                <DashboardInfoModal
+                /> */}
+                {/* <DashboardInfoModal  // commented out for now but will be needed latter on
                     title={TROUBLESHOOTING_CONFIG.TITLE}
                     subtitle={TROUBLESHOOTING_CONFIG.DESCRIPTION}
                     open={displayTroubleShootingModal}
@@ -157,7 +151,7 @@ export const ErrorDashboard = ({
                     troubleshootingButton={{
                         link: globalConfig.pages.dashboard?.troubleshooting_url,
                     }}
-                />
+                /> */}
                 <DashboardCore
                     width="100%"
                     height="auto"
