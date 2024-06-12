@@ -6,6 +6,7 @@ import Button from '@splunk/react-ui/Button';
 import { variables } from '@splunk/themes';
 import styled from 'styled-components';
 import SearchJob from '@splunk/search-job';
+import type { DashboardCoreApi } from '@splunk/dashboard-types';
 
 import { getActionButtons, waitForElementToDisplayAndMoveThemToCanvas } from './utils';
 import { OPEN_SEARCH_LABEL } from './ErrorPageConfig';
@@ -25,22 +26,19 @@ const OpenSearchStyledBtn = styled(Button)`
 //     margin-right: 145px;
 // `;
 
-let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
-
 export const ErrorDashboard = ({
     dashboardDefinition,
 }: {
     dashboardDefinition: Record<string, unknown>;
 }) => {
     // const [displayTroubleShootingModal, setDisplayTroubleShootingModal] = useState(false); // commented out for now but will be needed latter on
+    const dashboardCoreApi = React.useRef<DashboardCoreApi | null>();
 
     const globalConfig = getUnifiedConfigs();
 
-    const setDashboardCoreApi = (api: {
-        updateDefinition: (arg0: Record<string, unknown>) => void;
-    }) => {
-        apiReference = api;
-    };
+    const setDashboardCoreApi = React.useCallback((api: DashboardCoreApi | null) => {
+        dashboardCoreApi.current = api;
+    }, []);
 
     useEffect(() => {
         waitForElementToDisplayAndMoveThemToCanvas(
@@ -61,6 +59,13 @@ export const ErrorDashboard = ({
         //     '#open_trouble_shooting_overlay',
         //     '#errors_tab_errors_list_viz'
         // );
+    }, []);
+
+    useEffect(() => {
+        // dashboardCoreApi?.current at beginning is null so ignore that iteration
+        if (!dashboardCoreApi?.current) {
+            return () => {};
+        }
 
         // search call to for error types
         const mySearchJob = SearchJob.create(
@@ -105,14 +110,14 @@ export const ErrorDashboard = ({
                             })
                         );
 
-                    apiReference?.updateDefinition(copyJson);
+                    dashboardCoreApi.current?.updateDefinition(copyJson);
                 }
             });
 
         return () => {
             resultsSubscription.unsubscribe();
         };
-    }, [dashboardDefinition, globalConfig.meta.restRoot]);
+    }, [dashboardDefinition, globalConfig.meta.restRoot, dashboardCoreApi]);
 
     return dashboardDefinition ? (
         <DashboardContextProvider

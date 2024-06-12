@@ -27,6 +27,7 @@
     "@splunk/dashboard-presets": "^27.1.0",
     "@splunk/dashboard-state": "^27.1.0",
     "@splunk/react-icons": "^4.5.0",
+    "@splunk/dashboard-types": "^27.1.0",
     "@splunk/react-page": "^7.0.0",
     "@splunk/react-toast-notifications": "^0.11.3",
     "@splunk/react-ui": "^4.32.0",

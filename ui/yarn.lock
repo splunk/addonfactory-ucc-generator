@@ -2594,6 +2594,11 @@
     "@splunk/dashboard-utils" "^27.1.0"
     lodash "^4.17.21"
 
+"@splunk/dashboard-types@^27.1.0":
+  version "27.1.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-types/-/dashboard-types-27.1.0.tgz#56c063368b8965b64aa01dd3a2f2ae040b684d41"
+  integrity sha512-pfvE3KgrwL7w7nCm5ELf8m/m9OwStL8mFB/RHVG1w/QlSid/fVWMRUmMnGyxNDRtac+vKcjSREdbxq4k9JN8dg==
+
 "@splunk/dashboard-ui@^27.1.0":
   version "27.1.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-ui/-/dashboard-ui-27.1.0.tgz#803cfecb93e862d76459b1fce2b879a5880a3e40"
