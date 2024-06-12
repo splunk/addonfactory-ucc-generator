@@ -14,11 +14,12 @@ The dashboard page provides some additional information about the add-on
 operations to increase the visibility into what the add-on is actually doing
 under the hood.
 
-As of now, 3 pre-built panels are supported:
+As of now, 4 pre-built panels are supported:
 
 * Overview
 * Data ingestion
 * Errors in the add-on.
+* Resource consumption.
 
 **IMPORTANT**: To fully use the panels available on the monitoring dashboard, use the `solnlib.log`'s [`events_ingested` function](https://github.com/splunk/addonfactory-solutions-library-python/blob/v4.14.0/solnlib/log.py#L253), available from **version 4.14**, to record events.
 

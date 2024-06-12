@@ -1,21 +1,21 @@
 {
   "visualizations": {
-    "errors_tab_label_viz": {
+    "resource_tab_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "## Errors",
+        "markdown": "## Resource consumption",
         "fontSize": "large"
       }
     },
-    "errors_tab_description_viz": {
+    "resource_tab_description_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "View error messages for your add-on within the selected time range.",
+        "markdown": "View the resource consumption for your add-on.",
         "customFontSize": 12,
         "fontColor": "#6c7685"
       }
     },
-    "errors_tab_timerange_label_start_viz": {
+    "resource_tab_timerange_label_start_viz": {
       "type": "splunk.singlevalue",
       "options": {
         "majorFontSize": 12,
@@ -23,10 +23,10 @@
         "majorColor": "#9fa4af"
       },
       "dataSources": {
-        "primary": "errors_tab_data_time_label_start_ds"
+        "primary": "resource_tab_data_time_label_start_ds"
       }
     },
-    "errors_tab_timerange_label_end_viz": {
+    "resource_tab_timerange_label_end_viz": {
       "type": "splunk.singlevalue",
       "options": {
         "majorFontSize": 12,
@@ -34,77 +34,88 @@
         "majorColor": "#9fa4af"
       },
       "dataSources": {
-        "primary": "errors_tab_data_time_label_end_ds"
+        "primary": "resource_tab_data_time_label_end_ds"
       }
     },
-    "errors_tab_errors_count_viz": {
+    "resource_tab_cpu_consumption_viz": {
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
-        "yAxisTitleText": "Errors count"
+        "seriesColors": [
+          "#A870EF"
+        ],
+        "yAxisTitleText": "CPU (%)"
       },
-      "title": "Errors count",
+      "title": "CPU consumption",
       "dataSources": {
-        "primary": "errors_tab_errors_count_ds"
+        "primary": "resource_tab_cpu_consumption_ds"
       }
     },
-    "errors_tab_errors_list_viz": {
-      "type": "splunk.events",
-      "options": {},
+    "resource_tab_memory_consumption_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
+        "seriesColors": [
+          "#A870EF"
+        ],
+        "yAxisTitleText": "Memory (%)"
+      },
+      "title": "Memory consumption",
       "dataSources": {
-        "primary": "errors_tab_errors_list_ds"
+        "primary": "resource_tab_memory_consumption_ds"
       }
     }
   },
   "dataSources": {
-    "errors_tab_data_time_label_start_ds": {
+    "resource_tab_data_time_label_start_ds": {
       "type": "ds.search",
       "options": {
         "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
         "queryParameters": {
-          "earliest": "$errors_tab_time.earliest$",
-          "latest": "$errors_tab_time.latest$"
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
         }
       }
     },
-    "errors_tab_data_time_label_end_ds": {
+    "resource_tab_data_time_label_end_ds": {
       "type": "ds.search",
       "options": {
         "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
         "queryParameters": {
-          "earliest": "$errors_tab_time.earliest$",
-          "latest": "$errors_tab_time.latest$"
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
         }
       }
     },
-    "errors_tab_errors_count_ds": {
+    "resource_tab_cpu_consumption_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart count as Errors",
+        "query": "index = _introspection component=PerProcess data.args=*splunk_ta_uccexample* | timechart avg(data.pct_cpu) as \"CPU (%)\"",
         "queryParameters": {
-          "earliest": "$errors_tab_time.earliest$",
-          "latest": "$errors_tab_time.latest$"
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
         }
       }
     },
-    "errors_tab_errors_list_ds": {
+    "resource_tab_memory_consumption_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR",
+        "query": "index=_introspection component=PerProcess data.args=*splunk_ta_uccexample* | timechart avg(data.pct_memory) as \"Memory (%)\"",
         "queryParameters": {
-          "earliest": "$errors_tab_time.earliest$",
-          "latest": "$errors_tab_time.latest$"
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
         }
       }
     }
   },
   "defaults": {},
   "inputs": {
-    "errors_tab_input": {
+    "resource_tab_input": {
       "options": {
         "defaultValue": "-24h,now",
-        "token": "errors_tab_time"
+        "token": "resource_tab_time"
       },
       "title": "Time",
       "type": "input.timerange"
@@ -113,20 +124,20 @@
   "layout": {
     "type": "grid",
     "globalInputs": [
-      "errors_tab_input"
+      "resource_tab_input"
     ],
     "structure": [
       {
-        "item": "errors_tab_label_viz",
+        "item": "resource_tab_label_viz",
         "position": {
           "x": 20,
           "y": 500,
           "w": 300,
-          "h": 50
+          "h": 20
         }
       },
       {
-        "item": "errors_tab_description_viz",
+        "item": "resource_tab_description_viz",
         "position": {
           "x": 20,
           "y": 520,
@@ -135,7 +146,7 @@
         }
       },
       {
-        "item": "errors_tab_timerange_label_start_viz",
+        "item": "resource_tab_timerange_label_start_viz",
         "position": {
           "x": 20,
           "y": 530,
@@ -144,7 +155,7 @@
         }
       },
       {
-        "item": "errors_tab_timerange_label_end_viz",
+        "item": "resource_tab_timerange_label_end_viz",
         "position": {
           "x": 120,
           "y": 530,
@@ -153,21 +164,21 @@
         }
       },
       {
-        "item": "errors_tab_errors_count_viz",
+        "item": "resource_tab_cpu_consumption_viz",
         "position": {
           "x": 20,
           "y": 550,
-          "w": 1220,
+          "w": 620,
           "h": 150
         }
       },
       {
-        "item": "errors_tab_errors_list_viz",
+        "item": "resource_tab_memory_consumption_viz",
         "position": {
-          "x": 20,
-          "y": 710,
-          "w": 1220,
-          "h": 600
+          "x": 640,
+          "y": 550,
+          "w": 620,
+          "h": 150
         }
       }
     ]

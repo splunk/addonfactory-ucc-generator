@@ -163,7 +163,7 @@
   "inputs": {
     "data_ingestion_input": {
       "options": {
-        "defaultValue": "-7d,now",
+        "defaultValue": "-24h,now",
         "token": "data_ingestion_time"
       },
       "title": "Time",
@@ -195,7 +195,7 @@
           },
           {
             "label": "Input",
-            "value": "index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table event_input, events, sparkevent, \"Last event\" | rename event_input as \"Input\", events as \"Number of events\", sparkevent as \"Event trendline\""
+            "value": "| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = \"Splunk_TA_UCCExample\" | eval Enabled=if(lower(disabled) IN (\"1\", \"true\", \"t\"), \"no\", \"yes\") | table title, Enabled | rename title as \"event_input\" | join type=left event_input [ search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") ] | makemv delim=\",\" sparkevent | table event_input, Enabled, events, sparkevent, \"Last event\" | rename event_input as \"Input\", events as \"Number of events\", sparkevent as \"Event trendline\""
           }
         ],
         "defaultValue": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st | join type=left st [search index = _internal source=*splunk_ta_uccexample* action=events_ingested | stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by sourcetype_ingested | rename sourcetype_ingested as st ] | makemv delim=\",\" sparkevent | eval \"Last event\" = strftime(le, \"%e %b %Y %I:%M%p\") | table st, Bytes, sparkvolume, events, sparkevent, \"Last event\" | rename st as \"Source type\", Bytes as \"Data volume\", events as \"Number of events\", sparkvolume as \"Volume trendline (Bytes)\", sparkevent as \"Event trendline\"",
