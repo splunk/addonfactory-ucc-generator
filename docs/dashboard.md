@@ -76,7 +76,7 @@ and 3 optional parameters:
 * `msg_before` - custom message before exception traceback. Default: None
 * `msg_after` - custom message after exception traceback. Default: None
 
-Additionally, function [`log_exception`](https://github.com/splunk/addonfactory-solutions-library-python/blob/v5.0.0/solnlib/log.py#L303) has a new, **mandatory** parameter `exc_label` thanks to which you can log your own, non-standard types.
+Additionally, function [`log_exception`](https://github.com/splunk/addonfactory-solutions-library-python/blob/v5.0.0/solnlib/log.py#L329) has a new, **mandatory** parameter `exc_label` thanks to which you can log your own, non-standard types.
 
 All of the above is available in the `log` module of the `solnlib` library from **version 5.0**. Please make sure you are using this version of `solnlib` library if you want to take full advantage of the extended error panel.
 
