@@ -6,8 +6,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import ExclamationTriangle from '@splunk/react-icons/ExclamationTriangle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
-// eslint-disable-next-line import/no-cycle
-import { getExpansionRowData } from './TableExpansionRow';
+import { getExpansionRowData } from './TableExpansionRowData';
 
 function onCustomControlError(params) {
     // eslint-disable-next-line no-console
