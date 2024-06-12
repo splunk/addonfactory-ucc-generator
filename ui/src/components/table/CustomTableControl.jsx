@@ -54,6 +54,7 @@ class CustomTableControl extends Component {
                                 // check if getDLRow return invalid object
                                 this.setState({
                                     loading: false,
+                                    checkMethodIsPresent: true,
                                     methodNotPresentError:
                                         'getDLRows method did not return a valid object',
                                 });

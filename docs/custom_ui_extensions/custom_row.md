@@ -11,9 +11,15 @@ When a row is expanded on the Inputs table, Custom Row is utilized to incorporat
 
 ### Methods
 
-| Property | Description                                                                                                                                                    |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| render   | is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions are performed. |
+| Property  | Description                                                                                                                                                    |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| render    | is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions are performed. |
+| getDLRows | is a method which contains the logic to update the custom row values, return a key-value pair.                                                                 |
+
+> Note
+
+> - Atleast one method should be present
+> - If both method is present then the getDLRows method have the high priority.
 
 ### Usage
 
@@ -53,6 +59,15 @@ class CustomInputRow {
         this.row = row;
     }
 
+    getDLRows() {
+        return Object.fromEntries(
+            Object.entries(this.row).map(([key, value]) => [
+                key,
+                key === "name" ? `Updated ${value}` : value,
+            ])
+        );
+    }
+
     render() {
         const content_html_template = 'Custom Input Row';
         this.el.innerHTML = content_html_template;
@@ -65,8 +80,8 @@ export default CustomInputRow;
 
 > Note:
 
-- The content should be included in the JavaScript file named by customRow.src property in globalConfig (see usage for details).
-- The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
+> - The content should be included in the JavaScript file named by customRow.src property in globalConfig (see usage for details).
+> - The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
 
 ### Output
 
