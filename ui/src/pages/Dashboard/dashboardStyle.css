@@ -306,6 +306,6 @@ body {
     color: var(--dashboard-ucc-grey-color);
 }
 
-#errors_tab_errors_list_viz svg[data-test="placeholder-icon"]{
+#errors_tab_errors_list_viz svg[data-test='placeholder-icon'] {
     max-height: 400px;
 }
