@@ -4,6 +4,7 @@ import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
 import Message from '@splunk/react-ui/Message';
+import type { DashboardCoreApi } from '@splunk/dashboard-types';
 
 import { debounce } from 'lodash';
 import {
@@ -12,8 +13,6 @@ import {
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
 } from './utils';
-
-let apiReference: { updateDefinition: (arg0: Record<string, unknown>) => void } | null = null;
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -26,6 +25,8 @@ export const DataIngestionDashboard = ({
 }: {
     dashboardDefinition: Record<string, unknown>;
 }) => {
+    const dashboardCoreApi = React.useRef<DashboardCoreApi | null>();
+
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
@@ -40,7 +41,7 @@ export const DataIngestionDashboard = ({
         const callback = (mutationsList: MutationRecord[]) => {
             mutationsList.forEach((mutation: MutationRecord) => {
                 if (mutation.attributeName === 'data-test-value') {
-                    apiReference?.updateDefinition(dashboardDefinition);
+                    dashboardCoreApi.current?.updateDefinition(dashboardDefinition);
                     setSearchInput('');
                     setToggleNoTraffic(false);
                     const viewByOption = (mutation.target as HTMLElement)?.getAttribute('label');
@@ -69,11 +70,9 @@ export const DataIngestionDashboard = ({
         };
     }, [dashboardDefinition]);
 
-    const setDashboardCoreApi = (api: {
-        updateDefinition: (arg0: Record<string, unknown>) => void;
-    }) => {
-        apiReference = api;
-    };
+    const setDashboardCoreApi = React.useCallback((api: DashboardCoreApi | null) => {
+        dashboardCoreApi.current = api;
+    }, []);
 
     const debounceHandlerChangeData = useMemo(
         () =>
@@ -97,7 +96,7 @@ export const DataIngestionDashboard = ({
                         selectedLabel
                     );
                     copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
-                    apiReference?.updateDefinition(copyJson);
+                    dashboardCoreApi.current?.updateDefinition(copyJson);
                 }
             }, 1000),
         [dashboardDefinition]

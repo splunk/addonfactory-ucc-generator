@@ -1,10 +1,8 @@
 # [5.45.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.44.0...v5.45.0) (2024-05-28)
 
-
 ### Bug Fixes
 
 * explicitly pass required field ([#1202](https://github.com/splunk/addonfactory-ucc-generator/issues/1202)) ([a0ddbf8](https://github.com/splunk/addonfactory-ucc-generator/commit/a0ddbf896e2598afa6126d752b19aded43f34255))
-
 
 ### Features
 

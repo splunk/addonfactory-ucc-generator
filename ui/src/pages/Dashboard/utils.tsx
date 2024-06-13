@@ -95,13 +95,19 @@ export const createNewQueryBasedOnSearchAndHideTraffic = (
     return newQuery;
 };
 
-export const openSearchInNewTabWithQuery = (query: string, queryParams: Record<string, string>) => {
-    const dashabordUrl = window.location.origin + window.location.pathname;
-    const lastIndex = dashabordUrl.lastIndexOf('/');
-    const searchUrl = new URL(`${dashabordUrl.slice(0, lastIndex)}/search`);
+export const openSearchInNewTabWithQuery = (query: string | null, queryParams: object | null) => {
+    if (!query) {
+        // eslint-disable-next-line no-console
+        console.error('No search query provided - openSearchInNewTabWithQuery');
+        return;
+    }
+
+    const dashboardUrl = window.location.origin + window.location.pathname;
+    const lastIndex = dashboardUrl.lastIndexOf('/');
+    const searchUrl = new URL(`${dashboardUrl.slice(0, lastIndex)}/search`);
     searchUrl.searchParams.append('q', query);
-    Object.keys(queryParams).forEach((paramKey) => {
-        searchUrl.searchParams.append(paramKey, queryParams[paramKey]);
+    Object.entries(queryParams || {}).forEach(([key, value]) => {
+        searchUrl.searchParams.append(key, value);
     });
     window.open(searchUrl, '_blank')?.focus();
 };
@@ -113,7 +119,12 @@ export const getActionButtons = (serviceName: string) => {
         <OpenSearchButton
             key={`${serviceName}_opensearch`}
             onOpenSearchClick={(x) => {
-                openSearchInNewTabWithQuery(x.options.query, x.options.queryParameters);
+                if (
+                    typeof x?.options?.query === 'string' &&
+                    typeof x?.options?.queryParameters === 'object'
+                ) {
+                    openSearchInNewTabWithQuery(x.options.query, x.options.queryParameters);
+                }
             }}
         />,
     ];

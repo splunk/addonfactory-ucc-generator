@@ -304,6 +304,18 @@ def test_config_validation_when_deprecated_placeholder_is_used(caplog):
                 "undefined_entity_field_name which is not defined in entity"
             ),
         ),
+        (
+            "invalid_config_meta_default_inputs_page_but_no_inputs_defined.json",
+            (
+                'meta.defaultView == "inputs" but there is no inputs defined in globalConfig'
+            ),
+        ),
+        (
+            "invalid_config_meta_default_dashboard_page_but_no_dashboard_defined.json",
+            (
+                'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
+            ),
+        ),
     ],
 )
 def test_config_validation_when_error(filename, exception_message):

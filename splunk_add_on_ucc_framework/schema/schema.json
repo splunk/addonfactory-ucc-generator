@@ -319,6 +319,11 @@
           "items": {
             "$ref": "#/definitions/DashboardPanel"
           }
+        },
+        "troubleshooting_url": {
+          "type": "string",
+          "description": "Link to external TA documentation used for redirection on error dashboard page",
+          "format": "uri"
         }
       },
       "required": ["panels"],
@@ -1686,9 +1691,30 @@
           "type": "string",
           "description": "Version of UCC used during build process"
         },
+        "hideUCCVersion": {
+          "type": "boolean",
+          "description": "Hide the label 'Made with UCC' on the Configuration page"
+        },
         "checkForUpdates": {
           "type": "boolean",
           "default": true
+        },
+        "defaultView": {
+          "type": "string",
+          "anyOf": [
+            {
+              "const": "inputs"
+            },
+            {
+              "const": "configuration"
+            },
+            {
+              "const": "dashboard"
+            },
+            {
+              "const": "search"
+            }
+          ]
         },
         "os-dependentLibraries": {
           "type": "array",
@@ -1753,7 +1779,7 @@
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],
-      "description": "Meta deta regarding build",
+      "description": "Metadata regarding build",
       "additionalProperties": false
     },
     "NumberValidator": {

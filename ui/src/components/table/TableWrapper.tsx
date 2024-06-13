@@ -2,15 +2,58 @@ import React, { useState, useContext, useEffect, memo } from 'react';
 import update from 'immutability-helper';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { HeadCellSortHandler } from '@splunk/react-ui/Table';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
 import { getUnifiedConfigs, generateToast, isTrue } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
-import TableContext from '../../context/TableContext';
+import TableContext, { RowDataType, RowDataFields } from '../../context/TableContext';
 import { PAGE_INPUT } from '../../constants/pages';
 import { parseErrorMsg } from '../../util/messageUtil';
+import { Mode } from '../../constants/modes';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
+
+export interface ITableWrapperProps {
+    page: string;
+    serviceName: string;
+    handleRequestModalOpen: () => void;
+    handleOpenPageStyleDialog: (row: IRowData, mode: Mode) => void;
+    displayActionBtnAllRows: boolean;
+}
+
+interface IRowData {}
+
+const getTableConfigAndServices = (
+    page: string,
+    unifiedConfigs: GlobalConfig,
+    serviceName: string
+) => {
+    const services =
+        page === PAGE_INPUT
+            ? unifiedConfigs.pages.inputs?.services
+            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
+
+    if (page === PAGE_INPUT) {
+        if (unifiedConfigs.pages.inputs && 'table' in unifiedConfigs.pages.inputs) {
+            return { services, tableConfig: unifiedConfigs.pages.inputs.table };
+        }
+
+        const serviceWithTable = services?.find((x) => x.name === serviceName);
+        const tableData = serviceWithTable && 'table' in serviceWithTable && serviceWithTable.table;
+
+        return { services, tableConfig: tableData || {} };
+    }
+
+    const tableConfig =
+        unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName)?.table || {};
+    return {
+        services,
+        tableConfig,
+    };
+};
 
 function TableWrapper({
     page,
@@ -18,38 +61,31 @@ function TableWrapper({
     handleRequestModalOpen,
     handleOpenPageStyleDialog,
     displayActionBtnAllRows,
-}) {
+}: ITableWrapperProps) {
     const [sortKey, setSortKey] = useState('name');
     const [sortDir, setSortDir] = useState('asc');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const { rowData, setRowData, pageSize, currentPage, searchText, searchType } =
-        useContext(TableContext);
+        useContext(TableContext)!;
 
     const unifiedConfigs = getUnifiedConfigs();
+    const { services, tableConfig } = getTableConfigAndServices(page, unifiedConfigs, serviceName);
 
-    const services =
-        page === PAGE_INPUT
-            ? unifiedConfigs.pages.inputs.services
-            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
-
-    const tableConfig =
-        page === PAGE_INPUT
-            ? unifiedConfigs.pages.inputs.table ||
-              services.find((x) => x.name === serviceName).table
-            : unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName).table;
-
-    const { moreInfo } = tableConfig;
-    const headers = tableConfig.header;
+    const moreInfo = tableConfig && 'moreInfo' in tableConfig ? tableConfig?.moreInfo : null;
+    const headers = tableConfig && 'header' in tableConfig ? tableConfig?.header : null;
     const isTabs = !!serviceName;
 
-    const modifyAPIResponse = (data) => {
-        const obj = {};
-        services.forEach((service, index) => {
-            if (service && service.name && data) {
-                const tmpObj = {};
-                data[index].forEach((val) => {
+    const modifyAPIResponse = (
+        apiData: Array<Array<{ name: string; content: Record<string, string>; id: string }>>
+    ) => {
+        const obj: RowDataType = {};
+
+        services?.forEach((service, index) => {
+            if (service && service.name && apiData) {
+                const tmpObj: Record<string, RowDataFields> = {};
+                apiData[index].forEach((val) => {
                     tmpObj[val.name] = {
                         ...val.content,
                         id: val.id,
@@ -61,46 +97,59 @@ function TableWrapper({
                 obj[service.name] = tmpObj;
             }
         });
+
         setRowData(obj);
         setLoading(false);
     };
 
     const fetchInputs = () => {
-        const requests = [];
-        services.forEach((service) => {
-            requests.push(
+        const abortController = new AbortController();
+
+        const requests =
+            services?.map((service) =>
                 axiosCallWrapper({
                     serviceName: service.name,
                     params: { count: -1 },
+                    signal: abortController.signal,
                 })
-            );
-        });
+            ) || [];
+
         axios
             .all(requests)
             .catch((caughtError) => {
+                if (axios.isCancel(caughtError)) {
+                    return;
+                }
                 const message = parseErrorMsg(caughtError);
 
                 generateToast(message, 'error');
                 setLoading(false);
                 setError(caughtError);
-                return Promise.reject(caughtError);
             })
             .then((response) => {
+                if (!response) {
+                    return;
+                }
                 modifyAPIResponse(response.map((res) => res.data.entry));
             });
+
+        return () => {
+            abortController.abort();
+        };
     };
 
-    useEffect(() => {
-        fetchInputs();
+    useEffect(
+        () => fetchInputs(),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        []
+    );
 
     /**
      *
      * @param row {Object} row
      */
-    const changeToggleStatus = (row) => {
-        setRowData((currentRowData) =>
+    const changeToggleStatus = (row: RowDataFields) => {
+        setRowData((currentRowData: RowDataType) =>
             update(currentRowData, {
                 [row.serviceName]: {
                     [row.name]: {
@@ -110,7 +159,7 @@ function TableWrapper({
             })
         );
         const body = new URLSearchParams();
-        body.append('disabled', !row.disabled);
+        body.append('disabled', String(!row.disabled));
         axiosCallWrapper({
             serviceName: `${row.serviceName}/${row.name}`,
             body,
@@ -118,7 +167,7 @@ function TableWrapper({
             method: 'post',
             handleError: true,
             callbackOnError: () => {
-                setRowData((currentRowData) =>
+                setRowData((currentRowData: RowDataType) =>
                     update(currentRowData, {
                         [row.serviceName]: {
                             [row.name]: {
@@ -129,7 +178,7 @@ function TableWrapper({
                 );
             },
         }).then((response) => {
-            setRowData((currentRowData) =>
+            setRowData((currentRowData: RowDataType) =>
                 update(currentRowData, {
                     [row.serviceName]: {
                         [row.name]: {
@@ -143,50 +192,53 @@ function TableWrapper({
         });
     };
 
-    const handleSort = (e, val) => {
+    const handleSort: HeadCellSortHandler = (e, val) => {
         const prevSortKey = sortKey;
         const prevSortDir = prevSortKey === val.sortKey ? sortDir : 'none';
         const nextSortDir = prevSortDir === 'asc' ? 'desc' : 'asc';
         setSortDir(nextSortDir);
-        setSortKey(val.sortKey);
+        if (val.sortKey) {
+            setSortKey(val.sortKey);
+        }
     };
 
     /**
      *
-     * @param {Array} data
+     * @param {Array} serviceData data for single service
      * This function will iterate an arrray and match each key-value with the searchText
      * It will return a new array which will match with searchText
      */
-    const findByMatchingValue = (data) => {
-        const arr = [];
-        const tableFields = [];
+    const findByMatchingValue = (serviceData: Record<string, RowDataFields>) => {
+        const matchedRows: Record<string, AcceptableFormValueOrNull>[] = [];
+        const searchableFields: string[] = [];
 
-        headers.forEach((headData) => {
-            tableFields.push(headData.field);
+        headers?.forEach((headData: { field: string }) => {
+            searchableFields.push(headData.field);
         });
-        moreInfo?.forEach((moreInfoData) => {
-            tableFields.push(moreInfoData.field);
+        moreInfo?.forEach((moreInfoData: { field: string }) => {
+            searchableFields.push(moreInfoData.field);
         });
 
-        Object.keys(data).forEach((v) => {
+        Object.keys(serviceData).forEach((v) => {
             let found = false;
-            Object.keys(data[v]).forEach((vv) => {
+            Object.keys(serviceData[v]).forEach((vv) => {
+                const formValue = serviceData[v][vv];
                 if (
-                    tableFields.includes(vv) &&
-                    typeof data[v][vv] === 'string' &&
-                    data[v][vv].toLowerCase().includes(searchText.toLowerCase().trim()) &&
+                    searchableFields.includes(vv) &&
+                    typeof formValue === 'string' &&
+                    formValue.toLowerCase().includes(searchText.toLowerCase().trim()) &&
                     !found
                 ) {
-                    arr.push(data[v]);
+                    matchedRows.push(serviceData[v]);
                     found = true;
                 }
             });
         });
-        return arr;
+        return matchedRows;
     };
 
     const getRowData = () => {
-        let arr = [];
+        let allRowsData: Array<Record<string, AcceptableFormValueOrNull>> = [];
         if (searchType === 'all') {
             Object.keys(rowData).forEach((key) => {
                 let newArr = [];
@@ -195,27 +247,42 @@ function TableWrapper({
                 } else {
                     newArr = Object.keys(rowData[key]).map((val) => rowData[key][val]);
                 }
-                arr = arr.concat(newArr);
+                allRowsData = allRowsData.concat(newArr);
             });
         } else {
-            arr = findByMatchingValue(rowData[searchType]);
+            allRowsData = findByMatchingValue(rowData[searchType]);
         }
 
         // For Inputs page, filter the data when tab change
         if (isTabs) {
-            arr = arr.filter((v) => v.serviceName === serviceName);
+            allRowsData = allRowsData.filter((v) => v.serviceName === serviceName);
         }
 
+        const headerMapping =
+            headers?.find((header: { field: string }) => header.field === sortKey)?.mapping || {};
         // Sort the array based on the sort value
-        const sortedArr = arr.sort((rowA, rowB) => {
+        const sortedArr = allRowsData.sort((rowA, rowB) => {
             if (sortDir === 'asc') {
-                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
-                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                const rowAValue =
+                    rowA[sortKey] === undefined
+                        ? ''
+                        : headerMapping[String(rowA[sortKey])] || rowA[sortKey];
+                const rowBValue =
+                    rowB[sortKey] === undefined
+                        ? ''
+                        : headerMapping[String(rowB[sortKey])] || rowB[sortKey];
                 return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                const rowAValue = rowA[sortKey] === undefined ? '' : rowA[sortKey];
-                const rowBValue = rowB[sortKey] === undefined ? '' : rowB[sortKey];
+                const rowAValue =
+                    rowA[sortKey] === undefined
+                        ? ''
+                        : headerMapping[String(rowA[sortKey])] || rowA[sortKey];
+                const rowBValue =
+                    rowB[sortKey] === undefined
+                        ? ''
+                        : headerMapping[String(rowB[sortKey])] || rowB[sortKey];
+
                 return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
@@ -227,7 +294,11 @@ function TableWrapper({
             updatedArr = sortedArr.slice((currentPage - 1) * pageSize, pageSize);
         }
 
-        return [updatedArr, arr.length, arr];
+        return {
+            filteredData: updatedArr,
+            totalElement: allRowsData.length,
+            allFilteredData: allRowsData,
+        };
     };
 
     if (error) {
@@ -238,7 +309,8 @@ function TableWrapper({
         return <WaitSpinnerWrapper size="medium" />;
     }
 
-    const [filteredData, totalElement, allFilteredData] = getRowData();
+    const { filteredData, totalElement, allFilteredData } = getRowData();
+
     return (
         <>
             <TableHeader
@@ -261,7 +333,6 @@ function TableWrapper({
                 sortKey={sortKey}
                 handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                 tableConfig={tableConfig}
-                services={services}
             />
         </>
     );

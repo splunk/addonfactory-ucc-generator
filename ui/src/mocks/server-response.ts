@@ -17,6 +17,7 @@ export const mockServerResponseWithContent = {
     updated: '2023-08-21T11:54:12+00:00',
     entry: [
         {
+            id: 1,
             content: {
                 disabled: true,
             },
