@@ -71,9 +71,6 @@
       "options": {
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
-        "seriesColors": [
-          "#A870EF"
-        ],
         "yAxisTitleText": "Error count"
       },
       "title": "Errors",
@@ -128,7 +125,7 @@
   "inputs": {
     "overview_input": {
       "options": {
-        "defaultValue": "-7d,now",
+        "defaultValue": "-24h,now",
         "token": "overview_time"
       },
       "title": "Time",
