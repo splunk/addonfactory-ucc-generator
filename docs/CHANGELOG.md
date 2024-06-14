@@ -1,3 +1,20 @@
+# [5.46.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.45.0...v5.46.0) (2024-06-13)
+
+
+### Bug Fixes
+
+* **oauth:** set loglevel in oauth rh template to use log level set in add-on ([#1227](https://github.com/splunk/addonfactory-ucc-generator/issues/1227)) ([3b7b9e1](https://github.com/splunk/addonfactory-ucc-generator/commit/3b7b9e1b7d02a80acda20c1f3b7619120f7bbefc))
+
+
+### Features
+
+* allow developers to choose the default view ([#1197](https://github.com/splunk/addonfactory-ucc-generator/issues/1197)) ([21610e2](https://github.com/splunk/addonfactory-ucc-generator/commit/21610e20957796bdc1208b8d9c050f5327fbb2c6)), closes [#1041](https://github.com/splunk/addonfactory-ucc-generator/issues/1041)
+* **configuration:** display UCC version ([#1221](https://github.com/splunk/addonfactory-ucc-generator/issues/1221)) ([a63d8b3](https://github.com/splunk/addonfactory-ucc-generator/commit/a63d8b389c1a56c23c647c31866786c05b84dcf8))
+* **dashboard:** add error categories to chart and event table in the error panel ([#1225](https://github.com/splunk/addonfactory-ucc-generator/issues/1225)) ([cd2907a](https://github.com/splunk/addonfactory-ucc-generator/commit/cd2907ae1f2369ba5736fa92692bc9afe4854d5d))
+* **dashboard:** add resource monitoring tab and information about input status ([#1209](https://github.com/splunk/addonfactory-ucc-generator/issues/1209)) ([e8acfd9](https://github.com/splunk/addonfactory-ucc-generator/commit/e8acfd9d76df207c8344467e95cb6f77d4bd2e3e))
+* globalConfig file passed through `--config` accepts only JSON or YAML formats ([#1216](https://github.com/splunk/addonfactory-ucc-generator/issues/1216)) ([f661475](https://github.com/splunk/addonfactory-ucc-generator/commit/f661475201be6e2d9da478e24a20d7a385d7bccc))
+* sort table by visible text ([#1205](https://github.com/splunk/addonfactory-ucc-generator/issues/1205)) ([8561e0f](https://github.com/splunk/addonfactory-ucc-generator/commit/8561e0fd5ea99daab5030bec00bb2fcac3b7c9b1))
+
 # [5.45.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.44.0...v5.45.0) (2024-05-28)
 
 ### Bug Fixes
