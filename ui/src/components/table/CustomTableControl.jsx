@@ -30,47 +30,45 @@ class CustomTableControl extends Component {
     componentDidMount() {
         const globalConfig = getUnifiedConfigs();
         this.loadCustomControl()
-            .then((Control) => {
-                if (typeof Control === 'function') {
-                    this.customControl = new Control(
-                        globalConfig,
-                        this.props.serviceName,
-                        this.el,
-                        this.state.row,
-                        this.props.field
-                    );
-
-                    this.callCustomMethod('getDLRows')
-                        .then((result) => {
-                            // check if getDLRow is exist in the custom input row file
-                            if (result && typeof result === 'object' && !Array.isArray(result)) {
-                                this.setState({
-                                    row: { ...result },
-                                    checkMethodIsPresent: true,
-                                    loading: false,
-                                });
-                            } else if (result !== null) {
-                                // check if getDLRow return invalid object
-                                this.setState({
-                                    loading: false,
-                                    checkMethodIsPresent: true,
-                                    methodNotPresentError:
-                                        'getDLRows method did not return a valid object',
-                                });
-                            } else {
-                                // if getDLRow is not present then check render method is present or not
-                                this.handleNoGetDLRows();
-                            }
-                        })
-                        .catch((error) => {
-                            onCustomControlError({ methodName: 'getDLRows', error });
-                            this.handleNoGetDLRows();
-                        });
-                } else {
+            .then(async (Control) => {
+                if (typeof Control !== 'function') {
                     this.setState({
                         loading: false,
                         methodNotPresentError: 'Loaded module is not a constructor function',
                     });
+                    return;
+                }
+                this.customControl = new Control(
+                    globalConfig,
+                    this.props.serviceName,
+                    this.el,
+                    this.state.row,
+                    this.props.field
+                );
+
+                const result = await this.callCustomMethod('getDLRows');
+                try {
+                    // check if getDLRow is exist in the custom input row file
+                    if (result && typeof result === 'object' && !Array.isArray(result)) {
+                        this.setState({
+                            row: { ...result },
+                            checkMethodIsPresent: true,
+                            loading: false,
+                        });
+                    } else if (result !== null) {
+                        // check if getDLRow return invalid object
+                        this.setState({
+                            loading: false,
+                            checkMethodIsPresent: true,
+                            methodNotPresentError: 'getDLRows method did not return a valid object',
+                        });
+                    } else {
+                        // if getDLRow is not present then check render method is present or not
+                        this.handleNoGetDLRows();
+                    }
+                } catch (error) {
+                    onCustomControlError({ methodName: 'getDLRows', error });
+                    this.handleNoGetDLRows();
                 }
             })
             .catch(() =>
@@ -111,6 +109,13 @@ class CustomTableControl extends Component {
             }
         });
 
+    /**
+     * Calls a method on the customControl instance, if it exists, with the provided arguments.
+     *
+     * @param {string} methodName - The name of the method to call on the customControl class instance.
+     * @param  {...unknown} args - Any arguments that should be passed to the method.
+     * @returns {*} - The response from the custom control method, or null if the method does not exist or an error occurs.
+     */
     callCustomMethod = async (methodName, ...args) => {
         try {
             if (typeof this.customControl[methodName] === 'function') {

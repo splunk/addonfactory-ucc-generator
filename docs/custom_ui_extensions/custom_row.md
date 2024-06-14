@@ -63,7 +63,7 @@ class CustomInputRow {
         return Object.fromEntries(
             Object.entries(this.row).map(([key, value]) => [
                 key,
-                key === "name" ? `Updated ${value}` : value,
+                key === "interval" ? `${value} sec` : value,
             ])
         );
     }
