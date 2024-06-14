@@ -316,7 +316,6 @@ class TestInputPage(UccTester):
         # we verify that the conf value is `interval` and only the UI has changed
         assert backend_stanza.get("interval") == interval
 
-
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
