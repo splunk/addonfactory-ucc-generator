@@ -8,6 +8,11 @@ MD010:
   # Include code blocks
   code_blocks: false
 
+# MD012/no-multiple-blanks
+MD012:
+  # 2 Consecutive blank lines for changelog
+  maximum: 2
+
 # MD013/line-length
 MD013: false
 
