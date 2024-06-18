@@ -8,7 +8,7 @@ import { ResourceDashboard } from './Resource';
 import { CustomDashboard } from './Custom';
 import './dashboardStyle.css';
 import { getBuildDirPath } from '../../util/script';
-import {getUnifiedConfigs} from "../../util/util";
+import { getUnifiedConfigs } from '../../util/util';
 
 /**
  *
