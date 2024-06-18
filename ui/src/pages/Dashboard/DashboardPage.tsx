@@ -8,6 +8,7 @@ import { ResourceDashboard } from './Resource';
 import { CustomDashboard } from './Custom';
 import './dashboardStyle.css';
 import { getBuildDirPath } from '../../util/script';
+import {getUnifiedConfigs} from "../../util/util";
 
 /**
  *
@@ -52,6 +53,8 @@ function DashboardPage() {
         };
     }, []);
 
+    const globalConfig = getUnifiedConfigs();
+
     return (
         <ErrorBoundary>
             <div>
@@ -84,7 +87,13 @@ function DashboardPage() {
                             </TabLayout.Panel>
                         )}
                         {customDef && (
-                            <TabLayout.Panel label="Custom" panelId="customTabPanel">
+                            <TabLayout.Panel
+                                label={
+                                    globalConfig.pages.dashboard?.settings?.custom_tab_name ||
+                                    'Custom'
+                                }
+                                panelId="customTabPanel"
+                            >
                                 <CustomDashboard dashboardDefinition={customDef} />
                             </TabLayout.Panel>
                         )}
