@@ -317,9 +317,31 @@ Next, you have to add the **custom** panel to your dashboard page in globalConfi
 }
 ```
 
-By default, the custom dashboard will be added as an additional tab under the overview section.
+By default, the custom dashboard will be added as an additional tab under the overview section called `Custom`.
 
 ![img.png](images/custom_dashboard.png)
+
+If you would like to change the tab name from **Custom** to any other value, you can do it in the `globalConfig.json`.
+Global config, from UCC version **v5.47.0**, has an additional `settings` parameter for the dashboard section. To change the name of a custom tab, add the `custom_tab_name` attribute in the `settings`.
+
+```json
+{
+...
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "custom"
+                }
+            ],
+            "settings": {
+                "custom_tab_name": "My custom tab name"
+            }
+        },
+...
+}
+```
+
+![img.png](images/dashboard_custom_tab_name.png)
 
 It is possible to enable only a custom panel. To do this, remove the "default" element from globalConfig.json.
 

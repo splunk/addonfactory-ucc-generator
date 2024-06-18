@@ -324,6 +324,16 @@
           "type": "string",
           "description": "Link to external TA documentation used for redirection on error dashboard page",
           "format": "uri"
+        },
+        "settings": {
+          "type": "object",
+          "description": "Additional settings for monitoring dashboard.",
+          "properties": {
+            "custom_tab_name": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": ["panels"],
