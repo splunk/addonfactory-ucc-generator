@@ -81,7 +81,8 @@
                                 ]
                             },
                             "defaultValue": "INFO",
-                            "field": "loglevel"
+                            "field": "loglevel",
+                            "required": true
                         }
                     ],
                     "title": "Logging"
@@ -116,19 +117,12 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "defaultValue": "300",
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
-                            "required": true
+                            "required": true,
+                            "defaultValue": "300"
                         },
                         {
                             "type": "singleSelect",
@@ -198,13 +192,7 @@
         "dashboard": {
             "panels": [
                 {
-                    "name": "addon_version"
-                },
-                {
-                    "name": "events_ingested_by_sourcetype"
-                },
-                {
-                    "name": "errors_in_the_addon"
+                    "name": "default"
                 }
             ]
         }
@@ -212,9 +200,9 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.36.2Ref7d7543",
+        "version": "5.44.0R7f88cfdd",
         "displayName": "This is my add-on",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.36.2"
+        "schemaVersion": "0.0.7",
+        "_uccVersion": "5.44.0"
     }
 }

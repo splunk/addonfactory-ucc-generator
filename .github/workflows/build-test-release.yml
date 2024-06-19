@@ -47,6 +47,15 @@ jobs:
           fossa test --debug
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   pre-commit:
     runs-on: ubuntu-latest
@@ -70,7 +79,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: apache/skywalking-eyes@v0.5.0
+      - uses: apache/skywalking-eyes@v0.6.0
 
   build-ui:
     name: Build UCC UI
@@ -114,8 +123,6 @@ jobs:
         if: "! github.event.pull_request.head.repo.fork "
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
-      - name: Check docs
-        run: poetry run mkdocs build --strict
       - name: Build UCC
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
@@ -145,11 +152,20 @@ jobs:
       - run: |
           poetry install
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   test-smoke:
     name: test-smoke ${{ matrix.python-version }}
     needs:
-      - build
+      - build-ui
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -162,18 +178,28 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
           poetry install
           poetry run pytest tests/smoke
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   build-test-addon:
     runs-on: ubuntu-latest
@@ -208,14 +234,6 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    if: |
-      github.base_ref == 'main' ||
-      github.ref_name == 'main' ||
-      github.base_ref == 'develop' ||
-      github.ref_name == 'develop' ||
-      startsWith(github.ref_name, 'release') ||
-      startsWith(github.base_ref, 'release') ||
-      contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -257,7 +275,7 @@ jobs:
           export PATH=$PATH:$CHROMEWEBDRIVER
           chromedriver --version
       - run: |
-          ./run_splunk.sh ${{ matrix.splunk.version }}
+          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
@@ -298,7 +316,7 @@ jobs:
           poetry install
           mkdir tests/packaged
           poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
-      - uses: splunk/appinspect-cli-action@v2.2
+      - uses: splunk/appinspect-cli-action@v2.7
         with:
           app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
@@ -308,6 +326,8 @@ jobs:
   all-checks:
     if: ${{ !cancelled() }}
     needs:
+      - test-unit
+      - test-smoke
       - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
@@ -315,11 +335,11 @@ jobs:
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
-      - name: check if tests have passed or skipped
+      - name: check if tests have passed
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\" or .result == \"skipped\")")
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" and (.outputs.failed // "false") != "true")')
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
@@ -418,7 +438,7 @@ jobs:
           python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
       - run: mv out_${{ matrix.splunk.version }} output
       - run: |
-          ./run_splunk.sh ${{ matrix.splunk.version }}
+          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py

@@ -54,7 +54,16 @@
               "type": "singleSelect",
               "label": "Account to use",
               "options": {
-                "referenceName": "account"
+                "autoCompleteFields": [
+                  {
+                    "value": "value1",
+                    "label": "Value1"
+                  },
+                  {
+                    "value": "value2",
+                    "label": "Value2"
+                  }
+                ]
               },
               "help": "Account to use for this input.",
               "field": "account",
@@ -234,7 +243,16 @@
               "type": "singleSelect",
               "label": "Account to use",
               "options": {
-                "referenceName": "account"
+                "autoCompleteFields": [
+                  {
+                    "value": "value1",
+                    "label": "Value1"
+                  },
+                  {
+                    "value": "value2",
+                    "label": "Value2"
+                  }
+                ]
               },
               "help": "Account to use for this input.",
               "field": "account",
@@ -367,7 +385,7 @@
       "description": "Manage your data inputs",
       "table": {
         "actions": [
-          "edit", "enable", "delete", "clone"
+          "edit", "enable", "delete","search", "clone"
         ],
         "header": [
           {
@@ -422,13 +440,7 @@
     "dashboard": {
       "panels": [
         {
-          "name": "addon_version"
-        },
-        {
-          "name": "events_ingested_by_sourcetype"
-        },
-        {
-          "name": "errors_in_the_addon"
+          "name": "default"
         }
       ]
     }

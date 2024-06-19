@@ -9,7 +9,7 @@ Only add-ons that use Python 3 are supported.
 It is available as a GitHub action here:
 <https://github.com/splunk/addonfactory-ucc-generator-action>
 
-You can use [Splunk Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk) 
+You can use [Splunk Extension for VSCode](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk)
 as well.
 
 ## What is UCC?
@@ -30,6 +30,7 @@ The `splunk-add-on-ucc-framework`:
 
 * generates UI (`appserver` folder).
 * generates Python REST handlers to support UI CRUD operations (`bin` folder).
+* generates [inputs](./inputs/index.md) and their [helper modules](./inputs/helper.md)
 * generates OpenAPI description documents (`appserver/static/openapi.json` file) (for more information, see [here](openapi.md)).
 * generates `.conf` files (more information, see [here](dot_conf_files.md)).
 * installs Python requirements (`lib` folder).
@@ -37,6 +38,7 @@ The `splunk-add-on-ucc-framework`:
 * generates the monitoring dashboard (for more information, see [here](dashboard.md)).
 * it possibly extends the UI with custom codes (for more information, see [here](custom_ui_extensions/custom_hook.md)).
 * it possibly extends the build process via a `additional_packaging.py` file (more information, [here](additional_packaging.md)).
+* generates the necessary files defined for the Alert Action, if defined in globalConfig (for more informaiton, see [here](alert_actions/index.md)).
 
 ## Installation
 

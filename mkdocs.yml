@@ -14,6 +14,7 @@ markdown_extensions:
   - fenced_code
   - sane_lists
   - codehilite
+  - pymdownx.superfences
 
 theme:
   name: "material"
@@ -36,11 +37,17 @@ nav:
     - Introduction: "inputs/index.md"
     - Tabs: "inputs/tabs.md"
     - Multi-level Menu: "inputs/multilevel_menu.md"
+    - Helper Module: "inputs/helper.md"
   - Configuration:
       - "configurations/index.md"
       - Introduction: "configurations/index.md"
+      - Logging: "configurations/logging.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
+  - Alert Actions:
+    - "alert_actions/index.md"
+    - Alert Action Scripts: "alert_actions/alert_scripts.md"
+    - Adaptive Response: "alert_actions/adaptive_response.md"
   - Entity:
     - "entity/index.md"
     - Introduction: "entity/index.md"
@@ -74,3 +81,4 @@ nav:
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
   - Changelog: "CHANGELOG.md"
+  - Storybook: "storybook/index.html"

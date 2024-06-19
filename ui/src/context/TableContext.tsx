@@ -1,9 +1,17 @@
 import React, { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { AcceptableFormValueOrNull } from '../types/components/shareableTypes';
+import { AcceptableFormRecord } from '../types/components/shareableTypes';
+
+export type RowDataFields = {
+    name: string;
+    serviceName: string;
+    disabled?: boolean;
+    id?: string;
+    index?: string;
+} & AcceptableFormRecord;
 
 // serviceName > specificRowName > dataForRow
-type RowDataType = Record<string, Record<string, Record<string, AcceptableFormValueOrNull>>>;
+export type RowDataType = Record<string, Record<string, RowDataFields>>;
 
 export type TableContextProviderType = {
     rowData: RowDataType;
@@ -20,11 +28,7 @@ export type TableContextProviderType = {
 
 const TableContext = createContext<TableContextProviderType | null>(null);
 
-export function TableContextProvider({
-    children,
-}: {
-    children: (typeof PropTypes.node | typeof PropTypes.node)[];
-}) {
+export function TableContextProvider({ children }: { children: Node | Node[] }) {
     const [rowData, setRowData] = useState<TableContextProviderType['rowData']>({});
     const [searchText, setSearchText] = useState<string>('');
     const [searchType, setSearchType] = useState<string>('all');

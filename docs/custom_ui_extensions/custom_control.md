@@ -1,4 +1,4 @@
-The Custom Control feature allows you to display any customised input component in a form. The developer can easily design and render any complex input component with this feature. Modern add-ons frequently require the use of complex input components, and this feature will allow you to use the custom component in the form that is best suited to your needs, without relying on newer releases of UCC for support. 
+The Custom Control feature allows you to display any customised input component in a form. The developer can easily design and render any complex input component with this feature. Modern add-ons frequently require the use of complex input components, and this feature will allow you to use the custom component in the form that is best suited to your needs, without relying on newer releases of UCC for support.
 
 ### Properties
 
@@ -70,7 +70,9 @@ class CustomControl {
         this.setValue = setValue;
     }
 
-    _onSelectOptionChange() { }
+    onSelectOptionChange(event) {
+        this.setValue(event.target.value);
+    }
 
     validation(field, value) {
         // Validation logic for value. Return the error message if failed.
@@ -88,8 +90,8 @@ class CustomControl {
         `;
 
         this.el.innerHTML = content_html;
+        this.el.addEventListener('change', this.onSelectOptionChange);
 
-        $('select#custom_control').on('change', () => this._onSelectOptionChange());
         return this;
     }
 }

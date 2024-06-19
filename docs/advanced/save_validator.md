@@ -1,6 +1,6 @@
 This feature allows you to pass a Javascript function as a string to apply customized validation to form data.
 
-By using this approach, you can write custom JavaScript code where you can write your business logic, and validating can return error messages which will be displayed at the top of the form. 
+By using this approach, you can write custom JavaScript code where you can write your business logic, and validating can return error messages which will be displayed at the top of the form.
 
 This custom javascript function has a parameter, (for example, dataDict), which contains the form data object.
 

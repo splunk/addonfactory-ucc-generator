@@ -91,6 +91,20 @@
                             }
                         },
                         {
+                            "field": "url",
+                            "label": "URL",
+                            "type": "text",
+                            "help": "Enter the URL, for example",
+                            "required": false,
+                            "validators": [
+                                {
+                                    "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
+                                    "type": "regex",
+                                    "pattern": "^(https://)[^/]+/?$"
+                                }
+                            ]
+                        },
+                        {
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
@@ -253,7 +267,9 @@
                             }
                         }
                     ],
-                    "title": "Account"
+                    "title": "Account",
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator"
                 },
                 {
                     "name": "proxy",
@@ -362,46 +378,7 @@
                     "title": "Proxy"
                 },
                 {
-                    "name": "logging",
-                    "warning": {
-                        "config": {
-                            "message": "Some warning for account text config"
-                        }
-                    },
-                    "entity": [
-                        {
-                            "type": "singleSelect",
-                            "label": "Log level",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {
-                                        "value": "DEBUG",
-                                        "label": "DEBUG"
-                                    },
-                                    {
-                                        "value": "INFO",
-                                        "label": "INFO"
-                                    },
-                                    {
-                                        "value": "WARNING",
-                                        "label": "WARNING"
-                                    },
-                                    {
-                                        "value": "ERROR",
-                                        "label": "ERROR"
-                                    },
-                                    {
-                                        "value": "CRITICAL",
-                                        "label": "CRITICAL"
-                                    }
-                                ]
-                            },
-                            "defaultValue": "INFO",
-                            "field": "loglevel"
-                        }
-                    ],
-                    "title": "Logging"
+                    "type": "loggingTab"
                 },
                 {
                     "name": "custom_abc",
@@ -505,6 +482,7 @@
             "services": [
                 {
                     "name": "example_input_one",
+                    "inputHelperModule": "helper_one",
                     "warning": {
                         "create": {
                             "message": "Some warning for account text create"
@@ -624,16 +602,9 @@
                             }
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         },
@@ -790,6 +761,7 @@
                 },
                 {
                     "name": "example_input_two",
+                    "inputHelperModule": "helper_two",
                     "entity": [
                         {
                             "type": "text",
@@ -812,16 +784,9 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds .",
                             "required": true
                         },
@@ -1105,89 +1070,6 @@
                         }
                     ],
                     "title": "Example Input Two"
-                },
-                {
-                    "name": "example_input_three",
-                    "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                },
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of input name should be between 1 and 100",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "field": "name",
-                            "help": "A unique name for the data input.",
-                            "required": true
-                        },
-                        {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "field": "interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Example Input Three"
-                },
-                {
-                    "name": "example_input_four",
-                    "restHandlerModule": "splunk_ta_uccexample_custom_rh",
-                    "restHandlerClass": "CustomRestHandler",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                },
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of input name should be between 1 and 100",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "field": "name",
-                            "help": "A unique name for the data input.",
-                            "required": true
-                        },
-                        {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "field": "interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Example Input Four"
                 }
             ],
             "title": "Inputs",
@@ -1282,135 +1164,17 @@
         "dashboard": {
             "panels": [
                 {
-                    "name": "addon_version"
-                },
-                {
-                    "name": "events_ingested_by_sourcetype"
-                },
-                {
-                    "name": "errors_in_the_addon"
+                    "name": "default"
                 }
             ]
         }
     },
-    "alerts": [
-        {
-            "name": "test_alert",
-            "label": "Test Alert",
-            "description": "Description for test Alert Action",
-            "activeResponse": {
-                "task": [
-                    "Create",
-                    "Update"
-                ],
-                "supportsAdhoc": true,
-                "subject": [
-                    "endpoint"
-                ],
-                "category": [
-                    "Information Conveyance",
-                    "Information Portrayal"
-                ],
-                "technology": [
-                    {
-                        "version": [
-                            "1.0.0"
-                        ],
-                        "product": "Test Incident Update",
-                        "vendor": "Splunk"
-                    }
-                ],
-                "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
-                "sourcetype": "test:incident"
-            },
-            "entity": [
-                {
-                    "type": "text",
-                    "label": "Name",
-                    "field": "name",
-                    "defaultValue": "xyz",
-                    "required": true,
-                    "help": "Please enter your name"
-                },
-                {
-                    "type": "checkbox",
-                    "label": "All Incidents",
-                    "field": "all_incidents",
-                    "defaultValue": 0,
-                    "required": false,
-                    "help": "Tick if you want to update all incidents/problems"
-                },
-                {
-                    "type": "singleSelect",
-                    "label": "Table List",
-                    "field": "table_list",
-                    "options": {
-                        "items": [
-                            {
-                                "value": "Incident",
-                                "label": "incident"
-                            },
-                            {
-                                "value": "Problem",
-                                "label": "problem"
-                            }
-                        ]
-                    },
-                    "help": "Please select the table",
-                    "required": false,
-                    "defaultValue": "problem"
-                },
-                {
-                    "type": "radio",
-                    "label": "Action:",
-                    "field": "action",
-                    "options": {
-                        "items": [
-                            {
-                                "value": "Update",
-                                "label": "update"
-                            },
-                            {
-                                "value": "Delete",
-                                "label": "delete"
-                            }
-                        ]
-                    },
-                    "help": "Select the action you want to perform",
-                    "required": true,
-                    "defaultValue": "two"
-                },
-                {
-                    "type": "singleSelectSplunkSearch",
-                    "label": "Select Account",
-                    "field": "account",
-                    "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",
-                    "options": {
-                        "items": [
-                            {
-                                "label": "earliest",
-                                "value": "-4@h"
-                            },
-                            {
-                                "label": "latest",
-                                "value": "now"
-                            }
-                        ]
-                    },
-                    "valueField": "title",
-                    "labelField": "title",
-                    "help": "Select the account from the dropdown",
-                    "required": true
-                }
-            ]
-        }
-    ],
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.36.2Ref7d7543",
+        "version": "5.44.0R7f88cfdd",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.36.2"
+        "schemaVersion": "0.0.7",
+        "_uccVersion": "5.44.0"
     }
 }

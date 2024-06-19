@@ -1,7 +1,7 @@
 ### Common Properties
 
 - `type`<span class="required-asterisk">*</span> specifies which validator type to use.
-- `errorMsg`<span class="required-asterisk">*</span> displays a custom error message. UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/main/ui/src/main/webapp/constants/messageDict.ts).
+- `errorMsg`<span class="required-asterisk">*</span> displays a custom error message. UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/develop/ui/src/constants/messageDict.ts).
 
 ### String
 
@@ -19,7 +19,6 @@ See the following example usage:
     "maxLength": 80
 }
 ```
-
 
 ### Regex
 
@@ -71,7 +70,7 @@ No parameters are needed.
 
 Internally, it checks the IPV4 address using this [regex](https://github.com/splunk/addonfactory-ucc-generator/blob/main/ui/src/main/webapp/constants/preDefinedRegex.ts).
 
-### Date 
+### Date
 
 No parameters are needed.
 

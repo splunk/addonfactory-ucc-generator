@@ -1,0 +1,279 @@
+{
+  "visualizations": {
+    "data_ingestion_label_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "## Data Ingestion",
+        "fontSize": "large"
+      }
+    },
+    "data_ingestion_description_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "View your add-on ingestion by data volume and number of events.",
+        "customFontSize": 12,
+        "fontColor": "#6c7685"
+      }
+    },
+    "data_ingestion_timerange_label_start_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "data_ingestion_data_time_label_start_ds"
+      }
+    },
+    "data_ingestion_timerange_label_end_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "data_ingestion_data_time_label_end_ds"
+      }
+    },
+    "data_ingestion_data_volume_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "seriesColors": ["#A870EF"],
+        "yAxisTitleText": "Volume (bytes)",
+        "xAxisTitleText": "Time"
+      },
+      "title": "Data volume",
+      "dataSources": {
+        "primary": "data_ingestion_data_volume_ds"
+      }
+    },
+    "data_ingestion_events_count_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
+        "seriesColors": [
+          "#A870EF"
+        ],
+        "yAxisTitleText": "Number of events"
+      },
+      "title": "Number of events",
+      "dataSources": {
+        "primary": "data_ingestion_events_count_ds"
+      }
+    },
+    "data_ingestion_table_viz": {
+      "type": "splunk.table",
+      "context": {
+        "formattedVolume": {
+          "number": {
+            "output": "byte",
+            "base": "decimal",
+            "mantissa": 2,
+            "spaceSeparated": true
+          }
+        },
+        "formattedEvent": {
+          "number": {
+            "trimMantissa": true,
+            "average": true,
+            "mantissa": 2,
+            "spaceSeparated": false
+          }
+        }
+      },
+      "dataSources": {
+        "primary": "data_ingestion_table_ds"
+      },
+      "options": {
+        "tableFormat": {
+          "rowBackgroundColors": "> table | seriesByIndex(0) | pick(tableAltRowBackgroundColorsByBackgroundColor)",
+          "headerBackgroundColor": "> backgroundColor | setColorChannel(tableHeaderBackgroundColorConfig)",
+          "rowColors": "> rowBackgroundColors | maxContrast(tableRowColorMaxContrast)",
+          "headerColor": "> headerBackgroundColor | maxContrast(tableRowColorMaxContrast)"
+        },
+        "columnFormat": {
+          "Data volume": {
+            "data": "> table | seriesByName(\"Data volume\") | formatByType(formattedVolume)"
+          },
+          "Number of events": {
+            "data": "> table | seriesByName(\"Number of events\") | formatByType(formattedEvent)"
+          }
+        },
+        "count": 10
+      }
+    }
+  },
+  "dataSources": {
+    "data_ingestion_data_time_label_start_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
+        }
+      }
+    },
+    "data_ingestion_data_time_label_end_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
+        }
+      }
+    },
+    "data_ingestion_data_volume_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "{{data_ingestion}}",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
+        }
+      }
+    },
+    "data_ingestion_events_count_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "{{events_count}}",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
+        }
+      }
+    },
+    "data_ingestion_table_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "$table_view_by$",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
+        }
+      }
+    }
+  },
+  "defaults": {},
+  "inputs": {
+    "data_ingestion_input": {
+      "options": {
+        "defaultValue": "-24h,now",
+        "token": "data_ingestion_time"
+      },
+      "title": "Time",
+      "type": "input.timerange"
+    },
+    "data_ingestion_table_input": {
+      "type": "input.dropdown",
+      "options": {
+        "items": [
+          {
+            "label": "Source type",
+            "value": "{{ table_sourcetype }}"
+          },
+          {
+            "label": "Source",
+            "value": "{{ table_source }}"
+          },
+          {
+            "label": "Host",
+            "value": "{{ table_host }}"
+          },
+          {
+            "label": "Index",
+            "value": "{{ table_index }}"
+          },
+          {
+            "label": "Account",
+            "value": "{{ table_account }}"
+          },
+          {
+            "label": "Input",
+            "value": "{{ table_input }}"
+          }
+        ],
+        "defaultValue": "{{ table_sourcetype }}",
+        "token": "table_view_by"
+      },
+      "title": "View by"
+    }
+  },
+  "layout": {
+    "type": "grid",
+    "globalInputs": [
+      "data_ingestion_input",
+      "data_ingestion_table_input"
+    ],
+    "structure": [
+      {
+        "item": "data_ingestion_label_viz",
+        "position": {
+          "x": 20,
+          "y": 500,
+          "w": 300,
+          "h": 20
+        }
+      },
+      {
+        "item": "data_ingestion_description_viz",
+        "position": {
+          "x": 20,
+          "y": 520,
+          "w": 500,
+          "h": 50
+        }
+      },
+      {
+        "item": "data_ingestion_timerange_label_start_viz",
+        "position": {
+          "x": 20,
+          "y": 530,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "data_ingestion_timerange_label_end_viz",
+        "position": {
+          "x": 120,
+          "y": 530,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "data_ingestion_data_volume_viz",
+        "position": {
+          "x": 20,
+          "y": 550,
+          "w": 620,
+          "h": 150
+        }
+      },
+      {
+        "item": "data_ingestion_events_count_viz",
+        "position": {
+          "x": 640,
+          "y": 550,
+          "w": 620,
+          "h": 150
+        }
+      },
+      {
+        "item": "data_ingestion_table_viz",
+        "position": {
+          "x": 20,
+          "y": 710,
+          "w": 1220,
+          "h": 300
+        }
+      }
+    ]
+  }
+}

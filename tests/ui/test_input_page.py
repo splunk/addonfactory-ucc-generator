@@ -324,9 +324,19 @@ class TestInputPage(UccTester):
             left_args={"name": "dummy_input_one", "enable": False},
         )
         self.assert_util(
+            input_page.table.get_cell_value,
+            "Disabled",
+            left_args={"name": "dummy_input_one", "column": "Status"},
+        )
+        self.assert_util(
             input_page.table.input_status_toggle,
             True,
             left_args={"name": "dummy_input_one", "enable": True},
+        )
+        self.assert_util(
+            input_page.table.get_cell_value,
+            "Enabled",
+            left_args={"name": "dummy_input_one", "column": "Status"},
         )
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -661,7 +671,7 @@ class TestInputPage(UccTester):
     def test_example_input_one_valid_input_interval(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies whether adding non numeric values, intreval field displays validation error"""
+        """Verifies whether adding non numeric values, interval field displays validation error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input One")
         input_page.entity1.example_account.wait_for_values()
@@ -672,7 +682,7 @@ class TestInputPage(UccTester):
         input_page.entity1.interval.set_value("abc")
         self.assert_util(
             input_page.entity1.save,
-            r"Interval must be an integer.",
+            r"Interval must be either a non-negative number or -1.",
             left_args={"expect_error": True},
         )
 
@@ -1051,7 +1061,7 @@ class TestInputPage(UccTester):
                 "interval": "90",
                 "index": "default",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1124,7 +1134,7 @@ class TestInputPage(UccTester):
                 "interval": "3600",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1147,6 +1157,7 @@ class TestInputPage(UccTester):
             "example_input_one://dummy_input_one"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1202,7 +1213,7 @@ class TestInputPage(UccTester):
                 "interval": "180",
                 "index": "default",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1225,16 +1236,17 @@ class TestInputPage(UccTester):
             "example_input_one://dummy_input_one_Clone_Test"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
     @pytest.mark.sanity_test
-    def test_example_input_one_delete_row_frontend_validation(
+    def test_example_input_one_delete_row_frontend_backend_validation(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
     ):
-        """Verifies the frontend delete functionality"""
+        """Verifies the frontend and backend delete functionality"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.input_status_toggle("dummy_input_one", enable=False)
         input_page.table.delete_row("dummy_input_one")
@@ -1279,6 +1291,21 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.table.clone_row("dummy_input_one")
         self.assert_util(input_page.entity1.close, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_one_clone_save_entity(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+    ):
+        """Verifies required field name in example input one at time of clone"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.clone_row("dummy_input_one")
+        self.assert_util(
+            input_page.entity1.save,
+            "Field Name is required",
+            left_args={"expect_error": True},
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1512,6 +1539,23 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_example_input_two_clone_valid_input_name(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+    ):
+        """Verifies whether adding special characters, name field displays validation error while cloning a row"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.table.clone_row("dummy_input_two")
+        input_page.entity2.example_account.wait_for_values()
+        input_page.entity2.name.set_value("$$test_name_two")
+        self.assert_util(
+            input_page.entity2.save,
+            r"Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     def test_example_input_two_required_field_interval(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
@@ -1538,7 +1582,7 @@ class TestInputPage(UccTester):
     def test_example_input_two_valid_input_interval(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
-        """Verifies whether adding non numeric values, intreval field displays validation error"""
+        """Verifies whether adding non numeric values, interval field displays validation error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input Two")
         input_page.entity2.example_account.wait_for_values()
@@ -1546,7 +1590,7 @@ class TestInputPage(UccTester):
         input_page.entity2.interval.set_value("abc")
         self.assert_util(
             input_page.entity2.save,
-            r"Interval must be an integer.",
+            r"Interval must be either a non-negative number or -1.",
             left_args={"expect_error": True},
         )
 
@@ -1704,7 +1748,7 @@ class TestInputPage(UccTester):
         )
         self.assert_util(
             input_page.entity2.interval.get_help_text,
-            "Time interval of the data input, in seconds .",
+            "Time interval of the data input, in seconds.",
         )
         self.assert_util(
             input_page.entity2.example_checkbox.get_help_text,
@@ -1828,7 +1872,7 @@ class TestInputPage(UccTester):
                 "interval": "90",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1845,6 +1889,7 @@ class TestInputPage(UccTester):
             "example_input_two://dummy_input"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1886,7 +1931,7 @@ class TestInputPage(UccTester):
                 "interval": "3600",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1903,6 +1948,7 @@ class TestInputPage(UccTester):
             "example_input_two://dummy_input_two"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1953,7 +1999,7 @@ class TestInputPage(UccTester):
                 "interval": "180",
                 "index": "main",
                 "status": "Enabled",
-                "actions": "Edit | Clone | Delete",
+                "actions": "Edit | Clone | Search | Delete",
             },
         )
         value_to_test = {
@@ -1970,6 +2016,7 @@ class TestInputPage(UccTester):
             "example_input_two://dummy_input_two_Clone_Test"
         )
         for each_key, each_value in value_to_test.items():
+            self.assert_util(each_key, backend_stanza, operator="in")
             self.assert_util(each_value, backend_stanza[each_key])
 
     @pytest.mark.execute_enterprise_cloud_true

@@ -1,11 +1,11 @@
 # OpenAPI description document
 
-OpenAPI's description document is generated using the `ucc-gen` command. 
+OpenAPI's description document is generated using the `ucc-gen` command.
 There has to be defined, valid `globalConfig.json` and `app.manifest` to have the document (`appserver/static/openapi.json` file) generated.
 
 ## How to find the document?
 
-Once t`ucc-gen` command is executed, OpenAPI description document is located in the `appserver/static` output subdirectory.
+Once `ucc-gen` command is executed, OpenAPI description document is located in the `appserver/static` output subdirectory.
 
 One way to download it is through the button displayed on the top right corner of the configuration page.
 
@@ -15,7 +15,7 @@ When add-on is installed to Splunk instance, it is exposed via web and managemen
 
 * \[protocol\]://\[domain\]:\[port\]/en-GB/static/app/\[appname\]/openapi.json
 
-(eg. http://localhost:8000/en-GB/static/app/Splunk_TA_cisco_meraki/openapi.json)
+(eg. <http://localhost:8000/en-GB/static/app/Splunk_TA_cisco_meraki/openapi.json>)
 
 See the following resources for more information on working with the Splunk REST API (for example, how to authenticate):
 
@@ -28,9 +28,9 @@ The OpenAPI Description document can be used to create:
 
 * interactive documentation that generates simple curl requests to all documented endpoints (check [this section](#how-to-get-curl-commands-and-use-them) for the relevant instructions).
 * automation that uses the simple requests to create more complex solutions such as:
-    * orchestration
-    * mass load or migration
-    * automated tests.
+  * orchestration
+  * mass load or migration
+  * automated tests.
 
 Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/OpenAPI-Specification/blob/main/IMPLEMENTATIONS.md) for more possibilities.
 
@@ -46,9 +46,9 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 1. Open https://editor.swagger.io/
    * Alternatively, you can run your own instance of Swagger Editor
      by running the following command in terminal:
-     
+
      `docker run -p 8081:8080 swaggerapi/swagger-editor`
-     
+
      Then go to: http://localhost:8081/
 2. Load the OpenAPI description document (File > Import file)
 3. Check domain and port values for your Splunk instance and Authorize

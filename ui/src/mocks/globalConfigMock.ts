@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { GlobalConfigSchema } from '../types/globalConfig/globalConfig';
 
-const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
+const globalConfigMock = {
     pages: {
         configuration: {
             tabs: [
@@ -248,8 +248,9 @@ const globalConfigMock: z.input<typeof GlobalConfigSchema> = {
         displayName: 'Demo Add-on for Splunk',
         schemaVersion: '0.0.3',
         checkForUpdates: false,
+        searchViewDefault: false,
     },
-};
+} satisfies z.input<typeof GlobalConfigSchema>;
 
 export function getGlobalConfigMock() {
     return GlobalConfigSchema.parse(globalConfigMock);

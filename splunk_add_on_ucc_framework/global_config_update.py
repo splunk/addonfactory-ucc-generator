@@ -14,9 +14,12 @@
 # limitations under the License.
 #
 import logging
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, Tuple, List, Optional
 
-from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
+from splunk_add_on_ucc_framework.entity import collapse_entity
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
+from splunk_add_on_ucc_framework.tabs import resolve_tab
 
 logger = logging.getLogger("ucc_gen")
 
@@ -51,6 +54,10 @@ def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, 
 def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig) -> None:
     for tab in global_config.tabs:
         conf_entities = tab.get("entity")
+
+        if conf_entities is None:
+            continue
+
         tab["entity"] = _handle_biased_terms(conf_entities)
     for service in global_config.inputs:
         conf_entities = service.get("entity")
@@ -64,6 +71,50 @@ def _handle_dropping_api_version_update(
     if global_config.meta.get("apiVersion"):
         del global_config.meta["apiVersion"]
     global_config.update_schema_version("0.0.3")
+
+
+def _handle_alert_action_updates(global_config: global_config_lib.GlobalConfig) -> None:
+    if global_config.has_alerts():
+        updated_alerts = []
+        for alert in global_config.alerts:
+            modified_alert = {}
+            for k, v in alert.items():
+                if k in ["activeResponse", "adaptiveResponse"]:
+                    # set default values for the below properties
+                    v["supportsAdhoc"] = v.get("supportsAdhoc", False)
+                    v["supportsCloud"] = v.get("supportsCloud", True)
+                if k == "activeResponse":
+                    logger.warning(
+                        "'activeResponse' is deprecated. Please use 'adaptiveResponse' instead."
+                    )
+                    modified_alert["adaptiveResponse"] = v
+                else:
+                    modified_alert[k] = v
+
+            # in either case, we create a new list and fill it with updated alerts, if any
+            updated_alerts.append(modified_alert)
+        global_config._content["alerts"] = updated_alerts
+        global_config.dump(global_config.original_path)
+    global_config.update_schema_version("0.0.4")
+
+
+def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) -> None:
+    panels_to_migrate = [
+        "addon_version",
+        "events_ingested_by_sourcetype",
+        "errors_in_the_addon",
+    ]
+    if global_config.has_dashboard():
+        panels = [panel["name"] for panel in global_config.dashboard["panels"]]
+        deprecated_panels = [el for el in panels if el in panels_to_migrate]
+        if deprecated_panels:
+            logger.warning(
+                f"deprecated dashboard panels found: {deprecated_panels}. "
+                f"Instead, use just one panel: \"'name': 'default'\""
+            )
+            global_config.dashboard["panels"] = [{"name": "default"}]
+            global_config.dump(global_config.original_path)
+    global_config.update_schema_version("0.0.5")
 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
@@ -81,6 +132,10 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         for tab in global_config.tabs:
             if tab["name"] == "account":
                 conf_entities = tab.get("entity")
+
+                if conf_entities is None:
+                    continue
+
                 oauth_state_enabled_entity = {}
                 for entity in conf_entities:
                     if entity.get("field") == "oauth_state_enabled":
@@ -141,3 +196,60 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _handle_dropping_api_version_update(global_config)
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.3")
+
+    if _version_tuple(version) < _version_tuple("0.0.4"):
+        _handle_alert_action_updates(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.4")
+
+    if _version_tuple(version) < _version_tuple("0.0.5"):
+        _handle_xml_dashboard_update(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.5")
+
+    if _version_tuple(version) < _version_tuple("0.0.6"):
+        global_config.update_schema_version("0.0.6")
+        _dump_with_migrated_tabs(global_config, global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.6")
+
+    if _version_tuple(version) < _version_tuple("0.0.7"):
+        global_config.update_schema_version("0.0.7")
+        _dump_with_migrated_entities(global_config, global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.7")
+
+
+def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
+    for i, tab in enumerate(
+        global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
+    ):
+        global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
+
+    _dump(global_config.content, path, global_config._is_global_config_yaml)
+
+
+def _dump_with_migrated_entities(global_config: GlobalConfig, path: str) -> None:
+    _collapse_entities(global_config.content["pages"].get("inputs", {}).get("services"))
+    _collapse_entities(global_config.content["pages"]["configuration"].get("tabs"))
+    _collapse_entities(global_config.content.get("alerts"))
+
+    _dump(global_config.content, path, global_config._is_global_config_yaml)
+
+
+def _collapse_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
+    if items is None:
+        return
+
+    for item in items:
+        for i, entity in enumerate(item.get("entity", [])):
+            item["entity"][i] = collapse_entity(entity)
+
+
+def _dump(content: Dict[Any, Any], path: str, is_yaml: bool) -> None:
+    if is_yaml:
+        utils.dump_yaml_config(content, path)
+    else:
+        utils.dump_json_config(content, path)
+
+
+def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
+    return resolve_tab(tab).short_form()

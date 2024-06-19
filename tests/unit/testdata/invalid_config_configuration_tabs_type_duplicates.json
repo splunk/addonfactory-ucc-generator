@@ -1,0 +1,25 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "type": "loggingTab"
+                },
+                {
+                    "type": "loggingTab",
+                    "name": "logging2",
+                    "title": "Logging2"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
+    }
+}

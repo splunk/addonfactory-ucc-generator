@@ -3,8 +3,9 @@ import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
-import { AnyEntity, UtilControlWrapper } from '../BaseFormTypes';
+import { AnyEntity, UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import CustomControl from '../CustomControl/CustomControl';
 
 const CustomElement = styled.div``;
 
@@ -68,15 +69,16 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         const { text, link, color, markdownType, token, linkText } =
             this.props.markdownMessage || {};
         let rowView;
+        // console.log('render custom component', this.props);
+
         if (this.props?.entity?.type === 'custom') {
             const data = {
                 value: this.props.value,
                 mode: this.props.mode,
                 serviceName: this.props.serviceName,
             };
-
             rowView = this.controlType
-                ? React.createElement(this.controlType, {
+                ? React.createElement(this.controlType as typeof CustomControl, {
                       data,
                       handleChange,
                       addCustomValidator,
@@ -88,19 +90,24 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                 : `No View Found for ${this?.props?.entity?.type} type`;
         } else {
             rowView = this.controlType
-                ? React.createElement(this.controlType, {
-                      handleChange,
-                      value: this.props.value,
-                      controlOptions: this.props.entity?.options,
-                      error: this.props.error,
-                      disabled: this.props.disabled,
-                      dependencyValues: this.props.dependencyValues,
-                      addCustomValidator,
-                      fileNameToDisplay: this.props.fileNameToDisplay,
-                      mode: this.props.mode,
-                      ...this?.props?.entity,
-                      ...this.props?.modifiedEntitiesData,
-                  })
+                ? React.createElement(
+                      // TODO: refactor props of each component or use switch case instead of CONTROL_TYPE_MAP
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      this.controlType as any,
+                      {
+                          handleChange,
+                          value: this.props.value,
+                          controlOptions: this.props.entity?.options,
+                          error: this.props.error,
+                          disabled: this.props.disabled,
+                          dependencyValues: this.props.dependencyValues,
+                          addCustomValidator,
+                          fileNameToDisplay: this.props.fileNameToDisplay,
+                          mode: this.props.mode,
+                          ...this?.props?.entity,
+                          ...this.props?.modifiedEntitiesData,
+                      }
+                  )
                 : `No View Found for ${this?.props?.entity?.type} type`;
         }
 
@@ -118,6 +125,11 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             </>
         );
 
+        const isFieldRequired =
+            this.props.entity?.required === undefined
+                ? 'oauth_field' in (this.props.entity || {}) // if required is undefined use true for oauth fields and false for others
+                : this.props.entity?.required; // if required present use required
+
         return (
             this.props.display && (
                 <ControlGroupWrapper
@@ -128,6 +140,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     // @ts-expect-error property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={this?.props?.entity.field}
                     labelWidth={240}
+                    required={isFieldRequired}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>

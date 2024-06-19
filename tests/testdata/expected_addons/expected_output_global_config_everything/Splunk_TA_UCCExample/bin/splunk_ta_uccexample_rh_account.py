@@ -8,7 +8,7 @@ from splunktaucclib.rest_handler.endpoint import (
     SingleModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
-from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
+from splunk_ta_uccexample_validate_account_rh import CustomAccountValidator
 import logging
 
 util.remove_http_proxy_env_vars()
@@ -28,6 +28,15 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
+    ), 
+    field.RestField(
+        'url',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=validator.Pattern(
+            regex=r"""^(https://)[^/]+/?$""", 
+        )
     ), 
     field.RestField(
         'account_checkbox',
@@ -184,5 +193,5 @@ if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())
     admin_external.handle(
         endpoint,
-        handler=AdminExternalHandler,
+        handler=CustomAccountValidator,
     )

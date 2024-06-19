@@ -1,0 +1,208 @@
+{
+  "visualizations": {
+    "main_page_label_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "# Monitoring dashboard",
+        "fontSize": "large"
+      }
+    },
+    "main_page_description_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "Use the Monitoring dashboard to track behaviors for your add-on.",
+        "customFontSize": 12,
+        "fontColor": "#6c7685"
+      }
+    },
+    "overview_main_label_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "## Overview",
+        "fontSize": "large"
+      }
+    },
+    "overview_timerange_label_start_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "overview_data_time_label_start_ds"
+      }
+    },
+    "overview_timerange_label_end_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "context": {},
+      "dataSources": {
+        "primary": "overview_data_time_label_end_ds"
+      }
+    },
+    "overview_data_volume_viz": {
+      "type": "splunk.column",
+      "options": {
+        "xAxisVisibility": "hide",
+        "seriesColors": [
+          "#A870EF",
+          "#029ceb"
+        ],
+        "yAxisTitleText": "Volume (bytes)",
+        "overlayFields": "Number of events",
+        "y2AxisTitleText": "Number of events",
+        "xAxisTitleText": "Time",
+        "y2AxisLineVisibility": "show",
+        "showRoundedY2AxisLabels": true,
+        "showOverlayY2Axis": true
+      },
+      "title": "Data ingestion",
+      "dataSources": {
+        "primary": "overview_data_volume_ds"
+      }
+    },
+    "overview_errors_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
+        "yAxisTitleText": "Error count"
+      },
+      "title": "Errors",
+      "dataSources": {
+        "primary": "overview_errors_count_ds"
+      }
+    }
+  },
+  "dataSources": {
+    "overview_data_time_label_start_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        }
+      }
+    },
+    "overview_data_time_label_end_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        }
+      }
+    },
+    "overview_data_volume_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "{{data_ingestion_and_events}}",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        }
+      }
+    },
+    "overview_errors_count_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "{{errors_count}}",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        }
+      }
+    }
+  },
+  "defaults": {},
+  "inputs": {
+    "overview_input": {
+      "options": {
+        "defaultValue": "-24h,now",
+        "token": "overview_time"
+      },
+      "title": "Time",
+      "type": "input.timerange"
+    }
+  },
+  "layout": {
+    "type": "grid",
+    "globalInputs": [
+      "overview_input"
+    ],
+    "structure": [
+      {
+        "item": "main_page_label_viz",
+        "position": {
+          "x": 20,
+          "y": 20,
+          "w": 500,
+          "h": 200
+        }
+      },
+      {
+        "item": "main_page_description_viz",
+        "position": {
+          "x": 20,
+          "y": 50,
+          "w": 500,
+          "h": 200
+        }
+      },
+      {
+        "item": "overview_main_label_viz",
+        "position": {
+          "x": 20,
+          "y": 100,
+          "w": 500,
+          "h": 200
+        }
+      },
+      {
+        "item": "overview_timerange_label_start_viz",
+        "position": {
+          "x": 20,
+          "y": 130,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "overview_timerange_label_end_viz",
+        "position": {
+          "x": 120,
+          "y": 130,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "overview_data_volume_viz",
+        "position": {
+          "x": 20,
+          "y": 150,
+          "w": 620,
+          "h": 300
+        }
+      },
+      {
+        "item": "overview_errors_viz",
+        "position": {
+          "x": 640,
+          "y": 150,
+          "w": 620,
+          "h": 300
+        }
+      }
+    ]
+  },
+  "description": "",
+  "title": "Custom Components Dashboard"
+}

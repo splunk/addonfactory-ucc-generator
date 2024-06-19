@@ -33,7 +33,6 @@ When a row is expanded on the Inputs table, Custom Row is utilized to incorporat
 }
 ```
 
-
 ### Example
 
 ```

@@ -1,4 +1,4 @@
-This feature allows you to separate inputs based on their service name. Use the tabs feature when multiple inputs services are provided in the global configuration file, and you want to display each input service in a separate tab (and table). 
+This feature allows you to separate inputs based on their service name. Use the tabs feature when multiple inputs services are provided in the global configuration file, and you want to display each input service in a separate tab (and table).
 
 The `table` property must be present in the services to use the tabs feature.
 

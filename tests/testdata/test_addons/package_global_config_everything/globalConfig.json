@@ -91,6 +91,23 @@
                             }
                         },
                         {
+                            "field": "url",
+                            "label": "URL",
+                            "type": "text",
+                            "help": "Enter the URL, for example",
+                            "required": false,
+                            "options": {
+                                "placeholder": "Required"
+                            },
+                            "validators": [
+                                {
+                                    "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
+                                    "type": "regex",
+                                    "pattern": "^(https://)[^/]+/?$"
+                                }
+                            ]
+                        },
+                        {
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
@@ -443,7 +460,9 @@
                             }
                         }
                     ],
-                    "title": "Account"
+                    "title": "Account",
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator"
                 },
                 {
                     "name": "proxy",
@@ -552,46 +571,7 @@
                     "title": "Proxy"
                 },
                 {
-                    "name": "logging",
-                    "warning": {
-                        "config": {
-                            "message": "Some warning for account text config"
-                        }
-                    },
-                    "entity": [
-                        {
-                            "type": "singleSelect",
-                            "label": "Log level",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {
-                                        "value": "DEBUG",
-                                        "label": "DEBUG"
-                                    },
-                                    {
-                                        "value": "INFO",
-                                        "label": "INFO"
-                                    },
-                                    {
-                                        "value": "WARNING",
-                                        "label": "WARNING"
-                                    },
-                                    {
-                                        "value": "ERROR",
-                                        "label": "ERROR"
-                                    },
-                                    {
-                                        "value": "CRITICAL",
-                                        "label": "CRITICAL"
-                                    }
-                                ]
-                            },
-                            "defaultValue": "INFO",
-                            "field": "loglevel"
-                        }
-                    ],
-                    "title": "Logging"
+                    "type": "loggingTab"
                 },
                 {
                     "name": "custom_abc",
@@ -695,6 +675,7 @@
             "services": [
                 {
                     "name": "example_input_one",
+                    "inputHelperModule": "helper_one",
                     "warning": {
                         "create": {
                             "message": "Some warning for account text create"
@@ -814,16 +795,9 @@
                             }
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         },
@@ -980,6 +954,7 @@
                 },
                 {
                     "name": "example_input_two",
+                    "inputHelperModule": "helper_two",
                     "entity": [
                         {
                             "type": "text",
@@ -1002,17 +977,10 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
+                            "type": "interval",
                             "field": "interval",
-                            "help": "Time interval of the data input, in seconds .",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
                             "required": true
                         },
                         {
@@ -1321,16 +1289,9 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
@@ -1363,16 +1324,9 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
@@ -1397,7 +1351,8 @@
                     "edit",
                     "enable",
                     "delete",
-                    "clone"
+                    "clone",
+                    "search"
                 ],
                 "header": [
                     {
@@ -1472,13 +1427,7 @@
         "dashboard": {
             "panels": [
                 {
-                    "name": "addon_version"
-                },
-                {
-                    "name": "events_ingested_by_sourcetype"
-                },
-                {
-                    "name": "errors_in_the_addon"
+                    "name": "default"
                 }
             ]
         }
@@ -1488,12 +1437,14 @@
             "name": "test_alert",
             "label": "Test Alert",
             "description": "Description for test Alert Action",
-            "activeResponse": {
+            "iconFileName": "test icon.png",
+            "adaptiveResponse": {
                 "task": [
                     "Create",
                     "Update"
                 ],
                 "supportsAdhoc": true,
+                "supportsCloud": true,
                 "subject": [
                     "endpoint"
                 ],
@@ -1537,12 +1488,12 @@
                     "options": {
                         "items": [
                             {
-                                "value": "Incident",
-                                "label": "incident"
+                                "value": "incident",
+                                "label": "Incident"
                             },
                             {
-                                "value": "Problem",
-                                "label": "problem"
+                                "value": "problem",
+                                "label": "Problem"
                             }
                         ]
                     },
@@ -1557,18 +1508,18 @@
                     "options": {
                         "items": [
                             {
-                                "value": "Update",
-                                "label": "update"
+                                "value": "update",
+                                "label": "Update"
                             },
                             {
-                                "value": "Delete",
-                                "label": "delete"
+                                "value": "delete",
+                                "label": "Delete"
                             }
                         ]
                     },
                     "help": "Select the action you want to perform",
                     "required": true,
-                    "defaultValue": "two"
+                    "defaultValue": "update"
                 },
                 {
                     "type": "singleSelectSplunkSearch",
@@ -1592,15 +1543,16 @@
                     "help": "Select the account from the dropdown",
                     "required": true
                 }
-            ]
+            ],
+            "customScript": "myAlertLogic"
         }
     ],
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.37.0R9e80e3a7",
+        "version": "5.44.0R7f88cfdd",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.37.0"
+        "schemaVersion": "0.0.7",
+        "_uccVersion": "5.44.0"
     }
 }

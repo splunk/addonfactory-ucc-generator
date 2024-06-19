@@ -5,6 +5,7 @@ description: >-
 title: 'Feature request: '
 labels:
 - enhancement
+- triage
 
 body:
 - type: markdown
@@ -12,9 +13,10 @@ body:
     value: >
       Please:
 
-      - [ ] Check for duplicate requests.
+      - [ ] Check for duplicate requests
 - type: textarea
   attributes:
     label: Description
-    description: >-
-      Description of the feature request.
+    description: Description of the feature request
+  validations:
+    required: true

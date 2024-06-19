@@ -11,8 +11,10 @@ from pytest_splunk_addon_ui_smartx.components.controls.checkbox import Checkbox
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
 from pytest_splunk_addon_ui_smartx.components.controls.learn_more import LearnMore
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
+from pytest_splunk_addon_ui_smartx.components.controls.message import Message
 from pytest_splunk_addon_ui_smartx.components.conf_table import ConfigurationTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
+
 
 from tests.ui import constants as C
 
@@ -36,6 +38,9 @@ class AccountEntity(Entity):
         # Controls
         self.name = TextBox(
             browser, Selector(select='[data-test="control-group"][data-name="name"]')
+        )
+        self.URL = TextBox(
+            browser, Selector(select='[data-test="control-group"][data-name="url"]')
         )
         self.environment = SingleSelect(
             browser,
@@ -96,6 +101,10 @@ class AccountEntity(Entity):
             ),
         )
         self.title = BaseComponent(browser, Selector(select='[data-test="title"]'))
+        self.auth_type = OAuthSelect(
+            browser,
+            Selector(select='[data-test="control-group"][data-name="auth_type"]'),
+        )
 
 
 class AccountPage(Page):
@@ -121,6 +130,14 @@ class AccountPage(Page):
             )
             self.entity = AccountEntity(
                 ucc_smartx_selenium_helper.browser, account_container
+            )
+            self.title = Message(
+                ucc_smartx_selenium_helper.browser,
+                Selector(select=' [data-test="column"] .pageTitle'),
+            )
+            self.description = Message(
+                ucc_smartx_selenium_helper.browser,
+                Selector(select=' [data-test="column"] .pageSubtitle'),
             )
 
         if ucc_smartx_rest_helper:

@@ -1,11 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
-import styled from 'styled-components';
 
+import styled from 'styled-components';
 import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
@@ -15,6 +15,15 @@ import ConfigurationFormView from '../../components/ConfigurationFormView';
 import ConfigurationTable from '../../components/ConfigurationTable';
 import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownloadBtn';
 import SubDescription from '../../components/SubDescription/SubDescription';
+import UccCredit from '../../components/UCCCredit/UCCCredit';
+
+const StyledHeaderControls = styled.div`
+    display: inline-flex;
+    align-items: center;
+    justify-content: end;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+`;
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -106,8 +115,11 @@ function ConfigurationPage() {
                             <SubTitleComponent>{_(description || '')}</SubTitleComponent>
                             <SubDescription {...subDescription} />
                         </ColumnLayout.Column>
-                        <ColumnLayout.Column span={1} style={{ textAlignLast: 'right' }}>
-                            <OpenApiDownloadButton />
+                        <ColumnLayout.Column span={3} style={{ textAlignLast: 'right' }}>
+                            <StyledHeaderControls>
+                                <UccCredit />
+                                <OpenApiDownloadButton />
+                            </StyledHeaderControls>
                         </ColumnLayout.Column>
                     </Row>
                 </ColumnLayout>

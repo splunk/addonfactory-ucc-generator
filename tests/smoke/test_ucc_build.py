@@ -1,22 +1,17 @@
 import os
 import tempfile
-import sys
-import pytest
 import logging
 import json
 from os import path
+from pathlib import Path
+from typing import Dict, Any
 
 from tests.smoke import helpers
-
+from tests.unit import helpers as unit_helpers
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework import __version__
-
-PYTEST_SKIP_REASON = """Python 3.8 and higher preserves the order of the attrib
-fields when `tostring` function is used.
-https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.tostring
-"""
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
@@ -104,7 +99,6 @@ def test_ucc_generate_with_config_param():
     check_ucc_versions()
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_everything():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -134,6 +128,7 @@ def test_ucc_generate_with_everything():
         # Expected add-on package folder does not have "lib" in it.
         files_to_be_equal = [
             ("README.txt",),
+            ("appserver", "static", "test icon.png"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -148,7 +143,8 @@ def test_ucc_generate_with_everything():
             ("default", "data", "ui", "views", "inputs.xml"),
             ("default", "data", "ui", "views", "dashboard.xml"),
             ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
-            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+            ("bin", "helper_one.py"),
+            ("bin", "helper_two.py"),
             ("bin", "example_input_one.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
@@ -162,6 +158,8 @@ def test_ucc_generate_with_everything():
             ("bin", "splunk_ta_uccexample_custom_rh.py"),
             ("bin", "splunk_ta_uccexample_rh_oauth.py"),
             ("bin", "splunk_ta_uccexample_rh_settings.py"),
+            ("bin", "splunk_ta_uccexample_validate_account_rh.py"),
+            ("bin", "myAlertLogic.py"),
             ("bin", "test_alert.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),
@@ -179,10 +177,23 @@ def test_ucc_generate_with_everything():
             ("static", "appIcon_2x.png"),
             ("static", "appIconAlt.png"),
             ("static", "appIconAlt_2x.png"),
+            ("appserver", "static", "js", "build", "entry_page.js"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert path.exists(expected_file_path)
+            actual_file_path = path.join(actual_folder, *f)
+            assert path.exists(actual_file_path)
+
+        # when custom files are provided, default files shouldn't be shipped
+        files_should_be_absent = [
+            ("appserver", "static", "alerticon.png"),
+            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
+        ]
+        for af in files_should_be_absent:
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
+
+        _compare_expandable_tabs_and_entities(package_folder, actual_folder)
 
 
 def test_ucc_generate_with_multiple_inputs_tabs():
@@ -197,7 +208,6 @@ def test_ucc_generate_with_multiple_inputs_tabs():
     build.generate(source=package_folder)
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -257,8 +267,8 @@ def test_ucc_generate_with_configuration():
             ("static", "appIconAlt_2x.png"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
-            assert path.exists(expected_file_path)
+            actual_file_path = path.join(actual_folder, *f)
+            assert path.exists(actual_file_path)
 
 
 def test_ucc_generate_with_configuration_files_only():
@@ -314,10 +324,10 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         )
         build.generate(source=package_folder, output_directory=temp_dir)
 
-        expected_file_path = path.join(
+        actual_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        assert not path.exists(expected_file_path)
+        assert not path.exists(actual_file_path)
 
 
 def test_ucc_build_verbose_mode(caplog):
@@ -415,6 +425,7 @@ def test_ucc_build_verbose_mode(caplog):
         source=package_folder,
         output_directory=temp_dir,
         verbose_file_summary_report=True,
+        ui_source_map=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
@@ -431,8 +442,11 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.levelname == expected_logs[log_line.message]
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 8), reason=PYTEST_SKIP_REASON)
 def test_ucc_generate_with_everything_uccignore(caplog):
+    """
+    Checks the functioning of .uccignore present in a repo.
+    Compare only the files that shouldn't be present in the output directory.
+    """
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -449,71 +463,177 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
         )
 
-        edm1 = "Removed:"
-        edm2 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py"
-        edm3 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py"
-        edm4 = f"\n{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py"
+        edm_paths = {
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
+        }
+        removed = set(
+            caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
+        )
 
         assert expected_warning_msg in caplog.text
-        assert (edm1 + edm2 + edm3 + edm4) in caplog.text or (
-            edm1 + edm3 + edm2 + edm4
-        ) in caplog.text
+        assert edm_paths == removed
 
-        expected_folder = path.join(
-            path.dirname(__file__),
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+        # when custom files are provided, default files shouldn't be shipped
+        files_should_be_absent = [
+            ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
+            ("bin", "example_input_one.py"),
+            ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
+        ]
+        for af in files_should_be_absent:
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
+
+
+def test_ucc_generate_only_one_tab():
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    build.generate(source=package_folder)
+
+
+def test_ucc_generate_with_ui_source_map():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
-            "expected_addons",
-            "expected_output_global_config_everything",
-            "Splunk_TA_UCCExample",
+            "test_addons",
+            "package_global_config_everything",
+            "package",
         )
+        build.generate(
+            source=package_folder, output_directory=temp_dir, ui_source_map=True
+        )
+
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-        _compare_app_conf(expected_folder, actual_folder)
-        files_to_be_equal = [
-            ("README.txt",),
-            ("default", "alert_actions.conf"),
-            ("default", "eventtypes.conf"),
-            ("default", "inputs.conf"),
-            ("default", "restmap.conf"),
-            ("default", "tags.conf"),
-            ("default", "splunk_ta_uccexample_settings.conf"),
-            ("default", "web.conf"),
-            ("default", "server.conf"),
-            ("default", "data", "ui", "alerts", "test_alert.html"),
-            ("default", "data", "ui", "nav", "default.xml"),
-            ("default", "data", "ui", "views", "configuration.xml"),
-            ("default", "data", "ui", "views", "inputs.xml"),
-            ("default", "data", "ui", "views", "dashboard.xml"),
-            ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
-            ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
-            ("bin", "example_input_two.py"),
-            ("bin", "example_input_three.py"),
-            ("bin", "example_input_four.py"),
-            ("bin", "import_declare_test.py"),
-            ("bin", "splunk_ta_uccexample_rh_account.py"),
-            ("bin", "splunk_ta_uccexample_rh_three_custom.py"),
-            ("bin", "splunk_ta_uccexample_rh_example_input_four.py"),
-            ("bin", "splunk_ta_uccexample_custom_rh.py"),
-            ("bin", "splunk_ta_uccexample_rh_oauth.py"),
-            ("bin", "splunk_ta_uccexample_rh_settings.py"),
-            ("bin", "test_alert.py"),
-            ("README", "alert_actions.conf.spec"),
-            ("README", "inputs.conf.spec"),
-            ("README", "splunk_ta_uccexample_account.conf.spec"),
-            ("README", "splunk_ta_uccexample_settings.conf.spec"),
-            ("metadata", "default.meta"),
-        ]
-        helpers.compare_file_content(
-            files_to_be_equal,
-            expected_folder,
-            actual_folder,
-        )
+
         files_to_exist = [
-            ("static", "appIcon.png"),
-            ("static", "appIcon_2x.png"),
-            ("static", "appIconAlt.png"),
-            ("static", "appIconAlt_2x.png"),
+            ("appserver", "static", "js", "build", "entry_page.js"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
         ]
         for f in files_to_exist:
-            expected_file_path = path.join(expected_folder, *f)
+            expected_file_path = path.join(actual_folder, *f)
             assert path.exists(expected_file_path)
+
+
+def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    tmp_file_gc = tmp_path / "globalConfig.json"
+    unit_helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_all_alerts.json"
+    )
+
+    build.generate(source=package_folder, config_path=str(tmp_file_gc))
+
+    # there are 2 occurrences of 'activeResponse' in 'valid_config_all_alerts.json'
+    assert (
+        caplog.messages.count(
+            "'activeResponse' is deprecated. Please use 'adaptiveResponse' instead."
+        )
+        == 2
+    )
+    assert "Updated globalConfig schema to version 0.0.4" in caplog.messages
+
+
+def _compare_expandable_tabs_and_entities(package_dir: str, output_dir: str) -> None:
+    with open(Path(package_dir) / os.pardir / "globalConfig.json") as fp:
+        global_config = json.load(fp)
+
+    with open(
+        Path(output_dir) / "appserver" / "static" / "js" / "build" / "globalConfig.json"
+    ) as fp:
+        static_config = json.load(fp)
+
+    _compare_logging_tab(global_config, static_config)
+    _compare_interval_entities(global_config, static_config)
+
+
+def _compare_logging_tab(
+    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+) -> None:
+    tab_exists = False
+    num = 0
+
+    for num, tab in enumerate(global_config["pages"]["configuration"]["tabs"]):
+        if tab.get("type", "") == "loggingTab":
+            tab_exists = True
+            break
+
+    assert tab_exists
+
+    static_tab = static_config["pages"]["configuration"]["tabs"][num]
+
+    assert "type" not in static_tab
+    assert static_tab == {
+        "entity": [
+            {
+                "defaultValue": "INFO",
+                "field": "loglevel",
+                "label": "Log level",
+                "options": {
+                    "autoCompleteFields": [
+                        {"label": "DEBUG", "value": "DEBUG"},
+                        {"label": "INFO", "value": "INFO"},
+                        {"label": "WARNING", "value": "WARNING"},
+                        {"label": "ERROR", "value": "ERROR"},
+                        {"label": "CRITICAL", "value": "CRITICAL"},
+                    ],
+                    "disableSearch": True,
+                },
+                "type": "singleSelect",
+                "required": True,
+            }
+        ],
+        "name": "logging",
+        "title": "Logging",
+    }
+
+
+def _compare_interval_entities(
+    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+) -> None:
+    for lmbd in (
+        lambda x: x["pages"]["configuration"]["tabs"],
+        lambda x: x.get("alerts", []),
+        lambda x: x["pages"].get("inputs", {}).get("services", []),
+    ):
+        for item_num, item in enumerate(lmbd(global_config)):
+            for entity_num, entity in enumerate(item.get("entity", [])):
+                if entity.get("type", "") == "interval":
+                    assert entity == {
+                        "field": "interval",
+                        "help": "Time interval of the data input, in seconds.",
+                        "label": "Interval",
+                        "required": True,
+                        "type": "interval",
+                    }
+                    assert lmbd(static_config)[item_num]["entity"][entity_num] == {
+                        "field": "interval",
+                        "help": "Time interval of the data input, in seconds.",
+                        "label": "Interval",
+                        "required": True,
+                        "type": "text",
+                        "validators": [
+                            {
+                                "errorMsg": "Interval must be either a non-negative number or -1.",
+                                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                                "type": "regex",
+                            }
+                        ],
+                    }

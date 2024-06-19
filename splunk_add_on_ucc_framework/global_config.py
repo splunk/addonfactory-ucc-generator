@@ -21,6 +21,8 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework.entity import expand_entity
+from splunk_add_on_ucc_framework.tabs import resolve_tab, LoggingTab
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
@@ -54,20 +56,46 @@ class OSDependentLibraryConfig:
 
 
 class GlobalConfig:
-    def __init__(self, global_config_path: str, is_global_config_yaml: bool) -> None:
+    def __init__(self, global_config_path: str) -> None:
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
-        self._content = (
-            yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
+        self._is_global_config_yaml = (
+            True if global_config_path.endswith(".yaml") else False
         )
-        self._is_global_config_yaml = is_global_config_yaml
+        self._content = (
+            yaml_load(config_raw)
+            if self._is_global_config_yaml
+            else json.loads(config_raw)
+        )
         self._original_path = global_config_path
 
     def dump(self, path: str) -> None:
         if self._is_global_config_yaml:
-            utils.dump_yaml_config(self._content, path)
+            utils.dump_yaml_config(self.content, path)
         else:
-            utils.dump_json_config(self._content, path)
+            utils.dump_json_config(self.content, path)
+
+    def expand(self) -> None:
+        self.expand_tabs()
+        self.expand_entities()
+
+    def expand_tabs(self) -> None:
+        for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
+            self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+
+    def expand_entities(self) -> None:
+        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
+        self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
+        self._expand_entities(self._content.get("alerts"))
+
+    @staticmethod
+    def _expand_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
+        if items is None:
+            return
+
+        for item in items:
+            for i, entity in enumerate(item.get("entity", [])):
+                item["entity"][i] = expand_entity(entity)
 
     @property
     def content(self) -> Any:
@@ -96,6 +124,13 @@ class GlobalConfig:
         return settings
 
     @property
+    def logging_tab(self) -> Dict[str, Any]:
+        for tab in self.tabs:
+            if LoggingTab.from_definition(tab) is not None:
+                return tab
+        return {}
+
+    @property
     def configs(self) -> List[Any]:
         configs = []
         for tab in self.tabs:
@@ -108,7 +143,7 @@ class GlobalConfig:
         return self._content.get("alerts", [])
 
     @property
-    def meta(self) -> Dict[str, str]:
+    def meta(self) -> Dict[str, Any]:
         return self._content["meta"]
 
     @property

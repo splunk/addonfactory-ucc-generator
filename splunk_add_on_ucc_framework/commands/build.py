@@ -138,11 +138,14 @@ def _add_modular_input(
         entity = service.get("entity")
         field_allow_list = frozenset(["name", "interval", "index", "sourcetype"])
         template = "input.template"
+
         if "template" in service:
             template = service.get("template") + ".template"
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
+
+        input_helper_module = service.get("inputHelperModule")
 
         content = (
             utils.get_j2_env()
@@ -152,11 +155,28 @@ def _add_modular_input(
                 class_name=class_name,
                 description=description,
                 entity=entity,
+                input_helper_module=input_helper_module,
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
+
+        if input_helper_module is not None:
+            helper_module_template = "input.module-template"
+            helper_filename = os.path.join(
+                outputdir, ta_name, "bin", f"{input_helper_module}.py"
+            )
+
+            content = (
+                utils.get_j2_env()
+                .get_template(helper_module_template)
+                .render(
+                    input_name=input_name,
+                )
+            )
+            with open(helper_filename, "w") as helper_file:
+                helper_file.write(content)
 
         input_default = os.path.join(outputdir, ta_name, "default", "inputs.conf")
         config = configparser.ConfigParser()
@@ -229,6 +249,7 @@ def generate_data_ui(
     addon_name: str,
     include_inputs: bool,
     include_dashboard: bool,
+    default_view: str,
 ) -> None:
     # Create directories in the output folder for add-on's UI nav and views.
     os.makedirs(
@@ -252,6 +273,7 @@ def generate_data_ui(
             default_xml_content = data_ui_generator.generate_nav_default_xml(
                 include_inputs=include_inputs,
                 include_dashboard=include_dashboard,
+                default_view=default_view,
             )
             default_xml_file.write(default_xml_content)
     with open(
@@ -269,6 +291,14 @@ def generate_data_ui(
                 addon_name,
             )
             input_xml_file.write(inputs_xml_content)
+    if include_dashboard:
+        with open(
+            os.path.join(default_ui_path, "views", "dashboard.xml"), "w"
+        ) as dashboard_xml_file:
+            dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(
+                addon_name
+            )
+            dashboard_xml_file.write(dashboard_xml_content)
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -331,6 +361,20 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         raise exceptions.CouldNotIdentifyPythonVersionException(
             f"Failed to identify python version for binary {python_binary_name}"
         )
+
+
+def _get_and_check_global_config_path(source: str, config_path: Optional[str]) -> str:
+    if not config_path:
+        config_path = os.path.abspath(
+            os.path.join(source, os.pardir, "globalConfig.json")
+        )
+        if not os.path.isfile(config_path):
+            config_path = os.path.abspath(
+                os.path.join(source, os.pardir, "globalConfig.yaml")
+            )
+    if os.path.isfile(config_path):
+        return config_path
+    return ""
 
 
 def summary_report(
@@ -455,6 +499,7 @@ def generate(
     verbose_file_summary_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
+    ui_source_map: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -479,24 +524,13 @@ def generate(
     logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
-    if not config_path:
-        is_global_config_yaml = False
-        config_path = os.path.abspath(
-            os.path.join(source, os.pardir, "globalConfig.json")
-        )
-        if not os.path.isfile(config_path):
-            config_path = os.path.abspath(
-                os.path.join(source, os.pardir, "globalConfig.yaml")
-            )
-            is_global_config_yaml = True
-    else:
-        is_global_config_yaml = True if config_path.endswith(".yaml") else False
 
-    if os.path.isfile(config_path):
-        logger.info(f"Using globalConfig file located @ {config_path}")
-        global_config = global_config_lib.GlobalConfig(
-            config_path, is_global_config_yaml
-        )
+    gc_path = _get_and_check_global_config_path(source, config_path)
+    if gc_path:
+        logger.info(f"Using globalConfig file located @ {gc_path}")
+        global_config = global_config_lib.GlobalConfig(gc_path)
+        # handle the update of globalConfig before validating
+        global_config_update.handle_global_config_update(global_config)
         try:
             validator = global_config_validator.GlobalConfigValidator(
                 internal_root_dir, global_config
@@ -512,21 +546,23 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        global_config_update.handle_global_config_update(global_config)
+        global_config.expand()
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
+            ui_source_map,
         )
         generate_data_ui(
             output_directory,
             ta_name,
             global_config.has_inputs(),
             global_config.has_dashboard(),
+            global_config.meta.get("default_view", data_ui_generator.DEFAULT_VIEW),
         )
         logger.info("Copied UCC template directory")
         global_config_file = (
-            "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
+            "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
         )
         output_global_config_path = os.path.join(
             output_directory,
@@ -537,10 +573,7 @@ def generate(
             "build",
             global_config_file,
         )
-        shutil.copyfile(
-            config_path,
-            output_global_config_path,
-        )
+        global_config.dump(output_global_config_path)
         logger.info("Copied globalConfig to output")
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
@@ -598,16 +631,18 @@ def generate(
             )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
-            dashboard_xml_path = os.path.join(
+            dashboard_definition_json_path = os.path.join(
                 output_directory,
                 ta_name,
-                "default",
-                "data",
-                "ui",
-                "views",
-                "dashboard.xml",
+                "appserver",
+                "static",
+                "js",
+                "build",
+                "custom",
             )
-            dashboard.generate_dashboard(global_config, ta_name, dashboard_xml_path)
+            dashboard.generate_dashboard(
+                global_config, ta_name, dashboard_definition_json_path
+            )
 
     else:
         global_config = None

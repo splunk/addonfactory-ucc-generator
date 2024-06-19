@@ -21,11 +21,12 @@ from typing import Any, Dict, List
 import logging
 import itertools
 
-
 import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import data_ui_generator
+from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
 
 logger = logging.getLogger("ucc_gen")
 
@@ -42,7 +43,14 @@ class GlobalConfigValidator:
 
     def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
         self._source_dir = source_dir
+        self._global_config = global_config
         self._config = global_config.content
+
+    @property
+    def config_tabs(self) -> List[Tab]:
+        return [
+            resolve_tab(tab) for tab in self._config["pages"]["configuration"]["tabs"]
+        ]
 
     def _validate_config_against_schema(self) -> None:
         """
@@ -63,10 +71,7 @@ class GlobalConfigValidator:
         Validates that if a configuration tab should be rendered as a table,
         then it needs to have an entity which has field "name".
         """
-        pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
+        for tab in self.config_tabs:
             if "table" in tab:
                 entities = tab["entity"]
                 has_name_field = False
@@ -127,10 +132,7 @@ class GlobalConfigValidator:
         Also if file is encrypted but not required, this is not supported,
         and we need to throw a validation error.
         """
-        pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
+        for tab in self.config_tabs:
             entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
@@ -203,6 +205,13 @@ class GlobalConfigValidator:
                 f"pattern provided in the 'pattern' field is not compilable."
             )
 
+    def _validate_interval(self, entity: Dict[str, Any]) -> None:
+        """
+        Validate options of the 'interval' entity
+        """
+        if "range" in entity.get("options", {}):
+            self._validate_number_validator(entity["field"], entity["options"])
+
     def _validate_entity_validators(self, entity: Dict[str, Any]) -> None:
         """
         Validates entity validators.
@@ -216,15 +225,16 @@ class GlobalConfigValidator:
             if validator["type"] == "regex":
                 self._validate_regex_validator(entity["field"], validator)
 
+        if entity.get("type", "") == "interval":
+            self._validate_interval(entity)
+
     def _validate_validators(self) -> None:
         """
         Validates both configuration and services validators, currently string,
         number and regex are supported.
         """
         pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
+        for tab in self.config_tabs:
             entities = tab["entity"]
             for entity in entities:
                 self._validate_entity_validators(entity)
@@ -355,23 +365,28 @@ class GlobalConfigValidator:
                 "Duplicates found for entity field or label"
             )
 
-    def _validate_tabs_duplicates(self, tabs: List[Dict[str, Any]]) -> None:
+    def _validate_tabs_duplicates(self, tabs: List[Tab]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
         Calls for entity validator, as at least one entity is required in schema
         """
-        names, titles = [], []
+        names, titles, types = [], [], []
         for tab in tabs:
             names.append(tab["name"].lower())
             titles.append(tab["title"].lower())
 
+            if tab.tab_type is not None:
+                types.append(tab.tab_type.lower())
+
             self._validate_entity_duplicates(tab["entity"])
-        if self._find_duplicates_in_list(names) or self._find_duplicates_in_list(
-            titles
+        if (
+            self._find_duplicates_in_list(names)
+            or self._find_duplicates_in_list(titles)
+            or self._find_duplicates_in_list(types)
         ):
             raise GlobalConfigValidatorException(
-                "Duplicates found for tabs names or titles"
+                "Duplicates found for tabs names, titles or types"
             )
 
     def _validate_inputs_duplicates(self, inputs: Dict[str, Any]) -> None:
@@ -401,7 +416,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
 
-        self._validate_tabs_duplicates(pages["configuration"]["tabs"])
+        self._validate_tabs_duplicates(self.config_tabs)
 
         inputs = pages.get("inputs")
         if inputs:
@@ -475,9 +490,7 @@ class GlobalConfigValidator:
         More details here: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
         """
         pages = self._config["pages"]
-        configuration = pages["configuration"]
-        tabs = configuration["tabs"]
-        for tab in tabs:
+        for tab in self.config_tabs:
             for entity in tab["entity"]:
                 if "placeholder" in entity.get("options", {}):
                     logger.warning(
@@ -601,11 +614,11 @@ class GlobalConfigValidator:
                     visited = self._is_circular(
                         mods, visited, all_entity_fields, influenced_field
                     )
-        # all of dependent modifications fields are dead_end
+        # All dependent modifications fields are dead_end
         visited[current_field] = DEAD_END
         return visited
 
-    def _check_if_cilcular(
+    def _check_if_circular(
         self,
         all_entity_fields: List[Any],
         fields_with_mods: List[Any],
@@ -660,7 +673,7 @@ class GlobalConfigValidator:
 
         return all_fields
 
-    def _get_all_modifiction_data(
+    def _get_all_modification_data(
         self,
         collections: List[Dict[str, Any]],
     ) -> List[Any]:
@@ -680,9 +693,9 @@ class GlobalConfigValidator:
     def _validate_field_modifications(self) -> None:
         """
         Validates:
-        Circular dependencies
-        If fields try modify itself
-        If fields try modify unexisting field
+        * Circular dependencies
+        * If fields try to modify itself
+        * If fields try to modify field that do not exist
         """
         pages = self._config["pages"]
 
@@ -694,9 +707,9 @@ class GlobalConfigValidator:
                 fields_with_mods_config,
                 all_modifications_config,
                 all_fields_config,
-            ) = self._get_all_modifiction_data(tabs)
+            ) = self._get_all_modification_data(tabs)
 
-            self._check_if_cilcular(
+            self._check_if_circular(
                 all_fields_config, fields_with_mods_config, all_modifications_config
             )
 
@@ -708,10 +721,23 @@ class GlobalConfigValidator:
                 fields_with_mods_inputs,
                 all_modifications_inputs,
                 all_fields_inputs,
-            ) = self._get_all_modifiction_data(services)
+            ) = self._get_all_modification_data(services)
 
-            self._check_if_cilcular(
+            self._check_if_circular(
                 all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs
+            )
+
+    def _validate_meta_default_view(self) -> None:
+        default_view = self._global_config.meta.get(
+            "defaultView", data_ui_generator.DEFAULT_VIEW
+        )
+        if default_view == "inputs" and not self._global_config.has_inputs():
+            raise GlobalConfigValidatorException(
+                'meta.defaultView == "inputs" but there is no inputs defined in globalConfig'
+            )
+        if default_view == "dashboard" and not self._global_config.has_dashboard():
+            raise GlobalConfigValidatorException(
+                'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
             )
 
     def validate(self) -> None:
@@ -728,3 +754,4 @@ class GlobalConfigValidator:
         self._validate_checkbox_group()
         self._validate_groups()
         self._validate_field_modifications()
+        self._validate_meta_default_view()

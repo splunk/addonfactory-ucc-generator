@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
 import FileInputComponent from '../FileInputComponent';
 
 const meta = {
@@ -16,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        handleChange: fn(),
         field: 'fileInptuComponent',
         controlOptions: {
             fileSupportMessage: 'test support message',

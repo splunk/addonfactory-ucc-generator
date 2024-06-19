@@ -20,7 +20,7 @@ export const TableSchema = z.object({
         })
     ),
     customRow: z.record(z.any()).optional(),
-    actions: z.array(z.enum(['edit', 'delete', 'clone', 'enable'])),
+    actions: z.array(z.enum(['edit', 'delete', 'clone', 'enable', 'search'])),
 });
 
 // TODO add "required": ["entity", "name", "title"] or required": ["customTab", "name", "title"]
@@ -91,6 +91,7 @@ export const TableLessServiceSchema = z.object({
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
     warning: WarningSchema,
+    inputHelperModule: z.string().optional(),
 });
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
@@ -157,6 +158,8 @@ export const pages = z.object({
     dashboard: z
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),
+            troubleshooting_url: z.string().optional(),
+            settings: z.object({ custom_tab_name: z.string().optional() }).optional(),
         })
         .optional(),
 });
