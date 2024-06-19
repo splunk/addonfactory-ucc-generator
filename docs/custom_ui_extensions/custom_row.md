@@ -11,10 +11,10 @@ When a row is expanded on the Inputs table, Custom Row is utilized to incorporat
 
 ### Methods
 
-| Property  | Description                                                                                                                                                    |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| render    | is a method which should have logic for the custom row component, and it will be executed automatically when the create, edit, or clone actions are performed. |
-| getDLRows | is a method which contains the logic to update the custom row values, return a key-value pair.                                                                 |
+| Property  | Description                                                                                                                              |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| render    | is a method which contains the logic to display the custom row component. This method is automatically executed when the row is expanded |
+| getDLRows | is a method which contains the logic to update the custom row values, return a key-value pair.                                           |
 
 > Note
 
