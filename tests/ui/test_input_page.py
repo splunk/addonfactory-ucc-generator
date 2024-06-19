@@ -299,7 +299,7 @@ class TestInputPage(UccTester):
                 "Name": "dummy_input_one",
                 "Interval": "90",
                 "Index": "default",
-                "Status": "Enabled",
+                "Status": "Active",
                 "Example Account": "test_input",
                 "Object": "test_object",
                 "Object Fields": "test_field",
@@ -325,7 +325,7 @@ class TestInputPage(UccTester):
         )
         self.assert_util(
             input_page.table.get_cell_value,
-            "Disabled",
+            "Inactive",
             left_args={"name": "dummy_input_one", "column": "Status"},
         )
         self.assert_util(
@@ -335,7 +335,7 @@ class TestInputPage(UccTester):
         )
         self.assert_util(
             input_page.table.get_cell_value,
-            "Enabled",
+            "Active",
             left_args={"name": "dummy_input_one", "column": "Status"},
         )
 
@@ -1060,7 +1060,7 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "90",
                 "index": "default",
-                "status": "Enabled",
+                "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
         )
@@ -1133,7 +1133,7 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "3600",
                 "index": "main",
-                "status": "Enabled",
+                "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
         )
@@ -1212,7 +1212,7 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "180",
                 "index": "default",
-                "status": "Enabled",
+                "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
         )
@@ -1871,7 +1871,7 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "90",
                 "index": "main",
-                "status": "Enabled",
+                "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
         )
@@ -1930,7 +1930,7 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "3600",
                 "index": "main",
-                "status": "Enabled",
+                "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
         )
@@ -1998,7 +1998,7 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "180",
                 "index": "main",
-                "status": "Enabled",
+                "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
         )
@@ -2326,7 +2326,7 @@ class TestInputPage(UccTester):
         inputs_enabled_table = input_page.table.get_table()
         inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
         for i in inputs_disabled_table:
-            inputs_disabled_table[i]["status"] = "Disabled"
+            inputs_disabled_table[i]["status"] = "Inactive"
         input_page.disable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
         input_page.enable_all_inputs()
@@ -2359,7 +2359,7 @@ class TestInputPage(UccTester):
         inputs_enabled_table = input_page.table.get_table()
         inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
         for i in inputs_disabled_table:
-            inputs_disabled_table[i]["status"] = "Disabled"
+            inputs_disabled_table[i]["status"] = "Inactive"
         input_page.disable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
         time.sleep(10)
@@ -2388,7 +2388,7 @@ class TestInputPage(UccTester):
         inputs_enabled_table = input_page.table.get_table()
         inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
         for i in inputs_disabled_table:
-            inputs_disabled_table[i]["status"] = "Disabled"
+            inputs_disabled_table[i]["status"] = "Inactive"
         input_page.disable_all_inputs()
         input_page.interact_all_prompt_entity.confirm()
         time.sleep(1)
@@ -2442,7 +2442,7 @@ class TestInputPage(UccTester):
         inputs_enabled_table = input_page.table.get_table()
         inputs_disabled_table = copy.deepcopy(inputs_enabled_table)
         for i in inputs_disabled_table:
-            inputs_disabled_table[i]["status"] = "Disabled"
+            inputs_disabled_table[i]["status"] = "Inactive"
         self.assert_util(
             input_page.table.input_status_toggle,
             True,
