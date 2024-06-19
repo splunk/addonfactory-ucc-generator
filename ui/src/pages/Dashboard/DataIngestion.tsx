@@ -5,14 +5,17 @@ import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOn
 import Search from '@splunk/react-ui/Search';
 import Message from '@splunk/react-ui/Message';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';
-
+import Card from '@splunk/react-ui/Card';
+import Button from '@splunk/react-ui/Button';
 import { debounce } from 'lodash';
+
 import {
     createNewQueryBasedOnSearchAndHideTraffic,
     getActionButtons,
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
 } from './utils';
+import TableClickHandler from './EventHandlers';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -26,7 +29,8 @@ export const DataIngestionDashboard = ({
     dashboardDefinition: Record<string, unknown>;
 }) => {
     const dashboardCoreApi = React.useRef<DashboardCoreApi | null>();
-
+    const [showCard, setShowCard] = useState<boolean>(false);
+    const [selectedInput, setSelectedInput] = useState<string>('');
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
@@ -112,7 +116,12 @@ export const DataIngestionDashboard = ({
     return (
         <>
             <DashboardContextProvider
-                preset={EnterpriseViewOnlyPreset}
+                preset={{
+                    ...EnterpriseViewOnlyPreset,
+                    eventHandlers: {
+                        'table.click.handler': TableClickHandler,
+                    },
+                }}
                 initialDefinition={dashboardDefinition}
             >
                 <>
@@ -143,6 +152,21 @@ export const DataIngestionDashboard = ({
                             Hide items with no traffic
                         </Switch>
                     </div> */}
+                    {showCard ? (
+                        <Card>
+                            <Card.Header
+                                title="Title"
+                                subtitle="subtitlesubtitlesubtitle"
+                                actionPrimary={<Button />}
+                            />
+
+                            <Card.Body>{selectedInput}</Card.Body>
+                            <Card.Footer>
+                                <Button appearance="secondary">Label</Button>
+                                <Button appearance="primary">Label</Button>
+                            </Card.Footer>
+                        </Card>
+                    ) : null}
                     <div id="info_message_for_data_ingestion" className="invisible_before_moving">
                         {infoMessage ? (
                             <Message appearance="fill" type="info">
