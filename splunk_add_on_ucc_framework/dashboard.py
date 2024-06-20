@@ -47,6 +47,7 @@ default_definition_json_filename = {
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
     "errors_tab": "errors_tab_definition.json",
     "resources_tab": "resources_tab_definition.json",
+    "spike_side_panel_definition": "spike_side_panel_definition.json",
 }
 
 data_ingestion = (
@@ -213,6 +214,12 @@ def generate_dashboard_content(
                 ),
             )
         )
+
+    if (
+        definition_json_name
+        == default_definition_json_filename["spike_side_panel_definition"]
+    ):
+        content = utils.get_j2_env().get_template(definition_json_name).render()
 
     return content
 

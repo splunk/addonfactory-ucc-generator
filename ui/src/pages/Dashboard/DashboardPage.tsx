@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TabLayout from '@splunk/react-ui/TabLayout';
+
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { OverviewDashboard } from './Overview';
 import { DataIngestionDashboard } from './DataIngestion';
@@ -7,24 +8,7 @@ import { ErrorDashboard } from './Error';
 import { ResourceDashboard } from './Resource';
 import { CustomDashboard } from './Custom';
 import './dashboardStyle.css';
-import { getBuildDirPath } from '../../util/script';
-
-/**
- *
- * @param {string} fileName name of json file in custom dir
- * @param {string} setData callback, called with data as params
- */
-function loadJson(fileName: string, dataHandler: (data: Record<string, unknown>) => void) {
-    fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
-        .then((res) => res.json())
-        .then((external) => {
-            dataHandler(external);
-        })
-        .catch((e) => {
-            // eslint-disable-next-line no-console
-            console.error('Loading file failed: ', e);
-        });
-}
+import { loadDashboardJsonDefinition } from './utils';
 
 function DashboardPage() {
     const [overviewDef, setOverviewDef] = useState<Record<string, unknown> | null>(null);
@@ -34,17 +18,23 @@ function DashboardPage() {
     const [customDef, setCustomDef] = useState<Record<string, unknown> | null>(null);
 
     useEffect(() => {
-        loadJson('panels_to_display.json', (data: { default?: boolean; custom?: boolean }) => {
-            if (data?.default) {
-                loadJson('overview_definition.json', setOverviewDef);
-                loadJson('data_ingestion_tab_definition.json', setDataIngestionDef);
-                loadJson('errors_tab_definition.json', setErrorDef);
-                loadJson('resources_tab_definition.json', setResourceDef);
+        loadDashboardJsonDefinition(
+            'panels_to_display.json',
+            (data: { default?: boolean; custom?: boolean }) => {
+                if (data?.default) {
+                    loadDashboardJsonDefinition('overview_definition.json', setOverviewDef);
+                    loadDashboardJsonDefinition(
+                        'data_ingestion_tab_definition.json',
+                        setDataIngestionDef
+                    );
+                    loadDashboardJsonDefinition('errors_tab_definition.json', setErrorDef);
+                    loadDashboardJsonDefinition('resources_tab_definition.json', setResourceDef);
+                }
+                if (data?.custom) {
+                    loadDashboardJsonDefinition('custom.json', setCustomDef);
+                }
             }
-            if (data?.custom) {
-                loadJson('custom.json', setCustomDef);
-            }
-        });
+        );
 
         document.body.classList.add('grey_background');
         return () => {

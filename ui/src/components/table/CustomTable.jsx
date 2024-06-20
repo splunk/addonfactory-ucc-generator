@@ -222,26 +222,29 @@ function CustomTable({
         <Table.Body>
             {data &&
                 data.length &&
-                data.map((row) => (
-                    <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                        key={row.id}
-                        row={row}
-                        columns={columns}
-                        rowActions={actions}
-                        headerMapping={headerMapping}
-                        {...{
-                            handleEditActionClick,
-                            handleCloneActionClick,
-                            handleDeleteActionClick,
-                        }}
-                        handleToggleActionClick={handleToggleActionClick}
-                        {...(moreInfo
-                            ? {
-                                  expansionRow: getExpansionRow(columns.length, row, moreInfo),
-                              }
-                            : {})}
-                    />
-                ))}
+                data.map((row) => {
+                    console.log('row,row', row);
+                    return (
+                        <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
+                            key={row.id}
+                            row={row}
+                            columns={columns}
+                            rowActions={actions}
+                            headerMapping={headerMapping}
+                            {...{
+                                handleEditActionClick,
+                                handleCloneActionClick,
+                                handleDeleteActionClick,
+                            }}
+                            handleToggleActionClick={handleToggleActionClick}
+                            {...(moreInfo
+                                ? {
+                                      expansionRow: getExpansionRow(columns.length, row, moreInfo),
+                                  }
+                                : {})}
+                        />
+                    );
+                })}
         </Table.Body>
     );
 

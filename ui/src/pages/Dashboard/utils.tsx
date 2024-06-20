@@ -1,5 +1,26 @@
 import { RefreshButton, ExportButton, OpenSearchButton } from '@splunk/dashboard-action-buttons';
 import React from 'react';
+import { getBuildDirPath } from '../../util/script';
+
+/**
+ *
+ * @param {string} fileName name of json file in custom dir
+ * @param {string} setData callback, called with data as params
+ */
+export function loadDashboardJsonDefinition(
+    fileName: string,
+    dataHandler: (data: Record<string, unknown>) => void
+) {
+    fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
+        .then((res) => res.json())
+        .then((external) => {
+            dataHandler(external);
+        })
+        .catch((e) => {
+            // eslint-disable-next-line no-console
+            console.error('Loading file failed: ', e);
+        });
+}
 
 export const waitForElementToDisplay = (
     selector: string,
@@ -156,6 +177,8 @@ export const makeVisualAdjustmentsOnDataIngestionPage = () => {
         '#info_message_for_data_ingestion',
         '#data_ingestion_table_viz div'
     );
+
+    waitForElementToDisplayAndMoveThemToCanvas('#spikeCardSidePanel', '#data_ingestion_table_viz');
 };
 
 const VIEW_BY_EXTRA_LABEL_DESC: Record<string, string> = {
