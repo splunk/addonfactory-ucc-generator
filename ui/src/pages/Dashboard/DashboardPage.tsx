@@ -4,9 +4,11 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { OverviewDashboard } from './Overview';
 import { DataIngestionDashboard } from './DataIngestion';
 import { ErrorDashboard } from './Error';
+import { ResourceDashboard } from './Resource';
 import { CustomDashboard } from './Custom';
 import './dashboardStyle.css';
 import { getBuildDirPath } from '../../util/script';
+import { getUnifiedConfigs } from '../../util/util';
 
 /**
  *
@@ -29,6 +31,7 @@ function DashboardPage() {
     const [overviewDef, setOverviewDef] = useState<Record<string, unknown> | null>(null);
     const [dataIngestionDef, setDataIngestionDef] = useState<Record<string, unknown> | null>(null);
     const [errorDef, setErrorDef] = useState<Record<string, unknown> | null>(null);
+    const [resourceDef, setResourceDef] = useState<Record<string, unknown> | null>(null);
     const [customDef, setCustomDef] = useState<Record<string, unknown> | null>(null);
 
     useEffect(() => {
@@ -37,6 +40,7 @@ function DashboardPage() {
                 loadJson('overview_definition.json', setOverviewDef);
                 loadJson('data_ingestion_tab_definition.json', setDataIngestionDef);
                 loadJson('errors_tab_definition.json', setErrorDef);
+                loadJson('resources_tab_definition.json', setResourceDef);
             }
             if (data?.custom) {
                 loadJson('custom.json', setCustomDef);
@@ -48,6 +52,8 @@ function DashboardPage() {
             document.body.classList.remove('grey_background');
         };
     }, []);
+
+    const globalConfig = getUnifiedConfigs();
 
     return (
         <ErrorBoundary>
@@ -72,8 +78,22 @@ function DashboardPage() {
                                 <ErrorDashboard dashboardDefinition={errorDef} />
                             </TabLayout.Panel>
                         )}
+                        {resourceDef && (
+                            <TabLayout.Panel
+                                label="Resource consumption"
+                                panelId="resourceTabPanel"
+                            >
+                                <ResourceDashboard dashboardDefinition={resourceDef} />
+                            </TabLayout.Panel>
+                        )}
                         {customDef && (
-                            <TabLayout.Panel label="Custom" panelId="customTabPanel">
+                            <TabLayout.Panel
+                                label={
+                                    globalConfig.pages.dashboard?.settings?.custom_tab_name ||
+                                    'Custom'
+                                }
+                                panelId="customTabPanel"
+                            >
                                 <CustomDashboard dashboardDefinition={customDef} />
                             </TabLayout.Panel>
                         )}

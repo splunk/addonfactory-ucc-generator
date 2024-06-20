@@ -319,6 +319,21 @@
           "items": {
             "$ref": "#/definitions/DashboardPanel"
           }
+        },
+        "troubleshooting_url": {
+          "type": "string",
+          "description": "Link to external TA documentation used for redirection on error dashboard page",
+          "format": "uri"
+        },
+        "settings": {
+          "type": "object",
+          "description": "Additional settings for monitoring dashboard.",
+          "properties": {
+            "custom_tab_name": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
         }
       },
       "required": ["panels"],
@@ -1686,6 +1701,10 @@
           "type": "string",
           "description": "Version of UCC used during build process"
         },
+        "hideUCCVersion": {
+          "type": "boolean",
+          "description": "Hide the label 'Made with UCC' on the Configuration page"
+        },
         "checkForUpdates": {
           "type": "boolean",
           "default": true
@@ -1693,18 +1712,18 @@
         "defaultView": {
           "type": "string",
           "anyOf": [
-              {
-                "const": "inputs"
-              },
-              {
-                "const": "configuration"
-              },
-              {
-                "const": "dashboard"
-              },
-              {
-                "const": "search"
-              }
+            {
+              "const": "inputs"
+            },
+            {
+              "const": "configuration"
+            },
+            {
+              "const": "dashboard"
+            },
+            {
+              "const": "search"
+            }
           ]
         },
         "os-dependentLibraries": {

@@ -46,6 +46,7 @@ default_definition_json_filename = {
     "overview": "overview_definition.json",
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
     "errors_tab": "errors_tab_definition.json",
+    "resources_tab": "resources_tab_definition.json",
 }
 
 data_ingestion = (
@@ -53,6 +54,7 @@ data_ingestion = (
     "(s IN ({input_names})) | timechart sum(b) as Usage | "
     'rename Usage as \\"Data volume\\"'
 )
+
 data_ingestion_and_events = (
     "index=_internal source=*license_usage.log type=Usage "
     "(s IN ({input_names})) | timechart sum(b) as Usage "
@@ -60,7 +62,9 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = "index=_internal source=*{addon_name}* ERROR | timechart count as Errors"
+errors_count = (
+    "index=_internal source=*{addon_name}* ERROR | timechart count as Errors by exc_l"
+)
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -117,16 +121,29 @@ table_account_query = (
     '| rename event_account as \\"Account\\", events as \\"Number of events\\", '
     'sparkevent as \\"Event trendline\\"'
 )
+
 table_input_query = (
-    "index = _internal source=*{addon_name}* action=events_ingested "
+    '| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = \\"{addon_name}\\" '
+    '| eval Enabled=if(lower(disabled) IN (\\"1\\", \\"true\\", \\"t\\"), \\"no\\", \\"yes\\") '
+    '| table title, Enabled | rename title as \\"event_input\\" | join type=left event_input [ '
+    "search index = _internal source=*{addon_name_lowercase}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
-    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
-    '| table event_input, events, sparkevent, \\"Last event\\" '
-    '| rename event_input as \\"Input\\", events as \\"Number of events\\", '
-    'sparkevent as \\"Event trendline\\"'
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] | makemv delim=\\",\\" sparkevent '
+    '| table event_input, Enabled, events, sparkevent, \\"Last event\\" '
+    '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
 )
 
 errors_list_query = "index=_internal source=*{addon_name}* ERROR"
+
+resource_cpu_query = (
+    "index = _introspection component=PerProcess data.args=*{addon_name}* "
+    '| timechart avg(data.pct_cpu) as \\"CPU (%)\\"'
+)
+
+resource_memory_query = (
+    "index=_introspection component=PerProcess data.args=*{addon_name}* "
+    '| timechart avg(data.pct_memory) as \\"Memory (%)\\"'
+)
 
 
 def generate_dashboard_content(
@@ -169,7 +186,9 @@ def generate_dashboard_content(
                     input_names=input_names_str, addon_name=addon_name.lower()
                 ),
                 table_account=table_account_query.format(addon_name=addon_name.lower()),
-                table_input=table_input_query.format(addon_name=addon_name.lower()),
+                table_input=table_input_query.format(
+                    addon_name=addon_name, addon_name_lowercase=addon_name.lower()
+                ),
             )
         )
 
@@ -180,6 +199,18 @@ def generate_dashboard_content(
             .render(
                 errors_count=errors_count.format(addon_name=addon_name.lower()),
                 errors_list=errors_list_query.format(addon_name=addon_name.lower()),
+            )
+        )
+
+    if definition_json_name == default_definition_json_filename["resources_tab"]:
+        content = (
+            utils.get_j2_env()
+            .get_template(definition_json_name)
+            .render(
+                resource_cpu=resource_cpu_query.format(addon_name=addon_name.lower()),
+                resource_memory=resource_memory_query.format(
+                    addon_name=addon_name.lower()
+                ),
             )
         )
 
@@ -230,22 +261,22 @@ def generate_dashboard(
 
 
 def get_custom_json_content(custom_dashboard_path: str) -> Dict[Any, Any]:
-    custom_dashbaord = load_custom_json(custom_dashboard_path)
+    custom_dashboard = load_custom_json(custom_dashboard_path)
 
-    if not custom_dashbaord:
+    if not custom_dashboard:
         logger.error(
             f"Custom dashboard page set in globalConfig.json but custom content not found. "
             f"Please verify if file {custom_dashboard_path} has a proper structure "
             f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
         )
         sys.exit(1)
-    return custom_dashbaord
+    return custom_dashboard
 
 
 def load_custom_json(json_path: str) -> Dict[Any, Any]:
     try:
         with open(json_path) as dashboard_file:
-            custom_dashbaord = json.load(dashboard_file)
+            custom_dashboard = json.load(dashboard_file)
     except FileNotFoundError:
         logger.error(
             f"Custom dashboard page set in globalConfig.json but "
@@ -255,4 +286,4 @@ def load_custom_json(json_path: str) -> Dict[Any, Any]:
     except json.decoder.JSONDecodeError:
         logger.error(f"{json_path} it's not a valid json file")
         sys.exit(1)
-    return custom_dashbaord
+    return custom_dashboard

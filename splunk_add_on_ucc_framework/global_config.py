@@ -22,7 +22,7 @@ import yaml
 
 from splunk_add_on_ucc_framework import utils
 from splunk_add_on_ucc_framework.entity import expand_entity
-from splunk_add_on_ucc_framework.tabs import resolve_tab
+from splunk_add_on_ucc_framework.tabs import resolve_tab, LoggingTab
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
@@ -122,6 +122,13 @@ class GlobalConfig:
             if "table" not in tab:
                 settings.append(tab)
         return settings
+
+    @property
+    def logging_tab(self) -> Dict[str, Any]:
+        for tab in self.tabs:
+            if LoggingTab.from_definition(tab) is not None:
+                return tab
+        return {}
 
     @property
     def configs(self) -> List[Any]:
