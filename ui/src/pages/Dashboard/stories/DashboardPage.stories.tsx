@@ -3,11 +3,17 @@ import React from 'react';
 import DashboardPage from '../DashboardPage';
 
 import { DASHBOARD_JSON_MOCKS } from '../tests/mockJs';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../../util/util';
 
 const meta = {
     component: DashboardPage,
     title: 'DashboardPage',
-    render: () => <DashboardPage />,
+    render: () => {
+        const mockConfig = getGlobalConfigMock();
+        setUnifiedConfig(mockConfig);
+        return <DashboardPage />;
+    },
     parameters: {
         msw: {
             handlers: DASHBOARD_JSON_MOCKS,
