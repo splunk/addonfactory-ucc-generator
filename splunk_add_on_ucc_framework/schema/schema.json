@@ -791,7 +791,8 @@
               "description": "It filters options that don’t match the regex based on the name attribute when received via an API call using endpointUrl and referenceName."
             },
             "labelField": {
-              "type": "string"
+              "type": "string",
+              "description": "If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used.```item.content?.[labelField]``` "
             },
             "autoCompleteFields": {
               "$ref": "#/definitions/AutoCompleteFields"
@@ -922,7 +923,8 @@
               "description": "It filters options that don’t match the regex based on the name attribute when received via an API call using endpointUrl and referenceName."
             },
             "labelField": {
-              "type": "string"
+              "type": "string",
+              "description": "If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used.```item.content?.[labelField]``` "
             },
             "autoCompleteFields": {
               "$ref": "#/definitions/AutoCompleteFields"
@@ -1736,10 +1738,12 @@
         },
         "checkForUpdates": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "description": "Ability to configure app.conf->package.check_for_updates from globalConfig file."
         },
         "defaultView": {
           "type": "string",
+          "description": "Define which view should be loaded on TA load.",
           "anyOf": [
             {
               "const": "inputs"
@@ -2022,19 +2026,23 @@
         },
         "conf": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Configuration name for a rest handler."
         },
         "restHandlerName": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. (Do NOT use with restHandlerModule) "
         },
         "restHandlerModule": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerClass) "
         },
         "restHandlerClass": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
         },
         "hook": {
           "type": "object",
@@ -2534,23 +2542,28 @@
               },
               "conf": {
                 "type": "string",
-                "maxLength": 100
+                "maxLength": 100,
+                "description": "Configuration name for a rest handler."
               },
               "restHandlerName": {
                 "type": "string",
-                "maxLength": 100
+                "maxLength": 100,
+                "description": "Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. (Do NOT use with restHandlerModule) "
               },
               "restHandlerModule": {
                 "type": "string",
-                "maxLength": 100
+                "maxLength": 100,
+                "description": "Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerClass) "
               },
               "restHandlerClass": {
                 "type": "string",
-                "maxLength": 100
+                "maxLength": 100,
+                "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
               },
               "inputHelperModule": {
                 "type": "string",
-                "maxLength": 100
+                "maxLength": 100,
+                "description": "A module that contains `validate_input` and `stream_events` methods. By default it is not used."
               },
               "warning": {
                 "$ref": "#/definitions/WarningMessage"

@@ -5,7 +5,7 @@ proxy configuration, and logging level configuration.
 ### Configuration Properties
 
 | Property                                                          | Type   | Description                                             |
-|-------------------------------------------------------------------|--------|---------------------------------------------------------|
+| ----------------------------------------------------------------- | ------ | ------------------------------------------------------- |
 | title<span class="required-asterisk">\*</span>                    | string | -                                                       |
 | description                                                       | string | To provide a brief summary of an configuration page.    |
 | [subDescription](../advanced/sub_description.md)                  | object | To provide broader description of an configuration page |
@@ -14,7 +14,7 @@ proxy configuration, and logging level configuration.
 ### Tabs properties
 
 | Property                                                              | Type   | Description                                                                                                                                                                                        |
-|-----------------------------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | name<span class="required-asterisk">\*</span>                         | string | To define the particular tab name.                                                                                                                                                                 |
 | title<span class="required-asterisk">\*</span>                        | string | To show the title of the tab.                                                                                                                                                                      |
 | [entity](../entity/index.md)<span class="required-asterisk">\*</span> | array  | A list of fields and their properties.                                                                                                                                                             |
@@ -23,10 +23,10 @@ proxy configuration, and logging level configuration.
 | options                                                               | object | This property allows you to enable the [saveValidator](../advanced/save_validator.md) feature.                                                                                                     |
 | hook                                                                  | object | It is used to add custom behaviour to forms. Visit the [Custom Hook](../custom_ui_extensions/custom_hook.md) page to learn more.                                                                   |
 | [warning](../advanced/custom_warning.md)                              | object | It is used to add custom warning message for each of modes ('create', 'edit', 'config', 'clone'), message is displayed on form                                                                     |
-| conf                                                                  | string | TBD                                                                                                                                                                                                |
-| restHandlerName                                                       | string | TBD                                                                                                                                                                                                |
-| restHandlerModule                                                     | string | TBD                                                                                                                                                                                                |
-| restHandlerClass                                                      | string | TBD                                                                                                                                                                                                |
+| conf                                                                  | string | Configuration name for a rest handler.                                                                                                                                                             |
+| restHandlerName                                                       | string | Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. <br>(Do NOT use with restHandlerModule)                                                           |
+| [restHandlerModule](../advanced/custom_rest_handler.md)               | string | Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. <br>(Use with restHandlerClass)                                                                    |
+| [restHandlerClass](../advanced/custom_rest_handler.md)                | string | Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. <br>(Use with restHandlerModule)                                                                    |
 | customTab                                                             | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab.md) feature.                                                                                                |
 
 ### Tab components

@@ -34,7 +34,7 @@ The `splunk-add-on-ucc-framework`:
 * generates OpenAPI description documents (`appserver/static/openapi.json` file) (for more information, see [here](openapi.md)).
 * generates `.conf` files (more information, see [here](dot_conf_files.md)).
 * installs Python requirements (`lib` folder).
-* generate metadata files (`metadata` folder).
+* generate [metadata](./metadata.md) files (`metadata` folder).
 * generates the monitoring dashboard (for more information, see [here](dashboard.md)).
 * it possibly extends the UI with custom codes (for more information, see [here](custom_ui_extensions/custom_hook.md)).
 * it possibly extends the build process via a `additional_packaging.py` file (more information, [here](additional_packaging.md)).
