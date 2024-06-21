@@ -6,9 +6,14 @@ import DashboardPage from '../DashboardPage';
 import { server } from '../../../mocks/server';
 
 import { DASHBOARD_JSON_MOCKS } from './mockJs';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../../util/util';
+import { consoleError } from '../../../../jest.setup';
 
 it('dashboard page renders waiting spinner', async () => {
     server.use(http.get('/custom/panels_to_display.json', () => HttpResponse.json({})));
+    const mockConfig = getGlobalConfigMock();
+    setUnifiedConfig(mockConfig);
 
     render(<DashboardPage />);
 
@@ -17,8 +22,13 @@ it('dashboard page renders waiting spinner', async () => {
 });
 
 it('render with all default dashboards', async () => {
+    consoleError.mockImplementation(() => {});
     DASHBOARD_JSON_MOCKS.forEach((mock: RequestHandler) => server.use(mock));
+
+    const mockConfig = getGlobalConfigMock();
+    setUnifiedConfig(mockConfig);
     render(<DashboardPage />);
+
     const timeLabels = await screen.findAllByText('Time');
     expect(timeLabels[0]).toBeInTheDocument();
     expect(timeLabels.length).toEqual(2);

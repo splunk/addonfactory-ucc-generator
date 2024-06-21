@@ -18,6 +18,9 @@ export const DASHBOARD_JSON_MOCKS = [
     http.get('/custom/errors_tab_definition.json', () =>
         HttpResponse.json(MOCK_ERROR_TAB_DEFINITION)
     ),
+    http.get('/custom/resources_tab_definition.json', () =>
+        HttpResponse.json(MOCK_ERROR_TAB_DEFINITION)
+    ),
     http.post('/services/search/jobs', () => HttpResponse.error()),
     http.get('/services/authentication/current-context', () => HttpResponse.error()),
 ];
