@@ -293,11 +293,12 @@ class TestInputPage(UccTester):
     ):
         """Verifies the expand functionality of the inputs table"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        interval = "90"
         self.assert_util(
             input_page.table.get_more_info,
             {
                 "Name": "dummy_input_one",
-                "Interval": "90",
+                "Interval": f"{interval} sec",
                 "Index": "default",
                 "Status": "Enabled",
                 "Example Account": "test_input",
@@ -309,6 +310,11 @@ class TestInputPage(UccTester):
             },
             left_args={"name": "dummy_input_one"},
         )
+        backend_stanza = input_page.backend_conf.get_stanza(
+            "example_input_one://dummy_input_one"
+        )
+        # we verify that the conf value is `interval` and only the UI has changed
+        assert backend_stanza.get("interval") == interval
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
