@@ -331,6 +331,35 @@
           "properties": {
             "custom_tab_name": {
               "type": "string"
+            },
+            "custom_license_usage": {
+              "type": "object",
+              "description": "Settings for creating custom search query for license usage.",
+              "properties": {
+                "determine_by": {
+                  "type": "string",
+                  "description": "Specify what to use (source or sourcetype) to search events in license usage.",
+                  "enum": [
+                    "source",
+                    "sourcetype",
+                    "host",
+                    "index"
+                  ]
+                },
+                "search_condition": {
+                  "type": "array",
+                  "description": "Elements that will be used as a query condition.",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "determine_by",
+                "search_condition"
+              ],
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
