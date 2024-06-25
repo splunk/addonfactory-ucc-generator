@@ -7,9 +7,9 @@
 
 The following 3rd-party software packages may be used by or distributed with addonfactory-ucc-generator. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
-Date generated: 2024-6-13
+Date generated: 2024-6-25
 
-Revision ID: 5d8cb696873a5df551a53a7e86e6e1f9d79b20cc
+Revision ID: 59c0c19595547d1651b855e33baa70d1ed13643b
 
 ================================================================================
 ================================================================================
@@ -1979,11 +1979,11 @@ Package Title: @splunk/async-dynamic-options-evaluator (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 * Other Licenses *
-MIT, BSD-3-Clause, Apache-2.0
+MIT, Apache-2.0, BSD-3-Clause
 
 * MIT *
 
@@ -2005,6 +2005,22 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+* Apache-2.0 *
+
+Copyright 2018 Splunk Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+See the License for the specific language governing permissions and limitations under the License.
 
 * BSD-3-Clause *
 
@@ -2034,22 +2050,6 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-* Apache-2.0 *
-
-Copyright 2018 Splunk Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-See the License for the specific language governing permissions and limitations under the License.
 
 
 --------------------------------------------------------------------------------
@@ -2135,7 +2135,7 @@ Package Title: @splunk/charting-bundle (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6450,7 +6450,7 @@ Package Title: @splunk/visualization-color-palettes (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6474,7 +6474,7 @@ Package Title: @splunk/visualization-encoding (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6490,7 +6490,7 @@ Package Title: @splunk/visualization-encoding-parsers (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6506,7 +6506,7 @@ Package Title: @splunk/visualization-icons (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6522,7 +6522,7 @@ Package Title: @splunk/visualization-migrations (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6538,7 +6538,7 @@ Package Title: @splunk/visualization-themes (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6554,7 +6554,7 @@ Package Title: @splunk/visualizations (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -6570,7 +6570,7 @@ Package Title: @splunk/visualizations-shared (25.13.1)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-SEE LICENSE IN LICENSE.md
+unknown
 
 
 --------------------------------------------------------------------------------
@@ -18388,7 +18388,7 @@ Package Title: packaging (24.0)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-BSD-3-Clause, BSD-2-Clause, Apache-2.0
+BSD-3-Clause, Apache-2.0, BSD-2-Clause
 
 * BSD-3-Clause *
 
@@ -18419,6 +18419,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+* Apache-2.0 *
+
+This software is made available under the terms of *either* of the licenses
+found in LICENSE.APACHE or LICENSE.BSD. Contributions to this software is made
+under the terms of *both* these licenses.
+
+
 * BSD-2-Clause *
 
 Copyright (c) Donald Stufft and individual contributors.
@@ -18444,13 +18451,6 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-* Apache-2.0 *
-
-This software is made available under the terms of *either* of the licenses
-found in LICENSE.APACHE or LICENSE.BSD. Contributions to this software is made
-under the terms of *both* these licenses.
 
 
 
@@ -22120,7 +22120,7 @@ The views and conclusions contained in the software and documentation are those 
 
 
 --------------------------------------------------------------------------------
-Package Title: urllib3 (1.26.18)
+Package Title: urllib3 (1.26.19)
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
@@ -31689,4 +31689,4 @@ This is a catch-all license used when we find many different proprietary license
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-Report Generated by FOSSA on 2024-6-13
+Report Generated by FOSSA on 2024-6-25
