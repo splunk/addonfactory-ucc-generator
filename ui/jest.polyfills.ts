@@ -27,4 +27,13 @@ Object.defineProperties(globalThis, {
     Request: { value: Request },
     Response: { value: Response },
 });
+
+Object.defineProperty(URL, 'createObjectURL', {
+    // needed for package import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset'
+    writable: true,
+    value: jest.fn(),
+});
+
+HTMLCanvasElement.prototype.getContext = jest.fn();
+
 // --- END of unnecessary polyfills

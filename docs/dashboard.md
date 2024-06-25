@@ -317,9 +317,31 @@ Next, you have to add the **custom** panel to your dashboard page in globalConfi
 }
 ```
 
-By default, the custom dashboard will be added as an additional tab under the overview section.
+By default, the custom dashboard will be added as an additional tab under the overview section called `Custom`.
 
 ![img.png](images/custom_dashboard.png)
+
+If you would like to change the tab name from **Custom** to any other value, you can do it in the `globalConfig.json`.
+Global config, from UCC version **v5.47.0**, has an additional `settings` parameter for the dashboard section. To change the name of a custom tab, add the `custom_tab_name` attribute in the `settings`.
+
+```json
+{
+...
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "custom"
+                }
+            ],
+            "settings": {
+                "custom_tab_name": "My custom tab name"
+            }
+        },
+...
+}
+```
+
+![img.png](images/dashboard_custom_tab_name.png)
 
 It is possible to enable only a custom panel. To do this, remove the "default" element from globalConfig.json.
 
@@ -336,3 +358,48 @@ It is possible to enable only a custom panel. To do this, remove the "default" e
 ...
 }
 ```
+
+## Data volume
+
+To obtain information on data volume usage, the monitoring dashboard uses logs saved in the `license_usage.log` file.
+By default, data filtering for a specific add-on is based on the `source` (s) and names of individual inputs.
+e.g.
+
+`...source=*license_usage.log type=Usage (s IN (demo_addon_release_2*,my_input_2*))...`
+
+If data is saved in your add-on with different, non-standard values or if filtering logs
+using the source is not possible, **UCC v5.47** offers the ability to define how the search engine should
+find data regarding a given add-on.
+To do this, you need to add the `custom_license_usage` parameter in globalconfig in the **dashboard** -> **settings** section.
+This parameter takes 2 mandatory items:
+
+* `determine_by` -> is used to determine the filtering basis. It can take one of 4 possible arguments: ("source", "sourcetype", "host", "index").
+* `search_condition` -> list of strings type parameter where you can provide elements that will be used to filter events in the license usage file.
+
+e.g. of globalConfig.json:
+
+```json
+{
+...
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "custom"
+                }
+            ],
+            "settings": {
+                "custom_license_usage": {
+                    "determine_by": "sourcetype",
+                    "search_condition": [
+                        "*addon123*",
+                        "my_custom_condition*"
+                    ]
+                }
+            }
+        },
+...
+}
+```
+
+the above configuration will create the following filter query:
+`...source=*license_usage.log type=Usage (st IN ("*addon123*","my_custom_condition*"))...`
