@@ -248,7 +248,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
+        splunk:
+          - version: "9.1"
+          - version: "9.1.2"
+          - version: "9.1.3"
+          - version: "9.1.4"
+          - version: "9.2"
+          - version: "9.2.0"
+          - version: "9.2.1"
         test-mark:
           - "logging"
           - "proxy"
