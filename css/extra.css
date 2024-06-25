@@ -1,0 +1,21 @@
+.md-typeset table:not([class]),
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+  border: 0.01rem solid rgba(0,0,0,.12);
+  border-collapse: collapse;
+}
+
+.md-typeset__table {
+    width: 100%;
+  }
+.md-typeset__table table:not([class]) {
+    display: table
+  }
+
+.required-asterisk {
+  color: red
+}
+
+.md-grid {
+  max-width: 65rem;
+}
