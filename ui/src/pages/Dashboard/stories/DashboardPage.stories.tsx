@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
+import { expect, within } from '@storybook/test';
 import DashboardPage from '../DashboardPage';
 
 import { DASHBOARD_JSON_MOCKS } from '../tests/mockJs';
@@ -28,4 +29,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DashboardPageView: Story = {};
+export const DashboardPageView: Story = {
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        const dataIngestion = await canvas.findByRole('heading', { name: 'Data Ingestion' });
+
+        await expect(dataIngestion).toBeInTheDocument();
+    },
+};
