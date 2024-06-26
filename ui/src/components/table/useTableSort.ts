@@ -1,4 +1,3 @@
-// hooks/useTableSort.ts
 import { useState, useCallback } from 'react';
 import { HeadCellSortHandler } from '@splunk/react-ui/Table';
 
