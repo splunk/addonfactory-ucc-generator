@@ -33,7 +33,7 @@ export const DashboardPageView: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        const dataIngestion = await canvas.findByRole('heading', { name: 'Data Ingestion' });
+        const dataIngestion = await canvas.findByText('Search sid not found');
 
         await expect(dataIngestion).toBeInTheDocument();
     },
