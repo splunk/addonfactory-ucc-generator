@@ -1,3 +1,17 @@
+# [5.47.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.46.0...v5.47.0) (2024-06-25)
+
+
+### Bug Fixes
+
+* allow 2 blank lines in markdown ([3832c3c](https://github.com/splunk/addonfactory-ucc-generator/commit/3832c3c1f5458665923d14dba962dc2c3cc53223))
+
+
+### Features
+
+* **custom_row:** pass default row value to custom row component ([#1218](https://github.com/splunk/addonfactory-ucc-generator/issues/1218)) ([1fdebfa](https://github.com/splunk/addonfactory-ucc-generator/commit/1fdebfa28a3cecc7498fb7e1c441f3e0742d89d4))
+* **dashboard:** add custom filtering options for the license_usage file ([#1247](https://github.com/splunk/addonfactory-ucc-generator/issues/1247)) ([3e8d864](https://github.com/splunk/addonfactory-ucc-generator/commit/3e8d86476fbf1521785c236c3af15ef3d6fd754d))
+* **dashboard:** add globalconfig configuration for custom dashboard tab name ([#1239](https://github.com/splunk/addonfactory-ucc-generator/issues/1239)) ([fce1df4](https://github.com/splunk/addonfactory-ucc-generator/commit/fce1df428b6761ddd20360c6cfc9e8eda1982d74))
+
 # [5.46.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.45.0...v5.46.0) (2024-06-13)
 
 
