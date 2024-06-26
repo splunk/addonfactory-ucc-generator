@@ -446,8 +446,8 @@
     }
   },
   "meta": {
-    "name": "demo_addon_for_splunk2",
-    "restRoot": "demo_addon_for_splunk2",
+    "name": "demo_addon_for_splunk",
+    "restRoot": "demo_addon_for_splunk",
     "version": "5.32.0R0e2087fe",
     "displayName": "Demo Add-on for Splunk",
     "schemaVersion": "0.0.3"
