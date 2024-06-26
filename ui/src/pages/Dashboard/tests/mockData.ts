@@ -655,3 +655,21 @@ export const MOCK_ERROR_TAB_DEFINITION = {
         ],
     },
 };
+
+export const CURRENT_CONTEXT_RESPONSE = {
+    entry: [
+        {
+            content: {
+                capabilities: [],
+            },
+        },
+    ],
+};
+
+export const SEARCH_JOB_RESULT = {
+    entry: [
+        {
+            content: {},
+        },
+    ],
+};
