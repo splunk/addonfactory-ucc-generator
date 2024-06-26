@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { expect, within } from '@storybook/test';
+import { expect, within, screen } from '@storybook/test';
 import DashboardPage from '../DashboardPage';
 
 import { DASHBOARD_JSON_MOCKS } from '../tests/mockJs';
@@ -33,8 +33,7 @@ export const DashboardPageView: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        const dataIngestion = await canvas.findByText('Search sid not found');
-
-        await expect(dataIngestion).toBeInTheDocument();
+        await canvas.findByRole('heading', { name: 'Data Ingestion' });
+        await canvas.findAllByText((match) => match.includes('Search sid not found'));
     },
 };
