@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Table from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import useQuery from '../../hooks/useQuery';
+import { useSearchParams } from 'react-router-dom';
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
 import { getUnifiedConfigs } from '../../util/util';
@@ -57,9 +57,9 @@ function CustomTable({
         [page, unifiedConfigs]
     );
 
-    const query = useQuery();
-    const tab = query.get('tab');
-    const record = query.get('record');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tab = searchParams.get('tab');
+    const record = searchParams.get('record');
 
     // Run only once when component is mounted to load component based on initial query params
     // and when query params are updated
@@ -83,6 +83,11 @@ function CustomTable({
     }, [tab, record, entityModal, rowData, serviceName]);
 
     const handleEntityClose = () => {
+        if (searchParams.has('record')) {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('record');
+            setSearchParams(newSearchParams);
+        }
         setEntityModal({ ...entityModal, open: false });
     };
 
