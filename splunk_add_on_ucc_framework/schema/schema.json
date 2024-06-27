@@ -570,9 +570,6 @@
             "disableonEdit": {
               "$ref": "#/definitions/disableonEdit"
             },
-            "placeholder": {
-              "$ref": "#/definitions/placeholder"
-            },
             "enable": {
               "$ref": "#/definitions/enable"
             },
@@ -653,9 +650,6 @@
             },
             "disableonEdit": {
               "$ref": "#/definitions/disableonEdit"
-            },
-            "placeholder": {
-              "$ref": "#/definitions/placeholder"
             },
             "enable": {
               "$ref": "#/definitions/enable"
@@ -754,9 +748,6 @@
             },
             "disableonEdit": {
               "$ref": "#/definitions/disableonEdit"
-            },
-            "placeholder": {
-              "$ref": "#/definitions/placeholder"
             },
             "enable": {
               "$ref": "#/definitions/enable"
@@ -885,9 +876,6 @@
             },
             "disableonEdit": {
               "$ref": "#/definitions/disableonEdit"
-            },
-            "placeholder": {
-              "$ref": "#/definitions/placeholder"
             },
             "enable": {
               "$ref": "#/definitions/enable"
@@ -1880,9 +1868,6 @@
         "options": {
           "type": "object",
           "properties": {
-            "placeholder": {
-              "$ref": "#/definitions/placeholder"
-            },
             "disableonEdit": {
               "$ref": "#/definitions/disableonEdit"
             },
@@ -2683,10 +2668,6 @@
       "type": "boolean",
       "description": "When the form is in edit mode, the field becomes unable to be edited.",
       "default": false
-    },
-    "placeholder": {
-      "type": "string",
-      "description": "(Deprecated) The grey text is shown when the input is empty."
     },
     "enable": {
       "type": "boolean",

@@ -20,6 +20,7 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib, util
 from splunk_add_on_ucc_framework.entity import collapse_entity
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.tabs import resolve_tab
+from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
 
@@ -217,6 +218,11 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _dump_with_migrated_entities(global_config, global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.7")
 
+    if _version_tuple(version) < _version_tuple("0.0.8"):
+        _stop_build_on_placeholder_usage(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.8")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
@@ -253,3 +259,44 @@ def _dump(content: Dict[Any, Any], path: str, is_yaml: bool) -> None:
 
 def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
     return resolve_tab(tab).short_form()
+
+
+def _stop_build_on_placeholder_usage(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    """
+    Stops the build of addon and logs error if placeholder is used.
+    Deprecation Notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
+    Allows to update the schema version if placeholder isn't found.
+    """
+    log_msg = (
+        "`placeholder` option found for %s '%s' -> entity field '%s'. "
+        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+        "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+    )
+    exc_msg = (
+        "`placeholder` option found for %s '%s'. It has been removed from UCC. "
+        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+    )
+    for tab in global_config.tabs:
+        for entity in tab.get("entity", []):
+            if "placeholder" in entity.get("options", {}):
+                logger.error(
+                    log_msg % ("configuration tab", tab["name"], entity["field"])
+                )
+                raise GlobalConfigValidatorException(
+                    exc_msg % ("configuration tab", tab["name"])
+                )
+    services = global_config.inputs
+    if not services:
+        return
+    for service in services:
+        for entity in service.get("entity", {}):
+            if "placeholder" in entity.get("options", {}):
+                logger.error(
+                    log_msg % ("input service", service["name"], entity["field"])
+                )
+                raise GlobalConfigValidatorException(
+                    exc_msg % ("input service", service["name"])
+                )
+    global_config.update_schema_version("0.0.8")
