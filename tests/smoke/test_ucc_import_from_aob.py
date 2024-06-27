@@ -11,7 +11,7 @@ def test_ucc_import_from_aob():
     The archive that exists in `tests/smoke` folder is downloaded from
     Splunkbase directly and moved to this folder, so it will be easier to
     execute tests.
-    
+
     NOTE: the globalConfig has been edited from the gzip to comply with renouncing of placeholder attribute
     """
     aob_addon_path = os.path.join(

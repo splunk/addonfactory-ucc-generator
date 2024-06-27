@@ -1,5 +1,5 @@
 import json
-
+import re
 import pytest
 
 import tests.unit.helpers as helpers
@@ -10,10 +10,11 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _handle_alert_action_updates,
     _dump_with_migrated_tabs,
     _dump_with_migrated_entities,
-    _stop_build_on_placeholder_usage
+    _stop_build_on_placeholder_usage,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
+
 
 @pytest.mark.parametrize(
     "filename",
@@ -166,28 +167,38 @@ def test_entity_migration(tmp_path):
         }
     )
 
-@pytest.mark.parametrize(["file_name", "failure"], [(
-        "valid_config_renounced_placeholder_usage.json",
-        True
-    ), (
-        "valid_config.json",
-        False
-    )])
-def test_config_validation_when_renounced_placeholder_is_used(tmp_path, caplog, file_name, failure):
+
+@pytest.mark.parametrize(
+    ["file_name", "failure"],
+    [
+        ("valid_config_renounced_placeholder_usage.json", True),
+        ("valid_config.json", False),
+    ],
+)
+def test_config_validation_when_renounced_placeholder_is_used(
+    tmp_path, caplog, file_name, failure
+):
     tmp_file_gc = tmp_path / "globalConfig.json"
-    
+
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, file_name)
     global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
-    exp_info = ("`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
-                "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
-                "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831.")
-    
+    error_log = (
+        "`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
+        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+        "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+    )
+    exc_msg = re.escape(
+        "`placeholder` option found for input service 'example_input_one'. "
+        "It has been removed from UCC. We recommend to use `help` "
+        "instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+    )
+
     if failure:
-        with pytest.raises(GlobalConfigValidatorException):
+        with pytest.raises(GlobalConfigValidatorException, match=exc_msg):
             _stop_build_on_placeholder_usage(global_config)
         expected_schema_version = "0.0.7"
         assert expected_schema_version == global_config.schema_version
-        assert exp_info in caplog.text
+        assert error_log in caplog.text
     else:
         _stop_build_on_placeholder_usage(global_config)
         expected_schema_version = "0.0.8"
