@@ -65,27 +65,19 @@ function CustomTable({
     // and when query params are updated
     useEffect(() => {
         // Only run when tab matches serviceName or if in input page where serviceName is undefined
-        if (tab === serviceName || typeof serviceName === 'undefined') {
-            // Open modal when record is available in query params and modal is not open
-            if (record && !entityModal.open) {
-                const serviceKey = Object.keys(rowData).find(
-                    (x) => typeof rowData[x][record] !== 'undefined'
-                );
-                if (serviceKey) {
-                    const row = rowData[serviceKey][record];
-                    setEntityModal({
-                        ...entityModal,
-                        open: true,
-                        serviceName: row.serviceName,
-                        stanzaName: row.name,
-                        mode: MODE_EDIT,
-                    });
-                }
-            } else if (!record && entityModal.open) {
-                // Close modal if record query param is not available and modal is open
-                // NOTE: This should only be executed in case of MODE_EDIT which is handled by
-                // useEffect dependency which will only be changed in case of editing entity
-                setEntityModal({ ...entityModal, open: false });
+        if ((tab === serviceName || serviceName === undefined) && record && !entityModal.open) {
+            const serviceKey = Object.keys(rowData).find(
+                (x) => typeof rowData[x][record] !== 'undefined'
+            );
+            if (serviceKey) {
+                const row = rowData[serviceKey][record];
+                setEntityModal({
+                    ...entityModal,
+                    open: true,
+                    serviceName: row.serviceName,
+                    stanzaName: row.name,
+                    mode: MODE_EDIT,
+                });
             }
         }
     }, [tab, record, entityModal, rowData, serviceName]);
@@ -149,7 +141,7 @@ function CustomTable({
     const generateModalDialog = () => {
         if (entityModal.open) {
             let label;
-            if (page === 'inputs') {
+            if (page === PAGE_INPUT) {
                 const { services } = unifiedConfigs.pages.inputs;
                 label = services.find((x) => x.name === entityModal.serviceName)?.title;
             } else if (page === 'configuration') {
