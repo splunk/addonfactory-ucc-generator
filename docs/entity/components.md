@@ -27,9 +27,6 @@ See the following example usage:
             "pattern": "^[a-zA-Z]\\w*$"
         }
     ],
-    "options": {
-        "placeholder": "Required"
-    },
     "field": "name",
     "help": "Enter a unique name for this account.",
     "required": true
