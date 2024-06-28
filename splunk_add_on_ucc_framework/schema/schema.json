@@ -1815,6 +1815,14 @@
               "os"
             ]
           }
+        },
+        "supportedThemes": {
+          "description": "This feature allows you to choose theme based on the given option i.e. light and dark",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["light", "dark"]
+          }
         }
       },
       "required": ["displayName", "name", "restRoot", "version"],

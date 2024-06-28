@@ -3,6 +3,7 @@ import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
+import { getUserTheme } from '@splunk/splunk-utils/themes';
 
 import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
@@ -74,9 +75,21 @@ For external users, join us at: https://splunk-usergroups.slack.com/archives/C03
 We appreciate your help in making UCC better! 🚀`);
 
 if (page === PAGE_INPUT) {
-    layout(<InputPageComponent />, { pageTitle: messageDict[116] });
+    getUserTheme().then((theme) => {
+        layout(<InputPageComponent />, {
+            pageTitle: messageDict[116],
+            theme,
+        });
+    });
 } else if (page === PAGE_CONF) {
-    layout(<ConfigurationPageComponent />, { pageTitle: messageDict[117] });
+    getUserTheme().then((theme) => {
+        layout(<ConfigurationPageComponent />, {
+            pageTitle: messageDict[117],
+            theme,
+        });
+    });
 } else if (page === PAGE_DASHBOARD) {
-    layout(<DashboardPageComponent />, { pageTitle: messageDict[119] });
+    getUserTheme().then((theme) => {
+        layout(<DashboardPageComponent />, { pageTitle: messageDict[119], theme });
+    });
 }

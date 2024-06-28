@@ -14,12 +14,8 @@
  * limitations under the License.
  *
  */
-body {
+ body {
     min-width: 960px;
-}
-
-.grey_background {
-    background: #f2f4f5; /* move to class to applied changes only for Monitoring Dashboard */
 }
 
 /* Safari browser specific issue - https://stackoverflow.com/questions/21400182/safari-css-font-color-issue?noredirect=1&lq=1 */
