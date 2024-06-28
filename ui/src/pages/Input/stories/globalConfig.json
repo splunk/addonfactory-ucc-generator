@@ -431,11 +431,21 @@
             }
           },
           {
+            "label": "Exported",
+            "field": "hard_disabled",
+            "mapping": {
+              "true": "Yes",
+              "false": "No"
+            }
+          },
+          {
             "label": "Select Dropdown",
             "field": "someselectdropdown2"
           }
         ]
-      }
+      },
+      "readonlyFieldName": "hard_disabled",
+      "hideFieldName": "hide_in_ui"
     },
     "dashboard": {
       "panels": [

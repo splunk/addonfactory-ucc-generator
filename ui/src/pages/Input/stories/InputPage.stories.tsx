@@ -24,19 +24,34 @@ const meta = {
         msw: {
             handlers: [
                 http.get('/servicesNS/nobody/-/:inputName', ({ params }) => {
-                    if (params.inputName === 'demo_addon_for_splunk_demo_input') {
-                        return HttpResponse.json(
-                            getMockServerResponseForInput([
-                                {
-                                    name: 'my disabled input',
-                                    content: {
-                                        disabled: '1',
+                    switch (params.inputName) {
+                        case 'demo_addon_for_splunk_demo_input':
+                            return HttpResponse.json(
+                                getMockServerResponseForInput([
+                                    {
+                                        name: 'my disabled input',
+                                        content: {
+                                            disabled: true,
+                                        },
                                     },
-                                },
-                            ])
-                        );
+                                    {
+                                        name: 'my read only input',
+                                        content: {
+                                            hard_disabled: true,
+                                        },
+                                    },
+                                    {
+                                        name: 'my hidden input',
+                                        content: {
+                                            hide_in_ui: true,
+                                        },
+                                    },
+                                ])
+                            );
+                        case 'demo_addon_for_splunk_demo_input_page':
+                            return HttpResponse.json(mockServerResponseForInput);
+                        default:
                     }
-                    return HttpResponse.json(mockServerResponseForInput);
                 }),
                 http.post('/servicesNS/nobody/-/:inputName/:name', () =>
                     HttpResponse.json(mockServerResponseForInput)

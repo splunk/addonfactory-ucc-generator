@@ -9,15 +9,17 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 
 ### Properties
 
-| Property                                                                  | Type   | Description                                                                                            |
-|---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
-| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                      |
-| description                                                               | string | It provides a brief summary of an inputs page.                                                         |
-| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                     |
-| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature. |
-| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                         |
-| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.               |
-| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                 |
+| Property                                                                  | Type   | Description                                                                                                                              |
+|---------------------------------------------------------------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------|
+| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                                                        |
+| description                                                               | string | It provides a brief summary of an inputs page.                                                                                           |
+| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                                                       |
+| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature.                                    |
+| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                                                           |
+| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.                                                 |
+| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                                                   |
+| readonlyFieldName                                                         | string | Name of the boolean attribute that UCC checks for each input. If the attribute is true for an input, editing is disabled for that input. |
+| hideFieldName                                                             | string | Name of the boolean attribute that UCC checks for each input. If the attribute is true for an input, that input is hidden from the UI.   |
 
 ### Services Properties
 
@@ -43,39 +45,9 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 This is how the global configuration looks like without tabs:
 
 ```json
-"pages": {
-    "inputs": {
-        "title": "Inputs",
-        "description": "Manage your data inputs",
-        "services": [
-            {
-                "name": "example_input_one",
-                "title": "Example Input",
-                "entity": []
-            },
-            {
-                "name": "example_input_two",
-                "title": "Example Input Two",
-                "entity": []
-            }
-        ],
-        "table": {
-            "actions": [
-                "edit",
-                "enable",
-                "delete",
-                "search",
-                "clone"
-            ],
-            "header": [],
-            "moreInfo": []
-        }
-    }
-},
+--8<-- "ui/src/pages/Input/stories/globalConfig.json"
 ```
 
 ### Output
 
-This is how it looks like in the UI:
-
-![image](../images/inputs/Introduction_Output.png)
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></ifame>

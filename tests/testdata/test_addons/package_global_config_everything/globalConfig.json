@@ -1426,7 +1426,9 @@
                         "field": "limit"
                     }
                 ]
-            }
+            },
+            "hideFieldName": "hide_in_ui",
+            "readonlyFieldName": "hard_disabled"
         },
         "dashboard": {
             "panels": [
