@@ -40,15 +40,16 @@ const defaultThemeSplunkThemeProviderMap = {
     },
 };
 
-let ThemeProviderSettings = defaultThemeSplunkThemeProviderMap[defaultTheme];
+let themeProviderSettings = defaultThemeSplunkThemeProviderMap[defaultTheme];
+const getThemeProviderSettings = () => themeProviderSettings;
 
 getUserTheme().then((theme) => {
     const isDarkTheme = theme === 'dark';
 
     document.body.style.backgroundColor = isDarkTheme ? '#171d21' : '#ffffff';
-    ThemeProviderSettings = isDarkTheme
+    themeProviderSettings = isDarkTheme
         ? defaultThemeSplunkThemeProviderMap.enterpriseDark
         : defaultThemeSplunkThemeProviderMap[defaultTheme];
 });
 
-export { StyledContainer, StyledGreeting, ThemeProviderSettings, StyledButton };
+export { StyledContainer, StyledGreeting, getThemeProviderSettings, StyledButton };

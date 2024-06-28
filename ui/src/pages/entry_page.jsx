@@ -2,8 +2,8 @@ import React, { Suspense } from 'react';
 import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
-import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 import { getUserTheme } from '@splunk/splunk-utils/themes';
+import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
 import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
