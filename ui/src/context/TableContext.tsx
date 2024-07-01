@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, ReactNode, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AcceptableFormRecord } from '../types/components/shareableTypes';
 
@@ -28,7 +28,7 @@ export type TableContextProviderType = {
 
 const TableContext = createContext<TableContextProviderType | null>(null);
 
-export function TableContextProvider({ children }: { children: Node | Node[] }) {
+export function TableContextProvider({ children }: { children: ReactNode }) {
     const [rowData, setRowData] = useState<TableContextProviderType['rowData']>({});
     const [searchText, setSearchText] = useState<string>('');
     const [searchType, setSearchType] = useState<string>('all');

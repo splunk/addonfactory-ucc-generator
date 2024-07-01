@@ -121,7 +121,7 @@ function CustomTableRow(props) {
     // Fix set of props are passed to Table.Row element
     return (
         <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
-            key={row.id}
+            key={row.name || row.id}
             {...props}
         >
             {columns &&

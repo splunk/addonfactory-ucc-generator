@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
+import { BrowserRouter } from 'react-router-dom';
 import { MockRowData } from '../stories/rowDataMockup';
-import TableWrapper from '../TableWrapper';
+import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
@@ -22,7 +22,7 @@ it('correct render table with all elements', async () => {
         handleRequestModalOpen,
         handleOpenPageStyleDialog,
         displayActionBtnAllRows: false,
-    };
+    } satisfies ITableWrapperProps;
 
     server.use(
         http.get('/servicesNS/nobody/-/splunk_ta_uccexample_account', () =>
@@ -33,11 +33,10 @@ it('correct render table with all elements', async () => {
     setUnifiedConfig(SIMPLE_NAME_TABLE_MOCK_DATA);
 
     render(
-        <Router>
-            <TableContextProvider>
-                {(<TableWrapper {...props} />) as unknown as Node}
-            </TableContextProvider>
-        </Router>
+        <TableContextProvider>
+            <TableWrapper {...props} />
+        </TableContextProvider>,
+        { wrapper: BrowserRouter }
     );
 
     const numberOfItems = await screen.findByText('9 Items');
@@ -45,7 +44,7 @@ it('correct render table with all elements', async () => {
 
     const headerNames = ['Name', 'Actions'];
 
-    const tableHeader = document.querySelectorAll('th');
+    const tableHeader = screen.getAllByRole('columnheader');
 
     expect(tableHeader.length).toEqual(headerNames.length);
 
@@ -72,7 +71,7 @@ it('sort items after filtering', async () => {
         handleRequestModalOpen,
         handleOpenPageStyleDialog,
         displayActionBtnAllRows: false,
-    };
+    } satisfies ITableWrapperProps;
 
     server.use(
         http.get('/servicesNS/nobody/-/splunk_ta_uccexample_account', () =>
@@ -83,11 +82,10 @@ it('sort items after filtering', async () => {
     setUnifiedConfig(TABLE_CONFIG_WITH_MAPPING);
 
     render(
-        <Router>
-            <TableContextProvider>
-                {(<TableWrapper {...props} />) as unknown as Node}
-            </TableContextProvider>
-        </Router>
+        <TableContextProvider>
+            <TableWrapper {...props} />
+        </TableContextProvider>,
+        { wrapper: BrowserRouter }
     );
 
     const numberOfItems = await screen.findByText('Custom Text');
