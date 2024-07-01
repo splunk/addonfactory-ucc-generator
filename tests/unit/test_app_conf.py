@@ -32,7 +32,7 @@ def test_update():
         ],
         True,
         True,
-        supported_themes=''
+        supported_themes="",
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
@@ -59,14 +59,7 @@ def test_update_when_should_not_be_visible():
             "company": "Company name",
         },
     ]
-    app_conf.update(
-        "1.0.0",
-        app_manifest_mock,
-        [],
-        False,
-        True,
-        supported_themes=''
-    )
+    app_conf.update("1.0.0", app_manifest_mock, [], False, True, supported_themes="")
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
         app_conf.write(output_app_conf_path)
@@ -92,20 +85,14 @@ def test_update_when_minimal_app_conf():
             "company": "Company name",
         },
     ]
-    app_conf.update(
-        "1.0.0",
-        app_manifest_mock,
-        [],
-        True,
-        False,
-        supported_themes=''
-    )
+    app_conf.update("1.0.0", app_manifest_mock, [], True, False, supported_themes="")
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
         app_conf.write(output_app_conf_path)
         app_conf_expected = get_testdata_file("app.conf.minimal.updated")
         with open(output_app_conf_path) as output_app_conf_fd:
             assert app_conf_expected == output_app_conf_fd.read()
+
 
 @mock.patch("time.time", mock.MagicMock(return_value=12345))
 def test_update_with_supported_themes():
@@ -125,12 +112,7 @@ def test_update_with_supported_themes():
         },
     ]
     app_conf.update(
-        "1.0.0",
-        app_manifest_mock,
-        [],
-        True,
-        True,
-        supported_themes='light, dark'
+        "1.0.0", app_manifest_mock, [], True, True, supported_themes="light, dark"
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)

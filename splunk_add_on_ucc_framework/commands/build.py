@@ -706,19 +706,22 @@ def generate(
         output_directory, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
     )
     app_conf.read(output_app_conf_path)
-    should_be_visible = True if global_config else False
-    if global_config and global_config.meta.get("checkForUpdates") is False:
-        check_for_updates = False
-    else:
-        check_for_updates = True
-    supported_themes =  ', '.join(global_config.meta.get("supportedThemes")) 
+    should_be_visible = False
+    check_for_updates = True
+    supported_themes = ""
+    if global_config:
+        should_be_visible = True
+        if global_config.meta.get("checkForUpdates") is False:
+            check_for_updates = False
+        if global_config.meta.get("supportedThemes") is not None:
+            supported_themes = ", ".join(global_config.meta["supportedThemes"])
     app_conf.update(
         addon_version,
         app_manifest,
         conf_file_names,
         should_be_visible,
         check_for_updates,
-        supported_themes=supported_themes
+        supported_themes=supported_themes,
     )
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")

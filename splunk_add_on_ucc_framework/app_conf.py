@@ -36,7 +36,7 @@ class AppConf:
         conf_file_names: Sequence[str],
         is_visible: bool,
         check_for_updates: bool = True,
-        **kwargs
+        **kwargs: str,
     ) -> None:
         if "launcher" not in self._app_conf:
             self._app_conf.add_section("launcher")
@@ -66,7 +66,7 @@ class AppConf:
             "true" if check_for_updates else "false"
         )
         self._app_conf["ui"]["label"] = app_manifest.get_title()
-        if kwargs.get("supported_themes") != '':
+        if kwargs.get("supported_themes") != "":
             self._app_conf["ui"]["supported_themes"] = kwargs["supported_themes"]
         self._app_conf["ui"]["is_visible"] = "true" if is_visible else "false"
         for conf_file_name in conf_file_names:
