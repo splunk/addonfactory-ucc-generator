@@ -5,7 +5,10 @@ import { userEvent, within } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
-import { mockServerResponseForInput } from '../../../mocks/server-response';
+import {
+    getMockServerResponseForInput,
+    mockServerResponseForInput,
+} from '../../../mocks/server-response';
 
 const meta = {
     component: InputPage,
@@ -20,10 +23,22 @@ const meta = {
     parameters: {
         msw: {
             handlers: [
-                http.get('/servicesNS/nobody/-/:name', () =>
-                    HttpResponse.json(mockServerResponseForInput)
-                ),
-                http.post('/servicesNS/nobody/-/:name', () =>
+                http.get('/servicesNS/nobody/-/:inputName', ({ params }) => {
+                    if (params.inputName === 'demo_addon_for_splunk_demo_input') {
+                        return HttpResponse.json(
+                            getMockServerResponseForInput([
+                                {
+                                    name: 'my disabled input',
+                                    content: {
+                                        disabled: '1',
+                                    },
+                                },
+                            ])
+                        );
+                    }
+                    return HttpResponse.json(mockServerResponseForInput);
+                }),
+                http.post('/servicesNS/nobody/-/:inputName/:name', () =>
                     HttpResponse.json(mockServerResponseForInput)
                 ),
             ],
@@ -38,7 +53,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const InputPageView: Story = {
+export const InputPageView: Story = {};
+export const InputPageViewAdd: Story = {
     play: async ({ canvasElement }) => {
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
@@ -53,7 +69,7 @@ export const InputPageView: Story = {
         await userEvent.click(await body.findByText('demo_input'));
     },
 };
-export const InputTabView: Story = {
+export const InputTabViewAdd: Story = {
     play: async ({ canvasElement }) => {
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);

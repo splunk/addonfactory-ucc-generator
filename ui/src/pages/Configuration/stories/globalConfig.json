@@ -17,7 +17,7 @@
             }
           },
           "table": {
-            "actions": ["edit", "delete","search", "clone"],
+            "actions": ["edit", "delete", "clone"],
             "header": [
               {
                 "label": "Name",

@@ -25,13 +25,14 @@ beforeEach(() => {
 function setup(meta: Partial<metaType>) {
     const globalConfigMock = getGlobalConfigMock();
 
-    getUnifiedConfigsMock.mockImplementation(() => ({
+    const newGlobalConfig = {
         ...globalConfigMock,
         meta: {
             ...globalConfigMock.meta,
             ...meta,
         },
-    }));
+    };
+    getUnifiedConfigsMock.mockImplementation(() => newGlobalConfig);
     return render(<ConfigurationPage />, { wrapper: BrowserRouter });
 }
 
@@ -40,7 +41,7 @@ it('should show UCC label', async () => {
         _uccVersion: undefined,
     });
 
-    const uccLink = page.getByRole('link', { name: /ucc/i });
+    const uccLink = await page.findByRole('link', { name: /ucc/i });
     expect(uccLink).toBeInTheDocument();
     expect(uccLink.getAttribute('href')).toContain('github.io');
 });
@@ -55,10 +56,11 @@ it('should not show UCC label', async () => {
 });
 
 it('should show UCC version', async () => {
-    const uccVersion = '5.2221.2341';
+    const expectedUccVersion = '5.2221.2341';
     const page = setup({
-        _uccVersion: uccVersion,
+        _uccVersion: expectedUccVersion,
     });
 
-    expect(page.getByTestId('ucc-credit')).toHaveTextContent(uccVersion);
+    const uccVersion = await page.findByTestId('ucc-credit');
+    expect(uccVersion).toHaveTextContent(expectedUccVersion);
 });
