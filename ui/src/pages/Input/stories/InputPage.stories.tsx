@@ -51,6 +51,7 @@ const meta = {
                         case 'demo_addon_for_splunk_demo_input_page':
                             return HttpResponse.json(mockServerResponseForInput);
                         default:
+                            return HttpResponse.error();
                     }
                 }),
                 http.post('/servicesNS/nobody/-/:inputName/:name', () =>
