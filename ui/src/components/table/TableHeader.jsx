@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import Paginator from '@splunk/react-ui/Paginator';
@@ -6,11 +6,11 @@ import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import TableFilter from './TableFilter';
-import TableContext from '../../context/TableContext';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import { InteractAllStatusButtons } from '../InteractAllStatusButton';
+import { useTableContext } from '../../context/useTableContext';
 
 const TableHeaderWrapper = styled.div`
     display: flex;
@@ -43,7 +43,7 @@ function TableHeader({
         searchType,
         setSearchType,
         setSearchText,
-    } = useContext(TableContext);
+    } = useTableContext();
 
     const itemLabel = page === PAGE_INPUT ? 'Input' : 'Item';
 
