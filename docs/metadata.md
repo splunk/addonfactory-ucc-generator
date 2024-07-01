@@ -1,5 +1,5 @@
 ---
-title: Metadata
+title: globalConfig Meta Data
 ---
 
 Metadata contains general information about add-on build.
@@ -7,7 +7,7 @@ Metadata contains general information about add-on build.
 ## Metadata Properties
 
 | Property                                                      | Type    | Description                                                                                                                                     |
-| ------------------------------------------------------------- | ------- |-------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | displayName<span class="required-asterisk">\*</span>          | string  | Name displayed for end user.                                                                                                                    |
 | name<span class="required-asterisk">\*</span>                 | string  | Name used for API endpoints and all code references separating separating endpoints from any other app.                                         |
 | restRoot<span class="required-asterisk">\*</span>             | string  | String used to create API endpoints. <br> Follow patter ```/^\w+$/```.                                                                          |
