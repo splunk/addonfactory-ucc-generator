@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { variables, mixins } from '@splunk/themes';
 import Button from '@splunk/react-ui/Button';
-import { defaultTheme } from '@splunk/splunk-utils/themes';
-import { getUserTheme } from '@splunk/splunk-utils/themes';
+import { defaultTheme, getUserTheme } from '@splunk/splunk-utils/themes';
 
 const StyledContainer = styled.div`
     ${mixins.reset('inline')};
