@@ -1,3 +1,4 @@
+
 import import_declare_test
 
 import sys
@@ -70,6 +71,18 @@ class EXAMPLE_INPUT_TWO(smi.Script):
         scheme.add_argument(
             smi.Argument(
                 'apis',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                'hide_in_ui',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                    'hard_disabled',
                 required_on_create=False,
             )
         )
