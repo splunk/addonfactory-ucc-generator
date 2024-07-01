@@ -82,4 +82,5 @@ nav:
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
   - Changelog: "CHANGELOG.md"
+  - Metadata: "metadata.md"
   - Storybook: "storybook/index.html"
