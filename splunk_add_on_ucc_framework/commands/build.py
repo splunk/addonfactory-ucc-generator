@@ -537,7 +537,7 @@ def generate(
             )
             validator.validate()
             logger.info("globalConfig file is valid")
-        except global_config_validator.GlobalConfigValidatorException as e:
+        except exceptions.GlobalConfigValidatorException as e:
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
