@@ -53,7 +53,6 @@ const CommonEditableEntityFields = CommonEntityFields.extend({
 });
 
 const CommonEditableEntityOptions = z.object({
-    placeholder: z.string().optional(),
     display: z.boolean().default(true).optional(),
     disableonEdit: z.boolean().default(false).optional(),
     enable: z.boolean().default(true).optional(),
@@ -170,7 +169,7 @@ export const MultipleSelectEntity = CommonEditableEntityFields.extend({
 export const CheckboxEntity = CommonEditableEntityFields.extend({
     type: z.literal('checkbox'),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }).optional(),
+    options: CommonEditableEntityOptions.optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
@@ -178,7 +177,7 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
     type: z.literal('checkboxGroup'),
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
+    options: CommonEditableEntityOptions.extend({
         groups: z
             .array(
                 z.object({
@@ -227,14 +226,12 @@ export const FileEntity = CommonEditableEntityFields.extend({
     type: z.literal('file'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true })
-        .extend({
-            maxFileSize: z.number().optional(),
-            fileSupportMessage: z.string().optional(),
-            supportedFileTypes: z.array(z.string()),
-            useBase64Encoding: z.boolean().default(false).optional(),
-        })
-        .optional(),
+    options: CommonEditableEntityOptions.extend({
+        maxFileSize: z.number().optional(),
+        fileSupportMessage: z.string().optional(),
+        supportedFileTypes: z.array(z.string()),
+        useBase64Encoding: z.boolean().default(false).optional(),
+    }).optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
@@ -249,7 +246,6 @@ export const OAuthFields = z.object({
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
     options: z
         .object({
-            placeholder: z.string().optional(),
             disableonEdit: z.boolean().optional(),
             enable: z.boolean().default(true).optional(),
             display: z.literal(true).default(true).optional(),
@@ -264,7 +260,6 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
     options: CommonEditableEntityOptions.omit({
-        placeholder: true,
         requiredWhenVisible: true,
     }).extend({
         auth_type: z.array(z.union([z.literal('basic'), z.literal('oauth')])),
