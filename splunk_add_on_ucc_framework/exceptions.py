@@ -23,3 +23,7 @@ class IsNotAGitRepo(Exception):
 
 class CouldNotIdentifyPythonVersionException(Exception):
     pass
+
+
+class GlobalConfigValidatorException(Exception):
+    pass

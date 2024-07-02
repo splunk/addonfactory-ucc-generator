@@ -5,7 +5,7 @@ from tests.ui.pages.alert_action_page import AlertPage
 
 
 @pytest.fixture
-def clean_alert(ucc_smartx_rest_helper):
+def _clean_alert(ucc_smartx_rest_helper):
     yield None
 
     alert_page = AlertPage(None, ucc_smartx_rest_helper, open_page=False)
@@ -110,7 +110,7 @@ class TestAlertActions(UccTester):
     @pytest.mark.sanity_test
     @pytest.mark.alert
     def test_alert_action_save(
-        self, ucc_smartx_selenium_helper, clean_alert, add_delete_account
+        self, ucc_smartx_selenium_helper, _clean_alert, add_delete_account
     ):
         alert_page = AlertPage(ucc_smartx_selenium_helper, None)
         alert_page.alert_entity.open()
