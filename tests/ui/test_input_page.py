@@ -8,7 +8,7 @@ import time
 
 
 @pytest.fixture(scope="module", autouse=True)
-def add_account(ucc_smartx_rest_helper):
+def _add_account(ucc_smartx_rest_helper):
     account = AccountPage(
         ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
     )
@@ -34,7 +34,7 @@ def add_account(ucc_smartx_rest_helper):
 
 
 @pytest.fixture
-def add_multiple_inputs(ucc_smartx_rest_helper):
+def _add_multiple_inputs(ucc_smartx_rest_helper):
     input_page = InputPage(
         ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
     )
@@ -71,7 +71,7 @@ def add_multiple_inputs(ucc_smartx_rest_helper):
 
 
 @pytest.fixture
-def add_input_one(ucc_smartx_rest_helper):
+def _add_input_one(ucc_smartx_rest_helper):
     input_page = InputPage(
         ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
     )
@@ -96,7 +96,7 @@ def add_input_one(ucc_smartx_rest_helper):
 
 
 @pytest.fixture
-def add_input_two(ucc_smartx_rest_helper):
+def _add_input_two(ucc_smartx_rest_helper):
     input_page = InputPage(
         ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
     )
@@ -117,7 +117,7 @@ def add_input_two(ucc_smartx_rest_helper):
 
 @pytest.fixture(autouse=True)
 # All the inputs created should start with dummy_input as prefix
-def delete_inputs(ucc_smartx_rest_helper):
+def _delete_inputs(ucc_smartx_rest_helper):
     yield
     input_page = InputPage(
         ucc_smartx_rest_helper=ucc_smartx_rest_helper, open_page=False
@@ -154,7 +154,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_pagination(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_multiple_inputs
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_multiple_inputs
     ):
         """Verifies pagination functionality by creating 100 accounts"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -175,8 +175,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """Verifies sorting functionality for name column"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -197,8 +197,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """Verifies the filter functionality (Negative)"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -217,8 +217,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """Verifies the filter functionality (Positive)"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -265,8 +265,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """Verifies input type filter list"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -289,7 +289,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_more_info(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the expand functionality of the inputs table"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -320,7 +320,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_enable_disable(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies enable and disable functionality of the input"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -352,8 +352,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """Verifies count on table"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1099,7 +1099,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_edit_uneditable_field_name(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the frontend uneditable fields at time of edit of the example input one entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1111,7 +1111,7 @@ class TestInputPage(UccTester):
     @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_one_edit_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the frontend and backend edit functionality of the example input one entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1170,7 +1170,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_clone_default_values(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the frontend default fields at time of clone for example input one entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1198,7 +1198,7 @@ class TestInputPage(UccTester):
     @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_one_clone_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the frontend and backend clone functionality of the example input one entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1250,7 +1250,7 @@ class TestInputPage(UccTester):
     @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_one_delete_row_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the frontend and backend delete functionality"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1280,7 +1280,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_edit_close_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies close functionality at time of edit"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1291,7 +1291,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_clone_close_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies close functionality at time of clone"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1302,7 +1302,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_clone_save_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies required field name in example input one at time of clone"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1317,7 +1317,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_delete_close_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies close functionality at time of delete"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1343,7 +1343,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_edit_cancel_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies cancel functionality at time of edit"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1354,7 +1354,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_clone_cancel_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies cancel functionality at time of clone"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1365,7 +1365,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_delete_cancel_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies cancel functionality at time of delete"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1379,7 +1379,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_add_duplicate_names(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies by saving an entity with duplicate name it displays and error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1397,7 +1397,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_clone_duplicate_names(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies by saving an entity with duplicate name at time of clone it displays and error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1430,7 +1430,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_edit_valid_title(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the title of the 'Edit Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1444,7 +1444,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_clone_valid_title(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the title of the 'Clone Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1458,7 +1458,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_delete_valid_title(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the title of the 'Delete Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1472,7 +1472,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_one_delete_valid_prompt_message(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies the prompt message of the 'Delete Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1546,7 +1546,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_valid_input_name(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies whether adding special characters, name field displays validation error while cloning a row"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1902,7 +1902,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_edit_uneditable_field_name(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the frontend uneditable fields at time of edit of the Example Input Two entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1915,7 +1915,7 @@ class TestInputPage(UccTester):
     @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_two_edit_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the frontend and backend edit functionality of the Example Input Two entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1961,7 +1961,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_default_values(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the frontend default fields at time of clone for Example Input Two entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -1986,7 +1986,7 @@ class TestInputPage(UccTester):
     @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_two_clone_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the frontend and backend clone functionality of the Example Input Two entity"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2030,7 +2030,7 @@ class TestInputPage(UccTester):
     @pytest.mark.input
     @pytest.mark.sanity_test
     def test_example_input_two_delete_row_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the frontend and backend delete functionality"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2060,7 +2060,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_edit_close_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies close functionality at time of edit"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2071,7 +2071,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_close_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies close functionality at time of clone"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2082,7 +2082,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_delete_close_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies close functionality at time of delete"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2108,7 +2108,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_edit_cancel_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies cancel functionality at time of edit"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2119,7 +2119,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_cancel_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies cancel functionality at time of clone"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2130,7 +2130,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_delete_cancel_entity(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies cancel functionality at time of delete"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2144,7 +2144,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_add_duplicate_names(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies by saving an entity with duplicate name it displays and error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2162,7 +2162,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_duplicate_names(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies by saving an entity with duplicate name at time of clone it displays and error"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2195,7 +2195,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_edit_valid_title(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the title of the 'Edit Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2210,7 +2210,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_clone_valid_title(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the title of the 'Clone Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2225,7 +2225,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_delete_valid_title(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the title of the 'Delete Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2239,7 +2239,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_example_input_two_delete_valid_prompt_message(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_two
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_two
     ):
         """Verifies the prompt message of the 'Delete Entity'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2253,7 +2253,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_enable_all_title_message(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies title and message of enable all prompt"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2275,7 +2275,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_disable_all_title_message(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """Verifies title and message of disable all prompt"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2297,7 +2297,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_enable_all_close(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that closing the 'Enable All' prompt behaves correctly.
@@ -2310,7 +2310,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_disable_all_close(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that closing the 'Disable All' prompt behaves correctly.
@@ -2323,7 +2323,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_enable_all_deny(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that when 'Enable All' is followed by 'Deny,' inputs remain disabled.
@@ -2343,7 +2343,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_disable_all_deny(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that when 'Disable All' is followed by 'Deny,' inputs remain enabled.
@@ -2358,7 +2358,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_disable_enable_all(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_multiple_inputs
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_multiple_inputs
     ):
         """Verifies that all inputs are disabled after clicking 'Disable all'"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -2382,8 +2382,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """
         Verifies that various types of inputs are correctly disabled and enabled
@@ -2411,8 +2411,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """
         Verifies that all inputs are enabled correctly.
@@ -2437,8 +2437,8 @@ class TestInputPage(UccTester):
         self,
         ucc_smartx_selenium_helper,
         ucc_smartx_rest_helper,
-        add_input_one,
-        add_input_two,
+        _add_input_one,
+        _add_input_two,
     ):
         """
         Verifies that all inputs are disabled correctly.
@@ -2463,7 +2463,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_textarea_height(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that textarea height values
@@ -2487,7 +2487,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_textarea_big_input(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that textarea can handle big inputs
@@ -2507,7 +2507,7 @@ class TestInputPage(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.input
     def test_inputs_textarea_scroll(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, add_input_one
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _add_input_one
     ):
         """
         Verifies that textarea height values

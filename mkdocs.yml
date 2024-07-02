@@ -36,6 +36,8 @@ plugins:
         python:
           options:
             show_if_no_docstring: true
+            filters: ["!^_"]
+            show_source: true
 
 nav:
   - Home: "index.md"
