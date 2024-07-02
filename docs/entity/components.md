@@ -85,16 +85,16 @@ A clear button is visible to the right of the dropdown when this field is marked
 
 ### Options
 
-| Property                                          | Type    | Description                                                                                                                                                                 | Default Value |
-| ------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| Property                                          | Type    | Description                                                                                                                                                                    | Default Value |
+| ------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
 | disableSearch                                     | boolean | It determines whether to show the filter box. When false, the children are automatically filtered based on the label.                                                          | false         |
-| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                     | false         |
-| referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                            | -             |
-| endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                        | -             |
+| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                    | false         |
+| referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                               | -             |
+| endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                           | -             |
 | allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`. It is applied before denyList. | -             |
 | denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`.                               | -             |
-| labelField                                        | string  | TBD                                                                                                                                                                         | -             |
-| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                               | -             |
+| labelField                                        | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used.```item.content?.[labelField]```         | -             |
+| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                              | -             |
 
 ### See the following example usage
 
@@ -327,18 +327,18 @@ Multiselect allows the user to select multiple options at once.
 
 ### Options
 
-| Property                                          | Type    | Description                                                                                                                                                                                              | Default Value |
-| ------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| items                                             | array   | An array of options with a label and a value.                                                                                                                                                                | -             |
-| delimiter                                         | string  | It delimits each value of the field with a predefined character. <br>For example, In the data option_a\|option_b, a vertical bar (the pipe character) delimits the two data items option_a and option_b.   | comma(`,`)    |
-| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                                                  | false         |
-| referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                                                         | -             |
-| endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                                                     | -             |
-| allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`. It is applied before denyList.                              | -             |
-| denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                             | -             |
-| labelField                                        | string  | TBD                                                                                                                                                                                                      | -             |
-| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                             | -             |
-| [autoCompleteFields](#using-autocompletefields-options)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
+| Property                                                | Type    | Description                                                                                                                                                                                              | Default Value |
+| ------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| items                                                   | array   | An array of options with a label and a value.                                                                                                                                                            | -             |
+| delimiter                                               | string  | It delimits each value of the field with a predefined character. <br>For example, In the data option_a\|option_b, a vertical bar (the pipe character) delimits the two data items option_a and option_b. | comma(`,`)    |
+| createSearchChoice                                      | boolean | It allows the user to add arbitrary values.                                                                                                                                                              | false         |
+| referenceName                                           | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                                                         | -             |
+| endpointUrl                                             | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                                                     | -             |
+| allowList                                               | string  | It only accepts options that match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`. It is applied before denyList.                              | -             |
+| denyList                                                | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                            | -             |
+| labelField                                              | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used.```item.content?.[labelField]```                                   | -             |
+| [dependencies](../advanced/dependent_dropdown.md)       | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                            | -             |
+| [autoCompleteFields](#using-autocompletefields-options) | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
 
 See the following example usage:
 
@@ -375,8 +375,8 @@ RadioBar is a component that provides the ability to select one option out of a 
 
 ### Options
 
-| Property                                      | Type  | Description                                | Default Value |
-| --------------------------------------------- | ----- | ------------------------------------------ | ------------- |
+| Property                                      | Type  | Description                                                    | Default Value |
+| --------------------------------------------- | ----- | -------------------------------------------------------------- | ------------- |
 | items<span class="required-asterisk">*</span> | array | This property is an array of options with a label and a value. | -             |
 
 See the following example usage:
@@ -416,9 +416,9 @@ It will open the link in a new tab.
 
 ### Options
 
-| Property                                     | Type   | Description                             | Default Value |
-| -------------------------------------------- | ------ | --------------------------------------- | ------------- |
-| text<span class="required-asterisk">*</span> | string | It is a message to be displayed.        | -             |
+| Property                                     | Type   | Description                                     | Default Value |
+| -------------------------------------------- | ------ | ----------------------------------------------- | ------------- |
+| text<span class="required-asterisk">*</span> | string | It is a message to be displayed.                | -             |
 | link<span class="required-asterisk">*</span> | string | It is a link where the user will be redirected. | -             |
 
 See the following example usage:
@@ -503,7 +503,7 @@ value, i.e. a number greater than or equal to 0, or -1.
 <h3> Options </h3>
 
 | Property | Type                         | Description             |
-|----------|------------------------------|-------------------------|
+| -------- | ---------------------------- | ----------------------- |
 | range    | list of numbers (2 elements) | Range of allowed values |
 
 See the following example:
