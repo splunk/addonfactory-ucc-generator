@@ -7,6 +7,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
 
 const proxyTargetUrl = 'http://localhost:8000';
+const DEBUG = process.env.NODE_ENV !== 'production';
 
 const jsAssetsRegex = /.+\/app\/.+\/js\/build(\/.+(js(.map)?))/;
 function isItStaticAsset(url) {
@@ -45,7 +46,7 @@ module.exports = merge(baseConfig, {
         }),
         new ForkTsCheckerWebpackPlugin(),
     ],
-    devtool: 'source-map',
+    devtool: DEBUG ? 'eval-source-map' : false,
     resolve: {
         fallback: { querystring: require.resolve('querystring-es3') },
     },

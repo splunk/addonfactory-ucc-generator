@@ -19,7 +19,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -33,7 +32,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -47,7 +45,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -61,7 +58,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -75,7 +71,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": True,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -96,7 +91,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -119,7 +113,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -144,7 +137,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -170,7 +162,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": False,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -197,7 +188,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": True,
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -226,7 +216,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": True,
                 "pip_version": "21.0.0",
                 "pip_legacy_resolver": False,
-                "ui_source_map": False,
             },
         ),
         (
@@ -256,29 +245,6 @@ from splunk_add_on_ucc_framework import main
                 "verbose_file_summary_report": True,
                 "pip_version": "21.0.0",
                 "pip_legacy_resolver": True,
-                "ui_source_map": False,
-            },
-        ),
-        (
-            [
-                "--source",
-                "package",
-                "--ta-version",
-                "2.2.0",
-                "--python-binary-name",
-                "python.exe",
-                "--ui-source-map",
-            ],
-            {
-                "source": "package",
-                "config_path": None,
-                "addon_version": "2.2.0",
-                "output_directory": None,
-                "python_binary_name": "python.exe",
-                "verbose_file_summary_report": False,
-                "pip_version": "latest",
-                "pip_legacy_resolver": False,
-                "ui_source_map": True,
             },
         ),
     ],

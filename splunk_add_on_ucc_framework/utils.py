@@ -15,7 +15,6 @@
 #
 import json
 import os
-import shutil
 from typing import Any, Dict
 
 import dunamai
@@ -34,14 +33,13 @@ def get_j2_env() -> jinja2.Environment:
     )
 
 
-def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> None:
+def recursive_overwrite(src: str, dest: str) -> None:
     """
     Method to copy from src to dest recursively.
 
     Args:
         src (str): Source of copy
         dest (str): Destination to copy
-        ui_source_map (bool): flag that decides if source map files should be copied
     """
     # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
     if os.path.isdir(src):
@@ -49,15 +47,10 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
             os.makedirs(dest)
         files = os.listdir(src)
         for f in files:
-            recursive_overwrite(
-                os.path.join(src, f), os.path.join(dest, f), ui_source_map
-            )
+            recursive_overwrite(os.path.join(src, f), os.path.join(dest, f))
     else:
         if os.path.exists(dest):
             os.remove(dest)
-
-        if (".js.map" not in dest) or ui_source_map:
-            shutil.copy(src, dest)
 
 
 def get_os_path(path: str) -> str:
