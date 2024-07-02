@@ -84,13 +84,6 @@
                         {
                             "type": "text",
                             "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
                             "defaultValue": "300",
                             "field": "interval",
                             "help": "Time interval of the data input, in seconds.",
@@ -175,6 +168,6 @@
         "restRoot": "demo_addon_for_splunk",
         "version": "1.0.0",
         "displayName": "Demo Add-on for Splunk",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.7"
     }
 }
