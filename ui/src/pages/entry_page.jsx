@@ -5,7 +5,7 @@ import { SplunkThemeProvider } from '@splunk/themes';
 import { getUserTheme } from '@splunk/splunk-utils/themes';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
-import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
+import { StyledContainer, getThemeProviderSettings } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
 import messageDict from '../constants/messageDict';
@@ -31,7 +31,7 @@ function higherOrderComponent(WrappedComponent) {
         render() {
             return (
                 <SplunkThemeProvider // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                    {...ThemeProviderSettings}
+                    {...getThemeProviderSettings}
                 >
                     <StyledContainer>
                         <Router>
