@@ -42,11 +42,13 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 
 ### Usage
 
-This is how the global configuration looks like without tabs:
-
-```json
---8<-- "ui/src/pages/Input/stories/globalConfig.json"
+This is how the global configuration looks like without tabs
+<details>
+  <summary>Expand to see full json code </summary>
+  ```json
+  --8<-- "ui/src/pages/Input/stories/globalConfig.json"
 ```
+</details>
 
 ### Output
 
