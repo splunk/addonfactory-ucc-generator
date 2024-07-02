@@ -54,7 +54,7 @@ function CustomTableRow(props) {
         (selectedRow) => (
             <TableCellWrapper data-column="actions" key={selectedRow.id}>
                 <ButtonGroup>
-                    {rowActions.includes('edit') && (
+                    {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -90,7 +90,7 @@ function CustomTableRow(props) {
                             />
                         </Tooltip>
                     )}
-                    {rowActions.includes('delete') && (
+                    {!props.readonly && rowActions.includes('delete') && (
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -145,7 +145,7 @@ function CustomTableRow(props) {
                                         onClick={() => handleToggleActionClick(row)}
                                         selected={!row.disabled}
                                         // eslint-disable-next-line no-underscore-dangle
-                                        disabled={row.__toggleShowSpinner}
+                                        disabled={row.__toggleShowSpinner || props.readonly}
                                         appearance="toggle"
                                         className="toggle_switch"
                                         selectedLabel={_(
@@ -190,6 +190,7 @@ function CustomTableRow(props) {
 
 CustomTableRow.propTypes = {
     row: PropTypes.any,
+    readonly: PropTypes.bool,
     columns: PropTypes.array,
     rowActions: PropTypes.array,
     headerMapping: PropTypes.object,

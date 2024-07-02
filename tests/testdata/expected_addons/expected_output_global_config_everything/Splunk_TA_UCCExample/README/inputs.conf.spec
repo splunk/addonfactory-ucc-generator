@@ -14,6 +14,8 @@ start_date =
 limit = 
 example_textarea_field = 
 example_help_link = 
+hide_in_ui =
+hard_disabled =
 
 [example_input_two://<name>]
 interval = 
@@ -26,6 +28,8 @@ use_existing_checkpoint =
 start_date = 
 example_help_link = 
 apis = 
+hide_in_ui =
+hard_disabled =
 
 [example_input_three://<name>]
 interval = 

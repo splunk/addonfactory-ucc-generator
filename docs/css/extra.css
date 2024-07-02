@@ -19,3 +19,9 @@
 .md-grid {
   max-width: 65rem;
 }
+
+
+iframe {
+    width: 100%;
+    min-height: 36rem;
+}

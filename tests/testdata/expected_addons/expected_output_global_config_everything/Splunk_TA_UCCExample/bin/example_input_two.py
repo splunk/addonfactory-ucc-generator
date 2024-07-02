@@ -73,6 +73,18 @@ class EXAMPLE_INPUT_TWO(smi.Script):
                 required_on_create=False,
             )
         )
+        scheme.add_argument(
+            smi.Argument(
+                'hide_in_ui',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                'hard_disabled',
+                required_on_create=False,
+            )
+        )
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
