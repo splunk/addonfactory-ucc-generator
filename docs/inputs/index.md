@@ -9,15 +9,15 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 
 ### Properties
 
-| Property                                                                  | Type   | Description                                                                                           |
-| ------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                     |
-| description                                                               | string | It provides a brief summary of an inputs page.                                                        |
-| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                    |
-| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature. |
-| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                        |
-| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.              |
-| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                |
+| Property                                                                  | Type   | Description                                                                                                                              |
+|---------------------------------------------------------------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------|
+| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                                                        |
+| description                                                               | string | It provides a brief summary of an inputs page.                                                                                           |
+| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                                                       |
+| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature.                                    |
+| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                                                           |
+| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.                                                 |
+| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                                                   |
 | readonlyFieldName                                                         | string | Name of the boolean attribute that UCC checks for each input. If the attribute is true for an input, editing is disabled for that input. |
 | hideFieldName                                                             | string | Name of the boolean attribute that UCC checks for each input. If the attribute is true for an input, that input is hidden from the UI.   |
 
