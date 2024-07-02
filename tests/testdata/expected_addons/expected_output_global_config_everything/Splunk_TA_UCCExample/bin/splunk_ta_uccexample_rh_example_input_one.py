@@ -138,14 +138,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
-    ), 
-
-    field.RestField(
-        'disabled',
-        required=False,
-        validator=None
     ),
-
     field.RestField(
         'hide_in_ui',
         required=False,
@@ -153,12 +146,17 @@ fields = [
         default=None,
         validator=None
     ),
-
     field.RestField(
         'hard_disabled',
         required=False,
         encrypted=False,
         default=None,
+        validator=None
+    ),
+
+    field.RestField(
+        'disabled',
+        required=False,
         validator=None
     )
 

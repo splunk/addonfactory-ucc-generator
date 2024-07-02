@@ -1,4 +1,3 @@
-
 import import_declare_test
 
 import sys
@@ -82,7 +81,7 @@ class EXAMPLE_INPUT_TWO(smi.Script):
         )
         scheme.add_argument(
             smi.Argument(
-                    'hard_disabled',
+                'hard_disabled',
                 required_on_create=False,
             )
         )
