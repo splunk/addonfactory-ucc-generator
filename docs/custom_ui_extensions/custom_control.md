@@ -38,9 +38,6 @@ The Custom Control feature allows you to display any customised input component 
         {
             "type": "text",
             "label": "Name",
-            "options": {
-                "placeholder": "Required"
-            },
             "field": "name",
             "help": "Enter a unique name for this account.",
             "required": true

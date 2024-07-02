@@ -37,12 +37,12 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
     - `required` specifies whether the field is required or not. The default value is true.
     - `defaultValue` is the initial input value (string, number, or boolean).
     - `options`:
-      - `placeholder`: The placeholder for the field.
+      - `placeholder`: (RENOUNCED) The placeholder for the field.
       - `disableonEdit`: When the form is in edit mode, the field becomes unable to be edited. The default value is false.
       - `enable`: The enable property sets whether a field is enabled or not. The default value is true.
 
 > [!WARNING]
-> The [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and will be removed in one of the following versions. Instead, using the "help" attribute is recommended.
+> The [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced. Instead, we recommend to use the "help" attribute.
 
 ### Usage
 
