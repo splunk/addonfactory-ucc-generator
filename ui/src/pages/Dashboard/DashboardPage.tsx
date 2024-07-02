@@ -71,12 +71,6 @@ function DashboardPage() {
                 }
             }
         );
-
-        document.body.classList.add('grey_background');
-        return () => {
-            isComponentMounted.current = false;
-            document.body.classList.remove('grey_background');
-        };
     }, []);
 
     const globalConfig = getUnifiedConfigs();

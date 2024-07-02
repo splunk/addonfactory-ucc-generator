@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { variables, mixins } from '@splunk/themes';
 import Button from '@splunk/react-ui/Button';
-import { defaultTheme } from '@splunk/splunk-utils/themes';
+import { defaultTheme, getUserTheme } from '@splunk/splunk-utils/themes';
 
 const StyledContainer = styled.div`
     ${mixins.reset('inline')};
@@ -39,8 +39,16 @@ const defaultThemeSplunkThemeProviderMap = {
     },
 };
 
-const ThemeProviderSettings =
-    defaultThemeSplunkThemeProviderMap[defaultTheme()] ||
-    defaultThemeSplunkThemeProviderMap.enterprise;
+let themeProviderSettings = defaultThemeSplunkThemeProviderMap[defaultTheme];
+const getThemeProviderSettings = () => themeProviderSettings;
 
-export { StyledContainer, StyledGreeting, ThemeProviderSettings, StyledButton };
+getUserTheme().then((theme) => {
+    const isDarkTheme = theme === 'dark';
+
+    document.body.style.backgroundColor = isDarkTheme ? '#171d21' : '#ffffff';
+    themeProviderSettings = isDarkTheme
+        ? defaultThemeSplunkThemeProviderMap.enterpriseDark
+        : defaultThemeSplunkThemeProviderMap[defaultTheme];
+});
+
+export { StyledContainer, StyledGreeting, getThemeProviderSettings, StyledButton };
