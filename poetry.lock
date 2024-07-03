@@ -925,24 +925,6 @@ files = [
 selenium = "3.141"
 
 [[package]]
-name = "openapi3"
-version = "1.8.2"
-description = "Client and Validator of OpenAPI 3 Specifications"
-optional = false
-python-versions = "*"
-files = [
-    {file = "openapi3-1.8.2-py2.py3-none-any.whl", hash = "sha256:0d8fd34f304b61bc64b1f48ed6c6dbcc03ca04a29bcfa84e40ec5d87648e4399"},
-    {file = "openapi3-1.8.2.tar.gz", hash = "sha256:a21a490573d89ca69ada7cbe585adb2fca4964257f6f3a1df531f12815455d2c"},
-]
-
-[package.dependencies]
-PyYaml = "*"
-requests = "*"
-
-[package.extras]
-test = ["fastapi (==0.76.0)", "hypercorn (==0.14.3)", "pydantic (==1.10.2)", "pytest", "pytest-asyncio (==0.16)", "uvloop (==0.17.0)"]
-
-[[package]]
 name = "packaging"
 version = "24.0"
 description = "Core utilities for Python packages"
@@ -1748,4 +1730,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "bf8d93bdcb8fad1e8308115993e0b2a367512a5cd599dd193f96168a44dfd4bd"
+content-hash = "3c26683119c8eebc0aec7b4a7f711277474e9091eba8e348d887b4c0ac5e2c78"
