@@ -1,5 +1,5 @@
 import json
-
+import re
 import pytest
 
 import tests.unit.helpers as helpers
@@ -10,8 +10,10 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _handle_alert_action_updates,
     _dump_with_migrated_tabs,
     _dump_with_migrated_entities,
+    _stop_build_on_placeholder_usage,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 
 @pytest.mark.parametrize(
@@ -164,3 +166,41 @@ def test_entity_migration(tmp_path):
             },
         }
     )
+
+
+def test_config_validation_when_placeholder_is_absent(tmp_path, caplog):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    expected_schema_version = "0.0.8"
+
+    _stop_build_on_placeholder_usage(global_config)
+
+    assert expected_schema_version == global_config.schema_version
+    assert caplog.text == ""
+
+
+def test_config_validation_when_placeholder_is_present(tmp_path, caplog):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_renounced_placeholder_usage.json"
+    )
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    error_log = (
+        "`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
+        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+        "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+    )
+    exc_msg = re.escape(
+        "`placeholder` option found for input service 'example_input_one'. "
+        "It has been removed from UCC. We recommend to use `help` "
+        "instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+    )
+
+    with pytest.raises(GlobalConfigValidatorException, match=exc_msg):
+        _stop_build_on_placeholder_usage(global_config)
+    expected_schema_version = "0.0.7"
+    assert expected_schema_version == global_config.schema_version
+    assert error_log in caplog.text

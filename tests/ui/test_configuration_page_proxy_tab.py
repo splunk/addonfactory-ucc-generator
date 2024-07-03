@@ -4,7 +4,7 @@ from pytest_splunk_addon_ui_smartx.pages.proxy import Proxy
 
 from tests.ui import constants as C
 
-PROXY_URL = f"servicesNS/nobody/{C.ADDON_NAME}/{C.ADDON_NAME.lower()}_settings/proxy"
+_PROXY_URL = f"servicesNS/nobody/{C.ADDON_NAME}/{C.ADDON_NAME.lower()}_settings/proxy"
 
 
 class TestProxyPage(UccTester):
@@ -14,7 +14,7 @@ class TestProxyPage(UccTester):
     def test_proxy_misc(self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -47,7 +47,7 @@ class TestProxyPage(UccTester):
         # Tests proxy.options.saveValidator
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -70,7 +70,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -91,7 +91,7 @@ class TestProxyPage(UccTester):
         # Tests proxy.options.saveValidator
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -112,7 +112,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -132,7 +132,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -152,7 +152,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -181,7 +181,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -202,7 +202,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -225,7 +225,7 @@ class TestProxyPage(UccTester):
     ):
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
@@ -262,7 +262,7 @@ class TestProxyPage(UccTester):
         """
         proxy = Proxy(
             C.ADDON_NAME,
-            PROXY_URL,
+            _PROXY_URL,
             ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
             ucc_smartx_rest_helper=ucc_smartx_rest_helper,
         )
