@@ -1456,8 +1456,8 @@
                     }
                 ]
             },
-            "hideFieldName": "hide_in_ui",
-            "readonlyFieldName": "hard_disabled"
+            "hideFieldId": "hide_in_ui",
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [

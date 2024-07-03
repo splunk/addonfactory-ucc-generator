@@ -2560,10 +2560,10 @@
             "required": ["name", "title", "entity"]
           }
         },
-        "hideFieldName": {
+        "hideFieldId": {
           "type": "string"
         },
-        "readonlyFieldName": {
+        "readonlyFieldId": {
           "type": "string"
         }
       },
@@ -2650,10 +2650,10 @@
             "required": ["name", "title", "table", "entity"]
           }
         },
-        "hideFieldName": {
+        "hideFieldId": {
           "type": "string"
         },
-        "readonlyFieldName": {
+        "readonlyFieldId": {
           "type": "string"
         }
       },

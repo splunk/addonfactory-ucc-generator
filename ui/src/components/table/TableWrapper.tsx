@@ -40,8 +40,8 @@ const getTableConfigAndServices = (
             return {
                 services,
                 tableConfig: unifiedConfigs.pages.inputs.table,
-                readonlyFieldName: unifiedConfigs.pages.inputs.readonlyFieldName,
-                hideFieldName: unifiedConfigs.pages.inputs.hideFieldName,
+                readonlyFieldId: unifiedConfigs.pages.inputs.readonlyFieldId,
+                hideFieldId: unifiedConfigs.pages.inputs.hideFieldId,
             };
         }
 
@@ -51,8 +51,8 @@ const getTableConfigAndServices = (
         return {
             services,
             tableConfig: tableData || {},
-            readonlyFieldName: undefined,
-            hideFieldName: undefined,
+            readonlyFieldId: undefined,
+            hideFieldId: undefined,
         };
     }
 
@@ -61,8 +61,8 @@ const getTableConfigAndServices = (
     return {
         services,
         tableConfig,
-        readonlyFieldName: undefined,
-        hideFieldName: undefined,
+        readonlyFieldId: undefined,
+        hideFieldId: undefined,
     };
 };
 
@@ -107,7 +107,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         useTableContext()!;
 
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, tableConfig, readonlyFieldName, hideFieldName } = useMemo(
+    const { services, tableConfig, readonlyFieldId, hideFieldId } = useMemo(
         () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
         [page, unifiedConfigs, serviceName]
     );
@@ -175,7 +175,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
      * @param row {Object} row
      */
     const changeToggleStatus = (row: RowDataFields) => {
-        if (readonlyFieldName && readonlyFieldName in row && !!row[readonlyFieldName]) {
+        if (readonlyFieldId && readonlyFieldId in row && !!row[readonlyFieldId]) {
             return;
         }
         setRowData((currentRowData: RowDataType) =>
@@ -271,8 +271,8 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         if (isTabs) {
             allRowsData = allRowsData.filter((v) => v.serviceName === serviceName);
         }
-        if (hideFieldName) {
-            allRowsData = allRowsData.filter((v) => !v[hideFieldName]);
+        if (hideFieldId) {
+            allRowsData = allRowsData.filter((v) => !v[hideFieldId]);
         }
 
         const headerMapping =
