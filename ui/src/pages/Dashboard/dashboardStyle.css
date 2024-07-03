@@ -15,10 +15,6 @@
  *
  */
 
-body {
-    --dashboard-ucc-grey-color: rgb(108, 118, 133);
-}
-
 #dashboardTable [data-test='tab-bar'] {
     margin-bottom: 15px;
 
@@ -256,7 +252,7 @@ body {
         font-family: 'Splunk Platform Sans', 'Splunk Platform Sans', 'Proxima Nova', Roboto, Droid,
             'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-weight: 400;
-        color: var(--dashboard-ucc-grey-color);
+        color: var(--muted-text-color);
     }
     [data-test='action-menu-wrapper'] {
         display: none;
@@ -303,9 +299,17 @@ body {
 #resource_tab_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
-    color: var(--dashboard-ucc-grey-color);
+    color: var(--muted-text-color);
 }
 
 #errors_tab_errors_list_viz svg[data-test='placeholder-icon'] {
     max-height: 400px;
+}
+
+/* muted color */
+#main_page_description_viz p,
+#data_ingestion_description_viz p,
+#errors_tab_description_viz p
+{
+    color: var(--muted-text-color);
 }

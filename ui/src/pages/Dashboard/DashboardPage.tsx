@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import TabLayout from '@splunk/react-ui/TabLayout';
+import styled, { createGlobalStyle } from 'styled-components';
+import variables from '@splunk/themes/variables';
+import { pick } from '@splunk/themes';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { OverviewDashboard } from './Overview';
 import { DataIngestionDashboard } from './DataIngestion';
@@ -34,6 +37,20 @@ function loadJson(
             console.error('Loading file failed: ', e);
         });
 }
+
+const GlobalStyle = createGlobalStyle`
+    body {
+        background-color: ${pick({
+            enterprise: {
+                light: variables.gray98,
+            },
+        })};
+    }
+`;
+
+const DashboardStyles = styled.div`
+    --muted-text-color: ${variables.textGray};
+`;
 
 function DashboardPage() {
     const [overviewDef, setOverviewDef] = useState<Record<string, unknown> | null>(null);
@@ -77,7 +94,8 @@ function DashboardPage() {
 
     return (
         <ErrorBoundary>
-            <div>
+            <GlobalStyle />
+            <DashboardStyles>
                 <OverviewDashboard dashboardDefinition={overviewDef} />
                 {overviewDef ? ( // if overview is loaded then all default tabs should be present so table is injected
                     <TabLayout
@@ -124,7 +142,7 @@ function DashboardPage() {
                 {!overviewDef && !customDef ? (
                     <WaitSpinner size="medium" data-testid="wait-spinner" />
                 ) : null}
-            </div>
+            </DashboardStyles>
         </ErrorBoundary>
     );
 }

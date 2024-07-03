@@ -3,9 +3,11 @@ import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { getUserTheme } from '@splunk/splunk-utils/themes';
+import { createGlobalStyle } from 'styled-components';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
+import colors from '@splunk/themes/variables';
 
-import { StyledContainer, getThemeProviderSettings } from './EntryPageStyle';
+import { StyledContainer } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
 import messageDict from '../constants/messageDict';
@@ -23,6 +25,12 @@ const DashboardPage = React.lazy(() =>
     import(/* webpackPrefetch: true */ './Dashboard/DashboardPage')
 );
 
+const GlobalStyle = createGlobalStyle`
+	body {
+		background-color: ${colors.backgroundColorPage};
+	}
+`;
+
 // Take in a component as argument WrappedComponent
 function higherOrderComponent(WrappedComponent) {
     // And return another component
@@ -30,9 +38,8 @@ function higherOrderComponent(WrappedComponent) {
     class HOC extends React.Component {
         render() {
             return (
-                <SplunkThemeProvider // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                    {...getThemeProviderSettings}
-                >
+                <SplunkThemeProvider>
+                    <GlobalStyle />
                     <StyledContainer>
                         <Router>
                             <ConfigManager>
