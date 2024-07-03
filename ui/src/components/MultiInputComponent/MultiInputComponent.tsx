@@ -2,9 +2,11 @@ import React, { useState, useEffect, ReactElement } from 'react';
 import Multiselect from '@splunk/react-ui/Multiselect';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import { z } from 'zod';
 
 import { AxiosCallType, axiosCallWrapper } from '../../util/axiosCallWrapper';
 import { filterResponse } from '../../util/util';
+import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
@@ -18,20 +20,7 @@ export interface MultiInputComponentProps {
     id?: string;
     handleChange: (field: string, data: string) => void;
     field: string;
-    controlOptions: {
-        delimiter?: string;
-        createSearchChoice?: boolean;
-        referenceName?: string;
-        dependencies?: unknown[];
-        endpointUrl?: string;
-        denyList?: string;
-        allowList?: string;
-        labelField?: string;
-        items?: {
-            label: string;
-            value: string;
-        }[];
-    };
+    controlOptions: z.TypeOf<typeof MultipleSelectCommonOptions>;
     disabled?: boolean;
     value?: string;
     error?: boolean;
@@ -58,6 +47,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         referenceName,
         createSearchChoice,
         labelField,
+        valueField,
         delimiter = ',',
     } = controlOptions;
 
@@ -67,9 +57,13 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
     }
 
-    function generateOptions(itemList: { label: string; value: string }[]) {
+    function generateOptions(itemList: { label: string; value: string | number | boolean }[]) {
         return itemList.map((item) => (
-            <Multiselect.Option label={item.label} value={item.value} key={item.value} />
+            <Multiselect.Option
+                label={item.label}
+                value={item.value}
+                key={typeof item.value === 'boolean' ? String(item.value) : item.value}
+            />
         ));
     }
 
@@ -108,7 +102,13 @@ function MultiInputComponent(props: MultiInputComponentProps) {
                     if (current) {
                         setOptions(
                             generateOptions(
-                                filterResponse(response.data.entry, labelField, allowList, denyList)
+                                filterResponse(
+                                    response.data.entry,
+                                    labelField,
+                                    valueField,
+                                    allowList,
+                                    denyList
+                                )
                             )
                         );
                         setLoading(false);

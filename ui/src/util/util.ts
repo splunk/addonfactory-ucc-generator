@@ -114,6 +114,7 @@ export function filterByDenyList(fields: { value: string; label: string }[], den
 export function filterResponse(
     items: { content?: Record<string, string>; name: string }[],
     labelField?: string,
+    valueField?: string,
     allowList?: string,
     denyList?: string
 ) {
@@ -122,9 +123,13 @@ export function filterResponse(
         if (typeof label !== 'string') {
             throw new Error(`Label not found for ${item.name}`);
         }
+        const value = valueField ? item.content?.[valueField] : item.name;
+        if (typeof value !== 'string') {
+            throw new Error(`Value not found for ${item.name}`);
+        }
         return {
             label,
-            value: item.name,
+            value,
         };
     });
 
@@ -135,6 +140,5 @@ export function filterResponse(
     if (denyList) {
         newItems = filterByDenyList(newItems, denyList);
     }
-
     return newItems;
 }

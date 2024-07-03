@@ -137,7 +137,7 @@ const AutoCompleteFields = z.array(
     ])
 );
 
-const SelectCommonOptions = CommonEditableEntityOptions.extend({
+export const SelectCommonOptions = CommonEditableEntityOptions.extend({
     disableSearch: z.boolean().default(false).optional(),
     createSearchChoice: z.boolean().default(false).optional(),
     referenceName: z.string().optional(),
@@ -145,6 +145,7 @@ const SelectCommonOptions = CommonEditableEntityOptions.extend({
     allowList: z.string().optional(),
     denyList: z.string().optional(),
     labelField: z.string().optional(),
+    valueField: z.string().optional(),
     autoCompleteFields: AutoCompleteFields.optional(),
     dependencies: z.array(z.string()).optional(),
     items: ValueLabelPair.array().optional(),
@@ -157,13 +158,15 @@ export const SingleSelectEntity = CommonEditableEntityFields.extend({
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
+export const MultipleSelectCommonOptions = SelectCommonOptions.extend({
+    delimiter: z.string().length(1).optional(),
+});
+
 export const MultipleSelectEntity = CommonEditableEntityFields.extend({
     type: z.literal('multipleSelect'),
     validators: AllValidators.optional(),
     defaultValue: z.string().optional(),
-    options: SelectCommonOptions.extend({
-        delimiter: z.string().length(1).optional(),
-    }),
+    options: MultipleSelectCommonOptions,
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
