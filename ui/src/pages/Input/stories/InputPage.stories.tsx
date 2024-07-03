@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within, expect } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
@@ -69,7 +69,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const InputPageView: Story = {};
+export const InputPageView: Story = {
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        // there are 4 inputs where 1 is hidden
+        // the header counts as a row
+        await expect(await canvas.findAllByRole('row')).toHaveLength(4);
+    },
+};
 export const InputPageViewAdd: Story = {
     play: async ({ canvasElement }) => {
         const body = within(canvasElement.ownerDocument.body);
