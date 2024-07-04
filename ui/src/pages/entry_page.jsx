@@ -26,9 +26,9 @@ const DashboardPage = React.lazy(() =>
 );
 
 const GlobalStyle = createGlobalStyle`
-body {
-    background-color: ${colors.backgroundColorPage};
-}
+    body {
+        background-color: ${colors.backgroundColorPage};
+    }
 `;
 
 // Take in a component as argument WrappedComponent
@@ -60,6 +60,7 @@ function higherOrderComponent(WrappedComponent) {
             );
         }
     }
+
     return HOC;
 }
 
@@ -81,22 +82,23 @@ For external users, join us at: https://splunk-usergroups.slack.com/archives/C03
 
 We appreciate your help in making UCC better! 🚀`);
 
-if (page === PAGE_INPUT) {
-    getUserTheme().then((theme) => {
-        layout(<InputPageComponent />, {
-            pageTitle: messageDict[116],
-            theme,
-        });
-    });
-} else if (page === PAGE_CONF) {
-    getUserTheme().then((theme) => {
-        layout(<ConfigurationPageComponent />, {
-            pageTitle: messageDict[117],
-            theme,
-        });
-    });
-} else if (page === PAGE_DASHBOARD) {
-    getUserTheme().then((theme) => {
-        layout(<DashboardPageComponent />, { pageTitle: messageDict[119], theme });
-    });
-}
+getUserTheme().then((theme) => {
+    switch (page) {
+        case PAGE_INPUT:
+            layout(<InputPageComponent />, {
+                pageTitle: messageDict[116],
+                theme,
+            });
+            break;
+        case PAGE_CONF:
+            layout(<ConfigurationPageComponent />, {
+                pageTitle: messageDict[117],
+                theme,
+            });
+            break;
+        case PAGE_DASHBOARD:
+            layout(<DashboardPageComponent />, { pageTitle: messageDict[119], theme });
+            break;
+        default:
+    }
+});
