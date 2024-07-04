@@ -9,20 +9,22 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 
 ### Properties
 
-| Property                                                                  | Type   | Description                                                                                           |
-| ------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
-| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                     |
-| description                                                               | string | It provides a brief summary of an inputs page.                                                        |
-| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                    |
-| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature. |
-| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                        |
-| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.              |
-| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                |
+| Property                                                                  | Type   | Description                                                                                                                                                                                                                                               |
+|---------------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                                                                                                                                                                         |
+| description                                                               | string | It provides a brief summary of an inputs page.                                                                                                                                                                                                            |
+| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                                                                                                                                                                        |
+| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature.                                                                                                                                                     |
+| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                                                                                                                                                                            |
+| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.                                                                                                                                                                  |
+| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                                                                                                                                                                    |
+| readonlyFieldId                                                           | string | A field of the boolean entity that UCC checks for each input. If the field's value is true, the corresponding input cannot be edited from the UI. There is no way to change this from the UI; it is supposed to be changed via REST.                      |
+| hideFieldId                                                               | string | A field of the boolean entity that UCC checks for each input. If the field's value is true, the corresponding input is hidden from the UI. There is no way to change this from the UI; it is supposed to be changed via REST. Check out an example below. |
 
 ### Services Properties
 
 | Property                                                              | Type   | Description                                                                                                                                                                                                                                                                         |
-| --------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|-----------------------------------------------------------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name<span class="required-asterisk">\*</span>                         | string | It defines the particular service name.                                                                                                                                                                                                                                             |
 | title<span class="required-asterisk">\*</span>                        | string | It shows the title of the service.                                                                                                                                                                                                                                                  |
 | subTitle                                                              | string | It shows the subtitle (or additional information) of the service.                                                                                                                                                                                                                   |
@@ -40,42 +42,14 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 
 ### Usage
 
-This is how the global configuration looks like without tabs:
-
-```json
-"pages": {
-    "inputs": {
-        "title": "Inputs",
-        "description": "Manage your data inputs",
-        "services": [
-            {
-                "name": "example_input_one",
-                "title": "Example Input",
-                "entity": []
-            },
-            {
-                "name": "example_input_two",
-                "title": "Example Input Two",
-                "entity": []
-            }
-        ],
-        "table": {
-            "actions": [
-                "edit",
-                "enable",
-                "delete",
-                "search",
-                "clone"
-            ],
-            "header": [],
-            "moreInfo": []
-        }
-    }
-},
-```
+This is how the global configuration looks like without tabs
+<details>
+  <summary>Expand to see full json code </summary>
+  ```json
+  --8<-- "ui/src/pages/Input/stories/globalConfig.json"
+  ```
+</details>
 
 ### Output
 
-This is how it looks like in the UI:
-
-![image](../images/inputs/Introduction_Output.png)
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></ifame>

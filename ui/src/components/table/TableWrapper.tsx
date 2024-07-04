@@ -35,16 +35,25 @@ const getTableConfigAndServices = (
         page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs?.services
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
-
     if (page === PAGE_INPUT) {
         if (unifiedConfigs.pages.inputs && 'table' in unifiedConfigs.pages.inputs) {
-            return { services, tableConfig: unifiedConfigs.pages.inputs.table };
+            return {
+                services,
+                tableConfig: unifiedConfigs.pages.inputs.table,
+                readonlyFieldId: unifiedConfigs.pages.inputs.readonlyFieldId,
+                hideFieldId: unifiedConfigs.pages.inputs.hideFieldId,
+            };
         }
 
         const serviceWithTable = services?.find((x) => x.name === serviceName);
         const tableData = serviceWithTable && 'table' in serviceWithTable && serviceWithTable.table;
 
-        return { services, tableConfig: tableData || {} };
+        return {
+            services,
+            tableConfig: tableData || {},
+            readonlyFieldId: undefined,
+            hideFieldId: undefined,
+        };
     }
 
     const tableConfig =
@@ -52,6 +61,8 @@ const getTableConfigAndServices = (
     return {
         services,
         tableConfig,
+        readonlyFieldId: undefined,
+        hideFieldId: undefined,
     };
 };
 
@@ -96,7 +107,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         useTableContext()!;
 
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, tableConfig } = useMemo(
+    const { services, tableConfig, readonlyFieldId, hideFieldId } = useMemo(
         () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
         [page, unifiedConfigs, serviceName]
     );
@@ -164,6 +175,9 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
      * @param row {Object} row
      */
     const changeToggleStatus = (row: RowDataFields) => {
+        if (readonlyFieldId && readonlyFieldId in row && !!row[readonlyFieldId]) {
+            return;
+        }
         setRowData((currentRowData: RowDataType) =>
             update(currentRowData, {
                 [row.serviceName]: {
@@ -256,6 +270,9 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         // For Inputs page, filter the data when tab change
         if (isTabs) {
             allRowsData = allRowsData.filter((v) => v.serviceName === serviceName);
+        }
+        if (hideFieldId) {
+            allRowsData = allRowsData.filter((v) => !v[hideFieldId]);
         }
 
         const headerMapping =

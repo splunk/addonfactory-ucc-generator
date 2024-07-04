@@ -2559,6 +2559,12 @@
             },
             "required": ["name", "title", "entity"]
           }
+        },
+        "hideFieldId": {
+          "type": "string"
+        },
+        "readonlyFieldId": {
+          "type": "string"
         }
       },
       "required": ["title", "table", "services"],
@@ -2643,6 +2649,12 @@
             },
             "required": ["name", "title", "table", "entity"]
           }
+        },
+        "hideFieldId": {
+          "type": "string"
+        },
+        "readonlyFieldId": {
+          "type": "string"
         }
       },
       "required": ["title", "services"],
