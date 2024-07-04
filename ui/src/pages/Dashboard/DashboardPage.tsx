@@ -90,6 +90,10 @@ function DashboardPage() {
                 }
             }
         );
+
+        return () => {
+            isComponentMounted.current = false;
+        };
     }, []);
 
     const globalConfig = getUnifiedConfigs();
