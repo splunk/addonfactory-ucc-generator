@@ -742,24 +742,24 @@ def generate(
             )
             raise e
 
-    # if global_config:
-    #     logger.info("Generating OpenAPI file")
-    #     open_api_object = ucc_to_oas.transform(global_config, app_manifest)
-    #     open_api = OpenAPI(open_api_object.json)
-    #
-    #     output_openapi_folder = os.path.abspath(
-    #         os.path.join(output_directory, ta_name, "appserver", "static")
-    #     )
-    #     output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
-    #     if not os.path.isdir(output_openapi_folder):
-    #         os.makedirs(os.path.join(output_openapi_folder))
-    #         logger.info(f"Creating {output_openapi_folder} folder")
-    #     with open(output_openapi_path, "w") as openapi_file:
-    #         json.dump(open_api.raw_element, openapi_file, indent=4)
-    #
-    # summary_report(
-    #     source,
-    #     ta_name,
-    #     os.path.join(output_directory, ta_name),
-    #     verbose_file_summary_report,
-    # )
+    if global_config:
+        logger.info("Generating OpenAPI file")
+        open_api_object = ucc_to_oas.transform(global_config, app_manifest)
+        # open_api = OpenAPI(open_api_object.json)
+
+        output_openapi_folder = os.path.abspath(
+            os.path.join(output_directory, ta_name, "appserver", "static")
+        )
+        output_openapi_path = os.path.join(output_openapi_folder, "openapi.json")
+        if not os.path.isdir(output_openapi_folder):
+            os.makedirs(os.path.join(output_openapi_folder))
+            logger.info(f"Creating {output_openapi_folder} folder")
+        with open(output_openapi_path, "w") as openapi_file:
+            json.dump(open_api_object.json, openapi_file, indent=4)
+
+    summary_report(
+        source,
+        ta_name,
+        os.path.join(output_directory, ta_name),
+        verbose_file_summary_report,
+    )
