@@ -26,8 +26,6 @@ import colorama as c
 import fnmatch
 import filecmp
 
-from openapi3 import OpenAPI
-
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -745,7 +743,6 @@ def generate(
     if global_config:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
-        open_api = OpenAPI(open_api_object.json)
 
         output_openapi_folder = os.path.abspath(
             os.path.join(output_directory, ta_name, "appserver", "static")
@@ -755,7 +752,7 @@ def generate(
             os.makedirs(os.path.join(output_openapi_folder))
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
-            json.dump(open_api.raw_element, openapi_file, indent=4)
+            json.dump(open_api_object.json, openapi_file, indent=4)
 
     summary_report(
         source,
