@@ -39,6 +39,8 @@ const mockedEntries = [
     { name: 'dataApiTest4', content: { testLabel: 'fourthLabel', testValue: 'fourthValue' } },
 ];
 
+const MOCK_API_URL = '/demo_addon_for_splunk/some_API_endpint_for_select_data';
+
 const renderFeature = (additionalProps?: Partial<MultiInputComponentProps>) => {
     const props = {
         ...defaultInputProps,
@@ -54,7 +56,7 @@ const setConfig = () => {
 
 const mockAPI = () => {
     server.use(
-        http.get('/demo_addon_for_splunk/some_API_endpint_for_select_data', () =>
+        http.get(MOCK_API_URL, () =>
             HttpResponse.json(getMockServerResponseForInput(mockedEntries))
         )
     );
@@ -65,8 +67,7 @@ it('renders correctly', () => {
     const inputComponent = screen.getByTestId('multiselect');
     expect(inputComponent).toBeInTheDocument();
     expect(inputComponent.getAttribute('data-test-values')).toEqual(
-        // eslint-disable-next-line no-useless-escape
-        `[\"${defaultInputProps.value}\"]`
+        `["${defaultInputProps.value}"]`
     );
 });
 
@@ -103,7 +104,7 @@ it.each(mockedEntries)('handler endpoint data loading', async (mockedEntry) => {
     renderFeature({
         controlOptions: {
             delimiter: ',',
-            endpointUrl: '/demo_addon_for_splunk/some_API_endpint_for_select_data',
+            endpointUrl: MOCK_API_URL,
             dependencies: undefined,
         },
         value: undefined,
@@ -121,12 +122,11 @@ it.each(mockedEntries)('handler endpoint data loading', async (mockedEntry) => {
     if (option) {
         await userEvent.click(option);
     }
-    expect(handleChange).toHaveBeenCalledWith(defaultInputProps.field, `${apiEntry.name}`);
+    expect(handleChange).toHaveBeenCalledWith(defaultInputProps.field, apiEntry.name);
 });
 
-it.each(mockedEntries)(
-    `handler endpoint data loading content data %mockedEntry`,
-    async (mockedEntry) => {
+describe.each(mockedEntries)('handler endpoint data loading', (mockedEntry) => {
+    it(`handler endpoint data loading content data - entry ${mockedEntry.name}`, async () => {
         setConfig();
         mockAPI();
 
@@ -134,7 +134,7 @@ it.each(mockedEntries)(
             controlOptions: {
                 delimiter: ',',
                 createSearchChoice: true,
-                endpointUrl: '/demo_addon_for_splunk/some_API_endpint_for_select_data',
+                endpointUrl: MOCK_API_URL,
                 labelField: 'testLabel',
                 valueField: 'testValue',
                 dependencies: undefined,
@@ -155,7 +155,7 @@ it.each(mockedEntries)(
         }
         expect(handleChange).toHaveBeenCalledWith(
             defaultInputProps.field,
-            `${apiEntry.content.testValue}`
+            apiEntry.content.testValue
         );
-    }
-);
+    });
+});

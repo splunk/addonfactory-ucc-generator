@@ -53,9 +53,11 @@ const mockedEntries = [
     { name: 'dataApiTest4', content: { testLabel: 'fourthLabel', testValue: 'fourthValue' } },
 ];
 
+const MOCK_API_URL = '/demo_addon_for_splunk/some_API_endpint_for_select_data';
+
 const mockAPI = () => {
     server.use(
-        http.get('/demo_addon_for_splunk/some_API_endpint_for_select_data', () =>
+        http.get(MOCK_API_URL, () =>
             HttpResponse.json(getMockServerResponseForInput(mockedEntries))
         )
     );
@@ -101,30 +103,32 @@ it('clear calls handler with empty data', async () => {
     expect(handleChange).toHaveBeenCalledWith(defaultInputProps.field, ``);
 });
 
-it.each(mockedEntries)('handler called correctly with API data using labelField', async (entry) => {
-    mockAPI();
-    renderFeature({
-        value: undefined,
-        controlOptions: {
-            createSearchChoice: true,
-            dependencies: undefined,
-            endpointUrl: '/demo_addon_for_splunk/some_API_endpint_for_select_data',
-            labelField: 'testLabel',
-            valueField: 'testValue',
-        },
+describe.each(mockedEntries)('handler endpoint data loading', (entry) => {
+    it(`handler called correctly with API data using labelField - entry ${entry.name}`, async () => {
+        mockAPI();
+        renderFeature({
+            value: undefined,
+            controlOptions: {
+                createSearchChoice: true,
+                dependencies: undefined,
+                endpointUrl: MOCK_API_URL,
+                labelField: 'testLabel',
+                valueField: 'testValue',
+            },
+        });
+        const inputComponent = screen.getByTestId('combo-box');
+        await userEvent.click(inputComponent);
+
+        const option = document.querySelector(`[data-test-value="${entry.content.testValue}"]`);
+        expect(option).toBeInTheDocument();
+
+        if (option) {
+            await userEvent.click(option);
+        }
+
+        expect(handleChange).toHaveBeenCalledWith(
+            defaultInputProps.field,
+            `${entry.content.testValue}`
+        );
     });
-    const inputComponent = screen.getByTestId('combo-box');
-    await userEvent.click(inputComponent);
-
-    const option = document.querySelector(`[data-test-value="${entry.content.testValue}"]`);
-    expect(option).toBeInTheDocument();
-
-    if (option) {
-        await userEvent.click(option);
-    }
-
-    expect(handleChange).toHaveBeenCalledWith(
-        defaultInputProps.field,
-        `${entry.content.testValue}`
-    );
 });
