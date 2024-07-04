@@ -51,7 +51,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const DashboardStyles = styled.div`
-    --muted-text-color: ${variables.gray45};
+    --muted-text-color: ${pick({
+        enterprise: {
+            light: variables.gray45,
+            dark: variables.gray80,
+        },
+    })};
 `;
 
 function DashboardPage() {
