@@ -82,10 +82,16 @@
                             "required": true
                         },
                         {
-                            "type": "text",
+                            "type": "interval",
                             "label": "Interval",
                             "defaultValue": "300",
                             "field": "interval",
+                            "options": {
+                                "range": [
+                                    10,
+                                    301
+                                ]
+                            },
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         },
