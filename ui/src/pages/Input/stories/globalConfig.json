@@ -225,6 +225,22 @@
               }
             },
             {
+              "type": "checkbox",
+              "label": "Hide in UI boolean value",
+              "field": "hide_in_ui",
+              "options": {
+                "display": false
+              }
+            },
+            {
+              "type": "checkbox",
+              "label": "Is input readonly?",
+              "field": "hard_disabled",
+              "options": {
+                "display": false
+              }
+            },
+            {
               "type": "text",
               "label": "Interval",
               "validators": [
@@ -431,11 +447,21 @@
             }
           },
           {
+            "label": "Exported",
+            "field": "hard_disabled",
+            "mapping": {
+              "true": "Yes",
+              "false": "No"
+            }
+          },
+          {
             "label": "Select Dropdown",
             "field": "someselectdropdown2"
           }
         ]
-      }
+      },
+      "readonlyFieldId": "hard_disabled",
+      "hideFieldId": "hide_in_ui"
     },
     "dashboard": {
       "panels": [
