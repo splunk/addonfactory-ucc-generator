@@ -175,6 +175,10 @@
         "restRoot": "demo_addon_for_splunk",
         "version": "1.0.0",
         "displayName": "Demo Add-on for Splunk",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.3",
+        "supportedThemes": [
+            "light",
+            "dark"
+        ]
     }
 }

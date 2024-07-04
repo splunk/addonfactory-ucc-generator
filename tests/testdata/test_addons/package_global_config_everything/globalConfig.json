@@ -945,6 +945,22 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input One"
@@ -1257,6 +1273,22 @@
                                     }
                                 ]
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input Two"
@@ -1423,7 +1455,9 @@
                         "field": "limit"
                     }
                 ]
-            }
+            },
+            "hideFieldId": "hide_in_ui",
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [

@@ -31,7 +31,7 @@ def test_update():
             "splunk_ta_uccexample_accounts",
         ],
         True,
-        True,
+        check_for_updates="true",
         supported_themes="",
     )
     with tempfile.TemporaryDirectory() as temp_dir:
@@ -59,7 +59,14 @@ def test_update_when_should_not_be_visible():
             "company": "Company name",
         },
     ]
-    app_conf.update("1.0.0", app_manifest_mock, [], False, True, supported_themes="")
+    app_conf.update(
+        "1.0.0",
+        app_manifest_mock,
+        [],
+        False,
+        check_for_updates="true",
+        supported_themes="",
+    )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
         app_conf.write(output_app_conf_path)
@@ -85,7 +92,14 @@ def test_update_when_minimal_app_conf():
             "company": "Company name",
         },
     ]
-    app_conf.update("1.0.0", app_manifest_mock, [], True, False, supported_themes="")
+    app_conf.update(
+        "1.0.0",
+        app_manifest_mock,
+        [],
+        True,
+        check_for_updates="false",
+        supported_themes="",
+    )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
         app_conf.write(output_app_conf_path)
@@ -112,7 +126,12 @@ def test_update_with_supported_themes():
         },
     ]
     app_conf.update(
-        "1.0.0", app_manifest_mock, [], True, True, supported_themes="light, dark"
+        "1.0.0",
+        app_manifest_mock,
+        [],
+        True,
+        check_for_updates="true",
+        supported_themes="light, dark",
     )
     with tempfile.TemporaryDirectory() as temp_dir:
         output_app_conf_path = os.path.join(temp_dir, app_conf_lib.APP_CONF_FILE_NAME)
