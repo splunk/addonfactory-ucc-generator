@@ -309,7 +309,6 @@
 /* muted color */
 #main_page_description_viz p,
 #data_ingestion_description_viz p,
-#errors_tab_description_viz p
-{
+#errors_tab_description_viz p {
     color: var(--muted-text-color);
 }
