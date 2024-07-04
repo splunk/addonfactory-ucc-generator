@@ -4,8 +4,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { getUserTheme } from '@splunk/splunk-utils/themes';
 import { createGlobalStyle } from 'styled-components';
-import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 import colors from '@splunk/themes/variables';
+import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
 import { StyledContainer } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
@@ -26,9 +26,9 @@ const DashboardPage = React.lazy(() =>
 );
 
 const GlobalStyle = createGlobalStyle`
-	body {
-		background-color: ${colors.backgroundColorPage};
-	}
+body {
+    background-color: ${colors.backgroundColorPage};
+}
 `;
 
 // Take in a component as argument WrappedComponent

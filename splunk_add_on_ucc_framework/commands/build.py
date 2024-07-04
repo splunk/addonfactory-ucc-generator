@@ -707,12 +707,12 @@ def generate(
     )
     app_conf.read(output_app_conf_path)
     should_be_visible = False
-    check_for_updates = True
+    check_for_updates = "true"
     supported_themes = ""
     if global_config:
         should_be_visible = True
         if global_config.meta.get("checkForUpdates") is False:
-            check_for_updates = False
+            check_for_updates = "false"
         if global_config.meta.get("supportedThemes") is not None:
             supported_themes = ", ".join(global_config.meta["supportedThemes"])
     app_conf.update(
@@ -720,7 +720,7 @@ def generate(
         app_manifest,
         conf_file_names,
         should_be_visible,
-        check_for_updates,
+        check_for_updates=check_for_updates,
         supported_themes=supported_themes,
     )
     app_conf.write(output_app_conf_path)
