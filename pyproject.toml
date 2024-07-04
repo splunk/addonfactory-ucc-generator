@@ -46,7 +46,6 @@ dunamai = "^1.9.0"
 jsonschema = "^4.4.0"
 PyYAML = "^6.0"
 defusedxml = "^0.7.1"
-urllib3 = "<2"
 colorama = "^0.4.6"
 
 [tool.poetry.group.dev.dependencies]
