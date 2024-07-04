@@ -25,7 +25,7 @@ const DashboardPage = React.lazy(() =>
     import(/* webpackPrefetch: true */ './Dashboard/DashboardPage')
 );
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
     body {
         background-color: ${colors.backgroundColorPage};
     }

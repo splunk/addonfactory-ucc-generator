@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
+import { GlobalStyle } from '../src/pages/entry_page';
 import fontDefinitions from './fontDefinitions';
 
 const TestStylesForConsistentScreenshots = createGlobalStyle`
@@ -33,6 +34,7 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
         <AnimationToggleProvider enabled={animation}>
             <TestStylesForConsistentScreenshots />
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>
+                <GlobalStyle />
                 <StyledContainer>
                     <Router>
                         <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
