@@ -42,8 +42,10 @@ const GlobalStyle = createGlobalStyle`
     body {
         background-color: ${pick({
             enterprise: {
-                light: variables.gray98,
+                light: variables.gray96,
+                dark: variables.gray20,
             },
+            prisma: variables.backgroundColorSection,
         })};
     }
 `;
