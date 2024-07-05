@@ -46,6 +46,10 @@ function CustomTable({
     const [deleteModal, setDeleteModal] = useState({ open: false });
 
     const { rowData } = useTableContext();
+    const readonlyFieldId =
+        page === PAGE_INPUT && 'readonlyFieldId' in unifiedConfigs.pages.inputs
+            ? unifiedConfigs.pages.inputs.readonlyFieldId
+            : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
     const headerMapping = {};
@@ -233,6 +237,7 @@ function CustomTable({
                         columns={columns}
                         rowActions={actions}
                         headerMapping={headerMapping}
+                        readonly={readonlyFieldId ? !!row[readonlyFieldId] : false}
                         {...{
                             handleEditActionClick,
                             handleCloneActionClick,

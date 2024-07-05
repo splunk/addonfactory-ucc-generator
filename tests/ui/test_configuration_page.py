@@ -1,5 +1,6 @@
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from tests.ui.pages.configuration_page import ConfigurationPage
+from tests.ui.constants import ADDON_NAME
 
 import pytest
 from splunk_add_on_ucc_framework import (
@@ -38,7 +39,7 @@ class TestConfigurationPage(UccTester):
         )
         configuration_page.download_openapi.wait_to_be_clickable()
         self.assert_util(
-            "/app/Splunk_TA_UCCExample/openapi.json",
+            f"/app/{ADDON_NAME}/openapi.json",
             download_openapi_href,
             operator="in",
         )

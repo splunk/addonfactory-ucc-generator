@@ -2,7 +2,7 @@ from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from tests.ui.pages.custom_page import CustomPage
 import pytest
 
-DEFAULT_CONFIGURATION = {
+_DEFAULT_CONFIGURATION = {
     "testNumber": "",
     "testRegex": "",
     "testString": "",
@@ -14,10 +14,10 @@ DEFAULT_CONFIGURATION = {
 
 
 @pytest.fixture
-def reset_configuration(ucc_smartx_selenium_helper, ucc_smartx_rest_helper):
+def _reset_configuration(ucc_smartx_selenium_helper, ucc_smartx_rest_helper):
     yield
     custom = CustomPage(ucc_smartx_rest_helper=ucc_smartx_rest_helper)
-    custom.backend_conf.update_parameters(DEFAULT_CONFIGURATION)
+    custom.backend_conf.update_parameters(_DEFAULT_CONFIGURATION)
 
 
 class TestCustomPage(UccTester):
@@ -42,7 +42,7 @@ class TestCustomPage(UccTester):
     @pytest.mark.custom
     @pytest.mark.sanity_test
     def test_custom_frontend_backend_validation(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, reset_configuration
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, _reset_configuration
     ):
         """This test case checks the validates frontend save in custom tab"""
         custom = CustomPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
