@@ -9,8 +9,8 @@ import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { filterResponse } from '../../util/util';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
+import { filterResponse, isFalse, isTrue } from '../../util/util';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -82,16 +82,27 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         const data: ReactElement[] = [];
         items.forEach((item) => {
             if ('value' in item && item.value && item.label) {
+                // splunk will mape those when sending post form
+                // so worth doing it earlier to keep same state before and after post
+                const itemValue =
+                    (isFalse(item.value) && '0') || (isTrue(item.value) && '1') || item.value;
+
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
-                data.push(<Option label={item.label} value={item.value} key={item.value} />);
+                data.push(<Option label={item.label} value={itemValue} key={item.value} />);
             }
             if ('children' in item && item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
+                    // splunk will mape those when sending post form
+                    // so worth doing it earlier to keep same state before and after post
+                    const childValue =
+                        (isFalse(child.value) && '0') ||
+                        (isTrue(child.value) && '1') ||
+                        child.value;
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
-                    data.push(<Option label={child.label} value={child.value} key={child.value} />);
+                    data.push(<Option label={child.label} value={childValue} key={childValue} />);
                 });
             }
         });
