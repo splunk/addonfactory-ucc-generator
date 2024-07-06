@@ -31,7 +31,8 @@ const defaultInputProps = {
     error: false,
     dependencyValues: {},
     handleChange,
-};
+} satisfies MultiInputComponentProps;
+
 const mockedEntries = [
     { name: 'dataApiTest1', content: { testLabel: 'firstLabel', testValue: 'firstValue' } },
     { name: 'dataApiTest2', content: { testLabel: 'secondLabel', testValue: 'secondValue' } },

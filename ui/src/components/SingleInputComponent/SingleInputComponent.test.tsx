@@ -31,7 +31,7 @@ const defaultInputProps = {
     dependencyValues: {},
     required: false,
     handleChange,
-};
+} satisfies SingleInputComponentProps;
 
 beforeEach(() => {
     const mockConfig = getGlobalConfigMock();
