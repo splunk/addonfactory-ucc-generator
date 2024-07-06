@@ -25,7 +25,7 @@ export function getMetaInfo() {
     };
 }
 
-export function isFalse(value: AcceptableFormValueOrNullish) {
+export function isFalse(value: boolean | number | AcceptableFormValueOrNullish) {
     return (
         value === null ||
         value === undefined ||
@@ -33,7 +33,7 @@ export function isFalse(value: AcceptableFormValueOrNullish) {
     );
 }
 
-export function isTrue(value: AcceptableFormValueOrNullish) {
+export function isTrue(value: boolean | number | AcceptableFormValueOrNullish) {
     return (
         value !== null &&
         value !== undefined &&

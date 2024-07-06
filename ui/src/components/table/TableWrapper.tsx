@@ -179,6 +179,8 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             return;
         }
         setRowData((currentRowData: RowDataType) =>
+            // apply property is not used here
+            // @ts-expect-error variable changes should have property '$apply'
             update(currentRowData, {
                 [row.serviceName]: {
                     [row.name]: {
@@ -197,6 +199,8 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             handleError: true,
             callbackOnError: () => {
                 setRowData((currentRowData: RowDataType) =>
+                    // apply property is not used here
+                    // @ts-expect-error variable changes should have property '$apply'
                     update(currentRowData, {
                         [row.serviceName]: {
                             [row.name]: {
@@ -208,6 +212,8 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             },
         }).then((response) => {
             setRowData((currentRowData: RowDataType) =>
+                // apply property is not used here
+                // @ts-expect-error variable changes should have property '$apply'
                 update(currentRowData, {
                     [row.serviceName]: {
                         [row.name]: {
