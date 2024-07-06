@@ -1,5 +1,6 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { isFalse, isTrue } from '../../util/util';
 import {
     BaseFormState,
     AnyEntity,
@@ -81,11 +82,21 @@ const getModificationForEntity = (
     stateShallowCopy: BaseFormState,
     mode: Mode
 ) => {
-    let modification = entity.modifyFieldsOnValue?.find(
-        (mod) =>
-            stateShallowCopy.data?.[entity.field]?.value === mod.fieldValue &&
+    let modification = entity.modifyFieldsOnValue?.find((mod) => {
+        const currentFieldValue = stateShallowCopy.data?.[entity.field]?.value;
+        return (
+            // do not compare empty values for modifications
+            currentFieldValue !== undefined &&
+            currentFieldValue !== null &&
+            // here type convertion is needed as splunk keeps all data as string
+            // and users can put numbers or booleans inside global config
+            // eslint-disable-next-line eqeqeq
+            (currentFieldValue == mod.fieldValue ||
+                (isFalse(mod.fieldValue) && isFalse(currentFieldValue)) ||
+                (isTrue(mod.fieldValue) && isTrue(currentFieldValue))) &&
             (!mod.mode || mod.mode === mode)
-    );
+        );
+    });
 
     if (!modification) {
         modification = entity.modifyFieldsOnValue?.find(
