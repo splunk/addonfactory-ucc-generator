@@ -10,7 +10,8 @@ import { z } from 'zod';
 
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
-import { filterResponse, getValueConsiderTruthyFalse } from '../../util/util';
+import { filterResponse } from '../../util/util';
+import { getValueConsiderTruthyFalse } from '../../util/considerFalseAndTruthy';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;

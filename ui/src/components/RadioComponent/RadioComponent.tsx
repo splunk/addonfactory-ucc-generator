@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RadioBar from '@splunk/react-ui/RadioBar';
 import styled from 'styled-components';
-import { getValueConsiderTruthyFalse } from '../../util/util';
+import { getValueConsiderTruthyFalse } from '../../util/considerFalseAndTruthy';
 
 const RadioBarWrapper = styled(RadioBar)`
     width: 320px;

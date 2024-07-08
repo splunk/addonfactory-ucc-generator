@@ -1,6 +1,6 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { getValueConsiderTruthyFalse } from '../../util/util';
+import { getValueConsiderTruthyFalse } from '../../util/considerFalseAndTruthy';
 import {
     BaseFormState,
     AnyEntity,
