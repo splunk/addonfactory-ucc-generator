@@ -1,7 +1,4 @@
-import {
-    AcceptableFormValue,
-    AcceptableFormValueOrNullish,
-} from '../types/components/shareableTypes';
+import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
 
 export function isFalse(value: AcceptableFormValueOrNullish) {
     return (
@@ -25,5 +22,5 @@ export function isTrue(value: AcceptableFormValueOrNullish) {
  * @param value value used for mapping
  * @returns maps truthy values into 1 and false into 0, does not midify rest
  */
-export const getValueMapTruthyFalse = (value: AcceptableFormValue) =>
+export const getValueMapTruthyFalse = (value: string | number | boolean) =>
     (isFalse(value) && '0') || (isTrue(value) && '1') || value;
