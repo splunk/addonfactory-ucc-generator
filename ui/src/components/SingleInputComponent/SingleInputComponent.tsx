@@ -176,7 +176,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                value={props.value === null ? '' : props.value}
+                value={props.value === null ? '' : String(getValueMapTruthyFalse(props.value))}
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
@@ -193,7 +193,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                value={props.value}
+                value={getValueMapTruthyFalse(props.value)}
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
