@@ -90,7 +90,6 @@ const getModificationForEntity = (
             currentFieldValue !== null &&
             // here type convertion is needed as splunk keeps all data as string
             // and users can put numbers or booleans inside global config
-            // eslint-disable-next-line eqeqeq
             getValueConsiderTruthyFalse(currentFieldValue) ===
                 getValueConsiderTruthyFalse(mod.fieldValue) &&
             (!mod.mode || mod.mode === mode)
