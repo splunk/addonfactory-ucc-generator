@@ -2,6 +2,7 @@ import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
 import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
 import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
+import { invariant } from './invariant';
 
 interface AppData {
     app: string;
@@ -114,17 +115,21 @@ export function filterByDenyList(fields: { value: string; label: string }[], den
 export function filterResponse(
     items: { content?: Record<string, string>; name: string }[],
     labelField?: string,
+    valueField?: string,
     allowList?: string,
     denyList?: string
 ) {
     let newItems: { value: string; label: string }[] = items.map((item) => {
         const label = labelField ? item.content?.[labelField] : item.name;
-        if (typeof label !== 'string') {
-            throw new Error(`Label not found for ${item.name}`);
-        }
+
+        invariant(typeof label === 'string', `Label not found for ${item.name}`);
+
+        const value = valueField ? item.content?.[valueField] : item.name;
+        invariant(typeof value === 'string', `Value not found for ${item.name}`);
+
         return {
             label,
-            value: item.name,
+            value,
         };
     });
 
@@ -135,6 +140,5 @@ export function filterResponse(
     if (denyList) {
         newItems = filterByDenyList(newItems, denyList);
     }
-
     return newItems;
 }
