@@ -728,8 +728,7 @@ class TestAccount(UccTester):
         """Verifies default value of example radio"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
-        # Yes value is mappend into "1"
-        self.assert_util(account.entity.account_radio.get_value, "1")
+        self.assert_util(account.entity.account_radio.get_value, "Yes")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder

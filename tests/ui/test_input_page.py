@@ -632,8 +632,7 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Example Input One")
         input_page.entity1.example_account.wait_for_values()
-        # Yes value is mappend into "1"
-        self.assert_util(input_page.entity1.example_radio.get_value, "1")
+        self.assert_util(input_page.entity1.example_radio.get_value, "Yes")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -646,8 +645,7 @@ class TestInputPage(UccTester):
         input_page.create_new_input.select("Example Input One")
         input_page.entity1.example_account.wait_for_values()
         input_page.entity1.example_radio.select("No")
-        # No value is mappend into "0"
-        self.assert_util(input_page.entity1.example_radio.get_value, "0")
+        self.assert_util(input_page.entity1.example_radio.get_value, "No")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1180,8 +1178,7 @@ class TestInputPage(UccTester):
         input_page.entity1.example_account.wait_for_values()
         self.assert_util(input_page.entity1.name.get_value, "")
         self.assert_util(input_page.entity1.example_checkbox.is_checked, True)
-        # Yes value is mappend into "1"
-        self.assert_util(input_page.entity1.example_radio.get_value, "1")
+        self.assert_util(input_page.entity1.example_radio.get_value, "Yes")
         self.assert_util(input_page.entity1.single_select_group_test.get_value, "Two")
         self.assert_util(input_page.entity1.multiple_select_test.get_values, ["A", "B"])
         self.assert_util(input_page.entity1.interval.get_value, "90")
@@ -1827,8 +1824,7 @@ class TestInputPage(UccTester):
         input_page.create_new_input.select("Example Input Two")
         input_page.entity2.example_account.wait_for_values()
         input_page.entity2.example_radio.select("No")
-        # No value is mappend into "0"
-        self.assert_util(input_page.entity2.example_radio.get_value, "0")
+        self.assert_util(input_page.entity2.example_radio.get_value, "No")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1973,8 +1969,7 @@ class TestInputPage(UccTester):
         input_page.entity2.example_account.wait_for_values()
         self.assert_util(input_page.entity2.name.get_value, "")
         self.assert_util(input_page.entity2.example_checkbox.is_checked, True)
-        # No value is mappend into "0"
-        self.assert_util(input_page.entity2.example_radio.get_value, "0")
+        self.assert_util(input_page.entity2.example_radio.get_value, "No")
         self.assert_util(
             input_page.entity2.example_multiple_select.get_values,
             ["Option One", "Option Two"],
