@@ -1,6 +1,6 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { getValueConsiderTruthyFalse } from '../../util/considerFalseAndTruthy';
+import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import {
     BaseFormState,
     AnyEntity,
@@ -90,8 +90,8 @@ const getModificationForEntity = (
             currentFieldValue !== null &&
             // here type convertion is needed as splunk keeps all data as string
             // and users can put numbers or booleans inside global config
-            getValueConsiderTruthyFalse(currentFieldValue) ===
-                getValueConsiderTruthyFalse(mod.fieldValue) &&
+            getValueMapTruthyFalse(currentFieldValue) ===
+                getValueMapTruthyFalse(mod.fieldValue) &&
             (!mod.mode || mod.mode === mode)
         );
     });

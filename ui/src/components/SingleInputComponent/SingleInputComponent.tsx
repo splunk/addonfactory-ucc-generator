@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse } from '../../util/util';
-import { getValueConsiderTruthyFalse } from '../../util/considerFalseAndTruthy';
+import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -85,8 +85,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             if ('value' in item && item.value && item.label) {
                 // splunk will mape those when sending post form
                 // so worth doing it earlier to keep same state before and after post
-
-                const itemValue = getValueConsiderTruthyFalse(item.value);
+                const itemValue = getValueMapTruthyFalse(item.value);
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                 data.push(<Option label={item.label} value={itemValue} key={item.value} />);
@@ -94,7 +93,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             if ('children' in item && item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
-                    const childValue = getValueConsiderTruthyFalse(child.value);
+                    const childValue = getValueMapTruthyFalse(child.value);
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                     data.push(<Option label={child.label} value={childValue} key={childValue} />);

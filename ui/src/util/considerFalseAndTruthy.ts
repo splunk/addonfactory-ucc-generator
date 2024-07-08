@@ -25,5 +25,5 @@ export function isTrue(value: AcceptableFormValueOrNullish) {
  * @param value value used for mapping
  * @returns maps truthy values into 1 and false into 0, does not midify rest
  */
-export const getValueConsiderTruthyFalse = (value: AcceptableFormValue) =>
+export const getValueMapTruthyFalse = (value: AcceptableFormValue) =>
     (isFalse(value) && '0') || (isTrue(value) && '1') || value;
