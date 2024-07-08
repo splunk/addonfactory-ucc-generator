@@ -78,7 +78,7 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
                 )
             log.events_ingested(
                 logger,
-                normalized_input_name,
+                input_name,
                 sourcetype,
                 len(data),
                 input_item.get("index"),
