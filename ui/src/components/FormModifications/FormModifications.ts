@@ -90,8 +90,7 @@ const getModificationForEntity = (
             currentFieldValue !== null &&
             // here type convertion is needed as splunk keeps all data as string
             // and users can put numbers or booleans inside global config
-            getValueMapTruthyFalse(currentFieldValue) ===
-                getValueMapTruthyFalse(mod.fieldValue) &&
+            getValueMapTruthyFalse(currentFieldValue) === getValueMapTruthyFalse(mod.fieldValue) &&
             (!mod.mode || mod.mode === mode)
         );
     });
