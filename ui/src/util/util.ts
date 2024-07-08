@@ -1,8 +1,11 @@
 import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
 import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
-import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
 import { invariant } from './invariant';
+import {
+    AcceptableFormValue,
+    AcceptableFormValueOrNullish,
+} from '../types/components/shareableTypes';
 
 interface AppData {
     app: string;
@@ -25,7 +28,7 @@ export function getMetaInfo() {
     };
 }
 
-export function isFalse(value: boolean | number | AcceptableFormValueOrNullish) {
+export function isFalse(value: AcceptableFormValueOrNullish) {
     return (
         value === null ||
         value === undefined ||
@@ -33,7 +36,7 @@ export function isFalse(value: boolean | number | AcceptableFormValueOrNullish) 
     );
 }
 
-export function isTrue(value: boolean | number | AcceptableFormValueOrNullish) {
+export function isTrue(value: AcceptableFormValueOrNullish) {
     return (
         value !== null &&
         value !== undefined &&
@@ -142,3 +145,12 @@ export function filterResponse(
     }
     return newItems;
 }
+
+/**
+ * since splunk does not oeprate on booleans and numbers, but onyl strings
+ * here we use mapping to enable compering and oeprating on them
+ * @param value value used for mapping
+ * @returns maps truthy values into 1 and false into 0, does not midify rest
+ */
+export const getValueConsiderTruthyFalse = (value: AcceptableFormValue) =>
+    (isFalse(value) && '0') || (isTrue(value) && '1') || value;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import RadioBar from '@splunk/react-ui/RadioBar';
 import styled from 'styled-components';
-import { isFalse, isTrue } from '../../util/util';
+import { getValueConsiderTruthyFalse } from '../../util/util';
 
 const RadioBarWrapper = styled(RadioBar)`
     width: 320px;
@@ -42,11 +42,7 @@ class RadioComponent extends Component<RadioComponentProps> {
                 {this.props.controlOptions.items.map((item) => (
                     <RadioBarOption
                         key={item.value}
-                        value={
-                            (isFalse(item.value) && '0') ||
-                            (isTrue(item.value) && '1') ||
-                            item.value
-                        }
+                        value={getValueConsiderTruthyFalse(item.value)}
                         label={item.label}
                         disabled={this.props.disabled}
                     />

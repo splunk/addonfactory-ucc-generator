@@ -303,7 +303,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 if (props.mode === MODE_CREATE) {
                                     tempEntity.value =
                                         typeof field?.defaultValue !== 'undefined'
-                                            ? String(field.defaultValue)
+                                            ? field.defaultValue
                                             : undefined;
                                 } else {
                                     const isEncrypted = field?.encrypted || false;
@@ -379,7 +379,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     }
                     if (props.mode === MODE_CREATE) {
                         tempEntity.value =
-                            typeof e.defaultValue !== 'undefined' ? String(e?.defaultValue) : null;
+                            typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
                         tempEntity.error = false;
@@ -415,7 +415,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value =
                             typeof this.currentInput?.[e.field] !== 'undefined'
                                 ? this.currentInput?.[e.field]
-                                : String(e.defaultValue);
+                                : e.defaultValue;
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;

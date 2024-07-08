@@ -1,6 +1,6 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { isFalse, isTrue } from '../../util/util';
+import { getValueConsiderTruthyFalse } from '../../util/util';
 import {
     BaseFormState,
     AnyEntity,
@@ -91,9 +91,8 @@ const getModificationForEntity = (
             // here type convertion is needed as splunk keeps all data as string
             // and users can put numbers or booleans inside global config
             // eslint-disable-next-line eqeqeq
-            (currentFieldValue == mod.fieldValue ||
-                (isFalse(mod.fieldValue) && isFalse(currentFieldValue)) ||
-                (isTrue(mod.fieldValue) && isTrue(currentFieldValue))) &&
+            getValueConsiderTruthyFalse(currentFieldValue) ===
+                getValueConsiderTruthyFalse(mod.fieldValue) &&
             (!mod.mode || mod.mode === mode)
         );
     });
