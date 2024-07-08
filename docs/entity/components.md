@@ -94,6 +94,10 @@ A clear button is visible to the right of the dropdown when this field is marked
 | valueField                                        | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as value for each item.```item.content?.[valueField]``` | -             |
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                                             | -             |
 
+> When using [Boolean](https://docs.splunk.com/Documentation/SplunkCloud/9.2.2403/SearchReference/ListOfDataTypes) values consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
+>
+> Consider using values '0' and '1' as false and true values.
+
 ### See the following example usage
 
 #### Using referenceName option
@@ -406,6 +410,10 @@ See the following example usage:
 This is how it looks in the UI:
 
 ![image](../images/components/radio_component_example.png)
+
+> When using [Boolean](https://docs.splunk.com/Documentation/SplunkCloud/9.2.2403/SearchReference/ListOfDataTypes) values consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
+>
+> Consider using values '0' and '1' as false and true values.
 
 ## `Help Link`
 
