@@ -10,7 +10,7 @@ const config: TestRunnerConfig = {
         const parameters = storyContext.parameters;
 
         const height = parameters.snapshots?.height || 600;
-        const width = parameters.snapshots?.width || 800;
+        const width = parameters.snapshots?.width || 1000;
 
         await page.setViewportSize({ width, height });
     },
