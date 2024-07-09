@@ -27,13 +27,13 @@ afterAll(() => server.close());
 export let consoleError: jest.SpyInstance<void, Parameters<(typeof console)['error']>>;
 
 beforeEach(() => {
+    // eslint-disable-next-line no-console
+    const originalConsoleError = console.error;
     consoleError = jest.spyOn(console, 'error');
     consoleError.mockImplementation((...args: Parameters<typeof console.error>) => {
-        // warnign as if we use error it is infinite loop
-        // eslint-disable-next-line no-console
-        console.warn(...args);
+        originalConsoleError(...args);
         throw new Error(
-            `Console error was called. Call consoleError.mockImplementation(() => {}) if this is expected.`
+            'Console error was called. Call consoleError.mockImplementation(() => {}) if this is expected.'
         );
     });
 });
