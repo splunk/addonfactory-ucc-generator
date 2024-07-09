@@ -230,13 +230,7 @@ const globalConfigMock = {
         dashboard: {
             panels: [
                 {
-                    name: 'addon_version',
-                },
-                {
-                    name: 'events_ingested_by_sourcetype',
-                },
-                {
-                    name: 'errors_in_the_addon',
+                    name: 'default',
                 },
             ],
         },

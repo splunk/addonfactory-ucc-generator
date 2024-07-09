@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import TabBar from '@splunk/react-ui/TabBar';
@@ -41,39 +41,42 @@ const Row = styled(ColumnLayout.Row)`
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
-    const permittedTabNames = tabs.map((tab) => tab.name);
+    const permittedTabNames = useMemo(() => tabs.map((tab) => tab.name), [tabs]);
+    const isComponentMounted = useRef(false);
 
     const [activeTabId, setActiveTabId] = useState(tabs[0].name);
     const [isPageOpen, setIsPageOpen] = useState(false);
 
     const query = useQuery();
+    const queryTabValue = query?.get('tab');
 
     // Run initially and when query is updated to set active tab based on initial URL
     // or while navigating browser history
     useEffect(() => {
         // Only change active tab when provided tab in query is specified in globalConfig
         // and if the current active tab is not same as provided in query
-        if (
-            query &&
-            permittedTabNames.includes(query.get('tab')) &&
-            query.get('tab') !== activeTabId
-        ) {
-            setActiveTabId(query.get('tab'));
+        if (permittedTabNames.includes(queryTabValue) && queryTabValue !== activeTabId) {
+            setActiveTabId(queryTabValue);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [queryTabValue, permittedTabNames, activeTabId]);
 
-    const handleChange = useCallback(
-        (e, { selectedTabId }) => {
+    useEffect(() => {
+        isComponentMounted.current = true;
+        return () => {
+            isComponentMounted.current = false;
+        };
+    }, []);
+    const handleChange = useCallback((e, { selectedTabId }) => {
+        if (isComponentMounted.current) {
             setActiveTabId(selectedTabId);
             setIsPageOpen(false);
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [activeTabId]
-    );
+        }
+    }, []);
 
     const updateIsPageOpen = (data) => {
-        setIsPageOpen(data);
+        if (isComponentMounted.current) {
+            setIsPageOpen(data);
+        }
     };
 
     const getCustomTab = (tab) => React.createElement(CustomTab, { tab });

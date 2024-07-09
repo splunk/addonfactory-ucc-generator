@@ -23,8 +23,6 @@ pages:
           errorMsg: Name must begin with a letter and consist exclusively of alphanumeric
             characters and underscores.
           pattern: "^[a-zA-Z]\\w*$"
-        options:
-          placeholder: Required
         field: not_a_name
         help: Enter a unique name for this account.
         required: true

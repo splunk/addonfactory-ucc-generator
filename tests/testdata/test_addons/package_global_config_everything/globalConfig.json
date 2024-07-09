@@ -96,9 +96,6 @@
                             "type": "text",
                             "help": "Enter the URL, for example",
                             "required": false,
-                            "options": {
-                                "placeholder": "Required"
-                            },
                             "validators": [
                                 {
                                     "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
@@ -948,6 +945,22 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input One"
@@ -1260,6 +1273,22 @@
                                     }
                                 ]
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input Two"
@@ -1376,6 +1405,10 @@
                         "field": "disabled"
                     }
                 ],
+                "customRow": {
+                    "src": "custom_input_row",
+                    "type": "external"
+                },
                 "moreInfo": [
                     {
                         "label": "Name",
@@ -1422,7 +1455,9 @@
                         "field": "limit"
                     }
                 ]
-            }
+            },
+            "hideFieldId": "hide_in_ui",
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [
@@ -1550,9 +1585,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.44.0R7f88cfdd",
+        "version": "5.47.0Ra2b585f01",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.7",
-        "_uccVersion": "5.44.0"
+        "_uccVersion": "5.47.0"
     }
 }
