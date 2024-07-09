@@ -36,7 +36,9 @@ class RadioComponent extends Component<RadioComponentProps> {
                 id={this.props.id}
                 inline
                 onChange={this.handleChange}
-                value={getValueMapTruthyFalse(this.props.value)}
+                value={
+                    this.props.value ? getValueMapTruthyFalse(this.props.value) : this.props.value
+                }
                 key={this.props.field}
             >
                 {this.props.controlOptions.items.map((item) => (
