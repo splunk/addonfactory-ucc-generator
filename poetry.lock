@@ -1167,24 +1167,28 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "3.1.2"
+version = "4.0.1-beta.1"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
-python-versions = "<4.0,>=3.7"
-files = [
-    {file = "pytest_splunk_addon_ui_smartx-3.1.2-py3-none-any.whl", hash = "sha256:c764863eb2956c0f293fe32dcff3c73ea8a31b2024b5ff729007993588ad130d"},
-    {file = "pytest_splunk_addon_ui_smartx-3.1.2.tar.gz", hash = "sha256:b1d952481a97a7eb7c39a13dd9c3a1d522e1a19a31b90766072d9aa2ad474236"},
-]
+python-versions = "^3.7"
+files = []
+develop = false
 
 [package.dependencies]
 cssselect = "*"
-lxml = ">=4.8.0,<5.0.0"
+lxml = "^4.8.0"
 msedge-selenium-tools = "*"
 pytest-html = "*"
-pytest-splunk-addon = ">=5.0.0,<6.0.0"
+pytest-splunk-addon = "^5.0.0"
 selenium = "*"
-urllib3 = ">=1.21.1,<2.0.0"
+urllib3 = "^1.21.1"
 webdriver-manager = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/splunk/addon-factory-smartx-ui-test-library"
+reference = "fix/dynamic-hanlde-input-status-toggle"
+resolved_reference = "adbea0b2f561217e0a5463f37289b15e2452f6af"
 
 [[package]]
 name = "pytest-xdist"
@@ -1666,4 +1670,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "71f38c7ac6bbc9706c78d3be01f762388ebf7f6d3669ca7fdcfe615c4a3c1805"
+content-hash = "c2dc16881c01c39159049bcc6d8fe934a469a801f757a372be73782a3e4b1442"
