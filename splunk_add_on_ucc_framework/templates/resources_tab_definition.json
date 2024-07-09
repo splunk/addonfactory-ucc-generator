@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "View the resource consumption for your add-on.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "resource_tab_timerange_label_start_viz": {

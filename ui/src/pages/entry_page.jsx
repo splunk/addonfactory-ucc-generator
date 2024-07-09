@@ -2,9 +2,12 @@ import React, { Suspense } from 'react';
 import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
+import { getUserTheme } from '@splunk/splunk-utils/themes';
+import { createGlobalStyle } from 'styled-components';
+import colors from '@splunk/themes/variables';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
-import { StyledContainer, ThemeProviderSettings } from './EntryPageStyle';
+import { StyledContainer } from './EntryPageStyle';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
 import ConfigManager from '../util/configManager';
 import messageDict from '../constants/messageDict';
@@ -22,6 +25,12 @@ const DashboardPage = React.lazy(() =>
     import(/* webpackPrefetch: true */ './Dashboard/DashboardPage')
 );
 
+export const GlobalStyle = createGlobalStyle`
+    body {
+        background-color: ${colors.backgroundColorPage};
+    }
+`;
+
 // Take in a component as argument WrappedComponent
 function higherOrderComponent(WrappedComponent) {
     // And return another component
@@ -29,9 +38,8 @@ function higherOrderComponent(WrappedComponent) {
     class HOC extends React.Component {
         render() {
             return (
-                <SplunkThemeProvider // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                    {...ThemeProviderSettings}
-                >
+                <SplunkThemeProvider>
+                    <GlobalStyle />
                     <StyledContainer>
                         <Router>
                             <ConfigManager>
@@ -52,6 +60,7 @@ function higherOrderComponent(WrappedComponent) {
             );
         }
     }
+
     return HOC;
 }
 
@@ -73,10 +82,23 @@ For external users, join us at: https://splunk-usergroups.slack.com/archives/C03
 
 We appreciate your help in making UCC better! 🚀`);
 
-if (page === PAGE_INPUT) {
-    layout(<InputPageComponent />, { pageTitle: messageDict[116] });
-} else if (page === PAGE_CONF) {
-    layout(<ConfigurationPageComponent />, { pageTitle: messageDict[117] });
-} else if (page === PAGE_DASHBOARD) {
-    layout(<DashboardPageComponent />, { pageTitle: messageDict[119] });
-}
+getUserTheme().then((theme) => {
+    switch (page) {
+        case PAGE_INPUT:
+            layout(<InputPageComponent />, {
+                pageTitle: messageDict[116],
+                theme,
+            });
+            break;
+        case PAGE_CONF:
+            layout(<ConfigurationPageComponent />, {
+                pageTitle: messageDict[117],
+                theme,
+            });
+            break;
+        case PAGE_DASHBOARD:
+            layout(<DashboardPageComponent />, { pageTitle: messageDict[119], theme });
+            break;
+        default:
+    }
+});
