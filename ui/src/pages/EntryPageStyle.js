@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { variables, mixins } from '@splunk/themes';
 import Button from '@splunk/react-ui/Button';
 
@@ -18,6 +18,12 @@ const StyledGreeting = styled.div`
 
 const StyledButton = styled(Button)`
     min-width: 80px;
+`;
+
+export const GlobalBodyStyle = createGlobalStyle`
+    body {
+        background-color: ${variables.backgroundColorPage};
+    }
 `;
 
 export { StyledContainer, StyledGreeting, StyledButton };
