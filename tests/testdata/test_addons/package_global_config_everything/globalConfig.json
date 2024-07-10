@@ -108,36 +108,7 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
-                            "help": "This is an example checkbox for the account entity",
-                            "modifyFieldsOnValue": [
-                                {
-                                    "fieldValue": 1,
-                                    "fieldsToModify": [
-                                        {
-                                            "fieldId": "account_radio",
-                                            "disabled": false
-                                        },
-                                        {
-                                            "fieldId": "endpoint",
-                                            "display": true
-                                        }
-                                    ]
-                                },
-                                {
-                                    "fieldValue": 0,
-                                    "mode": "edit",
-                                    "fieldsToModify": [
-                                        {
-                                            "fieldId": "account_radio",
-                                            "disabled": true
-                                        },
-                                        {
-                                            "fieldId": "endpoint",
-                                            "display": false
-                                        }
-                                    ]
-                                }
-                            ]
+                            "help": "This is an example checkbox for the account entity"
                         },
                         {
                             "type": "radio",
@@ -338,12 +309,7 @@
                                                 "fieldsToModify": [
                                                     {
                                                         "fieldId": "oauth_oauth_text",
-                                                        "disabled": false,
                                                         "label": "Disabled on edit for oauth 55555"
-                                                    },
-                                                    {
-                                                        "fieldId": "endpoint_authorize",
-                                                        "display": true
                                                     }
                                                 ]
                                             },

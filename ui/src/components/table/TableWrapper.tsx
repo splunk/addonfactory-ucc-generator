@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { getUnifiedConfigs, generateToast, isTrue } from '../../util/util';
+import { getUnifiedConfigs, generateToast } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
 import { RowDataType, RowDataFields } from '../../context/TableContext';
@@ -15,6 +15,7 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
 import { useTableSort } from './useTableSort';
 import { useTableContext } from '../../context/useTableContext';
+import { isTrue } from '../../util/considerFalseAndTruthy';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
