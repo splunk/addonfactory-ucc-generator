@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, memo, useState, useContext } from 'react';
+import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import Table from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import useQuery from '../../hooks/useQuery';
+import { useSearchParams } from 'react-router-dom';
 import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
 import { getUnifiedConfigs } from '../../util/util';
@@ -13,8 +13,22 @@ import { STYLE_MODAL, STYLE_PAGE } from '../../constants/dialogStyles';
 import CustomTableRow from './CustomTableRow';
 import EntityModal from '../EntityModal/EntityModal';
 import DeleteModal from '../DeleteModal/DeleteModal';
-import TableContext from '../../context/TableContext';
 import { NoRecordsDiv } from './CustomTableStyle';
+import { useTableContext } from '../../context/useTableContext';
+
+function getServiceToStyleMap(page, unifiedConfigs) {
+    const serviceToStyleMap = {};
+    if (page === PAGE_INPUT) {
+        unifiedConfigs.pages.inputs.services.forEach((x) => {
+            serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
+        });
+    } else {
+        unifiedConfigs.pages.configuration.tabs.forEach((x) => {
+            serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
+        });
+    }
+    return serviceToStyleMap;
+}
 
 function CustomTable({
     page,
@@ -31,59 +45,53 @@ function CustomTable({
     const [entityModal, setEntityModal] = useState({ open: false });
     const [deleteModal, setDeleteModal] = useState({ open: false });
 
-    const { rowData } = useContext(TableContext);
-
+    const { rowData } = useTableContext();
+    const readonlyFieldId =
+        page === PAGE_INPUT && 'readonlyFieldId' in unifiedConfigs.pages.inputs
+            ? unifiedConfigs.pages.inputs.readonlyFieldId
+            : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
     const headerMapping = {};
     headers.forEach((x) => {
         headerMapping[x.field] = x.mapping;
     });
+    const serviceToStyleMap = useMemo(
+        () => getServiceToStyleMap(page, unifiedConfigs),
+        [page, unifiedConfigs]
+    );
 
-    const serviceToStyleMap = {};
-    if (page === PAGE_INPUT) {
-        unifiedConfigs.pages.inputs.services.forEach((x) => {
-            serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
-        });
-    } else {
-        unifiedConfigs.pages.configuration.tabs.forEach((x) => {
-            serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
-        });
-    }
-
-    const query = useQuery();
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tab = searchParams.get('tab');
+    const record = searchParams.get('record');
 
     // Run only once when component is mounted to load component based on initial query params
     // and when query params are updated
     useEffect(() => {
         // Only run when tab matches serviceName or if in input page where serviceName is undefined
-        if (query && (query.get('tab') === serviceName || typeof serviceName === 'undefined')) {
-            // Open modal when record is available in query params and modal is not open
-            if (query.get('record') && !entityModal.open) {
-                const serviceKey = Object.keys(rowData).find(
-                    (x) => typeof rowData[x][query.get('record')] !== 'undefined'
-                );
-                if (serviceKey) {
-                    const row = rowData[serviceKey][query.get('record')];
-                    setEntityModal({
-                        ...entityModal,
-                        open: true,
-                        serviceName: row.serviceName,
-                        stanzaName: row.name,
-                        mode: MODE_EDIT,
-                    });
-                }
-            } else if (!query.get('record') && entityModal.open) {
-                // Close modal if record query param is not available and modal is open
-                // NOTE: This should only be executed in case of MODE_EDIT which is handled by
-                // useEffect dependency which will only be changed in case of editing entity
-                setEntityModal({ ...entityModal, open: false });
+        if ((tab === serviceName || serviceName === undefined) && record && !entityModal.open) {
+            const serviceKey = Object.keys(rowData).find(
+                (x) => typeof rowData[x][record] !== 'undefined'
+            );
+            if (serviceKey) {
+                const row = rowData[serviceKey][record];
+                setEntityModal({
+                    ...entityModal,
+                    open: true,
+                    serviceName: row.serviceName,
+                    stanzaName: row.name,
+                    mode: MODE_EDIT,
+                });
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [tab, record, entityModal, rowData, serviceName]);
 
     const handleEntityClose = () => {
+        if (searchParams.has('record')) {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('record');
+            setSearchParams(newSearchParams);
+        }
         setEntityModal({ ...entityModal, open: false });
     };
 
@@ -142,7 +150,7 @@ function CustomTable({
     const generateModalDialog = () => {
         if (entityModal.open) {
             let label;
-            if (page === 'inputs') {
+            if (page === PAGE_INPUT) {
                 const { services } = unifiedConfigs.pages.inputs;
                 label = services.find((x) => x.name === entityModal.serviceName)?.title;
             } else if (page === 'configuration') {
@@ -224,11 +232,12 @@ function CustomTable({
                 data.length &&
                 data.map((row) => (
                     <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                        key={row.id}
+                        key={row.name || row.id}
                         row={row}
                         columns={columns}
                         rowActions={actions}
                         headerMapping={headerMapping}
+                        readonly={readonlyFieldId ? !!row[readonlyFieldId] : false}
                         {...{
                             handleEditActionClick,
                             handleCloneActionClick,

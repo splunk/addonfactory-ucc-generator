@@ -1,3 +1,4 @@
+import builtins
 from contextlib import nullcontext as does_not_raise
 
 import pytest
@@ -53,22 +54,6 @@ def test_autocompletefields_children_support_integer_values():
 
     with does_not_raise():
         validator.validate()
-
-
-def test_config_validation_when_deprecated_placeholder_is_used(caplog):
-    global_config_path = helpers.get_testdata_file_path(
-        "valid_config_deprecated_placeholder_usage.json"
-    )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
-
-    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
-    validator.validate()
-
-    expected_warning_message = (
-        "`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
-        "Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
-    )
-    assert expected_warning_message in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -370,3 +355,22 @@ def test_invalid_config_modifications_correct_raises(filename, raise_message):
 
     (msg,) = exc_info.value.args
     assert msg == raise_message
+
+
+@pytest.mark.parametrize(
+    "encoding",
+    ["utf-8", "cp1250", "ascii"],
+)
+def test_validate_against_schema_regardless_of_the_default_encoding(
+    encoding, monkeypatch
+):
+    @monkeypatch.function(builtins)
+    def open(*args, **kwargs):
+        kwargs.setdefault("encoding", encoding)
+        return open._old(*args, **kwargs)
+
+    global_config_path = helpers.get_testdata_file_path("valid_config.json")
+    global_config = global_config_lib.GlobalConfig(global_config_path)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+    validator._validate_config_against_schema()

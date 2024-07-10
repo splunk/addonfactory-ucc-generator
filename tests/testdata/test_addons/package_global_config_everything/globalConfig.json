@@ -96,9 +96,6 @@
                             "type": "text",
                             "help": "Enter the URL, for example",
                             "required": false,
-                            "options": {
-                                "placeholder": "Required"
-                            },
                             "validators": [
                                 {
                                     "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
@@ -111,36 +108,7 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
-                            "help": "This is an example checkbox for the account entity",
-                            "modifyFieldsOnValue": [
-                                {
-                                    "fieldValue": 1,
-                                    "fieldsToModify": [
-                                        {
-                                            "fieldId": "account_radio",
-                                            "disabled": false
-                                        },
-                                        {
-                                            "fieldId": "endpoint",
-                                            "display": true
-                                        }
-                                    ]
-                                },
-                                {
-                                    "fieldValue": 0,
-                                    "mode": "edit",
-                                    "fieldsToModify": [
-                                        {
-                                            "fieldId": "account_radio",
-                                            "disabled": true
-                                        },
-                                        {
-                                            "fieldId": "endpoint",
-                                            "display": false
-                                        }
-                                    ]
-                                }
-                            ]
+                            "help": "This is an example checkbox for the account entity"
                         },
                         {
                             "type": "radio",
@@ -341,12 +309,7 @@
                                                 "fieldsToModify": [
                                                     {
                                                         "fieldId": "oauth_oauth_text",
-                                                        "disabled": false,
                                                         "label": "Disabled on edit for oauth 55555"
-                                                    },
-                                                    {
-                                                        "fieldId": "endpoint_authorize",
-                                                        "display": true
                                                     }
                                                 ]
                                             },
@@ -948,6 +911,22 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input One"
@@ -1260,6 +1239,22 @@
                                     }
                                 ]
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input Two"
@@ -1426,7 +1421,9 @@
                         "field": "limit"
                     }
                 ]
-            }
+            },
+            "hideFieldId": "hide_in_ui",
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [
@@ -1554,9 +1551,13 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.45.0R08c37572",
+        "version": "5.47.0R2026c71b",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.7",
-        "_uccVersion": "5.45.0"
+        "_uccVersion": "5.47.0",
+        "supportedThemes": [
+            "light",
+            "dark"
+        ]
     }
 }

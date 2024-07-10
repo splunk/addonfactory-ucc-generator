@@ -1,5 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components';
-import variables from '@splunk/themes/variables';
+import { createGlobalStyle } from 'styled-components';
 import { PartialStoryFn as StoryFunction, Renderer, StoryContext } from '@storybook/types';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { SplunkThemeProvider } from '@splunk/themes';
@@ -7,6 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Suspense } from 'react';
 import { StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
+import { GlobalStyle } from '../src/pages/entry_page';
 import fontDefinitions from './fontDefinitions';
 
 const TestStylesForConsistentScreenshots = createGlobalStyle`
@@ -18,21 +18,6 @@ const TestStylesForConsistentScreenshots = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
-`;
-
-// https://storybook.js.org/blog/how-to-add-a-theme-switcher-to-storybook/
-// syncing storybook preview background with selected theme
-const BackgroundBlock = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100vw;
-    height: 100vh;
-    bottom: 0;
-    overflow: auto;
-    padding: 1rem;
-    background-color: ${variables.backgroundColorPage};
 `;
 
 export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
@@ -49,15 +34,14 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
         <AnimationToggleProvider enabled={animation}>
             <TestStylesForConsistentScreenshots />
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>
-                <BackgroundBlock>
-                    <StyledContainer>
-                        <Router>
-                            <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
-                                {StoryFn()}
-                            </Suspense>
-                        </Router>
-                    </StyledContainer>
-                </BackgroundBlock>
+                <GlobalStyle />
+                <StyledContainer>
+                    <Router>
+                        <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
+                            {StoryFn()}
+                        </Suspense>
+                    </Router>
+                </StyledContainer>
             </SplunkThemeProvider>
         </AnimationToggleProvider>
     );

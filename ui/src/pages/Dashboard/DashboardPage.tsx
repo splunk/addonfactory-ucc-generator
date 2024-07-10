@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import TabLayout from '@splunk/react-ui/TabLayout';
+import styled, { createGlobalStyle } from 'styled-components';
+import variables from '@splunk/themes/variables';
+import { pick } from '@splunk/themes';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { OverviewDashboard } from './Overview';
 import { DataIngestionDashboard } from './DataIngestion';
@@ -15,7 +18,7 @@ import { getUnifiedConfigs } from '../../util/util';
  *
  * @param {string} fileName name of json file in custom dir
  * @param {boolean} isComponentMounted used to remove component data leakage, determines if component is still mounted and dataHandler referes to setState
- * @param {string} setData callback, called with data as params
+ * @param {string} dataHandler callback, called with data as params
  */
 function loadJson(
     fileName: string,
@@ -34,6 +37,27 @@ function loadJson(
             console.error('Loading file failed: ', e);
         });
 }
+
+const GlobalStyle = createGlobalStyle`
+    body {
+        background-color: ${pick({
+            enterprise: {
+                light: variables.gray96,
+                dark: variables.gray20,
+            },
+            prisma: variables.backgroundColorSection,
+        })};
+    }
+`;
+
+const DashboardStyles = styled.div`
+    --muted-text-color: ${pick({
+        enterprise: {
+            light: variables.gray45,
+            dark: variables.gray80,
+        },
+    })};
+`;
 
 function DashboardPage() {
     const [overviewDef, setOverviewDef] = useState<Record<string, unknown> | null>(null);
@@ -72,10 +96,8 @@ function DashboardPage() {
             }
         );
 
-        document.body.classList.add('grey_background');
         return () => {
             isComponentMounted.current = false;
-            document.body.classList.remove('grey_background');
         };
     }, []);
 
@@ -83,7 +105,8 @@ function DashboardPage() {
 
     return (
         <ErrorBoundary>
-            <div>
+            <GlobalStyle />
+            <DashboardStyles>
                 <OverviewDashboard dashboardDefinition={overviewDef} />
                 {overviewDef ? ( // if overview is loaded then all default tabs should be present so table is injected
                     <TabLayout
@@ -130,7 +153,7 @@ function DashboardPage() {
                 {!overviewDef && !customDef ? (
                     <WaitSpinner size="medium" data-testid="wait-spinner" />
                 ) : null}
-            </div>
+            </DashboardStyles>
         </ErrorBoundary>
     );
 }

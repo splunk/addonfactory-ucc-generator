@@ -27,12 +27,9 @@ from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
+from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
-
-
-class GlobalConfigValidatorException(Exception):
-    pass
 
 
 class GlobalConfigValidator:
@@ -58,7 +55,7 @@ class GlobalConfigValidator:
         Raises jsonschema.ValidationError if config is not valid.
         """
         schema_path = os.path.join(self._source_dir, "schema", "schema.json")
-        with open(schema_path) as f_schema:
+        with open(schema_path, encoding="utf-8") as f_schema:
             schema_raw = f_schema.read()
             schema = json.loads(schema_raw)
         try:
@@ -484,33 +481,6 @@ class GlobalConfigValidator:
                         f"Supported panel names: {dashboard_lib.SUPPORTED_PANEL_NAMES_READABLE}"
                     )
 
-    def _warn_on_placeholder_usage(self) -> None:
-        """
-        Warns if placeholder is used.
-        More details here: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
-        """
-        pages = self._config["pages"]
-        for tab in self.config_tabs:
-            for entity in tab["entity"]:
-                if "placeholder" in entity.get("options", {}):
-                    logger.warning(
-                        f"`placeholder` option found for configuration tab '{tab['name']}' "
-                        f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
-                    )
-        inputs = pages.get("inputs")
-        if inputs is None:
-            return
-        services = inputs["services"]
-        for service in services:
-            for entity in service["entity"]:
-                if "placeholder" in entity.get("options", {}):
-                    logger.warning(
-                        f"`placeholder` option found for input service '{service['name']}' "
-                        f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
-                    )
-
     def _validate_checkbox_group(self) -> None:
         pages = self._config["pages"]
         inputs = pages.get("inputs")
@@ -750,7 +720,6 @@ class GlobalConfigValidator:
         self._validate_duplicates()
         self._validate_alerts()
         self._validate_panels()
-        self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
         self._validate_groups()
         self._validate_field_modifications()

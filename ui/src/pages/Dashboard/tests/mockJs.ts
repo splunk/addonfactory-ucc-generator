@@ -3,6 +3,8 @@ import {
     MOCK_OVERVIEW_DEFINITION_JSON,
     MOCK_DATA_INGESTION_TAB_TAB_DEFINITION,
     MOCK_ERROR_TAB_DEFINITION,
+    CURRENT_CONTEXT_RESPONSE,
+    SEARCH_JOB_RESULT,
 } from './mockData';
 
 export const DASHBOARD_JSON_MOCKS = [
@@ -21,6 +23,17 @@ export const DASHBOARD_JSON_MOCKS = [
     http.get('/custom/resources_tab_definition.json', () =>
         HttpResponse.json(MOCK_ERROR_TAB_DEFINITION)
     ),
-    http.post('/services/search/jobs', () => HttpResponse.error()),
-    http.get('/services/authentication/current-context', () => HttpResponse.error()),
+    http.post('/services/search/jobs', () =>
+        HttpResponse.json(
+            {
+                sid: 'sid',
+            },
+            { status: 201 }
+        )
+    ),
+    http.post('/services/search/jobs/sid/control', () => HttpResponse.json({})),
+    http.get('/services/search/jobs', () => HttpResponse.json(SEARCH_JOB_RESULT)),
+    http.get('/services/authentication/current-context', () =>
+        HttpResponse.json(CURRENT_CONTEXT_RESPONSE)
+    ),
 ];

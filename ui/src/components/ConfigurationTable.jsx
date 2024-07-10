@@ -18,7 +18,7 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
         if (isConfigurationPageStyle) {
             updateIsPageOpen(!!entity.open);
         }
-    }, [entity]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [updateIsPageOpen, isConfigurationPageStyle, entity]);
 
     const handleRequestOpen = () => {
         setEntity({

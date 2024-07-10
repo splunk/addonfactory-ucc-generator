@@ -12,7 +12,6 @@ export const MOCK_OVERVIEW_DEFINITION_JSON = {
             options: {
                 markdown: 'Use the Monitoring dashboard to track behaviors for your add-on.',
                 customFontSize: 12,
-                fontColor: '#6c7685',
             },
         },
         overview_main_label_viz: {
@@ -217,7 +216,6 @@ export const MOCK_DATA_INGESTION_TAB_TAB_DEFINITION = {
             options: {
                 markdown: 'View your add-on ingestion by data volume and number of events.',
                 customFontSize: 12,
-                fontColor: '#6c7685',
             },
         },
         data_ingestion_timerange_label_start_viz: {
@@ -495,7 +493,6 @@ export const MOCK_ERROR_TAB_DEFINITION = {
             options: {
                 markdown: 'View error messages for your add-on within the selected time range.',
                 customFontSize: 12,
-                fontColor: '#6c7685',
             },
         },
         errors_tab_timerange_label_start_viz: {
@@ -654,4 +651,22 @@ export const MOCK_ERROR_TAB_DEFINITION = {
             },
         ],
     },
+};
+
+export const CURRENT_CONTEXT_RESPONSE = {
+    entry: [
+        {
+            content: {
+                capabilities: [],
+            },
+        },
+    ],
+};
+
+export const SEARCH_JOB_RESULT = {
+    entry: [
+        {
+            content: {},
+        },
+    ],
 };

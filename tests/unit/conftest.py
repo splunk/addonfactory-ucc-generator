@@ -1,3 +1,4 @@
+import functools
 import json
 
 import pytest
@@ -50,3 +51,35 @@ def global_config_only_logging() -> global_config_lib.GlobalConfig:
     )
     global_config = global_config_lib.GlobalConfig(global_config_path)
     return global_config
+
+
+@pytest.fixture
+def monkeypatch(monkeypatch):
+    """
+    Extend the default monkeypatch with a new decorator to mock functions.
+
+    Old function is accessible via `_old` attribute
+
+    Example:
+        # mock `test_fun` function in `test_module` module
+
+        @monkeypatch.function(test_module)
+        def test_fun(arg):
+            return test_fun._old(arg + 1)
+    """
+
+    def function(module, name=None):
+        def wrapper(func, module, name):
+            if name is None:
+                name = func.__name__
+
+            func._old = getattr(module, name)
+            monkeypatch.setattr(module, name, func)
+
+            return func
+
+        return functools.partial(wrapper, module=module, name=name)
+
+    monkeypatch.function = function
+
+    return monkeypatch

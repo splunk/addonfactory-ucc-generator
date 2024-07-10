@@ -29,6 +29,16 @@ theme:
 extra_css:
   - css/extra.css
 
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_if_no_docstring: true
+            filters: ["!^_"]
+            show_source: true
+
 nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
@@ -82,4 +92,14 @@ nav:
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
   - Changelog: "CHANGELOG.md"
+  - Metadata: "metadata.md"
   - Storybook: "storybook/index.html"
+  - UI Tests:
+      - Configuration Page:
+          - General: "ui_tests_config_page_general.md"
+          - Account: "ui_tests_config_page_account.md"
+          - Custom: "ui_tests_config_page_custom.md"
+          - Logging: "ui_tests_config_page_logging.md"
+          - Proxy: "ui_tests_config_page_proxy.md"
+      - Alert Action Page: "ui_tests_alert_actions_page.md"
+      - Input Page: "ui_tests_inputs_page.md"

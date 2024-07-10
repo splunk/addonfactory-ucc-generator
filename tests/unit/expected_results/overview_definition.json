@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "Use the Monitoring dashboard to track behaviors for your add-on.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "overview_main_label_viz": {

@@ -19,7 +19,7 @@ title: Entity
 | [modifyFieldsOnValue](./modifyFieldsOnValue.md)                  | array                     | It is used to speficy values and parameters that will influence visually other entities.                                         | -             |
 
 > [!WARNING]  
-> The [Placeholder](https://splunkui.splunk.com/Packages/react-ui/Text?section=develop) attribute is deprecated and will be removed in the next major version.
+> The [Placeholder](https://splunkui.splunk.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced.
 > The placeholder text is no longer displayed in the UI. Instead, use the `help` attribute.
 
 ## Common Options
@@ -28,8 +28,8 @@ This section describes common options that can be used within the `options` obje
 
 | Property            | Type    | Description                                                                            | Default Value |
 |---------------------|---------|----------------------------------------------------------------------------------------|---------------|
-| placeholder         | string  | (`Deprecated`) The grey text is shown when the input is empty.                         | -             |
 | display             | boolean | It chooses whether or not to display the field.                                        | true          |
 | disableonEdit       | boolean | When the form is in edit mode, the field becomes unable to be edited.                  | false         |
 | enable              | boolean | The enable property sets whether a field is enabled or not.                            | true          |
 | requiredWhenVisible | boolean | It makes the field required on the UI when it appears. It is used only for visibility. | false         |
+| placeholder         | string  | (`Renounced`) The grey text is shown when the input is empty.                          | -             |

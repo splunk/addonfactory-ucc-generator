@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "View your add-on ingestion by data volume and number of events.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "data_ingestion_timerange_label_start_viz": {
