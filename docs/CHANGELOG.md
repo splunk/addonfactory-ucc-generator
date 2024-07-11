@@ -1,3 +1,10 @@
+## [5.48.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.0...v5.48.1) (2024-07-11)
+
+
+### Bug Fixes
+
+* schema for mapping custom api value ([#1281](https://github.com/splunk/addonfactory-ucc-generator/issues/1281)) ([571bef7](https://github.com/splunk/addonfactory-ucc-generator/commit/571bef7450e994bac4fecf98376f58525cceec85))
+
 # [5.48.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.47.0...v5.48.0) (2024-07-10)
 
 
