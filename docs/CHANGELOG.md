@@ -15,7 +15,7 @@
 * **select entity:** allow custom mapping for values ([#1265](https://github.com/splunk/addonfactory-ucc-generator/issues/1265)) ([202f046](https://github.com/splunk/addonfactory-ucc-generator/commit/202f046c662427b7123825d42b5baecba9355071))
 
 
-[5.47.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.46.0...v5.47.0) (2024-06-25)
+# [5.47.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.46.0...v5.47.0) (2024-06-25)
 
 
 ### Bug Fixes
