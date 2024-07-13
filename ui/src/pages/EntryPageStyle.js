@@ -1,7 +1,6 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { variables, mixins } from '@splunk/themes';
 import Button from '@splunk/react-ui/Button';
-import { defaultTheme } from '@splunk/splunk-utils/themes';
 
 const StyledContainer = styled.div`
     ${mixins.reset('inline')};
@@ -21,26 +20,10 @@ const StyledButton = styled(Button)`
     min-width: 80px;
 `;
 
-const defaultThemeSplunkThemeProviderMap = {
-    enterprise: {
-        family: 'enterprise',
-        colorScheme: 'light',
-        density: 'comfortable',
-    },
-    enterpriseDark: {
-        family: 'enterprise',
-        colorScheme: 'dark',
-        density: 'comfortable',
-    },
-    lite: {
-        family: 'enterprise',
-        colorScheme: 'light',
-        density: 'comfortable',
-    },
-};
+export const GlobalBodyStyle = createGlobalStyle`
+    body {
+        background-color: ${variables.backgroundColorPage};
+    }
+`;
 
-const ThemeProviderSettings =
-    defaultThemeSplunkThemeProviderMap[defaultTheme()] ||
-    defaultThemeSplunkThemeProviderMap.enterprise;
-
-export { StyledContainer, StyledGreeting, ThemeProviderSettings, StyledButton };
+export { StyledContainer, StyledGreeting, StyledButton };

@@ -8,7 +8,7 @@ export default {
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     modulePathIgnorePatterns: ['<rootDir>/src/main/resources'],
-
+    restoreMocks: true,
     // Coverage
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
