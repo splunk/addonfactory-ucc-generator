@@ -39,16 +39,15 @@ See the following example usage:
 
 <h3> Properties </h3>
 - `range`<span class="required-asterisk">*</span> is the range within which the target value should fall.
+- `is_int` is the boolean which target only integer value if sets true. Default value is false
 
 See the following example usage:
 
 ```json
 {
-    "type": "number",
-    "range": [
-        1,
-        65535
-    ]
+  "type": "number",
+  "range": [1, 65535],
+  "is_int": true
 }
 ```
 
