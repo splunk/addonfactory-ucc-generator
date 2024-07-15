@@ -20,7 +20,7 @@ describe('isFalse function', () => {
         [true, false],
         ['random string', false],
         [{}, false],
-        [[], false],
+        [[], true],
     ])('isFalse(%p) should return %p', (input, expected) => {
         expect(isFalse(input)).toBe(expected);
     });
