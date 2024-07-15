@@ -67,6 +67,8 @@ describe('getValueMapTruthyFalse function', () => {
         ['Y', '1'],
         ['YES', '1'],
         ['random string', 'random string'],
+        [1, '1'],
+        [0, '0'],
         [123, 123],
         [true, '1'],
         [false, '0'],
