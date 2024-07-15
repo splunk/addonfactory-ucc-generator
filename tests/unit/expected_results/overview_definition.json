@@ -112,7 +112,7 @@
     "overview_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart count as Errors by exc_l",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level=ERROR | timechart count as Errors by exc_l",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
