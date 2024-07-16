@@ -38,7 +38,6 @@ from splunk_add_on_ucc_framework import (
 from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
-from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import data_ui_generator
@@ -56,7 +55,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
-
+from splunk_add_on_ucc_framework.generators.file_generator import begin
 
 logger = logging.getLogger("ucc_gen")
 
@@ -524,6 +523,7 @@ def generate(
     logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
+    generated_files = []
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
@@ -592,6 +592,20 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
+        ####################################################################
+        # NOTE: START OF THE NEW BUILD PROCESS
+        ####################################################################
+        generated_files.extend(
+            begin(
+                global_config=global_config,
+                input_dir=source,
+                output_dir=output_directory,
+                ucc_dir=internal_root_dir,
+                addon_name=ta_name,
+            )
+        )
+        # TODO: all FILES GENERATED object: generated_files, use it for comparison
+
         builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
         builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
@@ -613,22 +627,6 @@ def generate(
         conf_file_names.extend(list(scheme.configs_conf_file_names))
         conf_file_names.extend(list(scheme.oauth_conf_file_names))
 
-        source_server_conf_path = os.path.join(source, "default", "server.conf")
-        # For now, only create server.conf only if no server.conf is present in
-        # the source package.
-        if not os.path.isfile(source_server_conf_path):
-            server_conf = server_conf_lib.ServerConf()
-            server_conf.create_default(conf_file_names)
-            output_server_conf_path = os.path.join(
-                output_directory,
-                ta_name,
-                "default",
-                server_conf_lib.SERVER_CONF_FILE_NAME,
-            )
-            server_conf.write(output_server_conf_path)
-            logger.info(
-                f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
-            )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
             dashboard_definition_json_path = os.path.join(

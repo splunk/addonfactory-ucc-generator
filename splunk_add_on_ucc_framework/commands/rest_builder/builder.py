@@ -20,8 +20,6 @@ from typing import Dict, List, Set
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
 )
-from splunk_add_on_ucc_framework.rest_map_conf import RestmapConf
-from splunk_add_on_ucc_framework.web_conf import WebConf
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 __all__ = ["RestBuilder"]
@@ -173,19 +171,6 @@ class RestBuilder:
                 endpoint.generate_rh(),
             )
 
-        self.output.put(
-            self.output.default,
-            "restmap.conf",
-            RestmapConf.build(
-                self._schema.endpoints,
-                self._schema.namespace,
-            ),
-        )
-        self.output.put(
-            self.output.default,
-            "web.conf",
-            WebConf.build(self._schema.endpoints),
-        )
         self.output.put(
             self.output.bin,
             "import_declare_test.py",
