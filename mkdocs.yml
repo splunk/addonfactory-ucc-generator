@@ -33,6 +33,7 @@ nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
+  - Generated Files: "generated_files.md"
   - Inputs:
       - "inputs/index.md"
       - Introduction: "inputs/index.md"
@@ -81,6 +82,6 @@ nav:
       - Custom Warning: "advanced/custom_warning.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
-  - Changelog: "CHANGELOG.md"
   - Metadata: "metadata.md"
   - Storybook: "storybook/index.html"
+  - Changelog: "CHANGELOG.md"
