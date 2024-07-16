@@ -15,7 +15,7 @@ import EntityModal from '../EntityModal/EntityModal';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import { NoRecordsDiv } from './CustomTableStyle';
 import { useTableContext } from '../../context/useTableContext';
-import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
+import { isTrue } from '../../util/considerFalseAndTruthy';
 
 function getServiceToStyleMap(page, unifiedConfigs) {
     const serviceToStyleMap = {};
@@ -238,11 +238,7 @@ function CustomTable({
                         columns={columns}
                         rowActions={actions}
                         headerMapping={headerMapping}
-                        readonly={
-                            readonlyFieldId
-                                ? getValueMapTruthyFalse(row[readonlyFieldId]) === '1'
-                                : false
-                        }
+                        readonly={readonlyFieldId ? isTrue(row[readonlyFieldId]) : false}
                         {...{
                             handleEditActionClick,
                             handleCloneActionClick,
