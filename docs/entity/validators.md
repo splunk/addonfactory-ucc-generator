@@ -1,7 +1,7 @@
 ### Common Properties
 
-- `type`<span class="required-asterisk">*</span> specifies which validator type to use.
-- `errorMsg`<span class="required-asterisk">*</span> displays a custom error message. UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/develop/ui/src/constants/messageDict.ts).
+- `type`<span class="required-asterisk">\*</span> specifies which validator type to use.
+- `errorMsg`<span class="required-asterisk">\*</span> displays a custom error message. UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/develop/ui/src/constants/messageDict.ts).
 
 ### String
 
@@ -13,10 +13,10 @@ See the following example usage:
 
 ```json
 {
-    "type": "string",
-    "errorMsg": "Length of index name should be between 1 to 80 characters.",
-    "minLength": 1,
-    "maxLength": 80
+  "type": "string",
+  "errorMsg": "Length of index name should be between 1 to 80 characters.",
+  "minLength": 1,
+  "maxLength": 80
 }
 ```
 
@@ -29,9 +29,9 @@ See the following example usage:
 
 ```json
 {
-    "type": "regex",
-    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-    "pattern": "^[a-zA-Z]\\w*$"
+  "type": "regex",
+  "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+  "pattern": "^[a-zA-Z]\\w*$"
 }
 ```
 
@@ -39,7 +39,7 @@ See the following example usage:
 
 <h3> Properties </h3>
 - `range`<span class="required-asterisk">*</span> is the range within which the target value should fall.
-- `is_int` is the boolean which target only integer value if sets true. Default value is false
+- `isInteger` is the boolean which target only integer value if sets true. Default value is false
 
 See the following example usage:
 
@@ -47,7 +47,7 @@ See the following example usage:
 {
   "type": "number",
   "range": [1, 65535],
-  "is_int": true
+  "isInteger": true
 }
 ```
 
@@ -61,7 +61,7 @@ If you're using a regexp internally, this [regex](https://github.com/splunk/addo
 
 No parameters are needed.
 
-Using a regexp internally is recommended by [WHATWG](https://html.spec.whatwg.org/multipage/input.html#email-state-(type=email)).
+Using a regexp internally is recommended by [WHATWG](<https://html.spec.whatwg.org/multipage/input.html#email-state-(type=email)>).
 
 ### IPV4
 

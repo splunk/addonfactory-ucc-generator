@@ -52,6 +52,7 @@ fields_proxy = [
         validator=validator.Number(
             max_val=65535, 
             min_val=1, 
+            is_integer=True
         )
     ), 
     field.RestField(

@@ -514,7 +514,8 @@
               "validators": [
                 {
                   "type": "number",
-                  "range": [1, 65535]
+                  "range": [1, 65535],
+                  "isInteger": true
                 }
               ],
               "field": "proxy_port"

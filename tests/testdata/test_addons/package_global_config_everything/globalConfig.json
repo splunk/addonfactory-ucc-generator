@@ -491,7 +491,7 @@
                                         1,
                                         65535
                                     ],
-                                    "is_int": true
+                                    "isInteger": true
                                 }
                             ],
                             "field": "proxy_port"

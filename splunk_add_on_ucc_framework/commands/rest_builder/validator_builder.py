@@ -68,8 +68,8 @@ class NumberValidator(BaseValidator):
 
     def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
         ranges = config.get("range", [None, None])
-        is_int = config.get("is_int", False)
-        return {"max_val": ranges[1], "min_val": ranges[0], "is_int": is_int}
+        is_integer = config.get("isInteger", False)
+        return {"max_val": ranges[1], "min_val": ranges[0], "is_integer": is_integer}
 
 
 class RegexValidator(BaseValidator):

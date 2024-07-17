@@ -209,16 +209,12 @@ class Validator {
                     : getFormattedMessage(16, [label]),
             };
         }
-        if (validator?.is_int) {
-            // If val is not an integer, return an error
-            if (!Number.isInteger(val)) {
-                return {
-                    errorField: field,
-                    errorMsg: getFormattedMessage(29, [label]),
-                };
-            }
-        } else {
-            val = parseFloat(val);
+        // If val is not an integer, return an error
+        if (validator?.isInteger && !Number.isInteger(val)) {
+            return {
+                errorField: field,
+                errorMsg: getFormattedMessage(29, [label]),
+            };
         }
         if (
             (Validator.checkIsFieldHasInput(data) && val > validator.range[1]) ||
