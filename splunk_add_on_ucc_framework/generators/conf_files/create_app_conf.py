@@ -1,5 +1,5 @@
 from time import time
-from typing import Any
+from typing import Any, Dict
 
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import \
     GlobalConfigBuilderSchema
@@ -8,7 +8,7 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AppConf(ConfGenerator):
-    __description__ = "Generates app.conf and app.conf.spec with the details mentioned in globalConfig[meta]"
+    __description__ = "Generates app.conf with the details mentioned in globalConfig[meta]"
 
     def __init__(
         self,
@@ -18,6 +18,7 @@ class AppConf(ConfGenerator):
         **kwargs: Any
     ) -> None:
         super().__init__(global_config, input_dir, output_dir, **kwargs)
+        self.conf_file = "app.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.custom_conf = []
@@ -44,7 +45,8 @@ class AppConf(ConfGenerator):
         self.id = self._global_config.product
         self.label = self._global_config.display_name
 
-    def generate_conf(self) -> None:
+    def generate_conf(self) -> Dict[str, str]:
+        file_path=self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="app_conf.template"
         )
@@ -62,10 +64,8 @@ class AppConf(ConfGenerator):
             is_visible=self.is_visible,
         )
         self.writer(
-            file_name="app.conf",
-            file_path=self.get_file_output_path(["default", "app.conf"]),
+            file_name=self.conf_file,
+            file_path=file_path,
             content=rendered_content,
         )
-
-    def generate_conf_spec(self) -> None:
-        return
+        return {self.conf_file: file_path}

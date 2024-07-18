@@ -12,7 +12,8 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AlertActionsConf(ConfGenerator):
-    __description__ = "Generates AlertAction.conf and AlertAction.conf.spec file"
+    __description__ = ("Generates alert_actions.conf and alert_actions.conf.spec file "
+                       "for the custom alert actions defined in globalConfig")
 
     def __init__(
         self,
@@ -22,6 +23,7 @@ class AlertActionsConf(ConfGenerator):
         **kwargs: Any,
     ) -> None:
         super().__init__(global_config, input_dir, output_dir, **kwargs)
+        self.conf_file = "alert_actions.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
         envs = normalize.normalize(
@@ -119,25 +121,29 @@ class AlertActionsConf(ConfGenerator):
                         )
                         self.alerts_spec[alert_name].append(value)
 
-    def generate_conf(self) -> None:
+    def generate_conf(self) -> Dict[str, str]:
+        file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
         )
         rendered_content = self._template.render(alerts=self.alerts)
         self.writer(
-            file_name="alert_actions.conf",
-            file_path=self.get_file_output_path(["default", "alert_actions.conf"]),
+            file_name=self.conf_file,
+            file_path=file_path,
             content=rendered_content,
         )
+        return {self.conf_file: file_path}
 
-    def generate_conf_spec(self) -> None:
+    def generate_conf_spec(self) -> Dict[str, str]:
+        file_path=self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"],
             file_name="alert_actions_conf_spec.template",
         )
         rendered_content = self._template.render(alerts=self.alerts_spec)
         self.writer(
-            file_name="alert_actions.conf.spec",
-            file_path=self.get_file_output_path(["README", "alert_actions.conf.spec"]),
+            file_name=self.conf_spec_file,
+            file_path=file_path,
             content=rendered_content,
         )
+        return {self.conf_spec_file: file_path}

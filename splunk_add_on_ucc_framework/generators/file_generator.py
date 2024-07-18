@@ -84,8 +84,12 @@ def begin(
 ) -> List[Dict[str, str]]:
     generated_files: List[Dict[str, str]] = []
     for item in fc.GEN_FILE_LIST:
-        item.file_class(global_config, input_dir, output_dir, **kwargs).generate()
-        logger.info(f"Successfully generated {item.file_name}.")
-        generated_files.append({item.file_name: item.file_path})
+        file_details: Dict[str, str] = {}
+        file_details = item.file_class(global_config, input_dir, output_dir, **kwargs).generate()
+        for k, v in file_details.items():
+            if not k:
+                continue
+            logger.info(f"Successfully generated {k} at {v}.")
+        generated_files.append(file_details)
 
     return generated_files

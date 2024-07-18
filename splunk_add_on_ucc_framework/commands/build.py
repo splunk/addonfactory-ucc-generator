@@ -36,7 +36,6 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework import dashboard
-from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -701,26 +700,6 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
-
-    app_conf = app_conf_lib.AppConf()
-    output_app_conf_path = os.path.join(
-        output_directory, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
-    )
-    app_conf.read(output_app_conf_path)
-    should_be_visible = True if global_config else False
-    if global_config and global_config.meta.get("checkForUpdates") is False:
-        check_for_updates = False
-    else:
-        check_for_updates = True
-    app_conf.update(
-        addon_version,
-        app_manifest,
-        conf_file_names,
-        should_be_visible,
-        check_for_updates,
-    )
-    app_conf.write(output_app_conf_path)
-    logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
 
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
