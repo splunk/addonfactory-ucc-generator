@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "View error messages for your add-on within the selected time range.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "errors_tab_timerange_label_start_viz": {

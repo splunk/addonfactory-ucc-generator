@@ -55,7 +55,7 @@ class GlobalConfigValidator:
         Raises jsonschema.ValidationError if config is not valid.
         """
         schema_path = os.path.join(self._source_dir, "schema", "schema.json")
-        with open(schema_path) as f_schema:
+        with open(schema_path, encoding="utf-8") as f_schema:
             schema_raw = f_schema.read()
             schema = json.loads(schema_raw)
         try:

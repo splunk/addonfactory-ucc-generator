@@ -6,9 +6,12 @@ import Clear from '@splunk/react-icons/enterprise/Clear';
 import axios from 'axios';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import { z } from 'zod';
 
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse } from '../../util/util';
+import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -24,13 +27,16 @@ const StyledDiv = styled.div`
     }
 `;
 
-interface FormItem {
-    label: string;
-    value: string;
-    children?: { label: string; value: string }[];
-}
+type BasicFormItem = { value: string | number | boolean; label: string };
 
-interface SingleInputComponentProps {
+type FormItem =
+    | BasicFormItem
+    | {
+          label: string;
+          children: BasicFormItem[];
+      };
+
+export interface SingleInputComponentProps {
     id?: string;
     disabled?: boolean;
     value: string;
@@ -38,16 +44,7 @@ interface SingleInputComponentProps {
     handleChange: (field: string, value: string | number | boolean) => void;
     field: string;
     dependencyValues?: Record<string, unknown>;
-    controlOptions: {
-        autoCompleteFields?: FormItem[];
-        endpointUrl?: string;
-        denyList?: string;
-        allowList?: string;
-        dependencies?: [];
-        createSearchChoice?: boolean;
-        referenceName?: string;
-        disableSearch?: boolean;
-        labelField?: string;
+    controlOptions: z.TypeOf<typeof SelectCommonOptions> & {
         hideClearBtn?: boolean;
     };
     required: boolean;
@@ -71,6 +68,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         referenceName,
         disableSearch,
         labelField,
+        valueField,
         autoCompleteFields,
         hideClearBtn,
     } = controlOptions;
@@ -84,17 +82,21 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     function generateOptions(items: FormItem[]) {
         const data: ReactElement[] = [];
         items.forEach((item) => {
-            if (item.value && item.label) {
+            if ('value' in item && item.value && item.label) {
+                // splunk will mape those when sending post form
+                // so worth doing it earlier to keep same state before and after post
+                const itemValue = getValueMapTruthyFalse(item.value);
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
-                data.push(<Option label={item.label} value={item.value} key={item.value} />);
+                data.push(<Option label={item.label} value={itemValue} key={item.value} />);
             }
-            if (item.children && item.label) {
+            if ('children' in item && item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
+                    const childValue = getValueMapTruthyFalse(child.value);
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
-                    data.push(<Option label={child.label} value={child.value} key={child.value} />);
+                    data.push(<Option label={child.label} value={childValue} key={childValue} />);
                 });
             }
         });
@@ -136,7 +138,13 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                     if (current) {
                         setOptions(
                             generateOptions(
-                                filterResponse(response.data.entry, labelField, allowList, denyList)
+                                filterResponse(
+                                    response.data.entry,
+                                    labelField,
+                                    valueField,
+                                    allowList,
+                                    denyList
+                                )
                             )
                         );
                         setLoading(false);
@@ -168,7 +176,8 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                value={props.value === null ? '' : props.value}
+                // do not map empty values like '', null, undefined
+                value={props.value ? getValueMapTruthyFalse(props.value) : ''}
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
@@ -185,7 +194,8 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                value={props.value}
+                // do not map empty values like '', null, undefined
+                value={props.value ? getValueMapTruthyFalse(props.value) : props.value}
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
