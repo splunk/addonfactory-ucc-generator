@@ -183,6 +183,7 @@ class Validator {
     /**
      * @typedef {ValidatorBase} NumberValidatorOptions
      * @property {[number, number]} range
+     * @property {boolean} isInteger
      */
 
     /**

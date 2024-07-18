@@ -52,7 +52,7 @@ fields_proxy = [
         validator=validator.Number(
             max_val=65535, 
             min_val=1, 
-            is_integer=True
+            is_int=True,
         )
     ), 
     field.RestField(
@@ -115,8 +115,8 @@ fields_custom_abc = [
         encrypted=False,
         default=None,
         validator=validator.Number(
-            max_val=10, 
-            min_val=1, 
+            max_val=10,
+            min_val=1,
         )
     ), 
     field.RestField(
