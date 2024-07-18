@@ -14,7 +14,7 @@ class ConfGenerator(FileGenerator):
         global_config: GlobalConfig,
         input_dir: str,
         output_dir: str,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         super().__init__(global_config, input_dir, output_dir, **kwargs)
         self.conf_file = ".conf"
@@ -41,7 +41,7 @@ class ConfGenerator(FileGenerator):
         # uses the attributes set in  _set_attributes method to render the template
         # use self.get_file_output_path() to get the output file to create the file
         return {"": ""}
-    
+
     @property
     def conf_spec_file(self) -> str:
         return f"{self.conf_file}.spec"

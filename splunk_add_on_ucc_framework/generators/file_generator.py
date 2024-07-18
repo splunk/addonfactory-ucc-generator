@@ -5,8 +5,9 @@ from typing import Any, Dict, List, Union
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import \
-    write_file
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
+    write_file,
+)
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 from . import file_const as fc
@@ -48,7 +49,7 @@ class FileGenerator(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def generate(self) -> None:
+    def generate(self) -> Dict[str, str]:
         raise NotImplementedError
 
     def _get_output_dir(self) -> str:
@@ -85,7 +86,9 @@ def begin(
     generated_files: List[Dict[str, str]] = []
     for item in fc.GEN_FILE_LIST:
         file_details: Dict[str, str] = {}
-        file_details = item.file_class(global_config, input_dir, output_dir, **kwargs).generate()
+        file_details = item.file_class(
+            global_config, input_dir, output_dir, **kwargs
+        ).generate()
         for k, v in file_details.items():
             if not k:
                 continue

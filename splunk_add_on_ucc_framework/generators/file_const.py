@@ -1,8 +1,15 @@
 from typing import List, NamedTuple, Type, Union
 
 from splunk_add_on_ucc_framework.generators.conf_files import (
-    AlertActionsConf, AppConf, EventtypesConf, InputsConf, RestMapConf,
-    ServerConf, TagsConf, WebConf)
+    AlertActionsConf,
+    AppConf,
+    EventtypesConf,
+    InputsConf,
+    RestMapConf,
+    ServerConf,
+    TagsConf,
+    WebConf,
+)
 
 __all__ = ["FileClass", "GEN_FILE_LIST"]
 

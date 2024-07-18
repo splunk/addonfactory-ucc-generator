@@ -1,16 +1,16 @@
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import \
-    arf_consts as ac
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import \
-    normalize
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import arf_consts as ac
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class EventtypesConf(ConfGenerator):
-    __description__ = ("Generates eventtypes.conf file if the sourcetype is mentioned"
-                       " in Adaptive Response of custom alert action")
+    __description__ = (
+        "Generates eventtypes.conf file if the sourcetype is mentioned"
+        " in Adaptive Response of custom alert action"
+    )
 
     def __init__(
         self,
@@ -31,7 +31,7 @@ class EventtypesConf(ConfGenerator):
         self.alert_settings = schema_content[ac.MODULAR_ALERTS]
 
     def generate_conf(self) -> Dict[str, str]:
-        file_path=self.get_file_output_path(["default", self.conf_file])
+        file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="eventtypes_conf.template"
         )

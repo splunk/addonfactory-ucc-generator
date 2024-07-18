@@ -3,17 +3,17 @@ import shutil
 from os import path
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import \
-    arf_consts as ac
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import \
-    normalize
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import arf_consts as ac
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AlertActionsConf(ConfGenerator):
-    __description__ = ("Generates alert_actions.conf and alert_actions.conf.spec file "
-                       "for the custom alert actions defined in globalConfig")
+    __description__ = (
+        "Generates alert_actions.conf and alert_actions.conf.spec file "
+        "for the custom alert actions defined in globalConfig"
+    )
 
     def __init__(
         self,
@@ -135,7 +135,7 @@ class AlertActionsConf(ConfGenerator):
         return {self.conf_file: file_path}
 
     def generate_conf_spec(self) -> Dict[str, str]:
-        file_path=self.get_file_output_path(["README", self.conf_spec_file])
+        file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"],
             file_name="alert_actions_conf_spec.template",

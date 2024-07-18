@@ -1,7 +1,8 @@
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import \
-    GlobalConfigBuilderSchema
+from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
+    GlobalConfigBuilderSchema,
+)
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 

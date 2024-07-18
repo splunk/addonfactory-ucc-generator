@@ -23,7 +23,7 @@ class InputsConf(ConfGenerator):
             self.input_names.append(service.get("name"))
 
     def generate_conf(self) -> Dict[str, str]:
-        file_path=self.get_file_output_path(["default", self.conf_file])
+        file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="inputs_conf.template"
         )
@@ -34,4 +34,3 @@ class InputsConf(ConfGenerator):
             content=rendered_content,
         )
         return {self.conf_file: file_path}
-
