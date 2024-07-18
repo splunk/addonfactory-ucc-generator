@@ -51,8 +51,8 @@ function CustomTableRow(props) {
         });
 
     const rowActionsPrimaryButton = useCallback(
-        (selectedRow) => (
-            <TableCellWrapper data-column="actions" key={selectedRow.id}>
+        (selectedRow, header) => (
+            <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
                     {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
@@ -128,7 +128,6 @@ function CustomTableRow(props) {
                 columns.length &&
                 columns.map((header) => {
                     let cellHTML = '';
-
                     if (header.customCell && header.customCell.src) {
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
@@ -164,7 +163,7 @@ function CustomTableRow(props) {
                             </Table.Cell>
                         );
                     } else if (header.field === 'actions') {
-                        cellHTML = rowActionsPrimaryButton(row);
+                        cellHTML = rowActionsPrimaryButton(row, header);
                     } else {
                         cellHTML = (
                             <Table.Cell
