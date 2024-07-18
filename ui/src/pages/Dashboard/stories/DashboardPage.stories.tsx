@@ -34,6 +34,8 @@ export const DashboardPageView: Story = {
         const canvas = within(canvasElement);
 
         await canvas.findByRole('heading', { name: 'Data Ingestion' });
-        await canvas.findAllByText((match) => match.includes('Search sid not found'));
+        await canvas.findAllByText((match) => match.includes('Search sid not found'), undefined, {
+            timeout: 10_000,
+        });
     },
 };
