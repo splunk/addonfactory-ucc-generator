@@ -602,6 +602,9 @@ def generate(
                 output_dir=output_directory,
                 ucc_dir=internal_root_dir,
                 addon_name=ta_name,
+                app_manifest=app_manifest,
+                addon_version=addon_version,
+                has_ui=True,
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison

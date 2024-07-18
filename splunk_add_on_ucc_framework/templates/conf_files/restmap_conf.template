@@ -7,6 +7,6 @@ members = {{ endpoint_names }}
 handlertype = python
 python.version = python3
 handlerfile = {{ endpoint.rh_name }}.py
-handleractions = {{ endpoint.actions() }}
+handleractions = {{ endpoint.actions() | join(', ') }}
 handlerpersistentmode = true
 {% endfor %}

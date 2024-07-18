@@ -1,19 +1,27 @@
+from typing import Any
+
+from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import \
+    GlobalConfigBuilderSchema
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
-    GlobalConfigBuilderSchema,
-)
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class WebConf(ConfGenerator):
-    __description__ = ("Generates web.conf to expose the endpoints generated in "
-                       "restmap.conf which is generated based on configs from globalConfig.")
+    __description__ = (
+        "Generates web.conf to expose the endpoints generated in "
+        "restmap.conf which is generated based on configs from globalConfig."
+    )
 
     def __init__(
-        self, global_config, input_dir: str, output_dir: str, **kwargs
+        self,
+        global_config: GlobalConfig,
+        input_dir: str,
+        output_dir: str,
+        **kwargs: Any
     ) -> None:
         super().__init__(global_config, input_dir, output_dir, **kwargs)
 
-    def _set_attributes(self, **kwargs):
+    def _set_attributes(self, **kwargs: Any) -> None:
         scheme = GlobalConfigBuilderSchema(self._global_config)
         self.endpoints = scheme.endpoints
 
@@ -30,5 +38,5 @@ class WebConf(ConfGenerator):
             content=rendered_content,
         )
 
-    def generate_conf_spec(self):
-        pass
+    def generate_conf_spec(self) -> None:
+        return

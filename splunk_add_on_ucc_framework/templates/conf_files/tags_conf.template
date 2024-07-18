@@ -1,0 +1,6 @@
+{% for alert in mod_alerts %}
+    {% if alert.get("adaptive_response") and alert.adaptive_response.get("sourcetype") %}
+[eventtype={{ alert.short_name }}_modaction_result]
+modaction_result = enabled
+    {% endif %}
+{% endfor %}

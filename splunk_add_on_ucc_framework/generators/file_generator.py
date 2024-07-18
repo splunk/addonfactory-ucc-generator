@@ -1,21 +1,30 @@
+import logging
 from abc import ABC, abstractmethod
-from typing import Union, List, Dict, NoReturn
-from os.path import sep, realpath
+from os.path import realpath, sep
+from typing import Any, Dict, List, Union
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from . import file_const as fc
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
-    write_file,
-)
+
+from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import \
+    write_file
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
+from . import file_const as fc
+
 __all__ = ["FileGenerator", "begin"]
+
+logger = logging.getLogger("ucc_gen")
 
 
 class FileGenerator(ABC):
     __description__ = "DESCRIBE THE FILE THAT IS GENERATED"
 
     def __init__(
-        self, global_config: GlobalConfig, input_dir: str, output_dir: str, **kwargs
+        self,
+        global_config: GlobalConfig,
+        input_dir: str,
+        output_dir: str,
+        **kwargs: Any,
     ) -> None:
         """
         :param global_config: the GlobalConfig object that is validated and parsed
@@ -29,17 +38,18 @@ class FileGenerator(ABC):
         self._global_config = global_config
         self._input_dir = input_dir
         self._output_dir = output_dir
-        self._set_attributes(**kwargs)
         self._template_dir = [(sep.join([kwargs["ucc_dir"], "templates"]))]
         self._addon_name = kwargs["addon_name"]
         self.writer = write_file
-
-    def _set_attributes(self, **kwargs) -> NoReturn:
-        raise NotImplementedError()
+        self._set_attributes(**kwargs)
 
     @abstractmethod
-    def generate(self) -> NoReturn:
-        raise NotImplementedError()
+    def _set_attributes(self, **kwargs: Any) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def generate(self) -> None:
+        raise NotImplementedError
 
     def _get_output_dir(self) -> str:
         return sep.join([realpath(self._output_dir), self._addon_name])
@@ -61,18 +71,21 @@ class FileGenerator(ABC):
         select_autoescape(disabled_extensions=("template"))
 
         self._template = Environment(
-            loader=FileSystemLoader(sep.join(self._template_dir + template_file_path))
+            loader=FileSystemLoader(sep.join(self._template_dir + template_file_path)),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
         )
         self._template = self._template.get_template(file_name)
 
 
 def begin(
-    global_config, input_dir: str, output_dir: str, **kwargs
+    global_config: GlobalConfig, input_dir: str, output_dir: str, **kwargs: Any
 ) -> List[Dict[str, str]]:
-    generated_files = []
-    for tup in fc.FILE_TUPLE:
-        tup.file_class(global_config, input_dir, output_dir, **kwargs).generate()
-        # logger.info(f"Successfully generated {tup.file_name}".)
-        generated_files.append({tup.file_name: tup.file_path})
+    generated_files: List[Dict[str, str]] = []
+    for item in fc.GEN_FILE_LIST:
+        item.file_class(global_config, input_dir, output_dir, **kwargs).generate()
+        logger.info(f"Successfully generated {item.file_name}.")
+        generated_files.append({item.file_name: item.file_path})
 
     return generated_files
