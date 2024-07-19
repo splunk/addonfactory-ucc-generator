@@ -3,6 +3,7 @@ import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { getUserTheme } from '@splunk/splunk-utils/themes';
+import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
 
 import { GlobalBodyStyle, StyledContainer } from './EntryPageStyle';
@@ -23,6 +24,8 @@ const DashboardPage = React.lazy(() =>
     import(/* webpackPrefetch: true */ './Dashboard/DashboardPage')
 );
 
+const systemUnderTest = navigator.webdriver;
+
 // Take in a component as argument WrappedComponent
 function higherOrderComponent(WrappedComponent) {
     // And return another component
@@ -30,25 +33,29 @@ function higherOrderComponent(WrappedComponent) {
     class HOC extends React.Component {
         render() {
             return (
-                <SplunkThemeProvider>
-                    <GlobalBodyStyle />
-                    <StyledContainer>
-                        <Router>
-                            <ConfigManager>
-                                {({ loading, appData }) =>
-                                    !loading &&
-                                    appData && (
-                                        <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
-                                            <WrappedComponent // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                                                {...this.props}
-                                            />
-                                        </Suspense>
-                                    )
-                                }
-                            </ConfigManager>
-                        </Router>
-                    </StyledContainer>
-                </SplunkThemeProvider>
+                <AnimationToggleProvider enabled={!systemUnderTest}>
+                    <SplunkThemeProvider>
+                        <GlobalBodyStyle />
+                        <StyledContainer>
+                            <Router>
+                                <ConfigManager>
+                                    {({ loading, appData }) =>
+                                        !loading &&
+                                        appData && (
+                                            <Suspense
+                                                fallback={<WaitSpinnerWrapper size="medium" />}
+                                            >
+                                                <WrappedComponent // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
+                                                    {...this.props}
+                                                />
+                                            </Suspense>
+                                        )
+                                    }
+                                </ConfigManager>
+                            </Router>
+                        </StyledContainer>
+                    </SplunkThemeProvider>
+                </AnimationToggleProvider>
             );
         }
     }
