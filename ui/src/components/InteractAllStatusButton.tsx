@@ -75,7 +75,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
             {tryInteract && (
                 <AcceptModal
                     message={`Do you want to ${
-                        isDisabling ? 'disable' : 'enable'
+                        isDisabling ? 'deactivate' : 'activate'
                     } all? It may take a while.`}
                     open={tryInteract}
                     handleRequestClose={handleAcceptModal}
