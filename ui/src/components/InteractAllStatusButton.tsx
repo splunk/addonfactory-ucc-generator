@@ -59,7 +59,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                 role="button"
                 disabled={props.dataRows.length < 1}
             >
-                Enable all
+                Activate all
             </InteractAllActionButton>
             <InteractAllActionButton
                 data-testid="disableAllBtn"
@@ -70,7 +70,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                 role="button"
                 disabled={props.dataRows.length < 1}
             >
-                Disable all
+                Deactivate all
             </InteractAllActionButton>
             {tryInteract && (
                 <AcceptModal
@@ -79,7 +79,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                     } all? It may take a while.`}
                     open={tryInteract}
                     handleRequestClose={handleAcceptModal}
-                    title={isDisabling ? 'Disable all' : 'Enable all'}
+                    title={isDisabling ? 'Deactivate all' : 'Activate all'}
                     declineBtnLabel="No"
                     acceptBtnLabel="Yes"
                 />
