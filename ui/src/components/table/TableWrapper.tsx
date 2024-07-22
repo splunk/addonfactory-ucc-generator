@@ -16,6 +16,7 @@ import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes
 import { useTableSort } from './useTableSort';
 import { useTableContext } from '../../context/useTableContext';
 import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
+import { isReadonlyRow } from './table.utils';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
@@ -176,7 +177,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
      * @param row {Object} row
      */
     const changeToggleStatus = (row: RowDataFields) => {
-        if (readonlyFieldId && readonlyFieldId in row && isTrue(row[readonlyFieldId])) {
+        if (isReadonlyRow(readonlyFieldId, row)) {
             return;
         }
         setRowData((currentRowData: RowDataType) =>
