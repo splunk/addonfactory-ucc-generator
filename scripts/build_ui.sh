@@ -21,4 +21,4 @@ cd $REPO_ROOT_DIR/ui
 yarn run setup
 cd $REPO_ROOT_DIR
 
-cp -n -R ui/dist/build/ splunk_add_on_ucc_framework/package/appserver/static/js/build/
+cp -f -R ui/dist/build/ splunk_add_on_ucc_framework/package/appserver/static/js/build/
