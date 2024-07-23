@@ -490,7 +490,8 @@
                                     "range": [
                                         1,
                                         65535
-                                    ]
+                                    ],
+                                    "isInteger": true
                                 }
                             ],
                             "field": "proxy_port"
@@ -1551,10 +1552,10 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.47.0R2026c71b",
+        "version": "5.48.1Rbfdf113d",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.7",
-        "_uccVersion": "5.47.0",
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.48.1",
         "supportedThemes": [
             "light",
             "dark"

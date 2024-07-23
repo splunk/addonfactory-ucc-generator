@@ -27,6 +27,7 @@ const MESSAGE_DICT: Record<number | 'unknown', string> = {
     26: 'The file is invalid',
     27: '{{args[0]}} type is not present in supported File Types',
     28: 'The file must be in {{args[0]}} format',
+    29: 'Field {{args[0]}} is not a integer',
 
     // general messages, range [100, 499]
     100: 'Create New Input',

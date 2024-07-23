@@ -41,7 +41,7 @@ from tests.unit.helpers import get_testdata_file
             get_testdata_file("validator_builder_result_regex"),
         ),
         (
-            [{"type": "number", "range": [1, 65535]}],
+            [{"type": "number", "range": [1, 65535], "isInteger": True}],
             get_testdata_file("validator_builder_result_number"),
         ),
         (
@@ -89,10 +89,7 @@ from tests.unit.helpers import get_testdata_file
                     "minLength": 1,
                     "maxLength": 100,
                 },
-                {
-                    "type": "number",
-                    "range": [1, 65535],
-                },
+                {"type": "number", "range": [1, 65535], "isInteger": True},
                 {
                     "errorMsg": "Enter a valid Email Address.",
                     "type": "email",
