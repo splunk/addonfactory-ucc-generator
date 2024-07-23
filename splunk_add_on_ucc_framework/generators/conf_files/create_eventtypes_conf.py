@@ -8,8 +8,8 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 class EventtypesConf(ConfGenerator):
     __description__ = (
-        "Generates eventtypes.conf file if the sourcetype is mentioned"
-        " in Adaptive Response of custom alert action"
+        "Generates `eventtypes.conf` file if the sourcetype is mentioned"
+        " in Adaptive Response of custom alert action in globalConfig"
     )
 
     def __init__(

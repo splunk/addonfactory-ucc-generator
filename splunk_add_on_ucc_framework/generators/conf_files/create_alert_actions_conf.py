@@ -11,7 +11,7 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 class AlertActionsConf(ConfGenerator):
     __description__ = (
-        "Generates alert_actions.conf and alert_actions.conf.spec file "
+        "Generates `alert_actions.conf` and `alert_actions.conf.spec` file "
         "for the custom alert actions defined in globalConfig"
     )
 

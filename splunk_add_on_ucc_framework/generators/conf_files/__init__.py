@@ -7,6 +7,8 @@ from .create_restmap_conf import RestMapConf
 from .create_server_conf import ServerConf
 from .create_tags_conf import TagsConf
 from .create_web_conf import WebConf
+from .create_account_conf import AccountConf
+from .create_settings_conf import SettingsConf
 
 __all__ = [
     "ConfGenerator",
@@ -19,4 +21,6 @@ __all__ = [
     "TagsConf",
     "AppConf",
     "InputsConf",
+    "AccountConf",
+    "SettingsConf",
 ]

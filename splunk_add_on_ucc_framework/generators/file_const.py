@@ -9,6 +9,8 @@ from splunk_add_on_ucc_framework.generators.conf_files import (
     ServerConf,
     TagsConf,
     WebConf,
+    AccountConf,
+    SettingsConf,
 )
 
 __all__ = ["FileClass", "GEN_FILE_LIST"]
@@ -26,13 +28,13 @@ class FileClass(NamedTuple):
             EventtypesConf,
             TagsConf,
             InputsConf,
+            AccountConf,
+            SettingsConf,
         ]
     ]
     file_path: str
     file_description: str
 
-
-# TODO: add more description to the files
 
 GEN_FILE_LIST: List[FileClass] = [
     FileClass("app.conf", AppConf, "default", AppConf.__description__),
@@ -50,4 +52,6 @@ GEN_FILE_LIST: List[FileClass] = [
         "eventtypes.conf", EventtypesConf, "default", EventtypesConf.__description__
     ),
     FileClass("tags.conf", TagsConf, "default", TagsConf.__description__),
+    FileClass("_account.conf", AccountConf, "README", AccountConf.__description__),
+    FileClass("_settings.conf", SettingsConf, "README", SettingsConf.__description__),
 ]

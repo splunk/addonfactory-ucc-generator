@@ -1,15 +1,12 @@
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
-    GlobalConfigBuilderSchema,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class RestMapConf(ConfGenerator):
     __description__ = (
-        "Generates restmap.conf for the custom REST handlers that "
+        "Generates `restmap.conf` for the custom REST handlers that "
         "are generated based on configs from globalConfig"
     )
 
@@ -24,10 +21,9 @@ class RestMapConf(ConfGenerator):
         self.conf_file = "restmap.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        scheme = GlobalConfigBuilderSchema(self._global_config)
-        self.endpoints = scheme.endpoints
+        self.endpoints = self._gc_schema.endpoints
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
-        self.namespace = scheme.namespace
+        self.namespace = self._gc_schema.namespace
 
     def generate_conf(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])

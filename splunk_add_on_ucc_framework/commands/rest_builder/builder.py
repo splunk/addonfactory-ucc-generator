@@ -140,31 +140,6 @@ class RestBuilder:
 
     def build(self) -> None:
         for endpoint in self._schema.endpoints:
-            # If the endpoint is oauth, which is for getting accesstoken. Conf file entries should not get created.
-            if endpoint._name != "oauth":
-                if endpoint._name == "settings":
-                    self.output.put(
-                        self.output.default,
-                        f"{endpoint.conf_name}.conf",
-                        endpoint.generate_conf_with_default_values(),
-                    )
-
-                self.output.put(
-                    self.output.readme,
-                    f"{endpoint.conf_name}.conf.spec",
-                    endpoint.generate_spec(),
-                )
-
-                # Add data input of self defined conf to inputs.conf.spec
-                if endpoint._entities[0] and endpoint._entities[0]._conf_name:
-                    lines = [
-                        f"[{endpoint._name}://<name>]",
-                        "placeholder = placeholder",
-                    ]
-                    self.output.put(
-                        self.output.readme, "inputs.conf.spec", "\n".join(lines)
-                    )
-
             self.output.put(
                 self.output.bin,
                 endpoint.rh_name + ".py",

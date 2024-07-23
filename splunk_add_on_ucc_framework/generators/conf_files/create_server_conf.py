@@ -1,15 +1,15 @@
 from os.path import isfile, join
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
-    GlobalConfigBuilderSchema,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class ServerConf(ConfGenerator):
-    __description__ = "Generates server.conf for the custom conf files created as per definition in globalConfig"
+    __description__ = (
+        "Generates `server.conf` for the custom conf "
+        "files created as per configurations in globalConfig"
+    )
 
     def __init__(
         self,
@@ -23,10 +23,9 @@ class ServerConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.custom_conf = []
-        scheme = GlobalConfigBuilderSchema(self._global_config)
-        self.custom_conf.extend(list(scheme.settings_conf_file_names))
-        self.custom_conf.extend(list(scheme.configs_conf_file_names))
-        self.custom_conf.extend(list(scheme.oauth_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
     def generate_conf(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])

@@ -1,16 +1,13 @@
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
-    GlobalConfigBuilderSchema,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class WebConf(ConfGenerator):
     __description__ = (
-        "Generates web.conf to expose the endpoints generated in "
-        "restmap.conf which is generated based on configs from globalConfig."
+        "Generates `web.conf` to expose the endpoints generated in "
+        "`restmap.conf` which is generated based on configurations from globalConfig."
     )
 
     def __init__(
@@ -24,8 +21,7 @@ class WebConf(ConfGenerator):
         self.conf_file = "web.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        scheme = GlobalConfigBuilderSchema(self._global_config)
-        self.endpoints = scheme.endpoints
+        self.endpoints = self._gc_schema.endpoints
 
     def generate_conf(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])

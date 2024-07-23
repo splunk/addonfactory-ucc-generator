@@ -7,7 +7,10 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class TagsConf(ConfGenerator):
-    __description__ = "Generates tags.conf file based on the eventtypes.conf created for custom alert actions."
+    __description__ = (
+        "Generates `tags.conf` file based on the "
+        "`eventtypes.conf` created for custom alert actions."
+    )
 
     def __init__(
         self,

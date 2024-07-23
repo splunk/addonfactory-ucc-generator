@@ -1,16 +1,13 @@
 from time import time
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
-    GlobalConfigBuilderSchema,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AppConf(ConfGenerator):
     __description__ = (
-        "Generates app.conf with the details mentioned in globalConfig[meta]"
+        "Generates `app.conf` with the details mentioned in globalConfig[meta]"
     )
 
     def __init__(
@@ -25,10 +22,9 @@ class AppConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.custom_conf = []
-        scheme = GlobalConfigBuilderSchema(self._global_config)
-        self.custom_conf.extend(list(scheme.settings_conf_file_names))
-        self.custom_conf.extend(list(scheme.configs_conf_file_names))
-        self.custom_conf.extend(list(scheme.oauth_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
         self.addon_version = kwargs["addon_version"]
         self.is_visible = kwargs["has_ui"]

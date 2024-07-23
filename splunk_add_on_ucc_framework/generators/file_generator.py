@@ -8,6 +8,9 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
     write_file,
 )
+from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
+    GlobalConfigBuilderSchema,
+)
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 from . import file_const as fc
@@ -40,8 +43,9 @@ class FileGenerator(ABC):
         self._input_dir = input_dir
         self._output_dir = output_dir
         self._template_dir = [(sep.join([kwargs["ucc_dir"], "templates"]))]
-        self._addon_name = kwargs["addon_name"]
+        self._addon_name: str = kwargs["addon_name"]
         self.writer = write_file
+        self._gc_schema = GlobalConfigBuilderSchema(global_config)
         self._set_attributes(**kwargs)
 
     @abstractmethod
@@ -75,7 +79,7 @@ class FileGenerator(ABC):
             loader=FileSystemLoader(sep.join(self._template_dir + template_file_path)),
             trim_blocks=True,
             lstrip_blocks=True,
-            keep_trailing_newline=True,
+            keep_trailing_newline=False,
         )
         self._template = self._template.get_template(file_name)
 
@@ -92,7 +96,7 @@ def begin(
         for k, v in file_details.items():
             if not k:
                 continue
-            logger.info(f"Successfully generated {k} at {v}.")
+            logger.info(f"Successfully generated '{k}' at '{v}'.")
         generated_files.append(file_details)
 
     return generated_files
