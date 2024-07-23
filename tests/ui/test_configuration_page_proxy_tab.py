@@ -147,6 +147,26 @@ class TestProxyPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_false
     @pytest.mark.forwarder
     @pytest.mark.proxy
+    def test_proxy_port_field_valid_integer(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        proxy = Proxy(
+            C.ADDON_NAME,
+            _PROXY_URL,
+            ucc_smartx_selenium_helper=ucc_smartx_selenium_helper,
+            ucc_smartx_rest_helper=ucc_smartx_rest_helper,
+        )
+        proxy.host.set_value("foobar")
+        proxy.port.set_value("10.1")
+        self.assert_util(
+            proxy.save,
+            "Field Port is not a integer",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_false
+    @pytest.mark.forwarder
+    @pytest.mark.proxy
     def test_proxy_encrypted_field_password(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
