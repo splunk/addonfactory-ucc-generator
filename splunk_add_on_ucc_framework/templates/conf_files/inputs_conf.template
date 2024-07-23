@@ -1,4 +1,4 @@
 {% for input_name in input_names %}
-[{{input_name}}]
+{{ "[" ~ input_name ~ "]"}}
 python.version = python3
 {% endfor %}

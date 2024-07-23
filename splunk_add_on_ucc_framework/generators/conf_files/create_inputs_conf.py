@@ -27,7 +27,7 @@ class InputsConf(ConfGenerator):
             if service.get("conf") is not None:
                 # Add data input of self defined conf to inputs.conf.spec
                 self.input_names.append(
-                    {f"[{service['name']}://<name>]": ["placeholder = placeholder"]}
+                    {service['name']: ["placeholder = placeholder"]}
                 )
                 continue
             for entity in service.get("entity", {"field": "name"}):
@@ -41,7 +41,7 @@ class InputsConf(ConfGenerator):
                     f"{' Default: ' + str(entity['defaultValue']) if entity.get('defaultValue') is not None else ''}"
                 )
 
-            self.input_names.append({f'[{service["name"]}]': properties})
+            self.input_names.append({service["name"]: properties})
 
     def generate_conf(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])

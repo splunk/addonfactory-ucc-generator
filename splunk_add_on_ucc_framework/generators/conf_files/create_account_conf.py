@@ -30,7 +30,7 @@ class AccountConf(ConfGenerator):
             content = self._gc_schema._get_oauth_enitities(account["entity"])
             fields = self._gc_schema._parse_fields(content)
             self.account_fields.append(
-                (account["name"], [f"{f._name} = " for f in fields])
+                ("<name>", [f"{f._name} = " for f in fields])
             )
 
     def generate_conf_spec(self) -> Dict[str, str]:

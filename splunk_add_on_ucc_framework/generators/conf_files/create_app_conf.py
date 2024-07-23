@@ -27,10 +27,10 @@ class AppConf(ConfGenerator):
         self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
         self.addon_version = kwargs["addon_version"]
-        self.is_visible = kwargs["has_ui"]
-        self.check_for_updates = True
+        self.is_visible = str(kwargs["has_ui"]).lower()
+        self.check_for_updates = "true"
         if self._global_config.meta.get("checkForUpdates") is False:
-            self.check_for_updates = False
+            self.check_for_updates = "false"
         if self._global_config.meta.get("supportedThemes") is not None:
             self.supported_themes = ", ".join(
                 self._global_config.meta["supportedThemes"]
@@ -42,7 +42,6 @@ class AppConf(ConfGenerator):
         self.name = self._global_config.product
         self.build = str(int(time()))
         self.id = self._global_config.product
-        self.label = self._global_config.display_name
 
     def generate_conf(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])
@@ -59,7 +58,7 @@ class AppConf(ConfGenerator):
             name=self.name,
             build=self.build,
             id=self.id,
-            label=self.label,
+            label=self.description,
             is_visible=self.is_visible,
         )
         self.writer(
