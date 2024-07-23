@@ -15,7 +15,8 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
 import { useTableSort } from './useTableSort';
 import { useTableContext } from '../../context/useTableContext';
-import { isTrue } from '../../util/considerFalseAndTruthy';
+import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
+import { isReadonlyRow } from './table.utils';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
@@ -176,7 +177,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
      * @param row {Object} row
      */
     const changeToggleStatus = (row: RowDataFields) => {
-        if (readonlyFieldId && readonlyFieldId in row && !!row[readonlyFieldId]) {
+        if (isReadonlyRow(readonlyFieldId, row)) {
             return;
         }
         setRowData((currentRowData: RowDataType) =>
@@ -273,7 +274,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             allRowsData = allRowsData.filter((v) => v.serviceName === serviceName);
         }
         if (hideFieldId) {
-            allRowsData = allRowsData.filter((v) => !v[hideFieldId]);
+            allRowsData = allRowsData.filter((v) => isFalse(v[hideFieldId]));
         }
 
         const headerMapping =
