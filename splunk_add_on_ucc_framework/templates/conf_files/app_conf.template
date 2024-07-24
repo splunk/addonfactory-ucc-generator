@@ -23,7 +23,9 @@ supported_themes = {{ supported_themes }}
 {% endif %}
 is_visible = {{ is_visible }}
 
+{% if custom_conf %}
 [triggers]
 {% for conf in custom_conf %}
 reload.{{ conf }} = simple
 {% endfor %}
+{% endif %}

@@ -21,27 +21,32 @@ class AppConf(ConfGenerator):
         self.conf_file = "app.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
+        self.check_for_updates = "true"
         self.custom_conf = []
-        self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
-        self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
-        self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
+        self.name = self._addon_name
+        self.id = self._addon_name
+        self.supported_themes = ""
+        
+        if self._global_config:
+            self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
+            self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
+            self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
+
+            if self._global_config.meta.get("checkForUpdates") is False:
+                self.check_for_updates = "false"
+            if self._global_config.meta.get("supportedThemes") is not None:
+                self.supported_themes = ", ".join(
+                    self._global_config.meta["supportedThemes"]
+                )
+            self.name = self._global_config.product
+            self.id = self._global_config.product
+        
 
         self.addon_version = kwargs["addon_version"]
         self.is_visible = str(kwargs["has_ui"]).lower()
-        self.check_for_updates = "true"
-        if self._global_config.meta.get("checkForUpdates") is False:
-            self.check_for_updates = "false"
-        if self._global_config.meta.get("supportedThemes") is not None:
-            self.supported_themes = ", ".join(
-                self._global_config.meta["supportedThemes"]
-            )
-        else:
-            self.supported_themes = ""
         self.description = kwargs["app_manifest"].get_description()
         self.author = kwargs["app_manifest"].get_authors()[0]["name"]
-        self.name = self._global_config.product
         self.build = str(int(time()))
-        self.id = self._global_config.product
 
     def generate_conf(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])
@@ -65,5 +70,6 @@ class AppConf(ConfGenerator):
             file_name=self.conf_file,
             file_path=file_path,
             content=rendered_content,
+            merge_mode="item_overwrite",
         )
         return {self.conf_file: file_path}

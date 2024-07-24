@@ -53,6 +53,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
+from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
 
 logger = logging.getLogger("ucc_gen")
 
@@ -521,9 +522,11 @@ def generate(
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
+    ui_available = False
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
+        ui_available = True
         logger.info(f"Using globalConfig file located @ {gc_path}")
         global_config = global_config_lib.GlobalConfig(gc_path)
         # handle the update of globalConfig before validating
@@ -589,9 +592,6 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
-        ####################################################################
-        # NOTE: START OF THE NEW BUILD PROCESS
-        ####################################################################
         generated_files.extend(
             begin(
                 global_config=global_config,
@@ -601,7 +601,7 @@ def generate(
                 addon_name=ta_name,
                 app_manifest=app_manifest,
                 addon_version=addon_version,
-                has_ui=True,
+                has_ui=ui_available,
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -698,7 +698,17 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
-
+    # NOTE: merging source and generated 'app.conf' as per previous design
+    AppConf(
+        global_config=global_config,
+        input_dir=source,
+        output_dir=output_directory,
+        ucc_dir=internal_root_dir,
+        addon_name=ta_name,
+        app_manifest=app_manifest,
+        addon_version=addon_version,
+        has_ui=ui_available,
+    ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
