@@ -15,8 +15,8 @@ export function isTrue(value: unknown) {
 }
 
 /**
- * since splunk does not oeprate on booleans and numbers, but onyl strings
- * here we use mapping to enable compering and oeprating on them
+ * since splunk does not operate on booleans and numbers, but only strings
+ * here we use mapping to enable comparing and operating on them
  * @param value value used for mapping
  * @returns maps truthy values into 1 and false into 0, does not modify rest
  */

@@ -183,6 +183,7 @@ class Validator {
     /**
      * @typedef {ValidatorBase} NumberValidatorOptions
      * @property {[number, number]} range
+     * @property {boolean} isInteger
      */
 
     /**
@@ -207,6 +208,13 @@ class Validator {
                 errorMsg: validator.errorMsg
                     ? validator.errorMsg
                     : getFormattedMessage(16, [label]),
+            };
+        }
+        // If val is not an integer, return an error
+        if (validator?.isInteger && !Number.isInteger(val)) {
+            return {
+                errorField: field,
+                errorMsg: getFormattedMessage(29, [label]),
             };
         }
         if (

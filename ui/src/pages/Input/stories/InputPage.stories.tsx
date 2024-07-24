@@ -31,19 +31,21 @@ const meta = {
                                     {
                                         name: 'my disabled input',
                                         content: {
-                                            disabled: true,
+                                            disabled: '1',
+                                            hard_disabled: 'f',
+                                            hide_in_ui: 'N',
                                         },
                                     },
                                     {
                                         name: 'my read only input',
                                         content: {
-                                            hard_disabled: true,
+                                            hard_disabled: '1',
                                         },
                                     },
                                     {
                                         name: 'my hidden input',
                                         content: {
-                                            hide_in_ui: true,
+                                            hide_in_ui: 'y',
                                         },
                                     },
                                 ])
@@ -76,6 +78,13 @@ export const InputPageView: Story = {
         // there are 4 inputs where 1 is hidden
         // the header counts as a row
         await expect(await canvas.findAllByRole('row')).toHaveLength(4);
+    },
+};
+export const InputPageExpandedRow: Story = {
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        await userEvent.click((await canvas.findAllByRole('cell', { name: /expandable row/i }))[0]);
     },
 };
 export const InputPageViewAdd: Story = {

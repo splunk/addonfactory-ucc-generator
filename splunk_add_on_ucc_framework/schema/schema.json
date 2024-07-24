@@ -1842,6 +1842,10 @@
         },
         "range": {
           "$ref": "#/definitions/RangeValue"
+        },
+        "isInteger": {
+          "type": "boolean",
+          "description": "Specifies if the number should be an integer (true) or can be a float (false). Default value is false"
         }
       },
       "required": ["type", "range"],
