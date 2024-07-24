@@ -31,6 +31,9 @@ class EventtypesConf(ConfGenerator):
         self.alert_settings = schema_content[ac.MODULAR_ALERTS]
 
     def generate_conf(self) -> Dict[str, str]:
+        if not self.alert_settings:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="eventtypes_conf.template"

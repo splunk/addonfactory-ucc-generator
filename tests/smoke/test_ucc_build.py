@@ -431,7 +431,6 @@ def test_ucc_build_verbose_mode(caplog):
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
 
     summary_logs = extract_summary_logs()
-
     expected_logs = generate_expected_log()
 
     assert len(summary_logs) == len(expected_logs)

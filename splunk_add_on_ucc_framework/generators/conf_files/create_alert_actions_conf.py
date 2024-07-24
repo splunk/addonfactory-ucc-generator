@@ -47,10 +47,23 @@ class AlertActionsConf(ConfGenerator):
                 "customScript",  # it is a config from globalConfig only for Python script
             ]
         )
+        _router = {
+            "dropdownlist": "list",
+            "text": "string",
+            "textarea": "string",
+            "checkbox": "bool",
+            "password": "password",
+            "dropdownlist_splunk_search": "list",
+            "radio": "list",
+        }
+
         self.alerts: Dict[str, Any] = {}
+        self.alerts_spec: Dict[str, Any] = {}
+
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
             self.alerts[alert_name] = []
+            self.alerts_spec[alert_name] = []
             # process the 'iconFileName' property for alert actions
             if alert.get("iconFileName", "alerticon.png") != "alerticon.png":
                 self.alerts[alert_name].append(f"icon_path = {alert['iconFileName']}")
@@ -71,6 +84,9 @@ class AlertActionsConf(ConfGenerator):
                     }
                     value = f"param._cam = {json.dumps(new_cam)}"
                     self.alerts[alert_name].append(value)
+                    self.alerts_spec[alert_name].append(
+                        "param._cam = <json> Adaptive Response parameters."
+                    )
                 elif k == "parameters":
                     for param in v:
                         param_name = param["name"].strip()
@@ -80,29 +96,8 @@ class AlertActionsConf(ConfGenerator):
                             )
                         else:
                             self.alerts[alert_name].append(f"param.{param_name} = ")
-                elif k not in deny_list:
-                    value = f"{str(k).strip()} = {str(v).strip()}"
-                    self.alerts[alert_name].append(value)
-        _router = {
-            "dropdownlist": "list",
-            "text": "string",
-            "textarea": "string",
-            "checkbox": "bool",
-            "password": "password",
-            "dropdownlist_splunk_search": "list",
-            "radio": "list",
-        }
-        self.alerts_spec: Dict[str, Any] = {}
-        for alert in self._alert_settings:
-            alert_name = alert["short_name"]
-            self.alerts_spec[alert_name] = []
-            for k, v in alert.items():
-                if k == "adaptive_response":
-                    self.alerts_spec[alert_name].append(
-                        "param._cam = <json> Adaptive Response parameters."
-                    )
-                elif k == "parameters":
-                    for param in v:
+
+                        # fetching details for alert_actions.conf.spec file
                         format_type = _router[param["format_type"]]
                         is_required = (
                             "It's a required parameter."
@@ -120,8 +115,14 @@ class AlertActionsConf(ConfGenerator):
                             f'{param["label"]}. {is_required} {default_value}'
                         )
                         self.alerts_spec[alert_name].append(value)
+                elif k not in deny_list:
+                    value = f"{str(k).strip()} = {str(v).strip()}"
+                    self.alerts[alert_name].append(value)
 
     def generate_conf(self) -> Dict[str, str]:
+        if not self.alerts:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
@@ -135,6 +136,8 @@ class AlertActionsConf(ConfGenerator):
         return {self.conf_file: file_path}
 
     def generate_conf_spec(self) -> Dict[str, str]:
+        if not self.alerts_spec:
+            return super().generate_conf_spec()
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"],
