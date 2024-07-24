@@ -29,9 +29,7 @@ class AccountConf(ConfGenerator):
                 continue
             content = self._gc_schema._get_oauth_enitities(account["entity"])
             fields = self._gc_schema._parse_fields(content)
-            self.account_fields.append(
-                ("<name>", [f"{f._name} = " for f in fields])
-            )
+            self.account_fields.append(("<name>", [f"{f._name} = " for f in fields]))
 
     def generate_conf_spec(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["README", self.conf_spec_file])

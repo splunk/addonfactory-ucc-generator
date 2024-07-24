@@ -26,7 +26,7 @@ class AppConf(ConfGenerator):
         self.name = self._addon_name
         self.id = self._addon_name
         self.supported_themes = ""
-        
+
         if self._global_config:
             self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
             self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
@@ -40,7 +40,6 @@ class AppConf(ConfGenerator):
                 )
             self.name = self._global_config.product
             self.id = self._global_config.product
-        
 
         self.addon_version = kwargs["addon_version"]
         self.is_visible = str(kwargs["has_ui"]).lower()

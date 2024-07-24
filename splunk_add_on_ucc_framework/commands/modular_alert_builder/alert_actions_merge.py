@@ -13,14 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import logging
 import os
 from os.path import basename as bn
-from typing import Any, Union
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
+from typing import Any
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
@@ -71,7 +68,9 @@ def remove_alert_from_conf_file(alert: Any, conf_file: str) -> None:
 
 
 def merge_conf_file(
-    src_file: str, dst_file: str, merge_mode: Union[Literal["stanza_overwrite", "item_overwrite"], Any] = "stanza_overwrite"
+    src_file: str,
+    dst_file: str,
+    merge_mode: str = "stanza_overwrite",
 ) -> None:
     if not os.path.isfile(src_file):
         return

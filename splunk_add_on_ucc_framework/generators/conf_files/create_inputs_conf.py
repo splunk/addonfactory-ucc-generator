@@ -27,7 +27,7 @@ class InputsConf(ConfGenerator):
             if service.get("conf") is not None:
                 # Add data input of self defined conf to inputs.conf.spec
                 self.input_names.append(
-                    {service['name']: ["placeholder = placeholder"]}
+                    {service["name"]: ["placeholder = placeholder"]}
                 )
                 continue
             for entity in service.get("entity", {"field": "name"}):
