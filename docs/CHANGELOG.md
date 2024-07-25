@@ -1,4 +1,4 @@
-## [5.48.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.0...v5.48.1) (2024-07-11)
+# [5.48.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.0...v5.48.1) (2024-07-11)
 
 
 ### Bug Fixes

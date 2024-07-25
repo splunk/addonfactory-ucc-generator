@@ -15,6 +15,7 @@ import EntityModal from '../EntityModal/EntityModal';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import { NoRecordsDiv } from './CustomTableStyle';
 import { useTableContext } from '../../context/useTableContext';
+import { isReadonlyRow } from './table.utils';
 
 function getServiceToStyleMap(page, unifiedConfigs) {
     const serviceToStyleMap = {};
@@ -237,7 +238,7 @@ function CustomTable({
                         columns={columns}
                         rowActions={actions}
                         headerMapping={headerMapping}
-                        readonly={readonlyFieldId ? !!row[readonlyFieldId] : false}
+                        readonly={isReadonlyRow(readonlyFieldId, row)}
                         {...{
                             handleEditActionClick,
                             handleCloneActionClick,

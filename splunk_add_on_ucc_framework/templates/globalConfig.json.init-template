@@ -154,8 +154,8 @@
                         "label": "Status",
                         "field": "disabled",
                         "mapping": {
-                            "true": "Disabled",
-                            "false": "Enabled"
+                            "true": "Inactive",
+                            "false": "Active"
                         }
                     }
                 ]

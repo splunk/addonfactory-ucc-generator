@@ -442,6 +442,7 @@
             "label": "Status",
             "field": "disabled",
             "mapping": {
+              "1": "Disabled",
               "true": "Disabled",
               "false": "Enabled"
             }
@@ -450,8 +451,9 @@
             "label": "Exported",
             "field": "hard_disabled",
             "mapping": {
-              "true": "Yes",
-              "false": "No"
+              "1": "Yes",
+              "0": "No",
+              "f": "No"
             }
           },
           {
