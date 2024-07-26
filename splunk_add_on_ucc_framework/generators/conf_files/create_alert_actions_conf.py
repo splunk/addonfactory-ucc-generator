@@ -41,6 +41,9 @@ class AlertActionsConf(ConfGenerator):
         self.conf_file = "alert_actions.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
+        if self._global_config is None:
+            return
+
         envs = normalize.normalize(
             self._global_config.alerts,
             self._global_config.namespace,
@@ -153,6 +156,7 @@ class AlertActionsConf(ConfGenerator):
     def generate_conf_spec(self) -> Dict[str, str]:
         if not self.alerts_spec:
             return super().generate_conf_spec()
+
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"],

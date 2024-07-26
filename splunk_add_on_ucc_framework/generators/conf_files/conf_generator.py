@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from abc import abstractmethod
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
@@ -26,7 +26,7 @@ class ConfGenerator(FileGenerator):
 
     def __init__(
         self,
-        global_config: GlobalConfig,
+        global_config: Union[GlobalConfig, None],
         input_dir: str,
         output_dir: str,
         **kwargs: Any,

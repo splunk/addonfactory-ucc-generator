@@ -36,9 +36,13 @@ class WebConf(ConfGenerator):
         self.conf_file = "web.conf"
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        self.endpoints = self._gc_schema.endpoints
+        if self._gc_schema:
+            self.endpoints = self._gc_schema.endpoints
 
     def generate_conf(self) -> Dict[str, str]:
+        if not self._gc_schema:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="web_conf.template"

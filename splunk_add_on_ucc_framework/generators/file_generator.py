@@ -40,7 +40,7 @@ class FileGenerator(ABC):
 
     def __init__(
         self,
-        global_config: GlobalConfig,
+        global_config: Union[GlobalConfig, None],
         input_dir: str,
         output_dir: str,
         **kwargs: Any,
@@ -54,17 +54,17 @@ class FileGenerator(ABC):
 
         """
         super().__init__()
-        self._global_config: GlobalConfig = global_config
+        self._global_config = global_config
         self._input_dir = input_dir
         self._output_dir = output_dir
         self._template_dir = [(sep.join([kwargs["ucc_dir"], "templates"]))]
         self._addon_name: str = kwargs["addon_name"]
         self.writer = write_file
-        self._gc_schema: GlobalConfigBuilderSchema = (
-            GlobalConfigBuilderSchema(global_config)
-            if global_config is not None
-            else {}
-        )
+        self._gc_schema: Union[GlobalConfigBuilderSchema, None]
+        if global_config is not None:
+            self._gc_schema = GlobalConfigBuilderSchema(global_config)
+        else:
+            self._gc_schema = None
         self._set_attributes(**kwargs)
 
     @abstractmethod

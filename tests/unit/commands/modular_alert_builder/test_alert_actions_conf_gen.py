@@ -1,6 +1,6 @@
 import os
 import unittest.mock
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
+from splunk_add_on_ucc_framework.commands.modular_alert_builder import (  # type: ignore[attr-defined]
     alert_actions_conf_gen,
 )
 from tests.unit.helpers import get_testdata_file

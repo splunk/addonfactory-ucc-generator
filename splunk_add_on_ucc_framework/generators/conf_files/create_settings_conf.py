@@ -37,20 +37,24 @@ class SettingsConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.settings_stanzas: List[Tuple[str, List[str]]] = []
-        for setting in self._global_config.settings:
-            content = self._gc_schema._get_oauth_enitities(setting["entity"])
-            fields = self._gc_schema._parse_fields(content)
-            self.settings_stanzas.append(
-                (setting["name"], [f"{f._name} = " for f in fields])
-            )
-        if self._gc_schema._endpoints.get("settings") is not None:
-            self.default_content = self._gc_schema._endpoints[
-                "settings"
-            ].generate_conf_with_default_values()
-        else:
-            self.default_content = ""
+        self.default_content: str = ""
+
+        if self._global_config and self._gc_schema:
+            for setting in self._global_config.settings:
+                content = self._gc_schema._get_oauth_enitities(setting["entity"])
+                fields = self._gc_schema._parse_fields(content)
+                self.settings_stanzas.append(
+                    (setting["name"], [f"{f._name} = " for f in fields])
+                )
+            if self._gc_schema._endpoints.get("settings") is not None:
+                self.default_content = self._gc_schema._endpoints[
+                    "settings"
+                ].generate_conf_with_default_values()
 
     def generate_conf(self) -> Dict[str, str]:
+        if not self.default_content:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="settings_conf.template"
@@ -65,6 +69,9 @@ class SettingsConf(ConfGenerator):
         return {self.conf_spec_file: file_path}
 
     def generate_conf_spec(self) -> Dict[str, str]:
+        if not self.settings_stanzas:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"], file_name="settings_conf_spec.template"

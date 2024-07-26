@@ -37,28 +37,32 @@ class InputsConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.input_names: List[Dict[str, List[str]]] = []
-        for service in self._global_config.inputs:
-            properties = []
-            if service.get("conf") is not None:
-                # Add data input of self defined conf to inputs.conf.spec
-                self.input_names.append(
-                    {service["name"]: ["placeholder = placeholder"]}
-                )
-                continue
-            for entity in service.get("entity", {"field": "name"}):
-                # TODO: add the details and updates on what to skip and process
-                if entity["field"] == "name":
+        if self._global_config:
+            for service in self._global_config.inputs:
+                properties = []
+                if service.get("conf") is not None:
+                    # Add data input of self defined conf to inputs.conf.spec
+                    self.input_names.append(
+                        {service["name"]: ["placeholder = placeholder"]}
+                    )
                     continue
-                nl = "\n"  # hack for `f-string expression part cannot include a backslash`
-                # TODO: enhance the message formation for inputs.conf.spec file
-                properties.append(
-                    f"{entity['field']} = {entity.get('help', '').replace(nl, ' ')} "
-                    f"{' Default: ' + str(entity['defaultValue']) if entity.get('defaultValue') is not None else ''}"
-                )
+                for entity in service.get("entity", {"field": "name"}):
+                    # TODO: add the details and updates on what to skip and process
+                    if entity["field"] == "name":
+                        continue
+                    nl = "\n"  # hack for `f-string expression part cannot include a backslash`
+                    # TODO: enhance the message formation for inputs.conf.spec file
+                    properties.append(
+                        f"{entity['field']} = {entity.get('help', '').replace(nl, ' ')} "
+                        f"{'' if entity.get('defaultValue') is None else ' Default: ' + str(entity['defaultValue'])}"
+                    )
 
-            self.input_names.append({service["name"]: properties})
+                self.input_names.append({service["name"]: properties})
 
     def generate_conf(self) -> Dict[str, str]:
+        if not self.input_names:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["default", self.conf_file])
         stanzas: List[str] = []
         for k in self.input_names:
@@ -76,6 +80,9 @@ class InputsConf(ConfGenerator):
         return {self.conf_file: file_path}
 
     def generate_conf_spec(self) -> Dict[str, str]:
+        if not self.input_names:
+            return super().generate_conf_spec()
+
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"], file_name="inputs_conf_spec.template"

@@ -37,16 +37,22 @@ class AccountConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.account_fields: List[Tuple[str, List[str]]] = []
-        for account in self._global_config.configs:
-            # If the endpoint is oauth, which is for getting access_token, conf file entries
-            # should not get created (compatibility to previous versions)
-            if account["name"] == "oauth":
-                continue
-            content = self._gc_schema._get_oauth_enitities(account["entity"])
-            fields = self._gc_schema._parse_fields(content)
-            self.account_fields.append(("<name>", [f"{f._name} = " for f in fields]))
+        if self._global_config and self._gc_schema:
+            for account in self._global_config.configs:
+                # If the endpoint is oauth, which is for getting access_token, conf file entries
+                # should not get created (compatibility to previous versions)
+                if account["name"] == "oauth":
+                    continue
+                content = self._gc_schema._get_oauth_enitities(account["entity"])
+                fields = self._gc_schema._parse_fields(content)
+                self.account_fields.append(
+                    ("<name>", [f"{f._name} = " for f in fields])
+                )
 
     def generate_conf_spec(self) -> Dict[str, str]:
+        if not self.account_fields:
+            return super().generate_conf_spec()
+
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
             template_file_path=["README"], file_name="account_conf_spec.template"

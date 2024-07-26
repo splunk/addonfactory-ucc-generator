@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from time import time
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
@@ -27,7 +27,7 @@ class AppConf(ConfGenerator):
 
     def __init__(
         self,
-        global_config: GlobalConfig,
+        global_config: Union[GlobalConfig, None],
         input_dir: str,
         output_dir: str,
         **kwargs: Any
@@ -42,7 +42,7 @@ class AppConf(ConfGenerator):
         self.id = self._addon_name
         self.supported_themes = ""
 
-        if self._global_config:
+        if self._global_config and self._gc_schema:
             self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
             self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
             self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))

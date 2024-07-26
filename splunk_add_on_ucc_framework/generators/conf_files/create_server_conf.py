@@ -38,11 +38,15 @@ class ServerConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.custom_conf = []
-        self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
-        self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
-        self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
+        if self._gc_schema:
+            self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
+            self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
+            self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
     def generate_conf(self) -> Dict[str, str]:
+        if not self.custom_conf:
+            return super().generate_conf()
+
         file_path = self.get_file_output_path(["default", self.conf_file])
         # For now, only create server.conf only if
         # no server.conf is present in the source package.
