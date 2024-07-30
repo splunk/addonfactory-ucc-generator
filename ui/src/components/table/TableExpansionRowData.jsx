@@ -10,23 +10,24 @@ import { _ } from '@splunk/ui-utils/i18n';
  * @returns {Array} - An array of React elements representing the definition list rows.
  */
 export function getExpansionRowData(row, moreInfo) {
-    const DefinitionLists = [];
-
-    if (moreInfo?.length) {
-        moreInfo.forEach((val) => {
+    return (
+        moreInfo?.reduce((definitionLists, val) => {
             const label = _(val.label);
-            // Remove extra rows which are empty in moreInfo
-            if (val.field in row && row[val.field] !== null && row[val.field] !== '') {
-                DefinitionLists.push(<DL.Term key={val.field}>{label}</DL.Term>);
-                DefinitionLists.push(
-                    <DL.Description key={`${val.field}_decr`}>
-                        {val.mapping && val.mapping[row[val.field]]
-                            ? val.mapping[row[val.field]]
-                            : String(row[val.field])}
-                    </DL.Description>
+            const isNotEmpty = val.field in row && row[val.field] !== null && row[val.field] !== '';
+
+            // Remove extra rows which are empty in moreInfo and default value is not provided
+            if (val.mapping?.['[[default]]'] || isNotEmpty) {
+                definitionLists.push(
+                    <React.Fragment key={`DL-${val.field}`}>
+                        <DL.Term>{label}</DL.Term>
+                        <DL.Description>
+                            {val.mapping?.[isNotEmpty ? row[val.field] : '[[default]]'] ||
+                                String(row[val.field])}
+                        </DL.Description>
+                    </React.Fragment>
                 );
             }
-        });
-    }
-    return DefinitionLists;
+            return definitionLists;
+        }, []) || []
+    );
 }

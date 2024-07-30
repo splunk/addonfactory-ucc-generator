@@ -165,18 +165,18 @@ function CustomTableRow(props) {
                     } else if (header.field === 'actions') {
                         cellHTML = rowActionsPrimaryButton(row, header);
                     } else {
+                        const mappingKey =
+                            row[header.field] === undefined || row[header.field] === null
+                                ? '[[default]]'
+                                : row[header.field];
                         cellHTML = (
                             <Table.Cell
                                 style={{ wordBreak: 'break-word' }}
                                 data-column={header.field}
                                 key={header.field}
                             >
-                                {headerMapping[header.field] &&
-                                Object.prototype.hasOwnProperty.call(
-                                    headerMapping[header.field],
-                                    row[header.field]
-                                )
-                                    ? headerMapping[header.field][row[header.field]]
+                                {headerMapping?.[header.field]?.[mappingKey]
+                                    ? headerMapping[header.field][mappingKey]
                                     : row[header.field]}
                             </Table.Cell>
                         );
