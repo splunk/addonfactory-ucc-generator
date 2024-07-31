@@ -27,6 +27,13 @@ from splunk_add_on_ucc_framework.generators.conf_files import (
     AccountConf,
     SettingsConf,
 )
+from splunk_add_on_ucc_framework.generators.xml_files import (
+    ConfigurationXml,
+    DashboardXml,
+    DefaultXml,
+    InputsXml,
+    RedirectXml,
+)
 
 __all__ = ["FileClass", "GEN_FILE_LIST"]
 
@@ -45,9 +52,14 @@ class FileClass(NamedTuple):
             InputsConf,
             AccountConf,
             SettingsConf,
+            ConfigurationXml,
+            DashboardXml,
+            DefaultXml,
+            InputsXml,
+            RedirectXml,
         ]
     ]
-    file_path: str
+    file_path: Union[str, List[str]]
     file_description: str
 
 
@@ -69,4 +81,34 @@ GEN_FILE_LIST: List[FileClass] = [
     FileClass("tags.conf", TagsConf, "default", TagsConf.__description__),
     FileClass("_account.conf", AccountConf, "README", AccountConf.__description__),
     FileClass("_settings.conf", SettingsConf, "README", SettingsConf.__description__),
+    FileClass(
+        "configuration.xml",
+        ConfigurationXml,
+        ["default", "data", "ui", "views"],
+        ConfigurationXml.__description__,
+    ),
+    FileClass(
+        "dashboard.xml",
+        DashboardXml,
+        ["default", "data", "ui", "views"],
+        DashboardXml.__description__,
+    ),
+    FileClass(
+        "default.xml",
+        DefaultXml,
+        ["default", "data", "ui", "nav"],
+        DefaultXml.__description__,
+    ),
+    FileClass(
+        "inputs.xml",
+        InputsXml,
+        ["default", "data", "ui", "views"],
+        InputsXml.__description__,
+    ),
+    FileClass(
+        "_redirect.xml",
+        RedirectXml,
+        ["default", "data", "ui", "views"],
+        RedirectXml.__description__,
+    ),
 ]
