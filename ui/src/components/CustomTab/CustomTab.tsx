@@ -1,19 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
+import { z } from 'zod';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
+import { TabSchema } from '../../types/globalConfig/pages';
 
-function CustomTab({ tab }) {
+type TabSchema = z.infer<typeof TabSchema>;
+
+interface CustomTabProps {
+    tab: TabSchema;
+}
+
+interface ICustomTabClass {
+    new (tab: TabSchema, ref: HTMLDivElement): {
+        render: () => void;
+    };
+}
+
+const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
     const [loading, setLoading] = useState(true);
-    const divRef = useRef(null);
+    const divRef = useRef<HTMLDivElement>(null);
 
     const globalConfig = getUnifiedConfigs();
     const appName = globalConfig.meta.name;
 
-    const loadCustomTab = () =>
+    const loadCustomTab = (): Promise<ICustomTabClass> =>
         new Promise((resolve) => {
-            if (tab.customTab.type === 'external') {
+            if (tab.customTab?.type === 'external') {
                 import(
                     /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${tab.customTab.src}.js`
                 ).then((external) => {
@@ -21,18 +34,21 @@ function CustomTab({ tab }) {
                     resolve(Control);
                 });
             } else {
+                // @ts-expect-error should be exported to other js module and imported here
                 __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${tab.customTab.src}`],
-                    (Control) => resolve(Control)
+                    [`app/${appName}/js/build/custom/${tab.customTab?.src}`],
+                    (Control: ICustomTabClass) => resolve(Control)
                 );
             }
         });
 
     useEffect(() => {
         loadCustomTab().then((Control) => {
-            const customControl = new Control(tab, divRef.current);
-            customControl.render();
-            setLoading(false);
+            if (divRef.current) {
+                const customControl = new Control(tab, divRef.current);
+                customControl.render();
+                setLoading(false);
+            }
         });
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -42,10 +58,6 @@ function CustomTab({ tab }) {
             <div ref={divRef} style={{ visibility: loading ? 'hidden' : 'visible' }} />
         </>
     );
-}
-
-CustomTab.propTypes = {
-    tab: PropTypes.object.isRequired,
 };
 
 export default CustomTab;

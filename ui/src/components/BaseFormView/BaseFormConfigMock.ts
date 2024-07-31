@@ -73,6 +73,7 @@ const globalConfigMockCustomControl = {
             },
         },
         inputs: {
+            type: 'table',
             services: [
                 {
                     name: 'demo_input',

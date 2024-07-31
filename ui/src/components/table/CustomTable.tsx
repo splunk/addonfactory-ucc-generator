@@ -1,12 +1,15 @@
 import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import Table from '@splunk/react-ui/Table';
+import Table, { HeadCellSortHandler } from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { useSearchParams } from 'react-router-dom';
-import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
+import { TableSchema } from 'src/types/globalConfig/pages';
+import { z } from 'zod';
+import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_INPUT } from '../../constants/pages';
+import { RowDataFields } from '../../context/TableContext';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 import { STYLE_MODAL, STYLE_PAGE } from '../../constants/dialogStyles';
@@ -17,8 +20,44 @@ import { NoRecordsDiv } from './CustomTableStyle';
 import { useTableContext } from '../../context/useTableContext';
 import { isReadonlyRow } from './table.utils';
 
-function getServiceToStyleMap(page, unifiedConfigs) {
-    const serviceToStyleMap = {};
+type ITableConfig = z.infer<typeof TableSchema>;
+
+interface ICustomTableProps {
+    page: string;
+    serviceName?: string;
+    data: RowDataFields[];
+    handleToggleActionClick: (row: RowDataFields) => void;
+    handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
+    handleSort: HeadCellSortHandler;
+    sortDir: 'none' | 'desc' | 'asc' | null;
+    sortKey: 'none' | 'desc' | 'asc' | null;
+    tableConfig;
+}
+
+interface IHeader {
+    field: string;
+    label: string;
+    mapping?: string;
+    customCell?: string;
+}
+
+interface IUnifiedConfigs {
+    pages: {
+        inputs: {
+            services: { name: string; style: string; title: string }[];
+            readonlyFieldId?: string;
+        };
+        configuration: {
+            tabs: { name: string; style: string; title: string }[];
+        };
+    };
+}
+
+function getServiceToStyleMap(
+    page: string,
+    unifiedConfigs: IUnifiedConfigs
+): { [key: string]: string } {
+    const serviceToStyleMap: { [key: string]: string } = {};
     if (page === PAGE_INPUT) {
         unifiedConfigs.pages.inputs.services.forEach((x) => {
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
@@ -31,7 +70,7 @@ function getServiceToStyleMap(page, unifiedConfigs) {
     return serviceToStyleMap;
 }
 
-function CustomTable({
+const CustomTable: React.FC<ICustomTableProps> = ({
     page,
     serviceName,
     data,
@@ -41,10 +80,19 @@ function CustomTable({
     sortDir,
     sortKey,
     tableConfig,
-}) {
-    const unifiedConfigs = getUnifiedConfigs();
-    const [entityModal, setEntityModal] = useState({ open: false });
-    const [deleteModal, setDeleteModal] = useState({ open: false });
+}) => {
+    const unifiedConfigs = getUnifiedConfigs() as IUnifiedConfigs;
+    const [entityModal, setEntityModal] = useState<{
+        open: boolean;
+        serviceName: string;
+        stanzaName?: string;
+        mode: Mode;
+    }>({ open: false, serviceName: '', mode: MODE_CREATE });
+    const [deleteModal, setDeleteModal] = useState<{
+        open: boolean;
+        serviceName: string;
+        stanzaName: string;
+    }>({ open: false, serviceName: '', stanzaName: '' });
 
     const { rowData } = useTableContext();
     const readonlyFieldId =
@@ -53,9 +101,9 @@ function CustomTable({
             : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
-    const headerMapping = {};
-    headers.forEach((x) => {
-        headerMapping[x.field] = x.mapping;
+    const headerMapping: Record<string, string> = {};
+    headers.forEach((x: IHeader) => {
+        headerMapping[x.field] = x.mapping || '';
     });
     const serviceToStyleMap = useMemo(
         () => getServiceToStyleMap(page, unifiedConfigs),
@@ -97,7 +145,7 @@ function CustomTable({
     };
 
     const handleEditActionClick = useCallback(
-        (selectedRow) => {
+        (selectedRow: RowDataFields) => {
             if (serviceToStyleMap[selectedRow.serviceName] === STYLE_PAGE) {
                 handleOpenPageStyleDialog(selectedRow, MODE_EDIT);
             } else {
@@ -110,8 +158,7 @@ function CustomTable({
                 });
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [entityModal]
+        [entityModal, handleOpenPageStyleDialog, serviceToStyleMap]
     );
 
     const handleDeleteClose = () => {
@@ -119,7 +166,7 @@ function CustomTable({
     };
 
     const handleCloneActionClick = useCallback(
-        (selectedRow) => {
+        (selectedRow: RowDataFields) => {
             if (serviceToStyleMap[selectedRow.serviceName] === STYLE_PAGE) {
                 handleOpenPageStyleDialog(selectedRow, MODE_CLONE);
             } else {
@@ -132,12 +179,11 @@ function CustomTable({
                 });
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [entityModal]
+        [entityModal, handleOpenPageStyleDialog, serviceToStyleMap]
     );
 
     const handleDeleteActionClick = useCallback(
-        (selectedRow) => {
+        (selectedRow: RowDataFields) => {
             setDeleteModal({
                 ...deleteModal,
                 open: true,
@@ -150,7 +196,7 @@ function CustomTable({
 
     const generateModalDialog = () => {
         if (entityModal.open) {
-            let label;
+            let label: string | undefined;
             if (page === PAGE_INPUT) {
                 const { services } = unifiedConfigs.pages.inputs;
                 label = services.find((x) => x.name === entityModal.serviceName)?.title;
@@ -186,14 +232,15 @@ function CustomTable({
     );
 
     const generateColumns = () => {
-        const column = [];
+        const column: Array<{ label: string; field: string; sortKey: string | null }> = [];
         if (headers && headers.length) {
-            headers.forEach((item) => {
+            headers.forEach((item: IHeader) =>
                 column.push({
                     ...item,
                     sortKey: item.field || null,
-                });
-            });
+                    label: '',
+                })
+            );
         }
 
         if (actions && actions.length) {
@@ -213,8 +260,10 @@ function CustomTable({
                     columns.map((headData) => (
                         <Table.HeadCell
                             key={headData.field}
-                            onSort={headData.sortKey ? handleSort : null}
-                            sortKey={headData.sortKey ? headData.sortKey : null}
+                            onSort={headData.sortKey ? handleSort : undefined}
+                            sortKey={
+                                typeof headData.field === 'string' ? headData.field : undefined
+                            }
                             sortDir={
                                 headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'
                             }
@@ -231,7 +280,7 @@ function CustomTable({
         <Table.Body>
             {data &&
                 data.length &&
-                data.map((row) => (
+                data.map((row: RowDataFields) => (
                     <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
                         key={row.name || row.id}
                         row={row}
@@ -272,17 +321,17 @@ function CustomTable({
             {generateDeleteDialog()}
         </>
     );
-}
+};
 
 CustomTable.propTypes = {
     page: PropTypes.string.isRequired,
     serviceName: PropTypes.string,
     data: PropTypes.array.isRequired,
-    handleToggleActionClick: PropTypes.func,
-    handleOpenPageStyleDialog: PropTypes.func,
-    handleSort: PropTypes.func,
-    sortDir: PropTypes.string,
-    sortKey: PropTypes.string,
+    handleToggleActionClick: PropTypes.func.isRequired,
+    handleOpenPageStyleDialog: PropTypes.func.isRequired,
+    handleSort: PropTypes.func.isRequired,
+    sortDir: PropTypes.oneOf(['none', 'desc', 'asc', null]).isRequired,
+    sortKey: PropTypes.oneOf(['none', 'desc', 'asc', null]).isRequired,
     tableConfig: PropTypes.object.isRequired,
 };
 

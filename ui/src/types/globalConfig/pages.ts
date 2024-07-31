@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { AnyOfEntity } from './entities';
 
 export const TableSchema = z.object({
     moreInfo: z
@@ -45,7 +44,7 @@ const WarningSchema = z
     .optional();
 
 export const TabSchema = z.object({
-    entity: z.array(AnyOfEntity).optional(),
+    entity: z.array(z.any()).optional(),
     name: z.string(),
     title: z.string(),
     options: HooksSchema,
@@ -81,7 +80,7 @@ export const TableLessServiceSchema = z.object({
     name: z.string(),
     title: z.string(),
     subTitle: z.string().optional(),
-    entity: z.array(AnyOfEntity),
+    entity: z.array(z.any()),
     options: HooksSchema,
     groups: GroupsSchema,
     style: z.enum(['page', 'dialog']).optional(),
@@ -99,10 +98,10 @@ export const TableFullServiceSchema = TableLessServiceSchema.extend({
 });
 export const InputsPageRegular = z
     .object({
+        type: z.literal('regular'),
         title: z.string(),
         services: z.array(TableFullServiceSchema),
     })
-    // The strict method disallows a table field to distinguish between to inputs
     .strict();
 
 export const SubDescriptionSchema = z
@@ -122,6 +121,7 @@ export const SubDescriptionSchema = z
 
 export const InputsPageTableSchema = z
     .object({
+        type: z.literal('table'),
         title: z.string(),
         description: z.string().optional(),
         subDescription: SubDescriptionSchema,
@@ -143,7 +143,7 @@ export const InputsPageTableSchema = z
             .optional(),
         // The strict method disallows a table field to distinguish between
         // TableLessServiceSchema and TableFullServiceSchema
-        services: z.array(TableLessServiceSchema.strict()),
+        services: z.array(TableLessServiceSchema),
         hideFieldId: z.string().optional(),
         readonlyFieldId: z.string().optional(),
     })

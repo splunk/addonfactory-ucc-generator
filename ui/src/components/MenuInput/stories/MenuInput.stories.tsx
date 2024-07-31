@@ -115,6 +115,7 @@ export const Base: Story = {
             pages: {
                 ...globalConfigMock.pages,
                 inputs: {
+                    type: 'regular',
                     title: inputs.title,
                     services: commonServices,
                 },
@@ -131,6 +132,7 @@ export const WithSubMenu: Story = {
             pages: {
                 ...globalConfigMock.pages,
                 inputs: {
+                    type: 'table',
                     services: [
                         {
                             name: 'test-service-name1',

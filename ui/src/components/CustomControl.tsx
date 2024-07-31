@@ -5,8 +5,26 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../util/util';
 import { getBuildDirPath } from '../util/script';
 
-class CustomControl extends Component {
-    static loadCustomControl = (module, type, appName) =>
+interface ControlOptions {
+    src: string;
+    type: string;
+}
+
+interface propTypes {
+    data: Record<string, any>;
+    field: string;
+    handleChange: (field: string, newValue: any) => void;
+    controlOptions: ControlOptions;
+    addCustomValidator: (field: string, validation: Function) => void;
+    utilCustomFunctions: Record<string, any>;
+}
+
+interface State {
+    loading: boolean;
+}
+
+class CustomControl extends Component<Props, State> {
+    static loadCustomControl = (module: string, type: string, appName: string): Promise<any> =>
         new Promise((resolve) => {
             if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
@@ -16,13 +34,14 @@ class CustomControl extends Component {
                     }
                 );
             } else {
+                // @ts-expect-error
                 __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
                     resolve(Control);
                 });
             }
         });
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             loading: true,
@@ -55,7 +74,7 @@ class CustomControl extends Component {
         });
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
         if (!nextState.loading && this.shouldRender) {
             this.shouldRender = false;
             return true;
@@ -63,9 +82,12 @@ class CustomControl extends Component {
         return false;
     }
 
-    setValue = (newValue) => {
+    setValue = (newValue: any) => {
         this.props.handleChange(this.props.field, newValue);
     };
+
+    el: HTMLElement | null = null;
+    shouldRender: boolean = true;
 
     render() {
         return (

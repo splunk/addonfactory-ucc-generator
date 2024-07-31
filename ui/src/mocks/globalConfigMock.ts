@@ -105,6 +105,7 @@ const globalConfigMock = {
             },
         },
         inputs: {
+            type: 'table',
             services: [
                 {
                     name: 'demo_input',
