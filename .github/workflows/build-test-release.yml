@@ -96,6 +96,13 @@ jobs:
     with:
       node-version: "20"
 
+  bot-updates:
+    name: Generates Documentation
+    permissions:
+      contents: write
+    uses: ./.github/workflows/automatic_doc_generation.yml
+
+
   build:
     needs:
       - fossa-scan
@@ -327,6 +334,7 @@ jobs:
       - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
+      - bot-updates
     runs-on: ubuntu-latest
     env:
       NEEDS: ${{ toJson(needs) }}
