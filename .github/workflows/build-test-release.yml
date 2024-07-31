@@ -101,7 +101,8 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/automatic_doc_generation.yml
-
+    with:
+      python-version: "3.7"
 
   build:
     needs:
