@@ -2,6 +2,8 @@ import React from 'react';
 import DL from '@splunk/react-ui/DefinitionList';
 import { _ } from '@splunk/ui-utils/i18n';
 
+import { getTableCellValue } from './table.utils';
+
 /**
  * Generates the definition list rows for the expansion view based on the provided row data and moreInfo configuration.
  *
@@ -13,17 +15,13 @@ export function getExpansionRowData(row, moreInfo) {
     return (
         moreInfo?.reduce((definitionLists, val) => {
             const label = _(val.label);
-            const isNotEmpty = val.field in row && row[val.field] !== null && row[val.field] !== '';
-
+            const cellValue = getTableCellValue(row, val.field, val.mapping);
             // Remove extra rows which are empty in moreInfo and default value is not provided
-            if (val.mapping?.['[[default]]'] || isNotEmpty) {
+            if (cellValue) {
                 definitionLists.push(
                     <React.Fragment key={`DL-${val.field}`}>
                         <DL.Term>{label}</DL.Term>
-                        <DL.Description>
-                            {val.mapping?.[isNotEmpty ? row[val.field] : '[[default]]'] ||
-                                String(row[val.field])}
-                        </DL.Description>
+                        <DL.Description>{cellValue}</DL.Description>
                     </React.Fragment>
                 );
             }

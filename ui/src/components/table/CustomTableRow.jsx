@@ -15,6 +15,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
+import { getTableCellValue } from './table.utils';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -165,19 +166,13 @@ function CustomTableRow(props) {
                     } else if (header.field === 'actions') {
                         cellHTML = rowActionsPrimaryButton(row, header);
                     } else {
-                        const mappingKey =
-                            row[header.field] === undefined || row[header.field] === null
-                                ? '[[default]]'
-                                : row[header.field];
                         cellHTML = (
                             <Table.Cell
                                 style={{ wordBreak: 'break-word' }}
                                 data-column={header.field}
                                 key={header.field}
                             >
-                                {headerMapping?.[header.field]?.[mappingKey]
-                                    ? headerMapping[header.field][mappingKey]
-                                    : row[header.field]}
+                                {getTableCellValue(row, header.field, headerMapping[header.field])}
                             </Table.Cell>
                         );
                     }
