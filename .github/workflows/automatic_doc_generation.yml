@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate docs
         run: |
-          python splunk_add_on_ucc_framework/generators/doc_generator.py
+          poetry run ucc-gen-docs
 
       - name: Importing GPG key
         if: ${{ env.isPR }}

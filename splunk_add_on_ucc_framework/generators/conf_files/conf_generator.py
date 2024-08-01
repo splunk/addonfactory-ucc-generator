@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from abc import abstractmethod
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, NoReturn
 
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
@@ -41,7 +41,7 @@ class ConfGenerator(FileGenerator):
         return conf_files
 
     @abstractmethod
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
         # parse self._global_config and set the require attributes for self
         raise NotImplementedError
 

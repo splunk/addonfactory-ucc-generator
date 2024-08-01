@@ -16,7 +16,7 @@
 import logging
 from abc import ABC, abstractmethod
 from os.path import realpath, sep
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, NoReturn
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -68,7 +68,7 @@ class FileGenerator(ABC):
         self._set_attributes(**kwargs)
 
     @abstractmethod
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
         raise NotImplementedError
 
     @abstractmethod

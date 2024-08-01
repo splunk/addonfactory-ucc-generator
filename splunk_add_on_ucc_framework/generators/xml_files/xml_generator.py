@@ -15,7 +15,7 @@
 #
 from abc import abstractmethod
 from ..file_generator import FileGenerator
-from typing import Dict, Any
+from typing import Dict, Any, Union, NoReturn
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
@@ -37,7 +37,7 @@ class XMLGenerator(FileGenerator):
         return conf_files
 
     @abstractmethod
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
         # parse self._global_config and set the require attributes for self
         raise NotImplementedError()
 
