@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import configparser
 import glob
 import json
 import logging
@@ -157,19 +156,6 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
-
-        input_default = os.path.join(outputdir, ta_name, "default", "inputs.conf")
-        config = configparser.ConfigParser()
-        if os.path.exists(input_default):
-            config.read(input_default)
-
-        if config.has_section(input_name):
-            config[input_name]["python.version"] = "python3"
-        else:
-            config[input_name] = {"python.version": "python3"}
-
-        with open(input_default, "w") as configfile:
-            config.write(configfile)
 
 
 def _get_ignore_list(
@@ -536,9 +522,7 @@ def generate(
             _add_modular_input(ta_name, global_config, output_directory)
         if global_config.has_alerts():
             logger.info("Generating alerts code")
-            alert_builder.generate_alerts(
-                global_config, ta_name, internal_root_dir, output_directory
-            )
+            alert_builder.generate_alerts(global_config, ta_name, output_directory)
 
         conf_file_names = []
         conf_file_names.extend(list(scheme.settings_conf_file_names))

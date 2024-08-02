@@ -32,9 +32,9 @@ class XMLGenerator(FileGenerator):
         super().__init__(global_config, input_dir, output_dir, **kwargs)
 
     def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_xml())
-        return conf_files
+        xml_files: Dict[str, str] = {}
+        xml_files.update(self.generate_xml())
+        return xml_files
 
     @abstractmethod
     def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
@@ -43,5 +43,5 @@ class XMLGenerator(FileGenerator):
 
     def generate_xml(self) -> Dict[str, str]:
         # uses the attributes set in  _set_attributes method to set the required attributes
-        # use self.writer function to create the xml file to get the output file to create the file.
+        # use self.writer function to create the xml file.
         return {"": ""}

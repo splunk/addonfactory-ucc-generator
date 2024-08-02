@@ -98,7 +98,7 @@ class FileGenerator(ABC):
             loader=FileSystemLoader(sep.join(self._template_dir + template_file_path)),
             trim_blocks=True,
             lstrip_blocks=True,
-            keep_trailing_newline=False,
+            keep_trailing_newline=True,
         )
         self._template = self._template.get_template(file_name)
 

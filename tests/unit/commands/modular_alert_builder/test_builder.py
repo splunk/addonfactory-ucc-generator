@@ -1,6 +1,5 @@
 import os
 
-from splunk_add_on_ucc_framework.commands.build import internal_root_dir
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import builder
 from tests.unit.helpers import get_testdata_file
 
@@ -17,7 +16,6 @@ def test_builder(global_config_all_json, tmp_path):
     builder.generate_alerts(
         global_config_all_json,
         "Splunk_TA_UCCExample",
-        internal_root_dir,
         str(tmp_path),
     )
 

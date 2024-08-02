@@ -21,9 +21,6 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     normalize,
 )
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
-    alert_actions_html_gen,
-)
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     alert_actions_py_gen,
 )
 
@@ -33,7 +30,6 @@ logger = logging.getLogger("ucc_gen")
 def generate_alerts(
     global_config: global_config_lib.GlobalConfig,
     addon_name: str,
-    internal_source_dir: str,
     output_dir: str,
 ) -> None:
     envs = normalize.normalize(
@@ -42,12 +38,6 @@ def generate_alerts(
     )
     package_dir = os.path.join(output_dir, addon_name)
     schema_content = envs["schema.content"]
-
-    html_gen = alert_actions_html_gen.AlertHtmlGenerator(
-        input_setting=schema_content,
-        package_path=package_dir,
-    )
-    html_gen.handle()
 
     py_gen = alert_actions_py_gen.AlertActionsPyGenerator(
         addon_name=addon_name,
