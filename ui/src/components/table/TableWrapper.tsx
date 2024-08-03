@@ -16,6 +16,7 @@ import { useTableSort } from './useTableSort';
 import { useTableContext } from '../../context/useTableContext';
 import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
 import { isReadonlyRow } from './table.utils';
+import { ITableConfig } from '../../types/globalConfig/pages';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
@@ -24,6 +25,13 @@ export interface ITableWrapperProps {
     handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
     displayActionBtnAllRows: boolean;
 }
+
+const defaultTableConfig: ITableConfig = {
+    header: [],
+    actions: [],
+    moreInfo: [],
+    customRow: {},
+};
 
 const getTableConfigAndServices = (
     page: string,
@@ -49,17 +57,23 @@ const getTableConfigAndServices = (
 
         return {
             services,
-            tableConfig: tableData || {},
+            tableConfig: {
+                ...(tableData || defaultTableConfig),
+            },
             readonlyFieldId: undefined,
             hideFieldId: undefined,
         };
     }
 
-    const tableConfig =
-        unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName)?.table || {};
+    const tableConfig = unifiedConfigs.pages.configuration.tabs.find(
+        (x) => x.name === serviceName
+    )?.table;
+
     return {
         services,
-        tableConfig,
+        tableConfig: {
+            ...(tableConfig || defaultTableConfig),
+        },
         readonlyFieldId: undefined,
         hideFieldId: undefined,
     };

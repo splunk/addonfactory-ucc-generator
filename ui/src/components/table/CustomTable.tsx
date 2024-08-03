@@ -1,14 +1,9 @@
 import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
-import PropTypes from 'prop-types';
-
 import Table, { HeadCellSortHandler } from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
-
 import { useSearchParams } from 'react-router-dom';
-import { TableSchema } from 'src/types/globalConfig/pages';
-import { z } from 'zod';
 import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
-import { PAGE_INPUT } from '../../constants/pages';
+import { PAGE_CONF, PAGE_INPUT } from '../../constants/pages';
 import { RowDataFields } from '../../context/TableContext';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
@@ -19,47 +14,30 @@ import DeleteModal from '../DeleteModal/DeleteModal';
 import { NoRecordsDiv } from './CustomTableStyle';
 import { useTableContext } from '../../context/useTableContext';
 import { isReadonlyRow } from './table.utils';
+import { SortDirection } from './useTableSort';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { ITableConfig } from '../../types/globalConfig/pages';
 
-type ITableConfig = z.infer<typeof TableSchema>;
-
-interface ICustomTableProps {
+interface CustomTableProps {
     page: string;
     serviceName?: string;
     data: RowDataFields[];
     handleToggleActionClick: (row: RowDataFields) => void;
     handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
     handleSort: HeadCellSortHandler;
-    sortDir: 'none' | 'desc' | 'asc' | null;
-    sortKey: 'none' | 'desc' | 'asc' | null;
-    tableConfig;
+    sortDir: SortDirection;
+    sortKey: string;
+    tableConfig: ITableConfig;
 }
 
-interface IHeader {
-    field: string;
-    label: string;
-    mapping?: string;
-    customCell?: string;
-}
-
-interface IUnifiedConfigs {
-    pages: {
-        inputs: {
-            services: { name: string; style: string; title: string }[];
-            readonlyFieldId?: string;
-        };
-        configuration: {
-            tabs: { name: string; style: string; title: string }[];
-        };
-    };
-}
-
-function getServiceToStyleMap(
+const getServiceToStyleMap = (
     page: string,
-    unifiedConfigs: IUnifiedConfigs
-): { [key: string]: string } {
-    const serviceToStyleMap: { [key: string]: string } = {};
+    unifiedConfigs: GlobalConfig
+): Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> => {
+    const serviceToStyleMap: Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> = {};
     if (page === PAGE_INPUT) {
-        unifiedConfigs.pages.inputs.services.forEach((x) => {
+        const inputsPage = unifiedConfigs.pages.inputs;
+        inputsPage?.services.forEach((x) => {
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     } else {
@@ -68,9 +46,9 @@ function getServiceToStyleMap(
         });
     }
     return serviceToStyleMap;
-}
+};
 
-const CustomTable: React.FC<ICustomTableProps> = ({
+const CustomTable: React.FC<CustomTableProps> = ({
     page,
     serviceName,
     data,
@@ -81,30 +59,33 @@ const CustomTable: React.FC<ICustomTableProps> = ({
     sortKey,
     tableConfig,
 }) => {
-    const unifiedConfigs = getUnifiedConfigs() as IUnifiedConfigs;
-    const [entityModal, setEntityModal] = useState<{
-        open: boolean;
-        serviceName: string;
-        stanzaName?: string;
-        mode: Mode;
-    }>({ open: false, serviceName: '', mode: MODE_CREATE });
-    const [deleteModal, setDeleteModal] = useState<{
-        open: boolean;
-        serviceName: string;
-        stanzaName: string;
-    }>({ open: false, serviceName: '', stanzaName: '' });
+    const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
+    const [entityModal, setEntityModal] = useState({
+        open: false,
+        serviceName: '',
+        stanzaName: '',
+        mode: MODE_CREATE as Mode,
+    });
+    const [deleteModal, setDeleteModal] = useState({
+        open: false,
+        serviceName: '',
+        stanzaName: '',
+    });
 
     const { rowData } = useTableContext();
+    const inputsPage = unifiedConfigs.pages.inputs;
     const readonlyFieldId =
-        page === PAGE_INPUT && 'readonlyFieldId' in unifiedConfigs.pages.inputs
-            ? unifiedConfigs.pages.inputs.readonlyFieldId
+        page === PAGE_INPUT && inputsPage?.type === 'table' && inputsPage.readonlyFieldId
+            ? inputsPage.readonlyFieldId
             : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
     const headerMapping: Record<string, string> = {};
-    headers.forEach((x: IHeader) => {
-        headerMapping[x.field] = x.mapping || '';
+
+    headers.forEach((x) => {
+        headerMapping[x.field] = typeof x.mapping === 'string' ? x.mapping : '';
     });
+
     const serviceToStyleMap = useMemo(
         () => getServiceToStyleMap(page, unifiedConfigs),
         [page, unifiedConfigs]
@@ -118,10 +99,8 @@ const CustomTable: React.FC<ICustomTableProps> = ({
     // and when query params are updated
     useEffect(() => {
         // Only run when tab matches serviceName or if in input page where serviceName is undefined
-        if ((tab === serviceName || serviceName === undefined) && record && !entityModal.open) {
-            const serviceKey = Object.keys(rowData).find(
-                (x) => typeof rowData[x][record] !== 'undefined'
-            );
+        if ((tab === serviceName || !serviceName) && record && !entityModal.open) {
+            const serviceKey = Object.keys(rowData).find((x) => rowData[x][record]);
             if (serviceKey) {
                 const row = rowData[serviceKey][record];
                 setEntityModal({
@@ -158,7 +137,8 @@ const CustomTable: React.FC<ICustomTableProps> = ({
                 });
             }
         },
-        [entityModal, handleOpenPageStyleDialog, serviceToStyleMap]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [entityModal]
     );
 
     const handleDeleteClose = () => {
@@ -197,10 +177,11 @@ const CustomTable: React.FC<ICustomTableProps> = ({
     const generateModalDialog = () => {
         if (entityModal.open) {
             let label: string | undefined;
+            let services;
             if (page === PAGE_INPUT) {
-                const { services } = unifiedConfigs.pages.inputs;
-                label = services.find((x) => x.name === entityModal.serviceName)?.title;
-            } else if (page === 'configuration') {
+                services = inputsPage?.services;
+                label = services?.find((x) => x.name === entityModal.serviceName)?.title;
+            } else if (page === PAGE_CONF) {
                 const { tabs } = unifiedConfigs.pages.configuration;
                 label = tabs.find((x) => x.name === entityModal.serviceName)?.title;
             }
@@ -233,14 +214,15 @@ const CustomTable: React.FC<ICustomTableProps> = ({
 
     const generateColumns = () => {
         const column: Array<{ label: string; field: string; sortKey: string | null }> = [];
+
         if (headers && headers.length) {
-            headers.forEach((item: IHeader) =>
+            headers.forEach((item) => {
                 column.push({
                     ...item,
                     sortKey: item.field || null,
                     label: '',
-                })
-            );
+                });
+            });
         }
 
         if (actions && actions.length) {
@@ -261,9 +243,7 @@ const CustomTable: React.FC<ICustomTableProps> = ({
                         <Table.HeadCell
                             key={headData.field}
                             onSort={headData.sortKey ? handleSort : undefined}
-                            sortKey={
-                                typeof headData.field === 'string' ? headData.field : undefined
-                            }
+                            sortKey={headData.sortKey || ''}
                             sortDir={
                                 headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'
                             }
@@ -280,7 +260,7 @@ const CustomTable: React.FC<ICustomTableProps> = ({
         <Table.Body>
             {data &&
                 data.length &&
-                data.map((row: RowDataFields) => (
+                data.map((row) => (
                     <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
                         key={row.name || row.id}
                         row={row}
@@ -321,18 +301,6 @@ const CustomTable: React.FC<ICustomTableProps> = ({
             {generateDeleteDialog()}
         </>
     );
-};
-
-CustomTable.propTypes = {
-    page: PropTypes.string.isRequired,
-    serviceName: PropTypes.string,
-    data: PropTypes.array.isRequired,
-    handleToggleActionClick: PropTypes.func.isRequired,
-    handleOpenPageStyleDialog: PropTypes.func.isRequired,
-    handleSort: PropTypes.func.isRequired,
-    sortDir: PropTypes.oneOf(['none', 'desc', 'asc', null]).isRequired,
-    sortKey: PropTypes.oneOf(['none', 'desc', 'asc', null]).isRequired,
-    tableConfig: PropTypes.object.isRequired,
 };
 
 export default memo(CustomTable);

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, ReactNode } from 'react';
 import layout from '@splunk/react-page';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { SplunkThemeProvider } from '@splunk/themes';
@@ -12,8 +12,8 @@ import messageDict from '../constants/messageDict';
 import { getBuildDirPath } from '../util/script';
 import './style.css';
 
-// eslint-disable-next-line no-undef,camelcase
-__webpack_public_path__ = `${getBuildDirPath()}/`;
+// eslint-disable-next-line camelcase, no-underscore-dangle, @typescript-eslint/no-unused-vars
+const __webpack_public_path__ = `${getBuildDirPath()}/`;
 
 const InputPage = React.lazy(() => import(/* webpackPrefetch: true */ './Input/InputPage'));
 const ConfigurationPage = React.lazy(
@@ -24,10 +24,11 @@ const DashboardPage = React.lazy(
 );
 
 // Take in a component as argument WrappedComponent
-function higherOrderComponent(WrappedComponent) {
+// Define the generic type parameter P for the HOC
+function higherOrderComponent<P extends object>(WrappedComponent: React.ComponentType<P>) {
     // And return another component
     // eslint-disable-next-line react/prefer-stateless-function
-    class HOC extends React.Component {
+    class HOC extends React.Component<P & { children?: ReactNode }> {
         render() {
             return (
                 <SplunkThemeProvider>
@@ -73,7 +74,7 @@ For Splunkers, reach out via our Slack channel: #ucc-framework.
 For external users, join us at: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1.
 
 We appreciate your help in making UCC better! 🚀`);
-getUserTheme().then((theme) => {
+getUserTheme().then((theme: string) => {
     switch (page) {
         case PAGE_INPUT:
             layout(<InputPageComponent />, {

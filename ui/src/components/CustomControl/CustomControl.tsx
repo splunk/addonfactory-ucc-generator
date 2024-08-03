@@ -83,7 +83,7 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
             this.props.controlOptions.src,
             this.props.controlOptions.type,
             appName
-        ).then((Control: ICustomCompClass) => {
+        ).then((Control) => {
             const customControl = new Control(
                 globalConfig,
                 this.el,

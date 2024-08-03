@@ -8,8 +8,7 @@ import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import { _ } from '@splunk/ui-utils/i18n';
 import { z } from 'zod';
 import {
-    InputsPageRegular,
-    InputsPageTableSchema,
+    InputsPage,
     TableFullServiceSchema,
     TableLessServiceSchema,
 } from '../../types/globalConfig/pages';
@@ -42,14 +41,6 @@ const Row = styled(ColumnLayout.Row)`
         text-align: right;
     }
 `;
-
-// Define the types based on the Zod schemas
-type InputsPageRegular = z.infer<typeof InputsPageRegular>;
-type InputsPageTableSchema = z.infer<typeof InputsPageTableSchema>;
-
-type InputsPage = {
-    type: 'regular' | 'table';
-} & (InputsPageRegular | InputsPageTableSchema);
 
 type ServiceTableSchema =
     | z.infer<typeof TableFullServiceSchema>
@@ -130,6 +121,7 @@ function InputPage(): ReactElement {
                     mode: (query.get('action') as Mode) || '',
                 });
             } else {
+                // If previous state information is unavailable, create mode will be used by default
                 setEntity({
                     ...entity,
                     open: true,
@@ -215,7 +207,7 @@ function InputPage(): ReactElement {
             serviceName: row.serviceName,
             stanzaName: row.name,
             formLabel: mode === MODE_CLONE ? `Clone ${label}` : `Update ${label}`,
-            mode: mode as Mode,
+            mode,
         });
         query.set('service', row.serviceName);
         query.set('action', mode);
@@ -231,7 +223,7 @@ function InputPage(): ReactElement {
         navigate({ search: query.toString() });
     };
 
-    const generatePageDialog = (): ReactElement => (
+    const generatePageDialog = () => (
         <EntityPage
             handleRequestClose={handlePageDialogClose}
             serviceName={entity.serviceName}

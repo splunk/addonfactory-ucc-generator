@@ -1,17 +1,69 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { InferProps } from 'prop-types';
 
 import { getFormattedMessage } from './messageUtil';
 import { setMetaInfo, setUnifiedConfig } from './util';
 import { loadGlobalConfig } from './script';
 import ErrorModal from '../components/ErrorModal/ErrorModal';
+import { GlobalConfig } from '../types/globalConfig/globalConfig';
 
-class ConfigManager extends Component {
-    constructor(props) {
+interface ConfigManagerState {
+    unifiedConfig: GlobalConfig;
+    appData: IAppData;
+    loading: boolean;
+    syntaxError: boolean;
+    fileNotFoundError?: boolean;
+}
+
+interface IAppData {
+    app: string;
+    custom_rest: string;
+    nullStr: 'NULL';
+    stanzaPrefix: string;
+}
+
+class ConfigManager extends Component<
+    InferProps<typeof ConfigManager.propTypes>,
+    ConfigManagerState
+> {
+    static propTypes = {
+        children: PropTypes.func.isRequired,
+    };
+
+    constructor(props: InferProps<typeof ConfigManager.propTypes>) {
         super(props);
         this.state = {
-            unifiedConfig: {},
-            appData: {},
+            unifiedConfig: {
+                meta: {
+                    displayName: '',
+                    name: '',
+                    restRoot: '',
+                    version: '',
+                    apiVersion: undefined,
+                    schemaVersion: undefined,
+                    _uccVersion: undefined,
+                    hideUCCVersion: undefined,
+                    checkForUpdates: undefined,
+                    searchViewDefault: undefined,
+                },
+                pages: {
+                    configuration: {
+                        title: '',
+                        description: '',
+                        subDescription: {
+                            text: '',
+                            links: [],
+                        },
+                        tabs: [],
+                    },
+                },
+            },
+            appData: {
+                app: '',
+                custom_rest: '',
+                nullStr: 'NULL',
+                stanzaPrefix: '',
+            },
             loading: true,
             syntaxError: false,
         };
@@ -24,7 +76,7 @@ class ConfigManager extends Component {
                 // The configuration object should be attached to global object,
                 // before executing the code below.
                 // this.unifiedConfig = window.__globalConfig;
-                this.attchPropertie(val);
+                this.attachProperties(val);
             })
             .catch((err) => {
                 if (err && err.name === 'SyntaxError') {
@@ -38,9 +90,9 @@ class ConfigManager extends Component {
             });
     }
 
-    attchPropertie(unifiedConfig) {
+    attachProperties(unifiedConfig: GlobalConfig) {
         const { meta } = unifiedConfig;
-        const appData = {
+        const appData: IAppData = {
             app: meta.name,
             custom_rest: meta.restRoot,
             nullStr: 'NULL',
@@ -74,9 +126,5 @@ class ConfigManager extends Component {
         return !this.state.loading && this.renderComponents();
     }
 }
-
-ConfigManager.propTypes = {
-    children: PropTypes.any,
-};
 
 export default ConfigManager;

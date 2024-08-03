@@ -5,14 +5,14 @@ import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { TabSchema } from '../../types/globalConfig/pages';
 
-type TabSchema = z.infer<typeof TabSchema>;
+type Tab = z.infer<typeof TabSchema>;
 
 interface CustomTabProps {
-    tab: TabSchema;
+    tab: Tab;
 }
 
 interface ICustomTabClass {
-    new (tab: TabSchema, ref: HTMLDivElement): {
+    new (tab: Tab, ref: HTMLDivElement): {
         render: () => void;
     };
 }
