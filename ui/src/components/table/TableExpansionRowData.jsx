@@ -18,12 +18,8 @@ export function getExpansionRowData(row, moreInfo) {
             const cellValue = getTableCellValue(row, val.field, val.mapping);
             // Remove extra rows which are empty in moreInfo and default value is not provided
             if (cellValue) {
-                definitionLists.push(
-                    <React.Fragment key={`DL-${val.field}`}>
-                        <DL.Term>{label}</DL.Term>
-                        <DL.Description>{cellValue}</DL.Description>
-                    </React.Fragment>
-                );
+                definitionLists.push(<DL.Term termWidth={250}>{label}</DL.Term>);
+                definitionLists.push(<DL.Description termWidth={250}>{cellValue}</DL.Description>);
             }
             return definitionLists;
         }, []) || []
