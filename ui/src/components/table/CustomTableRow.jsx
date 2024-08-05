@@ -107,7 +107,7 @@ function CustomTableRow(props) {
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
-    let statusContent = 'Enabled';
+    let statusContent = 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
@@ -115,7 +115,7 @@ function CustomTableRow(props) {
         statusContent =
             headerMapping?.disabled && headerMapping.disabled[row.disabled]
                 ? headerMapping.disabled[row.disabled]
-                : 'Disabled';
+                : 'Inactive';
     }
 
     // Fix set of props are passed to Table.Row element
@@ -150,12 +150,12 @@ function CustomTableRow(props) {
                                         selectedLabel={_(
                                             headerMapping?.disabled?.false
                                                 ? headerMapping.disabled.false
-                                                : 'Enabled'
+                                                : 'Active'
                                         )}
                                         unselectedLabel={_(
                                             headerMapping?.disabled?.true
                                                 ? headerMapping.disabled.true
-                                                : 'Disabled'
+                                                : 'Inactive'
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>

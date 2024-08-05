@@ -1250,13 +1250,13 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "3.1.2"
+version = "5.0.0"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-3.1.2-py3-none-any.whl", hash = "sha256:c764863eb2956c0f293fe32dcff3c73ea8a31b2024b5ff729007993588ad130d"},
-    {file = "pytest_splunk_addon_ui_smartx-3.1.2.tar.gz", hash = "sha256:b1d952481a97a7eb7c39a13dd9c3a1d522e1a19a31b90766072d9aa2ad474236"},
+    {file = "pytest_splunk_addon_ui_smartx-5.0.0-py3-none-any.whl", hash = "sha256:8a67dfe6aa58b36f5a673863a29deaa04718e497fdfe9b13642dde319a238a32"},
+    {file = "pytest_splunk_addon_ui_smartx-5.0.0.tar.gz", hash = "sha256:1f330558dfd537d06507e375480615a84dd95964672af5c9cd4966585d8e0fa6"},
 ]
 
 [package.dependencies]
@@ -1669,13 +1669,13 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
 name = "webdriver-manager"
-version = "4.0.1"
+version = "4.0.2"
 description = "Library provides the way to automatically manage drivers for different browsers"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "webdriver_manager-4.0.1-py2.py3-none-any.whl", hash = "sha256:d7970052295bb9cda2c1a24cf0b872dd2c41ababcc78f7b6b8dc37a41e979a7e"},
-    {file = "webdriver_manager-4.0.1.tar.gz", hash = "sha256:25ec177c6a2ce9c02fb8046f1b2732701a9418d6a977967bb065d840a3175d87"},
+    {file = "webdriver_manager-4.0.2-py2.py3-none-any.whl", hash = "sha256:75908d92ecc45ff2b9953614459c633db8f9aa1ff30181cefe8696e312908129"},
+    {file = "webdriver_manager-4.0.2.tar.gz", hash = "sha256:efedf428f92fd6d5c924a0d054e6d1322dd77aab790e834ee767af392b35590f"},
 ]
 
 [package.dependencies]

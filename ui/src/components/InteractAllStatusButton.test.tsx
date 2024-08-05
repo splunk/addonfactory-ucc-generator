@@ -94,8 +94,8 @@ describe('InteractAllStatusButtons', () => {
         );
     });
 
-    it('Disable All enabled rows correctly', async () => {
-        const disableBtn = await screen.findByText('Disable all');
+    it('Deactivate All enabled rows correctly', async () => {
+        const disableBtn = await screen.findByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
         disableBtn.click();
@@ -117,8 +117,8 @@ describe('InteractAllStatusButtons', () => {
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(3);
     });
 
-    it('Enable All disabled rows correctly', async () => {
-        const enableBtn = await screen.findByText('Enable all');
+    it('Activate All disabled rows correctly', async () => {
+        const enableBtn = await screen.findByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
         enableBtn.click();
@@ -141,7 +141,7 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Do not disable status if rejected', async () => {
-        const disableBtn = await screen.findByText('Disable all');
+        const disableBtn = await screen.findByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
         disableBtn.click();
@@ -155,7 +155,7 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Do not enable status if rejected', async () => {
-        const enableBtn = await screen.findByText('Enable all');
+        const enableBtn = await screen.findByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
         enableBtn.click();
@@ -169,7 +169,7 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Do not enable status if popup modal closed by X', async () => {
-        const enableBtn = await screen.findByText('Enable all');
+        const enableBtn = await screen.findByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
         enableBtn.click();
@@ -183,7 +183,7 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Do not disable status if popup modal closed by X', async () => {
-        const disableBtn = await screen.findByText('Disable all');
+        const disableBtn = await screen.findByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
         disableBtn.click();
