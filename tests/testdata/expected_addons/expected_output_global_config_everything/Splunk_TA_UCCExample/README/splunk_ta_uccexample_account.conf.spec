@@ -22,4 +22,3 @@ refresh_token =
 token = 
 url = 
 username = 
-
