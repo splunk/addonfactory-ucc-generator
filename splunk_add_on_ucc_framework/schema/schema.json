@@ -2256,6 +2256,10 @@
           "type": "boolean",
           "description": "Declares if component should be disabled (enable = false)"
         },
+        "required": {
+          "type": "boolean",
+          "description": "Declares if component should be required"
+        },
         "help": {
           "type": "string",
           "description": "Declares help text of target component"

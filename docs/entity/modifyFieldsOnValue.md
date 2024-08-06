@@ -16,6 +16,7 @@ This feature allows to specify conditions to modify other fields based on curren
 | display                                          | boolean                   | Declares display property of target component                |
 | value                                            | string, number or boolean | Declares current value of target component                   |
 | disabled                                         | boolean                   | Declares if component should be disabled (enable = false)    |
+| required                                         | boolean                   | Declares if component should be required                     |
 | help                                             | string                    | Declares help text                                           |
 | label                                            | string                    | Declares label text                                          |
 | markdownMessage                                  | object                    | Declares markdown message to display                         |
