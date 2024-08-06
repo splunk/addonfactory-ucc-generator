@@ -440,9 +440,8 @@ class GlobalConfigValidator:
                         raise GlobalConfigValidatorException(
                             f"{entity_type} type must have options parameter"
                         )
-                elif entity.get("options") and entity_type not in (
-                    "singleSelectSplunkSearch",
-                    "textarea",
+                elif (
+                    entity.get("options") and entity_type != "singleSelectSplunkSearch"
                 ):
                     raise GlobalConfigValidatorException(
                         f"{entity_type} type must not contain options parameter"
