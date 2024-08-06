@@ -11,15 +11,12 @@ export function getTableCellValue(
     field: string,
     mapping: Record<string, string>
 ) {
-    const isNotEmpty =
-        field in row && row[field] !== null && row[field] !== undefined && row[field] !== '';
+    const value = row[field];
+    const valueIsEmpty = value === null || value === undefined || value === '';
+    if (!valueIsEmpty) {
+        return mapping?.[String(value)] || value;
+    }
 
     const defaultValue = mapping?.[LABEL_FOR_DEFAULT_TABLE_CELL_VALUE];
-
-    const mappingExists = isNotEmpty && mapping?.[String(row[field])];
-
-    return (
-        mappingExists ||
-        (isNotEmpty || !defaultValue ? row[field] : mapping[LABEL_FOR_DEFAULT_TABLE_CELL_VALUE])
-    );
+    return defaultValue || value;
 }
