@@ -20,7 +20,7 @@ import { ITableConfig } from '../../types/globalConfig/pages';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
-    serviceName: string;
+    serviceName?: string;
     handleRequestModalOpen?: () => void;
     handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
     displayActionBtnAllRows: boolean;
@@ -36,7 +36,7 @@ const defaultTableConfig: ITableConfig = {
 const getTableConfigAndServices = (
     page: string,
     unifiedConfigs: GlobalConfig,
-    serviceName: string
+    serviceName?: string
 ) => {
     const services =
         page === PAGE_INPUT

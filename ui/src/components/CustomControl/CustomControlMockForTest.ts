@@ -6,7 +6,7 @@ import { UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
 export class CustomControlMockForTest {
     globalConfig: GlobalConfig;
 
-    el: Element;
+    el?: Element;
 
     data: { mode: Mode; serviceName: string; value: AcceptableFormValueOrNullish };
 
@@ -25,10 +25,10 @@ export class CustomControlMockForTest {
      */
     constructor(
         globalConfig: GlobalConfig,
-        el: Element,
         data: { mode: Mode; serviceName: string; value: AcceptableFormValueOrNullish },
         setValue: (newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilControlWrapper
+        util: UtilControlWrapper,
+        el?: Element
     ) {
         this.globalConfig = globalConfig;
         this.el = el;
@@ -53,6 +53,10 @@ export class CustomControlMockForTest {
     }
 
     render() {
+        if (!this.el) {
+            return this;
+        }
+
         const options = ['input_default', 'input_one', 'input_two', 'input_three'].map(
             (value) =>
                 `<option value="${value}" ${

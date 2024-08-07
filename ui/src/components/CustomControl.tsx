@@ -66,7 +66,7 @@ class CustomControl extends Component<ICustomCompProps, State> {
 
     el?: HTMLElement;
 
-    shouldRender: boolean = true;
+    shouldRender: boolean;
 
     constructor(props: ICustomCompProps) {
         super(props);

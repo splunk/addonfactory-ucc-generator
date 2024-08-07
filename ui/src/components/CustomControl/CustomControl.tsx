@@ -5,20 +5,21 @@ import { getBuildDirPath } from '../../util/script';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { UtilBaseForm } from '../BaseFormView/BaseFormTypes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { Mode } from '../../constants/modes';
 
 interface IData {
     value: AcceptableFormValueOrNullish;
-    mode: string;
+    mode: Mode;
     serviceName: string;
 }
 
 interface ICustomCompClass {
     new (
         config: GlobalConfig,
-        el: HTMLElement | undefined,
         data: IData,
         setValue: (field: string, newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilBaseForm
+        util: UtilBaseForm,
+        el?: HTMLElement
     ): {
         render: () => void;
         validation?: (submittedField: string, submittedValue: string) => void;
@@ -86,10 +87,10 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
         ).then((Control) => {
             const customControl = new Control(
                 globalConfig,
-                this.el,
                 this.props.data,
                 this.setValue,
-                this.props.utilCustomFunctions
+                this.props.utilCustomFunctions,
+                this.el
             );
             customControl?.render();
 

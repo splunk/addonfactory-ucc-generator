@@ -89,9 +89,11 @@ function InputPage(): ReactElement {
 
     if (inputsPage.type === 'regular') {
         ({ services, title } = inputsPage);
-        setActiveTabId(services[0].name);
     } else if (inputsPage.type === 'table') {
         ({ services, title, table, description, subDescription } = inputsPage);
+    }
+
+    if (activeTabId) {
         setActiveTabId(services[0].name);
     }
 
@@ -323,7 +325,6 @@ function InputPage(): ReactElement {
                             page={PAGE_INPUT}
                             handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                             displayActionBtnAllRows
-                            serviceName=""
                         />
                     )}
 

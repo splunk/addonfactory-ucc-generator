@@ -26,14 +26,14 @@ interface CustomTableProps {
     handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
     handleSort: HeadCellSortHandler;
     sortDir: SortDirection;
-    sortKey: string;
+    sortKey?: string;
     tableConfig: ITableConfig;
 }
 
 const getServiceToStyleMap = (
     page: string,
     unifiedConfigs: GlobalConfig
-): Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> => {
+): Record<string, string> => {
     const serviceToStyleMap: Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> = {};
     if (page === PAGE_INPUT) {
         const inputsPage = unifiedConfigs.pages.inputs;
@@ -177,9 +177,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const generateModalDialog = () => {
         if (entityModal.open) {
             let label: string | undefined;
-            let services;
             if (page === PAGE_INPUT) {
-                services = inputsPage?.services;
+                const services = inputsPage?.services;
                 label = services?.find((x) => x.name === entityModal.serviceName)?.title;
             } else if (page === PAGE_CONF) {
                 const { tabs } = unifiedConfigs.pages.configuration;
@@ -220,7 +219,6 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 column.push({
                     ...item,
                     sortKey: item.field || null,
-                    label: '',
                 });
             });
         }
@@ -243,7 +241,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                         <Table.HeadCell
                             key={headData.field}
                             onSort={headData.sortKey ? handleSort : undefined}
-                            sortKey={headData.sortKey || ''}
+                            sortKey={headData.sortKey ?? undefined}
                             sortDir={
                                 headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'
                             }

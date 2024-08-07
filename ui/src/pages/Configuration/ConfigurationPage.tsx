@@ -57,6 +57,7 @@ function ConfigurationPage() {
     // or while navigating browser history
     useEffect(() => {
         // Only change active tab when provided tab in query is specified in globalConfig
+        // and if the current active tab is not same as provided in query
         if (
             queryTabValue &&
             permittedTabNames.includes(queryTabValue) &&
@@ -117,7 +118,7 @@ function ConfigurationPage() {
 
     return (
         <ErrorBoundary>
-            <div>
+            <>
                 <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
                     <ColumnLayout gutter={8}>
                         <Row>
@@ -145,7 +146,7 @@ function ConfigurationPage() {
                 </div>
                 {tabs.map((tab) => getTabContent(tab))}
                 <ToastMessages position="top-right" />
-            </div>
+            </>
         </ErrorBoundary>
     );
 }

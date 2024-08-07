@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import PropTypes, { InferProps } from 'prop-types';
+import React, { Component, ReactNode } from 'react';
 
 import { getFormattedMessage } from './messageUtil';
 import { setMetaInfo, setUnifiedConfig } from './util';
@@ -7,8 +6,12 @@ import { loadGlobalConfig } from './script';
 import ErrorModal from '../components/ErrorModal/ErrorModal';
 import { GlobalConfig } from '../types/globalConfig/globalConfig';
 
+interface ConfigManagerProps {
+    children: (state: ConfigManagerState) => ReactNode;
+}
+
 interface ConfigManagerState {
-    unifiedConfig: GlobalConfig;
+    unifiedConfig?: GlobalConfig;
     appData: IAppData;
     loading: boolean;
     syntaxError: boolean;
@@ -22,42 +25,10 @@ interface IAppData {
     stanzaPrefix: string;
 }
 
-class ConfigManager extends Component<
-    InferProps<typeof ConfigManager.propTypes>,
-    ConfigManagerState
-> {
-    static propTypes = {
-        children: PropTypes.func.isRequired,
-    };
-
-    constructor(props: InferProps<typeof ConfigManager.propTypes>) {
+class ConfigManager extends Component<ConfigManagerProps, ConfigManagerState> {
+    constructor(props: ConfigManagerProps) {
         super(props);
         this.state = {
-            unifiedConfig: {
-                meta: {
-                    displayName: '',
-                    name: '',
-                    restRoot: '',
-                    version: '',
-                    apiVersion: undefined,
-                    schemaVersion: undefined,
-                    _uccVersion: undefined,
-                    hideUCCVersion: undefined,
-                    checkForUpdates: undefined,
-                    searchViewDefault: undefined,
-                },
-                pages: {
-                    configuration: {
-                        title: '',
-                        description: '',
-                        subDescription: {
-                            text: '',
-                            links: [],
-                        },
-                        tabs: [],
-                    },
-                },
-            },
             appData: {
                 app: '',
                 custom_rest: '',
