@@ -24,4 +24,3 @@ name = Splunk_TA_UCCExample
 [triggers]
 reload.splunk_ta_uccexample_settings = simple
 reload.splunk_ta_uccexample_accounts = simple
-
