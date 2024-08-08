@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import logging
-from abc import ABC, abstractmethod
+from abc import ABC
 from os.path import realpath, sep
 from typing import Any, Dict, List, Union, NoReturn
 
@@ -67,13 +67,11 @@ class FileGenerator(ABC):
             self._gc_schema = None
         self._set_attributes(**kwargs)
 
-    @abstractmethod
     def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
-        raise NotImplementedError
+        raise NotImplementedError()
 
-    @abstractmethod
     def generate(self) -> Dict[str, str]:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def _get_output_dir(self) -> str:
         return sep.join([realpath(self._output_dir), self._addon_name])

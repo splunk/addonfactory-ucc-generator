@@ -14,6 +14,6 @@
 # limitations under the License.
 #
 from .html_generator import HTMLGenerator
-from .create_alert_html import AlertHtml
+from .create_alert_actions_html import AlertActionsHtml
 
-__all__ = ["HTMLGenerator", "AlertHtml"]
+__all__ = ["HTMLGenerator", "AlertActionsHtml"]

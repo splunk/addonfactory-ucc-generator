@@ -24,7 +24,7 @@ from os import linesep
 from re import search
 
 
-class AlertHtml(HTMLGenerator):
+class AlertActionsHtml(HTMLGenerator):
     __description__ = (
         " Generates `alert_name.html` file based on alerts configuration present in globalConfig"
         " in `default/data/ui/alerts` folder."
@@ -48,34 +48,39 @@ class AlertHtml(HTMLGenerator):
             )
             schema_content = envs["schema.content"]
             self._alert_settings = schema_content["modular_alerts"]
-            for self.alert in self._alert_settings:
-                self.generate_html()
 
     def generate_html(self) -> Dict[str, str]:
-        if self._global_config and not self._global_config.has_alerts():
+        if (not self._global_config) or (
+            self._global_config and not self._global_config.has_alerts()
+        ):
             return super().generate_html()
-        self.set_template_and_render(
-            template_file_path=["html_templates"], file_name="mod_alert.html.template"
-        )
-        rendered_content = self._template.render(
-            mod_alert=self.alert, home_page=self._html_home
-        )
-        text = linesep.join(
-            [s for s in rendered_content.splitlines() if not search(r"^\s*$", s)]
-        )
-        file_name = f"{self.alert[ac.SHORT_NAME] + '.html'}"
-        file_path = self.get_file_output_path(
-            [
-                "default",
-                "data",
-                "ui",
-                "alerts",
-                file_name,
-            ]
-        )
-        self.writer(
-            file_name=file_name,
-            file_path=file_path,
-            content=text,
-        )
-        return {file_name: file_path}
+
+        alert_details: Dict[str, str] = {}
+        for self.alert in self._alert_settings:
+            self.set_template_and_render(
+                template_file_path=["html_templates"],
+                file_name="mod_alert.html.template",
+            )
+            rendered_content = self._template.render(
+                mod_alert=self.alert, home_page=self._html_home
+            )
+            text = linesep.join(
+                [s for s in rendered_content.splitlines() if not search(r"^\s*$", s)]
+            )
+            file_name = f"{self.alert[ac.SHORT_NAME] + '.html'}"
+            file_path = self.get_file_output_path(
+                [
+                    "default",
+                    "data",
+                    "ui",
+                    "alerts",
+                    file_name,
+                ]
+            )
+            self.writer(
+                file_name=file_name,
+                file_path=file_path,
+                content=text,
+            )
+            alert_details.update({file_name: file_path})
+        return alert_details

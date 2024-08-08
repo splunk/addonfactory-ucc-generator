@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from abc import abstractmethod
 from ..file_generator import FileGenerator
 from typing import Dict, Any, Union, NoReturn
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
@@ -31,15 +30,14 @@ class XMLGenerator(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir, **kwargs)
 
+    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
+        # parse self._global_config and set the require attributes for self
+        raise NotImplementedError()
+
     def generate(self) -> Dict[str, str]:
         xml_files: Dict[str, str] = {}
         xml_files.update(self.generate_xml())
         return xml_files
-
-    @abstractmethod
-    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
-        # parse self._global_config and set the require attributes for self
-        raise NotImplementedError()
 
     def generate_xml(self) -> Dict[str, str]:
         # uses the attributes set in  _set_attributes method to set the required attributes

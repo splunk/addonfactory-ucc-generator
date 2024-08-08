@@ -13,11 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from abc import abstractmethod
 from typing import Any, Dict, Union, NoReturn
-
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
-
 from ..file_generator import FileGenerator
 
 
@@ -34,16 +31,15 @@ class ConfGenerator(FileGenerator):
         super().__init__(global_config, input_dir, output_dir, **kwargs)
         self.conf_file = ".conf"
 
+    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
+        # parse self._global_config and set the require attributes for self
+        raise NotImplementedError()
+
     def generate(self) -> Dict[str, str]:
         conf_files: Dict[str, str] = {}
         conf_files.update(self.generate_conf())
         conf_files.update(self.generate_conf_spec())
         return conf_files
-
-    @abstractmethod
-    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
-        # parse self._global_config and set the require attributes for self
-        raise NotImplementedError
 
     def generate_conf(self) -> Dict[str, str]:
         # logic to pass the configs to template file
