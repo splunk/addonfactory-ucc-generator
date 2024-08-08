@@ -18,6 +18,7 @@
       ]
     },
     "inputs": {
+      "type": "table",
       "title": "Inputs",
       "table": {
         "header": [
@@ -32,12 +33,7 @@
             "label": "Name"
           }
         ],
-        "actions": [
-          "edit",
-          "delete",
-          "search",
-          "clone"
-        ]
+        "actions": ["edit", "delete", "search", "clone"]
       },
       "services": [
         {

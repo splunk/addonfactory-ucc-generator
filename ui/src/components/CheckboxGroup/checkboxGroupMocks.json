@@ -18,6 +18,7 @@
       ]
     },
     "inputs": {
+      "type": "table",
       "title": "Inputs",
       "table": {
         "header": [
@@ -32,12 +33,7 @@
             "label": "Name"
           }
         ],
-        "actions": [
-          "edit",
-          "delete",
-          "search",
-          "clone"
-        ]
+        "actions": ["edit", "delete", "search", "clone"]
       },
       "services": [
         {
@@ -56,9 +52,7 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": [
-                      "rowUnderGroup1"
-                    ]
+                    "fields": ["rowUnderGroup1"]
                   },
                   {
                     "label": "Group 3",
@@ -66,10 +60,7 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": [
-                      "requiredField",
-                      "160validation"
-                    ]
+                    "fields": ["requiredField", "160validation"]
                   }
                 ],
                 "rows": [
@@ -111,10 +102,7 @@
                       "validators": [
                         {
                           "type": "number",
-                          "range": [
-                            1,
-                            60
-                          ]
+                          "range": [1, 60]
                         }
                       ]
                     }

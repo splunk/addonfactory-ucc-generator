@@ -653,6 +653,7 @@
       }
     },
     "inputs": {
+      "type": "table",
       "services": [
         {
           "name": "example_input_one",
@@ -1348,7 +1349,7 @@
         ]
       },
       "table": {
-        "actions": ["edit", "enable", "delete","search", "clone"],
+        "actions": ["edit", "enable", "delete", "search", "clone"],
         "header": [
           {
             "label": "Name",

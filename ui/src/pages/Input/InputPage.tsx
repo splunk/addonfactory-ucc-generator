@@ -25,6 +25,7 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import EntityPage from '../../components/EntityPage/EntityPage';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import useQuery from '../../hooks/useQuery';
+import { regularInput, tableInput } from '../../constants/inputPageType';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -70,7 +71,28 @@ function InputPage(): ReactElement {
     });
     const unifiedConfigs = getUnifiedConfigs();
     const inputsPage = unifiedConfigs.pages.inputs as InputsPage;
-    const [activeTabId, setActiveTabId] = useState<string>('');
+
+    let services: ServiceTableSchema[] = [];
+    let title;
+    let table;
+    let description;
+    let subDescription;
+
+    if (inputsPage.type === regularInput) {
+        ({ services, title } = inputsPage);
+    } else if (inputsPage.type === tableInput) {
+        ({ services, title, table, description, subDescription } = inputsPage);
+    }
+
+    // check if the tabs feature is enabled or not.
+    const isTabs = !table;
+
+    const [activeTabId, setActiveTabId] = useState<string>(services[0].name);
+    const selectedTab = services.find((x) => x.name === activeTabId);
+    const isTableFullSchema = isTableFullServiceSchema(selectedTab);
+
+    const PERMITTED_MODES = [MODE_CLONE, MODE_CREATE, MODE_EDIT];
+    const permittedTabNames = services.map((service) => service.name);
 
     const navigate = useNavigate();
     const query = useQuery();
@@ -80,29 +102,6 @@ function InputPage(): ReactElement {
         setActiveTab();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [useLocation().search]);
-
-    let services: ServiceTableSchema[] = [];
-    let title;
-    let table;
-    let description;
-    let subDescription;
-
-    if (inputsPage.type === 'regular') {
-        ({ services, title } = inputsPage);
-    } else if (inputsPage.type === 'table') {
-        ({ services, title, table, description, subDescription } = inputsPage);
-    }
-
-    if (activeTabId) {
-        setActiveTabId(services[0].name);
-    }
-
-    const isTabs = !table;
-    const selectedTab = services.find((x) => x.name === activeTabId);
-    const isTableFullSchema = isTableFullServiceSchema(selectedTab);
-
-    const PERMITTED_MODES = [MODE_CLONE, MODE_CREATE, MODE_EDIT];
-    const permittedTabNames = services.map((service) => service.name);
 
     const setServiceEntity = (): void => {
         const service = services.find((x) => x.name === query.get('service'));
@@ -138,6 +137,7 @@ function InputPage(): ReactElement {
             entity.open &&
             entity.isInputPageStyle
         ) {
+            // Close page when any of the required query params are not provided
             setEntity({ ...entity, open: false });
         }
     };
@@ -184,10 +184,12 @@ function InputPage(): ReactElement {
         }
     };
 
+    // handle close/cancel/back request in add/create modal component
     const handleModalDialogClose = (): void => {
         setEntity({ ...entity, open: false });
     };
 
+    // generate modal style dialog
     const generateModalDialog = (): ReactElement => (
         <EntityModal
             page={PAGE_INPUT}
@@ -200,6 +202,7 @@ function InputPage(): ReactElement {
         />
     );
 
+    // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row: RowDataFields, mode: Mode): void => {
         const label = services.find((x) => x.name === row.serviceName)?.title;
         setEntity({
@@ -211,11 +214,13 @@ function InputPage(): ReactElement {
             formLabel: mode === MODE_CLONE ? `Clone ${label}` : `Update ${label}`,
             mode,
         });
+        // set query and push to history
         query.set('service', row.serviceName);
         query.set('action', mode);
         navigate({ search: query.toString() });
     };
 
+    // handle close request for page style dialog
     const handlePageDialogClose = (): void => {
         setEntity({ ...entity, open: false });
         if (!isTabs) {
