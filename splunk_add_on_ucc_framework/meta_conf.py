@@ -26,6 +26,6 @@ DEFAULT_META_FILE_NAME = "default.meta"
 
 
 class MetaConf:
-    def write(self, path: str) -> None:
+    def write_default(self, path: str) -> None:
         with open(path, "w") as fd:
             fd.write(DEFAULT)
