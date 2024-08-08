@@ -148,6 +148,7 @@ function InputPage(): ReactElement {
         }
     };
 
+    // handle modal/page open request on create/add entity button
     const handleRequestOpen = ({
         serviceName,
         groupName,
@@ -171,6 +172,7 @@ function InputPage(): ReactElement {
             groupName,
         });
         if (isInputPageStyle) {
+            // set query and push to navigate
             query.set('service', serviceName);
             query.set('action', MODE_CREATE);
             const selectedGroup = groupName && groupName !== ROOT_GROUP_NAME ? groupName : null;
@@ -230,6 +232,7 @@ function InputPage(): ReactElement {
         navigate({ search: query.toString() });
     };
 
+    // generate page style dialog
     const generatePageDialog = () => (
         <EntityPage
             handleRequestClose={handlePageDialogClose}
