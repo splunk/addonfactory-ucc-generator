@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import addonfactory_splunk_conf_parser_lib as conf_parser
 
 DEFAULT = """
 # Application-level permissions
@@ -27,12 +26,6 @@ DEFAULT_META_FILE_NAME = "default.meta"
 
 
 class MetaConf:
-    def __init__(self) -> None:
-        self._meta_conf = conf_parser.TABConfigParser()
-
-    def create_default(self) -> None:
-        self._meta_conf.read_string(DEFAULT)
-
-    def write(self, path: str) -> None:
+    def write_default(self, path: str) -> None:
         with open(path, "w") as fd:
-            self._meta_conf.write(fd)
+            fd.write(DEFAULT)
