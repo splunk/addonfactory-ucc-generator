@@ -1,0 +1,48 @@
+name: "Automatic doc generation"
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: true
+        type: string
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    env:
+      isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          ref: ${{ github.event.pull_request.head.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install
+
+      - name: Generate docs
+        run: |
+          poetry run ucc-gen-docs
+
+      - name: Importing GPG key
+        if: ${{ env.isPR }}
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: Push updated screenshots
+        if: ${{ env.isPR }}
+        run: |
+          git add \*.md
+          git diff --staged --exit-code || (git commit -S -m "doc: updated docs regarding generated conf, xml and html files" && git push)
+    

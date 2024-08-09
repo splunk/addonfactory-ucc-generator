@@ -13,21 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# The autofix suggestion mentioned in the pipeline does not work actually.
-# It proposed to replace `xml` with `defusedxml` and it does not have such
-# import.
-# nosemgrep: splunk.use-defused-xml
-from xml.etree import ElementTree as ET
-from defusedxml import minidom
+from lxml import etree as ET
 
 DEFAULT_VIEW = "configuration"
-
-
-def _pretty_print_xml(string: str) -> str:
-    """
-    Returns a pretty-printed XML as a string.
-    """
-    return minidom.parseString(string).toprettyxml(indent="    ")
 
 
 def generate_nav_default_xml(
@@ -57,8 +45,10 @@ def generate_nav_default_xml(
         ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
     else:
         ET.SubElement(nav, "view", attrib={"name": "search"})
-    nav_as_string = ET.tostring(nav, encoding="unicode")
-    return _pretty_print_xml(nav_as_string)
+    nav_as_string = ET.tostring(
+        nav, pretty_print=True, encoding="utf-8", xml_declaration=True
+    ).decode("utf-8")
+    return nav_as_string
 
 
 def generate_views_inputs_xml(addon_name: str) -> str:
@@ -75,8 +65,10 @@ def generate_views_inputs_xml(addon_name: str) -> str:
     )
     label = ET.SubElement(view, "label")
     label.text = "Inputs"
-    view_as_string = ET.tostring(view, encoding="unicode")
-    return _pretty_print_xml(view_as_string)
+    view_as_string = ET.tostring(
+        view, pretty_print=True, encoding="utf-8", xml_declaration=True
+    ).decode("utf-8")
+    return view_as_string
 
 
 def generate_views_configuration_xml(addon_name: str) -> str:
@@ -93,8 +85,10 @@ def generate_views_configuration_xml(addon_name: str) -> str:
     )
     label = ET.SubElement(view, "label")
     label.text = "Configuration"
-    view_as_string = ET.tostring(view, encoding="unicode")
-    return _pretty_print_xml(view_as_string)
+    view_as_string = ET.tostring(
+        view, pretty_print=True, encoding="utf-8", xml_declaration=True
+    ).decode("utf-8")
+    return view_as_string
 
 
 def generate_views_dashboard_xml(addon_name: str) -> str:
@@ -111,8 +105,10 @@ def generate_views_dashboard_xml(addon_name: str) -> str:
     )
     label = ET.SubElement(view, "label")
     label.text = "Monitoring Dashboard"
-    view_as_string = ET.tostring(view, encoding="unicode")
-    return _pretty_print_xml(view_as_string)
+    view_as_string = ET.tostring(
+        view, pretty_print=True, encoding="utf-8", xml_declaration=True
+    ).decode("utf-8")
+    return view_as_string
 
 
 def generate_views_redirect_xml(addon_name: str) -> str:
@@ -129,5 +125,7 @@ def generate_views_redirect_xml(addon_name: str) -> str:
     )
     label = ET.SubElement(view, "label")
     label.text = "Redirect"
-    view_as_string = ET.tostring(view, encoding="unicode")
-    return _pretty_print_xml(view_as_string)
+    view_as_string = ET.tostring(
+        view, pretty_print=True, encoding="utf-8", xml_declaration=True
+    ).decode("utf-8")
+    return view_as_string

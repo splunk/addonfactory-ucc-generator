@@ -1,0 +1,4 @@
+[shclustering]
+{% for conf in custom_conf %}
+conf_replication_include.{{ conf }} = true
+{% endfor %}

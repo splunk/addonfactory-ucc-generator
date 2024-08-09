@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from splunk_add_on_ucc_framework import server_conf as server_conf_lib
+from splunk_add_on_ucc_framework import server_conf as server_conf_lib  # type: ignore[attr-defined]
 from tests.unit import helpers
 
 

@@ -2,7 +2,7 @@ import os
 import tempfile
 from unittest import mock
 
-from splunk_add_on_ucc_framework import app_conf as app_conf_lib
+from splunk_add_on_ucc_framework import app_conf as app_conf_lib  # type: ignore[attr-defined]
 from tests.unit.helpers import get_testdata_file, get_testdata_file_path
 
 

@@ -1,20 +1,20 @@
 [proxy]
 proxy_enabled = 
+proxy_password = 
+proxy_port = 
+proxy_rdns = 
 proxy_type = 
 proxy_url = 
-proxy_port = 
 proxy_username = 
-proxy_password = 
-proxy_rdns = 
 
 [logging]
 loglevel = 
 
 [custom_abc]
-testString = 
-testNumber = 
-testRegex = 
+testDate = 
 testEmail = 
 testIpv4 = 
-testDate = 
+testNumber = 
+testRegex = 
+testString = 
 testUrl = 

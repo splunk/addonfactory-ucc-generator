@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import logging
 import os
 from os.path import basename as bn
@@ -67,7 +68,9 @@ def remove_alert_from_conf_file(alert: Any, conf_file: str) -> None:
 
 
 def merge_conf_file(
-    src_file: str, dst_file: str, merge_mode: str = "stanza_overwrite"
+    src_file: str,
+    dst_file: str,
+    merge_mode: str = "stanza_overwrite",
 ) -> None:
     if not os.path.isfile(src_file):
         return

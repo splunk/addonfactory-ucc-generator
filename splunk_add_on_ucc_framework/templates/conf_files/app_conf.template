@@ -1,0 +1,31 @@
+[launcher]
+version = {{ addon_version }}
+description = {{ description }}
+author = {{ author }}
+
+[id]
+version = {{ addon_version }}
+name = {{ name }}
+
+[install]
+build = {{ build }}
+is_configured = false
+state = enabled
+
+[package]
+id = {{ id }}
+check_for_updates = {{ check_for_updates }}
+
+[ui]
+label = {{ label }}
+{% if supported_themes %}
+supported_themes = {{ supported_themes }}
+{% endif %}
+is_visible = {{ is_visible }}
+
+{% if custom_conf %}
+[triggers]
+{% for conf in custom_conf %}
+reload.{{ conf }} = simple
+{% endfor %}
+{% endif %}
