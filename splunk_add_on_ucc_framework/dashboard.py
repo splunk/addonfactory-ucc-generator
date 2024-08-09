@@ -122,12 +122,12 @@ table_account_query = (
 
 table_input_query = (
     '| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = \\"{addon_name}\\" '
-    '| eval Enabled=if(lower(disabled) IN (\\"1\\", \\"true\\", \\"t\\"), \\"no\\", \\"yes\\") '
-    '| table title, Enabled | rename title as \\"event_input\\" | join type=left event_input [ '
+    '| eval Active=if(lower(disabled) IN (\\"1\\", \\"true\\", \\"t\\"), \\"no\\", \\"yes\\") '
+    '| table title, Active | rename title as \\"event_input\\" | join type=left event_input [ '
     "search index = _internal source=*{addon_name_lowercase}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] | makemv delim=\\",\\" sparkevent '
-    '| table event_input, Enabled, events, sparkevent, \\"Last event\\" '
+    '| table event_input, Active, events, sparkevent, \\"Last event\\" '
     '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
 )
 

@@ -15,6 +15,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
+import { getTableCellValue } from './table.utils';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -51,8 +52,8 @@ function CustomTableRow(props) {
         });
 
     const rowActionsPrimaryButton = useCallback(
-        (selectedRow) => (
-            <TableCellWrapper data-column="actions" key={selectedRow.id}>
+        (selectedRow, header) => (
+            <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
                     {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
@@ -107,7 +108,7 @@ function CustomTableRow(props) {
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
-    let statusContent = 'Enabled';
+    let statusContent = 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
@@ -115,7 +116,7 @@ function CustomTableRow(props) {
         statusContent =
             headerMapping?.disabled && headerMapping.disabled[row.disabled]
                 ? headerMapping.disabled[row.disabled]
-                : 'Disabled';
+                : 'Inactive';
     }
 
     // Fix set of props are passed to Table.Row element
@@ -128,7 +129,6 @@ function CustomTableRow(props) {
                 columns.length &&
                 columns.map((header) => {
                     let cellHTML = '';
-
                     if (header.customCell && header.customCell.src) {
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
@@ -151,12 +151,12 @@ function CustomTableRow(props) {
                                         selectedLabel={_(
                                             headerMapping?.disabled?.false
                                                 ? headerMapping.disabled.false
-                                                : 'Enabled'
+                                                : 'Active'
                                         )}
                                         unselectedLabel={_(
                                             headerMapping?.disabled?.true
                                                 ? headerMapping.disabled.true
-                                                : 'Disabled'
+                                                : 'Inactive'
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>
@@ -164,7 +164,7 @@ function CustomTableRow(props) {
                             </Table.Cell>
                         );
                     } else if (header.field === 'actions') {
-                        cellHTML = rowActionsPrimaryButton(row);
+                        cellHTML = rowActionsPrimaryButton(row, header);
                     } else {
                         cellHTML = (
                             <Table.Cell
@@ -172,13 +172,7 @@ function CustomTableRow(props) {
                                 data-column={header.field}
                                 key={header.field}
                             >
-                                {headerMapping[header.field] &&
-                                Object.prototype.hasOwnProperty.call(
-                                    headerMapping[header.field],
-                                    row[header.field]
-                                )
-                                    ? headerMapping[header.field][row[header.field]]
-                                    : row[header.field]}
+                                {getTableCellValue(row, header.field, headerMapping[header.field])}
                             </Table.Cell>
                         );
                     }

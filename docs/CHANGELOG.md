@@ -1,3 +1,11 @@
+## [5.48.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.1...v5.48.2) (2024-07-25)
+
+
+### Bug Fixes
+
+* **inputs:** fix parsing '0' as false for readonlyField and hideField ([#1290](https://github.com/splunk/addonfactory-ucc-generator/issues/1290)) ([ec676a1](https://github.com/splunk/addonfactory-ucc-generator/commit/ec676a1f7ca4a63e111aca355610161bc9e0fc1d))
+* **NumberValidator:** Number validators allows integer value ([#1293](https://github.com/splunk/addonfactory-ucc-generator/issues/1293)) ([dbd287c](https://github.com/splunk/addonfactory-ucc-generator/commit/dbd287c406957867da1c01a7804a314242de420a)), closes [#876](https://github.com/splunk/addonfactory-ucc-generator/issues/876)
+
 # [5.48.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.0...v5.48.1) (2024-07-11)
 
 

@@ -180,7 +180,8 @@
                                                             "markdownType": "text",
                                                             "text": "markdown message test",
                                                             "color": "red"
-                                                        }
+                                                        },
+                                                        "required": true
                                                     }
                                                 ]
                                             },
@@ -198,7 +199,8 @@
                                                             "markdownType": "link",
                                                             "text": "markdown message test conf page",
                                                             "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration"
-                                                        }
+                                                        },
+                                                        "required": false
                                                     }
                                                 ]
                                             },
@@ -211,7 +213,8 @@
                                                         "display": false,
                                                         "label": "Disabled on edit for oauth 3333",
                                                         "value": "test 3",
-                                                        "help": "Disabled on edit for test 3"
+                                                        "help": "Disabled on edit for test 3",
+                                                        "required": true
                                                     }
                                                 ]
                                             },
@@ -231,7 +234,8 @@
                                                             "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration",
                                                             "token": "token",
                                                             "linkText": "conf page"
-                                                        }
+                                                        },
+                                                        "required": false
                                                     }
                                                 ]
                                             },
@@ -247,7 +251,8 @@
                                                         "help": "Disabled on edit for test 5",
                                                         "markdownMessage": {
                                                             "text": "markdown message plain text"
-                                                        }
+                                                        },
+                                                        "required": true
                                                     }
                                                 ]
                                             }
@@ -490,7 +495,8 @@
                                     "range": [
                                         1,
                                         65535
-                                    ]
+                                    ],
+                                    "isInteger": true
                                 }
                             ],
                             "field": "proxy_port"
@@ -1392,8 +1398,8 @@
                         "label": "Status",
                         "field": "disabled",
                         "mapping": {
-                            "true": "Disabled",
-                            "false": "Enabled"
+                            "true": "Inactive",
+                            "false": "Active"
                         }
                     },
                     {
@@ -1551,10 +1557,10 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.47.0R2026c71b",
+        "version": "5.48.2R2463eca77",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.7",
-        "_uccVersion": "5.47.0",
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.48.2",
         "supportedThemes": [
             "light",
             "dark"

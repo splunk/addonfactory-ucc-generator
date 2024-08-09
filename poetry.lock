@@ -2,13 +2,13 @@
 
 [[package]]
 name = "addonfactory-splunk-conf-parser-lib"
-version = "0.4.0"
+version = "0.4.2"
 description = "Splunk .conf files parser"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "<4.0,>=3.7"
 files = [
-    {file = "addonfactory_splunk_conf_parser_lib-0.4.0-py3-none-any.whl", hash = "sha256:9567b6c8cb87668c1120517fb6001f9cf3c04d07c923f57385b0bb025df42c24"},
-    {file = "addonfactory_splunk_conf_parser_lib-0.4.0.tar.gz", hash = "sha256:e892cd26dc9708512f864a397ed101579cceefe2c408ea5be2dc5032d2edf05d"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.4.2-py3-none-any.whl", hash = "sha256:e36cfdd9e6d1d57aca8c6c24497d122e0771dfde3a46ef70e88d73f3900efcd2"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.4.2.tar.gz", hash = "sha256:57043e67687ba16f25648796e35024d535dcdae39039064d9f4f0c080e825e8f"},
 ]
 
 [[package]]
@@ -63,13 +63,13 @@ files = [
 
 [[package]]
 name = "certifi"
-version = "2024.6.2"
+version = "2024.7.4"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "certifi-2024.6.2-py3-none-any.whl", hash = "sha256:ddc6c8ce995e6987e7faf5e3f1b02b302836a0e5d98ece18392cb1a36c72ad56"},
-    {file = "certifi-2024.6.2.tar.gz", hash = "sha256:3cd43f1c6fa7dedc5899d69d3ad0398fd018ad1a17fba83ddaf78aa46c747516"},
+    {file = "certifi-2024.7.4-py3-none-any.whl", hash = "sha256:c198e21b1289c2ab85ee4e67bb4b4ef3ead0892059901a8d5b622f24a1101e90"},
+    {file = "certifi-2024.7.4.tar.gz", hash = "sha256:5a1e7645bc0ec61a09e26c36f6106dd4cf40c6db3a1fb6352b0244e7fb057c7b"},
 ]
 
 [[package]]
@@ -353,13 +353,13 @@ dev = ["Sphinx", "coverage", "flake8", "lxml", "lxml-stubs", "memory-profiler", 
 
 [[package]]
 name = "exceptiongroup"
-version = "1.2.1"
+version = "1.2.2"
 description = "Backport of PEP 654 (exception groups)"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "exceptiongroup-1.2.1-py3-none-any.whl", hash = "sha256:5258b9ed329c5bbdd31a309f53cbfb0b155341807f6ff7606a1e801a891b29ad"},
-    {file = "exceptiongroup-1.2.1.tar.gz", hash = "sha256:a4785e48b045528f5bfe627b6ad554ff32def154f42372786903b7abcfe1aa16"},
+    {file = "exceptiongroup-1.2.2-py3-none-any.whl", hash = "sha256:3111b9d131c238bec2f8f516e123e14ba243563fb135d3fe885990585aa7795b"},
+    {file = "exceptiongroup-1.2.2.tar.gz", hash = "sha256:47c2edf7c6738fafb49fd34290706d1a1a2f4d1c6df275526b62cbb4aa5393cc"},
 ]
 
 [package.extras]
@@ -1232,13 +1232,13 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "3.1.2"
+version = "5.0.0"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-3.1.2-py3-none-any.whl", hash = "sha256:c764863eb2956c0f293fe32dcff3c73ea8a31b2024b5ff729007993588ad130d"},
-    {file = "pytest_splunk_addon_ui_smartx-3.1.2.tar.gz", hash = "sha256:b1d952481a97a7eb7c39a13dd9c3a1d522e1a19a31b90766072d9aa2ad474236"},
+    {file = "pytest_splunk_addon_ui_smartx-5.0.0-py3-none-any.whl", hash = "sha256:8a67dfe6aa58b36f5a673863a29deaa04718e497fdfe9b13642dde319a238a32"},
+    {file = "pytest_splunk_addon_ui_smartx-5.0.0.tar.gz", hash = "sha256:1f330558dfd537d06507e375480615a84dd95964672af5c9cd4966585d8e0fa6"},
 ]
 
 [package.dependencies]
@@ -1651,13 +1651,13 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
 name = "webdriver-manager"
-version = "4.0.1"
+version = "4.0.2"
 description = "Library provides the way to automatically manage drivers for different browsers"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "webdriver_manager-4.0.1-py2.py3-none-any.whl", hash = "sha256:d7970052295bb9cda2c1a24cf0b872dd2c41ababcc78f7b6b8dc37a41e979a7e"},
-    {file = "webdriver_manager-4.0.1.tar.gz", hash = "sha256:25ec177c6a2ce9c02fb8046f1b2732701a9418d6a977967bb065d840a3175d87"},
+    {file = "webdriver_manager-4.0.2-py2.py3-none-any.whl", hash = "sha256:75908d92ecc45ff2b9953614459c633db8f9aa1ff30181cefe8696e312908129"},
+    {file = "webdriver_manager-4.0.2.tar.gz", hash = "sha256:efedf428f92fd6d5c924a0d054e6d1322dd77aab790e834ee767af392b35590f"},
 ]
 
 [package.dependencies]
@@ -1731,4 +1731,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "b8f9a1df44095e56eeee8a6906486a0eca166d78edbc33de19ebfff316da27f1"
+content-hash = "3e012baead7e41d684c3547f48e80c96660d7434de0b81ebc45bfa3310342486"
