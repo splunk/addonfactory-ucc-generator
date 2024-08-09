@@ -54,6 +54,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
+from splunk_add_on_ucc_framework.generators.file_generator import begin
 
 
 logger = logging.getLogger("ucc_gen")
@@ -522,6 +523,8 @@ def generate(
     logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
+    generated_files = []
+    ui_available = False
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
@@ -590,6 +593,19 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
+        generated_files.extend(
+            begin(
+                global_config=global_config,
+                input_dir=source,
+                output_dir=output_directory,
+                ucc_dir=internal_root_dir,
+                addon_name=ta_name,
+                app_manifest=app_manifest,
+                addon_version=addon_version,
+                has_ui=ui_available,
+            )
+        )
+        # TODO: all FILES GENERATED object: generated_files, use it for comparison
         builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
         builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
