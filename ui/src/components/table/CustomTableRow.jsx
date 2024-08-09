@@ -15,6 +15,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
+import { getTableCellValue } from './table.utils';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -171,13 +172,7 @@ function CustomTableRow(props) {
                                 data-column={header.field}
                                 key={header.field}
                             >
-                                {headerMapping[header.field] &&
-                                Object.prototype.hasOwnProperty.call(
-                                    headerMapping[header.field],
-                                    row[header.field]
-                                )
-                                    ? headerMapping[header.field][row[header.field]]
-                                    : row[header.field]}
+                                {getTableCellValue(row, header.field, headerMapping[header.field])}
                             </Table.Cell>
                         );
                     }

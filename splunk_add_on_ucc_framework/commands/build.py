@@ -693,8 +693,7 @@ def generate(
     if not os.path.exists(default_meta_conf_path):
         os.makedirs(os.path.join(output_directory, ta_name, "metadata"), exist_ok=True)
         meta_conf = meta_conf_lib.MetaConf()
-        meta_conf.create_default()
-        meta_conf.write(default_meta_conf_path)
+        meta_conf.write_default(default_meta_conf_path)
         logger.info(
             f"Created default {meta_conf_lib.DEFAULT_META_FILE_NAME} file in the output folder"
         )
