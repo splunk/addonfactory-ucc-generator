@@ -73,7 +73,6 @@ For Splunkers, reach out via our Slack channel: #ucc-framework.
 For external users, join us at: https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1.
 
 We appreciate your help in making UCC better! 🚀`);
-
 getUserTheme().then((theme) => {
     switch (page) {
         case PAGE_INPUT:

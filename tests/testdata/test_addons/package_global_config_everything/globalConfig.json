@@ -636,6 +636,7 @@
             }
         },
         "inputs": {
+            "type": "table",
             "services": [
                 {
                     "name": "example_input_one",
@@ -1552,10 +1553,10 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.48.1Rbfdf113d",
+        "version": "5.48.2R1c85c7e7",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
-        "_uccVersion": "5.48.1",
+        "_uccVersion": "5.48.2",
         "supportedThemes": [
             "light",
             "dark"

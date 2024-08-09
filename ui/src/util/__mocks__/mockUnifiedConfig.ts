@@ -12,6 +12,7 @@ export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
     },
     pages: {
         inputs: {
+            type: 'table',
             title: 'Inputs',
             description: 'Create data inputs to collect data from AWS',
             table: {

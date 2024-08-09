@@ -147,6 +147,7 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
             description: 'Set up your add-on',
         },
         inputs: {
+            type: 'table',
             services: [
                 {
                     name: 'example_input_one',

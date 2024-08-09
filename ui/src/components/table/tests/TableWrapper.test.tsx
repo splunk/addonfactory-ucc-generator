@@ -98,11 +98,11 @@ it('sort items after filtering', async () => {
     const mappedTextDefaultOrder = Array.from(defaultOrder).map((el: Node) => el.textContent);
     expect(mappedTextDefaultOrder).toMatchInlineSnapshot(`
         [
-          "wxyz=a",
-          "xyz=ab",
-          "yz=abc",
-          "z=abcd",
-          "xyz=ab",
+          "a",
+          "ab",
+          "abc",
+          "abcd",
+          "ab",
           "aaaaa",
           "two",
           "testsomethingelse",
@@ -121,11 +121,11 @@ it('sort items after filtering', async () => {
           "aaaaa",
           "testsomethingelse",
           "two",
-          "wxyz=a",
-          "xyz=ab",
-          "xyz=ab",
-          "yz=abc",
-          "z=abcd",
+          "a",
+          "ab",
+          "ab",
+          "abc",
+          "abcd",
         ]
     `);
 
@@ -136,11 +136,11 @@ it('sort items after filtering', async () => {
 
     expect(mappedTextDesc).toMatchInlineSnapshot(`
         [
-          "z=abcd",
-          "yz=abc",
-          "xyz=ab",
-          "xyz=ab",
-          "wxyz=a",
+          "abcd",
+          "abc",
+          "ab",
+          "ab",
+          "a",
           "two",
           "testsomethingelse",
           "aaaaa",

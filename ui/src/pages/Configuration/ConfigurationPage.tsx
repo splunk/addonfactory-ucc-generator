@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
 import { _ } from '@splunk/ui-utils/i18n';
-import TabBar from '@splunk/react-ui/TabBar';
+import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 
 import styled from 'styled-components';
+import { z } from 'zod';
 import useQuery from '../../hooks/useQuery';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
@@ -16,6 +16,7 @@ import ConfigurationTable from '../../components/ConfigurationTable';
 import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownloadBtn';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import UccCredit from '../../components/UCCCredit/UCCCredit';
+import { TabSchema } from '../../types/globalConfig/pages';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
@@ -38,14 +39,16 @@ const Row = styled(ColumnLayout.Row)`
     }
 `;
 
+type TabSchema = z.infer<typeof TabSchema>;
+
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
     const permittedTabNames = useMemo(() => tabs.map((tab) => tab.name), [tabs]);
-    const isComponentMounted = useRef(false);
+    const isComponentMounted = useRef<boolean>(false);
 
-    const [activeTabId, setActiveTabId] = useState(tabs[0].name);
-    const [isPageOpen, setIsPageOpen] = useState(false);
+    const [activeTabId, setActiveTabId] = useState<string>(tabs[0].name);
+    const [isPageOpen, setIsPageOpen] = useState<boolean>(false);
 
     const query = useQuery();
     const queryTabValue = query?.get('tab');
@@ -55,7 +58,11 @@ function ConfigurationPage() {
     useEffect(() => {
         // Only change active tab when provided tab in query is specified in globalConfig
         // and if the current active tab is not same as provided in query
-        if (permittedTabNames.includes(queryTabValue) && queryTabValue !== activeTabId) {
+        if (
+            queryTabValue &&
+            permittedTabNames.includes(queryTabValue) &&
+            queryTabValue !== activeTabId
+        ) {
             setActiveTabId(queryTabValue);
         }
     }, [queryTabValue, permittedTabNames, activeTabId]);
@@ -66,22 +73,23 @@ function ConfigurationPage() {
             isComponentMounted.current = false;
         };
     }, []);
-    const handleChange = useCallback((e, { selectedTabId }) => {
+
+    const handleChange = useCallback<TabBarChangeHandler>((e, { selectedTabId }) => {
         if (isComponentMounted.current) {
-            setActiveTabId(selectedTabId);
+            setActiveTabId(selectedTabId || '');
             setIsPageOpen(false);
         }
     }, []);
 
-    const updateIsPageOpen = (data) => {
+    const updateIsPageOpen = (data: boolean) => {
         if (isComponentMounted.current) {
             setIsPageOpen(data);
         }
     };
 
-    const getCustomTab = (tab) => React.createElement(CustomTab, { tab });
+    const getCustomTab = (tab: TabSchema) => React.createElement(CustomTab, { tab });
 
-    const getTabContent = (tab) => {
+    const getTabContent = (tab: TabSchema) => {
         let TabComponent;
         if (tab?.customTab) {
             TabComponent = getCustomTab(tab);
@@ -110,30 +118,35 @@ function ConfigurationPage() {
 
     return (
         <ErrorBoundary>
-            <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
-                <ColumnLayout gutter={8}>
-                    <Row>
-                        <ColumnLayout.Column span={9}>
-                            <TitleComponent>{_(title)}</TitleComponent>
-                            <SubTitleComponent>{_(description || '')}</SubTitleComponent>
-                            <SubDescription {...subDescription} />
-                        </ColumnLayout.Column>
-                        <ColumnLayout.Column span={3} style={{ textAlignLast: 'right' }}>
-                            <StyledHeaderControls>
-                                <UccCredit />
-                                <OpenApiDownloadButton />
-                            </StyledHeaderControls>
-                        </ColumnLayout.Column>
-                    </Row>
-                </ColumnLayout>
-                <TabBar activeTabId={activeTabId} onChange={handleChange}>
-                    {tabs.map((tab) => (
-                        <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
-                    ))}
-                </TabBar>
-            </div>
-            {tabs.map((tab) => getTabContent(tab))}
-            <ToastMessages position="top-right" />
+            <>
+                <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
+                    <ColumnLayout gutter={8}>
+                        <Row>
+                            <ColumnLayout.Column span={9}>
+                                <TitleComponent>{_(title)}</TitleComponent>
+                                <SubTitleComponent>{_(description || '')}</SubTitleComponent>
+                                <SubDescription
+                                    text={subDescription?.text || ''}
+                                    links={subDescription?.links}
+                                />
+                            </ColumnLayout.Column>
+                            <ColumnLayout.Column span={3} style={{ textAlignLast: 'right' }}>
+                                <StyledHeaderControls>
+                                    <UccCredit />
+                                    <OpenApiDownloadButton />
+                                </StyledHeaderControls>
+                            </ColumnLayout.Column>
+                        </Row>
+                    </ColumnLayout>
+                    <TabBar activeTabId={activeTabId} onChange={handleChange}>
+                        {tabs.map((tab) => (
+                            <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
+                        ))}
+                    </TabBar>
+                </div>
+                {tabs.map((tab) => getTabContent(tab))}
+                <ToastMessages position="top-right" />
+            </>
         </ErrorBoundary>
     );
 }

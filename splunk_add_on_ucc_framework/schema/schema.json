@@ -2454,6 +2454,10 @@
     "InputPageSingleTable": {
       "type": "object",
       "properties": {
+        "type":{
+          "type" : "string",
+          "enum": ["regular", "table"]
+        },
         "title": {
           "type": "string",
           "maxLength": 60,

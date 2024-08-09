@@ -99,6 +99,7 @@ export const TableFullServiceSchema = TableLessServiceSchema.extend({
 });
 export const InputsPageRegular = z
     .object({
+        type: z.literal('regular'),
         title: z.string(),
         services: z.array(TableFullServiceSchema),
     })
@@ -122,6 +123,7 @@ export const SubDescriptionSchema = z
 
 export const InputsPageTableSchema = z
     .object({
+        type: z.literal('table'),
         title: z.string(),
         description: z.string().optional(),
         subDescription: SubDescriptionSchema,
@@ -165,3 +167,20 @@ export const pages = z.object({
         })
         .optional(),
 });
+// Define the types based on the Zod schemas
+
+type InputsPageRegular = z.infer<typeof InputsPageRegular>;
+type InputsPageTableSchema = z.infer<typeof InputsPageTableSchema>;
+
+export type InputsPage =
+    | ({ type: 'regular' } & InputsPageRegular)
+    | ({ type: 'table' } & InputsPageTableSchema);
+
+type TableLessServiceSchema = z.infer<typeof TableLessServiceSchema>;
+type TableFullServiceSchema = z.infer<typeof TableFullServiceSchema>;
+
+export type services =
+    | ({ type: 'regular' } & TableFullServiceSchema)
+    | ({ type: 'table' } & TableLessServiceSchema);
+
+export type ITableConfig = z.infer<typeof TableSchema>;
