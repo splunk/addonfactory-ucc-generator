@@ -16,6 +16,7 @@ This feature allows to specify conditions to modify other fields based on curren
 | display                                          | boolean                   | Declares display property of target component                |
 | value                                            | string, number or boolean | Declares current value of target component                   |
 | disabled                                         | boolean                   | Declares if component should be disabled (enable = false)    |
+| required                                         | boolean                   | Declares if component should be required                     |
 | help                                             | string                    | Declares help text                                           |
 | label                                            | string                    | Declares label text                                          |
 | markdownMessage                                  | object                    | Declares markdown message to display                         |
@@ -92,7 +93,8 @@ This feature allows to specify conditions to modify other fields based on curren
                         "markdownType": "text",
                         "text": "New markdown message for other values",
                         "color": "red"
-                    }
+                    },
+                    "required": false
                 }
             ]
         },
@@ -110,7 +112,8 @@ This feature allows to specify conditions to modify other fields based on curren
                         "markdownType": "link",
                         "text": "New markdown message for value 'a' as username",
                         "link": "https://splunk.github.io/addonfactory-ucc-generator/"
-                    }
+                    },
+                    "required": true
                 }
             ]
         },
@@ -124,6 +127,7 @@ This feature allows to specify conditions to modify other fields based on curren
                     "label": "New label for value 'aa' as username",
                     "value":"New value for value 'aa' as username",
                     "help": "New help for value 'aa' as username",
+                    "required": true
                 }
             ]
         },
@@ -143,7 +147,8 @@ This feature allows to specify conditions to modify other fields based on curren
                         "link": "https://splunk.github.io/addonfactory-ucc-generator/",
                         "token": "token",
                         "linkText": "for value"
-                    }
+                    },
+                    "required": true
                 }
             ]
         },
@@ -161,7 +166,8 @@ This feature allows to specify conditions to modify other fields based on curren
                     "markdownMessage": {
                         "markdownType": "text",
                         "text": "markdown message plain text used only when editing entity"
-                    }
+                    },
+                    "required": false
                 }
             ]
         }
