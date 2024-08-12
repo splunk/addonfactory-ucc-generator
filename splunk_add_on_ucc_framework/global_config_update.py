@@ -14,13 +14,12 @@
 # limitations under the License.
 #
 import logging
-from typing import Any, Dict, Tuple, List, Optional, Union, Type
+from typing import Any, Dict, Tuple, List, Optional
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
 from splunk_add_on_ucc_framework.entity import (
     collapse_entity,
     IntervalEntity,
-    IndexEntity,
 )
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.tabs import resolve_tab
@@ -242,7 +241,7 @@ def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
 def _dump_with_migrated_entities(
     global_config: GlobalConfig,
     path: str,
-    entity_type: List[Union[Type[IntervalEntity | IndexEntity]]],
+    entity_type: List[Any],
 ) -> None:
     _collapse_entities(
         global_config.content["pages"].get("inputs", {}).get("services"), entity_type
@@ -257,7 +256,7 @@ def _dump_with_migrated_entities(
 
 def _collapse_entities(
     items: Optional[List[Dict[Any, Any]]],
-    entity_type: List[Union[Type[IntervalEntity | IndexEntity]]],
+    entity_type: List[Any],
 ) -> None:
     if items is None:
         return
