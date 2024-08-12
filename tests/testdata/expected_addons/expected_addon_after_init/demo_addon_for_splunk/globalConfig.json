@@ -96,6 +96,11 @@
                             "required": true
                         },
                         {
+                            "type": "index",
+                            "field": "index",
+                            "label": "Index"
+                        },
+                        {
                             "type": "singleSelect",
                             "label": "Account to use",
                             "options": {
