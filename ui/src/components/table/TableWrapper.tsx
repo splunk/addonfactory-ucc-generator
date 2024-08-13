@@ -23,7 +23,7 @@ export interface ITableWrapperProps {
     serviceName?: string;
     handleRequestModalOpen?: () => void;
     handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
-    displayActionBtnAllRows: boolean;
+    displayActionBtnAllRows?: boolean;
 }
 
 const defaultTableConfig: ITableConfig = {

@@ -45,10 +45,10 @@ function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
     const permittedTabNames = useMemo(() => tabs.map((tab) => tab.name), [tabs]);
-    const isComponentMounted = useRef<boolean>(false);
+    const isComponentMounted = useRef(false);
 
-    const [activeTabId, setActiveTabId] = useState<string>(tabs[0].name);
-    const [isPageOpen, setIsPageOpen] = useState<boolean>(false);
+    const [activeTabId, setActiveTabId] = useState(tabs[0].name);
+    const [isPageOpen, setIsPageOpen] = useState(false);
 
     const query = useQuery();
     const queryTabValue = query?.get('tab');
@@ -75,8 +75,8 @@ function ConfigurationPage() {
     }, []);
 
     const handleChange = useCallback<TabBarChangeHandler>((e, { selectedTabId }) => {
-        if (isComponentMounted.current) {
-            setActiveTabId(selectedTabId || '');
+        if (isComponentMounted.current && selectedTabId) {
+            setActiveTabId(selectedTabId);
             setIsPageOpen(false);
         }
     }, []);

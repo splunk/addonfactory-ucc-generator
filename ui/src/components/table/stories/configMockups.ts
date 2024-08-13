@@ -47,7 +47,6 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
             description: 'Set up your add-on',
         },
         inputs: {
-            type: 'table',
             services: [
                 {
                     name: 'example_input_one',
@@ -180,7 +179,6 @@ export const TABLE_CONFIG_WITH_MAPPING = {
             description: 'Set up your add-on',
         },
         inputs: {
-            type: 'table',
             services: [
                 {
                     name: 'example_input_one',

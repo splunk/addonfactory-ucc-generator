@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
 import Table, { HeadCellSortHandler } from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 import { useSearchParams } from 'react-router-dom';
-import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
+import { Mode, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
 import { PAGE_CONF, PAGE_INPUT } from '../../constants/pages';
 import { RowDataFields } from '../../context/TableContext';
 import { getUnifiedConfigs } from '../../util/util';
@@ -28,6 +28,13 @@ interface CustomTableProps {
     sortDir: SortDirection;
     sortKey?: string;
     tableConfig: ITableConfig;
+}
+
+interface IEntityModal {
+    serviceName?: string;
+    open: boolean;
+    stanzaName?: string;
+    mode?: Mode;
 }
 
 const getServiceToStyleMap = (
@@ -60,22 +67,17 @@ const CustomTable: React.FC<CustomTableProps> = ({
     tableConfig,
 }) => {
     const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
-    const [entityModal, setEntityModal] = useState({
+    const [entityModal, setEntityModal] = useState<IEntityModal>({
         open: false,
-        serviceName: '',
-        stanzaName: '',
-        mode: MODE_CREATE as Mode,
     });
-    const [deleteModal, setDeleteModal] = useState({
+    const [deleteModal, setDeleteModal] = useState<IEntityModal>({
         open: false,
-        serviceName: '',
-        stanzaName: '',
     });
 
     const { rowData } = useTableContext();
     const inputsPage = unifiedConfigs.pages.inputs;
     const readonlyFieldId =
-        page === PAGE_INPUT && inputsPage?.type === 'table' && inputsPage.readonlyFieldId
+        page === PAGE_INPUT && inputsPage && 'table' in inputsPage && inputsPage.readonlyFieldId
             ? inputsPage.readonlyFieldId
             : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
@@ -184,7 +186,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 const { tabs } = unifiedConfigs.pages.configuration;
                 label = tabs.find((x) => x.name === entityModal.serviceName)?.title;
             }
-            return (
+            return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal
                     page={page}
                     open={entityModal.open}
@@ -196,20 +198,21 @@ const CustomTable: React.FC<CustomTableProps> = ({
                         entityModal.mode === MODE_CLONE ? _(`Clone `) + label : _(`Update `) + label
                     }
                 />
-            );
+            ) : null;
         }
         return null;
     };
 
-    const generateDeleteDialog = () => (
-        <DeleteModal
-            page={page}
-            open={deleteModal.open}
-            handleRequestClose={handleDeleteClose}
-            serviceName={deleteModal.serviceName}
-            stanzaName={deleteModal.stanzaName}
-        />
-    );
+    const generateDeleteDialog = () =>
+        deleteModal.serviceName && deleteModal.stanzaName ? (
+            <DeleteModal
+                page={page}
+                open={deleteModal.open}
+                handleRequestClose={handleDeleteClose}
+                serviceName={deleteModal.serviceName}
+                stanzaName={deleteModal.stanzaName}
+            />
+        ) : null;
 
     const generateColumns = () => {
         const column: Array<{ label: string; field: string; sortKey: string | null }> = [];

@@ -10,7 +10,7 @@ export interface UseTableSortResult {
 }
 
 export const useTableSort = (initialSortKey: string = 'name'): UseTableSortResult => {
-    const [sortKey, setSortKey] = useState<string>(initialSortKey);
+    const [sortKey, setSortKey] = useState(initialSortKey);
     const [sortDir, setSortDir] = useState<SortDirection>('asc');
 
     const handleSort: HeadCellSortHandler = useCallback(

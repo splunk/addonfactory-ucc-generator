@@ -653,7 +653,6 @@
       }
     },
     "inputs": {
-      "type": "table",
       "services": [
         {
           "name": "example_input_one",

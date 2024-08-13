@@ -18,7 +18,6 @@
       ]
     },
     "inputs": {
-      "type": "table",
       "title": "Inputs",
       "table": {
         "header": [

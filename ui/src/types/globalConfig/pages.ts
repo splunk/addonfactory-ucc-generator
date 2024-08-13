@@ -99,7 +99,6 @@ export const TableFullServiceSchema = TableLessServiceSchema.extend({
 });
 export const InputsPageRegular = z
     .object({
-        type: z.literal('regular'),
         title: z.string(),
         services: z.array(TableFullServiceSchema),
     })
@@ -123,7 +122,6 @@ export const SubDescriptionSchema = z
 
 export const InputsPageTableSchema = z
     .object({
-        type: z.literal('table'),
         title: z.string(),
         description: z.string().optional(),
         subDescription: SubDescriptionSchema,
@@ -151,6 +149,19 @@ export const InputsPageTableSchema = z
     })
     .strict();
 
+export const InputsPageSchema = z
+    .union([InputsPageRegular, InputsPageTableSchema])
+    .optional()
+    .refine((data) => {
+        if (!data) {
+            return false;
+        }
+        if ('table' in data) {
+            return InputsPageTableSchema.safeParse(data).success;
+        }
+        return InputsPageRegular.safeParse(data).success;
+    });
+
 export const pages = z.object({
     configuration: z.object({
         title: z.string(),
@@ -158,7 +169,7 @@ export const pages = z.object({
         subDescription: SubDescriptionSchema,
         tabs: z.array(TabSchema).min(1),
     }),
-    inputs: z.union([InputsPageRegular, InputsPageTableSchema]).optional(),
+    inputs: InputsPageSchema,
     dashboard: z
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),
@@ -169,18 +180,11 @@ export const pages = z.object({
 });
 // Define the types based on the Zod schemas
 
-type InputsPageRegular = z.infer<typeof InputsPageRegular>;
-type InputsPageTableSchema = z.infer<typeof InputsPageTableSchema>;
-
-export type InputsPage =
-    | ({ type: 'regular' } & InputsPageRegular)
-    | ({ type: 'table' } & InputsPageTableSchema);
+export type InputsPageSchema = z.infer<typeof InputsPageSchema>;
+export type InputsPageRegular = z.infer<typeof InputsPageRegular>;
+export type InputsPageTableSchema = z.infer<typeof InputsPageTableSchema>;
 
 type TableLessServiceSchema = z.infer<typeof TableLessServiceSchema>;
 type TableFullServiceSchema = z.infer<typeof TableFullServiceSchema>;
-
-export type services =
-    | ({ type: 'regular' } & TableFullServiceSchema)
-    | ({ type: 'table' } & TableLessServiceSchema);
 
 export type ITableConfig = z.infer<typeof TableSchema>;

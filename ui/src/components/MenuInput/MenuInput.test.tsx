@@ -76,7 +76,7 @@ describe('single service', () => {
     }
 
     it('should render button Create New Input', async () => {
-        setup({ title: '', type: 'regular', services: getOneService() });
+        setup({ title: '', services: getOneService() });
         const createButton = getCreateButton();
 
         expect(createButton).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('single service', () => {
     it('should call callback with service name on user click', async () => {
         const { mockHandleRequestOpen } = setup({
             title: '',
-            type: 'regular',
+
             services: getOneService(),
         });
         const createButton = getCreateButton();
@@ -122,14 +122,14 @@ describe('multiple services', () => {
     }
 
     it('should render dropdown Create New Input', async () => {
-        setup({ title: '', type: 'regular', services: getTwoServices() });
+        setup({ title: '', services: getTwoServices() });
         const createDropdown = getCreateDropdown();
         expect(createDropdown).toBeInTheDocument();
         expect(createDropdown).toHaveAttribute('data-test', 'dropdown');
     });
 
     it('should render service menu items on opening dropdown', async () => {
-        setup({ title: '', type: 'regular', services: getTwoServices() });
+        setup({ title: '', services: getTwoServices() });
         await userEvent.click(getCreateDropdown());
         expect(screen.getByTestId('menu')).toBeInTheDocument();
         expect(screen.getAllByTestId('item')).toHaveLength(2);
@@ -140,7 +140,7 @@ describe('multiple services', () => {
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
         const { mockHandleRequestOpen } = setup({
             title: '',
-            type: 'regular',
+
             services: getTwoServices(),
         });
         await userEvent.click(getCreateDropdown());
@@ -154,7 +154,6 @@ describe('multiple services', () => {
     describe('groups', () => {
         function getGroupedServices(): z.infer<typeof InputsPageTableSchema> {
             return {
-                type: 'table',
                 services: [
                     {
                         name: 'test-service-name1',
@@ -259,7 +258,6 @@ describe('multiple services', () => {
     describe('menu', () => {
         it('should render CustomMenu wrapper with groupsMenu without rendering underlying custom component', async () => {
             setup({
-                type: 'table',
                 services: [
                     {
                         name: 'test-service-name1',
@@ -323,7 +321,6 @@ describe('multiple services', () => {
 
         it('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component', async () => {
             setup({
-                type: 'table',
                 services: [
                     {
                         name: 'test-service-name1',

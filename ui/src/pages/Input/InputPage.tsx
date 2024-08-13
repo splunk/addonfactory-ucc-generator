@@ -8,7 +8,8 @@ import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import { _ } from '@splunk/ui-utils/i18n';
 import { z } from 'zod';
 import {
-    InputsPage,
+    InputsPageSchema,
+    InputsPageTableSchema,
     TableFullServiceSchema,
     TableLessServiceSchema,
 } from '../../types/globalConfig/pages';
@@ -25,7 +26,6 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import EntityPage from '../../components/EntityPage/EntityPage';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import useQuery from '../../hooks/useQuery';
-import { regularInput, tableInput } from '../../constants/inputPageType';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -50,8 +50,8 @@ type ServiceTableSchema =
 interface EntityState {
     open: boolean;
     isInputPageStyle?: boolean;
-    serviceName: string;
-    mode: Mode;
+    serviceName?: string;
+    mode?: Mode;
     formLabel?: string;
     groupName?: string;
     stanzaName?: string;
@@ -63,14 +63,14 @@ function isTableFullServiceSchema(
     return service !== undefined && 'description' in service;
 }
 
+function isTableSchema(inputs: InputsPageSchema): inputs is InputsPageTableSchema {
+    return inputs !== undefined && 'table' in inputs;
+}
+
 function InputPage(): ReactElement {
-    const [entity, setEntity] = useState<EntityState>({
-        open: false,
-        serviceName: '',
-        mode: MODE_CREATE,
-    });
+    const [entity, setEntity] = useState<EntityState>({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
-    const inputsPage = unifiedConfigs.pages.inputs as InputsPage;
+    const InputsPage = unifiedConfigs.pages.inputs;
 
     let services: ServiceTableSchema[] = [];
     let title;
@@ -78,10 +78,12 @@ function InputPage(): ReactElement {
     let description;
     let subDescription;
 
-    if (inputsPage.type === regularInput) {
-        ({ services, title } = inputsPage);
-    } else if (inputsPage.type === tableInput) {
-        ({ services, title, table, description, subDescription } = inputsPage);
+    if (InputsPage) {
+        if (isTableSchema(InputsPage)) {
+            ({ services, title, table, description, subDescription } = InputsPage);
+        } else {
+            ({ services, title } = InputsPage);
+        }
     }
 
     // check if the tabs feature is enabled or not.
@@ -192,17 +194,18 @@ function InputPage(): ReactElement {
     };
 
     // generate modal style dialog
-    const generateModalDialog = (): ReactElement => (
-        <EntityModal
-            page={PAGE_INPUT}
-            open={entity.open}
-            handleRequestClose={handleModalDialogClose}
-            serviceName={entity.serviceName}
-            mode={MODE_CREATE}
-            formLabel={entity.formLabel}
-            groupName={entity.groupName}
-        />
-    );
+    const generateModalDialog = () =>
+        entity.serviceName && (
+            <EntityModal
+                page={PAGE_INPUT}
+                open={entity.open}
+                handleRequestClose={handleModalDialogClose}
+                serviceName={entity.serviceName}
+                mode={MODE_CREATE}
+                formLabel={entity.formLabel}
+                groupName={entity.groupName}
+            />
+        );
 
     // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row: RowDataFields, mode: Mode): void => {
@@ -233,17 +236,18 @@ function InputPage(): ReactElement {
     };
 
     // generate page style dialog
-    const generatePageDialog = () => (
-        <EntityPage
-            handleRequestClose={handlePageDialogClose}
-            serviceName={entity.serviceName}
-            stanzaName={entity.stanzaName}
-            mode={entity.mode}
-            formLabel={entity.formLabel}
-            page={PAGE_INPUT}
-            groupName={entity.groupName}
-        />
-    );
+    const generatePageDialog = () =>
+        entity.serviceName && entity.mode ? (
+            <EntityPage
+                handleRequestClose={handlePageDialogClose}
+                serviceName={entity.serviceName}
+                stanzaName={entity.stanzaName}
+                mode={entity.mode}
+                formLabel={entity.formLabel}
+                page={PAGE_INPUT}
+                groupName={entity.groupName}
+            />
+        ) : null;
 
     const onTabChange = useCallback<TabBarChangeHandler>(
         (e, { selectedTabId }) => {
@@ -323,7 +327,6 @@ function InputPage(): ReactElement {
                                             handleRequestOpen({ serviceName: service.name })
                                         }
                                         handleOpenPageStyleDialog={handleOpenPageStyleDialog}
-                                        displayActionBtnAllRows
                                     />
                                 </div>
                             ))}
