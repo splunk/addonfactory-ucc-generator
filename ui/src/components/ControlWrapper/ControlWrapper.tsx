@@ -48,6 +48,7 @@ interface ControlWrapperProps {
     modifiedEntitiesData?: {
         help?: string;
         label?: string;
+        required?: boolean;
     };
 }
 
@@ -126,8 +127,8 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             </>
         );
 
-        const isFieldRequired =
-            this.props.entity?.required === undefined
+        const isFieldRequired = // modifiedEntitiesData takes precedence over entity
+            this.props?.modifiedEntitiesData?.required || this.props.entity?.required === undefined
                 ? 'oauth_field' in (this.props.entity || {}) // if required is undefined use true for oauth fields and false for others
                 : this.props.entity?.required; // if required present use required
         const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';

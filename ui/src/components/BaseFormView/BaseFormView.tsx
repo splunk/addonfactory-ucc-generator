@@ -618,7 +618,12 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
 
             // require elements for UI when they are visible
+            // or if data modification is applicable
+            // modification takes precedence over requiredWhenVisible
             temEntities = temEntities?.map((entity) => {
+                const requiredModification =
+                    this.state?.data?.[entity.field].modifiedEntitiesData?.required;
+
                 if (
                     entity?.type !== 'helpLink' &&
                     entity?.type !== 'oauth' &&
@@ -626,9 +631,16 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     entity?.options?.requiredWhenVisible &&
                     this?.state?.data?.[entity.field].display
                 ) {
-                    return { required: true, ...entity };
+                    return {
+                        ...entity,
+                        required: requiredModification ?? true,
+                    };
                 }
-                return entity;
+
+                return {
+                    ...entity,
+                    required: requiredModification ?? entity.required,
+                };
             });
 
             // Validation of form fields on Submit
@@ -1299,7 +1311,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         if (!temState) {
                             return null;
                         }
-
                         return (
                             <ControlWrapper
                                 key={e.field}
