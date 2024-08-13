@@ -127,7 +127,9 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["rowUnderGroup1"]
+                    "fields": [
+                      "rowUnderGroup1"
+                    ]
                   },
                   {
                     "label": "Group 3",
@@ -135,7 +137,9 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["field223", "160validation"]
+                    "fields": [
+                      "field223", "160validation"
+                    ]
                   }
                 ],
                 "rows": [
@@ -328,7 +332,9 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["rowUnderGroup1"]
+                    "fields": [
+                      "rowUnderGroup1"
+                    ]
                   },
                   {
                     "label": "Group 3",
@@ -336,7 +342,9 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["field223", "160validation"]
+                    "fields": [
+                      "field223", "160validation"
+                    ]
                   }
                 ],
                 "rows": [
@@ -392,7 +400,9 @@
       "title": "Inputs",
       "description": "Manage your data inputs",
       "table": {
-        "actions": ["edit", "enable", "delete", "search", "clone"],
+        "actions": [
+          "edit", "enable", "delete","search", "clone"
+        ],
         "header": [
           {
             "label": "Name",

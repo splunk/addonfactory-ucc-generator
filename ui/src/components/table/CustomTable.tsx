@@ -67,12 +67,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
     tableConfig,
 }) => {
     const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
-    const [entityModal, setEntityModal] = useState<IEntityModal>({
-        open: false,
-    });
-    const [deleteModal, setDeleteModal] = useState<IEntityModal>({
-        open: false,
-    });
+    const [entityModal, setEntityModal] = useState<IEntityModal>({ open: false });
+    const [deleteModal, setDeleteModal] = useState<IEntityModal>({ open: false });
 
     const { rowData } = useTableContext();
     const inputsPage = unifiedConfigs.pages.inputs;
@@ -82,10 +78,10 @@ const CustomTable: React.FC<CustomTableProps> = ({
             : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
-    const headerMapping: Record<string, string> = {};
+    const headerMapping: Record<string, unknown> = {};
 
     headers.forEach((x) => {
-        headerMapping[x.field] = typeof x.mapping === 'string' ? x.mapping : '';
+        headerMapping[x.field] = x.mapping;
     });
 
     const serviceToStyleMap = useMemo(

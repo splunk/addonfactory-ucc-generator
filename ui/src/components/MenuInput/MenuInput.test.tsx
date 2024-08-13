@@ -84,11 +84,7 @@ describe('single service', () => {
     });
 
     it('should call callback with service name on user click', async () => {
-        const { mockHandleRequestOpen } = setup({
-            title: '',
-
-            services: getOneService(),
-        });
+        const { mockHandleRequestOpen } = setup({ title: '', services: getOneService() });
         const createButton = getCreateButton();
 
         await userEvent.click(createButton);
@@ -138,11 +134,7 @@ describe('multiple services', () => {
     });
 
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
-        const { mockHandleRequestOpen } = setup({
-            title: '',
-
-            services: getTwoServices(),
-        });
+        const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
         await userEvent.click(getCreateDropdown());
         await userEvent.click(screen.getByText('test-service-title2'));
         expect(mockHandleRequestOpen).toHaveBeenCalledWith({
