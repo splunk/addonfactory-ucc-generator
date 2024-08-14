@@ -37,10 +37,7 @@ interface IEntityModal {
     mode?: Mode;
 }
 
-const getServiceToStyleMap = (
-    page: string,
-    unifiedConfigs: GlobalConfig
-): Record<string, string> => {
+const getServiceToStyleMap = (page: string, unifiedConfigs: GlobalConfig) => {
     const serviceToStyleMap: Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> = {};
     if (page === PAGE_INPUT) {
         const inputsPage = unifiedConfigs.pages.inputs;
