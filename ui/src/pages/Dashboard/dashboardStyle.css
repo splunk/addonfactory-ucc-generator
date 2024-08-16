@@ -239,6 +239,17 @@ body {
     height: 300px;
 }
 
+
+#spike_modal_timerange_label_start_viz {
+    grid-row: 1;
+}
+
+#spike_modal_timerange_label_end_viz{
+    grid-row: 1;
+    margin-left: 145px;
+    display: flex;
+}
+
 /* shared styles for time labels */
 #overview_timerange_label_start_viz,
 #overview_timerange_label_end_viz,
@@ -247,7 +258,9 @@ body {
 #errors_tab_timerange_label_start_viz,
 #errors_tab_timerange_label_end_viz,
 #resource_tab_timerange_label_start_viz,
-#resource_tab_timerange_label_end_viz {
+#resource_tab_timerange_label_end_viz,
+#spike_modal_timerange_label_start_viz,
+#spike_modal_timerange_label_end_viz {
     inline-size: fit-content;
     grid-column: 1;
     width: 145px;
@@ -302,7 +315,8 @@ body {
 #overview_timerange_label_end_viz::before,
 #data_ingestion_timerange_label_end_viz::before,
 #errors_tab_timerange_label_end_viz::before,
-#resource_tab_timerange_label_end_viz::before {
+#resource_tab_timerange_label_end_viz::before,
+#spike_modal_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
     color: var(--dashboard-ucc-grey-color);
@@ -316,22 +330,4 @@ body {
     grid-template-columns: repeat(8, 12%);
     /* grid-template-rows: auto auto auto auto auto; */
     overflow-x: hidden;
-}
-
-#SpikeSidePanel [data-test='grid-layout-canvas'] {
-    grid-template-columns: 50% 50%;
-    /* grid-template-rows: auto auto auto auto auto; */
-    overflow-x: hidden;
-}
-
-#spike_side_panel_data_volume_viz,
-#spike_side_panel_events_count_viz {
-    grid-column: 1 / span 2;
-}
-
-#spikeCardSidePanel{
-    grid-column: 7 / 9;
-    grid-row: 7;
-    margin-top: 72px;
-    z-index: 999;
 }

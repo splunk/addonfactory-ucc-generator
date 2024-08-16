@@ -177,8 +177,6 @@ export const makeVisualAdjustmentsOnDataIngestionPage = () => {
         '#info_message_for_data_ingestion',
         '#data_ingestion_table_viz div'
     );
-
-    waitForElementToDisplayAndMoveThemToCanvas('#spikeCardSidePanel', '#data_ingestion_table_viz');
 };
 
 const VIEW_BY_EXTRA_LABEL_DESC: Record<string, string> = {

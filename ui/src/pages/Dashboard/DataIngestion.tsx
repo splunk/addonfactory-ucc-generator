@@ -5,7 +5,6 @@ import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOn
 import Search from '@splunk/react-ui/Search';
 import Message from '@splunk/react-ui/Message';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';
-import Button from '@splunk/react-ui/Button';
 import { debounce } from 'lodash';
 import TabLayout from '@splunk/react-ui/TabLayout';
 
@@ -18,7 +17,6 @@ import {
 } from './utils';
 import { CustomDashboard } from './Custom';
 import { SpikeModal } from './SpikeModal';
-import { SideCardPanel } from './SideCardPanel';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -35,10 +33,7 @@ export const DataIngestionDashboard = ({
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
-
     const [spikeDef, setSpikeDef] = useState<Record<string, unknown> | null>(null);
-
-    const [useSideModalModalVersion, setUseSideModalModalVersion] = useState<boolean>(true);
     const [displaySideMenuForInput, setDisplaySideMenuForInput] = useState<string | null>(null);
 
     useEffect(() => {
@@ -75,7 +70,7 @@ export const DataIngestionDashboard = ({
 
         setViewByInput(currentViewBy || '');
 
-        loadDashboardJsonDefinition('spike_side_panel_definition.json', setSpikeDef);
+        loadDashboardJsonDefinition('spike_modal_definition.json', setSpikeDef);
 
         return () => {
             observer.disconnect();
@@ -140,35 +135,24 @@ export const DataIngestionDashboard = ({
     }, []);
 
     const dashboardPlugin = useMemo(
-        () => ({
-            onEventTrigger: handleDashboardEvent,
-        }),
+        () => ({ onEventTrigger: handleDashboardEvent }),
         [handleDashboardEvent]
     );
     return (
         <>
             <DashboardContextProvider
-                preset={{
-                    ...EnterpriseViewOnlyPreset,
-                    // eventHandlers: {
-                    //     'table.click.handler': TableClickHandler,
-                    // },
-                }}
+                preset={{ ...EnterpriseViewOnlyPreset }}
                 initialDefinition={dashboardDefinition}
                 dashboardPlugin={dashboardPlugin}
             >
                 <>
-                    <Button
-                        onClick={() => setUseSideModalModalVersion(!useSideModalModalVersion)}
-                        label={`Should use Side Modal version => ${useSideModalModalVersion}`}
-                    />
                     <SpikeModal
-                        open={!useSideModalModalVersion && !!displaySideMenuForInput}
+                        open={!!displaySideMenuForInput}
                         handleRequestClose={() => {
                             setDisplaySideMenuForInput(null);
                         }}
                         title={`Title for input - ${displaySideMenuForInput}`}
-                        acceptBtnLabel="ok"
+                        acceptBtnLabel="Done"
                     >
                         <TabLayout.Panel label="spike" panelId="spikeDefTabPanel">
                             <CustomDashboard dashboardDefinition={spikeDef} />
@@ -191,62 +175,6 @@ export const DataIngestionDashboard = ({
                             style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
                         />
                     </div>
-                    {/* <div id="switch_hide_no_traffic_wrapper" className="invisible_before_moving">
-                        <Switch
-                            id="switch_hide_no_traffic"
-                            value={toggleNoTraffic}
-                            onClick={handleChangeSwitch}
-                            selected={!!toggleNoTraffic}
-                            appearance="toggle"
-                        >
-                            Hide items with no traffic
-                        </Switch>
-                    </div> */}
-                    {/* <Card
-                        style={{
-                            display:
-                                !useSpikeModalVersion && !!displaySideMenuForInput
-                                    ? 'block'
-                                    : 'none',
-                        }}
-                        id="spikeCardSidePanel"
-                    >
-                        <Card.Header
-                            title="Title"
-                            subtitle="subtitlesubtitlesubtitle"
-                            actionPrimary={
-                                <Button
-                                    label="X"
-                                    onClick={() => setDisplaySideMenuForInput(null)}
-                                />
-                            }
-                        />
-                        <Card.Body>
-                            <div id="SpikeSidePanel">
-                                {!useSpikeModalVersion && !!displaySideMenuForInput && (
-                                    <TabLayout.Panel label="spike" panelId="spikeDefTabPanel">
-                                        <CustomDashboard dashboardDefinition={spikeDef} />
-                                    </TabLayout.Panel>
-                                )}
-                            </div>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button
-                                appearance="secondary"
-                                onClick={() => setDisplaySideMenuForInput(null)}
-                            >
-                                Close
-                            </Button>
-                        </Card.Footer>
-                    </Card> */}
-                    {/* {!useSpikeModalVersion && !!displaySideMenuForInput ? ( */}
-                    <SideCardPanel
-                        display={useSideModalModalVersion && !!displaySideMenuForInput}
-                        displaySideMenuForInput={displaySideMenuForInput}
-                        setDisplaySideMenuForInput={setDisplaySideMenuForInput}
-                        spikeDef={spikeDef}
-                    />
-                    {/* ) : null} */}
                     <div id="info_message_for_data_ingestion" className="invisible_before_moving">
                         {infoMessage ? (
                             <Message appearance="fill" type="info">
