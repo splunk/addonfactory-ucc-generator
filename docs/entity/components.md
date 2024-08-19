@@ -528,7 +528,7 @@ See the following example:
 
 ## `Index`
 
-A field used to specify [index](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Inputsconf#Scripted_Input:).
+A field used to specify [index](https://docs.splunk.com/Splexicon:Index?utm_campaign=google_emea_tier3_en_search_brand&utm_source=google&utm_medium=cpc&utm_content=free_trials_downloads&utm_term=splunk&device=c&_bt=662330344273&_bm=p&_bn=g&gad_source=1&gclid=Cj0KCQjw2ou2BhCCARIsANAwM2FlgjCoQ1lITD4fu1EIeTeMSoUx1VOUunrBv1yDbRr43rQMcjh7r8EaAkU0EALw_wcB:).
 
 <h3> Attributes </h3>
 
@@ -544,7 +544,7 @@ A field used to specify [index](https://docs.splunk.com/Documentation/Splunk/lat
 
 See the following examples:
 
-Minimal definition:
+Only required attributes provided:
 
 ```json
 {
@@ -554,7 +554,7 @@ Minimal definition:
 }
 ```
 
-Full definition:
+All attributes provided:
 
 ```json
 {
@@ -573,6 +573,8 @@ Index field has two internal validators:
 2. LENGTH which allows for an index name to have of 1 to 80 characters.
 
 `endpointUrl` for that entity is `data/indexes?search=isInternal=0+disabled=0`
+
+During the build process, new index field will be converted to a full [definition](https://github.com/splunk/addonfactory-ucc-generator/blob/main/splunk_add_on_ucc_framework/entity/index_entity.py#L23:) and saved in the globalConfig in the output directory.
 
 ## `Custom`
 
