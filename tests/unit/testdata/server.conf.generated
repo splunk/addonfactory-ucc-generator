@@ -2,4 +2,3 @@
 conf_replication_include.splunk_ta_ucc_example_settings = true
 conf_replication_include.splunk_ta_ucc_example_account = true
 conf_replication_include.splunk_ta_ucc_example_oauth = true
-

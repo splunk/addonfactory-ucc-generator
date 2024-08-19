@@ -2,13 +2,13 @@
 
 [[package]]
 name = "addonfactory-splunk-conf-parser-lib"
-version = "0.4.0"
+version = "0.4.3"
 description = "Splunk .conf files parser"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = "<4.0,>=3.7"
 files = [
-    {file = "addonfactory_splunk_conf_parser_lib-0.4.0-py3-none-any.whl", hash = "sha256:9567b6c8cb87668c1120517fb6001f9cf3c04d07c923f57385b0bb025df42c24"},
-    {file = "addonfactory_splunk_conf_parser_lib-0.4.0.tar.gz", hash = "sha256:e892cd26dc9708512f864a397ed101579cceefe2c408ea5be2dc5032d2edf05d"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.4.3-py3-none-any.whl", hash = "sha256:16a66c1829eec876c21b2d2ee2b2ef305bc23516837fc0e63d5e7512c06d357d"},
+    {file = "addonfactory_splunk_conf_parser_lib-0.4.3.tar.gz", hash = "sha256:847e2eb34b3be35d1e5d3d5a2cdaec1ccd33cc687b7bbd1f3f746184f16b1479"},
 ]
 
 [[package]]
@@ -1731,4 +1731,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "c542f96c8441e92240503a85287767b54700bd4877e04cc27452ce6e56885399"
+content-hash = "b8706782dcaed29f95cbd6f7bd241830bb5e21017480e91c6421501360804554"

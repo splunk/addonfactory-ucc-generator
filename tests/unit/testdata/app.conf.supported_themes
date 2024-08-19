@@ -21,4 +21,3 @@ check_for_updates = true
 [id]
 version = 1.0.0
 name = Splunk_TA_UCCExample
-

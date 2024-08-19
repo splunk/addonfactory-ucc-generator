@@ -33,8 +33,8 @@ export const handleStateFieldModificationProp = (
 };
 
 export const handleEntityModificationProp = (
-    key: 'help' | 'label',
-    propValue: string,
+    key: 'help' | 'label' | 'required',
+    propValue: string | boolean,
     fieldId: string,
     state: BaseFormState
 ) => {
@@ -114,8 +114,8 @@ const isStateField = (
     propKey === 'disabled' ||
     propKey === 'markdownMessage';
 
-const isEntityField = (propKey: string): propKey is 'help' | 'label' =>
-    propKey === 'help' || propKey === 'label';
+const isEntityField = (propKey: string): propKey is 'help' | 'label' | 'required' =>
+    propKey === 'help' || propKey === 'label' || propKey === 'required';
 
 const getStateAfterModification = (
     modificationKey: string,
@@ -131,7 +131,10 @@ const getStateAfterModification = (
             stateShallowCopy
         );
     }
-    if (isEntityField(modificationKey) && typeof modificationValue === 'string') {
+    if (
+        isEntityField(modificationKey) &&
+        (typeof modificationValue === 'string' || typeof modificationValue === 'boolean')
+    ) {
         return handleEntityModificationProp(
             modificationKey,
             modificationValue,
@@ -152,7 +155,6 @@ export const getModifiedState = (
 ) => {
     let stateShallowCopy = { ...state };
     let shouldUpdateState = false;
-
     entitiesToModify.forEach((entity: EntitiesAllowingModifications) => {
         const modifications = getModificationForEntity(entity, stateShallowCopy, mode);
 
