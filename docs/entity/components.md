@@ -528,7 +528,7 @@ See the following example:
 
 ## `Index`
 
-A field used to specify [index](https://docs.splunk.com/Splexicon:Index?utm_campaign=google_emea_tier3_en_search_brand&utm_source=google&utm_medium=cpc&utm_content=free_trials_downloads&utm_term=splunk&device=c&_bt=662330344273&_bm=p&_bn=g&gad_source=1&gclid=Cj0KCQjw2ou2BhCCARIsANAwM2FlgjCoQ1lITD4fu1EIeTeMSoUx1VOUunrBv1yDbRr43rQMcjh7r8EaAkU0EALw_wcB:).
+A field used to specify [index](https://docs.splunk.com/Splexicon:Index:).
 
 <h3> Attributes </h3>
 
