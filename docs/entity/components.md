@@ -528,7 +528,7 @@ See the following example:
 
 ## `Index`
 
-A field used to specify [index](https://docs.splunk.com/Splexicon:Index:).
+A field used to specify [index](https://docs.splunk.com/Splexicon:Index).
 
 <h3> Attributes </h3>
 
