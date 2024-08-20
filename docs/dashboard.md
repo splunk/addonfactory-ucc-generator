@@ -21,7 +21,7 @@ As of now, 4 pre-built panels are supported:
 * Errors in the add-on.
 * Resource consumption.
 
-**IMPORTANT**: To fully use the panels available on the monitoring dashboard, use the `solnlib.log`'s [`events_ingested` function](https://github.com/splunk/addonfactory-solutions-library-python/blob/v4.14.0/solnlib/log.py#L253), to record events.
+**IMPORTANT**: To fully use the panels available on the monitoring dashboard, use the `solnlib.log`'s [`events_ingested` function](https://github.com/splunk/addonfactory-solutions-library-python/blob/v5.2.0/solnlib/log.py#L280), to record events.
 You must use `solnlib` in at least version **5.2.0**.
 
 The above function takes 5 positional parameters which are:
