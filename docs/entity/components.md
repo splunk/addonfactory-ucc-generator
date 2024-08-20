@@ -526,6 +526,56 @@ See the following example:
 }
 ```
 
+## `Index`
+
+A field used to specify [index](https://docs.splunk.com/Splexicon:Index).
+
+<h3> Attributes </h3>
+
+| Property     | Type    | Description                                                                                                                      |
+|--------------|---------|----------------------------------------------------------------------------------------------------------------------------------|
+| type*        | string  | To specify the type of entity to be rendered in inputs or configuration form.                                                    |
+| field*       | string  | To define a particular entity field.                                                                                             |
+| label*       | string  | Text displayed next to entity field.                                                                                             |
+| defaultValue | string  | The initial input value.                                                                                                         |
+| help         | string  | Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field. |
+| required     | string  | To specify whether the field is required or not.                                                                                 |
+
+
+See the following examples:
+
+Only required attributes provided:
+
+```json
+{
+    "type": "index",
+    "field": "index",
+    "label": "Index"
+}
+```
+
+All attributes provided:
+
+```json
+{
+    "type": "index",
+    "field": "index",
+    "label": "Index",
+    "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
+    "defaultValue": "main",
+    "required": true
+}
+```
+
+Index field has two internal validators:
+
+1. REGEX that forces index names to start with a letter or digit and can only contain letters, numbers, underscores or hyphens.
+2. LENGTH which allows for an index name to have of 1 to 80 characters.
+
+`endpointUrl` for that entity is `data/indexes?search=isInternal=0+disabled=0`
+
+During the build process, new index field will be converted to a full [definition](https://github.com/splunk/addonfactory-ucc-generator/blob/main/splunk_add_on_ucc_framework/entity/index_entity.py#L23) and saved in the globalConfig in the output directory.
+
 ## `Custom`
 
 Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/custom_control.md) page to learn more.
