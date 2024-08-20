@@ -70,7 +70,7 @@ export const ErrorDashboard = ({
         // search call to for error types
         const mySearchJob = SearchJob.create(
             {
-                search: `index=_internal source=*${globalConfig.meta.restRoot}* ERROR | dedup exc_l | table exc_l`,
+                search: `index=_internal source=*${globalConfig.meta.restRoot}* log_level=ERROR | dedup exc_l | table exc_l`,
                 earliest_time: '0', // all time
                 latest_time: 'now',
             },
