@@ -20,7 +20,7 @@ interface ICustomCompClass {
         data: IData,
         setValue: (field: string, newValue: AcceptableFormValueOrNullish) => void,
         util: UtilBaseForm,
-        el?: HTMLElement | undefined
+        el?: HTMLElement
     ): {
         render: () => void;
         validation?: (submittedField: string, submittedValue: string) => void;

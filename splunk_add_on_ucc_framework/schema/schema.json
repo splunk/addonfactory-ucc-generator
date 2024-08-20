@@ -339,7 +339,12 @@
                 "determine_by": {
                   "type": "string",
                   "description": "Specify what to use (source or sourcetype) to search events in license usage.",
-                  "enum": ["source", "sourcetype", "host", "index"]
+                  "enum": [
+                    "source",
+                    "sourcetype",
+                    "host",
+                    "index"
+                  ]
                 },
                 "search_condition": {
                   "type": "array",
@@ -350,7 +355,10 @@
                   }
                 }
               },
-              "required": ["determine_by", "search_condition"],
+              "required": [
+                "determine_by",
+                "search_condition"
+              ],
               "additionalProperties": false
             }
           },
