@@ -60,16 +60,6 @@
       "enabled": false
     },
     {
-      "description": "Ignore msw-storybook-addon since they bumps incorrectly while canary version is using",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "msw-storybook-addon"
-      ],
-      "enabled": false
-    },
-    {
       "description": "Update package.json versions together with yarn.lock",
       "matchManagers": [
         "npm"

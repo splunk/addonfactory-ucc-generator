@@ -13,19 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 
 from splunk_add_on_ucc_framework.entity.entity import Entity
 from splunk_add_on_ucc_framework.entity.interval_entity import IntervalEntity
-
+from splunk_add_on_ucc_framework.entity.index_entity import IndexEntity
 
 ENTITY_TYPES = [
     IntervalEntity,
+    IndexEntity,
 ]
 
 
-def resolve_entity(entity_definition: Dict[str, Any]) -> Entity:
-    for entity_type in ENTITY_TYPES:
+def resolve_entity(
+    entity_definition: Dict[str, Any],
+    entity_types: Optional[List[Any]] = None,
+) -> Entity:
+    entity_types = entity_types if entity_types else ENTITY_TYPES
+    for entity_type in entity_types:
         entity = entity_type.from_definition(entity_definition)
 
         if entity is not None:
@@ -38,5 +43,8 @@ def expand_entity(entity_definition: Dict[str, Any]) -> Dict[str, Any]:
     return resolve_entity(entity_definition).long_form()
 
 
-def collapse_entity(entity_definition: Dict[str, Any]) -> Dict[str, Any]:
-    return resolve_entity(entity_definition).short_form()
+def collapse_entity(
+    entity_definition: Dict[str, Any],
+    entity_types: Optional[List[Any]] = None,
+) -> Dict[str, Any]:
+    return resolve_entity(entity_definition, entity_types).short_form()

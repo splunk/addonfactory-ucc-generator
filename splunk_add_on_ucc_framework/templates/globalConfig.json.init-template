@@ -82,19 +82,23 @@
                             "required": true
                         },
                         {
-                            "type": "text",
+                            "type": "interval",
                             "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
                             "defaultValue": "300",
                             "field": "interval",
+                            "options": {
+                                "range": [
+                                    10,
+                                    301
+                                ]
+                            },
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
+                        },
+                        {
+                            "type": "index",
+                            "field": "index",
+                            "label": "Index"
                         },
                         {
                             "type": "singleSelect",
@@ -155,8 +159,8 @@
                         "label": "Status",
                         "field": "disabled",
                         "mapping": {
-                            "true": "Disabled",
-                            "false": "Enabled"
+                            "true": "Inactive",
+                            "false": "Active"
                         }
                     }
                 ]
@@ -175,6 +179,10 @@
         "restRoot": "{{addon_rest_root}}",
         "version": "{{addon_version}}",
         "displayName": "{{addon_display_name}}",
-        "schemaVersion": "0.0.3"
+        "schemaVersion": "0.0.8",
+        "supportedThemes": [
+            "light",
+            "dark"
+        ]
     }
 }

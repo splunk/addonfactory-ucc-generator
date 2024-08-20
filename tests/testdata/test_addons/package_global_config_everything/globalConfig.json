@@ -96,9 +96,6 @@
                             "type": "text",
                             "help": "Enter the URL, for example",
                             "required": false,
-                            "options": {
-                                "placeholder": "Required"
-                            },
                             "validators": [
                                 {
                                     "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
@@ -111,36 +108,7 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "account_checkbox",
-                            "help": "This is an example checkbox for the account entity",
-                            "modifyFieldsOnValue": [
-                                {
-                                    "fieldValue": 1,
-                                    "fieldsToModify": [
-                                        {
-                                            "fieldId": "account_radio",
-                                            "disabled": false
-                                        },
-                                        {
-                                            "fieldId": "endpoint",
-                                            "display": true
-                                        }
-                                    ]
-                                },
-                                {
-                                    "fieldValue": 0,
-                                    "mode": "edit",
-                                    "fieldsToModify": [
-                                        {
-                                            "fieldId": "account_radio",
-                                            "disabled": true
-                                        },
-                                        {
-                                            "fieldId": "endpoint",
-                                            "display": false
-                                        }
-                                    ]
-                                }
-                            ]
+                            "help": "This is an example checkbox for the account entity"
                         },
                         {
                             "type": "radio",
@@ -212,7 +180,8 @@
                                                             "markdownType": "text",
                                                             "text": "markdown message test",
                                                             "color": "red"
-                                                        }
+                                                        },
+                                                        "required": true
                                                     }
                                                 ]
                                             },
@@ -230,7 +199,8 @@
                                                             "markdownType": "link",
                                                             "text": "markdown message test conf page",
                                                             "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration"
-                                                        }
+                                                        },
+                                                        "required": false
                                                     }
                                                 ]
                                             },
@@ -243,7 +213,8 @@
                                                         "display": false,
                                                         "label": "Disabled on edit for oauth 3333",
                                                         "value": "test 3",
-                                                        "help": "Disabled on edit for test 3"
+                                                        "help": "Disabled on edit for test 3",
+                                                        "required": true
                                                     }
                                                 ]
                                             },
@@ -263,7 +234,8 @@
                                                             "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration",
                                                             "token": "token",
                                                             "linkText": "conf page"
-                                                        }
+                                                        },
+                                                        "required": false
                                                     }
                                                 ]
                                             },
@@ -279,7 +251,8 @@
                                                         "help": "Disabled on edit for test 5",
                                                         "markdownMessage": {
                                                             "text": "markdown message plain text"
-                                                        }
+                                                        },
+                                                        "required": true
                                                     }
                                                 ]
                                             }
@@ -341,12 +314,7 @@
                                                 "fieldsToModify": [
                                                     {
                                                         "fieldId": "oauth_oauth_text",
-                                                        "disabled": false,
                                                         "label": "Disabled on edit for oauth 55555"
-                                                    },
-                                                    {
-                                                        "fieldId": "endpoint_authorize",
-                                                        "display": true
                                                     }
                                                 ]
                                             },
@@ -527,7 +495,8 @@
                                     "range": [
                                         1,
                                         65535
-                                    ]
+                                    ],
+                                    "isInteger": true
                                 }
                             ],
                             "field": "proxy_port"
@@ -948,6 +917,22 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input One"
@@ -984,22 +969,8 @@
                             "required": true
                         },
                         {
-                            "type": "singleSelect",
+                            "type": "index",
                             "label": "Index",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of index name should be between 1 and 80.",
-                                    "minLength": 1,
-                                    "maxLength": 80
-                                }
-                            ],
-                            "defaultValue": "default",
-                            "options": {
-                                "endpointUrl": "data/indexes",
-                                "denyList": "^_.*$",
-                                "createSearchChoice": true
-                            },
                             "field": "index",
                             "required": true
                         },
@@ -1260,6 +1231,22 @@
                                     }
                                 ]
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input Two"
@@ -1376,6 +1363,10 @@
                         "field": "disabled"
                     }
                 ],
+                "customRow": {
+                    "src": "custom_input_row",
+                    "type": "external"
+                },
                 "moreInfo": [
                     {
                         "label": "Name",
@@ -1393,8 +1384,8 @@
                         "label": "Status",
                         "field": "disabled",
                         "mapping": {
-                            "true": "Disabled",
-                            "false": "Enabled"
+                            "true": "Inactive",
+                            "false": "Active"
                         }
                     },
                     {
@@ -1422,7 +1413,9 @@
                         "field": "limit"
                     }
                 ]
-            }
+            },
+            "hideFieldId": "hide_in_ui",
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [
@@ -1550,9 +1543,13 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.44.0R7f88cfdd",
+        "version": "5.48.2Ra94cdc9a8",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.7",
-        "_uccVersion": "5.44.0"
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.48.2",
+        "supportedThemes": [
+            "light",
+            "dark"
+        ]
     }
 }

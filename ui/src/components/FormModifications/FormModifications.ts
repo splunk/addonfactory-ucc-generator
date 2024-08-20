@@ -1,5 +1,6 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import {
     BaseFormState,
     AnyEntity,
@@ -32,8 +33,8 @@ export const handleStateFieldModificationProp = (
 };
 
 export const handleEntityModificationProp = (
-    key: 'help' | 'label',
-    propValue: string,
+    key: 'help' | 'label' | 'required',
+    propValue: string | boolean,
     fieldId: string,
     state: BaseFormState
 ) => {
@@ -81,11 +82,18 @@ const getModificationForEntity = (
     stateShallowCopy: BaseFormState,
     mode: Mode
 ) => {
-    let modification = entity.modifyFieldsOnValue?.find(
-        (mod) =>
-            stateShallowCopy.data?.[entity.field]?.value === mod.fieldValue &&
+    let modification = entity.modifyFieldsOnValue?.find((mod) => {
+        const currentFieldValue = stateShallowCopy.data?.[entity.field]?.value;
+        return (
+            // do not compare empty values for modifications
+            currentFieldValue !== undefined &&
+            currentFieldValue !== null &&
+            // here type convertion is needed as splunk keeps all data as string
+            // and users can put numbers or booleans inside global config
+            getValueMapTruthyFalse(currentFieldValue) === getValueMapTruthyFalse(mod.fieldValue) &&
             (!mod.mode || mod.mode === mode)
-    );
+        );
+    });
 
     if (!modification) {
         modification = entity.modifyFieldsOnValue?.find(
@@ -106,8 +114,8 @@ const isStateField = (
     propKey === 'disabled' ||
     propKey === 'markdownMessage';
 
-const isEntityField = (propKey: string): propKey is 'help' | 'label' =>
-    propKey === 'help' || propKey === 'label';
+const isEntityField = (propKey: string): propKey is 'help' | 'label' | 'required' =>
+    propKey === 'help' || propKey === 'label' || propKey === 'required';
 
 const getStateAfterModification = (
     modificationKey: string,
@@ -123,7 +131,10 @@ const getStateAfterModification = (
             stateShallowCopy
         );
     }
-    if (isEntityField(modificationKey) && typeof modificationValue === 'string') {
+    if (
+        isEntityField(modificationKey) &&
+        (typeof modificationValue === 'string' || typeof modificationValue === 'boolean')
+    ) {
         return handleEntityModificationProp(
             modificationKey,
             modificationValue,
@@ -144,7 +155,6 @@ export const getModifiedState = (
 ) => {
     let stateShallowCopy = { ...state };
     let shouldUpdateState = false;
-
     entitiesToModify.forEach((entity: EntitiesAllowingModifications) => {
         const modifications = getModificationForEntity(entity, stateShallowCopy, mode);
 

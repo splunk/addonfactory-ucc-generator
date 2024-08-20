@@ -57,6 +57,7 @@ export interface BaseFormStateData {
         modifiedEntitiesData?: {
             help?: string;
             label?: string;
+            required?: boolean;
         };
     };
 }

@@ -15,6 +15,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
+import { getTableCellValue } from './table.utils';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -51,10 +52,10 @@ function CustomTableRow(props) {
         });
 
     const rowActionsPrimaryButton = useCallback(
-        (selectedRow) => (
-            <TableCellWrapper data-column="actions" key={selectedRow.id}>
+        (selectedRow, header) => (
+            <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
-                    {rowActions.includes('edit') && (
+                    {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -90,7 +91,7 @@ function CustomTableRow(props) {
                             />
                         </Tooltip>
                     )}
-                    {rowActions.includes('delete') && (
+                    {!props.readonly && rowActions.includes('delete') && (
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -107,7 +108,7 @@ function CustomTableRow(props) {
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
-    let statusContent = 'Enabled';
+    let statusContent = 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
@@ -115,20 +116,19 @@ function CustomTableRow(props) {
         statusContent =
             headerMapping?.disabled && headerMapping.disabled[row.disabled]
                 ? headerMapping.disabled[row.disabled]
-                : 'Disabled';
+                : 'Inactive';
     }
 
     // Fix set of props are passed to Table.Row element
     return (
         <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
-            key={row.id}
+            key={row.name || row.id}
             {...props}
         >
             {columns &&
                 columns.length &&
                 columns.map((header) => {
                     let cellHTML = '';
-
                     if (header.customCell && header.customCell.src) {
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
@@ -145,18 +145,18 @@ function CustomTableRow(props) {
                                         onClick={() => handleToggleActionClick(row)}
                                         selected={!row.disabled}
                                         // eslint-disable-next-line no-underscore-dangle
-                                        disabled={row.__toggleShowSpinner}
+                                        disabled={row.__toggleShowSpinner || props.readonly}
                                         appearance="toggle"
                                         className="toggle_switch"
                                         selectedLabel={_(
                                             headerMapping?.disabled?.false
                                                 ? headerMapping.disabled.false
-                                                : 'Enabled'
+                                                : 'Active'
                                         )}
                                         unselectedLabel={_(
                                             headerMapping?.disabled?.true
                                                 ? headerMapping.disabled.true
-                                                : 'Disabled'
+                                                : 'Inactive'
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>
@@ -164,7 +164,7 @@ function CustomTableRow(props) {
                             </Table.Cell>
                         );
                     } else if (header.field === 'actions') {
-                        cellHTML = rowActionsPrimaryButton(row);
+                        cellHTML = rowActionsPrimaryButton(row, header);
                     } else {
                         cellHTML = (
                             <Table.Cell
@@ -172,13 +172,7 @@ function CustomTableRow(props) {
                                 data-column={header.field}
                                 key={header.field}
                             >
-                                {headerMapping[header.field] &&
-                                Object.prototype.hasOwnProperty.call(
-                                    headerMapping[header.field],
-                                    row[header.field]
-                                )
-                                    ? headerMapping[header.field][row[header.field]]
-                                    : row[header.field]}
+                                {getTableCellValue(row, header.field, headerMapping[header.field])}
                             </Table.Cell>
                         );
                     }
@@ -190,6 +184,7 @@ function CustomTableRow(props) {
 
 CustomTableRow.propTypes = {
     row: PropTypes.any,
+    readonly: PropTypes.bool,
     columns: PropTypes.array,
     rowActions: PropTypes.array,
     headerMapping: PropTypes.object,

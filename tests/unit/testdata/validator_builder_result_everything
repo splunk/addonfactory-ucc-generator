@@ -9,6 +9,7 @@ validator.AllOf(
     validator.Number(
         max_val=65535, 
         min_val=1, 
+        is_int=True, 
     ), 
     validator.Pattern(
         regex=r"""^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""", 

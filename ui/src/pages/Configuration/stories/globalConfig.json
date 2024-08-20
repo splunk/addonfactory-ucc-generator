@@ -17,7 +17,7 @@
             }
           },
           "table": {
-            "actions": ["edit", "delete","search", "clone"],
+            "actions": ["edit", "delete", "clone"],
             "header": [
               {
                 "label": "Name",
@@ -92,9 +92,6 @@
               "type": "text",
               "help": "Enter the URL, for example",
               "required": false,
-              "options": {
-                "placeholder": "Required"
-              },
               "validators": [
                 {
                   "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
@@ -517,7 +514,8 @@
               "validators": [
                 {
                   "type": "number",
-                  "range": [1, 65535]
+                  "range": [1, 65535],
+                  "isInteger": true
                 }
               ],
               "field": "proxy_port"

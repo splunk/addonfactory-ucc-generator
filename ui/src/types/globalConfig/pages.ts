@@ -144,6 +144,8 @@ export const InputsPageTableSchema = z
         // The strict method disallows a table field to distinguish between
         // TableLessServiceSchema and TableFullServiceSchema
         services: z.array(TableLessServiceSchema.strict()),
+        hideFieldId: z.string().optional(),
+        readonlyFieldId: z.string().optional(),
     })
     .strict();
 
@@ -159,6 +161,7 @@ export const pages = z.object({
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),
             troubleshooting_url: z.string().optional(),
+            settings: z.object({ custom_tab_name: z.string().optional() }).optional(),
         })
         .optional(),
 });

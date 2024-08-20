@@ -119,7 +119,6 @@ export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
                             type: 'singleSelect',
                             required: true,
                             options: {
-                                placeholder: 'Select an account',
                                 endpointUrl: MOCKED_TA_INPUT,
                             },
                         },

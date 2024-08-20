@@ -29,9 +29,14 @@ fields = [
         required=True,
         encrypted=False,
         default='default',
-        validator=validator.String(
-            max_len=80, 
-            min_len=1, 
+        validator=validator.AllOf(
+            validator.Pattern(
+                regex=r"""^[a-zA-Z0-9][a-zA-Z0-9\\_\\-]*$""",
+            ),
+            validator.String(
+                max_len=80,
+                min_len=1,
+            )
         )
     ), 
     field.RestField(
@@ -91,7 +96,21 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
+    field.RestField(
+        'hide_in_ui',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'hard_disabled',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
 
     field.RestField(
         'disabled',

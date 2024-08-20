@@ -27,9 +27,6 @@ See the following example usage:
             "pattern": "^[a-zA-Z]\\w*$"
         }
     ],
-    "options": {
-        "placeholder": "Required"
-    },
     "field": "name",
     "help": "Enter a unique name for this account.",
     "required": true
@@ -85,16 +82,21 @@ A clear button is visible to the right of the dropdown when this field is marked
 
 ### Options
 
-| Property                                          | Type    | Description                                                                                                                                                                 | Default Value |
-| ------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| disableSearch                                     | boolean | It determines whether to show the filter box. When false, the children are automatically filtered based on the label.                                                          | false         |
-| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                     | false         |
-| referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                            | -             |
-| endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                        | -             |
-| allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`. It is applied before denyList. | -             |
-| denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`.                               | -             |
-| labelField                                        | string  | TBD                                                                                                                                                                         | -             |
-| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                               | -             |
+| Property                                          | Type    | Description                                                                                                                                                                                   | Default Value |
+| ------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| disableSearch                                     | boolean | It determines whether to show the filter box. When false, the children are automatically filtered based on the label.                                                                         | false         |
+| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                                   | false         |
+| referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                                              | -             |
+| endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                                          | -             |
+| allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`. It is applied before denyList.                | -             |
+| denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via an API call using `endpointUrl` and `referenceName`.                                              | -             |
+| labelField                                        | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as label for each item.```item.content?.[labelField]``` | -             |
+| valueField                                        | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as value for each item.```item.content?.[valueField]``` | -             |
+| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                                             | -             |
+
+> When using [Boolean](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes) values consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
+>
+> Consider using values '0' and '1' as false and true values.
 
 ### See the following example usage
 
@@ -327,18 +329,19 @@ Multiselect allows the user to select multiple options at once.
 
 ### Options
 
-| Property                                          | Type    | Description                                                                                                                                                                                              | Default Value |
-| ------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| items                                             | array   | An array of options with a label and a value.                                                                                                                                                                | -             |
-| delimiter                                         | string  | It delimits each value of the field with a predefined character. <br>For example, In the data option_a\|option_b, a vertical bar (the pipe character) delimits the two data items option_a and option_b.   | comma(`,`)    |
-| createSearchChoice                                | boolean | It allows the user to add arbitrary values.                                                                                                                                                                  | false         |
-| referenceName                                     | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                                                         | -             |
-| endpointUrl                                       | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                                                     | -             |
-| allowList                                         | string  | It only accepts options that match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`. It is applied before denyList.                              | -             |
-| denyList                                          | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                             | -             |
-| labelField                                        | string  | TBD                                                                                                                                                                                                      | -             |
-| [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                             | -             |
-| [autoCompleteFields](#using-autocompletefields-options)         | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
+| Property                                                | Type    | Description                                                                                                                                                                                              | Default Value |
+| ------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| items                                                   | array   | An array of options with a label and a value.                                                                                                                                                            | -             |
+| delimiter                                               | string  | It delimits each value of the field with a predefined character. <br>For example, In the data option_a\|option_b, a vertical bar (the pipe character) delimits the two data items option_a and option_b. | comma(`,`)    |
+| createSearchChoice                                      | boolean | It allows the user to add arbitrary values.                                                                                                                                                              | false         |
+| referenceName                                           | string  | Dropdown options will be generated via an API call to the service's restHandler.                                                                                                                         | -             |
+| endpointUrl                                             | string  | Dropdown options will be generated via an API call to that endpoint.                                                                                                                                     | -             |
+| allowList                                               | string  | It only accepts options that match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`. It is applied before denyList.                              | -             |
+| denyList                                                | string  | It filters options that don't match the regex based on the name attribute when received via API call using `endpointUrl` and `referenceName`.                                                            | -             |
+| labelField                                              | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as label for each item.```item.content?.[labelField]```            | -             |
+| valueField                                              | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as value for each item.```item.content?.[valueField]```            | -             |
+| [dependencies](../advanced/dependent_dropdown.md)       | array   | It is used to update options via an API call when the value of any field in the dependencies list is updated.                                                                                            | -             |
+| [autoCompleteFields](#using-autocompletefields-options) | array   | It is used to add options in the Single select or Multiple select component.                                                                                                                             | -             |
 
 See the following example usage:
 
@@ -375,8 +378,8 @@ RadioBar is a component that provides the ability to select one option out of a 
 
 ### Options
 
-| Property                                      | Type  | Description                                | Default Value |
-| --------------------------------------------- | ----- | ------------------------------------------ | ------------- |
+| Property                                      | Type  | Description                                                    | Default Value |
+| --------------------------------------------- | ----- | -------------------------------------------------------------- | ------------- |
 | items<span class="required-asterisk">*</span> | array | This property is an array of options with a label and a value. | -             |
 
 See the following example usage:
@@ -408,6 +411,10 @@ This is how it looks in the UI:
 
 ![image](../images/components/radio_component_example.png)
 
+> When using [Boolean](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes) values consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
+>
+> Consider using values '0' and '1' as false and true values.
+
 ## `Help Link`
 
 See the underlying `@splunk/react-ui` component: [`Link`](https://splunkui.splunk.com/Packages/react-ui/Link).
@@ -416,9 +423,9 @@ It will open the link in a new tab.
 
 ### Options
 
-| Property                                     | Type   | Description                             | Default Value |
-| -------------------------------------------- | ------ | --------------------------------------- | ------------- |
-| text<span class="required-asterisk">*</span> | string | It is a message to be displayed.        | -             |
+| Property                                     | Type   | Description                                     | Default Value |
+| -------------------------------------------- | ------ | ----------------------------------------------- | ------------- |
+| text<span class="required-asterisk">*</span> | string | It is a message to be displayed.                | -             |
 | link<span class="required-asterisk">*</span> | string | It is a link where the user will be redirected. | -             |
 
 See the following example usage:
@@ -503,7 +510,7 @@ value, i.e. a number greater than or equal to 0, or -1.
 <h3> Options </h3>
 
 | Property | Type                         | Description             |
-|----------|------------------------------|-------------------------|
+| -------- | ---------------------------- | ----------------------- |
 | range    | list of numbers (2 elements) | Range of allowed values |
 
 See the following example:
@@ -518,6 +525,56 @@ See the following example:
     }
 }
 ```
+
+## `Index`
+
+A field used to specify [index](https://docs.splunk.com/Splexicon:Index).
+
+<h3> Attributes </h3>
+
+| Property     | Type    | Description                                                                                                                      |
+|--------------|---------|----------------------------------------------------------------------------------------------------------------------------------|
+| type*        | string  | To specify the type of entity to be rendered in inputs or configuration form.                                                    |
+| field*       | string  | To define a particular entity field.                                                                                             |
+| label*       | string  | Text displayed next to entity field.                                                                                             |
+| defaultValue | string  | The initial input value.                                                                                                         |
+| help         | string  | Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field. |
+| required     | string  | To specify whether the field is required or not.                                                                                 |
+
+
+See the following examples:
+
+Only required attributes provided:
+
+```json
+{
+    "type": "index",
+    "field": "index",
+    "label": "Index"
+}
+```
+
+All attributes provided:
+
+```json
+{
+    "type": "index",
+    "field": "index",
+    "label": "Index",
+    "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
+    "defaultValue": "main",
+    "required": true
+}
+```
+
+Index field has two internal validators:
+
+1. REGEX that forces index names to start with a letter or digit and can only contain letters, numbers, underscores or hyphens.
+2. LENGTH which allows for an index name to have of 1 to 80 characters.
+
+`endpointUrl` for that entity is `data/indexes?search=isInternal=0+disabled=0`
+
+During the build process, new index field will be converted to a full [definition](https://github.com/splunk/addonfactory-ucc-generator/blob/main/splunk_add_on_ucc_framework/entity/index_entity.py#L23) and saved in the globalConfig in the output directory.
 
 ## `Custom`
 

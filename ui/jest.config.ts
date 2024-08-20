@@ -8,7 +8,7 @@ export default {
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     modulePathIgnorePatterns: ['<rootDir>/src/main/resources'],
-
+    restoreMocks: true,
     // Coverage
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
@@ -28,5 +28,7 @@ export default {
     moduleNameMapper: {
         // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
         uuid: require.resolve('uuid'),
+        '\\.(css)$': '<rootDir>/src/mocks/styleMock.js',
     },
+    transformIgnorePatterns: ['node_modules/@splunk/dashboard-presets/EnterpriseViewOnlyPreset'],
 } satisfies Config;

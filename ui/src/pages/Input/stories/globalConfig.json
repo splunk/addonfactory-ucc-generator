@@ -225,6 +225,22 @@
               }
             },
             {
+              "type": "checkbox",
+              "label": "Hide in UI boolean value",
+              "field": "hide_in_ui",
+              "options": {
+                "display": false
+              }
+            },
+            {
+              "type": "checkbox",
+              "label": "Is input readonly?",
+              "field": "hard_disabled",
+              "options": {
+                "display": false
+              }
+            },
+            {
               "type": "text",
               "label": "Interval",
               "validators": [
@@ -426,8 +442,18 @@
             "label": "Status",
             "field": "disabled",
             "mapping": {
+              "1": "Disabled",
               "true": "Disabled",
               "false": "Enabled"
+            }
+          },
+          {
+            "label": "Exported",
+            "field": "hard_disabled",
+            "mapping": {
+              "1": "Yes",
+              "0": "No",
+              "f": "No"
             }
           },
           {
@@ -435,7 +461,9 @@
             "field": "someselectdropdown2"
           }
         ]
-      }
+      },
+      "readonlyFieldId": "hard_disabled",
+      "hideFieldId": "hide_in_ui"
     },
     "dashboard": {
       "panels": [
@@ -446,8 +474,8 @@
     }
   },
   "meta": {
-    "name": "demo_addon_for_splunk2",
-    "restRoot": "demo_addon_for_splunk2",
+    "name": "demo_addon_for_splunk",
+    "restRoot": "demo_addon_for_splunk",
     "version": "5.32.0R0e2087fe",
     "displayName": "Demo Add-on for Splunk",
     "schemaVersion": "0.0.3"

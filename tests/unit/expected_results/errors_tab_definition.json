@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "View error messages for your add-on within the selected time range.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "errors_tab_timerange_label_start_viz": {
@@ -81,7 +80,7 @@
     "errors_tab_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart count as Errors by exc_l",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level=ERROR | timechart count as Errors by exc_l",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"
@@ -91,7 +90,7 @@
     "errors_tab_errors_list_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR exc_l IN ($error_types$)",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level=ERROR exc_l IN ($error_types$)",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"

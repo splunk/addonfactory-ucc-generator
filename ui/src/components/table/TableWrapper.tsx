@@ -1,23 +1,25 @@
-import React, { useState, useContext, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useCallback, useMemo, useRef } from 'react';
 import update from 'immutability-helper';
 import axios from 'axios';
-import PropTypes from 'prop-types';
-import { HeadCellSortHandler } from '@splunk/react-ui/Table';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { getUnifiedConfigs, generateToast, isTrue } from '../../util/util';
+import { getUnifiedConfigs, generateToast } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
-import TableContext, { RowDataType, RowDataFields } from '../../context/TableContext';
-import { PAGE_INPUT } from '../../constants/pages';
+import { RowDataType, RowDataFields } from '../../context/TableContext';
+import { PAGE_CONF, PAGE_INPUT } from '../../constants/pages';
 import { parseErrorMsg } from '../../util/messageUtil';
 import { Mode } from '../../constants/modes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
+import { useTableSort } from './useTableSort';
+import { useTableContext } from '../../context/useTableContext';
+import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
+import { isReadonlyRow } from './table.utils';
 
 export interface ITableWrapperProps {
-    page: string;
+    page: typeof PAGE_INPUT | typeof PAGE_CONF;
     serviceName: string;
     handleRequestModalOpen: () => void;
     handleOpenPageStyleDialog: (row: IRowData, mode: Mode) => void;
@@ -35,16 +37,25 @@ const getTableConfigAndServices = (
         page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs?.services
             : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
-
     if (page === PAGE_INPUT) {
         if (unifiedConfigs.pages.inputs && 'table' in unifiedConfigs.pages.inputs) {
-            return { services, tableConfig: unifiedConfigs.pages.inputs.table };
+            return {
+                services,
+                tableConfig: unifiedConfigs.pages.inputs.table,
+                readonlyFieldId: unifiedConfigs.pages.inputs.readonlyFieldId,
+                hideFieldId: unifiedConfigs.pages.inputs.hideFieldId,
+            };
         }
 
         const serviceWithTable = services?.find((x) => x.name === serviceName);
         const tableData = serviceWithTable && 'table' in serviceWithTable && serviceWithTable.table;
 
-        return { services, tableConfig: tableData || {} };
+        return {
+            services,
+            tableConfig: tableData || {},
+            readonlyFieldId: undefined,
+            hideFieldId: undefined,
+        };
     }
 
     const tableConfig =
@@ -52,103 +63,123 @@ const getTableConfigAndServices = (
     return {
         services,
         tableConfig,
+        readonlyFieldId: undefined,
+        hideFieldId: undefined,
     };
 };
 
-function TableWrapper({
+export const getRowDataFromApiResponse = (
+    services: ReturnType<typeof getTableConfigAndServices>['services'],
+    apiData: Array<Array<{ name: string; content: Record<string, string>; id: string }>>
+): RowDataType => {
+    const obj: RowDataType = {};
+
+    services?.forEach((service, index) => {
+        if (service && service.name && apiData) {
+            const tmpObj: Record<string, RowDataFields> = {};
+            apiData[index].forEach((val) => {
+                tmpObj[val.name] = {
+                    ...val.content,
+                    id: val.id,
+                    name: val.name,
+                    serviceName: service.name,
+                    serviceTitle: service.title || '',
+                };
+            });
+            obj[service.name] = tmpObj;
+        }
+    });
+
+    return obj;
+};
+
+const TableWrapper: React.FC<ITableWrapperProps> = ({
     page,
     serviceName,
     handleRequestModalOpen,
     handleOpenPageStyleDialog,
     displayActionBtnAllRows,
-}: ITableWrapperProps) {
-    const [sortKey, setSortKey] = useState('name');
-    const [sortDir, setSortDir] = useState('asc');
+}: ITableWrapperProps) => {
+    const { sortKey, sortDir, handleSort } = useTableSort();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const isComponentMounted = useRef(false);
 
     const { rowData, setRowData, pageSize, currentPage, searchText, searchType } =
-        useContext(TableContext)!;
+        useTableContext()!;
 
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, tableConfig } = getTableConfigAndServices(page, unifiedConfigs, serviceName);
+    const { services, tableConfig, readonlyFieldId, hideFieldId } = useMemo(
+        () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
+        [page, unifiedConfigs, serviceName]
+    );
 
     const moreInfo = tableConfig && 'moreInfo' in tableConfig ? tableConfig?.moreInfo : null;
     const headers = tableConfig && 'header' in tableConfig ? tableConfig?.header : null;
     const isTabs = !!serviceName;
 
-    const modifyAPIResponse = (
-        apiData: Array<Array<{ name: string; content: Record<string, string>; id: string }>>
-    ) => {
-        const obj: RowDataType = {};
-
-        services?.forEach((service, index) => {
-            if (service && service.name && apiData) {
-                const tmpObj: Record<string, RowDataFields> = {};
-                apiData[index].forEach((val) => {
-                    tmpObj[val.name] = {
-                        ...val.content,
-                        id: val.id,
-                        name: val.name,
-                        serviceName: service.name,
-                        serviceTitle: service.title || '',
-                    };
-                });
-                obj[service.name] = tmpObj;
-            }
-        });
-
-        setRowData(obj);
-        setLoading(false);
-    };
-
-    const fetchInputs = () => {
+    useEffect(() => {
+        isComponentMounted.current = true;
+        return () => {
+            isComponentMounted.current = false;
+        };
+    }, []);
+    useEffect(() => {
         const abortController = new AbortController();
 
-        const requests =
-            services?.map((service) =>
-                axiosCallWrapper({
-                    serviceName: service.name,
-                    params: { count: -1 },
-                    signal: abortController.signal,
+        function fetchInputs() {
+            const requests =
+                services?.map((service) =>
+                    axiosCallWrapper({
+                        serviceName: service.name,
+                        params: { count: -1 },
+                        signal: abortController.signal,
+                    })
+                ) || [];
+
+            axios
+                .all(requests)
+                .catch((caughtError) => {
+                    if (axios.isCancel(caughtError)) {
+                        return;
+                    }
+                    const message = parseErrorMsg(caughtError);
+
+                    generateToast(message, 'error');
+                    setError(caughtError);
                 })
-            ) || [];
+                .then((response) => {
+                    if (!response) {
+                        return;
+                    }
+                    const data = getRowDataFromApiResponse(
+                        services,
+                        response.map((res) => res.data.entry)
+                    );
+                    setRowData(data);
+                })
+                .finally(() => {
+                    if (isComponentMounted.current) {
+                        setLoading(false);
+                    }
+                });
+        }
 
-        axios
-            .all(requests)
-            .catch((caughtError) => {
-                if (axios.isCancel(caughtError)) {
-                    return;
-                }
-                const message = parseErrorMsg(caughtError);
-
-                generateToast(message, 'error');
-                setLoading(false);
-                setError(caughtError);
-            })
-            .then((response) => {
-                if (!response) {
-                    return;
-                }
-                modifyAPIResponse(response.map((res) => res.data.entry));
-            });
+        fetchInputs();
 
         return () => {
             abortController.abort();
         };
-    };
-
-    useEffect(
-        () => fetchInputs(),
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        []
-    );
+    }, [services, setRowData]);
 
     /**
      *
      * @param row {Object} row
      */
     const changeToggleStatus = (row: RowDataFields) => {
+        if (isReadonlyRow(readonlyFieldId, row)) {
+            return;
+        }
         setRowData((currentRowData: RowDataType) =>
             update(currentRowData, {
                 [row.serviceName]: {
@@ -192,61 +223,46 @@ function TableWrapper({
         });
     };
 
-    const handleSort: HeadCellSortHandler = (e, val) => {
-        const prevSortKey = sortKey;
-        const prevSortDir = prevSortKey === val.sortKey ? sortDir : 'none';
-        const nextSortDir = prevSortDir === 'asc' ? 'desc' : 'asc';
-        setSortDir(nextSortDir);
-        if (val.sortKey) {
-            setSortKey(val.sortKey);
-        }
-    };
-
     /**
      *
      * @param {Array} serviceData data for single service
-     * This function will iterate an arrray and match each key-value with the searchText
+     * This function will iterate an array and match each key-value with the searchText
      * It will return a new array which will match with searchText
      */
-    const findByMatchingValue = (serviceData: Record<string, RowDataFields>) => {
-        const matchedRows: Record<string, AcceptableFormValueOrNull>[] = [];
-        const searchableFields: string[] = [];
+    const findByMatchingValue = useCallback(
+        (serviceData: Record<string, RowDataFields>) => {
+            const matchedRows: Record<string, AcceptableFormValueOrNull>[] = [];
+            const searchableFields: string[] = [
+                ...(headers?.map((headData) => headData.field) || []),
+                ...(moreInfo?.map((moreInfoData) => moreInfoData.field) || []),
+            ];
 
-        headers?.forEach((headData: { field: string }) => {
-            searchableFields.push(headData.field);
-        });
-        moreInfo?.forEach((moreInfoData: { field: string }) => {
-            searchableFields.push(moreInfoData.field);
-        });
+            Object.values(serviceData).forEach((_rowData) => {
+                const found = Object.entries(_rowData).some(
+                    ([key, value]) =>
+                        searchableFields.includes(key) &&
+                        typeof value === 'string' &&
+                        value.toLowerCase().includes(searchText.toLowerCase().trim())
+                );
 
-        Object.keys(serviceData).forEach((v) => {
-            let found = false;
-            Object.keys(serviceData[v]).forEach((vv) => {
-                const formValue = serviceData[v][vv];
-                if (
-                    searchableFields.includes(vv) &&
-                    typeof formValue === 'string' &&
-                    formValue.toLowerCase().includes(searchText.toLowerCase().trim()) &&
-                    !found
-                ) {
-                    matchedRows.push(serviceData[v]);
-                    found = true;
+                if (found) {
+                    matchedRows.push(_rowData);
                 }
             });
-        });
-        return matchedRows;
-    };
+
+            return matchedRows;
+        },
+        [headers, moreInfo, searchText]
+    );
 
     const getRowData = () => {
-        let allRowsData: Array<Record<string, AcceptableFormValueOrNull>> = [];
+        let allRowsData: Record<string, AcceptableFormValueOrNull>[] = [];
         if (searchType === 'all') {
             Object.keys(rowData).forEach((key) => {
-                let newArr = [];
-                if (searchText && searchText.length) {
-                    newArr = findByMatchingValue(rowData[key]);
-                } else {
-                    newArr = Object.keys(rowData[key]).map((val) => rowData[key][val]);
-                }
+                const newArr = searchText
+                    ? findByMatchingValue(rowData[key])
+                    : Object.keys(rowData[key]).map((val) => rowData[key][val]);
+
                 allRowsData = allRowsData.concat(newArr);
             });
         } else {
@@ -256,6 +272,9 @@ function TableWrapper({
         // For Inputs page, filter the data when tab change
         if (isTabs) {
             allRowsData = allRowsData.filter((v) => v.serviceName === serviceName);
+        }
+        if (hideFieldId) {
+            allRowsData = allRowsData.filter((v) => isFalse(v[hideFieldId]));
         }
 
         const headerMapping =
@@ -336,14 +355,6 @@ function TableWrapper({
             />
         </>
     );
-}
-
-TableWrapper.propTypes = {
-    page: PropTypes.string,
-    serviceName: PropTypes.string,
-    handleRequestModalOpen: PropTypes.func,
-    handleOpenPageStyleDialog: PropTypes.func,
-    displayActionBtnAllRows: PropTypes.bool,
 };
 
 export default memo(TableWrapper);

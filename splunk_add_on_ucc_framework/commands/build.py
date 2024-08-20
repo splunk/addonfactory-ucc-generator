@@ -26,8 +26,6 @@ import colorama as c
 import fnmatch
 import filecmp
 
-from openapi3 import OpenAPI
-
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -537,7 +535,7 @@ def generate(
             )
             validator.validate()
             logger.info("globalConfig file is valid")
-        except global_config_validator.GlobalConfigValidatorException as e:
+        except exceptions.GlobalConfigValidatorException as e:
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
@@ -679,8 +677,7 @@ def generate(
     if not os.path.exists(default_meta_conf_path):
         os.makedirs(os.path.join(output_directory, ta_name, "metadata"), exist_ok=True)
         meta_conf = meta_conf_lib.MetaConf()
-        meta_conf.create_default()
-        meta_conf.write(default_meta_conf_path)
+        meta_conf.write_default(default_meta_conf_path)
         logger.info(
             f"Created default {meta_conf_lib.DEFAULT_META_FILE_NAME} file in the output folder"
         )
@@ -706,17 +703,22 @@ def generate(
         output_directory, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
     )
     app_conf.read(output_app_conf_path)
-    should_be_visible = True if global_config else False
-    if global_config and global_config.meta.get("checkForUpdates") is False:
-        check_for_updates = False
-    else:
-        check_for_updates = True
+    should_be_visible = False
+    check_for_updates = "true"
+    supported_themes = ""
+    if global_config:
+        should_be_visible = True
+        if global_config.meta.get("checkForUpdates") is False:
+            check_for_updates = "false"
+        if global_config.meta.get("supportedThemes") is not None:
+            supported_themes = ", ".join(global_config.meta["supportedThemes"])
     app_conf.update(
         addon_version,
         app_manifest,
         conf_file_names,
         should_be_visible,
-        check_for_updates,
+        check_for_updates=check_for_updates,
+        supported_themes=supported_themes,
     )
     app_conf.write(output_app_conf_path)
     logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
@@ -745,7 +747,6 @@ def generate(
     if global_config:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
-        open_api = OpenAPI(open_api_object.json)
 
         output_openapi_folder = os.path.abspath(
             os.path.join(output_directory, ta_name, "appserver", "static")
@@ -755,7 +756,7 @@ def generate(
             os.makedirs(os.path.join(output_openapi_folder))
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
-            json.dump(open_api.raw_element, openapi_file, indent=4)
+            json.dump(open_api_object.json, openapi_file, indent=4)
 
     summary_report(
         source,

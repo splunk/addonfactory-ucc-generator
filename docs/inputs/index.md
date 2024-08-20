@@ -9,73 +9,47 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 
 ### Properties
 
-| Property                                                                  | Type   | Description                                                                                            |
-|---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
-| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                      |
-| description                                                               | string | It provides a brief summary of an inputs page.                                                         |
-| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                     |
-| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature. |
-| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                         |
-| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.               |
-| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                 |
+| Property                                                                  | Type   | Description                                                                                                                                                                                                                                                                                                                                          |
+|---------------------------------------------------------------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| title<span class="required-asterisk">\*</span>                            | string | -                                                                                                                                                                                                                                                                                                                                                    |
+| description                                                               | string | It provides a brief summary of an inputs page.                                                                                                                                                                                                                                                                                                       |
+| [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                                                                                                                                                                                                                                                                   |
+| menu                                                                      | object | This property allows you to enable the [custom menu](../custom_ui_extensions/custom_menu.md) feature.                                                                                                                                                                                                                                                |
+| [table](../table.md)                                                      | object | It displays input stanzas in a tabular format.                                                                                                                                                                                                                                                                                                       |
+| groupsMenu                                                                | array  | This property allows you to enable the [multi-level menu](./multilevel_menu.md) feature.                                                                                                                                                                                                                                                             |
+| [services](#services-properties)<span class="required-asterisk">\*</span> | array  | It specifies a list of modular inputs.                                                                                                                                                                                                                                                                                                               |
+| readonlyFieldId                                                           | string | A field of the boolean entity that UCC checks for each input. If the field's value is [truthful](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes), the corresponding input cannot be edited from the UI. There is no way to change this from the UI; it is supposed to be changed via REST.                      |
+| hideFieldId                                                               | string | A field of the boolean entity that UCC checks for each input. If the field's value is [truthful](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes), the corresponding input is hidden from the UI. There is no way to change this from the UI; it is supposed to be changed via REST. Check out an example below. |
 
 ### Services Properties
 
-| Property                                                              | Type   | Description                                                                                                                                                                                                   |
-|-----------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| name<span class="required-asterisk">\*</span>                         | string | It defines the particular service name.                                                                                                                                                                       |
-| title<span class="required-asterisk">\*</span>                        | string | It shows the title of the service.                                                                                                                                                                            |
-| subTitle                                                              | string | It shows the subtitle (or additional information) of the service.                                                                                                                                             |
-| [entity](../entity/index.md)<span class="required-asterisk">\*</span> | array  | It is a list of fields and their properties.                                                                                                                                                                  |
-| [groups](../advanced/groups_feature.md)                               | array  | It is used to divide forms into distinct sections, each comprising relevant fields.                                                                                                                           |
-| style                                                                 | string | By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog. <br>Supported values are "page" or "dialog". <br> The default value is **dialog**. |
-| options                                                               | object | This property allows you to enable the [saveValidator](../advanced/save_validator.md) feature.                                                                                                                |
-| hook                                                                  | object | It is used to add custom behaviour to forms. Visit the [Custom Hook](../custom_ui_extensions/custom_hook.md) page to learn more.                                                                              |
-| [warning](../advanced/custom_warning.md)                              | object | It is used to add the custom warning message for each of the modes of 'create', 'edit', 'config', and 'clone'. The message is displayed on the form.                                                          |
-| [inputHelperModule](./helper.md)                                      | string | A module that contains `validate_input` and `stream_events` methods. By default it is not used.                                                                                                               |
-| conf                                                                  | string | TBD                                                                                                                                                                                                           |
-| restHandlerName                                                       | string | TBD                                                                                                                                                                                                           |
-| restHandlerModule                                                     | string | TBD                                                                                                                                                                                                           |
-| restHandlerClass                                                      | string | TBD                                                                                                                                                                                                           |
+| Property                                                              | Type   | Description                                                                                                                                                                                                                                                                         |
+|-----------------------------------------------------------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| name<span class="required-asterisk">\*</span>                         | string | It defines the particular service name.                                                                                                                                                                                                                                             |
+| title<span class="required-asterisk">\*</span>                        | string | It shows the title of the service.                                                                                                                                                                                                                                                  |
+| subTitle                                                              | string | It shows the subtitle (or additional information) of the service.                                                                                                                                                                                                                   |
+| [entity](../entity/index.md)<span class="required-asterisk">\*</span> | array  | It is a list of fields and their properties.                                                                                                                                                                                                                                        |
+| [groups](../advanced/groups_feature.md)                               | array  | It is used to divide forms into distinct sections, each comprising relevant fields.                                                                                                                                                                                                 |
+| style                                                                 | string | By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog. <br>Supported values are "page" or "dialog". <br> The default value is **dialog**.                                                                       |
+| options                                                               | object | This property allows you to enable the [saveValidator](../advanced/save_validator.md) feature.                                                                                                                                                                                      |
+| hook                                                                  | object | It is used to add custom behaviour to forms. Visit the [Custom Hook](../custom_ui_extensions/custom_hook.md) page to learn more.                                                                                                                                                    |
+| [warning](../advanced/custom_warning.md)                              | object | It is used to add the custom warning message for each of the modes of 'create', 'edit', 'config', and 'clone'. The message is displayed on the form.                                                                                                                                |
+| [inputHelperModule](./helper.md)                                      | string | A module that contains `validate_input` and `stream_events` methods. By default it is not used.                                                                                                                                                                                     |
+| conf                                                                  | string | Configuration name for a rest handler.                                                                                                                                                                                                                                              |
+| restHandlerName                                                       | string | It specify name of the REST handler script, that provides fields, models and validators for the fields supported under the specified input and any specific actions to be performed on CRUD operations for the given input. (Do NOT use with restHandlerModule or restHandlerClass) |
+| [restHandlerModule](../advanced/custom_rest_handler.md)               | string | It specify name of the REST handler script that implements the custom actions to be performed on CRUD operations for the given input. (Use with restHandlerClass)                                                                                                                   |
+| [restHandlerClass](../advanced/custom_rest_handler.md)                | string | It specify name of the class present in the restHandlerModule, which implements methods like handleCreate, handleEdit, handleList, handleDelete and is child class of splunktaucclib.rest_handler.admin_external.AdminExternalHandler. (Use with restHandlerModule)                 |
 
 ### Usage
 
-This is how the global configuration looks like without tabs:
-
-```json
-"pages": {
-    "inputs": {
-        "title": "Inputs",
-        "description": "Manage your data inputs",
-        "services": [
-            {
-                "name": "example_input_one",
-                "title": "Example Input",
-                "entity": []
-            },
-            {
-                "name": "example_input_two",
-                "title": "Example Input Two",
-                "entity": []
-            }
-        ],
-        "table": {
-            "actions": [
-                "edit",
-                "enable",
-                "delete",
-                "search",
-                "clone"
-            ],
-            "header": [],
-            "moreInfo": []
-        }
-    }
-},
-```
+This is how the global configuration looks like without tabs
+<details>
+  <summary>Expand to see full json code </summary>
+  ```json
+  --8<-- "ui/src/pages/Input/stories/globalConfig.json"
+  ```
+</details>
 
 ### Output
 
-This is how it looks like in the UI:
-
-![image](../images/inputs/Introduction_Output.png)
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></ifame>
