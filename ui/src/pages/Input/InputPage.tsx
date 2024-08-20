@@ -10,8 +10,8 @@ import { z } from 'zod';
 import {
     InputsPageSchema,
     InputsPageTableSchema,
+    ServiceTable,
     TableFullServiceSchema,
-    TableLessServiceSchema,
 } from '../../types/globalConfig/pages';
 import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
@@ -43,10 +43,6 @@ const Row = styled(ColumnLayout.Row)`
     }
 `;
 
-type ServiceTableSchema =
-    | z.infer<typeof TableFullServiceSchema>
-    | z.infer<typeof TableLessServiceSchema>;
-
 interface EntityState {
     open: boolean;
     isInputPageStyle?: boolean;
@@ -58,7 +54,7 @@ interface EntityState {
 }
 
 function isTableFullServiceSchema(
-    service: ServiceTableSchema | undefined
+    service: ServiceTable | undefined
 ): service is z.infer<typeof TableFullServiceSchema> {
     return service !== undefined && 'description' in service;
 }
@@ -72,7 +68,7 @@ function InputPage(): ReactElement {
     const unifiedConfigs = getUnifiedConfigs();
     const InputsPage = unifiedConfigs.pages.inputs;
 
-    let services: ServiceTableSchema[] = [];
+    let services: ServiceTable[] = [];
     let title;
     let table;
     let description;
@@ -264,7 +260,7 @@ function InputPage(): ReactElement {
     return (
         <ErrorBoundary>
             <TableContextProvider>
-                {entity.isInputPageStyle && entity.open ? generatePageDialog() : null}{' '}
+                {entity.isInputPageStyle && entity.open ? generatePageDialog() : null}
                 <div
                     style={
                         entity.isInputPageStyle && entity.open

@@ -78,6 +78,7 @@ const GroupsSchema = z
     .optional();
 
 export const TableLessServiceSchema = z.object({
+    type: z.literal('lessService').default('lessService').optional(),
     name: z.string(),
     title: z.string(),
     subTitle: z.string().optional(),
@@ -96,14 +97,13 @@ export const TableLessServiceSchema = z.object({
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
     table: TableSchema,
+    type: z.literal('fullService').default('fullService').optional(),
 });
-export const InputsPageRegular = z
-    .object({
-        title: z.string(),
-        services: z.array(TableFullServiceSchema),
-    })
-    // The strict method disallows a table field to distinguish between to inputs
-    .strict();
+export const InputsPageRegular = z.object({
+    type: z.literal('regular').default('regular').optional(),
+    title: z.string(),
+    services: z.array(TableFullServiceSchema),
+});
 
 export const SubDescriptionSchema = z
     .object({
@@ -120,47 +120,34 @@ export const SubDescriptionSchema = z
     })
     .optional();
 
-export const InputsPageTableSchema = z
-    .object({
-        title: z.string(),
-        description: z.string().optional(),
-        subDescription: SubDescriptionSchema,
-        menu: z
-            .object({
-                type: z.literal('external'),
-                src: z.string(),
+export const InputsPageTableSchema = z.object({
+    type: z.literal('table').default('table').optional(),
+    title: z.string(),
+    description: z.string().optional(),
+    subDescription: SubDescriptionSchema,
+    menu: z
+        .object({
+            type: z.literal('external'),
+            src: z.string(),
+        })
+        .optional(),
+    table: TableSchema,
+    groupsMenu: z
+        .array(
+            z.object({
+                groupName: z.string(),
+                groupTitle: z.string(),
+                groupServices: z.array(z.string()).optional(),
             })
-            .optional(),
-        table: TableSchema,
-        groupsMenu: z
-            .array(
-                z.object({
-                    groupName: z.string(),
-                    groupTitle: z.string(),
-                    groupServices: z.array(z.string()).optional(),
-                })
-            )
-            .optional(),
-        // The strict method disallows a table field to distinguish between
-        // TableLessServiceSchema and TableFullServiceSchema
-        services: z.array(TableLessServiceSchema.strict()),
-        hideFieldId: z.string().optional(),
-        readonlyFieldId: z.string().optional(),
-    })
-    .strict();
+        )
+        .optional(),
+    services: z.array(TableLessServiceSchema),
+    hideFieldId: z.string().optional(),
+    readonlyFieldId: z.string().optional(),
+});
 
-export const InputsPageSchema = z
-    .union([InputsPageRegular, InputsPageTableSchema])
-    .optional()
-    .refine((data) => {
-        if (!data) {
-            return false;
-        }
-        if ('table' in data) {
-            return InputsPageTableSchema.safeParse(data).success;
-        }
-        return InputsPageRegular.safeParse(data).success;
-    });
+const InputsPageSchema = z.union([InputsPageRegular, InputsPageTableSchema]).optional();
+const ServiceTableSchema = z.union([TableFullServiceSchema, TableLessServiceSchema]);
 
 export const pages = z.object({
     configuration: z.object({
@@ -181,10 +168,7 @@ export const pages = z.object({
 // Define the types based on the Zod schemas
 
 export type InputsPageSchema = z.infer<typeof InputsPageSchema>;
-export type InputsPageRegular = z.infer<typeof InputsPageRegular>;
 export type InputsPageTableSchema = z.infer<typeof InputsPageTableSchema>;
-
-type TableLessServiceSchema = z.infer<typeof TableLessServiceSchema>;
-type TableFullServiceSchema = z.infer<typeof TableFullServiceSchema>;
+export type ServiceTable = z.infer<typeof ServiceTableSchema>;
 
 export type ITableConfig = z.infer<typeof TableSchema>;
