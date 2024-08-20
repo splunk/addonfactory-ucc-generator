@@ -574,7 +574,7 @@ Index field has two internal validators:
 
 `endpointUrl` for that entity is `data/indexes?search=isInternal=0+disabled=0`
 
-During the build process, new index field will be converted to a full [definition](https://github.com/splunk/addonfactory-ucc-generator/blob/main/splunk_add_on_ucc_framework/entity/index_entity.py#L23:) and saved in the globalConfig in the output directory.
+During the build process, new index field will be converted to a full [definition](https://github.com/splunk/addonfactory-ucc-generator/blob/main/splunk_add_on_ucc_framework/entity/index_entity.py#L23) and saved in the globalConfig in the output directory.
 
 ## `Custom`
 
