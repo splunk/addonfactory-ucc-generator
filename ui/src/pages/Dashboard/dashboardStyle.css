@@ -331,3 +331,8 @@ body {
     /* grid-template-rows: auto auto auto auto auto; */
     overflow-x: hidden;
 }
+
+[data-test-panel-id='spikeDefTabPanel'] [data-test='input-layout-container'],
+[data-test-panel-id='spikeDefTabPanel'] [data-test='grid-layout-canvas'] {
+    background-color: white;
+}

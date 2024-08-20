@@ -28,7 +28,8 @@
         "xAxisVisibility": "hide",
         "seriesColors": ["#A870EF"],
         "yAxisTitleText": "Volume (bytes)",
-        "xAxisTitleText": "Time"
+        "xAxisTitleText": "Time",
+        "backgroundColor": "#F7F8FA"
       },
       "title": "Data volume",
       "dataSources": {
@@ -41,7 +42,8 @@
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
         "seriesColors": ["#A870EF"],
-        "yAxisTitleText": "Number of events"
+        "yAxisTitleText": "Number of events",
+        "backgroundColor": "#F7F8FA"
       },
       "title": "Number of events",
       "dataSources": {
