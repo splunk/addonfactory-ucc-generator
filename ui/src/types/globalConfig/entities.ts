@@ -75,6 +75,7 @@ const FieldToModify = z.object({
             display: z.boolean().optional(),
             value: z.union([z.number(), z.string(), z.boolean()]).optional(),
             disabled: z.boolean().optional(),
+            required: z.boolean().optional(),
             help: z.string().optional(),
             label: z.string().optional(),
             markdownMessage: MarkdownMessageType.optional(),

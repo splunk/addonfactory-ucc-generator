@@ -180,7 +180,8 @@
                                                             "markdownType": "text",
                                                             "text": "markdown message test",
                                                             "color": "red"
-                                                        }
+                                                        },
+                                                        "required": true
                                                     }
                                                 ]
                                             },
@@ -198,7 +199,8 @@
                                                             "markdownType": "link",
                                                             "text": "markdown message test conf page",
                                                             "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration"
-                                                        }
+                                                        },
+                                                        "required": false
                                                     }
                                                 ]
                                             },
@@ -211,7 +213,8 @@
                                                         "display": false,
                                                         "label": "Disabled on edit for oauth 3333",
                                                         "value": "test 3",
-                                                        "help": "Disabled on edit for test 3"
+                                                        "help": "Disabled on edit for test 3",
+                                                        "required": true
                                                     }
                                                 ]
                                             },
@@ -231,7 +234,8 @@
                                                             "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration",
                                                             "token": "token",
                                                             "linkText": "conf page"
-                                                        }
+                                                        },
+                                                        "required": false
                                                     }
                                                 ]
                                             },
@@ -247,7 +251,8 @@
                                                         "help": "Disabled on edit for test 5",
                                                         "markdownMessage": {
                                                             "text": "markdown message plain text"
-                                                        }
+                                                        },
+                                                        "required": true
                                                     }
                                                 ]
                                             }
@@ -964,22 +969,8 @@
                             "required": true
                         },
                         {
-                            "type": "singleSelect",
+                            "type": "index",
                             "label": "Index",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of index name should be between 1 and 80.",
-                                    "minLength": 1,
-                                    "maxLength": 80
-                                }
-                            ],
-                            "defaultValue": "default",
-                            "options": {
-                                "endpointUrl": "data/indexes",
-                                "denyList": "^_.*$",
-                                "createSearchChoice": true
-                            },
                             "field": "index",
                             "required": true
                         },
@@ -1552,10 +1543,10 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.48.1Rbfdf113d",
+        "version": "5.48.2Ra94cdc9a8",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
-        "_uccVersion": "5.48.1",
+        "_uccVersion": "5.48.2",
         "supportedThemes": [
             "light",
             "dark"
