@@ -12,26 +12,31 @@ import { PAGE_CONF, PAGE_INPUT } from '../../constants/pages';
 import { parseErrorMsg } from '../../util/messageUtil';
 import { Mode } from '../../constants/modes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { AcceptableFormValueOrNull } from '../../types/components/shareableTypes';
 import { useTableSort } from './useTableSort';
 import { useTableContext } from '../../context/useTableContext';
 import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
 import { isReadonlyRow } from './table.utils';
+import { ITableConfig } from '../../types/globalConfig/pages';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
-    serviceName: string;
-    handleRequestModalOpen: () => void;
-    handleOpenPageStyleDialog: (row: IRowData, mode: Mode) => void;
-    displayActionBtnAllRows: boolean;
+    serviceName?: string;
+    handleRequestModalOpen?: () => void;
+    handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
+    displayActionBtnAllRows?: boolean;
 }
 
-interface IRowData {}
+const defaultTableConfig: ITableConfig = {
+    header: [],
+    actions: [],
+    moreInfo: [],
+    customRow: {},
+};
 
 const getTableConfigAndServices = (
     page: string,
     unifiedConfigs: GlobalConfig,
-    serviceName: string
+    serviceName?: string
 ) => {
     const services =
         page === PAGE_INPUT
@@ -52,17 +57,23 @@ const getTableConfigAndServices = (
 
         return {
             services,
-            tableConfig: tableData || {},
+            tableConfig: {
+                ...(tableData || defaultTableConfig),
+            },
             readonlyFieldId: undefined,
             hideFieldId: undefined,
         };
     }
 
-    const tableConfig =
-        unifiedConfigs.pages.configuration.tabs.find((x) => x.name === serviceName)?.table || {};
+    const tableConfig = unifiedConfigs.pages.configuration.tabs.find(
+        (x) => x.name === serviceName
+    )?.table;
+
     return {
         services,
-        tableConfig,
+        tableConfig: {
+            ...(tableConfig || defaultTableConfig),
+        },
         readonlyFieldId: undefined,
         hideFieldId: undefined,
     };
@@ -231,7 +242,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
      */
     const findByMatchingValue = useCallback(
         (serviceData: Record<string, RowDataFields>) => {
-            const matchedRows: Record<string, AcceptableFormValueOrNull>[] = [];
+            const matchedRows: RowDataFields[] = [];
             const searchableFields: string[] = [
                 ...(headers?.map((headData) => headData.field) || []),
                 ...(moreInfo?.map((moreInfoData) => moreInfoData.field) || []),
@@ -256,7 +267,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
     );
 
     const getRowData = () => {
-        let allRowsData: Record<string, AcceptableFormValueOrNull>[] = [];
+        let allRowsData: RowDataFields[] = [];
         if (searchType === 'all') {
             Object.keys(rowData).forEach((key) => {
                 const newArr = searchText

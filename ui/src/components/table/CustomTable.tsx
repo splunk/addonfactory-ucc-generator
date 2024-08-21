@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
-import PropTypes from 'prop-types';
-
-import Table from '@splunk/react-ui/Table';
+import Table, { HeadCellSortHandler } from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
-
 import { useSearchParams } from 'react-router-dom';
-import { MODE_CLONE, MODE_EDIT } from '../../constants/modes';
-import { PAGE_INPUT } from '../../constants/pages';
+import { Mode, MODE_CLONE, MODE_EDIT } from '../../constants/modes';
+import { PAGE_CONF, PAGE_INPUT } from '../../constants/pages';
+import { RowDataFields } from '../../context/TableContext';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 import { STYLE_MODAL, STYLE_PAGE } from '../../constants/dialogStyles';
@@ -16,11 +14,34 @@ import DeleteModal from '../DeleteModal/DeleteModal';
 import { NoRecordsDiv } from './CustomTableStyle';
 import { useTableContext } from '../../context/useTableContext';
 import { isReadonlyRow } from './table.utils';
+import { SortDirection } from './useTableSort';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { ITableConfig } from '../../types/globalConfig/pages';
 
-function getServiceToStyleMap(page, unifiedConfigs) {
-    const serviceToStyleMap = {};
+interface CustomTableProps {
+    page: string;
+    serviceName?: string;
+    data: RowDataFields[];
+    handleToggleActionClick: (row: RowDataFields) => void;
+    handleOpenPageStyleDialog: (row: RowDataFields, mode: Mode) => void;
+    handleSort: HeadCellSortHandler;
+    sortDir: SortDirection;
+    sortKey?: string;
+    tableConfig: ITableConfig;
+}
+
+interface IEntityModal {
+    serviceName?: string;
+    open: boolean;
+    stanzaName?: string;
+    mode?: Mode;
+}
+
+const getServiceToStyleMap = (page: string, unifiedConfigs: GlobalConfig) => {
+    const serviceToStyleMap: Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> = {};
     if (page === PAGE_INPUT) {
-        unifiedConfigs.pages.inputs.services.forEach((x) => {
+        const inputsPage = unifiedConfigs.pages.inputs;
+        inputsPage?.services.forEach((x) => {
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     } else {
@@ -29,9 +50,9 @@ function getServiceToStyleMap(page, unifiedConfigs) {
         });
     }
     return serviceToStyleMap;
-}
+};
 
-function CustomTable({
+const CustomTable: React.FC<CustomTableProps> = ({
     page,
     serviceName,
     data,
@@ -41,22 +62,25 @@ function CustomTable({
     sortDir,
     sortKey,
     tableConfig,
-}) {
-    const unifiedConfigs = getUnifiedConfigs();
-    const [entityModal, setEntityModal] = useState({ open: false });
-    const [deleteModal, setDeleteModal] = useState({ open: false });
+}) => {
+    const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
+    const [entityModal, setEntityModal] = useState<IEntityModal>({ open: false });
+    const [deleteModal, setDeleteModal] = useState<IEntityModal>({ open: false });
 
     const { rowData } = useTableContext();
+    const inputsPage = unifiedConfigs.pages.inputs;
     const readonlyFieldId =
-        page === PAGE_INPUT && 'readonlyFieldId' in unifiedConfigs.pages.inputs
-            ? unifiedConfigs.pages.inputs.readonlyFieldId
+        page === PAGE_INPUT && inputsPage && 'table' in inputsPage && inputsPage.readonlyFieldId
+            ? inputsPage.readonlyFieldId
             : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
-    const headerMapping = {};
+    const headerMapping: Record<string, unknown> = {};
+
     headers.forEach((x) => {
         headerMapping[x.field] = x.mapping;
     });
+
     const serviceToStyleMap = useMemo(
         () => getServiceToStyleMap(page, unifiedConfigs),
         [page, unifiedConfigs]
@@ -70,10 +94,8 @@ function CustomTable({
     // and when query params are updated
     useEffect(() => {
         // Only run when tab matches serviceName or if in input page where serviceName is undefined
-        if ((tab === serviceName || serviceName === undefined) && record && !entityModal.open) {
-            const serviceKey = Object.keys(rowData).find(
-                (x) => typeof rowData[x][record] !== 'undefined'
-            );
+        if ((tab === serviceName || !serviceName) && record && !entityModal.open) {
+            const serviceKey = Object.keys(rowData).find((x) => rowData[x][record]);
             if (serviceKey) {
                 const row = rowData[serviceKey][record];
                 setEntityModal({
@@ -97,7 +119,7 @@ function CustomTable({
     };
 
     const handleEditActionClick = useCallback(
-        (selectedRow) => {
+        (selectedRow: RowDataFields) => {
             if (serviceToStyleMap[selectedRow.serviceName] === STYLE_PAGE) {
                 handleOpenPageStyleDialog(selectedRow, MODE_EDIT);
             } else {
@@ -119,7 +141,7 @@ function CustomTable({
     };
 
     const handleCloneActionClick = useCallback(
-        (selectedRow) => {
+        (selectedRow: RowDataFields) => {
             if (serviceToStyleMap[selectedRow.serviceName] === STYLE_PAGE) {
                 handleOpenPageStyleDialog(selectedRow, MODE_CLONE);
             } else {
@@ -132,12 +154,11 @@ function CustomTable({
                 });
             }
         },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [entityModal]
+        [entityModal, handleOpenPageStyleDialog, serviceToStyleMap]
     );
 
     const handleDeleteActionClick = useCallback(
-        (selectedRow) => {
+        (selectedRow: RowDataFields) => {
             setDeleteModal({
                 ...deleteModal,
                 open: true,
@@ -150,15 +171,15 @@ function CustomTable({
 
     const generateModalDialog = () => {
         if (entityModal.open) {
-            let label;
+            let label: string | undefined;
             if (page === PAGE_INPUT) {
-                const { services } = unifiedConfigs.pages.inputs;
-                label = services.find((x) => x.name === entityModal.serviceName)?.title;
-            } else if (page === 'configuration') {
+                const services = inputsPage?.services;
+                label = services?.find((x) => x.name === entityModal.serviceName)?.title;
+            } else if (page === PAGE_CONF) {
                 const { tabs } = unifiedConfigs.pages.configuration;
                 label = tabs.find((x) => x.name === entityModal.serviceName)?.title;
             }
-            return (
+            return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal
                     page={page}
                     open={entityModal.open}
@@ -170,23 +191,25 @@ function CustomTable({
                         entityModal.mode === MODE_CLONE ? _(`Clone `) + label : _(`Update `) + label
                     }
                 />
-            );
+            ) : null;
         }
         return null;
     };
 
-    const generateDeleteDialog = () => (
-        <DeleteModal
-            page={page}
-            open={deleteModal.open}
-            handleRequestClose={handleDeleteClose}
-            serviceName={deleteModal.serviceName}
-            stanzaName={deleteModal.stanzaName}
-        />
-    );
+    const generateDeleteDialog = () =>
+        deleteModal.serviceName && deleteModal.stanzaName ? (
+            <DeleteModal
+                page={page}
+                open={deleteModal.open}
+                handleRequestClose={handleDeleteClose}
+                serviceName={deleteModal.serviceName}
+                stanzaName={deleteModal.stanzaName}
+            />
+        ) : null;
 
     const generateColumns = () => {
-        const column = [];
+        const column: Array<{ label: string; field: string; sortKey: string | null }> = [];
+
         if (headers && headers.length) {
             headers.forEach((item) => {
                 column.push({
@@ -213,8 +236,8 @@ function CustomTable({
                     columns.map((headData) => (
                         <Table.HeadCell
                             key={headData.field}
-                            onSort={headData.sortKey ? handleSort : null}
-                            sortKey={headData.sortKey ? headData.sortKey : null}
+                            onSort={headData.sortKey ? handleSort : undefined}
+                            sortKey={headData.sortKey ?? undefined}
                             sortDir={
                                 headData.sortKey && headData.sortKey === sortKey ? sortDir : 'none'
                             }
@@ -272,18 +295,6 @@ function CustomTable({
             {generateDeleteDialog()}
         </>
     );
-}
-
-CustomTable.propTypes = {
-    page: PropTypes.string.isRequired,
-    serviceName: PropTypes.string,
-    data: PropTypes.array.isRequired,
-    handleToggleActionClick: PropTypes.func,
-    handleOpenPageStyleDialog: PropTypes.func,
-    handleSort: PropTypes.func,
-    sortDir: PropTypes.string,
-    sortKey: PropTypes.string,
-    tableConfig: PropTypes.object.isRequired,
 };
 
 export default memo(CustomTable);
