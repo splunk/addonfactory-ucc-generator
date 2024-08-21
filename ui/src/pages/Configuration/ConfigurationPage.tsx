@@ -39,7 +39,7 @@ const Row = styled(ColumnLayout.Row)`
     }
 `;
 
-type TabSchema = z.infer<typeof TabSchema>;
+type Tab = z.infer<typeof TabSchema>;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
@@ -87,9 +87,9 @@ function ConfigurationPage() {
         }
     };
 
-    const getCustomTab = (tab: TabSchema) => React.createElement(CustomTab, { tab });
+    const getCustomTab = (tab: Tab) => React.createElement(CustomTab, { tab });
 
-    const getTabContent = (tab: TabSchema) => {
+    const getTabContent = (tab: Tab) => {
         let TabComponent;
         if (tab?.customTab) {
             TabComponent = getCustomTab(tab);

@@ -8,9 +8,11 @@ import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import { _ } from '@splunk/ui-utils/i18n';
 import { z } from 'zod';
 import {
-    InputsPageSchema,
-    InputsPageTableSchema,
+    InputsPage,
+    InputsPageTable,
+    ITableConfig,
     ServiceTable,
+    SubDescriptionType,
     TableFullServiceSchema,
 } from '../../types/globalConfig/pages';
 import { getUnifiedConfigs } from '../../util/util';
@@ -59,26 +61,26 @@ function isTableFullServiceSchema(
     return service !== undefined && 'description' in service;
 }
 
-function isTableSchema(inputs: InputsPageSchema): inputs is InputsPageTableSchema {
+function isTableSchema(inputs: InputsPage): inputs is InputsPageTable {
     return inputs !== undefined && 'table' in inputs;
 }
 
 function InputPage(): ReactElement {
     const [entity, setEntity] = useState<EntityState>({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
-    const InputsPage = unifiedConfigs.pages.inputs;
+    const inputsPage = unifiedConfigs.pages.inputs;
 
     let services: ServiceTable[] = [];
-    let title;
-    let table;
-    let description;
-    let subDescription;
+    let title: string | undefined;
+    let table: ITableConfig | undefined;
+    let description: string | undefined;
+    let subDescription: SubDescriptionType | undefined;
 
-    if (InputsPage) {
-        if (isTableSchema(InputsPage)) {
-            ({ services, title, table, description, subDescription } = InputsPage);
+    if (inputsPage) {
+        if (isTableSchema(inputsPage)) {
+            ({ services, title, table, description, subDescription } = inputsPage);
         } else {
-            ({ services, title } = InputsPage);
+            ({ services, title } = inputsPage);
         }
     }
 
