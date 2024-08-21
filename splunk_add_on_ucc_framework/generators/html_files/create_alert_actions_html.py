@@ -19,7 +19,7 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
     normalize,
 )
-from typing import Dict, Any
+from typing import Dict, Any, Union
 from os import linesep
 from re import search
 
@@ -49,11 +49,11 @@ class AlertActionsHtml(HTMLGenerator):
             schema_content = envs["schema.content"]
             self._alert_settings = schema_content["modular_alerts"]
 
-    def generate_html(self) -> Dict[str, str]:
+    def generate_html(self) -> Union[Dict[str, str], None]:
         if (not self._global_config) or (
             self._global_config and not self._global_config.has_alerts()
         ):
-            return super().generate_html()
+            return None
 
         alert_details: Dict[str, str] = {}
         for self.alert in self._alert_settings:
