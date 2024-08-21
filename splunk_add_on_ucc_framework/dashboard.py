@@ -62,9 +62,7 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = (
-    "index=_internal source=*{addon_name}* ERROR | timechart count as Errors by exc_l"
-)
+errors_count = "index=_internal source=*{addon_name}* log_level=ERROR | timechart count as Errors by exc_l"
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -133,7 +131,7 @@ table_input_query = (
     '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
 )
 
-errors_list_query = "index=_internal source=*{addon_name}* ERROR"
+errors_list_query = "index=_internal source=*{addon_name}* log_level=ERROR"
 
 resource_cpu_query = (
     "index = _introspection component=PerProcess data.args=*{addon_name}* "
