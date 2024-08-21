@@ -100,7 +100,7 @@ def test_alert_html_generate_html_no_global_config(
         addon_name=ta_name,
     )
     output = alert_html.generate_html()
-    assert output == super(AlertActionsHtml, alert_html).generate_html()
+    assert output is None
 
 
 @patch(
@@ -125,7 +125,7 @@ def test_alert_html_generate_html_no_alerts(
         addon_name=ta_name,
     )
     output = alert_html.generate_html()
-    assert output == super(AlertActionsHtml, alert_html).generate_html()
+    assert output is None
     assert not hasattr(alert_html, "_alert_settings")
 
 
@@ -193,6 +193,7 @@ def test_alert_actions_html_set_attributes_and_generate(
     alert_html._template = template_render
     output = alert_html.generate_html()
 
+    assert output is not None
     assert len(output) == 4, "4 alert action html file path should be provided"
     assert mock_op_path.call_count == 4
     assert mock_template.call_count == 4
