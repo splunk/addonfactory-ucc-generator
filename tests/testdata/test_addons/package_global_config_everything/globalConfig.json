@@ -969,22 +969,8 @@
                             "required": true
                         },
                         {
-                            "type": "singleSelect",
+                            "type": "index",
                             "label": "Index",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of index name should be between 1 and 80.",
-                                    "minLength": 1,
-                                    "maxLength": 80
-                                }
-                            ],
-                            "defaultValue": "default",
-                            "options": {
-                                "endpointUrl": "data/indexes",
-                                "denyList": "^_.*$",
-                                "createSearchChoice": true
-                            },
                             "field": "index",
                             "required": true
                         },
@@ -1557,7 +1543,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.48.2R2463eca77",
+        "version": "5.48.2Ra94cdc9a8",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.48.2",

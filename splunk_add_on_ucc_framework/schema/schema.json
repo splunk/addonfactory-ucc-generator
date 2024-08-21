@@ -1561,6 +1561,9 @@
           },
           {
             "$ref": "#/definitions/IntervalEntity"
+          },
+          {
+            "$ref": "#/definitions/IndexEntity"
           }
         ]
       }
@@ -2786,6 +2789,31 @@
           "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$"
         }
       ]
+    },
+    "IndexEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "index"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string"
+        },
+        "defaultValue": {
+          "type": "string"
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": ["type", "field", "label"],
+      "additionalProperties": false
     }
   },
   "type": "object",
