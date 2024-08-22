@@ -149,6 +149,9 @@ export const InputsPageTableSchema = z
     })
     .strict();
 
+const InputsPageSchema = z.union([InputsPageRegular, InputsPageTableSchema]).optional();
+const ServiceTableSchema = z.union([TableFullServiceSchema, TableLessServiceSchema]);
+
 export const pages = z.object({
     configuration: z.object({
         title: z.string(),
@@ -156,7 +159,7 @@ export const pages = z.object({
         subDescription: SubDescriptionSchema,
         tabs: z.array(TabSchema).min(1),
     }),
-    inputs: z.union([InputsPageRegular, InputsPageTableSchema]).optional(),
+    inputs: InputsPageSchema,
     dashboard: z
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),
@@ -165,3 +168,10 @@ export const pages = z.object({
         })
         .optional(),
 });
+
+// Define the types based on the Zod schemas
+export type InputsPage = z.infer<typeof InputsPageSchema>;
+export type InputsPageTable = z.infer<typeof InputsPageTableSchema>;
+export type ServiceTable = z.infer<typeof ServiceTableSchema>;
+export type SubDescriptionType = z.infer<typeof SubDescriptionSchema>;
+export type ITableConfig = z.infer<typeof TableSchema>;
