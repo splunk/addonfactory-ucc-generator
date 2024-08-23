@@ -44,15 +44,6 @@ def test_builder(global_config_all_json, tmp_path):
         generated_tags_conf = _f.read()
         assert expected_tags_conf == generated_tags_conf
 
-    expected_alert_html = get_testdata_file("alert.html.generated")
-    with open(
-        os.path.join(
-            tmp_path, addon_name, "default", "data", "ui", "alerts", "test_alert.html"
-        )
-    ) as _f:
-        generated_alert_html = _f.read()
-        assert expected_alert_html == generated_alert_html
-
     expected_alert = get_testdata_file("alert_action.py.generated")
     with open(os.path.join(tmp_path, addon_name, "bin", "test_alert.py")) as _f:
         generated_alert = _f.read()
