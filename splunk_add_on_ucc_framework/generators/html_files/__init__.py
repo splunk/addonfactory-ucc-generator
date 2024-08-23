@@ -13,14 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-__version__ = "5.49.0"
+from .html_generator import HTMLGenerator
+from .create_alert_actions_html import AlertActionsHtml
 
-import logging
-
-logger = logging.getLogger("ucc_gen")
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter("%(levelname)s: %(message)s")
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
+__all__ = ["HTMLGenerator", "AlertActionsHtml"]

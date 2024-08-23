@@ -12,6 +12,7 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _dump_with_migrated_entities,
     _stop_build_on_placeholder_usage,
 )
+from splunk_add_on_ucc_framework.entity import IntervalEntity
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
@@ -139,7 +140,9 @@ def test_entity_migration(tmp_path):
     assert '"type": "interval"' not in tmp_file_gc.read_text()
 
     global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
-    _dump_with_migrated_entities(global_config, global_config.original_path)
+    _dump_with_migrated_entities(
+        global_config, global_config.original_path, [IntervalEntity]
+    )
 
     assert '"type": "interval"' in tmp_file_gc.read_text()
 

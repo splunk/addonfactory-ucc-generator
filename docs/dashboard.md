@@ -21,9 +21,15 @@ As of now, 4 pre-built panels are supported:
 * Errors in the add-on.
 * Resource consumption.
 
-**IMPORTANT**: To fully use the panels available on the monitoring dashboard, use the `solnlib.log`'s [`events_ingested` function](https://github.com/splunk/addonfactory-solutions-library-python/blob/v4.14.0/solnlib/log.py#L253), available from **version 4.14**, to record events.
+**IMPORTANT**:
 
-The above function takes 5 positional parameters which are:
+* To fully use the panels available on the monitoring dashboard, use the `solnlib.log`'s [`events_ingested` function](https://github.com/splunk/addonfactory-solutions-library-python/blob/v5.2.0/solnlib/log.py#L280), to record events.
+Due to some changes in dashboard queries in UCC version **5.49.0**, you must use `solnlib` in at least version **5.2.0**.
+* Sometimes, especially with a short data collection period, the first chart in the overview section may not display data when the **all time** period is selected.
+This is because the `join` function used to aggregate data volume and number of ingested events does not have a default **span** for the **all time** range.
+Over time, the problem should automatically disappear.
+
+The above `events_ingested` function takes 5 positional parameters which are:
 
 * `logger`
 * `modular_input_name`
@@ -35,9 +41,14 @@ and 2 optional named parameters:
 
 * `account`
 * `host`
+* `license_usage_source` (available from version 5.2)
 
 If you additionally provide `account` and `host` arguments - you will get a better visibility in your dashboard.
 Please note that as a `modular_input_name` you should pass the full input in the format: **`demo_input://my_input_1`**.
+
+If for your add-on `license usage` file writes data in a source format that doesn't fit the above, the `events_ingested` function in **solnlib v5.2**
+has an additional, optional parameter `license_usage_source` that allows for proper data correlation
+between license usage and data written by the `events_ingested` function.
 
 Example of an `events_ingested` function:
 

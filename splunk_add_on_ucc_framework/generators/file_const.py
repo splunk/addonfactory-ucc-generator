@@ -22,6 +22,7 @@ from splunk_add_on_ucc_framework.generators.xml_files import (
     InputsXml,
     RedirectXml,
 )
+from splunk_add_on_ucc_framework.generators.html_files import AlertActionsHtml
 
 __all__ = ["FileClass", "GEN_FILE_LIST"]
 
@@ -37,6 +38,7 @@ class FileClass(NamedTuple):
             RedirectXml,
         ]
     ]
+    file_class: Type[Union[AlertActionsHtml]]
     file_path: Union[str, List[str]]
     file_description: str
 
@@ -71,5 +73,9 @@ GEN_FILE_LIST: List[FileClass] = [
         RedirectXml,
         ["default", "data", "ui", "views"],
         RedirectXml.__description__,
+        "_.html",
+        AlertActionsHtml,
+        ["default", "data", "ui", "alerts"],
+        AlertActionsHtml.__description__,
     ),
 ]
