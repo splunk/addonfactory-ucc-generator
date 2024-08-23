@@ -145,4 +145,4 @@ def test_generate_xml_without_dashboard(
         file_paths = dashboard_xml.generate_xml()
 
         # Assert that no files are returned since no dashboard is configured
-        assert file_paths == super(DashboardXml, dashboard_xml).generate_xml()
+        assert file_paths is None

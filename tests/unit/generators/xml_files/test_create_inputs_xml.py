@@ -147,4 +147,4 @@ def test_generate_xml_without_inputs(
         file_paths = inputs_xml.generate_xml()
 
         # Assert that no files are returned since no dashboard is configured
-        assert file_paths == super(InputsXml, inputs_xml).generate_xml()
+        assert file_paths is None

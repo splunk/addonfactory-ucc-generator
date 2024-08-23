@@ -138,4 +138,4 @@ def test_generate_xml_without_oauth(
         file_paths = redirect_xml.generate_xml()
 
         # Assert that no files are returned since no dashboard is configured
-        assert file_paths == super(RedirectXml, redirect_xml).generate_xml()
+        assert file_paths is None
