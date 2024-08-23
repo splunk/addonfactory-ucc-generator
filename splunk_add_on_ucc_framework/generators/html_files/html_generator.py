@@ -35,10 +35,8 @@ class HTMLGenerator(FileGenerator):
         raise NotImplementedError()
 
     def generate(self) -> Dict[str, str]:
-        result = self.generate_html()
-        if result is None:
-            return {"": ""}
-        return result
+        html_files = self.generate_html()
+        return html_files if html_files else {"": ""}
 
     def generate_html(self) -> Union[Dict[str, str], None]:
         # uses the attributes set in  _set_attributes method to set the required attributes
