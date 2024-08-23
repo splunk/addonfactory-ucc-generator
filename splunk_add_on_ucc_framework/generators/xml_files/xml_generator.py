@@ -35,9 +35,12 @@ class XMLGenerator(FileGenerator):
         raise NotImplementedError()
 
     def generate(self) -> Dict[str, str]:
-        return self.generate_xml()
+        result = self.generate_xml()
+        if result is None:
+            return {"": ""}
+        return result
 
-    def generate_xml(self) -> Dict[str, str]:
+    def generate_xml(self) -> Union[Dict[str, str], None]:
         # uses the attributes set in  _set_attributes method to set the required attributes
         # use self.writer function to create the xml file.
         return {"": ""}

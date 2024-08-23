@@ -15,7 +15,7 @@
 #
 from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from typing import Any, Dict
+from typing import Any, Dict, Union
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
@@ -40,9 +40,9 @@ class DashboardXml(XMLGenerator):
                 self._addon_name
             )
 
-    def generate_xml(self) -> Dict[str, str]:
+    def generate_xml(self) -> Union[Dict[str, str], None]:
         if self._global_config and not self._global_config.has_dashboard():
-            return super().generate_xml()
+            return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "dashboard.xml"]
         )
