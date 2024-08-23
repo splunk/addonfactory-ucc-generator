@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from typing import Dict, Any
 import os
 from splunk_add_on_ucc_framework import data_ui_generator
@@ -25,18 +24,9 @@ logger = logging.getLogger("ucc_gen")
 
 class DefaultXml(XMLGenerator):
     __description__ = (
-        " Generates default.xml file based on configs present in globalConfig"
+        "Generates default.xml file based on configs present in globalConfig"
         "in in `default/data/ui/nav` folder."
     )
-
-    def __init__(
-        self,
-        global_config: GlobalConfig,
-        input_dir: str,
-        output_dir: str,
-        **kwargs: Any,
-    ) -> None:
-        super().__init__(global_config, input_dir, output_dir, **kwargs)
 
     def _set_attributes(self, **kwargs: Any) -> None:
         addon_name = kwargs.get("addon_name")

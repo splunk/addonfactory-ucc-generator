@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.html_files import HTMLGenerator
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
     normalize,
@@ -26,18 +25,9 @@ from re import search
 
 class AlertActionsHtml(HTMLGenerator):
     __description__ = (
-        " Generates `alert_name.html` file based on alerts configuration present in globalConfig"
+        "Generates `alert_name.html` file based on alerts configuration present in globalConfig"
         " in `default/data/ui/alerts` folder."
     )
-
-    def __init__(
-        self,
-        global_config: GlobalConfig,
-        input_dir: str,
-        output_dir: str,
-        **kwargs: Dict[str, Any],
-    ) -> None:
-        super().__init__(global_config, input_dir, output_dir, **kwargs)
 
     def _set_attributes(self, **kwargs: Dict[str, Any]) -> None:
         if self._global_config and self._global_config.has_alerts():

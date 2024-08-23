@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from typing import List, NamedTuple, Type, Union
-
+from .file_generator import FileGenerator
 from splunk_add_on_ucc_framework.generators.xml_files import (
     ConfigurationXml,
     DashboardXml,
@@ -29,16 +29,7 @@ __all__ = ["FileClass", "GEN_FILE_LIST"]
 
 class FileClass(NamedTuple):
     file_name: str
-    file_class: Type[
-        Union[
-            ConfigurationXml,
-            DashboardXml,
-            DefaultXml,
-            InputsXml,
-            RedirectXml,
-            AlertActionsHtml,
-        ]
-    ]
+    file_class: Type[FileGenerator]
     file_path: Union[str, List[str]]
     file_description: str
 

@@ -15,20 +15,10 @@
 #
 from ..file_generator import FileGenerator
 from typing import Dict, Any, Union, NoReturn
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class HTMLGenerator(FileGenerator):
     __description__ = "DESCRIBE THE HTML FILE THAT IS GENERATED"
-
-    def __init__(
-        self,
-        global_config: GlobalConfig,
-        input_dir: str,
-        output_dir: str,
-        **kwargs: Dict[str, Any]
-    ) -> None:
-        super().__init__(global_config, input_dir, output_dir, **kwargs)
 
     def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
         # parse self._global_config and set the require attributes for self
