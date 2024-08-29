@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import configparser
 import glob
 import json
 import logging
@@ -34,9 +33,7 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework import dashboard
-from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
-from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import data_ui_generator
@@ -55,6 +52,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
+from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
 
 
 logger = logging.getLogger("ucc_gen")
@@ -176,19 +174,6 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
-
-        input_default = os.path.join(outputdir, ta_name, "default", "inputs.conf")
-        config = configparser.ConfigParser()
-        if os.path.exists(input_default):
-            config.read(input_default)
-
-        if config.has_section(input_name):
-            config[input_name]["python.version"] = "python3"
-        else:
-            config[input_name] = {"python.version": "python3"}
-
-        with open(input_default, "w") as configfile:
-            config.write(configfile)
 
 
 def _get_ignore_list(
@@ -528,6 +513,7 @@ def generate(
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
+        ui_available = True
         logger.info(f"Using globalConfig file located @ {gc_path}")
         global_config = global_config_lib.GlobalConfig(gc_path)
         # handle the update of globalConfig before validating
@@ -627,22 +613,6 @@ def generate(
         conf_file_names.extend(list(scheme.configs_conf_file_names))
         conf_file_names.extend(list(scheme.oauth_conf_file_names))
 
-        source_server_conf_path = os.path.join(source, "default", "server.conf")
-        # For now, only create server.conf only if no server.conf is present in
-        # the source package.
-        if not os.path.isfile(source_server_conf_path):
-            server_conf = server_conf_lib.ServerConf()
-            server_conf.create_default(conf_file_names)
-            output_server_conf_path = os.path.join(
-                output_directory,
-                ta_name,
-                "default",
-                server_conf_lib.SERVER_CONF_FILE_NAME,
-            )
-            server_conf.write(output_server_conf_path)
-            logger.info(
-                f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
-            )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
             dashboard_definition_json_path = os.path.join(
@@ -714,31 +684,17 @@ def generate(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
 
-    app_conf = app_conf_lib.AppConf()
-    output_app_conf_path = os.path.join(
-        output_directory, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
-    )
-    app_conf.read(output_app_conf_path)
-    should_be_visible = False
-    check_for_updates = "true"
-    supported_themes = ""
-    if global_config:
-        should_be_visible = True
-        if global_config.meta.get("checkForUpdates") is False:
-            check_for_updates = "false"
-        if global_config.meta.get("supportedThemes") is not None:
-            supported_themes = ", ".join(global_config.meta["supportedThemes"])
-    app_conf.update(
-        addon_version,
-        app_manifest,
-        conf_file_names,
-        should_be_visible,
-        check_for_updates=check_for_updates,
-        supported_themes=supported_themes,
-    )
-    app_conf.write(output_app_conf_path)
-    logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
-
+    # NOTE: merging source and generated 'app.conf' as per previous design
+    AppConf(
+        global_config=global_config,
+        input_dir=source,
+        output_dir=output_directory,
+        ucc_dir=internal_root_dir,
+        addon_name=ta_name,
+        app_manifest=app_manifest,
+        addon_version=addon_version,
+        has_ui=ui_available,
+    ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
