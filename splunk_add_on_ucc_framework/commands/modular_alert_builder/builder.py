@@ -30,7 +30,6 @@ logger = logging.getLogger("ucc_gen")
 def generate_alerts(
     global_config: global_config_lib.GlobalConfig,
     addon_name: str,
-    internal_source_dir: str,
     output_dir: str,
 ) -> None:
     envs = normalize.normalize(

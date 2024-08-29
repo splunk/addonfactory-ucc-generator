@@ -522,9 +522,7 @@ def generate(
             _add_modular_input(ta_name, global_config, output_directory)
         if global_config.has_alerts():
             logger.info("Generating alerts code")
-            alert_builder.generate_alerts(
-                global_config, ta_name, internal_root_dir, output_directory
-            )
+            alert_builder.generate_alerts(global_config, ta_name, output_directory)
 
         conf_file_names = []
         conf_file_names.extend(list(scheme.settings_conf_file_names))
