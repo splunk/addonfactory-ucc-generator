@@ -86,14 +86,13 @@ def mocked__set_attribute(this, **kwargs):
 )
 def test_alert_html_generate_html_no_global_config(
     mock_set_attributes,
-    global_config_no_alerts,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     alert_html = AlertActionsHtml(
-        global_config=global_config_no_alerts,
+        global_config,
         input_dir=input_dir,
         output_dir=output_dir,
         ucc_dir=ucc_dir,
@@ -154,6 +153,8 @@ def test_alert_html_generate_html_with_alerts(
     alert_html = AlertActionsHtml(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
+    print("\n \n")
+    print(alert_html._alert_settings)
     alert_html.writer = MagicMock()
     alert_html._template = template_render
 
