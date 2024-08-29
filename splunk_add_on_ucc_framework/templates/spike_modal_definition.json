@@ -129,13 +129,13 @@
   },
   "layout": {
     "type": "grid",
-    "globalInputs": ["spike_modal_input", "input1"],
+    "globalInputs": ["input1", "spike_modal_input"],
     "structure": [
       {
         "item": "spike_modal_timerange_label_start_viz",
         "position": {
-          "x": 20,
-          "y": 0,
+          "x": 0,
+          "y": 50,
           "w": 100,
           "h": 20
         }
@@ -143,8 +143,8 @@
       {
         "item": "spike_modal_timerange_label_end_viz",
         "position": {
-          "x": 120,
-          "y": 0,
+          "x": 100,
+          "y": 50,
           "w": 100,
           "h": 20
         }
@@ -152,8 +152,8 @@
       {
         "item": "spike_modal_data_volume_viz",
         "position": {
-          "x": 20,
-          "y": 100,
+          "x": 0,
+          "y": 80,
           "w": 300,
           "h": 400
         }
@@ -161,8 +161,8 @@
       {
         "item": "spike_modal_events_count_viz",
         "position": {
-          "x": 20,
-          "y": 550,
+          "x": 0,
+          "y": 500,
           "w": 300,
           "h": 400
         }

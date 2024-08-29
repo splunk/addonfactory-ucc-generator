@@ -329,7 +329,8 @@
 
 [data-test-panel-id='spikeDefTabPanel'] [data-test='input-layout-container'],
 [data-test-panel-id='spikeDefTabPanel'] [data-test='grid-layout-canvas'] {
-    background-color: white;
+    background-color: var(--muted-text-color);
+    padding: 0px;
 }
 
 /* muted color */
