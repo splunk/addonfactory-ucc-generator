@@ -16,6 +16,13 @@
 from typing import List, NamedTuple, Type, Union
 from .file_generator import FileGenerator
 
+from splunk_add_on_ucc_framework.generators.xml_files import (
+    ConfigurationXml,
+    DashboardXml,
+    DefaultXml,
+    InputsXml,
+    RedirectXml,
+)
 from splunk_add_on_ucc_framework.generators.html_files import AlertActionsHtml
 from splunk_add_on_ucc_framework.generators.conf_files import (
     AlertActionsConf,
@@ -58,6 +65,36 @@ GEN_FILE_LIST: List[FileClass] = [
     FileClass("tags.conf", TagsConf, "default", TagsConf.__description__),
     FileClass("_account.conf", AccountConf, "README", AccountConf.__description__),
     FileClass("_settings.conf", SettingsConf, "README", SettingsConf.__description__),
+    FileClass(
+        "configuration.xml",
+        ConfigurationXml,
+        ["default", "data", "ui", "views"],
+        ConfigurationXml.__description__,
+    ),
+    FileClass(
+        "dashboard.xml",
+        DashboardXml,
+        ["default", "data", "ui", "views"],
+        DashboardXml.__description__,
+    ),
+    FileClass(
+        "default.xml",
+        DefaultXml,
+        ["default", "data", "ui", "nav"],
+        DefaultXml.__description__,
+    ),
+    FileClass(
+        "inputs.xml",
+        InputsXml,
+        ["default", "data", "ui", "views"],
+        InputsXml.__description__,
+    ),
+    FileClass(
+        "_redirect.xml",
+        RedirectXml,
+        ["default", "data", "ui", "views"],
+        RedirectXml.__description__,
+    ),
     FileClass(
         "_.html",
         AlertActionsHtml,

@@ -17,19 +17,18 @@ from ..file_generator import FileGenerator
 from typing import Dict, Any, Union, NoReturn
 
 
-class HTMLGenerator(FileGenerator):
-    __description__ = "DESCRIBE THE HTML FILE THAT IS GENERATED"
+class XMLGenerator(FileGenerator):
+    __description__ = "DESCRIBE THE XML FILE THAT IS GENERATED"
 
     def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
         # parse self._global_config and set the require attributes for self
         raise NotImplementedError()
 
     def generate(self) -> Dict[str, str]:
-        html_files = self.generate_html()
-        return html_files if html_files else {"": ""}
+        xml_files = self.generate_xml()
+        return xml_files if xml_files else {"": ""}
 
-    def generate_html(self) -> Union[Dict[str, str], None]:
+    def generate_xml(self) -> Union[Dict[str, str], None]:
         # uses the attributes set in  _set_attributes method to set the required attributes
-        # uses set_template_and_render to load and render the HTML template.
-        # use self.writer function to create the html file.
+        # use self.writer function to create the xml file.
         return {"": ""}

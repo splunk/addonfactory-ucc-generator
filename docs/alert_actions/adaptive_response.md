@@ -28,7 +28,7 @@ An example of adaptive response in globalConfig:
         "label": "Test Alert",
         "description": "Description for test Alert Action",
         "iconFileName": "test icon.png",
-        "activeResponse": {
+        "adaptiveResponse": {
             "task": [
                 "Create",
                 "Update"
