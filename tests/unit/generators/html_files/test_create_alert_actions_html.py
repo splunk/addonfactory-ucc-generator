@@ -91,8 +91,11 @@ def test_alert_html_generate_html_no_global_config(
     ucc_dir,
     ta_name,
 ):
+    mocked_gc = MagicMock()
+    mocked_gc.return_value = None
+
     alert_html = AlertActionsHtml(
-        global_config,
+        global_config=mocked_gc(),
         input_dir=input_dir,
         output_dir=output_dir,
         ucc_dir=ucc_dir,

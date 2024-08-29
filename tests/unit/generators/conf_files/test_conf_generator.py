@@ -58,7 +58,9 @@ def test_generate(
     return_value=MagicMock(),
 )
 @patch("splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator.generate_conf")
-@patch("splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator.generate_conf_spec")
+@patch(
+    "splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator.generate_conf_spec"
+)
 def test_generate_conf_return(
     mock_conf_gen,
     mock_set_attr,

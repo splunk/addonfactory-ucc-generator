@@ -18,7 +18,6 @@ import shutil
 from os import path
 from typing import Any, Dict, Union
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder import arf_consts as ac
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 

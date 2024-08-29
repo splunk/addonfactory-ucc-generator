@@ -3,7 +3,6 @@ from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AlertActionsConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
-from time import time
 
 
 @fixture
@@ -20,13 +19,16 @@ def input_dir(tmp_path):
 def output_dir(tmp_path):
     return str(tmp_path / "output_dir")
 
+
 @fixture
 def ucc_dir(tmp_path):
     return str(tmp_path / "ucc_dir")
 
+
 @fixture
 def ta_name():
     return "test_addon"
+
 
 def mocked__set_attribute(this, **kwargs):
     this._alert_settings = [
@@ -65,31 +67,41 @@ def mocked__set_attribute(this, **kwargs):
             ],
         }
     ]
-    this.alerts = {"test":"unit testcase"}
-    this.alerts_spec = {"test2":"unit testcase2"}
+    this.alerts = {"test": "unit testcase"}
+    this.alerts_spec = {"test2": "unit testcase2"}
     this.conf_file = "alert_actions.conf"
-    this.conf_spec_file = "alert_actions.conf.spec"
+    this.conf_spec_file = f"{this.conf_file}.spec"
 
 
-def test_set_attributes_global_config_none(input_dir, output_dir,ucc_dir,ta_name):
+def test_set_attributes_global_config_none(input_dir, output_dir, ucc_dir, ta_name):
     """Test _set_attributes when _global_config is None."""
-    alert_action_conf = AlertActionsConf(global_config = None, input_dir = input_dir, output_dir = output_dir,ucc_dir = ucc_dir,addon_name = ta_name)
-    # alert_action_conf._global_config = None  # Simulate no global config
+    alert_action_conf = AlertActionsConf(
+        global_config=None,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
 
     alert_action_conf._set_attributes()
 
-    assert not hasattr (alert_action_conf ,"alerts")
-    assert not hasattr (alert_action_conf ,"alerts_spec")
+    assert not hasattr(alert_action_conf, "alerts")
+    assert not hasattr(alert_action_conf, "alerts_spec")
 
 
-def test_set_attributes_global_config_with_empty_alerts(global_config, input_dir, output_dir, ucc_dir,ta_name):
-    # Setting the global_config alerts attribute to an empty list
+def test_set_attributes_global_config_with_empty_alerts(
+    global_config, input_dir, output_dir, ucc_dir, ta_name
+):
     global_config = MagicMock()
     global_config.alerts = []
 
-    # mock_normalize.return_value = {"schema.content": {"modular_alerts": []}}
-    
-    alert_action_conf = AlertActionsConf(global_config, input_dir=input_dir, output_dir=output_dir, ucc_dir=ucc_dir,addon_name = ta_name)
+    alert_action_conf = AlertActionsConf(
+        global_config,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
     alert_action_conf._set_attributes(ucc_dir=ucc_dir)
 
     assert alert_action_conf.alerts == {}
@@ -103,8 +115,9 @@ def test_set_attributes_global_config_with_empty_alerts(global_config, input_dir
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.get_file_output_path"
 )
-def test_generate_conf(mock_op_path, mock_template, global_config, input_dir, output_dir,ucc_dir,ta_name):
-    # Mock returned values
+def test_generate_conf(
+    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+):
     content = "content"
     exp_fname = "alert_actions.conf"
     file_path = "output_path/alert_actions.conf"
@@ -112,9 +125,10 @@ def test_generate_conf(mock_op_path, mock_template, global_config, input_dir, ou
     template_render = MagicMock()
     template_render.render.return_value = content
 
-    # Create a AlertActionsConf instance
-    alert_actions_conf = AlertActionsConf(global_config, input_dir, output_dir, ucc_dir = ucc_dir, addon_name=ta_name)
-    
+    alert_actions_conf = AlertActionsConf(
+        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+    )
+
     alert_actions_conf.writer = MagicMock()
     alert_actions_conf._template = template_render
     file_paths = alert_actions_conf.generate_conf()
@@ -129,12 +143,22 @@ def test_generate_conf(mock_op_path, mock_template, global_config, input_dir, ou
     )
     assert file_paths == {exp_fname: file_path}
 
+
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
-def test_generate_conf_no_alerts(global_config, input_dir,output_dir,ucc_dir,ta_name):
-    alert_action_conf = AlertActionsConf(global_config, input_dir=input_dir, output_dir=output_dir, ucc_dir=ucc_dir,addon_name =ta_name)
+def test_generate_conf_no_alerts(
+    global_config, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
     alert_action_conf.alerts = {}
     result = alert_action_conf.generate_conf()
     assert result is None
+
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 @patch(
@@ -143,8 +167,9 @@ def test_generate_conf_no_alerts(global_config, input_dir,output_dir,ucc_dir,ta_
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.get_file_output_path"
 )
-def test_generate_conf_spec(mock_op_path, mock_template, global_config, input_dir, output_dir,ucc_dir,ta_name):
-    # Mock returned values
+def test_generate_conf_spec(
+    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+):
     content = "content"
     exp_fname = "alert_actions.conf.spec"
     file_path = "output_path/alert_actions.conf.spec"
@@ -152,9 +177,10 @@ def test_generate_conf_spec(mock_op_path, mock_template, global_config, input_di
     template_render = MagicMock()
     template_render.render.return_value = content
 
-    # Create a AlertActionsConf instance
-    alert_actions_conf = AlertActionsConf(global_config, input_dir, output_dir, ucc_dir = ucc_dir, addon_name=ta_name)
-    
+    alert_actions_conf = AlertActionsConf(
+        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+    )
+
     alert_actions_conf.writer = MagicMock()
     alert_actions_conf._template = template_render
     file_paths = alert_actions_conf.generate_conf_spec()
@@ -169,9 +195,18 @@ def test_generate_conf_spec(mock_op_path, mock_template, global_config, input_di
     )
     assert file_paths == {exp_fname: file_path}
 
+
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
-def test_generate_conf_no_alerts_spec(global_config, input_dir,output_dir,ucc_dir,ta_name):
-    alert_action_conf = AlertActionsConf(global_config, input_dir=input_dir, output_dir=output_dir, ucc_dir=ucc_dir,addon_name =ta_name)
+def test_generate_conf_no_alerts_spec(
+    global_config, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
     alert_action_conf.alerts_spec = {}
     result = alert_action_conf.generate_conf_spec()
     assert result is None
