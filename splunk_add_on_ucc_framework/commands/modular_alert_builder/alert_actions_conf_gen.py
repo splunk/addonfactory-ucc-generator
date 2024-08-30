@@ -24,7 +24,7 @@ from jinja2 import Environment, FileSystemLoader
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
+from splunk_add_on_ucc_framework.utils import (
     write_file,
 )
 from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_merge import (
