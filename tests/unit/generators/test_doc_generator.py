@@ -1,6 +1,6 @@
-from unittest.mock import patch, mock_open, Mock
+from unittest.mock import patch, mock_open, MagicMock
 from splunk_add_on_ucc_framework.generators import doc_generator
-from os.path import join, realpath, dirname
+from os.path import join
 from splunk_add_on_ucc_framework.generators.file_const import FileClass
 
 
@@ -16,8 +16,8 @@ class MockFileClass:
 # Test generate_docs function
 
 MOCKED_GEN_FILE_LIST = [
-    FileClass("file1.conf", None, "some/path", "Conf file"),
-    FileClass("file2.xml", None, ["xml", "path"], "XML file"),
+    FileClass("file1.conf", MagicMock(), "some/path", "Conf file"),
+    FileClass("file2.xml", MagicMock(), ["xml", "path"], "XML file"),
 ]
 
 

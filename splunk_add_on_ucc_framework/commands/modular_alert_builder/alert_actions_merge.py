@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 import logging
-import os
-from os.path import basename as bn
 from typing import Any
 
 import addonfactory_splunk_conf_parser_lib as conf_parser

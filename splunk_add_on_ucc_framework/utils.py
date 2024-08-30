@@ -15,18 +15,25 @@
 #
 import json
 import logging
+import logging
 import shutil
+from os import listdir, makedirs, path, remove, sep
+from os.path import basename as bn
+from os.path import dirname, exists, isdir, isfile, join
 from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
 from os.path import dirname, exists, isdir, isfile, join
 from typing import Any, Dict
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
+import addonfactory_splunk_conf_parser_lib as conf_parser
 import dunamai
 import jinja2
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+
+logger = logging.getLogger("ucc_gen")
 
 logger = logging.getLogger("ucc_gen")
 
@@ -54,11 +61,17 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
         if not isdir(dest):
             makedirs(dest)
         files = listdir(src)
+    if isdir(src):
+        if not isdir(dest):
+            makedirs(dest)
+        files = listdir(src)
         for f in files:
             recursive_overwrite(
                 join(src, f), join(dest, f), ui_source_map
             )
     else:
+        if exists(dest):
+            remove(dest)
         if exists(dest):
             remove(dest)
 
@@ -79,7 +92,11 @@ def get_os_path(path: str) -> str:
 
     if "\\\\" in path:
         path = path.replace("\\\\", sep)
+        path = path.replace("\\\\", sep)
     else:
+        path = path.replace("\\", sep)
+    path = path.replace("/", sep)
+    return path.strip(sep)
         path = path.replace("\\", sep)
     path = path.replace("/", sep)
     return path.strip(sep)

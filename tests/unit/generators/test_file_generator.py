@@ -1,14 +1,10 @@
 from splunk_add_on_ucc_framework.generators import FileGenerator
 from splunk_add_on_ucc_framework.generators.file_generator import begin
-from splunk_add_on_ucc_framework.generators import file_const as fc
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
-    GlobalConfigBuilderSchema,
-)
 from unittest.mock import patch, MagicMock
 from pytest import raises, fixture
 from tests.unit.helpers import get_testdata_file_path
-from jinja2 import Environment, Template
+from jinja2 import Template
 
 
 @fixture
@@ -100,7 +96,7 @@ def test_get_file_output_path(global_config, input_dir, output_dir, ucc_dir, ta_
 
     # Test with invalid type
     with raises(TypeError):
-        file_gen.get_file_output_path(12345)
+        file_gen.get_file_output_path({"path": "/dummy/path"})  # type: ignore[arg-type]
 
 
 # Test set_template_and_render
