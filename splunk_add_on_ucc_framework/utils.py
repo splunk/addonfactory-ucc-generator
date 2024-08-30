@@ -14,22 +14,28 @@
 # limitations under the License.
 #
 import json
-import os
+import logging
 import shutil
+from os import listdir, makedirs, path, remove, sep
+from os.path import basename as bn
+from os.path import dirname, exists, isdir, isfile, join
 from typing import Any, Dict
 
+import addonfactory_splunk_conf_parser_lib as conf_parser
 import dunamai
 import jinja2
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
 
+logger = logging.getLogger("ucc_gen")
+
 
 def get_j2_env() -> jinja2.Environment:
     # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
     return jinja2.Environment(
         loader=jinja2.FileSystemLoader(
-            os.path.join(os.path.dirname(__file__), "templates")
+            join(dirname(__file__), "templates")
         )
     )
 
@@ -44,17 +50,17 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
         ui_source_map (bool): flag that decides if source map files should be copied
     """
     # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
-    if os.path.isdir(src):
-        if not os.path.isdir(dest):
-            os.makedirs(dest)
-        files = os.listdir(src)
+    if isdir(src):
+        if not isdir(dest):
+            makedirs(dest)
+        files = listdir(src)
         for f in files:
             recursive_overwrite(
-                os.path.join(src, f), os.path.join(dest, f), ui_source_map
+                join(src, f), join(dest, f), ui_source_map
             )
     else:
-        if os.path.exists(dest):
-            os.remove(dest)
+        if exists(dest):
+            remove(dest)
 
         if (".js.map" not in dest) or ui_source_map:
             shutil.copy(src, dest)
@@ -72,11 +78,11 @@ def get_os_path(path: str) -> str:
     """
 
     if "\\\\" in path:
-        path = path.replace("\\\\", os.sep)
+        path = path.replace("\\\\", sep)
     else:
-        path = path.replace("\\", os.sep)
-    path = path.replace("/", os.sep)
-    return path.strip(os.sep)
+        path = path.replace("\\", sep)
+    path = path.replace("/", sep)
+    return path.strip(sep)
 
 
 def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
@@ -104,3 +110,89 @@ def get_version_from_git() -> str:
     except ValueError:
         raise exceptions.CouldNotVersionFromGitException()
     return f"{version.base}{stage}{version.commit}"
+
+
+def merge_conf_file(
+    src_file: str, dst_file: str, merge_mode: str = "stanza_overwrite"
+) -> None:
+    
+    merge_deny_list = ["default.meta", "README.txt"]
+    if not isfile(src_file):
+        return
+    if not isfile(dst_file):
+        return
+    if bn(src_file) in merge_deny_list:
+        return
+
+    sparser = conf_parser.TABConfigParser()
+    sparser.read(src_file)
+    src_dict = sparser.item_dict()
+    parser = conf_parser.TABConfigParser()
+    parser.read(dst_file)
+    dst_dict = parser.item_dict()
+
+    if merge_mode == "stanza_overwrite":
+        for stanza, key_values in list(src_dict.items()):
+            if stanza not in dst_dict:
+                parser.add_section(stanza)
+            else:
+                parser.remove_section(stanza)
+                parser.add_section(stanza)
+
+            for k, v in list(key_values.items()):
+                parser.set(stanza, k, v)
+    elif merge_mode == "item_overwrite":
+        for stanza, key_values in list(src_dict.items()):
+            if stanza not in dst_dict:
+                parser.add_section(stanza)
+
+            for k, v in list(key_values.items()):
+                if v:
+                    parser.set(stanza, k, v)
+                else:
+                    parser.remove_option(stanza, k)
+    else:
+        # overwrite the whole file
+        parser.read(src_file)
+
+    with open(dst_file, "w") as df:
+        parser.write(df)
+
+
+def write_file(file_name: str, file_path: str, content: str, **kwargs: str) -> None:
+    """
+    :param merge_mode: only supported for .conf and .conf.spec files.
+    """
+    logger.debug('operation="write", object="%s" object_type="file"', file_path)
+
+    merge_mode = kwargs.get("merge_mode", "stanza_overwrite")
+    do_merge = False
+    if file_name.endswith(".conf") or file_name.endswith(".conf.spec"):
+        do_merge = True
+    else:
+        logger.debug(
+            f"'{file_name}' is not going to be merged, only .conf and "
+            f".conf.spec files are supported."
+        )
+
+    new_file = None
+    if path.exists(file_path) and do_merge:
+        new_file = path.join(path.dirname(file_path), "new_" + file_name)
+    if new_file:
+        try:
+            with open(new_file, "w+") as fhandler:
+                fhandler.write(content)
+            merge_conf_file(new_file, file_path, merge_mode=merge_mode)
+        finally:
+            if path.exists(new_file):
+                remove(new_file)
+    else:
+        if not path.exists(path.dirname(file_path)):
+            makedirs(path.dirname(file_path))
+        with open(file_path, "w+") as fhandler:
+            fhandler.write(content)
+        if do_merge:
+            parser = conf_parser.TABConfigParser()
+            parser.read(file_path)
+            with open(file_path, "w") as df:
+                parser.write(df)
