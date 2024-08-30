@@ -15,17 +15,12 @@
 #
 import json
 import logging
-import logging
 import shutil
-from os import listdir, makedirs, path, remove, sep
-from os.path import basename as bn
-from os.path import dirname, exists, isdir, isfile, join
 from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
 from os.path import dirname, exists, isdir, isfile, join
 from typing import Any, Dict
 
-import addonfactory_splunk_conf_parser_lib as conf_parser
 import addonfactory_splunk_conf_parser_lib as conf_parser
 import dunamai
 import jinja2
@@ -41,9 +36,7 @@ logger = logging.getLogger("ucc_gen")
 def get_j2_env() -> jinja2.Environment:
     # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
     return jinja2.Environment(
-        loader=jinja2.FileSystemLoader(
-            join(dirname(__file__), "templates")
-        )
+        loader=jinja2.FileSystemLoader(join(dirname(__file__), "templates"))
     )
 
 
@@ -66,9 +59,7 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            recursive_overwrite(
-                join(src, f), join(dest, f), ui_source_map
-            )
+            recursive_overwrite(join(src, f), join(dest, f), ui_source_map)
     else:
         if exists(dest):
             remove(dest)
@@ -132,7 +123,6 @@ def get_version_from_git() -> str:
 def merge_conf_file(
     src_file: str, dst_file: str, merge_mode: str = "stanza_overwrite"
 ) -> None:
-    
     merge_deny_list = ["default.meta", "README.txt"]
     if not isfile(src_file):
         return
