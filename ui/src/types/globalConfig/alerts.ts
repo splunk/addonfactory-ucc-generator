@@ -14,10 +14,11 @@ export const alerts = z
             name: z.string(),
             label: z.string(),
             description: z.string(),
-            activeResponse: z
+            adaptiveResponse: z
                 .object({
                     task: z.array(z.string()).min(1),
                     supportsAdhoc: z.boolean(),
+                    supportsCloud: z.boolean(),
                     subject: z.array(z.string()).min(1),
                     category: z.array(z.string()).min(1),
                     technology: z
