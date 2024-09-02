@@ -49,12 +49,6 @@ def test_file_generator_init(
     file_gen = FileGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
-    # print("\n")
-    # print("path of input_dir is:",input_dir)
-    # print("\n")
-    # print("path of output_dir is:",output_dir)
-    # print("\n")
-    # print("path of ucc_dir is:",ucc_dir)
     assert file_gen._global_config == global_config
     assert file_gen._input_dir == input_dir
     assert file_gen._output_dir == output_dir
@@ -99,7 +93,6 @@ def test_get_file_output_path(global_config, input_dir, output_dir, ucc_dir, ta_
         file_gen.get_file_output_path({"path": "/dummy/path"})  # type: ignore[arg-type]
 
 
-# Test set_template_and_render
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 @patch("jinja2.Environment.get_template")
 def test_set_template_and_render(
@@ -141,7 +134,6 @@ def test_set_template_and_render_invalid_file_name(
         file_gen.set_template_and_render(["dir1"], "test.invalid")
 
 
-# Test begin function
 @patch(
     "splunk_add_on_ucc_framework.generators.file_generator.fc.GEN_FILE_LIST",
     new_callable=list,

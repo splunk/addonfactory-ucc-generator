@@ -4,17 +4,6 @@ from os.path import join
 from splunk_add_on_ucc_framework.generators.file_const import FileClass
 
 
-# Define a Mock class to simulate the FileClass structure
-class MockFileClass:
-    def __init__(self, file_name, file_path, file_description):
-        self.file_name = file_name
-        self.file_path = file_path
-        self.file_description = file_description
-
-
-# Test generate_docs function
-# Test generate_docs function
-
 MOCKED_GEN_FILE_LIST = [
     FileClass("file1.conf", MagicMock(), "some/path", "Conf file"),
     FileClass("file2.xml", MagicMock(), ["xml", "path"], "XML file"),
@@ -60,9 +49,6 @@ def test_generate_docs(mock_open, mock_dirname, mock_realpath):
     mock_open().write.assert_called_once_with(written_content)
 
 
-# Test generate_docs with an empty GEN_FILE_LIST
-
-
 @patch(
     "splunk_add_on_ucc_framework.generators.doc_generator.realpath",
     return_value="/fake/dir",
@@ -74,8 +60,6 @@ def test_generate_docs(mock_open, mock_dirname, mock_realpath):
 @patch("builtins.open", new_callable=mock_open)
 @patch.object(doc_generator, "GEN_FILE_LIST", [])
 def test_generate_docs_empty_list(mock_open_file, mock_dirname, mock_realpath):
-    # Mock an empty GEN_FILE_LIST
-
     doc_generator.generate_docs()
 
     # Verify the correct file path is being opened

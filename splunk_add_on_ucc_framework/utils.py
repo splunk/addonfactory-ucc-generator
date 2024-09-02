@@ -30,8 +30,6 @@ from splunk_add_on_ucc_framework import exceptions
 
 logger = logging.getLogger("ucc_gen")
 
-logger = logging.getLogger("ucc_gen")
-
 
 def get_j2_env() -> jinja2.Environment:
     # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
@@ -54,15 +52,9 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
         if not isdir(dest):
             makedirs(dest)
         files = listdir(src)
-    if isdir(src):
-        if not isdir(dest):
-            makedirs(dest)
-        files = listdir(src)
         for f in files:
             recursive_overwrite(join(src, f), join(dest, f), ui_source_map)
     else:
-        if exists(dest):
-            remove(dest)
         if exists(dest):
             remove(dest)
 
