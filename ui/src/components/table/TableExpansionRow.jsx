@@ -18,8 +18,6 @@ export function getExpansionRow(colSpan, row, moreInfo) {
         ? inputs.table.customRow
         : inputs.services.find((service) => service.name === row.serviceName).table?.customRow;
 
-    console.log('row getExpansionRow', { row, moreInfo });
-
     return (
         <Table.Row key={`${row.id}-expansion`} style={{ wordBreak: 'break-word' }}>
             <TableCellWrapper colSpan={colSpan}>

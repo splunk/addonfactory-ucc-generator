@@ -3,6 +3,7 @@ import React from 'react';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
+import { getActionButtons } from './utils';
 
 /**
  * @param {object} props
@@ -18,6 +19,10 @@ export const CustomDashboard = ({
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
         >
-            <DashboardCore width="100%" height="auto" />
+            <DashboardCore
+                width="100%"
+                height="auto"
+                actionMenus={getActionButtons('data_ingestion')}
+            />
         </DashboardContextProvider>
     ) : null;

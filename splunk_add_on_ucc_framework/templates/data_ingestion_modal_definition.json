@@ -1,6 +1,6 @@
 {
   "visualizations": {
-    "spike_modal_timerange_label_start_viz": {
+    "data_ingestion_modal_timerange_label_start_viz": {
       "type": "splunk.singlevalue",
       "options": {
         "majorFontSize": 12,
@@ -8,10 +8,10 @@
         "majorColor": "#9fa4af"
       },
       "dataSources": {
-        "primary": "spike_modal_data_time_label_start_ds"
+        "primary": "data_ingestion_modal_data_time_label_start_ds"
       }
     },
-    "spike_modal_timerange_label_end_viz": {
+    "data_ingestion_modal_timerange_label_end_viz": {
       "type": "splunk.singlevalue",
       "options": {
         "majorFontSize": 12,
@@ -19,31 +19,29 @@
         "majorColor": "#9fa4af"
       },
       "dataSources": {
-        "primary": "spike_modal_data_time_label_end_ds"
+        "primary": "data_ingestion_modal_data_time_label_end_ds"
       }
     },
-    "spike_modal_data_volume_viz": {
+    "data_ingestion_modal_data_volume_viz": {
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
         "seriesColors": ["#A870EF"],
         "yAxisTitleText": "Volume (bytes)",
-        "xAxisTitleText": "Time",
-        "backgroundColor": "#F7F8FA"
+        "xAxisTitleText": "Time"
       },
       "title": "Data volume",
       "dataSources": {
-        "primary": "spike_modal_data_volume_ds"
+        "primary": "data_ingestion_modal_data_volume_ds"
       }
     },
-    "spike_modal_events_count_viz": {
+    "data_ingestion_modal_events_count_viz": {
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
         "seriesColors": ["#A870EF"],
-        "yAxisTitleText": "Number of events",
-        "backgroundColor": "#F7F8FA"
+        "yAxisTitleText": "Number of events"
       },
       "title": "Number of events",
       "dataSources": {
@@ -52,33 +50,33 @@
     }
   },
   "dataSources": {
-    "spike_modal_data_time_label_start_ds": {
+    "data_ingestion_modal_data_time_label_start_ds": {
       "type": "ds.search",
       "options": {
         "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
         "queryParameters": {
-          "earliest": "$spike_modal_time.earliest$",
-          "latest": "$spike_modal_time.latest$"
+          "earliest": "$data_ingestion_modal_time.earliest$",
+          "latest": "$data_ingestion_modal_time.latest$"
         }
       }
     },
-    "spike_modal_data_time_label_end_ds": {
+    "data_ingestion_modal_data_time_label_end_ds": {
       "type": "ds.search",
       "options": {
         "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
         "queryParameters": {
-          "earliest": "$spike_modal_time.earliest$",
-          "latest": "$spike_modal_time.latest$"
+          "earliest": "$data_ingestion_modal_time.earliest$",
+          "latest": "$data_ingestion_modal_time.latest$"
         }
       }
     },
-    "spike_modal_data_volume_ds": {
+    "data_ingestion_modal_data_volume_ds": {
       "type": "ds.search",
       "options": {
         "query": "| inputlookup firewall_example.csv \n| search host=host8 OR host=host18\n| eval host=case(host=\"host8\", \"spend\", host=\"host18\", \"score\", 1=1, host)\n| eval myTime=strftime(timestamp,\"%H:%M\") \n| chart count over myTime by host\n| eval score=score*2\n| eval spend=spend*1500\n| fields myTime spend score\n| rename score as \"Security Score\", spend as \"Security Spend\"",
         "queryParameters": {
-          "earliest": "$spike_modal_time.earliest$",
-          "latest": "$spike_modal_time.latest$"
+          "earliest": "$data_ingestion_modal_time.earliest$",
+          "latest": "$data_ingestion_modal_time.latest$"
         }
       }
     },
@@ -87,8 +85,8 @@
       "options": {
         "query": "| inputlookup firewall_example.csv \n| search host=host8 OR host=host18\n| eval host=case(host=\"host8\", \"spend\", host=\"host18\", \"score\", 1=1, host)\n| eval myTime=strftime(timestamp,\"%H:%M\") \n| chart count over myTime by host\n| eval score=score*2\n| eval spend=spend*1500\n| fields myTime spend score\n| rename score as \"Security Score\", spend as \"Security Spend\"",
         "queryParameters": {
-          "earliest": "$spike_modal_time.earliest$",
-          "latest": "$spike_modal_time.latest$"
+          "earliest": "$data_ingestion_modal_time.earliest$",
+          "latest": "$data_ingestion_modal_time.latest$"
         }
       },
       "name": "Security Score vs Spend"
@@ -114,14 +112,14 @@
           }
         ],
         "defaultValue": "Source type",
-        "token": "spike_view_by"
+        "token": "data_ingestion_view_by"
       },
       "title": "Input"
     },
-    "spike_modal_input": {
+    "data_ingestion_modal_input": {
       "options": {
         "defaultValue": "-24h,now",
-        "token": "spike_modal_time"
+        "token": "data_ingestion_modal_time"
       },
       "title": "Time Window",
       "type": "input.timerange"
@@ -129,10 +127,10 @@
   },
   "layout": {
     "type": "grid",
-    "globalInputs": ["input1", "spike_modal_input"],
+    "globalInputs": ["input1", "data_ingestion_modal_input"],
     "structure": [
       {
-        "item": "spike_modal_timerange_label_start_viz",
+        "item": "data_ingestion_modal_timerange_label_start_viz",
         "position": {
           "x": 0,
           "y": 50,
@@ -141,7 +139,7 @@
         }
       },
       {
-        "item": "spike_modal_timerange_label_end_viz",
+        "item": "data_ingestion_modal_timerange_label_end_viz",
         "position": {
           "x": 100,
           "y": 50,
@@ -150,7 +148,7 @@
         }
       },
       {
-        "item": "spike_modal_data_volume_viz",
+        "item": "data_ingestion_modal_data_volume_viz",
         "position": {
           "x": 0,
           "y": 80,
@@ -159,7 +157,7 @@
         }
       },
       {
-        "item": "spike_modal_events_count_viz",
+        "item": "data_ingestion_modal_events_count_viz",
         "position": {
           "x": 0,
           "y": 500,

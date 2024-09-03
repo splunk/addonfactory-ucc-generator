@@ -47,7 +47,7 @@ default_definition_json_filename = {
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
     "errors_tab": "errors_tab_definition.json",
     "resources_tab": "resources_tab_definition.json",
-    "spike_modal_definition": "spike_modal_definition.json",
+    "data_ingestion_modal_definition": "data_ingestion_modal_definition.json",
 }
 
 data_ingestion = (
@@ -236,7 +236,7 @@ def generate_dashboard_content(
 
     if (
         definition_json_name
-        == default_definition_json_filename["spike_modal_definition"]
+        == default_definition_json_filename["data_ingestion_modal_definition"]
     ):
         content = utils.get_j2_env().get_template(definition_json_name).render()
 

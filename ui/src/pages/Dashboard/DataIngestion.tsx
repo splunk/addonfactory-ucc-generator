@@ -16,7 +16,7 @@ import {
     loadDashboardJsonDefinition,
 } from './utils';
 import { CustomDashboard } from './Custom';
-import { SpikeModal } from './SpikeModal';
+import { DataIngestionModal } from './DataIngestionModal';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -33,7 +33,10 @@ export const DataIngestionDashboard = ({
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
-    const [spikeDef, setSpikeDef] = useState<Record<string, unknown> | null>(null);
+    const [dataIngestionModalDef, setDataIngestionModalDef] = useState<Record<
+        string,
+        unknown
+    > | null>(null);
     const [displaySideMenuForInput, setDisplaySideMenuForInput] = useState<string | null>(null);
 
     useEffect(() => {
@@ -70,7 +73,10 @@ export const DataIngestionDashboard = ({
 
         setViewByInput(currentViewBy || '');
 
-        loadDashboardJsonDefinition('spike_modal_definition.json', setSpikeDef);
+        loadDashboardJsonDefinition(
+            'data_ingestion_modal_definition.json',
+            setDataIngestionModalDef
+        );
 
         return () => {
             observer.disconnect();
@@ -117,11 +123,6 @@ export const DataIngestionDashboard = ({
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
     const handleDashboardEvent = useCallback((event) => {
-        // eslint-disable-next-line no-console
-        console.log('clicked', {
-            ...event,
-        });
-
         if (
             event.type === 'cell.click' &&
             event.targetId === 'data_ingestion_table_viz' &&
@@ -146,18 +147,21 @@ export const DataIngestionDashboard = ({
                 dashboardPlugin={dashboardPlugin}
             >
                 <>
-                    <SpikeModal
+                    <DataIngestionModal
                         open={!!displaySideMenuForInput}
                         handleRequestClose={() => {
                             setDisplaySideMenuForInput(null);
                         }}
-                        title={`Title for input - ${displaySideMenuForInput}`}
+                        title={`${displaySideMenuForInput}`}
                         acceptBtnLabel="Done"
                     >
-                        <TabLayout.Panel label="spike" panelId="spikeDefTabPanel">
-                            <CustomDashboard dashboardDefinition={spikeDef} />
+                        <TabLayout.Panel
+                            label="data_ingestion_modal"
+                            panelId="dataIngestionModalDefTabPanel"
+                        >
+                            <CustomDashboard dashboardDefinition={dataIngestionModalDef} />
                         </TabLayout.Panel>
-                    </SpikeModal>
+                    </DataIngestionModal>
 
                     <DashboardCore
                         width="100%"

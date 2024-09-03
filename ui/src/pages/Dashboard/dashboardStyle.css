@@ -235,11 +235,11 @@
     height: 300px;
 }
 
-#spike_modal_timerange_label_start_viz {
+#data_ingestion_modal_timerange_label_start_viz {
     grid-row: 1;
 }
 
-#spike_modal_timerange_label_end_viz {
+#data_ingestion_modal_timerange_label_end_viz {
     grid-row: 1;
     margin-left: 145px;
     display: flex;
@@ -254,8 +254,8 @@
 #errors_tab_timerange_label_end_viz,
 #resource_tab_timerange_label_start_viz,
 #resource_tab_timerange_label_end_viz,
-#spike_modal_timerange_label_start_viz,
-#spike_modal_timerange_label_end_viz {
+#data_ingestion_modal_timerange_label_start_viz,
+#data_ingestion_modal_timerange_label_end_viz {
     inline-size: fit-content;
     grid-column: 1;
     width: 145px;
@@ -311,7 +311,7 @@
 #data_ingestion_timerange_label_end_viz::before,
 #errors_tab_timerange_label_end_viz::before,
 #resource_tab_timerange_label_end_viz::before,
-#spike_modal_timerange_label_end_viz::before {
+#data_ingestion_modal_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
     color: var(--muted-text-color);
@@ -327,8 +327,8 @@
     overflow-x: hidden;
 }
 
-[data-test-panel-id='spikeDefTabPanel'] [data-test='input-layout-container'],
-[data-test-panel-id='spikeDefTabPanel'] [data-test='grid-layout-canvas'] {
+[data-test-panel-id='dataIngestionModalDefTabPanel'] [data-test='input-layout-container'],
+[data-test-panel-id='dataIngestionModalDefTabPanel'] [data-test='grid-layout-canvas'] {
     background-color: var(--muted-text-color);
     padding: 0px;
 }
@@ -338,4 +338,13 @@
 #data_ingestion_description_viz p,
 #errors_tab_description_viz p {
     color: var(--muted-text-color);
+}
+
+table td:first-child {
+    cursor: pointer;
+    color: #006eaa !important;
+}
+
+table td:first-child:hover {
+    text-decoration: underline;
 }
