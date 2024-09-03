@@ -16,8 +16,10 @@ def test_get_j2_env():
         "input.template",
         "input_with_helper.template",
         "oauth.template",
+        "html_templates/alert_html_skeleton.template",
+        "html_templates/mod_alert.html.template",
     ]
-    assert expected_list_of_templates == list_of_templates
+    assert sorted(expected_list_of_templates) == sorted(list_of_templates)
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)

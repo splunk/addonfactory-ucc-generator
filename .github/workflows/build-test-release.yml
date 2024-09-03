@@ -63,13 +63,9 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
   semgrep:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: semgrep
-        uses: semgrep/semgrep-action@v1
-        with:
-          publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
+    uses: splunk/sast-scanning/.github/workflows/sast-scan.yml@main
+    secrets:
+      SEMGREP_KEY: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
   compliance-copyrights:
     runs-on: ubuntu-latest
@@ -95,6 +91,14 @@ jobs:
     uses: ./.github/workflows/storybook-visual.yml
     with:
       node-version: "20"
+  bot-updates:
+    name: Generates Documentation
+    permissions:
+      contents: write
+    secrets: inherit
+    uses: ./.github/workflows/automatic_doc_generation.yml
+    with:
+      python-version: "3.7"
 
   build:
     needs:
@@ -327,6 +331,7 @@ jobs:
       - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
+      - bot-updates
     runs-on: ubuntu-latest
     env:
       NEEDS: ${{ toJson(needs) }}

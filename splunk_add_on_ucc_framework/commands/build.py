@@ -39,7 +39,6 @@ from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     builder as alert_builder,
 )
@@ -54,6 +53,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
+from splunk_add_on_ucc_framework.generators.file_generator import begin
 
 
 logger = logging.getLogger("ucc_gen")
@@ -103,22 +103,6 @@ def _modify_and_replace_token_for_oauth_templates(
             "templates",
             ta_name.lower() + "_redirect.html",
         )
-        with open(
-            os.path.join(
-                outputdir,
-                ta_name,
-                "default",
-                "data",
-                "ui",
-                "views",
-                f"{ta_name.lower()}_redirect.xml",
-            ),
-            "w",
-        ) as addon_redirect_xml_file:
-            addon_redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
-                ta_name,
-            )
-            addon_redirect_xml_file.write(addon_redirect_xml_content)
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
     else:
@@ -240,63 +224,6 @@ def _remove_listed_files(ignore_list: List[str]) -> List[str]:
                     shutil.rmtree(path, ignore_errors=True)
                 removed_list.append(path)
     return removed_list
-
-
-def generate_data_ui(
-    output_directory: str,
-    addon_name: str,
-    include_inputs: bool,
-    include_dashboard: bool,
-    default_view: str,
-) -> None:
-    # Create directories in the output folder for add-on's UI nav and views.
-    os.makedirs(
-        os.path.join(output_directory, addon_name, "default", "data", "ui", "nav"),
-        exist_ok=True,
-    )
-    os.makedirs(
-        os.path.join(output_directory, addon_name, "default", "data", "ui", "views"),
-        exist_ok=True,
-    )
-    default_ui_path = os.path.join(
-        output_directory, addon_name, "default", "data", "ui"
-    )
-    default_xml_path = os.path.join(default_ui_path, "nav", "default.xml")
-    if os.path.exists(default_xml_path):
-        logger.info(
-            "Skipping generating data/ui/nav/default.xml because file already exists."
-        )
-    else:
-        with open(default_xml_path, "w") as default_xml_file:
-            default_xml_content = data_ui_generator.generate_nav_default_xml(
-                include_inputs=include_inputs,
-                include_dashboard=include_dashboard,
-                default_view=default_view,
-            )
-            default_xml_file.write(default_xml_content)
-    with open(
-        os.path.join(default_ui_path, "views", "configuration.xml"), "w"
-    ) as configuration_xml_file:
-        configuration_xml_content = data_ui_generator.generate_views_configuration_xml(
-            addon_name,
-        )
-        configuration_xml_file.write(configuration_xml_content)
-    if include_inputs:
-        with open(
-            os.path.join(default_ui_path, "views", "inputs.xml"), "w"
-        ) as input_xml_file:
-            inputs_xml_content = data_ui_generator.generate_views_inputs_xml(
-                addon_name,
-            )
-            input_xml_file.write(inputs_xml_content)
-    if include_dashboard:
-        with open(
-            os.path.join(default_ui_path, "views", "dashboard.xml"), "w"
-        ) as dashboard_xml_file:
-            dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(
-                addon_name
-            )
-            dashboard_xml_file.write(dashboard_xml_content)
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -522,6 +449,8 @@ def generate(
     logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
+    generated_files = []
+    ui_available = False
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
@@ -551,14 +480,6 @@ def generate(
             os.path.join(output_directory, ta_name),
             ui_source_map,
         )
-        generate_data_ui(
-            output_directory,
-            ta_name,
-            global_config.has_inputs(),
-            global_config.has_dashboard(),
-            global_config.meta.get("default_view", data_ui_generator.DEFAULT_VIEW),
-        )
-        logger.info("Copied UCC template directory")
         global_config_file = (
             "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
         )
@@ -590,6 +511,19 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
+        generated_files.extend(
+            begin(
+                global_config=global_config,
+                input_dir=source,
+                output_dir=output_directory,
+                ucc_dir=internal_root_dir,
+                addon_name=ta_name,
+                app_manifest=app_manifest,
+                addon_version=addon_version,
+                has_ui=ui_available,
+            )
+        )
+        # TODO: all FILES GENERATED object: generated_files, use it for comparison
         builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
         builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(

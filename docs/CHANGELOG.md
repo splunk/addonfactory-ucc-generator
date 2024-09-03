@@ -1,3 +1,20 @@
+# [5.49.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.2...v5.49.0) (2024-08-21)
+
+
+### Bug Fixes
+
+* add basic textarea in alerts ([50bd0e1](https://github.com/splunk/addonfactory-ucc-generator/commit/50bd0e1a5a97713fffc93363307227d87fe99c1b))
+* disallow alerts textarea to has option param ([f7605df](https://github.com/splunk/addonfactory-ucc-generator/commit/f7605df302d827dfd46412d7b4d62168792065a7))
+
+
+### Features
+
+* add basic textarea field to alerts ([#1308](https://github.com/splunk/addonfactory-ucc-generator/issues/1308)) ([cc1706f](https://github.com/splunk/addonfactory-ucc-generator/commit/cc1706ff527269e57ab7998800184015ac2f03b3))
+* add new index entity ([#1313](https://github.com/splunk/addonfactory-ucc-generator/issues/1313)) ([df77f51](https://github.com/splunk/addonfactory-ucc-generator/commit/df77f514b7dbf1bab9b89be3222db0e8fafbe6fd))
+* add required as modifiable property ([#1309](https://github.com/splunk/addonfactory-ucc-generator/issues/1309)) ([a94cdc9](https://github.com/splunk/addonfactory-ucc-generator/commit/a94cdc9a80e7754b12a56f3c9095022d323404ca))
+* default value for custom mapping ([#1304](https://github.com/splunk/addonfactory-ucc-generator/issues/1304)) ([8c5a3a6](https://github.com/splunk/addonfactory-ucc-generator/commit/8c5a3a6ff9f92259f3716f68ad63dd7b523b378d)), closes [#1282](https://github.com/splunk/addonfactory-ucc-generator/issues/1282)
+* use log_level in dashboard queries ([#1289](https://github.com/splunk/addonfactory-ucc-generator/issues/1289)) ([3fc86c3](https://github.com/splunk/addonfactory-ucc-generator/commit/3fc86c3003003273415de7b2ac71ea51da5e04e3))
+
 ## [5.48.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.1...v5.48.2) (2024-07-25)
 
 

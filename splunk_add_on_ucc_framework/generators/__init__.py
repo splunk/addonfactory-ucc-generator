@@ -13,14 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-__version__ = "5.49.0"
+from .file_const import GEN_FILE_LIST, FileClass
+from .file_generator import FileGenerator
 
-import logging
-
-logger = logging.getLogger("ucc_gen")
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter("%(levelname)s: %(message)s")
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
+__all__ = ["FileGenerator", "GEN_FILE_LIST", "FileClass"]

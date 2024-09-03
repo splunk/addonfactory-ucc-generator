@@ -13,14 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-__version__ = "5.49.0"
+from .xml_generator import XMLGenerator
+from .create_default_xml import DefaultXml
+from .create_configuration_xml import ConfigurationXml
+from .create_dashboard_xml import DashboardXml
+from .create_inputs_xml import InputsXml
+from .create_redirect_xml import RedirectXml
 
-import logging
-
-logger = logging.getLogger("ucc_gen")
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter("%(levelname)s: %(message)s")
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
+__all__ = [
+    "XMLGenerator",
+    "DefaultXml",
+    "ConfigurationXml",
+    "DashboardXml",
+    "InputsXml",
+    "RedirectXml",
+]
