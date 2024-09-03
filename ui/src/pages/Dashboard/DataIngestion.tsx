@@ -37,7 +37,7 @@ export const DataIngestionDashboard = ({
         string,
         unknown
     > | null>(null);
-    const [displaySideMenuForInput, setDisplaySideMenuForInput] = useState<string | null>(null);
+    const [displayModalForInput, setDisplayModalForInput] = useState<string | null>(null);
 
     useEffect(() => {
         makeVisualAdjustmentsOnDataIngestionPage();
@@ -129,10 +129,8 @@ export const DataIngestionDashboard = ({
             event.payload.cellIndex === 0 &&
             event.payload.value
         ) {
-            setDisplaySideMenuForInput(event.payload.value);
+            setDisplayModalForInput(event.payload.value);
         }
-
-        // setDisplaySideMenuForInput
     }, []);
 
     const dashboardPlugin = useMemo(
@@ -142,17 +140,17 @@ export const DataIngestionDashboard = ({
     return (
         <>
             <DashboardContextProvider
-                preset={{ ...EnterpriseViewOnlyPreset }}
+                preset={EnterpriseViewOnlyPreset}
                 initialDefinition={dashboardDefinition}
                 dashboardPlugin={dashboardPlugin}
             >
                 <>
                     <DataIngestionModal
-                        open={!!displaySideMenuForInput}
+                        open={!!displayModalForInput}
                         handleRequestClose={() => {
-                            setDisplaySideMenuForInput(null);
+                            setDisplayModalForInput(null);
                         }}
-                        title={`${displaySideMenuForInput}`}
+                        title={`${displayModalForInput}`}
                         acceptBtnLabel="Done"
                     >
                         <TabLayout.Panel
