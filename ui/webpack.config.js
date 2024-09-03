@@ -23,7 +23,7 @@ module.exports = merge(baseConfig, {
         entry_page: path.join(__dirname, 'src/pages/entry_page'),
     },
     output: {
-        path: '/Users/rohanm/Documents/addonfactory-ucc-generator/output/Splunk_TA_UCCExample/appserver/static/js/build',
+        path: path.join(__dirname, 'dist/build'),
         filename: (pathData) =>
             pathData.chunk.name === 'entry_page' ? '[name].js' : '[name].[contenthash].js',
         chunkFilename: '[name].[contenthash].js',
