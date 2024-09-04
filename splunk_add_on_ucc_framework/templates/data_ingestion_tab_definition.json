@@ -54,7 +54,9 @@
       "options": {
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
-        "seriesColors": ["#A870EF"],
+        "seriesColors": [
+          "#A870EF"
+        ],
         "yAxisTitleText": "Number of events"
       },
       "title": "Number of events",
@@ -208,7 +210,10 @@
   },
   "layout": {
     "type": "grid",
-    "globalInputs": ["data_ingestion_input", "data_ingestion_table_input"],
+    "globalInputs": [
+      "data_ingestion_input",
+      "data_ingestion_table_input"
+    ],
     "structure": [
       {
         "item": "data_ingestion_label_viz",
