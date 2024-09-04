@@ -43,8 +43,6 @@ class AppConf(ConfGenerator):
                 self.supported_themes = ", ".join(
                     self._global_config.meta["supportedThemes"]
                 )
-            self.name = self._global_config.product
-            self.id = self._global_config.product
 
         self.addon_version = kwargs["addon_version"]
         self.is_visible = str(kwargs["has_ui"]).lower()
