@@ -26,8 +26,10 @@ class AccountConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.account_fields: List[Tuple[str, List[str]]] = []
-        self.conf_spec_file = self._addon_name.lower() + "_account.conf.spec"
         if self._global_config and self._gc_schema:
+            self.conf_spec_file = (
+                self._global_config.namespace.lower() + "_account.conf.spec"
+            )
             for account in self._global_config.configs:
                 # If the endpoint is oauth, which is for getting access_token, conf file entries
                 # should not get created (compatibility to previous versions)

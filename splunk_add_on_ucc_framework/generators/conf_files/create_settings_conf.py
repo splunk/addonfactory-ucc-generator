@@ -25,12 +25,12 @@ class SettingsConf(ConfGenerator):
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        self.conf_file = self._addon_name.lower() + "_settings.conf"
-        self.conf_spec_file = f"{self.conf_file}.spec"
         self.settings_stanzas: List[Tuple[str, List[str]]] = []
         self.default_content: str = ""
 
         if self._global_config and self._gc_schema:
+            self.conf_file = self._global_config.namespace.lower() + "_settings.conf"
+            self.conf_spec_file = f"{self.conf_file}.spec"
             for setting in self._global_config.settings:
                 content = self._gc_schema._get_oauth_enitities(setting["entity"])
                 fields = self._gc_schema._parse_fields(content)
