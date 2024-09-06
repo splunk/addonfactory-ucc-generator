@@ -4,10 +4,14 @@ from splunk_add_on_ucc_framework.generators.conf_files import SettingsConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
 
+TA_NAME = "test_addon"
+
 
 @fixture
 def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc = GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc._content["meta"]["restRoot"] = TA_NAME
+    return gc
 
 
 @fixture
@@ -27,7 +31,7 @@ def ucc_dir(tmp_path):
 
 @fixture
 def ta_name():
-    return "test_addon"
+    return TA_NAME
 
 
 def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
@@ -38,6 +42,7 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
     settings_conf._gc_schema = MagicMock()
 
     settings_conf._global_config.settings = [{"entity": "entity1", "name": "setting1"}]
+    settings_conf._global_config.namespace = TA_NAME
     settings_conf._gc_schema._get_oauth_enitities.return_value = "mocked_content"
     settings_conf._gc_schema._parse_fields.return_value = [MagicMock(_name="field1")]
 
@@ -48,8 +53,11 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
 
     settings_conf._set_attributes()
 
-    assert settings_conf.conf_file == f"{ta_name}_settings.conf"
-    assert settings_conf.conf_spec_file == f"{ta_name}_settings.conf.spec"
+    assert settings_conf.conf_file == f"{global_config.namespace.lower()}_settings.conf"
+    assert (
+        settings_conf.conf_spec_file
+        == f"{global_config.namespace.lower()}_settings.conf.spec"
+    )
     assert settings_conf.settings_stanzas == [("setting1", ["field1 = "])]
     assert settings_conf.default_content == "default_values"
 
@@ -117,7 +125,7 @@ def test_generate_conf(
 ):
     content = "content"
     exp_fname = f"{ta_name}_settings.conf"
-    file_path = "output_path/settings.conf"
+    file_path = f"output_path/{exp_fname}"
     mock_op_path.return_value = file_path
     template_render = MagicMock()
     template_render.render.return_value = content
@@ -165,7 +173,7 @@ def test_generate_conf_spec(
 ):
     content = "content"
     exp_fname = f"{ta_name}_settings.conf.spec"
-    file_path = "output_path/ta_name_settings.conf.spec"
+    file_path = f"output_path/{exp_fname}"
     mock_op_path.return_value = file_path
     mock_template_render = MagicMock()
     mock_template_render.render.return_value = content

@@ -4,10 +4,14 @@ from splunk_add_on_ucc_framework.generators.conf_files import AccountConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
 
+TA_NAME = "test_addon"
+
 
 @fixture
 def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc = GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc._content["meta"]["restRoot"] = TA_NAME
+    return gc
 
 
 @fixture
@@ -27,7 +31,7 @@ def ucc_dir(tmp_path):
 
 @fixture
 def ta_name():
-    return "test_addon"
+    return TA_NAME
 
 
 def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
@@ -43,6 +47,7 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
         {"name": "oauth", "entity": "entity1"},
         {"name": "non_oauth", "entity": "entity2"},
     ]
+    account_spec._global_config.namespace = TA_NAME
     account_spec._gc_schema._get_oauth_enitities.return_value = "mocked_content"
     account_spec._gc_schema._parse_fields.return_value = [MagicMock(_name="field2")]
 
@@ -50,7 +55,10 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
 
     # Only the non-oauth account should be processed
     assert account_spec.account_fields == [("<name>", ["field2 = "])]
-    assert account_spec.conf_spec_file == f"{ta_name}_account.conf.spec"
+    assert (
+        account_spec.conf_spec_file
+        == f"{global_config.namespace.lower()}_account.conf.spec"
+    )
 
 
 def test_set_attributes_gc_only(global_config, input_dir, output_dir, ucc_dir, ta_name):
