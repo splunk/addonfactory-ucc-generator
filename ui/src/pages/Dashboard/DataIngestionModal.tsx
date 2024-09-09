@@ -7,25 +7,27 @@ import Button from '@splunk/react-ui/Button';
 import { StyledButton } from '../EntryPageStyle';
 
 const ModalWrapper = styled(Modal)`
-    width: 60%;
-    height: 80%;
-    margin-top: 4vh;
+    width: 60vw;
+    height: 80vh;
+    margin-top: 3vh;
 `;
 
 const ModalHeader = styled(Modal.Header)`
-    background-color: ${variables.backgroundColorHover};
-`;
-const ModalFooter = styled(Modal.Footer)`
-    background-color: ${variables.backgroundColorHover};
-`;
-const ModalBody = styled(Modal.Body)`
-    background-color: ${variables.backgroundColorHover};
+    background-color: ${variables.neutral200};
 `;
 
-const StyledDiv = styled('div')`
+const ModalFooter = styled(Modal.Footer)`
+    background-color: ${variables.neutral200};
+`;
+
+const ModalBody = styled(Modal.Body)`
+    background-color: ${variables.neutral200};
+`;
+
+const FooterButtonGroup = styled('div')`
     display: grid;
     grid-template-columns: 0.35fr 1fr;
-    margin: 0px 10px;
+    margin: 0px ${variables.spacingSmall};
 
     .footerBtn:first-child {
         justify-self: start;
@@ -36,18 +38,24 @@ const StyledDiv = styled('div')`
     }
 `;
 
-export const DataIngestionModal = (props: {
-    open: boolean | undefined;
+export const DataIngestionModal = ({
+    open = false,
+    handleRequestClose,
+    title = '',
+    acceptBtnLabel = 'Done',
+    children,
+}: {
+    open?: boolean;
     handleRequestClose: () => void;
-    title: string | undefined;
-    acceptBtnLabel: string;
+    title?: string;
+    acceptBtnLabel?: string;
     children: ReactElement;
 }) => (
-    <ModalWrapper open={props.open}>
-        <ModalHeader onRequestClose={props.handleRequestClose} title={props.title} />
-        <ModalBody>{props.children}</ModalBody>
+    <ModalWrapper open={open}>
+        <ModalHeader onRequestClose={handleRequestClose} title={title} />
+        <ModalBody>{children}</ModalBody>
         <ModalFooter>
-            <StyledDiv>
+            <FooterButtonGroup>
                 <Button
                     id="open_search_error_events_tab_with_types"
                     label="View ingested events in search"
@@ -63,10 +71,10 @@ export const DataIngestionModal = (props: {
                 <StyledButton
                     className="footerBtn"
                     appearance="primary"
-                    onClick={props.handleRequestClose}
-                    label={props.acceptBtnLabel || 'Done'}
+                    onClick={handleRequestClose}
+                    label={acceptBtnLabel}
                 />
-            </StyledDiv>
+            </FooterButtonGroup>
         </ModalFooter>
     </ModalWrapper>
 );
