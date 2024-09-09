@@ -63,7 +63,7 @@ it('renders disabled', () => {
     defaultRadioProps.controlOptions.items.forEach((option) => {
         const optionWithCorrectText = screen.getByText(option.label);
         expect(optionWithCorrectText).toBeInTheDocument();
-        expect(optionWithCorrectText.parentElement).toHaveAttribute('disabled');
+        expect(optionWithCorrectText.parentElement?.parentElement).toHaveAttribute('disabled');
     });
 });
 
