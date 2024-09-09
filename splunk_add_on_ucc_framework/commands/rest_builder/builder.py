@@ -15,7 +15,6 @@
 #
 import os
 import os.path as op
-import sys
 from typing import Dict, List, Set
 
 from splunk_add_on_ucc_framework.commands.rest_builder import (
@@ -86,8 +85,7 @@ def get_paths_to_add(libraries: List[OSDependentLibraryConfig]) -> Dict[str, Set
 
 
 def get_insert_to_syspath_str(target: str) -> str:
-    return f'\tsys.path.insert(0, os.path.join(libdir, "{target}",'\
-           ' f"py{sys.version_info.major}{sys.version_info.minor}))\n"'
+    return f'\tsys.path.insert(0, os.path.join(libdir, "{target}"))\n'
 
 
 class _RestBuilderOutput:
