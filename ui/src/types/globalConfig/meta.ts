@@ -11,6 +11,7 @@ export const meta = z.object({
     hideUCCVersion: z.boolean().optional(),
     checkForUpdates: z.boolean().default(true).optional(),
     searchViewDefault: z.boolean().default(false).optional(),
+    isVisible: z.boolean().default(true).optional(),
 });
 
 export type meta = z.infer<typeof meta>;

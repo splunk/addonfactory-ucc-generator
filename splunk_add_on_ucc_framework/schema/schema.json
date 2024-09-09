@@ -1740,6 +1740,11 @@
           "default": true,
           "description": "Ability to configure app.conf->package.check_for_updates from globalConfig file."
         },
+        "isVisible": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
+        },
         "defaultView": {
           "type": "string",
           "description": "Define which view should be loaded on TA load.",

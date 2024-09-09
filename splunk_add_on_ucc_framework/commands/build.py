@@ -641,7 +641,7 @@ def generate(
     check_for_updates = "true"
     supported_themes = ""
     if global_config:
-        should_be_visible = True
+        should_be_visible = global_config.meta.get("isVisible", True)
         if global_config.meta.get("checkForUpdates") is False:
             check_for_updates = "false"
         if global_config.meta.get("supportedThemes") is not None:
