@@ -474,6 +474,12 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config.expand()
+        if ta_name != global_config.product:
+            logger.error(
+                "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
+                "please unify them to build the add-on."
+            )
+            sys.exit(1)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
