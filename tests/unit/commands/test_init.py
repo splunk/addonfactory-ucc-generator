@@ -149,7 +149,7 @@ def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon)
         ),
         (
             {
-                "addon_name": "addon-name",
+                "addon_name": "addon-name()",
                 "addon_display_name": "Addon For Demo",
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
@@ -169,7 +169,7 @@ def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon)
                 "addon_name": "addon_name",
                 "addon_rest_root": "addon_rest_root",
                 "addon_display_name": "Addon For Demo",
-                "addon_input_name": "foo" * 51,
+                "addon_input_name": "x" * 51,
                 "addon_version": "0.0.1",
             }
         ),
