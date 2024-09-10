@@ -25,7 +25,7 @@ Developers are required to add alerts in the global config file to create an Ale
 
 | Property                                                                  | Type   | Description                                                                                            |
 |---------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------|
-| type<span class="required-asterisk">\*</span>                            | string | The type of the user input in the alert. Available choices: "text", "checkbox", "singleSelect", "radio", "singleSelectSplunkSearch". |
+| type<span class="required-asterisk">\*</span>                            | string | The type of the user input in the alert. Available choices: "text", "textarea", "checkbox", "singleSelect", "radio", "singleSelectSplunkSearch". |
 | label<span class="required-asterisk">\*</span>                            | string | The text that would be shown in the alert action UI. |
 | field<span class="required-asterisk">\*</span>                            | string | The field that would be used in the scripts to get the value from the user input. These are defined as `param.<field_mentioned>` in the `alert_actions.conf`. |
 | options                            | array | Static choices that a user can select in the alert action UI. |
