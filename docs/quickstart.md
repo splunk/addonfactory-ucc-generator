@@ -218,11 +218,8 @@ It accepts the following parameters:
 * copies the add-on's `package/*` to the `output/<package_ID>/*` directory.
 * If an add-on requires some additional configurations in packaging,
     then `ucc-gen` runs the code in the `additional_packaging.py` file as well.
-* **NOTE:** For the add-on's requirements, the packages are installed according to
-    following information:
-    - `lib/requirements.txt` installs Python3 compatible packages into
-        the `output/<package_ID>/lib`.
-    - It removes `setuptools*`, `bin*`, `pip*`, `distribute*`, and `wheel*` if
-        they exist from `output/<package_ID>/lib`
+* **NOTE:** For the add-on's requirements, the packages are installed according to following information:
+    - `lib/requirements.txt` installs Python3 compatible packages into the `output/<package_ID>/lib`.
+    - It removes `setuptools*`, `bin*`, `pip*`, `distribute*`, and `wheel*` if they exist from `output/<package_ID>/lib`
     - It removes the execute bit from every file under `output/<package_ID>/lib`.
 * **NOTE:** The build won't be generated only when the add-on name in `meta[name]` of `globalConfig` and `info[id][name]` in `app.manifest` are not same.
