@@ -279,10 +279,10 @@ Possible solutions, either:
 
 def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]):
     name_target_pairs = [(lib.name, lib.target) for lib in libs]
-    for name, target in set(name_target_pairs):
-        if name_target_pairs.count((name, target)) > 1:
+    conflicts = {x for x in name_target_pairs if name_target_pairs.count(x) > 1}
+    if conflicts:
             logger.error(
-                f"Conflicting paths for {name}. Found the same target: {target}. "
+                f"Found conflicting paths for libraries: {conflicts}. "
                 "Please make sure that the paths are unique."
             )
             raise CouldNotInstallRequirements

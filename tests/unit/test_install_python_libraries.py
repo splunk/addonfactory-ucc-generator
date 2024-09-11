@@ -496,13 +496,21 @@ def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
     assert validate_conflicting_paths(libs)
 
 
-def test_validate_conflicting_paths_with_conflict(os_dependent_library_config):
+def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, caplog):
     libs = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path1"),
+        os_dependent_library_config(name="lib1", target="path2"),
+        os_dependent_library_config(name="lib2", target="path2"),
+        os_dependent_library_config(name="lib3", target="path2"),
+        os_dependent_library_config(name="lib3", target="path2"),
     ]
     with pytest.raises(CouldNotInstallRequirements):
         validate_conflicting_paths(libs)
+
+    assert "('lib1', 'path1')" in caplog.text
+    assert "('lib3', 'path2')" in caplog.text
+    assert "('lib2', 'path2')" not in caplog.text
 
 
 def test_validate_conflicting_paths_empty_list():
