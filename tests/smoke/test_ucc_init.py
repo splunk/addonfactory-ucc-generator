@@ -15,6 +15,7 @@ def test_ucc_init():
         "Demo Add-on for Splunk",
         "demo_input",
         "1.0.0",
+        "demo-addon-for-splunk",
         overwrite=True,
     )
     expected_folder = os.path.join(
