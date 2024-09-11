@@ -1186,7 +1186,13 @@
                 {
                     "name": "default"
                 }
-            ]
+            ],
+            "settings": {
+                "error_panel_log_lvl": [
+                    "ERROR",
+                    "CRITICAL"
+                ]
+            }
         }
     },
     "alerts": [
