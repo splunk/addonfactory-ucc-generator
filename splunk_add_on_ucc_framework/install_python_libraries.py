@@ -19,13 +19,12 @@ import shutil
 import stat
 import subprocess
 import sys
+from itertools import groupby
 from pathlib import Path
 from typing import List, Optional, Set, Iterable, Dict
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
-
-SUPPORTED_PYTHON_VERSIONS = ["37", "39"]
 
 
 class SplunktaucclibNotFound(Exception):
@@ -229,9 +228,9 @@ def install_os_dependent_libraries(
         return cleanup_libraries
 
     logger.info("Installing os-dependentLibraries.")
-    for os_lib in os_libraries:
-        validate_python_version(os_lib)
 
+    validate_conflicting_paths(os_libraries)
+    for os_lib in os_libraries:
         if os_lib.dependencies is False and not _pip_is_lib_installed(
                 installer=installer,
                 target=ucc_lib_target,
@@ -249,7 +248,7 @@ Possible solutions, either:
             )
             raise CouldNotInstallRequirements
 
-        target_path = os.path.join(ucc_lib_target, os.path.normpath(os_lib.target), f"py{os_lib.python_version}")
+        target_path = os.path.join(ucc_lib_target, os.path.normpath(os_lib.target))
         if not os.path.exists(target_path):
             os.makedirs(target_path)
 
@@ -278,10 +277,13 @@ Possible solutions, either:
     return cleanup_libraries
 
 
-def validate_python_version(lib: OSDependentLibraryConfig):
-    if lib.python_version not in SUPPORTED_PYTHON_VERSIONS:
-        logger.error(
-            f"Python version {lib.python_version} for {lib.name}::{lib.version} is not supported. "
-            f"Supported versions are {SUPPORTED_PYTHON_VERSIONS}"
-        )
-        raise CouldNotInstallRequirements
+def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]):
+    name_target_pairs = [(lib.name, lib.target) for lib in libs]
+    for name, target in set(name_target_pairs):
+        if name_target_pairs.count((name, target)) > 1:
+            logger.error(
+                f"Conflicting paths for {name}. Found the same target: {target}. "
+                "Please make sure that the paths are unique."
+            )
+            raise CouldNotInstallRequirements
+    return True
