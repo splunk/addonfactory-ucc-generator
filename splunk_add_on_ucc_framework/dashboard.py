@@ -323,7 +323,7 @@ def _get_error_panel_log_lvl(dashboard: Dict[Any, Any]) -> str:
         error_lvl = dashboard["settings"]["error_panel_log_lvl"]
     except KeyError:
         logger.info(
-            "No custom license usage search condition found. Proceeding with default parameters."
+            "No custom error log level found. Proceeding with default parameters."
         )
         return "ERROR"
     return ", ".join(error_lvl)
