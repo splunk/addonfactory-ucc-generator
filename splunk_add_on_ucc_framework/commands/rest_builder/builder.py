@@ -44,7 +44,7 @@ _import_declare_os_lib_content = """
 bindir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
 libdir = os.path.join(bindir, "lib")
 platform = sys.platform
-python_version = "".join(sys.version_info[:2])
+python_version = "".join(str(x) for x in sys.version_info[:2])
 """
 
 

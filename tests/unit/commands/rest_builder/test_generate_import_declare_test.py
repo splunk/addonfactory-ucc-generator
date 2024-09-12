@@ -30,7 +30,7 @@ file_content_with_os_lib = base_file_content + [
     "bindir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))\n",
     'libdir = os.path.join(bindir, "lib")\n',
     "platform = sys.platform\n",
-    'python_version = "".join(sys.version_info[:2])\n',
+    'python_version = "".join(str(x) for x in sys.version_info[:2])\n',
     "\n",
     'if python_version == "37":\n',
     '\tif platform.startswith("win"):\n',
