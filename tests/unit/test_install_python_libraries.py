@@ -4,7 +4,6 @@ from unittest import mock
 
 import pytest
 import tests.unit.helpers as helpers
-from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
@@ -476,16 +475,6 @@ def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
     )
     assert expected_msg in caplog.text
 
-
-@pytest.fixture()
-def os_dependent_library_config():
-    return lambda name="lib1", python_version="37", target="t": OSDependentLibraryConfig(name=name,
-                                                                                         version="version",
-                                                                                         python_version=python_version,
-                                                                                         platform="platform",
-                                                                                         target=target,
-                                                                                         os="os",
-                                                                                         deps_flag="deps_flag")
 
 
 def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
