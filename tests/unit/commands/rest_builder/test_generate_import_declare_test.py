@@ -5,8 +5,10 @@ from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_sch
     GlobalConfigBuilderSchema,
 )
 from splunk_add_on_ucc_framework import global_config as gc
-from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder, \
-    group_libs_by_python_version_and_platform
+from splunk_add_on_ucc_framework.commands.rest_builder.builder import (
+    RestBuilder,
+    group_libs_by_python_version_and_platform,
+)
 
 base_file_content = [
     "\n",
@@ -29,7 +31,7 @@ file_content_with_os_lib = base_file_content + [
     'libdir = os.path.join(bindir, "lib")\n',
     "platform = sys.platform\n",
     'python_version = "".join(sys.version_info[:2])\n',
-    '\n',
+    "\n",
     'if python_version == "37":\n',
     '\tif platform.startswith("win"):\n',
     '\t\tsys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))\n',
@@ -79,46 +81,46 @@ def run_rest_builder_build(global_config, tmp_lib_path):
     os.walk(tmp_lib_path)
 
 
-def test_group_libs_by_python_version_and_platform_single_version(os_dependent_library_config):
+def test_group_libs_by_python_version_and_platform_single_version(
+    os_dependent_library_config,
+):
     libraries = [
-        os_dependent_library_config(name="lib1", python_version="37", os="linux", target="/path/to/lib1"),
-        os_dependent_library_config(name="lib2", python_version="37", os="linux", target="/path/to/lib2")
+        os_dependent_library_config(
+            name="lib1", python_version="37", os="linux", target="/path/to/lib1"
+        ),
+        os_dependent_library_config(
+            name="lib2", python_version="37", os="linux", target="/path/to/lib2"
+        ),
     ]
-    expected = {
-        "37": {
-            "linux": {"/path/to/lib1", "/path/to/lib2"}
-        }
-    }
+    expected = {"37": {"linux": {"/path/to/lib1", "/path/to/lib2"}}}
     assert group_libs_by_python_version_and_platform(libraries) == expected
 
 
-def test_group_libs_by_python_version_and_platform_multiple_versions(os_dependent_library_config):
+def test_group_libs_by_python_version_and_platform_multiple_versions(
+    os_dependent_library_config,
+):
     libraries = [
-        os_dependent_library_config(name="lib1", python_version="37", os="linux", target="/path/to/lib1"),
-        os_dependent_library_config(name="lib2", python_version="38", os="linux", target="/path/to/lib2")
+        os_dependent_library_config(
+            name="lib1", python_version="37", os="linux", target="/path/to/lib1"
+        ),
+        os_dependent_library_config(
+            name="lib2", python_version="38", os="linux", target="/path/to/lib2"
+        ),
     ]
-    expected = {
-        "37": {
-            "linux": {"/path/to/lib1"}
-        },
-        "38": {
-            "linux": {"/path/to/lib2"}
-        }
-    }
+    expected = {"37": {"linux": {"/path/to/lib1"}}, "38": {"linux": {"/path/to/lib2"}}}
     assert group_libs_by_python_version_and_platform(libraries) == expected
 
 
-def test_group_libs_by_python_version_and_platform_multiple_os(os_dependent_library_config):
+def test_group_libs_by_python_version_and_platform_multiple_os(
+    os_dependent_library_config,
+):
     libraries = [
-        os_dependent_library_config(name="lib1", python_version="37", os="linux",
-                                    target="/path/to/lib1"),
-        os_dependent_library_config(name="lib2", python_version="37", os="windows",
-                                    target="C:\\path\\to\\lib2")
+        os_dependent_library_config(
+            name="lib1", python_version="37", os="linux", target="/path/to/lib1"
+        ),
+        os_dependent_library_config(
+            name="lib2", python_version="37", os="windows", target="C:\\path\\to\\lib2"
+        ),
     ]
-    expected = {
-        "37": {
-            "linux": {"/path/to/lib1"},
-            "windows": {"C:\\path\\to\\lib2"}
-        }
-    }
+    expected = {"37": {"linux": {"/path/to/lib1"}, "windows": {"C:\\path\\to\\lib2"}}}
     assert group_libs_by_python_version_and_platform(libraries) == expected

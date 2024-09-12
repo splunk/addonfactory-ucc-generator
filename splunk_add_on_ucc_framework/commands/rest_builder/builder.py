@@ -49,7 +49,7 @@ python_version = "".join(sys.version_info[:2])
 
 
 def _generate_import_declare_test(
-        schema: global_config_builder_schema.GlobalConfigBuilderSchema,
+    schema: global_config_builder_schema.GlobalConfigBuilderSchema,
 ) -> str:
     base_content = _import_declare_content.format(ta_name=schema.product)
     libraries = schema.global_config.os_libraries
@@ -79,14 +79,16 @@ def _generate_import_declare_test(
     return base_content + os_lib_part
 
 
-def group_libs_by_python_version_and_platform(libraries: List[OSDependentLibraryConfig]) -> Dict[
-    str, Dict[str, Set[str]]]:
+def group_libs_by_python_version_and_platform(
+    libraries: List[OSDependentLibraryConfig],
+) -> Dict[str, Dict[str, Set[str]]]:
     """Returns os specific paths grouped by python version and platform"""
     python_versions = {lib.python_version for lib in libraries}
     os_specific_paths = {}
     for python_version in python_versions:
         os_specific_paths[python_version] = get_paths_to_add(
-            [lib for lib in libraries if lib.python_version == python_version])
+            [lib for lib in libraries if lib.python_version == python_version]
+        )
     return os_specific_paths
 
 
@@ -133,9 +135,9 @@ class _RestBuilderOutput:
 
 class RestBuilder:
     def __init__(
-            self,
-            schema: global_config_builder_schema.GlobalConfigBuilderSchema,
-            output_path: str,
+        self,
+        schema: global_config_builder_schema.GlobalConfigBuilderSchema,
+        output_path: str,
     ) -> None:
         self._schema = schema
         self._output_path = output_path

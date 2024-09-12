@@ -63,7 +63,8 @@ def os_dependent_library_config():
         platform="platform",
         target=target,
         os=os,
-        deps_flag="deps_flag")
+        deps_flag="deps_flag",
+    )
 
 
 @pytest.fixture

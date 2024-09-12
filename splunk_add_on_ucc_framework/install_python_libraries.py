@@ -19,7 +19,6 @@ import shutil
 import stat
 import subprocess
 import sys
-from itertools import groupby
 from pathlib import Path
 from typing import List, Optional, Set, Iterable, Dict
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
@@ -36,9 +35,9 @@ class CouldNotInstallRequirements(Exception):
 
 
 def _subprocess_call(
-        command: str,
-        command_desc: Optional[str] = None,
-        env: Optional[Dict[str, str]] = None,
+    command: str,
+    command_desc: Optional[str] = None,
+    env: Optional[Dict[str, str]] = None,
 ) -> int:
     command_desc = command_desc or command
     try:
@@ -67,7 +66,7 @@ def _pip_install(installer: str, command: str, command_desc: str) -> None:
 
 
 def _pip_is_lib_installed(
-        installer: str, target: str, libname: str, version: Optional[str] = None
+    installer: str, target: str, libname: str, version: Optional[str] = None
 ) -> bool:
     lib_installed_cmd = f"{installer} -m pip show --version {libname}"
     lib_version_match_cmd = f'{lib_installed_cmd} | grep "Version: {version}"'
@@ -93,13 +92,13 @@ def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
 
 
 def install_python_libraries(
-        source_path: str,
-        ucc_lib_target: str,
-        python_binary_name: str,
-        includes_ui: bool = False,
-        os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
-        pip_version: str = "latest",
-        pip_legacy_resolver: bool = False,
+    source_path: str,
+    ucc_lib_target: str,
+    python_binary_name: str,
+    includes_ui: bool = False,
+    os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
+    pip_version: str = "latest",
+    pip_legacy_resolver: bool = False,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -114,9 +113,9 @@ def install_python_libraries(
             pip_legacy_resolver=pip_legacy_resolver,
         )
         if includes_ui and not _pip_is_lib_installed(
-                installer=python_binary_name,
-                target=ucc_lib_target,
-                libname="splunktaucclib",
+            installer=python_binary_name,
+            target=ucc_lib_target,
+            libname="splunktaucclib",
         ):
             raise SplunktaucclibNotFound(
                 f"splunktaucclib is not found in {path_to_requirements_file}. "
@@ -151,11 +150,11 @@ def install_python_libraries(
 
 
 def install_libraries(
-        requirements_file_path: str,
-        installation_path: str,
-        installer: str,
-        pip_version: str = "latest",
-        pip_legacy_resolver: bool = False,
+    requirements_file_path: str,
+    installation_path: str,
+    installer: str,
+    pip_version: str = "latest",
+    pip_legacy_resolver: bool = False,
 ) -> None:
     """
     Upgrades `pip` version to the latest one and installs requirements to the
@@ -217,9 +216,9 @@ def remove_execute_bit(installation_path: str) -> None:
 
 
 def install_os_dependent_libraries(
-        ucc_lib_target: str,
-        installer: str,
-        os_libraries: Optional[List[OSDependentLibraryConfig]],
+    ucc_lib_target: str,
+    installer: str,
+    os_libraries: Optional[List[OSDependentLibraryConfig]],
 ) -> Set[str]:
     cleanup_libraries: Set[str] = set()
 
@@ -232,10 +231,10 @@ def install_os_dependent_libraries(
     validate_conflicting_paths(os_libraries)
     for os_lib in os_libraries:
         if os_lib.dependencies is False and not _pip_is_lib_installed(
-                installer=installer,
-                target=ucc_lib_target,
-                libname=os_lib.name,
-                version=os_lib.version,
+            installer=installer,
+            target=ucc_lib_target,
+            libname=os_lib.name,
+            version=os_lib.version,
         ):
             logger.error(
                 f"""
@@ -277,13 +276,13 @@ Possible solutions, either:
     return cleanup_libraries
 
 
-def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]):
+def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]) -> bool:
     name_target_pairs = [(lib.name, lib.target) for lib in libs]
     conflicts = {x for x in name_target_pairs if name_target_pairs.count(x) > 1}
     if conflicts:
-            logger.error(
-                f"Found conflicting paths for libraries: {conflicts}. "
-                "Please make sure that the paths are unique."
-            )
-            raise CouldNotInstallRequirements
+        logger.error(
+            f"Found conflicting paths for libraries: {conflicts}. "
+            "Please make sure that the paths are unique."
+        )
+        raise CouldNotInstallRequirements
     return True

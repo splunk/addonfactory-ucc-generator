@@ -1,9 +1,11 @@
 import os
 import stat
+from typing import List
 from unittest import mock
 
 import pytest
 import tests.unit.helpers as helpers
+from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
@@ -12,7 +14,8 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     install_libraries,
     install_python_libraries,
     remove_execute_bit,
-    remove_packages, validate_conflicting_paths,
+    remove_packages,
+    validate_conflicting_paths,
 )
 
 from splunk_add_on_ucc_framework import global_config as gc
@@ -30,32 +33,32 @@ from splunk_add_on_ucc_framework import global_config as gc
         ("solnlib\nsplunktaucclib\n", True),
         ("solnlib==5.0.0\nsplunktaucclib==6.0.0\n", True),
         (
-                """splunktalib==2.2.6; python_version >= "3.7" and python_version < "4.0" \
+            """splunktalib==2.2.6; python_version >= "3.7" and python_version < "4.0" \
         --hash=sha256:bba70ac7407cdedcb45437cb152ac0e43aae16b978031308e6bec548d3543119 \
         --hash=sha256:8d58d697a842319b4c675557b0cc4a9c68e8d909389a98ed240e2bb4ff358d31
     splunktaucclib==5.0.7; python_version >= "3.7" and python_version < "4.0" \
         --hash=sha256:3ddc1276c41c809c16ae810cb20e9eb4abd2f94dba5ddf460cf9c49b50f659ac \
         --hash=sha256:a1e3f710fcb0b24dff8913e6e5df0d36f0693b7f3ed7c0a9a43b08372b08eb90""",
-                True,
+            True,
         ),
         (
-                """splunktaucclib==5.0.7; python_version >= "3.7" and python_version < "4.0" \
+            """splunktaucclib==5.0.7; python_version >= "3.7" and python_version < "4.0" \
         --hash=sha256:3ddc1276c41c809c16ae810cb20e9eb4abd2f94dba5ddf460cf9c49b50f659ac \
         --hash=sha256:a1e3f710fcb0b24dff8913e6e5df0d36f0693b7f3ed7c0a9a43b08372b08eb90""",
-                True,
+            True,
         ),
         (
-                """sortedcontainers==2.4.0; python_version >= "3.7" and python_version < "4.0" \
+            """sortedcontainers==2.4.0; python_version >= "3.7" and python_version < "4.0" \
         --hash=sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0 \
         --hash=sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88
     splunk-sdk==1.7.1 \
         --hash=sha256:4d0de12a87395f28f2a0c90b179882072a39a1f09a3ec9e79ce0de7a16220fe1""",
-                False,
+            False,
         ),
     ],
 )
 def test_check_ucc_library_in_requirements_file(
-        tmp_path, requirements_content, expected_result
+    tmp_path, requirements_content, expected_result
 ):
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -63,8 +66,8 @@ def test_check_ucc_library_in_requirements_file(
     tmp_lib_reqs_file.write_text(requirements_content)
 
     assert (
-            _check_ucc_library_in_requirements_file(str(tmp_lib_reqs_file))
-            == expected_result
+        _check_ucc_library_in_requirements_file(str(tmp_lib_reqs_file))
+        == expected_result
     )
 
 
@@ -115,8 +118,8 @@ def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_call)
 )
 @mock.patch("subprocess.call", autospec=True)
 def test_install_libraries_when_subprocess_returns_non_zero_codes(
-        mock_subprocess_call,
-        subprocess_status_codes,
+    mock_subprocess_call,
+    subprocess_status_codes,
 ):
     mock_subprocess_call.side_effect = subprocess_status_codes
 
@@ -163,8 +166,8 @@ def test_install_python_libraries_when_no_requirements_file_found(caplog, tmp_pa
 
 @mock.patch("subprocess.call", autospec=True)
 def test_install_libraries_when_no_splunktaucclib_is_present_but_no_ui(
-        mock_subprocess_call,
-        tmp_path,
+    mock_subprocess_call,
+    tmp_path,
 ):
     mock_subprocess_call.return_value = 0
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
@@ -250,7 +253,7 @@ def test_remove_execute_bit(tmp_path):
     autospec=True,
 )
 def test_install_python_libraries_invalid_os_libraries(
-        mock_subprocess_call, install_libraries, caplog, tmp_path
+    mock_subprocess_call, install_libraries, caplog, tmp_path
 ):
     mock_subprocess_call.return_value = 1
     install_libraries.return_value = True
@@ -280,10 +283,10 @@ def test_install_python_libraries_invalid_os_libraries(
     autospec=True,
 )
 def test_install_libraries_valid_os_libraries(
-        mock_remove_packages,
-        mock_subprocess_call,
-        caplog,
-        tmp_path,
+    mock_remove_packages,
+    mock_subprocess_call,
+    caplog,
+    tmp_path,
 ):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
@@ -360,10 +363,10 @@ def test_install_libraries_valid_os_libraries(
     autospec=True,
 )
 def test_install_libraries_version_mismatch(
-        mock_remove_packages,
-        mock_subprocess_call,
-        caplog,
-        tmp_path,
+    mock_remove_packages,
+    mock_subprocess_call,
+    caplog,
+    tmp_path,
 ):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
@@ -476,9 +479,8 @@ def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
     assert expected_msg in caplog.text
 
 
-
 def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
-    libs = [
+    libs: List[OSDependentLibraryConfig] = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib2", target="path2"),
     ]
@@ -486,7 +488,7 @@ def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
 
 
 def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, caplog):
-    libs = [
+    libs: List[OSDependentLibraryConfig] = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path2"),
@@ -503,5 +505,5 @@ def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, c
 
 
 def test_validate_conflicting_paths_empty_list():
-    libs = []
+    libs: List[OSDependentLibraryConfig] = []
     assert validate_conflicting_paths(libs)

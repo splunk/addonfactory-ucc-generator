@@ -45,20 +45,22 @@ class OSDependentLibraryConfig:
             dc_field.name: kwargs[dc_field.name]
             for dc_field in fields(cls)
             if dc_field.name in kwargs
-               and (
-                       isinstance(kwargs[dc_field.name], dc_field.type)
-                       or kwargs[dc_field.name] is None
-               )
+            and (
+                isinstance(kwargs[dc_field.name], dc_field.type)
+                or kwargs[dc_field.name] is None
+            )
         }
         deps_flag = "" if result.get("dependencies") else "--no-deps"
         result.update({"deps_flag": deps_flag})
-        result.update({"python_version": cls._format_python_version(result["python_version"])})
+        result.update(
+            {"python_version": cls._format_python_version(result["python_version"])}
+        )
         return cls(**result)
 
     @staticmethod
-    def _format_python_version(python_version):
+    def _format_python_version(python_version: str) -> str:
         """Remove all non-numeric characters from the python version string to simplify processing"""
-        return "".join((x for x in python_version if x.isnumeric()))
+        return "".join(x for x in python_version if x.isnumeric())
 
 
 class GlobalConfig:
