@@ -16,9 +16,9 @@ def get_account_api_key(session_key: str, account_name: str):
     cfm = conf_manager.ConfManager(
         session_key,
         ADDON_NAME,
-        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-{{addon_rest_root}}_account",
+        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-{{addon_rest_root| lower}}_account",
     )
-    account_conf_file = cfm.get_conf("{{addon_rest_root}}_account")
+    account_conf_file = cfm.get_conf("{{addon_rest_root | lower}}_account")
     return account_conf_file.get(account_name).get("api_key")
 
 
@@ -60,7 +60,7 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
                 logger=logger,
                 session_key=session_key,
                 app_name=ADDON_NAME,
-                conf_name="{{addon_rest_root}}_settings",
+                conf_name="{{addon_rest_root | lower}}_settings",
             )
             logger.setLevel(log_level)
             log.modular_input_start(logger, normalized_input_name)
