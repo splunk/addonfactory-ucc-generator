@@ -19,6 +19,10 @@ class AlertActionWorkertest_alert(ModularAlertBase):
         if not self.get_param("name"):
             self.log_error('name is a mandatory parameter, but its value is None.')
             return False
+        
+        if not self.get_param("description"):
+            self.log_error('description is a mandatory parameter, but its value is None.')
+            return False
 
         if not self.get_param("action"):
             self.log_error('action is a mandatory parameter, but its value is None.')
