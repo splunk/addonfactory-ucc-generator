@@ -1,0 +1,12 @@
+[admin:{{ namespace }}]
+match = /
+members = {{ endpoint_names }}
+
+{% for endpoint in endpoints %}
+[admin_external:{{ endpoint.name }}]
+handlertype = python
+python.version = python3
+handlerfile = {{ endpoint.rh_name }}.py
+handleractions = {{ endpoint.actions() | join(', ') }}
+handlerpersistentmode = true
+{% endfor %}
