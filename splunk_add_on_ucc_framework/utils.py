@@ -75,12 +75,8 @@ def get_os_path(path: str) -> str:
 
     if "\\\\" in path:
         path = path.replace("\\\\", sep)
-        path = path.replace("\\\\", sep)
     else:
         path = path.replace("\\", sep)
-        path = path.replace("/", sep)
-        return path.strip(sep)
-    path = path.replace("\\", sep)
     path = path.replace("/", sep)
     return path.strip(sep)
 
