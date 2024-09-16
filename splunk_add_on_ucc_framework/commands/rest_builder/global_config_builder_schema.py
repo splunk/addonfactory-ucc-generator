@@ -55,7 +55,7 @@ class GlobalConfigBuilderSchema:
     def __init__(self, global_config: global_config_lib.GlobalConfig):
         self.global_config = global_config
         self._settings_conf_file_names: Set[str] = set()
-        self._configs_conf_file_names: Set[str] = set()
+        self._configs_conf_file_names: List[str] = list()
         self._oauth_conf_file_names: Set[str] = set()
         self._endpoints: Dict[str, RestEndpointBuilder] = {}
         self._parse_builder_schema()
@@ -73,7 +73,7 @@ class GlobalConfigBuilderSchema:
         return self._settings_conf_file_names
 
     @property
-    def configs_conf_file_names(self) -> Set[str]:
+    def configs_conf_file_names(self) -> List[str]:
         return self._configs_conf_file_names
 
     @property
@@ -125,7 +125,9 @@ class GlobalConfigBuilderSchema:
                     )
                     self._endpoints["oauth"] = oauth_endpoint
                     self._oauth_conf_file_names.add(oauth_endpoint.conf_name)
-            self._configs_conf_file_names.add(endpoint.conf_name)
+
+            if endpoint.conf_name not in self._configs_conf_file_names:
+                self._configs_conf_file_names.append(endpoint.conf_name)
 
     def _builder_settings(self) -> None:
         if not self.global_config.settings:
