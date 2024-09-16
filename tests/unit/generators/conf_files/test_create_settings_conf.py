@@ -44,7 +44,10 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
     settings_conf._global_config.settings = [{"entity": "entity1", "name": "setting1"}]
     settings_conf._global_config.namespace = TA_NAME
     settings_conf._gc_schema._get_oauth_enitities.return_value = "mocked_content"
-    settings_conf._gc_schema._parse_fields.return_value = [MagicMock(_name="field1")]
+    settings_conf._gc_schema._parse_fields.return_value = (
+        [MagicMock(_name="field1")],
+        [MagicMock(_name="field3")],
+    )
 
     settings_conf._gc_schema._endpoints = {"settings": MagicMock()}
     settings_conf._gc_schema._endpoints[
@@ -104,7 +107,10 @@ def test_set_attributes_no_settings_key(
 
     settings_conf._global_config.settings = [{"entity": "entity1", "name": "setting1"}]
     settings_conf._gc_schema._get_oauth_enitities.return_value = "mocked_content"
-    settings_conf._gc_schema._parse_fields.return_value = [MagicMock(_name="field1")]
+    settings_conf._gc_schema._parse_fields.return_value = (
+        [MagicMock(_name="field1")],
+        [MagicMock(_name="field3")],
+    )
 
     settings_conf._gc_schema._endpoints = {}
 

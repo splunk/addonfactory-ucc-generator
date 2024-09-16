@@ -14,6 +14,10 @@ import logging
 util.remove_http_proxy_env_vars()
 
 
+special_fields = [
+
+]
+
 fields_proxy = [
     field.RestField(
         'proxy_enabled',
@@ -78,8 +82,12 @@ fields_proxy = [
         validator=None
     )
 ]
-model_proxy = RestModel(fields_proxy, name='proxy')
+model_proxy = RestModel(fields_proxy, name='proxy', special_fields=special_fields)
 
+
+special_fields = [
+
+]
 
 fields_logging = [
     field.RestField(
@@ -90,8 +98,12 @@ fields_logging = [
         validator=None
     )
 ]
-model_logging = RestModel(fields_logging, name='logging')
+model_logging = RestModel(fields_logging, name='logging', special_fields=special_fields)
 
+
+special_fields = [
+
+]
 
 fields_custom_abc = [
     field.RestField(
@@ -160,7 +172,7 @@ fields_custom_abc = [
         )
     )
 ]
-model_custom_abc = RestModel(fields_custom_abc, name='custom_abc')
+model_custom_abc = RestModel(fields_custom_abc, name='custom_abc', special_fields=special_fields)
 
 
 endpoint = MultipleModel(
