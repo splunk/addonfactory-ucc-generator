@@ -681,31 +681,6 @@
                             "required": true
                         },
                         {
-                            "field": "example_help_link",
-                            "label": "",
-                            "type": "helpLink",
-                            "options": {
-                                "text": "Help Link",
-                                "link": "https://docs.splunk.com/Documentation"
-                            }
-                        },
-                        {
-                            "field": "config1_help_link",
-                            "type": "helpLink",
-                            "options": {
-                                "text": "Add-on configuration documentation",
-                                "link": "https://docs.splunk.com/Documentation"
-                            }
-                        },
-                        {
-                            "field": "config2_help_link",
-                            "type": "helpLink",
-                            "options": {
-                                "text": "SSL configuration documentation",
-                                "link": "https://docs.splunk.com/Documentation"
-                            }
-                        },
-                        {
                             "field": "text_test",
                             "label": "Text Test",
                             "help": "This is a text test",
