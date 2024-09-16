@@ -17,9 +17,9 @@ def test_global_config_builder_schema(global_config_all_json):
     assert global_config_builder_schema.settings_conf_file_names == {
         "splunk_ta_uccexample_settings"
     }
-    assert global_config_builder_schema.configs_conf_file_names == {
+    assert global_config_builder_schema.configs_conf_file_names == [
         "splunk_ta_uccexample_account"
-    }
+    ]
     assert global_config_builder_schema.oauth_conf_file_names == {
         "splunk_ta_uccexample_oauth"
     }
