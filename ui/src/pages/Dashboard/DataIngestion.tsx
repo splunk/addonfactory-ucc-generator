@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
@@ -15,8 +15,8 @@ import {
     addDescriptionToExpandedViewByOptions,
     loadDashboardJsonDefinition,
 } from './utils';
-import { CustomDashboard } from './Custom';
 import { DataIngestionModal } from './DataIngestionModal';
+import { DashboardModal } from './DashboardModal';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -29,7 +29,7 @@ export const DataIngestionDashboard = ({
 }: {
     dashboardDefinition: Record<string, unknown>;
 }) => {
-    const dashboardCoreApi = React.useRef<DashboardCoreApi | null>();
+    const dashboardCoreApi = useRef<DashboardCoreApi | null>(null);
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
@@ -37,8 +37,11 @@ export const DataIngestionDashboard = ({
         string,
         unknown
     > | null>(null);
+    const [copyDataIngestionModalDef, setCopyDataIngestionModalDef] = useState<Record<
+        string,
+        unknown
+    > | null>(null);
     const [displayModalForInput, setDisplayModalForInput] = useState<string | null>(null);
-
     useEffect(() => {
         makeVisualAdjustmentsOnDataIngestionPage();
 
@@ -83,7 +86,7 @@ export const DataIngestionDashboard = ({
         };
     }, [dashboardDefinition]);
 
-    const setDashboardCoreApi = React.useCallback((api: DashboardCoreApi | null) => {
+    const setDashboardCoreApi = useCallback((api: DashboardCoreApi | null) => {
         dashboardCoreApi.current = api;
     }, []);
 
@@ -122,16 +125,55 @@ export const DataIngestionDashboard = ({
 
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
-    const handleDashboardEvent = useCallback((event) => {
-        if (
-            event.type === 'cell.click' &&
-            event.targetId === 'data_ingestion_table_viz' &&
-            event.payload.cellIndex === 0 &&
-            event.payload.value
-        ) {
-            setDisplayModalForInput(event.payload.value);
-        }
-    }, []);
+    const handleDashboardEvent = useCallback(
+        (event) => {
+            if (
+                event.type === 'datasource.done' &&
+                event.targetId === 'data_ingestion_table_ds' &&
+                event.payload.data
+            ) {
+                // Create deep copy of dataIngestionModalDef for essential operations
+                const copyDataIngestionModalJson = JSON.parse(
+                    JSON.stringify(dataIngestionModalDef)
+                );
+                setDisplayModalForInput(event.payload.value);
+                const columnsArray: { key: string; value: string }[] =
+                    event.payload.data.columns[0].map((item: string) => ({
+                        key: item,
+                        value: item,
+                    }));
+
+                const modalInputSelectorName = event.payload.data.fields[0].name;
+
+                // update the input selector name and value in the modal
+                copyDataIngestionModalJson.inputs.input1.options.title = modalInputSelectorName;
+                copyDataIngestionModalJson.inputs.input1.title = modalInputSelectorName;
+                copyDataIngestionModalJson.inputs.input1.options.items = columnsArray;
+
+                // Modify visualizations only for specific cases
+                if (modalInputSelectorName === 'Input') {
+                    // Remove data volume visualization for "Input"
+                    delete copyDataIngestionModalJson.visualizations
+                        .data_ingestion_modal_data_volume_viz;
+                } else if (modalInputSelectorName === 'Host') {
+                    // Remove event count visualization for "Host"
+                    delete copyDataIngestionModalJson.visualizations
+                        .data_ingestion_modal_events_count_viz;
+                }
+                setCopyDataIngestionModalDef(copyDataIngestionModalJson); // Update state with modified copy
+            }
+
+            if (
+                event.type === 'cell.click' &&
+                event.targetId === 'data_ingestion_table_viz' &&
+                event.payload.cellIndex === 0 &&
+                event.payload.value
+            ) {
+                setDisplayModalForInput(event.payload.value);
+            }
+        },
+        [dataIngestionModalDef]
+    );
 
     const dashboardPlugin = useMemo(
         () => ({ onEventTrigger: handleDashboardEvent }),
@@ -147,17 +189,18 @@ export const DataIngestionDashboard = ({
                 <>
                     <DataIngestionModal
                         open={!!displayModalForInput}
-                        handleRequestClose={() => {
-                            setDisplayModalForInput(null);
-                        }}
-                        title={`${displayModalForInput}`}
+                        handleRequestClose={() => setDisplayModalForInput(null)}
+                        title={displayModalForInput || ''}
                         acceptBtnLabel="Done"
                     >
                         <TabLayout.Panel
                             label="data_ingestion_modal"
                             panelId="dataIngestionModalDefTabPanel"
                         >
-                            <CustomDashboard dashboardDefinition={dataIngestionModalDef} />
+                            <DashboardModal
+                                dashboardDefinition={copyDataIngestionModalDef}
+                                selectedLabelForInput={displayModalForInput || ''}
+                            />
                         </TabLayout.Panel>
                     </DataIngestionModal>
 
@@ -178,11 +221,11 @@ export const DataIngestionDashboard = ({
                         />
                     </div>
                     <div id="info_message_for_data_ingestion" className="invisible_before_moving">
-                        {infoMessage ? (
+                        {infoMessage && (
                             <Message appearance="fill" type="info">
                                 {infoMessage}
                             </Message>
-                        ) : null}
+                        )}
                     </div>
                 </>
             </DashboardContextProvider>

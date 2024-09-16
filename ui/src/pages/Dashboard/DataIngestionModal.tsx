@@ -41,7 +41,7 @@ const FooterButtonGroup = styled('div')`
 export const DataIngestionModal = ({
     open = false,
     handleRequestClose,
-    title = '',
+    title,
     acceptBtnLabel = 'Done',
     children,
 }: {

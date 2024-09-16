@@ -224,3 +224,27 @@ export const addDescriptionToExpandedViewByOptions = (target: Element) => {
         }
     });
 };
+
+export const createNewQueryForDataVolumeInModal = (
+    selectedInput: string,
+    selectedValue: string
+) => {
+    const selectedLabel = queryMap[selectedInput];
+
+    const newQuery = `index=_internal source=*license_usage.log type=Usage ${selectedLabel} = "${selectedValue}"
+    | timechart sum(b) as Usage
+    | rename Usage as "Data volume"`;
+
+    return newQuery;
+};
+
+export const createNewQueryForNumberOfEventsInModal = (
+    selectedInput: string,
+    selectedValue: string
+) => {
+    const selectedLabel = queryMap[selectedInput];
+
+    const newQuery = `index=_internal source=*splunk_ta_uccexample* action=events_ingested ${selectedLabel} = "${selectedValue}" | timechart sum(n_events) as "Number of events"`;
+
+    return newQuery;
+};

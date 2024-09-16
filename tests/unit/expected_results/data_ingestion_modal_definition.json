@@ -99,21 +99,7 @@
     "input1": {
       "type": "input.dropdown",
       "options": {
-        "items": [
-          {
-            "label": "Source type",
-            "value": "Source type"
-          },
-          {
-            "label": "Source",
-            "value": "Source"
-          },
-          {
-            "label": "Host",
-            "value": "Host"
-          }
-        ],
-        "defaultValue": "Source type",
+        "items": [],
         "token": "data_ingestion_view_by"
       },
       "title": "Input"
