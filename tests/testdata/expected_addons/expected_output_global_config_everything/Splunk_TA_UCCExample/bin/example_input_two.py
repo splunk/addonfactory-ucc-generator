@@ -88,10 +88,10 @@ class EXAMPLE_INPUT_TWO(smi.Script):
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
-        return validate_input(definition)
+        return validate_input(definition, self)
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
-        return stream_events(inputs, ew)
+        return stream_events(inputs, ew, self)
 
 
 if __name__ == '__main__':

@@ -3,11 +3,11 @@ import json
 from splunklib import modularinput as smi
 
 
-def validate_input(definition: smi.ValidationDefinition):
+def validate_input(definition: smi.ValidationDefinition, modular_input: smi.Script):
     return
 
 
-def stream_events(inputs: smi.InputDefinition, ew: smi.EventWriter):
+def stream_events(inputs: smi.InputDefinition, ew: smi.EventWriter, modular_input: smi.Script):
     input_items = [{'count': len(inputs.inputs)}]
     for input_name, input_item in inputs.inputs.items():
         input_item['name'] = input_name

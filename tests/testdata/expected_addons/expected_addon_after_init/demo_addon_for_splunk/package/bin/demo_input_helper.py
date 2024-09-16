@@ -40,7 +40,7 @@ def validate_input(definition: smi.ValidationDefinition):
     return
 
 
-def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
+def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter, modular_input: smi.Script):
     # inputs.inputs is a Python dictionary object like:
     # {
     #   "demo_input://<input_name>": {
