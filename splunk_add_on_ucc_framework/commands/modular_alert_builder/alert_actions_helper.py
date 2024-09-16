@@ -14,8 +14,7 @@
 # limitations under the License.
 #
 import logging
-import os.path as op
-from os import makedirs, remove
+from os import makedirs, remove, path
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
@@ -26,11 +25,15 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_me
 logger = logging.getLogger("ucc_gen")
 
 
-def write_file(file_name: str, file_path: str, content: str) -> None:
+def write_file(file_name: str, file_path: str, content: str, **kwargs: str) -> None:
+    """
+    :param merge_mode: only supported for .conf and .conf.spec files.
+    """
     logger.debug('operation="write", object="%s" object_type="file"', file_path)
 
+    merge_mode = kwargs.get("merge_mode", "stanza_overwrite")
     do_merge = False
-    if file_name.endswith(".conf") or file_name.endswith("conf.spec"):
+    if file_name.endswith(".conf") or file_name.endswith(".conf.spec"):
         do_merge = True
     else:
         logger.debug(
@@ -39,19 +42,19 @@ def write_file(file_name: str, file_path: str, content: str) -> None:
         )
 
     new_file = None
-    if op.exists(file_path) and do_merge:
-        new_file = op.join(op.dirname(file_path), "new_" + file_name)
+    if path.exists(file_path) and do_merge:
+        new_file = path.join(path.dirname(file_path), "new_" + file_name)
     if new_file:
         try:
             with open(new_file, "w+") as fhandler:
                 fhandler.write(content)
-            merge_conf_file(new_file, file_path)
+            merge_conf_file(new_file, file_path, merge_mode=merge_mode)
         finally:
-            if op.exists(new_file):
+            if path.exists(new_file):
                 remove(new_file)
     else:
-        if not op.exists(op.dirname(file_path)):
-            makedirs(op.dirname(file_path))
+        if not path.exists(path.dirname(file_path)):
+            makedirs(path.dirname(file_path))
         with open(file_path, "w+") as fhandler:
             fhandler.write(content)
         if do_merge:
