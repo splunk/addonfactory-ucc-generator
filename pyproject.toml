@@ -42,7 +42,6 @@ classifiers = [
 python = "^3.7"
 jinja2 = ">=2,<4"
 addonfactory-splunk-conf-parser-lib = "^0.4.3"
-splunktaucclib = "^6.4.0"
 dunamai = "^1.9.0"
 jsonschema = "^4.4.0"
 PyYAML = "^6.0"
