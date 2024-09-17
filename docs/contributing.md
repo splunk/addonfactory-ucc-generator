@@ -129,7 +129,7 @@ gh pr merge main --auto --merge
 ```
 
 - If a release encounters issues requiring a quick bug fix (handled by the UCC team):
-    + Create a PR to the main branch with the fix, including tests that reproduce and then fix the issue.
-    + Ensure CI passes and await team review.
-    + Merge the PR using the merge commit option on GitHub.
-    + Backport the bug fix PR to the develop branch.
+  - Create a PR to the main branch with the fix, including tests that reproduce and then fix the issue.
+  - Ensure CI passes and await team review.
+  - Merge the PR using the merge commit option on GitHub.
+  - Backport the bug fix PR to the develop branch.

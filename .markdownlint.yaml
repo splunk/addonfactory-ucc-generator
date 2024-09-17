@@ -3,14 +3,6 @@
 # MD001/heading-increment
 MD001: false
 
-ul-style:
-  style: sublist
-  
-MD007:
-  # set indent as 4 spaces
-  # reason: https://python-markdown.github.io/#differences
-  indent: 4
-
 # MD010/no-hard-tabs
 MD010:
   # Include code blocks

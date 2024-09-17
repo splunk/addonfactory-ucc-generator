@@ -7,8 +7,8 @@ The groups will be displayed at the bottom of the form.
 - `label` displays the title of a specific group.
 - `fields` specifies the list of fields in a group. All fields must be present in the **entity**.
 - `options`:
-    + `isExpandable` can be used to hide/show fields of the group. The default value is **false**.
-    + `expand` can be used to show all fields of the group while opening the form. The default value is **false**.
+  - `isExpandable` can be used to hide/show fields of the group. The default value is **false**.
+  - `expand` can be used to show all fields of the group while opening the form. The default value is **false**.
 
 ### Usage
 
