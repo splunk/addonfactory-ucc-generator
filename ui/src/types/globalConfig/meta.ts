@@ -12,7 +12,7 @@ export const meta = z.object({
     checkForUpdates: z.boolean().default(true).optional(),
     searchViewDefault: z.boolean().default(false).optional(),
     isVisible: z.boolean().default(true).optional(),
-    supportedThemes:z.array(z.string()).optional()
+    supportedThemes: z.array(z.string()).optional(),
 });
 
 export type meta = z.infer<typeof meta>;
