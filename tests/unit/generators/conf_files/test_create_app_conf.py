@@ -39,7 +39,8 @@ def addon_version():
 def has_ui():
     return True
 
-@fixture 
+
+@fixture
 def has_ui_no_globalConfig():
     return False
 
@@ -82,7 +83,9 @@ def test_set_attributes_no_global_config_or_schema(
     app_conf._gc_schema = None
 
     app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui_no_globalConfig, app_manifest=app_manifest
+        addon_version=addon_version,
+        has_ui=has_ui_no_globalConfig,
+        app_manifest=app_manifest,
     )
 
     assert app_conf.conf_file == "app.conf"
