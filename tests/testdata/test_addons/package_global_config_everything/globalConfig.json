@@ -1558,6 +1558,7 @@
         "supportedThemes": [
             "light",
             "dark"
-        ]
+        ],
+        "isVisible": false
     }
 }
