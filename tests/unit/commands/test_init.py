@@ -1,5 +1,6 @@
 from unittest import mock
-
+import tests.unit.helpers as helpers
+import json
 import pytest
 
 from splunk_add_on_ucc_framework.commands import init
@@ -196,3 +197,18 @@ def test_init_when_folder_already_exists(mock_generate_addon, caplog):
             "option to overwrite the content of existing folder."
         )
         assert expected_error_message in caplog.text
+
+
+def test_valid_regex():
+    file_path = f"{helpers.get_path_to_source_dir()}/schema/schema.json"
+    with open(file_path) as file:
+        content = file.read()
+        schema_json_content = json.loads(content)
+    restRoot_regex = schema_json_content["definitions"]["Meta"]["properties"][
+        "restRoot"
+    ]["pattern"]
+    name_regex = schema_json_content["definitions"]["Meta"]["properties"]["name"][
+        "pattern"
+    ]
+    assert init.ADDON_REST_ROOT_RE_STR == restRoot_regex
+    assert init.ADDON_NAME_RE_STR == name_regex
