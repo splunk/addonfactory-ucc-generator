@@ -113,6 +113,27 @@ except Exception as e:
     log.log_exception(logger, e, "Other")
 ```
 
+By default, the error section displays events logged with the ERROR level, but since version **5.50** UCC allows the user to define what level of logs should be displayed in this section. There are two levels to choose from:
+
+* ERROR
+* CRITICAL
+
+```json
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "default"
+                }
+            ],
+            "settings": {
+                "error_panel_log_lvl": [
+                    "ERROR",
+                    "CRITICAL"
+                ]
+            }
+        }
+```
+
 ## Configuration
 
 To be able to add a monitoring dashboard page to an existing add-on, you need to adjust your

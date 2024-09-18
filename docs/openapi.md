@@ -28,9 +28,9 @@ The OpenAPI Description document can be used to create:
 
 * interactive documentation that generates simple curl requests to all documented endpoints (check [this section](#how-to-get-curl-commands-and-use-them) for the relevant instructions).
 * automation that uses the simple requests to create more complex solutions such as:
-  * orchestration
-  * mass load or migration
-  * automated tests.
+    - orchestration
+    - mass load or migration
+    - automated tests.
 
 Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/OpenAPI-Specification/blob/main/IMPLEMENTATIONS.md) for more possibilities.
 
@@ -44,7 +44,7 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 ### Instructions
 
 1. Open https://editor.swagger.io/
-   * Alternatively, you can run your own instance of Swagger Editor
+   - Alternatively, you can run your own instance of Swagger Editor
      by running the following command in terminal:
 
      `docker run -p 8081:8080 swaggerapi/swagger-editor`
@@ -80,12 +80,14 @@ Make sure you clicked the Authorize button, gave the username and password, and 
 
 1. Go to the directory where you downloaded `openapi.json` file
 2. Run the following command: `docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client`
-   * make sure `openapi.json` is in the current directory
-   * you can generate clients for other languages as well - run
+
+    - make sure `openapi.json` is in the current directory
+    - you can generate clients for other languages as well - run
 
      `docker run --rm openapitools/openapi-generator-cli generate list`
 
      to see the list of supported languages
+
 3. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
 4. Install the client (`pip install .`)
 5. See `README.md` for an example of usage
