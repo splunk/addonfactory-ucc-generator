@@ -20,8 +20,6 @@ from typing import Dict, List, Set
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
 )
-from splunk_add_on_ucc_framework.rest_map_conf import RestmapConf
-from splunk_add_on_ucc_framework.web_conf import WebConf
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 __all__ = ["RestBuilder"]
@@ -159,50 +157,12 @@ class RestBuilder:
 
     def build(self) -> None:
         for endpoint in self._schema.endpoints:
-            # If the endpoint is oauth, which is for getting accesstoken. Conf file entries should not get created.
-            if endpoint._name != "oauth":
-                if endpoint._name == "settings":
-                    self.output.put(
-                        self.output.default,
-                        f"{endpoint.conf_name}.conf",
-                        endpoint.generate_conf_with_default_values(),
-                    )
-
-                self.output.put(
-                    self.output.readme,
-                    f"{endpoint.conf_name}.conf.spec",
-                    endpoint.generate_spec(),
-                )
-
-                # Add data input of self defined conf to inputs.conf.spec
-                if endpoint._entities[0] and endpoint._entities[0]._conf_name:
-                    lines = [
-                        f"[{endpoint._name}://<name>]",
-                        "placeholder = placeholder",
-                    ]
-                    self.output.put(
-                        self.output.readme, "inputs.conf.spec", "\n".join(lines)
-                    )
-
             self.output.put(
                 self.output.bin,
                 endpoint.rh_name + ".py",
                 endpoint.generate_rh(),
             )
 
-        self.output.put(
-            self.output.default,
-            "restmap.conf",
-            RestmapConf.build(
-                self._schema.endpoints,
-                self._schema.namespace,
-            ),
-        )
-        self.output.put(
-            self.output.default,
-            "web.conf",
-            WebConf.build(self._schema.endpoints),
-        )
         self.output.put(
             self.output.bin,
             "import_declare_test.py",

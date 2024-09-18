@@ -1467,6 +1467,14 @@
                     "help": "Please enter your name"
                 },
                 {
+                    "type": "textarea",
+                    "label": "Description",
+                    "field": "description",
+                    "defaultValue": "some sample description",
+                    "required": true,
+                    "help": "Please enter the description for the alert"
+                },
+                {
                     "type": "checkbox",
                     "label": "All Incidents",
                     "field": "all_incidents",

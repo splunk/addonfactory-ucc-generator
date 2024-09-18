@@ -62,7 +62,7 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = "index=_internal source=*{addon_name}* log_level=ERROR | timechart count as Errors by exc_l"
+errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l"
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -131,7 +131,7 @@ table_input_query = (
     '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
 )
 
-errors_list_query = "index=_internal source=*{addon_name}* log_level=ERROR"
+errors_list_query = "index=_internal source=*{addon_name}* log_level IN ({log_lvl})"
 
 resource_cpu_query = (
     "index = _introspection component=PerProcess data.args=*{addon_name}* "
@@ -149,6 +149,7 @@ def generate_dashboard_content(
     input_names: List[str],
     definition_json_name: str,
     lic_usg_search_params: Optional[Tuple[str, str]],
+    error_panel_log_lvl: str,
 ) -> str:
     determine_by = lic_usg_search_params[0] if lic_usg_search_params else "s"
     lic_usg_condition = (
@@ -169,7 +170,9 @@ def generate_dashboard_content(
                     addon_name=addon_name.lower(),
                     determine_by=determine_by,
                 ),
-                errors_count=errors_count.format(addon_name=addon_name.lower()),
+                errors_count=errors_count.format(
+                    addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
             )
         )
@@ -182,7 +185,9 @@ def generate_dashboard_content(
                 data_ingestion=data_ingestion.format(
                     lic_usg_condition=lic_usg_condition, determine_by=determine_by
                 ),
-                errors_count=errors_count.format(addon_name=addon_name.lower()),
+                errors_count=errors_count.format(
+                    addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
                 table_sourcetype=table_sourcetype_query.format(
                     lic_usg_condition=lic_usg_condition,
@@ -216,8 +221,12 @@ def generate_dashboard_content(
             utils.get_j2_env()
             .get_template(definition_json_name)
             .render(
-                errors_count=errors_count.format(addon_name=addon_name.lower()),
-                errors_list=errors_list_query.format(addon_name=addon_name.lower()),
+                errors_count=errors_count.format(
+                    addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
+                errors_list=errors_list_query.format(
+                    addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
             )
         )
 
@@ -251,10 +260,16 @@ def generate_dashboard(
 
     lic_usg_search_params = _get_license_usage_search_params(global_config.dashboard)
 
+    error_panel_log_lvl = _get_error_panel_log_lvl(global_config.dashboard)
+
     if PANEL_DEFAULT in panel_names:
         for definition_json_name in default_definition_json_filename.values():
             content = generate_dashboard_content(
-                addon_name, input_names, definition_json_name, lic_usg_search_params
+                addon_name,
+                input_names,
+                definition_json_name,
+                lic_usg_search_params,
+                error_panel_log_lvl,
             )
             with open(
                 os.path.join(definition_json_path, definition_json_name), "w"
@@ -301,6 +316,17 @@ def _get_license_usage_search_params(
     lic_usg_condition = ",".join(['\\"' + el + '\\"' for el in lic_usg_search_items])
 
     return determine_by, lic_usg_condition
+
+
+def _get_error_panel_log_lvl(dashboard: Dict[Any, Any]) -> str:
+    try:
+        error_lvl = dashboard["settings"]["error_panel_log_lvl"]
+    except KeyError:
+        logger.info(
+            "No custom error log level found. Proceeding with default parameters."
+        )
+        return "ERROR"
+    return ", ".join(error_lvl)
 
 
 def get_custom_json_content(custom_dashboard_path: str) -> Dict[Any, Any]:

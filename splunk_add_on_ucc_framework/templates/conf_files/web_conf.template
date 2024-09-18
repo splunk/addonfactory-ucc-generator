@@ -1,0 +1,9 @@
+{% for endpoint in endpoints %}
+[expose:{{ endpoint.name }}]
+pattern = {{ endpoint.name }}
+methods = POST, GET
+
+[expose:{{ endpoint.name }}_specified]
+pattern = {{ endpoint.name }}/*
+methods = POST, GET, DELETE
+{% endfor %}
