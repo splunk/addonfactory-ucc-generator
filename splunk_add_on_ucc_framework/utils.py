@@ -18,7 +18,7 @@ import logging
 import shutil
 from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
-from os.path import dirname, exists, isdir, isfile, join
+from os.path import dirname, exists, isdir, join
 from typing import Any, Dict
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -112,10 +112,6 @@ def merge_conf_file(
     src_file: str, dst_file: str, merge_mode: str = "stanza_overwrite"
 ) -> None:
     merge_deny_list = ["default.meta", "README.txt"]
-    if not isfile(src_file):
-        return
-    if not isfile(dst_file):
-        return
     if bn(src_file) in merge_deny_list:
         return
 
@@ -127,21 +123,21 @@ def merge_conf_file(
     dst_dict = parser.item_dict()
 
     if merge_mode == "stanza_overwrite":
-        for stanza, key_values in list(src_dict.items()):
+        for stanza, key_values in src_dict.items():
             if stanza not in dst_dict:
                 parser.add_section(stanza)
             else:
                 parser.remove_section(stanza)
                 parser.add_section(stanza)
 
-            for k, v in list(key_values.items()):
+            for k, v in key_values.items():
                 parser.set(stanza, k, v)
     elif merge_mode == "item_overwrite":
-        for stanza, key_values in list(src_dict.items()):
+        for stanza, key_values in src_dict.items():
             if stanza not in dst_dict:
                 parser.add_section(stanza)
 
-            for k, v in list(key_values.items()):
+            for k, v in key_values.items():
                 if v:
                     parser.set(stanza, k, v)
                 else:
