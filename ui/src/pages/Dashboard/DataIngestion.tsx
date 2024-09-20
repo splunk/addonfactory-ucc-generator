@@ -14,9 +14,12 @@ import {
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
     loadDashboardJsonDefinition,
+    queryMap,
+    fetchParsedValues,
 } from './utils';
 import { DataIngestionModal } from './DataIngestionModal';
 import { DashboardModal } from './DashboardModal';
+import { FieldValue } from './DataIngestion.types';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -45,6 +48,7 @@ export const DataIngestionDashboard = ({
     useEffect(() => {
         makeVisualAdjustmentsOnDataIngestionPage();
 
+        // Select the target node for observing mutations
         const targetNode = document.querySelector(
             '[data-input-id="data_ingestion_table_input"] button'
         );
@@ -52,9 +56,12 @@ export const DataIngestionDashboard = ({
         const callback = (mutationsList: MutationRecord[]) => {
             mutationsList.forEach((mutation: MutationRecord) => {
                 if (mutation.attributeName === 'data-test-value') {
+                    // Update the dashboard definition
                     dashboardCoreApi.current?.updateDefinition(dashboardDefinition);
                     setSearchInput('');
                     setToggleNoTraffic(false);
+
+                    // Get the view-by option from the mutated element
                     const viewByOption = (mutation.target as HTMLElement)?.getAttribute('label');
                     setViewByInput(viewByOption || '');
                 }
@@ -63,26 +70,31 @@ export const DataIngestionDashboard = ({
                 }
             });
         };
-        // mutation is used to detect if dropdown value is changed
-        // todo: do a better solution
+
+        // Create a MutationObserver instance and start observing
         const observer = new MutationObserver(callback);
         if (targetNode) {
             observer.observe(targetNode, config);
         }
 
+        // Set the current "view by" option when the component mounts
         const currentViewBy = document
             .querySelector('[data-input-id="data_ingestion_table_input"] button')
             ?.getAttribute('label');
 
         setViewByInput(currentViewBy || '');
 
+        // Load the dashboard definition
         loadDashboardJsonDefinition(
             'data_ingestion_modal_definition.json',
             setDataIngestionModalDef
         );
 
+        // Clean-up function to disconnect the observer when the component unmounts
         return () => {
-            observer.disconnect();
+            if (observer && targetNode) {
+                observer.disconnect();
+            }
         };
     }, [dashboardDefinition]);
 
@@ -94,26 +106,23 @@ export const DataIngestionDashboard = ({
         () =>
             debounce((searchValue, hideToggleValue) => {
                 const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
+                const selectedLabel =
+                    document
+                        ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
+                        ?.getAttribute('label') || 'Source type';
 
-                if (copyJson?.inputs?.data_ingestion_table_input?.options?.items?.length > 0) {
-                    const selectedLabel =
-                        document
-                            ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
-                            ?.getAttribute('label') || 'Source type';
+                const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
+                    (it: { label: string }) => it.label === selectedLabel
+                );
 
-                    const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
-                        (it: { label: string }) => it.label === selectedLabel
-                    );
-
-                    const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
-                        searchValue,
-                        hideToggleValue,
-                        item.value,
-                        selectedLabel
-                    );
-                    copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
-                    dashboardCoreApi.current?.updateDefinition(copyJson);
-                }
+                const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
+                    searchValue,
+                    hideToggleValue,
+                    item.value,
+                    selectedLabel
+                );
+                copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
+                dashboardCoreApi.current?.updateDefinition(copyJson);
             }, 1000),
         [dashboardDefinition]
     );
@@ -126,7 +135,7 @@ export const DataIngestionDashboard = ({
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
     const handleDashboardEvent = useCallback(
-        (event) => {
+        async (event) => {
             if (
                 event.type === 'datasource.done' &&
                 event.targetId === 'data_ingestion_table_ds' &&
@@ -136,19 +145,29 @@ export const DataIngestionDashboard = ({
                 const copyDataIngestionModalJson = JSON.parse(
                     JSON.stringify(dataIngestionModalDef)
                 );
-                setDisplayModalForInput(event.payload.value);
-                const columnsArray: { key: string; value: string }[] =
-                    event.payload.data.columns[0].map((item: string) => ({
-                        key: item,
-                        value: item,
-                    }));
-
                 const modalInputSelectorName = event.payload.data.fields[0].name;
+                const values = await fetchParsedValues();
+                let extractColumnsValues: string[] = [];
+                values.results.forEach((value) => {
+                    if (queryMap[modalInputSelectorName] === value.field) {
+                        const dropDownValues = JSON.parse(value.values);
+                        extractColumnsValues = dropDownValues.map((item: FieldValue) => item.value);
+                    }
+                });
+
+                setDisplayModalForInput(event.payload.value);
+                const columnsArray: { label: string; value: string }[] = extractColumnsValues.map(
+                    (item: string) => ({
+                        label: item,
+                        value: item,
+                    })
+                );
 
                 // update the input selector name and value in the modal
-                copyDataIngestionModalJson.inputs.input1.options.title = modalInputSelectorName;
-                copyDataIngestionModalJson.inputs.input1.title = modalInputSelectorName;
-                copyDataIngestionModalJson.inputs.input1.options.items = columnsArray;
+                copyDataIngestionModalJson.inputs.data_ingestion_modal_dynamic_input.title =
+                    modalInputSelectorName;
+                copyDataIngestionModalJson.inputs.data_ingestion_modal_dynamic_input.options.items =
+                    columnsArray;
 
                 // Modify visualizations only for specific cases
                 if (modalInputSelectorName === 'Input') {
@@ -160,9 +179,8 @@ export const DataIngestionDashboard = ({
                     delete copyDataIngestionModalJson.visualizations
                         .data_ingestion_modal_events_count_viz;
                 }
-                setCopyDataIngestionModalDef(copyDataIngestionModalJson); // Update state with modified copy
+                setCopyDataIngestionModalDef({ ...copyDataIngestionModalJson }); // Update state with modified copy
             }
-
             if (
                 event.type === 'cell.click' &&
                 event.targetId === 'data_ingestion_table_viz' &&
@@ -200,6 +218,7 @@ export const DataIngestionDashboard = ({
                             <DashboardModal
                                 dashboardDefinition={copyDataIngestionModalDef}
                                 selectedLabelForInput={displayModalForInput || ''}
+                                setDisplayModalForInput={setDisplayModalForInput}
                             />
                         </TabLayout.Panel>
                     </DataIngestionModal>

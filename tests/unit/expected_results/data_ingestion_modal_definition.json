@@ -96,7 +96,7 @@
   },
   "defaults": {},
   "inputs": {
-    "input1": {
+    "data_ingestion_modal_dynamic_input": {
       "type": "input.dropdown",
       "options": {
         "items": [],
@@ -104,7 +104,7 @@
       },
       "title": "Input"
     },
-    "data_ingestion_modal_input": {
+    "data_ingestion_modal_time_window": {
       "options": {
         "defaultValue": "-24h,now",
         "token": "data_ingestion_modal_time"
@@ -115,7 +115,10 @@
   },
   "layout": {
     "type": "grid",
-    "globalInputs": ["input1", "data_ingestion_modal_input"],
+    "globalInputs": [
+      "data_ingestion_modal_dynamic_input",
+      "data_ingestion_modal_time_window"
+    ],
     "structure": [
       {
         "item": "data_ingestion_modal_timerange_label_start_viz",

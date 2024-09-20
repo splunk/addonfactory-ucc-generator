@@ -340,11 +340,11 @@
     color: var(--muted-text-color);
 }
 
-table td:first-child {
+#data_ingestion_table_viz [data-test='table-container'] td:first-child {
     cursor: pointer;
     color: #006eaa !important;
 }
 
-table td:first-child:hover {
+#data_ingestion_table_viz [data-test='table-container'] td:first-child:hover {
     text-decoration: underline;
 }

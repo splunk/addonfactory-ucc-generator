@@ -1,6 +1,8 @@
 import { RefreshButton, ExportButton, OpenSearchButton } from '@splunk/dashboard-action-buttons';
 import React from 'react';
+import SearchJob from '@splunk/search-job';
 import { getBuildDirPath } from '../../util/script';
+import { SearchResponse } from './DataIngestion.types';
 
 /**
  *
@@ -74,7 +76,7 @@ export const waitForElementToDisplayAndMoveThemToCanvas = (
     );
 };
 
-const queryMap: Record<string, string> = {
+export const queryMap: Record<string, string> = {
     'Source type': 'st',
     Source: 's',
     Host: 'h',
@@ -225,6 +227,39 @@ export const addDescriptionToExpandedViewByOptions = (target: Element) => {
     });
 };
 
+export const setandRemoveOptionsFromDropdown = (target: Element, inputSelectorValue: string) => {
+    const optionPopupId = target?.getAttribute('data-test-popover-id');
+
+    if (!optionPopupId) {
+        return;
+    }
+
+    const optionPopup = document.getElementById(optionPopupId);
+    if (!optionPopup) {
+        return;
+    }
+
+    const allOptions = optionPopup.querySelectorAll('[role="option"]');
+    allOptions.forEach((option) => {
+        if (
+            option.getAttribute('aria-selected') === 'true' &&
+            option.getAttribute('title') !== inputSelectorValue
+        ) {
+            const svgTick = option.querySelector('span > span > div > svg');
+            if (svgTick) {
+                svgTick?.remove();
+            }
+
+            const button = option as HTMLElement;
+            if (button) {
+                button.style.backgroundColor = 'white';
+                button.style.color = 'black';
+                button.style.fontWeight = 'normal';
+            }
+        }
+    });
+};
+
 export const createNewQueryForDataVolumeInModal = (
     selectedInput: string,
     selectedValue: string
@@ -248,3 +283,35 @@ export const createNewQueryForNumberOfEventsInModal = (
 
     return newQuery;
 };
+
+export async function fetchParsedValues(): Promise<SearchResponse> {
+    return new Promise((resolve, reject) => {
+        const searchJob = SearchJob.create(
+            {
+                search: `index=_internal source=*license_usage.log type=Usage | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`,
+            },
+            { cache: true, cacheLimit: 300 }
+        );
+
+        const resultsSubscription = searchJob
+            .getResults({
+                count: 0,
+            })
+            .subscribe({
+                next: (response: SearchResponse) => {
+                    try {
+                        resolve(response);
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                error: (error: any) => {
+                    reject(error);
+                },
+                complete: () => {
+                    resultsSubscription.unsubscribe();
+                },
+            });
+    });
+}

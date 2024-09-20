@@ -60,13 +60,20 @@ export const DataIngestionModal = ({
                     id="open_search_error_events_tab_with_types"
                     label="View ingested events in search"
                     openInNewContext
-                    onClick={() =>
-                        (
-                            document.querySelector(
-                                '#data_ingestion_modal_events_count_viz [data-test="open-search-button"]'
-                            ) as HTMLElement
-                        )?.click()
-                    }
+                    onClick={() => {
+                        const searchButtonForNumberOfEvents = document.querySelector(
+                            '#data_ingestion_modal_events_count_viz [data-test="open-search-button"]'
+                        ) as HTMLElement | null;
+                        const searchButtonForDataVolume = document.querySelector(
+                            '#data_ingestion_modal_data_volume_viz [data-test="open-search-button"]'
+                        ) as HTMLElement | null;
+
+                        if (searchButtonForNumberOfEvents) {
+                            searchButtonForNumberOfEvents.click();
+                        } else {
+                            searchButtonForDataVolume?.click();
+                        }
+                    }}
                 />
                 <StyledButton
                     className="footerBtn"
