@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 import logging
-import os
-from os.path import basename as bn
 from typing import Any
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -26,9 +24,6 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
-
-merge_deny_list = ["default.meta", "README.txt"]
-merge_mode_config = {"app.conf": "item_overwrite"}
 
 logger = logging.getLogger("ucc_gen")
 
@@ -64,48 +59,3 @@ def remove_alert_from_conf_file(alert: Any, conf_file: str) -> None:
 
     with open(conf_file, "w") as cf:
         parser.write(cf)
-
-
-def merge_conf_file(
-    src_file: str, dst_file: str, merge_mode: str = "stanza_overwrite"
-) -> None:
-    if not os.path.isfile(src_file):
-        return
-    if not os.path.isfile(dst_file):
-        return
-    if bn(src_file) in merge_deny_list:
-        return
-
-    sparser = conf_parser.TABConfigParser()
-    sparser.read(src_file)
-    src_dict = sparser.item_dict()
-    parser = conf_parser.TABConfigParser()
-    parser.read(dst_file)
-    dst_dict = parser.item_dict()
-
-    if merge_mode == "stanza_overwrite":
-        for stanza, key_values in list(src_dict.items()):
-            if stanza not in dst_dict:
-                parser.add_section(stanza)
-            else:
-                parser.remove_section(stanza)
-                parser.add_section(stanza)
-
-            for k, v in list(key_values.items()):
-                parser.set(stanza, k, v)
-    elif merge_mode == "item_overwrite":
-        for stanza, key_values in list(src_dict.items()):
-            if stanza not in dst_dict:
-                parser.add_section(stanza)
-
-            for k, v in list(key_values.items()):
-                if v:
-                    parser.set(stanza, k, v)
-                else:
-                    parser.remove_option(stanza, k)
-    else:
-        # overwrite the whole file
-        parser.read(src_file)
-
-    with open(dst_file, "w") as df:
-        parser.write(df)
