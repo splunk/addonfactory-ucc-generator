@@ -15,6 +15,4 @@
 #
 
 SHORT_NAME = "short_name"
-PARAMETERS = "parameters"
 MODULAR_ALERTS = "modular_alerts"
-ALERT_PROPS = "alert_props"
