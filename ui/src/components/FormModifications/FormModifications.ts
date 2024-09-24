@@ -1,5 +1,5 @@
 import { Mode } from '../../constants/modes';
-import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { AcceptableFormValueOrNullish, StandardPages } from '../../types/components/shareableTypes';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import {
     BaseFormState,
@@ -80,7 +80,8 @@ export function getAllFieldsWithModifications(
 const getModificationForEntity = (
     entity: EntitiesAllowingModifications,
     stateShallowCopy: BaseFormState,
-    mode: Mode
+    mode: Mode,
+    page: StandardPages
 ) => {
     let modification = entity.modifyFieldsOnValue?.find((mod) => {
         const currentFieldValue = stateShallowCopy.data?.[entity.field]?.value;
@@ -90,7 +91,8 @@ const getModificationForEntity = (
             currentFieldValue !== null &&
             // here type convertion is needed as splunk keeps all data as string
             // and users can put numbers or booleans inside global config
-            getValueMapTruthyFalse(currentFieldValue) === getValueMapTruthyFalse(mod.fieldValue) &&
+            getValueMapTruthyFalse(currentFieldValue, page) ===
+                getValueMapTruthyFalse(mod.fieldValue, page) &&
             (!mod.mode || mod.mode === mode)
         );
     });
@@ -151,12 +153,13 @@ const getStateAfterModification = (
 export const getModifiedState = (
     state: BaseFormState,
     mode: Mode,
-    entitiesToModify: EntitiesAllowingModifications[]
+    entitiesToModify: EntitiesAllowingModifications[],
+    page: StandardPages
 ) => {
     let stateShallowCopy = { ...state };
     let shouldUpdateState = false;
     entitiesToModify.forEach((entity: EntitiesAllowingModifications) => {
-        const modifications = getModificationForEntity(entity, stateShallowCopy, mode);
+        const modifications = getModificationForEntity(entity, stateShallowCopy, mode, page);
 
         modifications?.fieldsToModify.forEach((modificationFields) => {
             const { fieldId, ...fieldProps } = modificationFields;

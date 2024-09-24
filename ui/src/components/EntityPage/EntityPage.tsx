@@ -14,12 +14,13 @@ import BaseFormView from '../BaseFormView/BaseFormView';
 import { SubTitleComponent } from '../../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StyledButton } from '../../pages/EntryPageStyle';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 interface EntityPageProps {
     handleRequestClose: () => void;
     serviceName: string;
     mode: Mode;
-    page: string;
+    page: StandardPages;
     stanzaName?: string;
     formLabel?: string;
     groupName?: string;

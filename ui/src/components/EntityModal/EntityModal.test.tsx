@@ -21,6 +21,7 @@ import {
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
 import { Mode } from '../../constants/modes';
 import * as axiosWrapper from '../../util/axiosCallWrapper';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
@@ -279,7 +280,7 @@ describe('EntityModal - custom warning', () => {
         setUnifiedConfig(newConfig);
     };
 
-    const renderModal = (inputMode: Mode, page: string) => {
+    const renderModal = (inputMode: Mode, page: StandardPages) => {
         const props = {
             serviceName: 'account',
             mode: inputMode,
@@ -305,7 +306,7 @@ describe('EntityModal - custom warning', () => {
         ${'config'} | ${'input'}
     `(
         'display custom warning for $mode mode - $page tab',
-        ({ mode, page }: { mode: keyof typeof WARNING_MESSAGES; page: string }) => {
+        ({ mode, page }: { mode: keyof typeof WARNING_MESSAGES; page: StandardPages }) => {
             if (page === 'configuration') {
                 setUpConfigWithWarningMessageForConfiguration();
             } else {
