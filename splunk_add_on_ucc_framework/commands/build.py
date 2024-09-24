@@ -504,7 +504,7 @@ def generate(
                 addon_name=ta_name,
                 app_manifest=app_manifest,
                 addon_version=addon_version,
-                has_ui=global_config.meta.get("is_visible", True),
+                has_ui=global_config.meta.get("isVisible", True),
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -600,7 +600,7 @@ def generate(
 
     ui_available = False
     if global_config:
-        ui_available = global_config.meta.get("is_visible", True)
+        ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(
         global_config=global_config,
