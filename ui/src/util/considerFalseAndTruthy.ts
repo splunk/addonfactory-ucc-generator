@@ -26,7 +26,7 @@ export function isTrue(value: unknown) {
  */
 export function getValueMapTruthyFalse<T>(value: string | T, currentPageName?: StandardPages) {
     if (currentPageName === 'configuration') {
-        return (isFalse(value) && '0') || (isTrue(value) && '1');
+        return (isFalse(value) && '0') || (isTrue(value) && '1') || value;
     }
 
     return value;
