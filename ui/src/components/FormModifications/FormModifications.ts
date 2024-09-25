@@ -89,9 +89,9 @@ const getModificationForEntity = (
             // do not compare empty values for modifications
             currentFieldValue !== undefined &&
             currentFieldValue !== null &&
-            // values are directly equal or they are equal after type convertion
+            // values are directly equal or they are equal after type conversion
             (currentFieldValue === mod.fieldValue ||
-                // here convertion is needed as splunk keeps boolsih data on cponfiguration page as 1 and 0
+                // here conversion is needed as splunk keeps boolish data on configuration page as 1 and 0
                 getValueMapTruthyFalse(currentFieldValue, page) ===
                     getValueMapTruthyFalse(mod.fieldValue, page)) &&
             (!mod.mode || mod.mode === mode)
