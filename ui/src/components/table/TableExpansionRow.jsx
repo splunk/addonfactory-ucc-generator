@@ -4,20 +4,13 @@ import Table from '@splunk/react-ui/Table';
 import styled from 'styled-components';
 
 import CustomTableControl from './CustomTableControl';
-import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRowData } from './TableExpansionRowData';
 
 const TableCellWrapper = styled(Table.Cell)`
     border-top: none;
 `;
 
-export function getExpansionRow(colSpan, row, moreInfo) {
-    const inputs = getUnifiedConfigs().pages?.inputs;
-
-    const customRow = inputs?.table
-        ? inputs.table.customRow
-        : inputs.services.find((service) => service.name === row.serviceName).table?.customRow;
-
+export function getExpansionRow(colSpan, row, moreInfo, customRow) {
     return (
         <Table.Row key={`${row.id}-expansion`} style={{ wordBreak: 'break-word' }}>
             <TableCellWrapper colSpan={colSpan}>

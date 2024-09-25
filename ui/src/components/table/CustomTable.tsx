@@ -270,7 +270,12 @@ const CustomTable: React.FC<CustomTableProps> = ({
                         handleToggleActionClick={handleToggleActionClick}
                         {...(moreInfo
                             ? {
-                                  expansionRow: getExpansionRow(columns.length, row, moreInfo),
+                                  expansionRow: getExpansionRow(
+                                      columns.length,
+                                      row,
+                                      moreInfo,
+                                      tableConfig?.customRow
+                                  ),
                               }
                             : {})}
                     />
