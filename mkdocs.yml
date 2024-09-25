@@ -43,6 +43,7 @@ nav:
   - Home: "index.md"
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
+  - Generated files: "generated_files.md"
   - Inputs:
       - "inputs/index.md"
       - Introduction: "inputs/index.md"
