@@ -75,9 +75,9 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         hideClearBtn,
     } = controlOptions;
 
-    function handleChange(e: unknown, obj: { value: string | number | boolean }) {
+    const handleChange = (e: unknown, obj: { value: string | number | boolean }) => {
         restProps.handleChange(field, obj.value);
-    }
+    };
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
@@ -178,12 +178,11 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                // do not map empty values like '', null, undefined
-                value={props.value ? getValueMapTruthyFalse(props.value, props.page) : ''}
+                value={props.value}
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
-                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                onChange={handleChange}
                 inline
             >
                 {options && options.length > 0 && options}
@@ -196,12 +195,11 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                // do not map empty values like '', null, undefined
-                value={props.value ? getValueMapTruthyFalse(props.value, props.page) : props.value}
+                value={props.value}
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
-                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                onChange={handleChange}
                 filter={!disableSearch}
                 inline
             >

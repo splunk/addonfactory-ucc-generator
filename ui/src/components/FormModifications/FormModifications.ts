@@ -89,10 +89,11 @@ const getModificationForEntity = (
             // do not compare empty values for modifications
             currentFieldValue !== undefined &&
             currentFieldValue !== null &&
-            // here type convertion is needed as splunk keeps all data as string
-            // and users can put numbers or booleans inside global config
-            getValueMapTruthyFalse(currentFieldValue, page) ===
-                getValueMapTruthyFalse(mod.fieldValue, page) &&
+            // values are directly equal or they are equal after type convertion
+            (currentFieldValue === mod.fieldValue ||
+                // here convertion is needed as splunk keeps boolsih data on cponfiguration page as 1 and 0
+                getValueMapTruthyFalse(currentFieldValue, page) ===
+                    getValueMapTruthyFalse(mod.fieldValue, page)) &&
             (!mod.mode || mod.mode === mode)
         );
     });
