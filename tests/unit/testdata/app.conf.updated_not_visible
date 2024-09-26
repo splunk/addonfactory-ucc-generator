@@ -1,0 +1,22 @@
+[install]
+build = 12345
+is_configured = false
+state = enabled
+
+[launcher]
+author = Company name
+version = 1.0.0
+description = Description for Splunk_TA_UCCExample
+
+[ui]
+is_visible = false
+label = Title for Splunk_TA_UCCExample
+docs_section_override = AddOns:released
+
+[package]
+id = Splunk_TA_UCCExample
+check_for_updates = true
+
+[id]
+version = 1.0.0
+name = Splunk_TA_UCCExample
