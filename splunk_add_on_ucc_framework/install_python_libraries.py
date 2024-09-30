@@ -20,6 +20,8 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
+
+from packaging.version import Version
 from typing import List, Optional, Set, Iterable, Dict
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
@@ -31,6 +33,10 @@ class SplunktaucclibNotFound(Exception):
 
 
 class CouldNotInstallRequirements(Exception):
+    pass
+
+
+class InvalidArguments(Exception):
     pass
 
 
@@ -55,6 +61,24 @@ def _subprocess_call(
         raise e
 
 
+def _subprocess_run(
+    command: str,
+    command_desc: Optional[str] = None,
+    env: Optional[Dict[str, str]] = None,
+) -> subprocess.CompletedProcess[bytes]:
+    command_desc = command_desc or command
+    try:
+        logger.info(f"Executing: {command}")
+        process_result = subprocess.run(
+            command, shell=True, env=env, capture_output=True
+        )
+        return process_result
+
+    except OSError as e:
+        logger.error(f"Execution ({command_desc}) failed due to {e}")
+        raise e
+
+
 def _pip_install(installer: str, command: str, command_desc: str) -> None:
     cmd = f"{installer} -m pip install {command}"
     try:
@@ -66,18 +90,36 @@ def _pip_install(installer: str, command: str, command_desc: str) -> None:
 
 
 def _pip_is_lib_installed(
-    installer: str, target: str, libname: str, version: Optional[str] = None
+    installer: str,
+    target: str,
+    libname: str,
+    version: Optional[str] = None,
+    allow_higher_version: bool = False,
 ) -> bool:
-    lib_installed_cmd = f"{installer} -m pip show --version {libname}"
-    lib_version_match_cmd = f'{lib_installed_cmd} | grep "Version: {version}"'
+    if not version and allow_higher_version:
+        raise InvalidArguments(
+            "Parameter 'allow_higher_version' can not be set to True if 'version' parameter is not provided"
+        )
 
-    cmd = lib_version_match_cmd if version else lib_installed_cmd
+    lib_installed_cmd = f"{installer} -m pip show --version {libname}"
+
+    if version and allow_higher_version:
+        cmd = f'{lib_installed_cmd} | grep "Version"'
+    elif version and not allow_higher_version:
+        cmd = f'{lib_installed_cmd} | grep "Version: {version}"'
+    else:
+        cmd = lib_installed_cmd
 
     try:
         my_env = os.environ.copy()
         my_env["PYTHONPATH"] = target
-        return_code = _subprocess_call(command=cmd, env=my_env)
-        return return_code == 0
+        if allow_higher_version:
+            result = _subprocess_run(command=cmd, env=my_env)
+            result_version = result.stdout.decode("utf-8").split("Version:")[1].strip()
+            return Version(result_version) >= Version(version)
+        else:
+            return_code = _subprocess_call(command=cmd, env=my_env)
+            return return_code == 0
     except OSError as e:
         raise CouldNotInstallRequirements from e
 
@@ -116,10 +158,12 @@ def install_python_libraries(
             installer=python_binary_name,
             target=ucc_lib_target,
             libname="splunktaucclib",
+            version="6.4",
+            allow_higher_version=True,
         ):
             raise SplunktaucclibNotFound(
-                f"splunktaucclib is not found in {path_to_requirements_file}. "
-                f"Please add it there because this add-on has UI."
+                f"splunktaucclib is not found in {path_to_requirements_file} or has invalid version. "
+                f"Please add it there and check if it is at least version 6.4, because this add-on has UI."
             )
 
         cleanup_libraries = install_os_dependent_libraries(
