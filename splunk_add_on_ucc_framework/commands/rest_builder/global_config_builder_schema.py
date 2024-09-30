@@ -217,15 +217,8 @@ class GlobalConfigBuilderSchema:
             if field["field"] != "name":
                 fields.append(rest_field)
             else:
-                special_fields.append(
-                    RestFieldBuilder(
-                        field["field"],
-                        _is_true(field.get("required")),
-                        _is_true(field.get("encrypted")),
-                        field.get("defaultValue"),
-                        ValidatorBuilder().build(field.get("validators")),
-                    )
-                )
+                special_fields.append(rest_field)
+
         return fields, special_fields
 
     """
