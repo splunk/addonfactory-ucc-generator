@@ -1,8 +1,11 @@
 import { RefreshButton, ExportButton, OpenSearchButton } from '@splunk/dashboard-action-buttons';
 import React from 'react';
 import SearchJob from '@splunk/search-job';
+import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { SearchResponse } from './DataIngestion.types';
+
+const globalConfig = getUnifiedConfigs();
 
 /**
  *
@@ -154,6 +157,12 @@ export const getActionButtons = (serviceName: string) => {
     return actionMenus;
 };
 
+export const makeVisualAdjustmentsOnDataIngestionModal = () => {
+    waitForElementToDisplayAndMoveThemToCanvas(
+        '#data_ingestion_modal_dropdown',
+        '[data-input-id="data_ingestion_modal_time_window"]'
+    );
+};
 export const makeVisualAdjustmentsOnDataIngestionPage = () => {
     waitForElementToDisplayAndMoveThemToCanvas(
         '[data-input-id="data_ingestion_input"]',
@@ -227,77 +236,92 @@ export const addDescriptionToExpandedViewByOptions = (target: Element) => {
     });
 };
 
-export const setandRemoveOptionsFromDropdown = (target: Element, inputSelectorValue: string) => {
-    const optionPopupId = target?.getAttribute('data-test-popover-id');
-
-    if (!optionPopupId) {
-        return;
-    }
-
-    const optionPopup = document.getElementById(optionPopupId);
-    if (!optionPopup) {
-        return;
-    }
-
-    const allOptions = optionPopup.querySelectorAll('[role="option"]');
-    allOptions.forEach((option) => {
-        if (
-            option.getAttribute('aria-selected') === 'true' &&
-            option.getAttribute('title') !== inputSelectorValue
-        ) {
-            const svgTick = option.querySelector('span > span > div > svg');
-            if (svgTick) {
-                svgTick?.remove();
-            }
-
-            const button = option as HTMLElement;
-            if (button) {
-                button.style.backgroundColor = 'white';
-                button.style.color = 'black';
-                button.style.fontWeight = 'normal';
-            }
-        }
-    });
-};
-
 export const createNewQueryForDataVolumeInModal = (
     selectedInput: string,
-    selectedValue: string
+    selectedValue: string,
+    query: string
 ) => {
     const selectedLabel = queryMap[selectedInput];
+    const updatedQuery = query.replace('|', `${selectedLabel} = "${selectedValue}" |`);
 
-    const newQuery = `index=_internal source=*license_usage.log type=Usage ${selectedLabel} = "${selectedValue}"
-    | timechart sum(b) as Usage
-    | rename Usage as "Data volume"`;
-
-    return newQuery;
+    return updatedQuery;
 };
 
 export const createNewQueryForNumberOfEventsInModal = (
     selectedInput: string,
-    selectedValue: string
+    selectedValue: string,
+    query: string
 ) => {
     const selectedLabel = queryMap[selectedInput];
+    const updatedQuery = query.replace('|', `${selectedLabel} = "${selectedValue}" |`);
 
-    const newQuery = `index=_internal source=*splunk_ta_uccexample* action=events_ingested ${selectedLabel} = "${selectedValue}" | timechart sum(n_events) as "Number of events"`;
-
-    return newQuery;
+    return updatedQuery;
 };
 
-export async function fetchParsedValues(): Promise<SearchResponse> {
-    return new Promise((resolve, reject) => {
-        const searchJob = SearchJob.create(
-            {
-                search: `index=_internal source=*license_usage.log type=Usage | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`,
-            },
-            { cache: true, cacheLimit: 300 }
-        );
+function getLicenseUsageSearchParams() {
+    const dashboard = globalConfig?.pages.dashboard as {
+        settings: {
+            custom_license_usage?: {
+                determine_by?: string;
+                search_condition?: string[];
+            };
+        };
+    };
+    const inputNames = globalConfig?.pages.inputs?.services;
+    let determineBy = 's';
+    let licUsgCondition = inputNames?.map((item) => `${item.name}*`).join(',');
 
-        const resultsSubscription = searchJob
-            .getResults({
-                count: 0,
-            })
-            .subscribe({
+    try {
+        const licUsgType = dashboard?.settings?.custom_license_usage?.determine_by || 'Source';
+        const licUsgSearchItems = dashboard?.settings?.custom_license_usage?.search_condition;
+        determineBy = queryMap[licUsgType];
+
+        const combinedItems = [
+            licUsgCondition || [],
+            ...(licUsgSearchItems?.map((el) => `"${el}"`) || []),
+        ];
+
+        licUsgCondition = combinedItems.join(',');
+        return [determineBy, licUsgCondition];
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.info(
+            'No custom license usage search condition found. Proceeding with default parameters.'
+        );
+        return null;
+    }
+}
+export async function fetchParsedValues(): Promise<SearchResponse[]> {
+    const licenseUsageParams = getLicenseUsageSearchParams();
+
+    const timeForDataIngestionTableStart = document
+        ?.querySelector('[data-input-id="data_ingestion_input"] button')
+        ?.getAttribute('data-test-earliest');
+    const timeForDataIngestionTableEnd = document
+        ?.querySelector('[data-input-id="data_ingestion_input"] button')
+        ?.getAttribute('data-test-latest');
+    // Construct the three queries
+    const eventInputQuery = `| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = "${globalConfig.meta.name}" | eval Active=if(lower(disabled) IN ("1", "true", "t"), "no", "yes") | table title, Active | stats values(title) as event_input by Active`;
+    const eventAccountQuery = `index=_internal source=*${globalConfig.meta.name}* action=events_ingested earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} | fieldsummary | fields field values | where field IN ("event_account")`;
+
+    let eventQuery = '';
+    if (licenseUsageParams) {
+        const [determineBy, licUsgCondition] = licenseUsageParams;
+        if (determineBy && licUsgCondition) {
+            eventQuery = `index=_internal source=*license_usage.log type=Usage earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} ${determineBy} IN (${licUsgCondition}) | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`;
+        }
+    }
+
+    if (!eventQuery) {
+        eventQuery = `index=_internal source=*license_usage.log type=Usage earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`;
+    }
+
+    // Function to run a search job for a given query
+    const runSearchJob = (searchQuery: string): Promise<SearchResponse> =>
+        new Promise((resolve, reject) => {
+            const searchJob = SearchJob.create({ search: searchQuery });
+
+            const resultsSubscription = searchJob.getResults({ count: 0 }).subscribe({
                 next: (response: SearchResponse) => {
                     try {
                         resolve(response);
@@ -313,5 +337,23 @@ export async function fetchParsedValues(): Promise<SearchResponse> {
                     resultsSubscription.unsubscribe();
                 },
             });
-    });
+        });
+
+    // Execute all queries concurrently
+    const queryPromises = [
+        runSearchJob(eventInputQuery),
+        runSearchJob(eventAccountQuery),
+        runSearchJob(eventQuery),
+    ];
+
+    // Return the combined results from all queries
+    return Promise.all(queryPromises)
+        .then(
+            (results) => results // Combined response of all queries
+        )
+        .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Error in fetching parsed values:', error);
+            throw error;
+        });
 }

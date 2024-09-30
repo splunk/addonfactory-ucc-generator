@@ -435,3 +435,7 @@ e.g. of globalConfig.json:
 
 the above configuration will create the following filter query:
 `...source=*license_usage.log type=Usage (st IN ("*addon123*","my_custom_condition*"))...`
+
+> Note:
+
+> - In the Data Ingestion table, the first column displays the `View by` options list. When you click on any row in this column, a modal opens, showing detailed information such as `Data volume` and the `Number of events` over time, visualized in charts. The modal allows you to adjust the options via a dropdown to view data for different View by options. This enables dynamic exploration of data trends for various selected inputs.

@@ -44,7 +44,13 @@ export const DataIngestionDashboard = ({
         string,
         unknown
     > | null>(null);
-    const [displayModalForInput, setDisplayModalForInput] = useState<string | null>(null);
+    const [selectValueForDropdownInModal, setSelectValueForDropdownInModal] = useState<
+        string | null
+    >(null);
+    const [selectTitleForDropdownInModal, setSelectTitleForDropdownInModal] = useState<
+        string | null
+    >(null);
+    const [dataIngestionDropdownValues, setDataIngestionDropdownValues] = useState([{}]);
     useEffect(() => {
         makeVisualAdjustmentsOnDataIngestionPage();
 
@@ -147,33 +153,76 @@ export const DataIngestionDashboard = ({
                 );
                 const modalInputSelectorName = event.payload.data.fields[0].name;
                 const values = await fetchParsedValues();
-                let extractColumnsValues: string[] = [];
-                values.results.forEach((value) => {
-                    if (queryMap[modalInputSelectorName] === value.field) {
-                        const dropDownValues = JSON.parse(value.values);
-                        extractColumnsValues = dropDownValues.map((item: FieldValue) => item.value);
+                let extractColumnsValues: Record<string, string>[] = [];
+                const processResults = (results: Record<string, string>[], fieldKey: string) => {
+                    results.forEach((value) => {
+                        if (queryMap[fieldKey] === value.field) {
+                            const dropDownValues = JSON.parse(value.values);
+                            extractColumnsValues = dropDownValues.map((item: FieldValue) => ({
+                                label: item.value,
+                                value: item.value,
+                            }));
+                        }
+                    });
+                };
+                const mergeInputValues = (
+                    activeValues?: string[],
+                    inactiveValues?: string[] | string
+                ): Record<string, string>[] => {
+                    // Handle inactiveValues being either a string or an array of strings
+                    let safeInactiveValues: Record<string, string>[] = [];
+                    if (typeof inactiveValues === 'string') {
+                        safeInactiveValues = [
+                            { label: `${inactiveValues} (disabled)`, value: inactiveValues },
+                        ]; // Convert single string to array
+                    } else if (Array.isArray(inactiveValues)) {
+                        safeInactiveValues = inactiveValues.map((item: string) => ({
+                            label: `${item} (disabled)`,
+                            value: item,
+                        }));
                     }
-                });
 
-                setDisplayModalForInput(event.payload.value);
-                const columnsArray: { label: string; value: string }[] = extractColumnsValues.map(
-                    (item: string) => ({
-                        label: item,
-                        value: item,
-                    })
-                );
+                    // Handle activeValues being either a string or an array of strings
+                    let safeActiveValues: Record<string, string>[] = [];
+                    if (typeof activeValues === 'string') {
+                        safeActiveValues = [{ label: activeValues, value: activeValues }]; // Convert single string to array
+                    } else if (Array.isArray(activeValues)) {
+                        safeActiveValues = activeValues.map((item: string) => ({
+                            label: item,
+                            value: item,
+                        }));
+                    }
 
-                // update the input selector name and value in the modal
-                copyDataIngestionModalJson.inputs.data_ingestion_modal_dynamic_input.title =
-                    modalInputSelectorName;
-                copyDataIngestionModalJson.inputs.data_ingestion_modal_dynamic_input.options.items =
-                    columnsArray;
+                    // Merge active and inactive inputs (safe arrays)
+                    const mergedValues = [...safeActiveValues, ...safeInactiveValues];
+                    return mergedValues;
+                };
+
+                if (modalInputSelectorName === 'Input') {
+                    const activeState = values[0]?.results[0]?.Active;
+                    const activeInputs = values[0]?.results[0]?.event_input;
+                    const inactiveInputs = values[0]?.results[1]?.event_input;
+
+                    // Handle cases where only active or inactive inputs exist
+                    if (activeState === 'yes') {
+                        extractColumnsValues = mergeInputValues(activeInputs, inactiveInputs);
+                    } else if (activeState === 'no') {
+                        extractColumnsValues = mergeInputValues(inactiveInputs, activeInputs);
+                    }
+                } else if (modalInputSelectorName === 'Account') {
+                    processResults(values[1].results, modalInputSelectorName);
+                } else {
+                    processResults(values[2].results, modalInputSelectorName);
+                }
+                setDataIngestionDropdownValues(extractColumnsValues);
+                setSelectTitleForDropdownInModal(modalInputSelectorName);
 
                 // Modify visualizations only for specific cases
-                if (modalInputSelectorName === 'Input') {
-                    // Remove data volume visualization for "Input"
+                if (modalInputSelectorName === 'Input' || modalInputSelectorName === 'Account') {
+                    // Remove data volume visualization for "Input" and "Account"
                     delete copyDataIngestionModalJson.visualizations
                         .data_ingestion_modal_data_volume_viz;
+                    copyDataIngestionModalJson.layout.structure[3].position.y = 80;
                 } else if (modalInputSelectorName === 'Host') {
                     // Remove event count visualization for "Host"
                     delete copyDataIngestionModalJson.visualizations
@@ -187,7 +236,7 @@ export const DataIngestionDashboard = ({
                 event.payload.cellIndex === 0 &&
                 event.payload.value
             ) {
-                setDisplayModalForInput(event.payload.value);
+                setSelectValueForDropdownInModal(event.payload.value);
             }
         },
         [dataIngestionModalDef]
@@ -206,10 +255,13 @@ export const DataIngestionDashboard = ({
             >
                 <>
                     <DataIngestionModal
-                        open={!!displayModalForInput}
-                        handleRequestClose={() => setDisplayModalForInput(null)}
-                        title={displayModalForInput || ''}
+                        open={!!selectValueForDropdownInModal}
+                        handleRequestClose={() => setSelectValueForDropdownInModal(null)}
+                        title={selectTitleForDropdownInModal || ''}
                         acceptBtnLabel="Done"
+                        dataIngestionDropdownValues={dataIngestionDropdownValues}
+                        selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
+                        setSelectValueForDropdownInModal={setSelectValueForDropdownInModal}
                     >
                         <TabLayout.Panel
                             label="data_ingestion_modal"
@@ -217,8 +269,8 @@ export const DataIngestionDashboard = ({
                         >
                             <DashboardModal
                                 dashboardDefinition={copyDataIngestionModalDef}
-                                selectedLabelForInput={displayModalForInput || ''}
-                                setDisplayModalForInput={setDisplayModalForInput}
+                                selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
+                                selectTitleForDropdownInModal={selectTitleForDropdownInModal || ''}
                             />
                         </TabLayout.Panel>
                     </DataIngestionModal>

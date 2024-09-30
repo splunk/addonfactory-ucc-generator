@@ -75,7 +75,7 @@
     "data_ingestion_modal_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "| inputlookup firewall_example.csv \n| search host=host8 OR host=host18\n| eval host=case(host=\"host8\", \"spend\", host=\"host18\", \"score\", 1=1, host)\n| eval myTime=strftime(timestamp,\"%H:%M\") \n| chart count over myTime by host\n| eval score=score*2\n| eval spend=spend*1500\n| fields myTime spend score\n| rename score as \"Security Score\", spend as \"Security Spend\"",
+        "query": "{{data_ingestion}}",
         "queryParameters": {
           "earliest": "$data_ingestion_modal_time.earliest$",
           "latest": "$data_ingestion_modal_time.latest$"
@@ -85,7 +85,7 @@
     "ds_search_1": {
       "type": "ds.search",
       "options": {
-        "query": "| inputlookup firewall_example.csv \n| search host=host8 OR host=host18\n| eval host=case(host=\"host8\", \"spend\", host=\"host18\", \"score\", 1=1, host)\n| eval myTime=strftime(timestamp,\"%H:%M\") \n| chart count over myTime by host\n| eval score=score*2\n| eval spend=spend*1500\n| fields myTime spend score\n| rename score as \"Security Score\", spend as \"Security Spend\"",
+        "query": "{{events_count}}",
         "queryParameters": {
           "earliest": "$data_ingestion_modal_time.earliest$",
           "latest": "$data_ingestion_modal_time.latest$"
@@ -96,14 +96,6 @@
   },
   "defaults": {},
   "inputs": {
-    "data_ingestion_modal_dynamic_input": {
-      "type": "input.dropdown",
-      "options": {
-        "items": [],
-        "token": "data_ingestion_view_by"
-      },
-      "title": "Input"
-    },
     "data_ingestion_modal_time_window": {
       "options": {
         "defaultValue": "-24h,now",
@@ -115,10 +107,7 @@
   },
   "layout": {
     "type": "grid",
-    "globalInputs": [
-      "data_ingestion_modal_dynamic_input",
-      "data_ingestion_modal_time_window"
-    ],
+    "globalInputs": ["data_ingestion_modal_time_window"],
     "structure": [
       {
         "item": "data_ingestion_modal_timerange_label_start_viz",

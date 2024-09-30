@@ -247,7 +247,16 @@ def generate_dashboard_content(
         definition_json_name
         == default_definition_json_filename["data_ingestion_modal_definition"]
     ):
-        content = utils.get_j2_env().get_template(definition_json_name).render()
+        content = (
+            utils.get_j2_env()
+            .get_template(definition_json_name)
+            .render(
+                data_ingestion=data_ingestion.format(
+                    lic_usg_condition=lic_usg_condition, determine_by=determine_by
+                ),
+                events_count=events_count.format(addon_name=addon_name.lower()),
+            )
+        )
 
     return content
 
