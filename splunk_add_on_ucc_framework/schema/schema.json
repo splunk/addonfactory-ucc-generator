@@ -1993,6 +1993,11 @@
               "dark"
             ]
           }
+        },
+        "isVisible": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
         }
       },
       "required": [

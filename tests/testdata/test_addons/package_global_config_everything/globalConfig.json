@@ -625,6 +625,77 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "custom_row_tab",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ],
+                        "customRow": {
+                            "src": "custom_input_row_replace",
+                            "type": "external"
+                        }
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "Custom table row"
                 }
             ],
             "title": "Configuration",
@@ -1551,13 +1622,14 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.48.2Ra94cdc9a8",
+        "version": "5.49.0Rcc63ee532",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
-        "_uccVersion": "5.48.2",
+        "_uccVersion": "5.49.0",
         "supportedThemes": [
             "light",
             "dark"
-        ]
+        ],
+        "isVisible": true
     }
 }
