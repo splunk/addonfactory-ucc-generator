@@ -17,6 +17,7 @@ import { useTableContext } from '../../context/useTableContext';
 import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
 import { isReadonlyRow } from './table.utils';
 import { ITableConfig } from '../../types/globalConfig/pages';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
@@ -34,7 +35,7 @@ const defaultTableConfig: ITableConfig = {
 };
 
 const getTableConfigAndServices = (
-    page: string,
+    page: StandardPages,
     unifiedConfigs: GlobalConfig,
     serviceName?: string
 ) => {
