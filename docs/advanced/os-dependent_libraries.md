@@ -32,8 +32,27 @@ In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means th
 
 Currently supported python versions are "3.7" and "3.9". Syntax without dots ("37" or "39") is also supported.
 
-If there are libraries specified for different python versions, they must have different target paths.
-
+If there are libraries specified for different python versions, they must have **different target** paths.
+```
+            "os-dependentLibraries": [
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "manylinux2014_x86_64",
+                "python_version": "37",
+                "os": "linux",
+                "target": "3rdparty/linux_libs"
+            },
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "dependencies": true,
+                "platform": "manylinux2014_x86_64",
+                "python_version": "3.9",
+                "os": "linux",
+                "target": "3rdparty/linux_lib_py39"
+            },
+```
 For more informations, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
 
 ### Usage
