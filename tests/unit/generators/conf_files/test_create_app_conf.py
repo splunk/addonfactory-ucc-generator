@@ -41,6 +41,11 @@ def has_ui():
 
 
 @fixture
+def has_ui_no_globalConfig():
+    return False
+
+
+@fixture
 def app_manifest():
     mock_manifest = MagicMock()
     mock_manifest.get_description.return_value = "Test Description"
@@ -60,7 +65,7 @@ def test_set_attributes_no_global_config_or_schema(
     ucc_dir,
     ta_name,
     addon_version,
-    has_ui,
+    has_ui_no_globalConfig,
     app_manifest,
 ):
     """Test _set_attributes when both _global_config and _gc_schema are None."""
@@ -71,14 +76,16 @@ def test_set_attributes_no_global_config_or_schema(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
         addon_version=addon_version,
-        has_ui=has_ui,
+        has_ui=has_ui_no_globalConfig,
         app_manifest=app_manifest,
     )
     app_conf._global_config = None
     app_conf._gc_schema = None
 
     app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
+        addon_version=addon_version,
+        has_ui=has_ui_no_globalConfig,
+        app_manifest=app_manifest,
     )
 
     assert app_conf.conf_file == "app.conf"
@@ -88,7 +95,7 @@ def test_set_attributes_no_global_config_or_schema(
     assert app_conf.id == app_conf._addon_name
     assert app_conf.supported_themes == ""
     assert app_conf.addon_version == addon_version
-    assert app_conf.is_visible == "true"
+    assert app_conf.is_visible == "false"
     assert app_conf.description == "Test Description"
     assert app_conf.author == "Test Author"
     assert app_conf.build == "1234"
