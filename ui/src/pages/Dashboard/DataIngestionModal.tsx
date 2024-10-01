@@ -77,19 +77,24 @@ export const DataIngestionModal = ({
     // add selected value
     const selectedItem = filteredItemByValue(selectValueForDropdownInModal);
     items.push(
-        <>
-            <Menu.Item className="dropdown_menu_item">
+        <React.Fragment key={`selected-${selectedItem?.value}`}>
+            <Menu.Item key={`selected-${selectedItem?.label}`} className="dropdown_menu_item">
                 <Checkmark style={{ color: '#00A4FD', marginRight: '2px' }} />
                 {selectedItem?.label}
             </Menu.Item>
-            <Menu.Divider />
-        </>
+            <Menu.Divider key="divider" />
+        </React.Fragment>
     );
 
     // add list in dropdown except the selected value
-    dataIngestionDropdownValues.forEach((item) => {
+    dataIngestionDropdownValues.forEach((item, index) => {
         if (selectValueForDropdownInModal !== item.value) {
-            items.push(<Menu.Item className="dropdown_menu_item">{item.label}</Menu.Item>);
+            items.push(
+                // eslint-disable-next-line react/no-array-index-key
+                <Menu.Item key={`${item.label}-${index}`} className="dropdown_menu_item">
+                    {item.label}
+                </Menu.Item>
+            );
         }
     });
 

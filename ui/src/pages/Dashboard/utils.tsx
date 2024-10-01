@@ -1,11 +1,9 @@
 import { RefreshButton, ExportButton, OpenSearchButton } from '@splunk/dashboard-action-buttons';
 import React from 'react';
 import SearchJob from '@splunk/search-job';
-import { getUnifiedConfigs } from '../../util/util';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../util/script';
 import { SearchResponse } from './DataIngestion.types';
-
-const globalConfig = getUnifiedConfigs();
 
 /**
  *
@@ -258,7 +256,7 @@ export const createNewQueryForNumberOfEventsInModal = (
     return updatedQuery;
 };
 
-function getLicenseUsageSearchParams() {
+function getLicenseUsageSearchParams(globalConfig: GlobalConfig) {
     const dashboard = globalConfig?.pages.dashboard as {
         settings: {
             custom_license_usage?: {
@@ -291,8 +289,8 @@ function getLicenseUsageSearchParams() {
         return null;
     }
 }
-export async function fetchParsedValues(): Promise<SearchResponse[]> {
-    const licenseUsageParams = getLicenseUsageSearchParams();
+export async function fetchParsedValues(globalConfig: GlobalConfig): Promise<SearchResponse[]> {
+    const licenseUsageParams = getLicenseUsageSearchParams(globalConfig);
 
     const timeForDataIngestionTableStart = document
         ?.querySelector('[data-input-id="data_ingestion_input"] button')

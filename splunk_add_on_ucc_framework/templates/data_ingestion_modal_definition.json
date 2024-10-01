@@ -40,9 +40,7 @@
       "options": {
         "xAxisVisibility": "hide",
         "xAxisTitleText": "Time",
-        "seriesColors": [
-          "#A870EF"
-        ],
+        "seriesColors": ["#A870EF"],
         "yAxisTitleText": "Number of events"
       },
       "title": "Number of events",

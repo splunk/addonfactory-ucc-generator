@@ -8,6 +8,7 @@ import type { DashboardCoreApi } from '@splunk/dashboard-types';
 import { debounce } from 'lodash';
 import TabLayout from '@splunk/react-ui/TabLayout';
 
+import { getUnifiedConfigs } from '../../util/util';
 import {
     createNewQueryBasedOnSearchAndHideTraffic,
     getActionButtons,
@@ -140,6 +141,7 @@ export const DataIngestionDashboard = ({
 
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
+    const globalConfig = getUnifiedConfigs();
     const handleDashboardEvent = useCallback(
         async (event) => {
             if (
@@ -151,8 +153,8 @@ export const DataIngestionDashboard = ({
                 const copyDataIngestionModalJson = JSON.parse(
                     JSON.stringify(dataIngestionModalDef)
                 );
-                const modalInputSelectorName = event.payload.data.fields[0].name;
-                const values = await fetchParsedValues();
+                const modalInputSelectorName = event.payload.data?.fields[0]?.name;
+                const values = await fetchParsedValues(globalConfig);
                 let extractColumnsValues: Record<string, string>[] = [];
                 const processResults = (results: Record<string, string>[], fieldKey: string) => {
                     results.forEach((value) => {
@@ -239,7 +241,7 @@ export const DataIngestionDashboard = ({
                 setSelectValueForDropdownInModal(event.payload.value);
             }
         },
-        [dataIngestionModalDef]
+        [dataIngestionModalDef, globalConfig]
     );
 
     const dashboardPlugin = useMemo(
