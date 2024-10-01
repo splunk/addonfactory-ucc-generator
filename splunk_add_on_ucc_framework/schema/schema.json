@@ -1848,12 +1848,12 @@
         },
         "name": {
           "type": "string",
-          "pattern": "^[^<>:\"\\/\\\\|\\?\\*]+$",
+          "pattern": "^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)(?!.*\\.(tar(\\.gz)?|tgz|spl)$)[A-Za-z_.-][A-Za-z0-9_.-]*[A-Za-z0-9_-]$",
           "description": "Name used for API endpoints and all code references separating separating endpoints from any other app."
         },
         "restRoot": {
           "type": "string",
-          "pattern": "^\\w+$",
+          "pattern": "^[\\w-]+$",
           "description": "String used to create API endpoints."
         },
         "apiVersion": {
