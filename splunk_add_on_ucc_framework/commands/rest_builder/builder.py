@@ -24,7 +24,6 @@ from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 __all__ = ["RestBuilder"]
 
-
 _import_declare_content = """
 import os
 import sys
@@ -43,6 +42,7 @@ _import_declare_os_lib_content = """
 bindir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))
 libdir = os.path.join(bindir, "lib")
 platform = sys.platform
+python_version = "".join(str(x) for x in sys.version_info[:2])
 """
 
 
@@ -54,23 +54,40 @@ def _generate_import_declare_test(
     if not libraries:
         return base_content
 
-    paths = get_paths_to_add(libraries)
-    os_lib_part = _import_declare_os_lib_content
-    for lib_os, targets in paths.items():
-        if lib_os == "windows":
-            os_lib_part += 'if platform.startswith("win"):\n'
-            for target in targets:
-                os_lib_part += get_insert_to_syspath_str(target)
-        elif lib_os == "darwin":
-            os_lib_part += 'if platform.startswith("darwin"):\n'
-            for target in targets:
-                os_lib_part += get_insert_to_syspath_str(target)
-        else:
-            os_lib_part += 'if platform.startswith("linux"):\n'
-            for target in targets:
-                os_lib_part += get_insert_to_syspath_str(target)
+    base_content += _import_declare_os_lib_content
+    os_lib_part = ""
+
+    paths = group_libs_by_python_version_and_platform(libraries)
+    for python_version, os_specific_paths in paths.items():
+        os_lib_part += f'\nif python_version == "{python_version}":\n'
+        for lib_os, targets in os_specific_paths.items():
+            if lib_os == "windows":
+                os_lib_part += '\tif platform.startswith("win"):\n'
+                for target in targets:
+                    os_lib_part += get_insert_to_syspath_str(target)
+            elif lib_os == "darwin":
+                os_lib_part += '\tif platform.startswith("darwin"):\n'
+                for target in targets:
+                    os_lib_part += get_insert_to_syspath_str(target)
+            else:
+                os_lib_part += '\tif platform.startswith("linux"):\n'
+                for target in targets:
+                    os_lib_part += get_insert_to_syspath_str(target)
 
     return base_content + os_lib_part
+
+
+def group_libs_by_python_version_and_platform(
+    libraries: List[OSDependentLibraryConfig],
+) -> Dict[str, Dict[str, Set[str]]]:
+    """Returns os specific paths grouped by python version and platform"""
+    python_versions = {lib.python_version for lib in libraries}
+    os_specific_paths = {}
+    for python_version in python_versions:
+        os_specific_paths[python_version] = get_paths_to_add(
+            [lib for lib in libraries if lib.python_version == python_version]
+        )
+    return os_specific_paths
 
 
 def get_paths_to_add(libraries: List[OSDependentLibraryConfig]) -> Dict[str, Set[str]]:
@@ -83,7 +100,7 @@ def get_paths_to_add(libraries: List[OSDependentLibraryConfig]) -> Dict[str, Set
 
 
 def get_insert_to_syspath_str(target: str) -> str:
-    return f'\tsys.path.insert(0, os.path.join(libdir, "{target}"))\n'
+    return f'\t\tsys.path.insert(0, os.path.join(libdir, "{target}"))\n'
 
 
 class _RestBuilderOutput:
