@@ -20,3 +20,4 @@ Metadata contains general information about add-on build.
 | defaultView                                                   | string  | Define which view should be loaded on TA load. One of `"inputs"`, `"configuration"`, `"dashboard"` or `"search"`. Default `configuration`.      |
 | [os-dependentLibraries](./advanced/os-dependent_libraries.md) | array   | This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process. |
 | supported_themes                                              | array   | This feature is allows you provide the themes supported by your add-on. Supported values: `light`, `dark`. No default.                          |
+| isVisible | boolean | This option allows you to create apps which are not visible by default by setting isVisible=false. Default: true if globalConfig file exists in the repository, else false. |

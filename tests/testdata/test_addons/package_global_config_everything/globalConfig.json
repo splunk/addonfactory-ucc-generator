@@ -1629,6 +1629,7 @@
         "supportedThemes": [
             "light",
             "dark"
-        ]
+        ],
+        "isVisible": true
     }
 }
