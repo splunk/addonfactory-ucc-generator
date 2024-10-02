@@ -16,8 +16,23 @@ def test_get_j2_env():
         "input.template",
         "input_with_helper.template",
         "oauth.template",
+        "html_templates/alert_html_skeleton.template",
+        "html_templates/mod_alert.html.template",
+        "README/account_conf_spec.template",
+        "README/alert_actions_conf_spec.template",
+        "README/inputs_conf_spec.template",
+        "README/settings_conf_spec.template",
+        "conf_files/alert_actions_conf.template",
+        "conf_files/app_conf.template",
+        "conf_files/eventtypes_conf.template",
+        "conf_files/inputs_conf.template",
+        "conf_files/restmap_conf.template",
+        "conf_files/server_conf.template",
+        "conf_files/settings_conf.template",
+        "conf_files/tags_conf.template",
+        "conf_files/web_conf.template",
     ]
-    assert expected_list_of_templates == list_of_templates
+    assert sorted(expected_list_of_templates) == sorted(list_of_templates)
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)

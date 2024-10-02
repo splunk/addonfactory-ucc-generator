@@ -19,6 +19,7 @@
           "type": "string",
           "enum": [
             "text",
+            "textarea",
             "checkbox",
             "singleSelect",
             "radio",
@@ -80,7 +81,11 @@
           }
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "Alerts": {
@@ -165,7 +170,12 @@
               "description": "The sourcetype in which the result of the AR alert action would be written to. The value is updated in the alert action script. If you don’t specify any value you can update your alert action script manually once it is generated."
             }
           },
-          "required": ["task", "subject", "category", "technology"]
+          "required": [
+            "task",
+            "subject",
+            "category",
+            "technology"
+          ]
         },
         "entity": {
           "type": "array",
@@ -198,7 +208,11 @@
           "description": "A Python script that would have validation and logic for alert action execution. The script should be present at <YOUR_ADD-ON_NAME>/bin/. Refer documentation for more information."
         }
       },
-      "required": ["name", "label", "description"],
+      "required": [
+        "name",
+        "label",
+        "description"
+      ],
       "additionalProperties": false
     },
     "ConfigurationPage": {
@@ -233,7 +247,10 @@
           "minItems": 1
         }
       },
-      "required": ["title", "tabs"],
+      "required": [
+        "title",
+        "tabs"
+      ],
       "description": "Page for account configuration, proxy configuration, and logging level configuration.",
       "additionalProperties": false
     },
@@ -260,7 +277,10 @@
                 "description": "Used to map field values to more meaningful values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           },
           "description": "Specifies the list of fields that will be displayed in row form when the user clicks the Row Expand button."
         },
@@ -289,7 +309,10 @@
                 "description": "Used to modify the default cell values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "customRow": {
@@ -301,11 +324,18 @@
           "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone"]
+            "enum": [
+              "edit",
+              "delete",
+              "clone"
+            ]
           }
         }
       },
-      "required": ["header", "actions"],
+      "required": [
+        "header",
+        "actions"
+      ],
       "description": "Configuration of single tab",
       "additionalProperties": false
     },
@@ -360,12 +390,29 @@
                 "search_condition"
               ],
               "additionalProperties": false
+            },
+            "error_panel_log_lvl": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "ERROR", "CRITICAL"
+                    ]
+                  }
+                ]
+              },
+              "uniqueItems": true
             }
           },
           "additionalProperties": false
         }
       },
-      "required": ["panels"],
+      "required": [
+        "panels"
+      ],
       "description": "The dashboard page provides some additional information about the add-on operations to increase the visibility into what the add-on is actually doing under the hood.",
       "additionalProperties": false
     },
@@ -382,7 +429,9 @@
           "const": "date"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "EmailValidator": {
@@ -397,7 +446,9 @@
           "description": "Exactly: email"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "SaveValidatorHook": {
@@ -447,7 +498,10 @@
             }
           }
         },
-        "required": ["label", "fields"],
+        "required": [
+          "label",
+          "fields"
+        ],
         "additionalProperties": false
       }
     },
@@ -480,7 +534,10 @@
               "description": "It is a link where the user will be redirected."
             }
           },
-          "required": ["text", "link"],
+          "required": [
+            "text",
+            "link"
+          ],
           "additionalProperties": false
         },
         "help": {
@@ -490,7 +547,11 @@
           "$ref": "#/definitions/tooltip"
         }
       },
-      "required": ["field", "type", "options"],
+      "required": [
+        "field",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "TextEntity": {
@@ -583,7 +644,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "TextareaEntity": {
@@ -674,7 +739,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "SingleSelectEntity": {
@@ -814,7 +883,12 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "MultipleSelectEntity": {
@@ -952,7 +1026,12 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "CheckboxEntity": {
@@ -1014,7 +1093,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "CheckboxGroupEntity": {
@@ -1069,7 +1152,10 @@
                     "uniqueItems": true
                   }
                 },
-                "required": ["label", "fields"],
+                "required": [
+                  "label",
+                  "fields"
+                ],
                 "additionalProperties": false
               }
             },
@@ -1121,7 +1207,9 @@
                     "additionalProperties": false
                   }
                 },
-                "required": ["field"],
+                "required": [
+                  "field"
+                ],
                 "additionalProperties": false
               },
               "minItems": 1
@@ -1130,7 +1218,9 @@
               "$ref": "#/definitions/disableonEdit"
             }
           },
-          "required": ["rows"],
+          "required": [
+            "rows"
+          ],
           "additionalProperties": false
         },
         "validators": {
@@ -1147,7 +1237,12 @@
           "type": "boolean"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "RadioEntity": {
@@ -1203,14 +1298,21 @@
               }
             }
           },
-          "required": ["items"],
+          "required": [
+            "items"
+          ],
           "additionalProperties": false
         },
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "FileEntity": {
@@ -1300,7 +1402,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "OAuthEntity": {
@@ -1435,7 +1541,9 @@
                 }
               },
               "then": {
-                "required": ["basic"]
+                "required": [
+                  "basic"
+                ]
               }
             },
             {
@@ -1452,15 +1560,24 @@
                 }
               },
               "then": {
-                "required": ["oauth"]
+                "required": [
+                  "oauth"
+                ]
               }
             }
           ],
           "additionalProperties": false,
-          "required": ["auth_type"]
+          "required": [
+            "auth_type"
+          ]
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "CustomEntity": {
@@ -1518,7 +1635,12 @@
           "additionalProperties": false
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "AnyOfEntity": {
@@ -1586,7 +1708,10 @@
                 }
               }
             },
-            "required": ["label", "children"]
+            "required": [
+              "label",
+              "children"
+            ]
           }
         },
         {
@@ -1633,7 +1758,10 @@
                 "description": "Used to map field values to more meaningful values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "header": {
@@ -1661,7 +1789,10 @@
                 "description": "Used to modify the default cell values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "customRow": {
@@ -1673,11 +1804,20 @@
           "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone", "enable", "search"]
+            "enum": [
+              "edit",
+              "delete",
+              "clone",
+              "enable",
+              "search"
+            ]
           }
         }
       },
-      "required": ["header", "actions"],
+      "required": [
+        "header",
+        "actions"
+      ],
       "description": "Displays input stanzas in a tabular format.",
       "additionalProperties": false
     },
@@ -1693,7 +1833,9 @@
           "description": "Exactly: ipv4"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "Meta": {
@@ -1706,12 +1848,12 @@
         },
         "name": {
           "type": "string",
-          "pattern": "^[^<>:\"\\/\\\\|\\?\\*]+$",
+          "pattern": "^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)(?!.*\\.(tar(\\.gz)?|tgz|spl)$)[A-Za-z_.-][A-Za-z0-9_.-]*[A-Za-z0-9_-]$",
           "description": "Name used for API endpoints and all code references separating separating endpoints from any other app."
         },
         "restRoot": {
           "type": "string",
-          "pattern": "^\\w+$",
+          "pattern": "^[\\w-]+$",
           "description": "String used to create API endpoints."
         },
         "apiVersion": {
@@ -1782,7 +1924,29 @@
               },
               "python_version": {
                 "type": "string",
-                "description": "Python version compatible with the library."
+                "description": "Python version compatible with the library.",
+                "anyOf": [
+                  {
+                    "const": "3.7",
+                    "type": "string",
+                    "description": "Exactly: 3.7"
+                  },
+                  {
+                    "const": "37",
+                    "type": "string",
+                    "description": "Alternative syntax for 3.7"
+                  },
+                  {
+                    "const": "3.9",
+                    "type": "string",
+                    "description": "Exactly: 3.9"
+                  },
+                  {
+                    "const": "39",
+                    "type": "string",
+                    "description": "Alternative syntax for 3.9"
+                  }
+                ]
               },
               "target": {
                 "type": "string",
@@ -1824,11 +1988,24 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["light", "dark"]
+            "enum": [
+              "light",
+              "dark"
+            ]
           }
+        },
+        "isVisible": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
         }
       },
-      "required": ["displayName", "name", "restRoot", "version"],
+      "required": [
+        "displayName",
+        "name",
+        "restRoot",
+        "version"
+      ],
       "description": "Metadata regarding build",
       "additionalProperties": false
     },
@@ -1851,7 +2028,10 @@
           "description": "Specifies if the number should be an integer (true) or can be a float (false). Default value is false"
         }
       },
-      "required": ["type", "range"],
+      "required": [
+        "type",
+        "range"
+      ],
       "additionalProperties": false
     },
     "RangeValue": {
@@ -1923,7 +2103,9 @@
         }
       },
       "then": {
-        "required": ["basic"]
+        "required": [
+          "basic"
+        ]
       }
     },
     "OauthRequirement": {
@@ -1939,7 +2121,9 @@
         }
       },
       "then": {
-        "required": ["oauth"]
+        "required": [
+          "oauth"
+        ]
       }
     },
     "Pages": {
@@ -1956,7 +2140,9 @@
           "$ref": "#/definitions/DashboardPage"
         }
       },
-      "required": ["configuration"],
+      "required": [
+        "configuration"
+      ],
       "additionalProperties": false
     },
     "RegexValidator": {
@@ -1975,7 +2161,10 @@
           "description": "Regex pattern."
         }
       },
-      "required": ["type", "pattern"],
+      "required": [
+        "type",
+        "pattern"
+      ],
       "additionalProperties": false
     },
     "StringValidator": {
@@ -2000,7 +2189,11 @@
           "description": "Specifies the maximum number of characters allowed."
         }
       },
-      "required": ["type", "minLength", "maxLength"],
+      "required": [
+        "type",
+        "minLength",
+        "maxLength"
+      ],
       "additionalProperties": false
     },
     "TabContent": {
@@ -2030,7 +2223,10 @@
         "style": {
           "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
           "type": "string",
-          "enum": ["page", "dialog"]
+          "enum": [
+            "page",
+            "dialog"
+          ]
         },
         "conf": {
           "type": "string",
@@ -2066,10 +2262,18 @@
       },
       "anyOf": [
         {
-          "required": ["entity", "name", "title"]
+          "required": [
+            "entity",
+            "name",
+            "title"
+          ]
         },
         {
-          "required": ["customTab", "name", "title"]
+          "required": [
+            "customTab",
+            "name",
+            "title"
+          ]
         }
       ],
       "additionalProperties": false
@@ -2095,7 +2299,11 @@
           "maxLength": 100
         }
       },
-      "required": ["version", "product", "vendor"],
+      "required": [
+        "version",
+        "product",
+        "vendor"
+      ],
       "additionalProperties": false
     },
     "UrlValidator": {
@@ -2110,7 +2318,9 @@
           "description": "Exactly: url"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "ValueLabelPair": {
@@ -2137,7 +2347,9 @@
           "description": "Text displayed next to entity field"
         }
       },
-      "required": ["label"],
+      "required": [
+        "label"
+      ],
       "additionalProperties": false
     },
     "DashboardPanel": {
@@ -2149,7 +2361,9 @@
           "maxLength": 100
         }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     },
     "WarningMessage": {
@@ -2185,7 +2399,9 @@
           "description": "Defines if message should disappear after any input changes."
         }
       },
-      "required": ["message"]
+      "required": [
+        "message"
+      ]
     },
     "Field": {
       "type": "string",
@@ -2223,9 +2439,15 @@
                 "type": "string"
               }
             },
-            "required": ["slug", "linkText", "link"]
+            "required": [
+              "slug",
+              "linkText",
+              "link"
+            ]
           },
-          "required": ["text"]
+          "required": [
+            "text"
+          ]
         }
       }
     },
@@ -2275,7 +2497,9 @@
           "$ref": "#/definitions/markdownMessage"
         }
       },
-      "required": ["fieldId"]
+      "required": [
+        "fieldId"
+      ]
     },
     "fieldToModify": {
       "type": "object",
@@ -2297,7 +2521,12 @@
         "mode": {
           "type": "string",
           "description": "Defines under which Mode modifications should occure. If not present modifications occure for all Mods",
-          "enum": ["create", "edit", "config", "clone"]
+          "enum": [
+            "create",
+            "edit",
+            "config",
+            "clone"
+          ]
         },
         "fieldsToModify": {
           "type": "array",
@@ -2308,7 +2537,10 @@
           "minItems": 1
         }
       },
-      "required": ["fieldValue", "fieldsToModify"]
+      "required": [
+        "fieldValue",
+        "fieldsToModify"
+      ]
     },
     "modifyFieldsOnValue": {
       "type": "array",
@@ -2334,7 +2566,10 @@
           "description": "Specify color of displayied text. Accepts all CSS colors"
         }
       },
-      "required": ["markdownType", "text"]
+      "required": [
+        "markdownType",
+        "text"
+      ]
     },
     "markdownMessageHybrid": {
       "type": "object",
@@ -2361,7 +2596,13 @@
           "description": "Declare url that will use for redirection"
         }
       },
-      "required": ["markdownType", "text", "token", "link", "linkText"]
+      "required": [
+        "markdownType",
+        "text",
+        "token",
+        "link",
+        "linkText"
+      ]
     },
     "markdownMessageLink": {
       "type": "object",
@@ -2380,7 +2621,11 @@
           "description": "Declare url that will use for redirection"
         }
       },
-      "required": ["markdownType", "text", "link"]
+      "required": [
+        "markdownType",
+        "text",
+        "link"
+      ]
     },
     "markdownMessagePlainText": {
       "type": "object",
@@ -2390,7 +2635,9 @@
           "description": "Declare message content"
         }
       },
-      "required": ["text"]
+      "required": [
+        "text"
+      ]
     },
     "markdownMessage": {
       "description": "Message that will be displayed as additional information",
@@ -2440,7 +2687,13 @@
         },
         "levels": {
           "type": "array",
-          "default": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+          "default": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR",
+            "CRITICAL"
+          ],
           "description": "List of all possible log levels.",
           "items": {
             "type": "string"
@@ -2455,7 +2708,9 @@
           "$ref": "#/definitions/help"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "InputPageSingleTable": {
@@ -2509,7 +2764,10 @@
                 }
               }
             },
-            "required": ["groupTitle", "groupName"]
+            "required": [
+              "groupTitle",
+              "groupName"
+            ]
           }
         },
         "services": {
@@ -2546,7 +2804,10 @@
               "style": {
                 "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
                 "type": "string",
-                "enum": ["page", "dialog"]
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
               },
               "hook": {
                 "description": "It is used to add custom behaviour to forms.",
@@ -2582,9 +2843,15 @@
               }
             },
             "not": {
-              "required": ["table"]
+              "required": [
+                "table"
+              ]
             },
-            "required": ["name", "title", "entity"]
+            "required": [
+              "name",
+              "title",
+              "entity"
+            ]
           }
         },
         "hideFieldId": {
@@ -2594,7 +2861,11 @@
           "type": "string"
         }
       },
-      "required": ["title", "table", "services"],
+      "required": [
+        "title",
+        "table",
+        "services"
+      ],
       "description": "Input Page definition where there is only one single tabel listing all services.",
       "additionalProperties": false
     },
@@ -2647,7 +2918,10 @@
               "style": {
                 "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
                 "type": "string",
-                "enum": ["page", "dialog"]
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
               },
               "hook": {
                 "description": "It is used to add custom behaviour to forms.",
@@ -2674,7 +2948,12 @@
                 "maxLength": 100
               }
             },
-            "required": ["name", "title", "table", "entity"]
+            "required": [
+              "name",
+              "title",
+              "table",
+              "entity"
+            ]
           }
         },
         "hideFieldId": {
@@ -2684,7 +2963,10 @@
           "type": "string"
         }
       },
-      "required": ["title", "services"],
+      "required": [
+        "title",
+        "services"
+      ],
       "description": "Input Page definition where there are tabs for each service with separate table listing input service entries.",
       "additionalProperties": false
     },
@@ -2759,7 +3041,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["range"]
+          "required": [
+            "range"
+          ]
         },
         "help": {
           "$ref": "#/definitions/help"
@@ -2771,7 +3055,11 @@
           "$ref": "#/definitions/required"
         }
       },
-      "required": ["type", "field", "label"],
+      "required": [
+        "type",
+        "field",
+        "label"
+      ],
       "additionalProperties": false
     },
     "IntervalValue": {
@@ -2812,7 +3100,11 @@
           "$ref": "#/definitions/required"
         }
       },
-      "required": ["type", "field", "label"],
+      "required": [
+        "type",
+        "field",
+        "label"
+      ],
       "additionalProperties": false
     }
   },
@@ -2833,6 +3125,9 @@
       "minItems": 1
     }
   },
-  "required": ["meta", "pages"],
+  "required": [
+    "meta",
+    "pages"
+  ],
   "additionalProperties": false
 }

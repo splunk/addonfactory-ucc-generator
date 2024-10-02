@@ -23,7 +23,7 @@ export const Base: Story = {
         handleRequestClose: fn(),
         serviceName: 'serviceName',
         stanzaName: 'stanzaName',
-        page: '',
+        page: 'configuration',
         open: true,
     },
 };

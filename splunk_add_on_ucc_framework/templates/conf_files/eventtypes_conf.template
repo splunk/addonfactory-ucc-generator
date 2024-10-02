@@ -1,0 +1,7 @@
+{% for alert in mod_alerts %}
+    {% if alert.get("adaptive_response", {}).get("sourcetype") %}
+[{{ alert.short_name }}_modaction_result]
+search = {{ 'sourcetype="' + alert.adaptive_response.sourcetype + '"' }}
+    {% endif %}
+{% endfor %}
+

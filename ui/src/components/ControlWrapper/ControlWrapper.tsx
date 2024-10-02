@@ -6,6 +6,7 @@ import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap
 import { AnyEntity, UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import CustomControl from '../CustomControl/CustomControl';
+import { Mode } from '../../constants/modes';
 
 const CustomElement = styled.div``;
 
@@ -26,7 +27,7 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: strin
 `;
 
 interface ControlWrapperProps {
-    mode: string;
+    mode: Mode;
     utilityFuncts: UtilControlWrapper;
     value: AcceptableFormValueOrNullish;
     display: boolean;
@@ -49,6 +50,7 @@ interface ControlWrapperProps {
         label?: string;
         required?: boolean;
     };
+    page?: string;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -107,6 +109,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                           mode: this.props.mode,
                           ...this?.props?.entity,
                           ...this.props?.modifiedEntitiesData,
+                          page: this.props.page,
                       }
                   )
                 : `No View Found for ${this?.props?.entity?.type} type`;
@@ -130,6 +133,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             this.props?.modifiedEntitiesData?.required || this.props.entity?.required === undefined
                 ? 'oauth_field' in (this.props.entity || {}) // if required is undefined use true for oauth fields and false for others
                 : this.props.entity?.required; // if required present use required
+        const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
 
         return (
             this.props.display && (
@@ -142,6 +146,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     dataName={this?.props?.entity.field}
                     labelWidth={240}
                     required={isFieldRequired}
+                    label={label}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>

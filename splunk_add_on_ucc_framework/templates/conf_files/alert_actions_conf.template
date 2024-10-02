@@ -1,0 +1,9 @@
+{% for alert, params in alerts.items() %}
+[{{ alert }}]
+    {% for param in params %}
+{{ param }}
+python.version: python3
+is_custom: 1
+payload_format: json
+    {% endfor %}
+{% endfor %}
