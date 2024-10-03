@@ -36,6 +36,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `encrypted` should be true if the user wants that particular field encrypted, otherwise, there is no need to have this parameter.
         - `required` specifies whether the field is required or not. The default value is true.
         - `defaultValue` is the initial input value (string, number, or boolean).
+        - `validators` array that is used to validate the values of fields using various [validators](../entity/validators.md).
         - `options`:
             + `placeholder`: (RENOUNCED) The placeholder for the field.
             + `disableonEdit`: When the form is in edit mode, the field becomes unable to be edited. The default value is false.
