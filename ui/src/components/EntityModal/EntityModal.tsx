@@ -8,13 +8,14 @@ import { ButtonClickHandler } from '@splunk/react-ui/Button';
 import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import BaseFormView from '../BaseFormView/BaseFormView';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
 export interface EntityModalProps {
-    page: string;
+    page: StandardPages;
     mode: Mode;
     serviceName: string;
     handleRequestClose: () => void;
