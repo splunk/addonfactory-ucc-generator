@@ -1,3 +1,10 @@
+## [5.50.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.0...v5.50.1) (2024-10-04)
+
+
+### Bug Fixes
+
+* use title for app conf ([#1356](https://github.com/splunk/addonfactory-ucc-generator/issues/1356)) ([adfd987](https://github.com/splunk/addonfactory-ucc-generator/commit/adfd9879832b66cd6749fb530bf575ad1a18d053))
+
 # [5.50.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.49.0...v5.50.0) (2024-10-02)
 
 
