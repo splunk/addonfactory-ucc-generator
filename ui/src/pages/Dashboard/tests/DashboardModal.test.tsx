@@ -1,18 +1,29 @@
 import * as React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, screen } from '@testing-library/react';
 
+import { http, HttpResponse, RequestHandler } from 'msw';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
+import { server } from '../../../mocks/server';
 
 import { DashboardModal } from '../DashboardModal';
 import { DataIngestionModal } from '../DataIngestionModal';
 import { MOCK_DS_MODAL_DEFINITION } from './mockData';
+import { DASHBOARD_JSON_MOCKS } from './mockJs';
 
 const handleClose = jest.fn();
 const handleSelect = jest.fn();
 
 describe('render data ingestion modal inputs', () => {
-    it('render with all default modal dashboards element', async () => {
+    it('renders with all default modal dashboard elements', async () => {
+        server.use(
+            http.get('/custom/data_ingestion_modal_definition.json', () =>
+                HttpResponse.json(MOCK_DS_MODAL_DEFINITION)
+            )
+        );
+
+        DASHBOARD_JSON_MOCKS.forEach((mock: RequestHandler) => server.use(mock));
+
         const mockConfig = getGlobalConfigMock();
         setUnifiedConfig(mockConfig);
 
@@ -26,18 +37,20 @@ describe('render data ingestion modal inputs', () => {
                 title="Source Type"
             >
                 <DashboardModal
-                    dashboardDefinition={MOCK_DS_MODAL_DEFINITION}
                     selectValueForDropdownInModal="source"
                     selectTitleForDropdownInModal="Source"
+                    setDataIngestionDropdownValues={handleSelect}
                 />
             </DataIngestionModal>
         );
 
-        await waitFor(() => {
-            expect(
-                document.querySelector('[data-input-id="data_ingestion_modal_time_window"]')
-            ).toBeInTheDocument();
-        });
+        const modal = await screen.findByTestId('modal');
+        expect(modal).toBeInTheDocument();
+
+        setTimeout(async () => {
+            const dropdown = await screen.findByTestId('data_ingestion_modal_dropdown');
+            expect(dropdown).toBeInTheDocument();
+        }, 100);
 
         const idsToBeInDocument = [
             'data_ingestion_modal_dropdown',
@@ -48,8 +61,8 @@ describe('render data ingestion modal inputs', () => {
 
         await waitFor(() => {
             idsToBeInDocument.forEach((id) => {
-                const elementWithId = document.getElementById(id);
-                expect(elementWithId).toBeInTheDocument();
+                const element = document.getElementById(id);
+                expect(element).toBeInTheDocument();
             });
         });
     });

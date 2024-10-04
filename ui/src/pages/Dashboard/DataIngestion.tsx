@@ -8,19 +8,14 @@ import type { DashboardCoreApi } from '@splunk/dashboard-types';
 import { debounce } from 'lodash';
 import TabLayout from '@splunk/react-ui/TabLayout';
 
-import { getUnifiedConfigs } from '../../util/util';
 import {
     createNewQueryBasedOnSearchAndHideTraffic,
     getActionButtons,
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
-    loadDashboardJsonDefinition,
-    queryMap,
-    fetchParsedValues,
 } from './utils';
 import { DataIngestionModal } from './DataIngestionModal';
 import { DashboardModal } from './DashboardModal';
-import { FieldValue } from './DataIngestion.types';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -37,14 +32,6 @@ export const DataIngestionDashboard = ({
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
-    const [dataIngestionModalDef, setDataIngestionModalDef] = useState<Record<
-        string,
-        unknown
-    > | null>(null);
-    const [copyDataIngestionModalDef, setCopyDataIngestionModalDef] = useState<Record<
-        string,
-        unknown
-    > | null>(null);
     const [selectValueForDropdownInModal, setSelectValueForDropdownInModal] = useState<
         string | null
     >(null);
@@ -91,12 +78,6 @@ export const DataIngestionDashboard = ({
 
         setViewByInput(currentViewBy || '');
 
-        // Load the dashboard definition
-        loadDashboardJsonDefinition(
-            'data_ingestion_modal_definition.json',
-            setDataIngestionModalDef
-        );
-
         // Clean-up function to disconnect the observer when the component unmounts
         return () => {
             if (observer && targetNode) {
@@ -141,108 +122,24 @@ export const DataIngestionDashboard = ({
 
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
-    const globalConfig = getUnifiedConfigs();
-    const handleDashboardEvent = useCallback(
-        async (event) => {
-            if (
-                event.type === 'datasource.done' &&
-                event.targetId === 'data_ingestion_table_ds' &&
-                event.payload.data
-            ) {
-                // Create deep copy of dataIngestionModalDef for essential operations
-                const copyDataIngestionModalJson = JSON.parse(
-                    JSON.stringify(dataIngestionModalDef)
-                );
-                const modalInputSelectorName = event.payload.data?.fields[0]?.name;
-                const values = await fetchParsedValues(globalConfig);
-                let extractColumnsValues: Record<string, string>[] = [];
-                const processResults = (results: Record<string, string>[], fieldKey: string) => {
-                    results.forEach((value) => {
-                        if (queryMap[fieldKey] === value.field) {
-                            const dropDownValues = JSON.parse(value.values);
-                            extractColumnsValues = dropDownValues.map((item: FieldValue) => ({
-                                label: item.value,
-                                value: item.value,
-                            }));
-                        }
-                    });
-                };
-                const mergeInputValues = (
-                    activeValues?: string[],
-                    inactiveValues?: string[] | string
-                ): Record<string, string>[] => {
-                    // Handle inactiveValues being either a string or an array of strings
-                    let safeInactiveValues: Record<string, string>[] = [];
-                    if (typeof inactiveValues === 'string') {
-                        safeInactiveValues = [
-                            { label: `${inactiveValues} (disabled)`, value: inactiveValues },
-                        ]; // Convert single string to array
-                    } else if (Array.isArray(inactiveValues)) {
-                        safeInactiveValues = inactiveValues.map((item: string) => ({
-                            label: `${item} (disabled)`,
-                            value: item,
-                        }));
-                    }
-
-                    // Handle activeValues being either a string or an array of strings
-                    let safeActiveValues: Record<string, string>[] = [];
-                    if (typeof activeValues === 'string') {
-                        safeActiveValues = [{ label: activeValues, value: activeValues }]; // Convert single string to array
-                    } else if (Array.isArray(activeValues)) {
-                        safeActiveValues = activeValues.map((item: string) => ({
-                            label: item,
-                            value: item,
-                        }));
-                    }
-
-                    // Merge active and inactive inputs (safe arrays)
-                    const mergedValues = [...safeActiveValues, ...safeInactiveValues];
-                    return mergedValues;
-                };
-
-                if (modalInputSelectorName === 'Input') {
-                    const activeState = values[0]?.results[0]?.Active;
-                    const activeInputs = values[0]?.results[0]?.event_input;
-                    const inactiveInputs = values[0]?.results[1]?.event_input;
-
-                    // Handle cases where only active or inactive inputs exist
-                    if (activeState === 'yes') {
-                        extractColumnsValues = mergeInputValues(activeInputs, inactiveInputs);
-                    } else if (activeState === 'no') {
-                        extractColumnsValues = mergeInputValues(inactiveInputs, activeInputs);
-                    }
-                } else if (modalInputSelectorName === 'Account') {
-                    processResults(values[1].results, modalInputSelectorName);
-                } else {
-                    processResults(values[2].results, modalInputSelectorName);
-                }
-                setDataIngestionDropdownValues(extractColumnsValues);
-                setSelectTitleForDropdownInModal(modalInputSelectorName);
-
-                // Modify visualizations only for specific cases
-                if (modalInputSelectorName === 'Input' || modalInputSelectorName === 'Account') {
-                    // Remove data volume visualization for "Input" and "Account"
-                    delete copyDataIngestionModalJson.visualizations
-                        .data_ingestion_modal_data_volume_viz;
-                    copyDataIngestionModalJson.layout.structure[3].position.y = 80;
-                } else if (modalInputSelectorName === 'Host') {
-                    // Remove event count visualization for "Host"
-                    delete copyDataIngestionModalJson.visualizations
-                        .data_ingestion_modal_events_count_viz;
-                }
-                setCopyDataIngestionModalDef({ ...copyDataIngestionModalJson }); // Update state with modified copy
-            }
-            if (
-                event.type === 'cell.click' &&
-                event.targetId === 'data_ingestion_table_viz' &&
-                event.payload.cellIndex === 0 &&
-                event.payload.value
-            ) {
-                setSelectValueForDropdownInModal(event.payload.value);
-            }
-        },
-        [dataIngestionModalDef, globalConfig]
-    );
+    const handleDashboardEvent = useCallback(async (event) => {
+        if (
+            event.type === 'datasource.done' &&
+            event.targetId === 'data_ingestion_table_ds' &&
+            event.payload.data
+        ) {
+            const modalInputSelectorName = event.payload.data?.fields[0]?.name;
+            setSelectTitleForDropdownInModal(modalInputSelectorName);
+        }
+        if (
+            event.type === 'cell.click' &&
+            event.targetId === 'data_ingestion_table_viz' &&
+            event.payload.cellIndex === 0 &&
+            event.payload.value
+        ) {
+            setSelectValueForDropdownInModal(event.payload.value);
+        }
+    }, []);
 
     const dashboardPlugin = useMemo(
         () => ({ onEventTrigger: handleDashboardEvent }),
@@ -270,9 +167,9 @@ export const DataIngestionDashboard = ({
                             panelId="dataIngestionModalDefTabPanel"
                         >
                             <DashboardModal
-                                dashboardDefinition={copyDataIngestionModalDef}
                                 selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
                                 selectTitleForDropdownInModal={selectTitleForDropdownInModal || ''}
+                                setDataIngestionDropdownValues={setDataIngestionDropdownValues}
                             />
                         </TabLayout.Panel>
                     </DataIngestionModal>

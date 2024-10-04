@@ -77,6 +77,15 @@ export const waitForElementToDisplayAndMoveThemToCanvas = (
     );
 };
 
+export const queryMapForEvents: Record<string, string> = {
+    'Source type': 'sourcetype_ingested',
+    Source: 'modular_input_name',
+    Host: 'event_host',
+    Index: 'event_index',
+    Account: 'event_account',
+    Input: 'event_input',
+};
+
 export const queryMap: Record<string, string> = {
     'Source type': 'st',
     Source: 's',
@@ -250,7 +259,7 @@ export const createNewQueryForNumberOfEventsInModal = (
     selectedValue: string,
     query: string
 ) => {
-    const selectedLabel = queryMap[selectedInput];
+    const selectedLabel = queryMapForEvents[selectedInput];
     const updatedQuery = query.replace('|', `${selectedLabel} = "${selectedValue}" |`);
 
     return updatedQuery;
@@ -289,7 +298,9 @@ function getLicenseUsageSearchParams(globalConfig: GlobalConfig) {
         return null;
     }
 }
-export async function fetchParsedValues(globalConfig: GlobalConfig): Promise<SearchResponse[]> {
+export async function fetchDropdownValuesFromQuery(
+    globalConfig: GlobalConfig
+): Promise<SearchResponse[]> {
     const licenseUsageParams = getLicenseUsageSearchParams(globalConfig);
 
     const timeForDataIngestionTableStart = document

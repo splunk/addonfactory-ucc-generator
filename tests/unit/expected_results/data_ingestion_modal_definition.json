@@ -73,7 +73,7 @@
     "data_ingestion_modal_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "{{data_ingestion}}",
+        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart sum(b) as Usage | rename Usage as \"Data volume\"",
         "queryParameters": {
           "earliest": "$data_ingestion_modal_time.earliest$",
           "latest": "$data_ingestion_modal_time.latest$"
@@ -83,7 +83,7 @@
     "ds_search_1": {
       "type": "ds.search",
       "options": {
-        "query": "{{events_count}}",
+        "query": "index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\"",
         "queryParameters": {
           "earliest": "$data_ingestion_modal_time.earliest$",
           "latest": "$data_ingestion_modal_time.latest$"
