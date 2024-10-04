@@ -1,3 +1,22 @@
+# [5.50.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.49.0...v5.50.0) (2024-10-02)
+
+
+### Bug Fixes
+
+* boolean values are converted to 1 and 0 only on configuration page ([#1347](https://github.com/splunk/addonfactory-ucc-generator/issues/1347)) ([d0d0c11](https://github.com/splunk/addonfactory-ucc-generator/commit/d0d0c113f959e11b52573a5105d2bb51d6410165))
+* custom row loading on many tabs ([#1336](https://github.com/splunk/addonfactory-ucc-generator/issues/1336)) ([f124b5e](https://github.com/splunk/addonfactory-ucc-generator/commit/f124b5e91cfd3690ab1869895f38a7cb9a217120))
+* **globalConfig:** update name and rest root convention ([#1335](https://github.com/splunk/addonfactory-ucc-generator/issues/1335)) ([bdfa8c3](https://github.com/splunk/addonfactory-ucc-generator/commit/bdfa8c3131e2971100de9f61e8567620ae796db9)), closes [#1333](https://github.com/splunk/addonfactory-ucc-generator/issues/1333)
+
+
+### Features
+
+* **dashboard:** add possibility to display CRITICAL log lvl in dashboard ([#1337](https://github.com/splunk/addonfactory-ucc-generator/issues/1337)) ([d937986](https://github.com/splunk/addonfactory-ucc-generator/commit/d93798623302a444cf4aa333397324ed80e6d5b9))
+* option for configuring is_visible from globalConfig.json ([#1345](https://github.com/splunk/addonfactory-ucc-generator/issues/1345)) ([04c80e3](https://github.com/splunk/addonfactory-ucc-generator/commit/04c80e35488301522e19735fb06168160a8b0b86)), closes [#1334](https://github.com/splunk/addonfactory-ucc-generator/issues/1334)
+* provide support for Python 3.9 for OS-dependent libraries ([#1338](https://github.com/splunk/addonfactory-ucc-generator/issues/1338)) ([5cfc889](https://github.com/splunk/addonfactory-ucc-generator/commit/5cfc889357a8a19695b7e43cf07a327b00ed600d))
+* restructure conf and spec file generation ([#1328](https://github.com/splunk/addonfactory-ucc-generator/issues/1328)) ([bc6a36b](https://github.com/splunk/addonfactory-ucc-generator/commit/bc6a36bd323a31ac2284f0a621caa2bfaa4c93ac))
+* restructure html file generation ([#1311](https://github.com/splunk/addonfactory-ucc-generator/issues/1311)) ([ed2c2bd](https://github.com/splunk/addonfactory-ucc-generator/commit/ed2c2bd66c5c62fbd09fc1ed28dfaa2fc49a05fa))
+* restructure xml file generation ([#1312](https://github.com/splunk/addonfactory-ucc-generator/issues/1312)) ([a171c8d](https://github.com/splunk/addonfactory-ucc-generator/commit/a171c8dc74d01268f4a4cb50df2d0e5b6956d883))
+
 # [5.49.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.2...v5.49.0) (2024-08-21)
 
 

@@ -3,6 +3,7 @@ import { Mode } from '../../constants/modes';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
+    StandardPages,
 } from '../../types/components/shareableTypes';
 import { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
 import {
@@ -66,7 +67,7 @@ export interface BaseFormProps {
     currentServiceState?: Record<string, AcceptableFormValueOrNull>;
     serviceName: string;
     mode: Mode;
-    page: string;
+    page: StandardPages;
     stanzaName: string;
     groupName?: string;
     handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
@@ -75,7 +76,7 @@ export interface BaseFormProps {
 export interface BaseFormState {
     serviceName?: string;
     mode?: Mode;
-    page?: string;
+    page?: StandardPages;
     stanzaName?: string;
     data: BaseFormStateData;
     errorMsg?: string;

@@ -1848,12 +1848,12 @@
         },
         "name": {
           "type": "string",
-          "pattern": "^[^<>:\"\\/\\\\|\\?\\*]+$",
+          "pattern": "^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)(?!.*\\.(tar(\\.gz)?|tgz|spl)$)[A-Za-z_.-][A-Za-z0-9_.-]*[A-Za-z0-9_-]$",
           "description": "Name used for API endpoints and all code references separating separating endpoints from any other app."
         },
         "restRoot": {
           "type": "string",
-          "pattern": "^\\w+$",
+          "pattern": "^[\\w-]+$",
           "description": "String used to create API endpoints."
         },
         "apiVersion": {
@@ -1924,7 +1924,29 @@
               },
               "python_version": {
                 "type": "string",
-                "description": "Python version compatible with the library."
+                "description": "Python version compatible with the library.",
+                "anyOf": [
+                  {
+                    "const": "3.7",
+                    "type": "string",
+                    "description": "Exactly: 3.7"
+                  },
+                  {
+                    "const": "37",
+                    "type": "string",
+                    "description": "Alternative syntax for 3.7"
+                  },
+                  {
+                    "const": "3.9",
+                    "type": "string",
+                    "description": "Exactly: 3.9"
+                  },
+                  {
+                    "const": "39",
+                    "type": "string",
+                    "description": "Alternative syntax for 3.9"
+                  }
+                ]
               },
               "target": {
                 "type": "string",
@@ -1971,6 +1993,11 @@
               "dark"
             ]
           }
+        },
+        "isVisible": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
         }
       },
       "required": [

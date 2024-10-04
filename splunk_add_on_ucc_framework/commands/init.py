@@ -25,9 +25,13 @@ from splunk_add_on_ucc_framework import utils
 
 logger = logging.getLogger("ucc_gen")
 
-ADDON_NAME_RE_STR = r'^[^<>:"/|?*]+$'
+ADDON_NAME_RE_STR = (
+    r"^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)"
+    r"(?!.*\.(tar(\.gz)?|tgz|spl)$)"
+    r"[A-Za-z_.-][A-Za-z0-9_.-]*[A-Za-z0-9_-]$"
+)
 ADDON_NAME_RE = re.compile(ADDON_NAME_RE_STR)
-ADDON_REST_ROOT_RE_STR = r"^\w+$"
+ADDON_REST_ROOT_RE_STR = r"^[\w-]+$"
 ADDON_REST_ROOT_RE = re.compile(ADDON_REST_ROOT_RE_STR)
 ADDON_INPUT_NAME_RE_STR = r"^[0-9a-zA-Z][\w-]*$"
 ADDON_INPUT_NAME_RE = re.compile(ADDON_INPUT_NAME_RE_STR)

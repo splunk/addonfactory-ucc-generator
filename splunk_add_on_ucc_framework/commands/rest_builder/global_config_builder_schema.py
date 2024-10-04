@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import json
-from typing import Dict, List, Set, Any
+from typing import Dict, List, Any
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -54,9 +54,9 @@ def _is_true(val: Any) -> bool:
 class GlobalConfigBuilderSchema:
     def __init__(self, global_config: global_config_lib.GlobalConfig):
         self.global_config = global_config
-        self._settings_conf_file_names: Set[str] = set()
-        self._configs_conf_file_names: Set[str] = set()
-        self._oauth_conf_file_names: Set[str] = set()
+        self._settings_conf_file_names: List[str] = list()
+        self._configs_conf_file_names: List[str] = list()
+        self._oauth_conf_file_names: List[str] = list()
         self._endpoints: Dict[str, RestEndpointBuilder] = {}
         self._parse_builder_schema()
 
@@ -69,15 +69,15 @@ class GlobalConfigBuilderSchema:
         return self.global_config.namespace
 
     @property
-    def settings_conf_file_names(self) -> Set[str]:
+    def settings_conf_file_names(self) -> List[str]:
         return self._settings_conf_file_names
 
     @property
-    def configs_conf_file_names(self) -> Set[str]:
+    def configs_conf_file_names(self) -> List[str]:
         return self._configs_conf_file_names
 
     @property
-    def oauth_conf_file_names(self) -> Set[str]:
+    def oauth_conf_file_names(self) -> List[str]:
         return self._oauth_conf_file_names
 
     @property
@@ -124,8 +124,11 @@ class GlobalConfigBuilderSchema:
                         log_level_field=log_details.get("entity", [{}])[0].get("field"),
                     )
                     self._endpoints["oauth"] = oauth_endpoint
-                    self._oauth_conf_file_names.add(oauth_endpoint.conf_name)
-            self._configs_conf_file_names.add(endpoint.conf_name)
+                    if oauth_endpoint.conf_name not in self._oauth_conf_file_names:
+                        self._oauth_conf_file_names.append(oauth_endpoint.conf_name)
+
+            if endpoint.conf_name not in self._configs_conf_file_names:
+                self._configs_conf_file_names.append(endpoint.conf_name)
 
     def _builder_settings(self) -> None:
         if not self.global_config.settings:
@@ -146,7 +149,8 @@ class GlobalConfigBuilderSchema:
                 fields,
             )
             endpoint.add_entity(entity)
-            self._settings_conf_file_names.add(endpoint.conf_name)
+            if endpoint.conf_name not in self._settings_conf_file_names:
+                self._settings_conf_file_names.append(endpoint.conf_name)
 
     def _builder_inputs(self) -> None:
         for input_item in self.global_config.inputs:

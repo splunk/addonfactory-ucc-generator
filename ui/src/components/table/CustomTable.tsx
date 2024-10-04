@@ -17,9 +17,10 @@ import { isReadonlyRow } from './table.utils';
 import { SortDirection } from './useTableSort';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { ITableConfig } from '../../types/globalConfig/pages';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 interface CustomTableProps {
-    page: string;
+    page: StandardPages;
     serviceName?: string;
     data: RowDataFields[];
     handleToggleActionClick: (row: RowDataFields) => void;
@@ -37,7 +38,7 @@ interface IEntityModal {
     mode?: Mode;
 }
 
-const getServiceToStyleMap = (page: string, unifiedConfigs: GlobalConfig) => {
+const getServiceToStyleMap = (page: StandardPages, unifiedConfigs: GlobalConfig) => {
     const serviceToStyleMap: Record<string, typeof STYLE_PAGE | typeof STYLE_MODAL> = {};
     if (page === PAGE_INPUT) {
         const inputsPage = unifiedConfigs.pages.inputs;
@@ -270,7 +271,12 @@ const CustomTable: React.FC<CustomTableProps> = ({
                         handleToggleActionClick={handleToggleActionClick}
                         {...(moreInfo
                             ? {
-                                  expansionRow: getExpansionRow(columns.length, row, moreInfo),
+                                  expansionRow: getExpansionRow(
+                                      columns.length,
+                                      row,
+                                      moreInfo,
+                                      tableConfig?.customRow
+                                  ),
                               }
                             : {})}
                     />
