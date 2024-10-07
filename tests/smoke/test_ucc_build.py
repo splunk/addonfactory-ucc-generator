@@ -468,6 +468,7 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
             f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
             f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
+            f"{temp_dir}/Splunk_TA_UCCExample/default/test.conf",
         }
         removed = set(
             caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
