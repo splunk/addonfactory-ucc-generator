@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2.0.0",
   "info": {
-    "title": "Splunk Add-on for UCC Example",
+    "title": "Title of Splunk Add-on for UCC Example",
     "id": {
       "group": null,
       "name": "Splunk_TA_UCCExample",
@@ -15,7 +15,7 @@
       }
     ],
     "releaseDate": null,
-    "description": "Splunk Add-on for UCC Example",
+    "description": "Some description of Splunk Add-on for UCC Example",
     "classification": {
       "intendedAudience": null,
       "categories": [],
