@@ -79,7 +79,7 @@ def test_get_version_from_git_when_stage_is_none(mock_version_from_git):
     )
     mock_version_from_git.return_value = version
 
-    expected_result = "5.25.0R391ec865"
+    expected_result = "5.25.0+391ec865"
     assert expected_result == utils.get_version_from_git()
 
 

@@ -12,13 +12,14 @@ import { axiosCallWrapper } from '../../util/axiosCallWrapper';
 import TableContext from '../../context/TableContext';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
 interface DeleteModalProps {
-    page: string;
+    page: StandardPages;
     handleRequestClose: () => void;
     serviceName: string;
     stanzaName: string;

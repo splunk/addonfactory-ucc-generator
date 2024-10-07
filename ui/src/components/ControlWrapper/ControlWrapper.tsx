@@ -50,6 +50,7 @@ interface ControlWrapperProps {
         label?: string;
         required?: boolean;
     };
+    page?: string;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -108,6 +109,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                           mode: this.props.mode,
                           ...this?.props?.entity,
                           ...this.props?.modifiedEntitiesData,
+                          page: this.props.page,
                       }
                   )
                 : `No View Found for ${this?.props?.entity?.type} type`;

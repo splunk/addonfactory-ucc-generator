@@ -8,7 +8,6 @@ from splunklib import modularinput as smi
 
 ADDON_NAME = "demo_addon_for_splunk"
 
-
 def logger_for_input(input_name: str) -> logging.Logger:
     return log.Logs().get_logger(f"{ADDON_NAME.lower()}_{input_name}")
 
@@ -17,9 +16,9 @@ def get_account_api_key(session_key: str, account_name: str):
     cfm = conf_manager.ConfManager(
         session_key,
         ADDON_NAME,
-        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-demo_addon_for_splunk_account",
+        realm=f"__REST_CREDENTIAL__#{ADDON_NAME}#configs/conf-demo-addon-for-splunk_account",
     )
-    account_conf_file = cfm.get_conf("demo_addon_for_splunk_account")
+    account_conf_file = cfm.get_conf("demo-addon-for-splunk_account")
     return account_conf_file.get(account_name).get("api_key")
 
 
@@ -61,7 +60,7 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
                 logger=logger,
                 session_key=session_key,
                 app_name=ADDON_NAME,
-                conf_name=f"{ADDON_NAME}_settings",
+                conf_name="demo-addon-for-splunk_settings",
             )
             logger.setLevel(log_level)
             log.modular_input_start(logger, normalized_input_name)
