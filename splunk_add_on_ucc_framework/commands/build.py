@@ -565,11 +565,11 @@ def generate(
         os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
         output_directory,
     )
+    utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    logger.info("Copied package directory")
     removed_list = _remove_listed_files(ignore_list)
     if removed_list:
         logger.info("Removed:\n{}".format("\n".join(removed_list)))
-    utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
-    logger.info("Copied package directory")
 
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME
