@@ -109,19 +109,6 @@ export const DashboardModal = ({
 
         setDataIngestionDropdownValues(extractColumnsValues);
 
-        // Modify visualizations only for specific cases
-        if (
-            selectTitleForDropdownInModal === 'Input' ||
-            selectTitleForDropdownInModal === 'Account'
-        ) {
-            // Remove data volume visualization for "Input" and "Account"
-            delete copyDataIngestionModalJson.visualizations.data_ingestion_modal_data_volume_viz;
-            copyDataIngestionModalJson.layout.structure[3].position.y = 80;
-        } else if (selectTitleForDropdownInModal === 'Host') {
-            // Remove event count visualization for "Host"
-            delete copyDataIngestionModalJson.visualizations.data_ingestion_modal_events_count_viz;
-        }
-
         const eventsQuery = createNewQueryForNumberOfEventsInModal(
             selectTitleForDropdownInModal,
             selectValueForDropdownInModal,
@@ -136,6 +123,31 @@ export const DashboardModal = ({
         copyDataIngestionModalJson.dataSources.data_ingestion_modal_data_volume_ds.options.query =
             dataVolumeQuery;
         copyDataIngestionModalJson.dataSources.ds_search_1.options.query = eventsQuery;
+
+        // Modify visualizations only for specific cases
+        if (
+            selectTitleForDropdownInModal === 'Input' ||
+            selectTitleForDropdownInModal === 'Account'
+        ) {
+            // Remove data volume visualization for "Input" and "Account"
+            delete copyDataIngestionModalJson.visualizations.data_ingestion_modal_data_volume_viz;
+            delete copyDataIngestionModalJson.dataSources.data_ingestion_modal_data_volume_ds;
+            delete copyDataIngestionModalJson.layout.structure[2];
+            copyDataIngestionModalJson.layout.structure =
+                copyDataIngestionModalJson.layout.structure.filter(
+                    (item: Record<string, unknown>) => item !== null
+                );
+            copyDataIngestionModalJson.layout.structure[2].position.y = 80;
+        } else if (selectTitleForDropdownInModal === 'Host') {
+            // Remove event count visualization for "Host"
+            delete copyDataIngestionModalJson.visualizations.data_ingestion_modal_events_count_viz;
+            delete copyDataIngestionModalJson.dataSources.ds_search_1;
+            delete copyDataIngestionModalJson.layout.structure[3];
+            copyDataIngestionModalJson.layout.structure =
+                copyDataIngestionModalJson.layout.structure.filter(
+                    (item: Record<string, unknown>) => item !== null
+                );
+        }
 
         return copyDataIngestionModalJson;
     }, [
