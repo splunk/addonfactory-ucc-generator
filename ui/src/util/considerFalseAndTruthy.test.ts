@@ -75,6 +75,7 @@ describe('getValueMapTruthyFalse function', () => {
         [{}, {}],
         [[], '0'],
     ])('getValueMapTruthyFalse(%p) should return %p', (input, expected) => {
-        expect(getValueMapTruthyFalse(input)).toEqual(expected);
+        expect(getValueMapTruthyFalse(input, 'configuration')).toEqual(expected);
+        expect(getValueMapTruthyFalse(input, 'inputs')).toEqual(input);
     });
 });

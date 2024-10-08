@@ -6,6 +6,7 @@ import pytest
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 import tests.unit.helpers as helpers
+from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 
 @pytest.fixture
@@ -51,6 +52,19 @@ def global_config_only_logging() -> global_config_lib.GlobalConfig:
     )
     global_config = global_config_lib.GlobalConfig(global_config_path)
     return global_config
+
+
+@pytest.fixture()
+def os_dependent_library_config():
+    return lambda name="lib1", python_version="37", target="t", os="os": OSDependentLibraryConfig(
+        name=name,
+        version="version",
+        python_version=python_version,
+        platform="platform",
+        target=target,
+        os=os,
+        deps_flag="deps_flag",
+    )
 
 
 @pytest.fixture
