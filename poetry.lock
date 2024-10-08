@@ -324,13 +324,13 @@ packaging = "*"
 
 [[package]]
 name = "dunamai"
-version = "1.21.2"
+version = "1.22.0"
 description = "Dynamic version generation"
 optional = false
 python-versions = ">=3.5"
 files = [
-    {file = "dunamai-1.21.2-py3-none-any.whl", hash = "sha256:87db76405bf9366f9b4925ff5bb1db191a9a1bd9f9693f81c4d3abb8298be6f0"},
-    {file = "dunamai-1.21.2.tar.gz", hash = "sha256:05827fb5f032f5596bfc944b23f613c147e676de118681f3bb1559533d8a65c4"},
+    {file = "dunamai-1.22.0-py3-none-any.whl", hash = "sha256:eab3894b31e145bd028a74b13491c57db01986a7510482c9b5fff3b4e53d77b7"},
+    {file = "dunamai-1.22.0.tar.gz", hash = "sha256:375a0b21309336f0d8b6bbaea3e038c36f462318c68795166e31f9873fdad676"},
 ]
 
 [package.dependencies]
@@ -1204,13 +1204,13 @@ pytest = ">=5.3"
 
 [[package]]
 name = "pytest-splunk-addon"
-version = "5.2.6"
+version = "5.4.0"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon-5.2.6-py3-none-any.whl", hash = "sha256:eefa4b022009b4ec6cb88b6c28a128a4768114b999635e1eb225e40fec6c03e2"},
-    {file = "pytest_splunk_addon-5.2.6.tar.gz", hash = "sha256:521172594319bb1f879a2ec433c34c35c20125a84669a84c38529c3ff6879fb6"},
+    {file = "pytest_splunk_addon-5.4.0-py3-none-any.whl", hash = "sha256:b2c6482bbeb4ce9dc225e487e32299431bc94cd17c74574a7e7126a63612c1ca"},
+    {file = "pytest_splunk_addon-5.4.0.tar.gz", hash = "sha256:78212c0583a5c7c5101ee3690e5cf75dba1e7f4edb444255e2a3cc6eee0c6a5a"},
 ]
 
 [package.dependencies]
@@ -1232,13 +1232,13 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "5.0.0"
+version = "5.3.0"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-5.0.0-py3-none-any.whl", hash = "sha256:8a67dfe6aa58b36f5a673863a29deaa04718e497fdfe9b13642dde319a238a32"},
-    {file = "pytest_splunk_addon_ui_smartx-5.0.0.tar.gz", hash = "sha256:1f330558dfd537d06507e375480615a84dd95964672af5c9cd4966585d8e0fa6"},
+    {file = "pytest_splunk_addon_ui_smartx-5.3.0-py3-none-any.whl", hash = "sha256:bd3b646469d869757d9fef4be9129fa373265121f027af21729828aa38726392"},
+    {file = "pytest_splunk_addon_ui_smartx-5.3.0.tar.gz", hash = "sha256:0b684382320aaf18b0047fd61a32fc9df232bd06d8b2b47b3716a65236390b26"},
 ]
 
 [package.dependencies]
