@@ -160,7 +160,7 @@ export const DashboardModal = ({
 
     // Update the dashboard when the definition or selected input changes
     useEffect(() => {
-        const updateDefinition = async () => {
+        const updateDefinitionForDashboardModal = async () => {
             if (dashboardCoreApi.current && dataIngestionModalDef) {
                 const updatedModalData = await updateModalData();
                 if (updatedModalData) {
@@ -169,7 +169,7 @@ export const DashboardModal = ({
             }
         };
 
-        updateDefinition();
+        updateDefinitionForDashboardModal();
     }, [dataIngestionModalDef, selectValueForDropdownInModal, updateModalData]);
 
     useEffect(() => {

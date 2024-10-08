@@ -94,23 +94,26 @@ export const DataIngestionDashboard = ({
         () =>
             debounce((searchValue, hideToggleValue) => {
                 const copyJson = JSON.parse(JSON.stringify(dashboardDefinition));
-                const selectedLabel =
-                    document
-                        ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
-                        ?.getAttribute('label') || 'Source type';
 
-                const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
-                    (it: { label: string }) => it.label === selectedLabel
-                );
+                if (copyJson?.inputs?.data_ingestion_table_input?.options?.items?.length > 0) {
+                    const selectedLabel =
+                        document
+                            ?.querySelector('[data-input-id="data_ingestion_table_input"] button')
+                            ?.getAttribute('label') || 'Source type';
 
-                const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
-                    searchValue,
-                    hideToggleValue,
-                    item.value,
-                    selectedLabel
-                );
-                copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
-                dashboardCoreApi.current?.updateDefinition(copyJson);
+                    const item = copyJson.inputs.data_ingestion_table_input.options.items.find(
+                        (it: { label: string }) => it.label === selectedLabel
+                    );
+
+                    const newQuery = createNewQueryBasedOnSearchAndHideTraffic(
+                        searchValue,
+                        hideToggleValue,
+                        item.value,
+                        selectedLabel
+                    );
+                    copyJson.dataSources.data_ingestion_table_ds.options.query = newQuery;
+                    dashboardCoreApi.current?.updateDefinition(copyJson);
+                }
             }, 1000),
         [dashboardDefinition]
     );

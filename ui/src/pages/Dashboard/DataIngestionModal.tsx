@@ -14,7 +14,6 @@ const ModalWrapper = styled(Modal)`
     width: 60vw;
     height: 80vh;
     margin-top: 3vh;
-    height: 80vh;
 `;
 
 const ModalHeader = styled(Modal.Header)`
