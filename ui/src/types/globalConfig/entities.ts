@@ -257,6 +257,7 @@ export const OAuthFields = z.object({
         })
         .optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
+    validators: AllValidators.optional(),
 });
 
 export const OAuthEntity = CommonEditableEntityFields.extend({
