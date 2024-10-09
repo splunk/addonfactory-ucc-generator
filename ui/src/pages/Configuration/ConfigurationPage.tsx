@@ -3,11 +3,12 @@ import { _ } from '@splunk/ui-utils/i18n';
 import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
+import SearchJob from '@splunk/search-job';
 
 import styled from 'styled-components';
 import { z } from 'zod';
 import useQuery from '../../hooks/useQuery';
-import { getUnifiedConfigs } from '../../util/util';
+import { getUnifiedConfigs, shouldHideForPlatform } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import CustomTab from '../../components/CustomTab/CustomTab';
@@ -16,7 +17,8 @@ import ConfigurationTable from '../../components/ConfigurationTable';
 import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownloadBtn';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import UccCredit from '../../components/UCCCredit/UCCCredit';
-import { TabSchema } from '../../types/globalConfig/pages';
+import { Platforms, TabSchema } from '../../types/globalConfig/pages';
+import { PageContextProvider } from '../../context/PageContext';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
@@ -43,7 +45,19 @@ type Tab = z.infer<typeof TabSchema>;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
-    const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
+    const {
+        title,
+        description,
+        subDescription,
+        tabs: unfilteredTabs,
+        distinguishPlatforms,
+    } = unifiedConfigs.pages.configuration;
+    const [platform, setPlatform] = useState<Platforms>();
+
+    const tabs = unfilteredTabs.filter(
+        (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
+    );
+
     const permittedTabNames = useMemo(() => tabs.map((tab) => tab.name), [tabs]);
     const isComponentMounted = useRef(false);
 
@@ -52,6 +66,40 @@ function ConfigurationPage() {
 
     const query = useQuery();
     const queryTabValue = query?.get('tab');
+
+    useEffect(() => {
+        if (!distinguishPlatforms) {
+            return () => {};
+        }
+
+        // search call to get server info, cloud or enterprise
+        const mySearchJob = SearchJob.create(
+            {
+                search: `| rest/services/server/info`,
+                earliest_time: '-15m', // time does not matter
+                latest_time: 'now',
+            },
+            { cache: true, cancelOnUnload: true } // default cache 10min = 600 in seconds
+        );
+
+        const resultsSubscription = mySearchJob
+            .getResults()
+            .subscribe(
+                (result: {
+                    results?: Array<{ product_type?: string; instance_type?: string }>;
+                }) => {
+                    if (result.results?.[0]?.product_type === 'cloud') {
+                        setPlatform('cloud');
+                    } else {
+                        setPlatform('enterprise');
+                    }
+                }
+            );
+
+        return () => {
+            resultsSubscription.unsubscribe();
+        };
+    }, [distinguishPlatforms]);
 
     // Run initially and when query is updated to set active tab based on initial URL
     // or while navigating browser history
@@ -118,7 +166,7 @@ function ConfigurationPage() {
 
     return (
         <ErrorBoundary>
-            <>
+            <PageContextProvider platform={platform}>
                 <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
                     <ColumnLayout gutter={8}>
                         <Row>
@@ -146,7 +194,7 @@ function ConfigurationPage() {
                 </div>
                 {tabs.map((tab) => getTabContent(tab))}
                 <ToastMessages position="top-right" />
-            </>
+            </PageContextProvider>
         </ErrorBoundary>
     );
 }

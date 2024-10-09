@@ -6,7 +6,7 @@ import Message from '@splunk/react-ui/Message';
 
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
-import { getUnifiedConfigs, generateToast } from '../../util/util';
+import { getUnifiedConfigs, generateToast, shouldHideForPlatform } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
@@ -144,7 +144,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
                 : `${this.props.serviceName}`;
         this.pageContext = props.pageContext;
-        console.log('props, ', props.pageContext);
+
         this.util = {
             setState: (callback) => {
                 this.onSavePromise = new Promise((resolve) => {
@@ -386,6 +386,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
@@ -397,6 +404,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         if (e.field === 'name') {
@@ -408,8 +423,17 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     } else if (props.mode === MODE_CLONE) {
                         tempEntity.value =
                             e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
+
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
@@ -423,6 +447,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         if (e.field === 'name') {

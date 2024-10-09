@@ -17,7 +17,7 @@ import {
     SubDescriptionType,
     TableFullServiceSchema,
 } from '../../types/globalConfig/pages';
-import { getUnifiedConfigs } from '../../util/util';
+import { getUnifiedConfigs, shouldHideForPlatform } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { RowDataFields, TableContextProvider } from '../../context/TableContext';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT, Mode } from '../../constants/modes';
@@ -85,8 +85,14 @@ function InputPage(): ReactElement {
         if (isTableSchema(inputsPage)) {
             ({ services, title, table, description, subDescription, distinguishPlatforms } =
                 inputsPage);
+            services = services.filter(
+                (service) => !shouldHideForPlatform(service.hideForPlatform, platform)
+            );
         } else {
             ({ services, title } = inputsPage);
+            services = services.filter(
+                (service) => !shouldHideForPlatform(service.hideForPlatform, platform)
+            );
         }
     }
 
@@ -104,8 +110,6 @@ function InputPage(): ReactElement {
     const query = useQuery();
 
     useEffect(() => {
-        // console.log('distinguishPlatforms, ', distinguishPlatforms);
-
         if (!distinguishPlatforms) {
             return () => {};
         }
@@ -126,8 +130,6 @@ function InputPage(): ReactElement {
                 (result: {
                     results?: Array<{ product_type?: string; instance_type?: string }>;
                 }) => {
-                    console.log('result, ', result);
-                    console.log('get instance_type', result.results?.[0]?.instance_type);
                     if (result.results?.[0]?.product_type === 'cloud') {
                         setPlatform('cloud');
                     } else {
@@ -302,7 +304,6 @@ function InputPage(): ReactElement {
         },
         [activeTabId] // eslint-disable-line react-hooks/exhaustive-deps
     );
-    console.log('platform, ', platform);
     return (
         <ErrorBoundary>
             <PageContextProvider platform={platform}>
@@ -369,7 +370,9 @@ function InputPage(): ReactElement {
                                             page={PAGE_INPUT}
                                             serviceName={service.name}
                                             handleRequestModalOpen={() =>
-                                                handleRequestOpen({ serviceName: service.name })
+                                                handleRequestOpen({
+                                                    serviceName: service.name,
+                                                })
                                             }
                                             handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                                         />

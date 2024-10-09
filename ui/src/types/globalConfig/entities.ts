@@ -57,7 +57,7 @@ const CommonEditableEntityOptions = z.object({
     disableonEdit: z.boolean().default(false).optional(),
     enable: z.boolean().default(true).optional(),
     requiredWhenVisible: z.boolean().default(false).optional(),
-    hideForPlatform: z.array(z.enum(['cloud', 'enterprise'])).optional(),
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 
 export const MarkdownMessageType = z.union([
@@ -106,7 +106,7 @@ export const LinkEntity = CommonEntityFields.extend({
     options: z.object({
         text: z.string(),
         link: z.string(),
-        hideForPlatform: z.array(z.enum(['cloud', 'enterprise'])).optional(),
+        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     }),
     required: z.literal(false).default(false).optional(),
 });
@@ -283,7 +283,7 @@ export const CustomEntity = CommonEditableEntityFields.extend({
     options: z.object({
         type: z.literal('external'),
         src: z.string(),
-        hideForPlatform: z.array(z.enum(['cloud', 'enterprise'])).optional(),
+        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     }),
 });
 

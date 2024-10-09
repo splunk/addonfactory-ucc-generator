@@ -9,10 +9,11 @@ import { _ as i18n } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
 import { variables } from '@splunk/themes';
 import { getFormattedMessage } from '../../util/messageUtil';
-import { getUnifiedConfigs } from '../../util/util';
+import { getUnifiedConfigs, shouldHideForPlatform } from '../../util/util';
 import CustomMenu from '../CustomMenu';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import { invariant } from '../../util/invariant';
+import { usePageContext } from '../../context/usePageContext';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
@@ -47,12 +48,22 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const [isSubMenu, setIsSubMenu] = useState(true);
 
     const { pages } = getUnifiedConfigs();
+    const pageContext = usePageContext();
 
     const { inputs } = pages;
     invariant(inputs);
     const groupsMenu = 'groupsMenu' in inputs ? inputs.groupsMenu : undefined;
     const customMenuField = 'menu' in inputs ? inputs.menu : undefined;
-    const { services } = inputs;
+
+    const [services, setServices] = useState(inputs.services);
+
+    useEffect(() => {
+        setServices(
+            inputs.services.filter(
+                (service) => !shouldHideForPlatform(service.hideForPlatform, pageContext.platform)
+            )
+        );
+    }, [inputs.services, pageContext.platform]);
 
     const closeReasons = ['clickAway', 'escapeKey', 'offScreen', 'toggleClick'];
     const toggle = (
@@ -177,7 +188,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
             }));
         }
         return getSlidingsPanels(servicesGroup);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [services]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Making a dropdown if we have more than one service
     const makeSingleSelectDropDown = () => (
@@ -204,6 +215,8 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
             appearance="primary"
             id="addInputBtn"
             onClick={() => {
+                console.log('MenuInput services getInputMenu', services);
+
                 handleRequestOpen({ serviceName: services[0].name });
             }}
         />

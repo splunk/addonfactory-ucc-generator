@@ -2,6 +2,7 @@ import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
 import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
 import { invariant } from './invariant';
+import { Platforms } from '../types/globalConfig/pages';
 
 interface AppData {
     app: string;
@@ -124,4 +125,12 @@ export function filterResponse(
         newItems = filterByDenyList(newItems, denyList);
     }
     return newItems;
+}
+
+export function shouldHideForPlatform(hideForPlatform: Platforms, platform: Platforms) {
+    if (platform && hideForPlatform === platform) {
+        return true;
+    }
+
+    return false;
 }
