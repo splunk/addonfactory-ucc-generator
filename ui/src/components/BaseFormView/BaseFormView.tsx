@@ -50,6 +50,7 @@ import {
     getModifiedState,
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { PageContextProviderType } from '../../context/PageContext';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -62,6 +63,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
     context!: React.ContextType<typeof TableContext>;
+
+    pageContext?: PageContextProviderType;
 
     flag: boolean;
 
@@ -140,7 +143,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
                 ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
                 : `${this.props.serviceName}`;
-
+        this.pageContext = props.pageContext;
+        console.log('props, ', props.pageContext);
         this.util = {
             setState: (callback) => {
                 this.onSavePromise = new Promise((resolve) => {

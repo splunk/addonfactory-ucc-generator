@@ -245,6 +245,9 @@
             ]
           },
           "minItems": 1
+        },
+        "distinguishPlatforms": {
+          "$ref": "#/definitions/DistinguishPlatforms"
         }
       },
       "required": [
@@ -532,6 +535,9 @@
             "link": {
               "type": "string",
               "description": "It is a link where the user will be redirected."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "required": [
@@ -636,6 +642,9 @@
             },
             "requiredWhenVisible": {
               "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -731,6 +740,9 @@
               "type": "number",
               "default": 8,
               "description": "Minimum number of rows to display."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -875,6 +887,9 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1018,6 +1033,9 @@
               "type": "string",
               "maxLength": 1,
               "description": "It delimits each value of the field with a predefined character."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1085,6 +1103,9 @@
             },
             "requiredWhenVisible": {
               "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1296,6 +1317,9 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "required": [
@@ -1394,6 +1418,9 @@
               "type": "boolean",
               "default": false,
               "description": "It defines used encoding for files. If true base64 will be used, if false utf-8 is applied."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1524,6 +1551,9 @@
               "type": "boolean",
               "default": false,
               "description": "Used to include the state for oauth authentication"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "allOf": [
@@ -2258,6 +2288,9 @@
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
         }
       },
       "anyOf": [
@@ -2451,6 +2484,11 @@
         }
       }
     },
+    "DistinguishPlatforms": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, you can hide some elements, by additional property, just for cloud or just enterprise platform."
+    },
     "singleFieldToModify": {
       "type": "object",
       "description": "Information about single field that will be modified.",
@@ -2495,6 +2533,9 @@
         },
         "markdownMessage": {
           "$ref": "#/definitions/markdownMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
         }
       },
       "required": [
@@ -2729,6 +2770,9 @@
         "subDescription": {
           "$ref": "#/definitions/SubDescription"
         },
+        "distinguishPlatforms": {
+          "$ref": "#/definitions/DistinguishPlatforms"
+        },
         "menu": {
           "description": "This property allows you to enable the custom menu feature",
           "type": "object"
@@ -2840,6 +2884,9 @@
               },
               "warning": {
                 "$ref": "#/definitions/WarningMessage"
+              },
+              "hideForPlatform": {
+                "$ref": "#/definitions/HideForPlatform"
               }
             },
             "not": {
@@ -2954,6 +3001,9 @@
               "table",
               "entity"
             ]
+          },    
+          "hideForPlatform": {
+            "$ref": "#/definitions/HideForPlatform"
           }
         },
         "hideFieldId": {
@@ -2997,6 +3047,9 @@
       "type": "boolean",
       "description": "It chooses whether or not to display the field.",
       "default": true
+    },
+    "hideForPlatform": {
+      "$ref": "#/definitions/HideForPlatform"
     },
     "disableonEdit": {
       "type": "boolean",
@@ -3061,6 +3114,17 @@
         "label"
       ],
       "additionalProperties": false
+    },
+    "HideForPlatform":{
+      "description": "Defines for which platform element should be hidden. Works only if distinguishPlatforms is set to true for page.",
+      "anyOf": [
+        {
+          "const": "cloud"
+        },
+        {
+          "const": "enterprise"
+        }
+      ]
     },
     "IntervalValue": {
       "anyOf": [

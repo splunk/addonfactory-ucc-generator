@@ -34,7 +34,6 @@ export function TableContextProvider({ children }: { children: ReactNode }) {
     const [searchType, setSearchType] = useState<string>('all');
     const [pageSize, setPageSize] = useState<number>(10);
     const [currentPage, setCurrentPage] = useState<number>(0);
-
     return (
         <TableContext.Provider
             value={{
