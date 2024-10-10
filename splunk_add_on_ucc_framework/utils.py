@@ -98,7 +98,7 @@ def get_version_from_git() -> str:
     except RuntimeError:
         raise exceptions.IsNotAGitRepo()
     if not version.stage:
-        stage = "R"
+        stage = "+"
     else:
         stage = version.stage[:1]
     try:
