@@ -87,14 +87,10 @@ field.RestField(
         return "\n".join(lines)
 
     def generate_rh(self) -> str:
-        fields = []
-        special_fields = []
-        for field in self._fields:
-            field_line = field.generate_rh()
-            fields.append(field_line)
-        for special_field in self._special_fields:
-            field_line = special_field.generate_rh()
-            special_fields.append(field_line)
+        fields = [field.generate_rh() for field in self._fields]
+        special_fields = [
+            special_field.generate_rh() for special_field in self._special_fields
+        ]
         # add disabled field for data input
         entity_builder = self.__class__.__name__
         if (
