@@ -30,8 +30,8 @@ class IntervalEntity(Entity):
             "validators": [
                 {
                     "type": "regex",
-                    "errorMsg": f"{self['label']} must be either a non-negative number or -1.",
-                    "pattern": r"^(?:-1|\d+(?:\.\d+)?)$",
+                    "errorMsg": f"{self['label']} must be either a non-negative number, CRON interval or -1.",
+                    "pattern": r"^(?:-1|\\d+(?:\\.\\d+)?)$|(((\\d+,)+\\d+|(\\d+[/-]\\d+)|\\d+|\\*(/\\d*)?) ?){5}",
                 }
             ],
         }
