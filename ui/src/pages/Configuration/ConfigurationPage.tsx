@@ -45,23 +45,18 @@ type Tab = z.infer<typeof TabSchema>;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
-    const {
-        title,
-        description,
-        subDescription,
-        tabs: unfilteredTabs,
-        distinguishPlatforms,
-    } = unifiedConfigs.pages.configuration;
+    const { title, description, subDescription, tabs, distinguishPlatforms } =
+        unifiedConfigs.pages.configuration;
     const [platform, setPlatform] = useState<Platforms>();
 
-    const tabs = unfilteredTabs.filter(
+    const filteredTabs = tabs.filter(
         (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
     );
 
-    const permittedTabNames = useMemo(() => tabs.map((tab) => tab.name), [tabs]);
+    const permittedTabNames = useMemo(() => filteredTabs.map((tab) => tab.name), [filteredTabs]);
     const isComponentMounted = useRef(false);
 
-    const [activeTabId, setActiveTabId] = useState(tabs[0].name);
+    const [activeTabId, setActiveTabId] = useState(filteredTabs[0].name);
     const [isPageOpen, setIsPageOpen] = useState(false);
 
     const query = useQuery();
@@ -187,12 +182,12 @@ function ConfigurationPage() {
                         </Row>
                     </ColumnLayout>
                     <TabBar activeTabId={activeTabId} onChange={handleChange}>
-                        {tabs.map((tab) => (
+                        {filteredTabs.map((tab) => (
                             <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
                         ))}
                     </TabBar>
                 </div>
-                {tabs.map((tab) => getTabContent(tab))}
+                {filteredTabs.map((tab) => getTabContent(tab))}
                 <ToastMessages position="top-right" />
             </PageContextProvider>
         </ErrorBoundary>
