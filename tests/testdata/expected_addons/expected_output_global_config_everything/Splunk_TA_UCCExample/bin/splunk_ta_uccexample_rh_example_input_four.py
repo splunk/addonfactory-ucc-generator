@@ -8,7 +8,7 @@ from splunktaucclib.rest_handler.endpoint import (
     DataInputModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
-from splunk_ta_uccexample_custom_rh import CustomRestHandler
+from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
 import logging
 
 util.remove_http_proxy_env_vars()
@@ -46,5 +46,5 @@ if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())
     admin_external.handle(
         endpoint,
-        handler=CustomRestHandler,
+        handler=AdminExternalHandler,
     )
