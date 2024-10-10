@@ -2,6 +2,7 @@ import * as React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 
 import { http, HttpResponse, RequestHandler } from 'msw';
+import { consoleError } from '../../../../jest.setup';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
 import { server } from '../../../mocks/server';
@@ -16,6 +17,7 @@ const handleSelect = jest.fn();
 
 describe('render data ingestion modal inputs', () => {
     it('renders with all default modal dashboard elements', async () => {
+        consoleError.mockImplementation(() => {});
         server.use(
             http.get('/custom/data_ingestion_modal_definition.json', () =>
                 HttpResponse.json(MOCK_DS_MODAL_DEFINITION)
@@ -47,10 +49,13 @@ describe('render data ingestion modal inputs', () => {
         const modal = await screen.findByTestId('modal');
         expect(modal).toBeInTheDocument();
 
-        setTimeout(async () => {
-            const dropdown = await screen.findByTestId('data_ingestion_modal_dropdown');
-            expect(dropdown).toBeInTheDocument();
-        }, 100);
+        // Wait for dropdown to be rendered
+        await waitFor(() => {
+            expect(document.querySelector('[data-test="input-title"]')).toBeInTheDocument();
+        });
+        await waitFor(() => {
+            expect(document.querySelector('#data_ingestion_modal_dropdown')).toBeInTheDocument();
+        });
 
         const idsToBeInDocument = [
             'data_ingestion_modal_dropdown',
