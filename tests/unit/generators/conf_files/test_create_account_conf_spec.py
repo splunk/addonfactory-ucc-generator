@@ -49,7 +49,10 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
     ]
     account_spec._global_config.namespace = TA_NAME
     account_spec._gc_schema._get_oauth_enitities.return_value = "mocked_content"
-    account_spec._gc_schema._parse_fields.return_value = [MagicMock(_name="field2")]
+    account_spec._gc_schema._parse_fields.return_value = (
+        [MagicMock(_name="field2")],
+        [MagicMock(_name="field3")],
+    )
 
     account_spec._set_attributes()
 

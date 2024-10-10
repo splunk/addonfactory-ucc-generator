@@ -33,10 +33,14 @@ if TYPE_CHECKING:
 class RestEntityBuilder:
     _title_template = "[{}]"
     _rh_template = """
+special_fields = [
+{special_fields}
+]
+
 fields{name_rh} = [
 {fields}
 ]
-model{name_rh} = RestModel(fields{name_rh}, name={name})
+model{name_rh} = RestModel(fields{name_rh}, name={name}, special_fields=special_fields)
 """
     _disabled_field_template = """
 field.RestField(
@@ -47,10 +51,15 @@ field.RestField(
 """
 
     def __init__(
-        self, name: Optional[str], fields: List["RestFieldBuilder"], **kwargs: Any
+        self,
+        name: Optional[str],
+        fields: List["RestFieldBuilder"],
+        special_fields: List["RestFieldBuilder"],
+        **kwargs: Any,
     ) -> None:
         self._name = name
         self._fields = fields
+        self._special_fields = special_fields
         self._conf_name = kwargs.get("conf_name")
 
     @property
@@ -78,10 +87,10 @@ field.RestField(
         return "\n".join(lines)
 
     def generate_rh(self) -> str:
-        fields = []
-        for field in self._fields:
-            field_line = field.generate_rh()
-            fields.append(field_line)
+        fields = [field.generate_rh() for field in self._fields]
+        special_fields = [
+            special_field.generate_rh() for special_field in self._special_fields
+        ]
         # add disabled field for data input
         entity_builder = self.__class__.__name__
         if (
@@ -91,7 +100,9 @@ field.RestField(
         ):
             fields.append(self._disabled_field_template)
         fields_lines = ", \n".join(fields)
+        special_fields_lines = ", \n".join(special_fields)
         return self._rh_template.format(
+            special_fields=indent(special_fields_lines),
             fields=indent(fields_lines),
             name_rh=self.name_rh,
             name=quote_string(self._name),

@@ -36,7 +36,7 @@ class AccountConf(ConfGenerator):
                 if account["name"] == "oauth":
                     continue
                 content = self._gc_schema._get_oauth_enitities(account["entity"])
-                fields = self._gc_schema._parse_fields(content)
+                fields, special_fields = self._gc_schema._parse_fields(content)
                 self.account_fields.append(
                     ("<name>", [f"{f._name} = " for f in fields])
                 )
