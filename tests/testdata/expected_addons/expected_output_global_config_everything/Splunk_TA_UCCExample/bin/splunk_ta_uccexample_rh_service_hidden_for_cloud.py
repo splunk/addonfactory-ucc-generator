@@ -21,7 +21,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^(?:-1|\d+(?:\.\d+)?)$""",
+            regex=r"""^(?:-1|\d+(?:\.\d+)?)$""", 
         )
     ), 
 
@@ -37,7 +37,7 @@ model = RestModel(fields, name=None)
 
 
 endpoint = DataInputModel(
-    'example_input_four',
+    'service_hidden_for_cloud',
     model,
 )
 

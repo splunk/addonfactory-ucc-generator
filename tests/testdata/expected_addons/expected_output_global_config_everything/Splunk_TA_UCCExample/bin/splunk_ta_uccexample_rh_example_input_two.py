@@ -47,6 +47,20 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'input_two_text_hidden_for_cloud',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'input_two_text_hidden_for_enterprise',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'input_two_multiple_select',
         required=True,
         encrypted=False,

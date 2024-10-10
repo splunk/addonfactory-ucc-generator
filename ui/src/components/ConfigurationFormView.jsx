@@ -12,6 +12,7 @@ import { axiosCallWrapper } from '../util/axiosCallWrapper';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
 import { PAGE_CONF } from '../constants/pages';
+import PageContext from '../context/PageContext';
 
 const ButtonWrapper = styled.div`
     margin-left: 270px !important;
@@ -73,15 +74,20 @@ function ConfigurationFormView({ serviceName }) {
     // Ref is used here to call submit method of form only
     return Object.keys(currentServiceState).length ? (
         <>
-            <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
-                ref={form}
-                page={PAGE_CONF}
-                stanzaName={serviceName}
-                serviceName="settings"
-                mode={MODE_CONFIG}
-                currentServiceState={currentServiceState}
-                handleFormSubmit={handleFormSubmit}
-            />
+            <PageContext.Consumer>
+                {(pageContext) => (
+                    <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+                        ref={form}
+                        page={PAGE_CONF}
+                        stanzaName={serviceName}
+                        serviceName="settings"
+                        mode={MODE_CONFIG}
+                        currentServiceState={currentServiceState}
+                        handleFormSubmit={handleFormSubmit}
+                        pageContext={pageContext}
+                    />
+                )}
+            </PageContext.Consumer>
             <ButtonWrapper>
                 <StyledButton
                     className="saveBtn"

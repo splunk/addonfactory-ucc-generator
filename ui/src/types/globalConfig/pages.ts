@@ -60,6 +60,7 @@ export const TabSchema = z.object({
     restHandlerClass: z.string().optional(),
     customTab: z.record(z.any()).optional(),
     warning: WarningSchema,
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 
 const GroupsSchema = z
@@ -92,6 +93,7 @@ export const TableLessServiceSchema = z.object({
     restHandlerClass: z.string().optional(),
     warning: WarningSchema,
     inputHelperModule: z.string().optional(),
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
@@ -146,6 +148,7 @@ export const InputsPageTableSchema = z
         services: z.array(TableLessServiceSchema.strict()),
         hideFieldId: z.string().optional(),
         readonlyFieldId: z.string().optional(),
+        distinguishPlatforms: z.boolean().default(false).optional(),
     })
     .strict();
 
@@ -158,6 +161,7 @@ export const pages = z.object({
         description: z.string().optional(),
         subDescription: SubDescriptionSchema,
         tabs: z.array(TabSchema).min(1),
+        distinguishPlatforms: z.boolean().default(false).optional(),
     }),
     inputs: InputsPageSchema,
     dashboard: z
@@ -168,6 +172,8 @@ export const pages = z.object({
         })
         .optional(),
 });
+
+export type Platforms = 'enterprise' | 'cloud' | undefined;
 
 // Define the types based on the Zod schemas
 export type InputsPage = z.infer<typeof InputsPageSchema>;
