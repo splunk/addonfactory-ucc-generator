@@ -1211,6 +1211,28 @@
                             "required": true
                         },
                         {
+                            "type": "text",
+                            "label": "Text input hidden for cloud",
+                            "field": "input_two_text_hidden_for_cloud",
+                            "help": "Should be hidden for cloud",
+                            "tooltip": "Should be hidden for cloud",
+                            "required": false,
+                            "options": {
+                                "hideForPlatform": "cloud"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Text input hidden for enterprise",
+                            "field": "input_two_text_hidden_for_enterprise",
+                            "help": "Should be hidden for enterprise",
+                            "tooltip": "Should be hidden for enterprise",
+                            "required": false,
+                            "options": {
+                                "hideForPlatform": "enterprise"
+                            }
+                        },
+                        {
                             "type": "multipleSelect",
                             "label": "Example Multiple Select",
                             "field": "input_two_multiple_select",
@@ -1844,7 +1866,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.50.1+89fae6f6f",
+        "version": "5.50.1+16ac6ad8c",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.50.1",
