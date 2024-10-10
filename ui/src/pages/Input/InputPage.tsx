@@ -17,7 +17,7 @@ import {
     SubDescriptionType,
     TableFullServiceSchema,
 } from '../../types/globalConfig/pages';
-import { getUnifiedConfigs, shouldHideForPlatform } from '../../util/util';
+import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from './InputPageStyle';
 import { RowDataFields, TableContextProvider } from '../../context/TableContext';
 import { MODE_CREATE, MODE_CLONE, MODE_EDIT, Mode } from '../../constants/modes';
@@ -31,6 +31,7 @@ import EntityPage from '../../components/EntityPage/EntityPage';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import useQuery from '../../hooks/useQuery';
 import { PageContextProvider } from '../../context/PageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;

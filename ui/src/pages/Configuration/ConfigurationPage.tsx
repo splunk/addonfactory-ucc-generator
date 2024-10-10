@@ -8,7 +8,7 @@ import SearchJob from '@splunk/search-job';
 import styled from 'styled-components';
 import { z } from 'zod';
 import useQuery from '../../hooks/useQuery';
-import { getUnifiedConfigs, shouldHideForPlatform } from '../../util/util';
+import { getUnifiedConfigs } from '../../util/util';
 import { TitleComponent, SubTitleComponent } from '../Input/InputPageStyle';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import CustomTab from '../../components/CustomTab/CustomTab';
@@ -19,6 +19,7 @@ import SubDescription from '../../components/SubDescription/SubDescription';
 import UccCredit from '../../components/UCCCredit/UCCCredit';
 import { Platforms, TabSchema } from '../../types/globalConfig/pages';
 import { PageContextProvider } from '../../context/PageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
@@ -48,7 +49,7 @@ function ConfigurationPage() {
     const { title, description, subDescription, tabs, distinguishPlatforms } =
         unifiedConfigs.pages.configuration;
     const [platform, setPlatform] = useState<Platforms>();
-
+    console.log('shouldHideForPlatform', shouldHideForPlatform);
     const filteredTabs = tabs.filter(
         (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
     );

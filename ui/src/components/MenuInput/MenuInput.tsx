@@ -9,11 +9,12 @@ import { _ as i18n } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
 import { variables } from '@splunk/themes';
 import { getFormattedMessage } from '../../util/messageUtil';
-import { getUnifiedConfigs, shouldHideForPlatform } from '../../util/util';
+import { getUnifiedConfigs } from '../../util/util';
 import CustomMenu from '../CustomMenu';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};

@@ -3011,6 +3011,9 @@
         },
         "readonlyFieldId": {
           "type": "string"
+        },
+        "distinguishPlatforms": {
+          "$ref": "#/definitions/DistinguishPlatforms"
         }
       },
       "required": [

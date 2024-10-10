@@ -6,7 +6,7 @@ import Message from '@splunk/react-ui/Message';
 
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
-import { getUnifiedConfigs, generateToast, shouldHideForPlatform } from '../../util/util';
+import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
 import { axiosCallWrapper } from '../../util/axiosCallWrapper';
@@ -51,6 +51,7 @@ import {
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { PageContextProviderType } from '../../context/PageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
