@@ -215,8 +215,6 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
             appearance="primary"
             id="addInputBtn"
             onClick={() => {
-                console.log('MenuInput services getInputMenu', services);
-
                 handleRequestOpen({ serviceName: services[0].name });
             }}
         />
