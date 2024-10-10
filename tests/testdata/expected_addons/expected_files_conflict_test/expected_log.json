@@ -27,6 +27,7 @@
   "appserver/static/js/build/globalConfig.json                                     created\u001b[0m": "INFO",
   "appserver/static/openapi.json                                                   created\u001b[0m": "INFO",
   "metadata/default.meta                                                           created\u001b[0m": "INFO",
+  "appserver/static/js/build/custom/data_ingestion_modal_definition.json           created\u001b[0m": "INFO",
   "appserver/static/js/build/custom/data_ingestion_tab_definition.json             created\u001b[0m": "INFO",
   "appserver/static/js/build/custom/errors_tab_definition.json                     created\u001b[0m": "INFO",
   "appserver/static/js/build/custom/overview_definition.json                       created\u001b[0m": "INFO",

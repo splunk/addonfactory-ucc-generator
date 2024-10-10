@@ -20,7 +20,7 @@ import { getUnifiedConfigs } from '../../util/util';
  * @param {boolean} isComponentMounted used to remove component data leakage, determines if component is still mounted and dataHandler referes to setState
  * @param {string} dataHandler callback, called with data as params
  */
-function loadJson(
+export function loadJson(
     fileName: string,
     isComponentMounted: boolean,
     dataHandler: (data: Record<string, unknown>) => void

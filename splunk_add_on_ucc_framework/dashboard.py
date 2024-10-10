@@ -47,6 +47,7 @@ default_definition_json_filename = {
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
     "errors_tab": "errors_tab_definition.json",
     "resources_tab": "resources_tab_definition.json",
+    "data_ingestion_modal_definition": "data_ingestion_modal_definition.json",
 }
 
 data_ingestion = (
@@ -239,6 +240,21 @@ def generate_dashboard_content(
                 resource_memory=resource_memory_query.format(
                     addon_name=addon_name.lower()
                 ),
+            )
+        )
+
+    if (
+        definition_json_name
+        == default_definition_json_filename["data_ingestion_modal_definition"]
+    ):
+        content = (
+            utils.get_j2_env()
+            .get_template(definition_json_name)
+            .render(
+                data_ingestion=data_ingestion.format(
+                    lic_usg_condition=lic_usg_condition, determine_by=determine_by
+                ),
+                events_count=events_count.format(addon_name=addon_name.lower()),
             )
         )
 

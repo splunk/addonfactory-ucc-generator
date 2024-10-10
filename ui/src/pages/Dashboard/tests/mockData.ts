@@ -670,3 +670,152 @@ export const SEARCH_JOB_RESULT = {
         },
     ],
 };
+
+export const MOCK_DS_MODAL_DEFINITION = {
+    visualizations: {
+        data_ingestion_modal_timerange_label_start_viz: {
+            type: 'splunk.singlevalue',
+            options: {
+                majorFontSize: 12,
+                backgroundColor: 'transparent',
+                majorColor: '#9fa4af',
+            },
+            dataSources: {
+                primary: 'data_ingestion_modal_data_time_label_start_ds',
+            },
+        },
+        data_ingestion_modal_timerange_label_end_viz: {
+            type: 'splunk.singlevalue',
+            options: {
+                majorFontSize: 12,
+                backgroundColor: 'transparent',
+                majorColor: '#9fa4af',
+            },
+            dataSources: {
+                primary: 'data_ingestion_modal_data_time_label_end_ds',
+            },
+        },
+        data_ingestion_modal_data_volume_viz: {
+            type: 'splunk.line',
+            options: {
+                xAxisVisibility: 'hide',
+                seriesColors: ['#A870EF'],
+                yAxisTitleText: 'Volume (bytes)',
+                xAxisTitleText: 'Time',
+            },
+            title: 'Data volume',
+            dataSources: {
+                primary: 'data_ingestion_modal_data_volume_ds',
+            },
+        },
+        data_ingestion_modal_events_count_viz: {
+            type: 'splunk.line',
+            options: {
+                xAxisVisibility: 'hide',
+                xAxisTitleText: 'Time',
+                seriesColors: ['#A870EF'],
+                yAxisTitleText: 'Number of events',
+            },
+            title: 'Number of events',
+            dataSources: {
+                primary: 'ds_search_1',
+            },
+        },
+    },
+    dataSources: {
+        data_ingestion_modal_data_time_label_start_ds: {
+            type: 'ds.search',
+            options: {
+                query: '| makeresults | addinfo | eval StartDate = strftime(info_min_time, "%e %b %Y %I:%M%p") | table StartDate',
+                queryParameters: {
+                    earliest: '$data_ingestion_modal_time.earliest$',
+                    latest: '$data_ingestion_modal_time.latest$',
+                },
+            },
+        },
+        data_ingestion_modal_data_time_label_end_ds: {
+            type: 'ds.search',
+            options: {
+                query: '| makeresults | addinfo | eval EndDate = strftime(info_max_time, "%e %b %Y %I:%M%p") | table EndDate',
+                queryParameters: {
+                    earliest: '$data_ingestion_modal_time.earliest$',
+                    latest: '$data_ingestion_modal_time.latest$',
+                },
+            },
+        },
+        data_ingestion_modal_data_volume_ds: {
+            type: 'ds.search',
+            options: {
+                query: 'index=_internal source=*license_usage.log type=Usage ({determine_by} IN ({lic_usg_condition})) | timechart sum(b) as Usage | rename Usage as \\"Data volume\\"',
+                queryParameters: {
+                    earliest: '$data_ingestion_modal_time.earliest$',
+                    latest: '$data_ingestion_modal_time.latest$',
+                },
+            },
+        },
+        ds_search_1: {
+            type: 'ds.search',
+            options: {
+                query: 'index=_internal source=*{addon_name}* action=events_ingested | timechart sum(n_events) as \\"Number of events\\"',
+                queryParameters: {
+                    earliest: '$data_ingestion_modal_time.earliest$',
+                    latest: '$data_ingestion_modal_time.latest$',
+                },
+            },
+            name: 'Security Score vs Spend',
+        },
+    },
+    defaults: {},
+    inputs: {
+        data_ingestion_modal_time_window: {
+            options: {
+                defaultValue: '-24h,now',
+                token: 'data_ingestion_modal_time',
+            },
+            title: 'Time Window',
+            type: 'input.timerange',
+        },
+    },
+    layout: {
+        type: 'grid',
+        globalInputs: ['data_ingestion_modal_time_window'],
+        structure: [
+            {
+                item: 'data_ingestion_modal_timerange_label_start_viz',
+                position: {
+                    x: 0,
+                    y: 50,
+                    w: 100,
+                    h: 20,
+                },
+            },
+            {
+                item: 'data_ingestion_modal_timerange_label_end_viz',
+                position: {
+                    x: 100,
+                    y: 50,
+                    w: 100,
+                    h: 20,
+                },
+            },
+            {
+                item: 'data_ingestion_modal_data_volume_viz',
+                position: {
+                    x: 0,
+                    y: 80,
+                    w: 300,
+                    h: 400,
+                },
+            },
+            {
+                item: 'data_ingestion_modal_events_count_viz',
+                position: {
+                    x: 0,
+                    y: 500,
+                    w: 300,
+                    h: 400,
+                },
+            },
+        ],
+    },
+};
