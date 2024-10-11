@@ -15,7 +15,7 @@
                             "required": true,
                             "validators": [
                                 {
-                                    "errorMsg": "Interval must be either a non-negative number or -1.",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
                                     "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
                                     "type": "regex"
                                 },
@@ -56,7 +56,7 @@
                             "required": true,
                             "validators": [
                                 {
-                                    "errorMsg": "Interval must be either a non-negative number or -1.",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
                                     "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
                                     "type": "regex"
                                 },
@@ -120,7 +120,7 @@
                     "required": true,
                     "validators": [
                         {
-                            "errorMsg": "Interval must be either a non-negative number or -1.",
+                            "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
                             "pattern": "^(?:-1|0(?:\\.\\d+)?|[1-9]\\d*(?:\\.\\d+)?)$",
                             "type": "regex"
                         },

@@ -631,8 +631,8 @@ def _compare_interval_entities(
                         "type": "text",
                         "validators": [
                             {
-                                "errorMsg": "Interval must be either a non-negative number or -1.",
-                                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                                "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                "pattern": r"^(?:-1|\d+(?:\.\d+)?)$|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",
                                 "type": "regex",
                             }
                         ],
