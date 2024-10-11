@@ -32,4 +32,3 @@ cron_regex = re.compile(
 def test_cron_regex_expression(is_valid, expression):
     match = cron_regex.fullmatch(expression)
     assert bool(match) == is_valid
-
