@@ -14,7 +14,7 @@ def test_interval_minimal_definition():
         "validators": [
             {
                 "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
-                "pattern": r"^(?:-1|\d+(?:\.\d+)?)$|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",
+                "pattern": r"^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$",
                 "type": "regex",
             }
         ],
@@ -47,7 +47,7 @@ def test_interval_full_definition():
         "validators": [
             {
                 "errorMsg": "Interval input must be either a non-negative number, CRON interval or -1.",
-                "pattern": r"^(?:-1|\d+(?:\.\d+)?)$|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",
+                "pattern": r"^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$",
                 "type": "regex",
             },
             {
@@ -71,7 +71,7 @@ def test_interval_migration():
         "validators": [
             {
                 "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
-                "pattern": r"^(?:-1|\d+(?:\.\d+)?)$|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",
+                "pattern": r"^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$",
                 "type": "regex",
             },
         ],
@@ -105,7 +105,7 @@ def test_interval_migration_with_range():
         "validators": [
             {
                 "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
-                "pattern": r"^(?:-1|\d+(?:\.\d+)?)$|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",
+                "pattern": r"^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$",
                 "type": "regex",
             },
             {
@@ -153,7 +153,7 @@ def test_interval_migration_wrong_field():
         "validators": [
             {
                 "errorMsg": "Other field must be either a non-negative number, CRON interval or -1.",
-                "pattern": r"^(?:-1|\d+(?:\.\d+)?)$|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",
+                "pattern": r"^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$",
                 "type": "regex",
             },
         ],

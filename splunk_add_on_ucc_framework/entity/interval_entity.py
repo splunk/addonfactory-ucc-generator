@@ -31,9 +31,11 @@ class IntervalEntity(Entity):
                 {
                     "type": "regex",
                     "errorMsg": f"{self['label']} must be either a non-negative number, CRON interval or -1.",
-                    "pattern": r"^(?:-1|\d+(?:\.\d+)?)$"  # Non-negative number or -1
+                    "pattern": r"^"
+                    r"(?:-1|\d+(?:\.\d+)?"  # Non-negative number or -1
                     r"|"
-                    r"(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(/\d*)?) ?){5}",  # CRON interval
+                    r"(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})"  # CRON interval
+                    r"$",
                 }
             ],
         }

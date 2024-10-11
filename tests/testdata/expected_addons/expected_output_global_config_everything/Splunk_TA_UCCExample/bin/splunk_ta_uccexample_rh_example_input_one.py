@@ -49,7 +49,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^(?:-1|\d+(?:\.\d+)?)$""",
+            regex=r"""^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$""",
         )
     ), 
     field.RestField(
