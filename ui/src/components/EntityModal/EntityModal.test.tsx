@@ -21,6 +21,7 @@ import {
 import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
 import { Mode } from '../../constants/modes';
 import * as axiosWrapper from '../../util/axiosCallWrapper';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
@@ -38,11 +39,9 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledOauthField = () =>
-        document.getElementsByClassName('oauth_oauth_text_jest_test')[1];
+    const getDisabledOauthField = () => document.querySelector('.oauth_oauth_text_jest_test input');
 
-    const getDisabledBasicField = () =>
-        document.getElementsByClassName('basic_oauth_text_jest_test')[1];
+    const getDisabledBasicField = () => document.querySelector('.basic_oauth_text_jest_test input');
 
     it('Oauth Oauth - disableonEdit = true, oauth field not disabled on create', async () => {
         setUpConfigWithDisabedOauth();
@@ -143,8 +142,7 @@ describe('Options - Enable field property', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledOauthField = () =>
-        document.getElementsByClassName('oauth_oauth_text_jest_test')[1];
+    const getDisabledOauthField = () => document.querySelector('.oauth_oauth_text_jest_test input');
 
     it('Oauth Oauth - Enable field equal false, so field disabled', async () => {
         setUpConfigWithDisabledComplitelyOauthField();
@@ -279,7 +277,7 @@ describe('EntityModal - custom warning', () => {
         setUnifiedConfig(newConfig);
     };
 
-    const renderModal = (inputMode: Mode, page: string) => {
+    const renderModal = (inputMode: Mode, page: StandardPages) => {
         const props = {
             serviceName: 'account',
             mode: inputMode,
@@ -305,7 +303,7 @@ describe('EntityModal - custom warning', () => {
         ${'config'} | ${'input'}
     `(
         'display custom warning for $mode mode - $page tab',
-        ({ mode, page }: { mode: keyof typeof WARNING_MESSAGES; page: string }) => {
+        ({ mode, page }: { mode: keyof typeof WARNING_MESSAGES; page: StandardPages }) => {
             if (page === 'configuration') {
                 setUpConfigWithWarningMessageForConfiguration();
             } else {

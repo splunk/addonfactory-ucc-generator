@@ -435,11 +435,9 @@ def generate(
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
-    ui_available = False
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
-        ui_available = True
         logger.info(f"Using globalConfig file located @ {gc_path}")
         global_config = global_config_lib.GlobalConfig(gc_path)
         # handle the update of globalConfig before validating
@@ -460,6 +458,12 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config.expand()
+        if ta_name != global_config.product:
+            logger.error(
+                "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
+                "please unify them to build the add-on."
+            )
+            sys.exit(1)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
@@ -506,7 +510,7 @@ def generate(
                 addon_name=ta_name,
                 app_manifest=app_manifest,
                 addon_version=addon_version,
-                has_ui=ui_available,
+                has_ui=global_config.meta.get("isVisible", True),
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -600,6 +604,9 @@ def generate(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
 
+    ui_available = False
+    if global_config:
+        ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(
         global_config=global_config,

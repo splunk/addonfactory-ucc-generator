@@ -509,7 +509,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         const stateWithModifications = getModifiedState(
             { data: temState },
             this.props.mode,
-            this.fieldsWithModifications
+            this.fieldsWithModifications,
+            this.props.page
         );
         if (stateWithModifications.shouldUpdateState) {
             temState = { ...stateWithModifications.newState.data };
@@ -936,7 +937,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             const { newState } = getModifiedState(
                 tempState,
                 this.props.mode,
-                this.fieldsWithModifications.filter((entity) => entity.field === field)
+                this.fieldsWithModifications.filter((entity) => entity.field === field),
+                this.props.page
             );
 
             if (this.hookDeferred) {
@@ -1231,6 +1233,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                         disabled={temState?.disabled || false}
                                         markdownMessage={temState?.markdownMessage}
                                         dependencyValues={temState?.dependencyValues || null}
+                                        page={this.props.page}
                                     />
                                 );
                             }
@@ -1326,6 +1329,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 dependencyValues={temState.dependencyValues || null}
                                 fileNameToDisplay={temState.fileNameToDisplay}
                                 modifiedEntitiesData={temState.modifiedEntitiesData}
+                                page={this.props.page}
                             />
                         );
                     })}

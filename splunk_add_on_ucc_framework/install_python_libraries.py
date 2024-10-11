@@ -227,6 +227,8 @@ def install_os_dependent_libraries(
         return cleanup_libraries
 
     logger.info("Installing os-dependentLibraries.")
+
+    validate_conflicting_paths(os_libraries)
     for os_lib in os_libraries:
         if os_lib.dependencies is False and not _pip_is_lib_installed(
             installer=installer,
@@ -272,3 +274,15 @@ Possible solutions, either:
             sys.exit("Package building process interrupted.")
         cleanup_libraries.add(os_lib.name)
     return cleanup_libraries
+
+
+def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]) -> bool:
+    name_target_pairs = [(lib.name, lib.target) for lib in libs]
+    conflicts = {x for x in name_target_pairs if name_target_pairs.count(x) > 1}
+    if conflicts:
+        logger.error(
+            f"Found conflicting paths for libraries: {conflicts}. "
+            "Please make sure that the paths are unique."
+        )
+        raise CouldNotInstallRequirements
+    return True

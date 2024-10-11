@@ -1,4 +1,4 @@
-When a row is expanded on the Inputs table, Custom Row is utilized to incorporate a customized element. By clicking on the icon provided on the left side of each row, the input-specific details are displayed.
+When a row is expanded on the Inputs table or Configuration Table, Custom Row is utilized to incorporate a customized element. By clicking on the icon provided on the left side of each row, the input-specific details are displayed.
 
 ### Properties
 
