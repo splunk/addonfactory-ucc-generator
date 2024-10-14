@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
@@ -26,7 +26,7 @@ jobs:
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -54,7 +54,7 @@ jobs:
       failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -68,7 +68,7 @@ jobs:
       SEMGREP_KEY: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
   compliance-copyrights:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: apache/skywalking-eyes@v0.6.0
@@ -104,7 +104,7 @@ jobs:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -133,7 +133,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -166,7 +166,7 @@ jobs:
     name: test-smoke ${{ matrix.python-version }}
     needs:
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -202,7 +202,7 @@ jobs:
       failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - build-ui
     steps:
@@ -234,7 +234,7 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       contents: read
@@ -293,7 +293,7 @@ jobs:
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -332,7 +332,7 @@ jobs:
       - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
@@ -365,7 +365,7 @@ jobs:
       - semgrep
       - pre-commit
       - all-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: "! github.event.pull_request.head.repo.fork "
     steps:
       - uses: actions/checkout@v4
@@ -407,7 +407,7 @@ jobs:
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - meta
       - build-test-addon
