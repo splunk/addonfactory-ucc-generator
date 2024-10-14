@@ -149,6 +149,22 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
         )
 
 
+def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_path):
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
+
+    with pytest.raises(SplunktaucclibNotFound):
+        install_python_libraries(
+            str(tmp_path),
+            str(tmp_ucc_lib_target),
+            python_binary_name="python3",
+            includes_ui=True,
+        )
+
+
 def test_remove_package_from_installed_path(tmp_path):
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
