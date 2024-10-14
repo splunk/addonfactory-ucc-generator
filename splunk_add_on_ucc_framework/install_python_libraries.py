@@ -65,7 +65,7 @@ def _subprocess_run(
     command: str,
     command_desc: Optional[str] = None,
     env: Optional[Dict[str, str]] = None,
-) -> subprocess.CompletedProcess[bytes]:
+) -> "subprocess.CompletedProcess[bytes]":
     command_desc = command_desc or command
     try:
         logger.info(f"Executing: {command}")
