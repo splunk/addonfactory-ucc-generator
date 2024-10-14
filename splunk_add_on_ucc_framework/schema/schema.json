@@ -241,6 +241,9 @@
               },
               {
                 "$ref": "#/definitions/PredefinedLoggingTab"
+              },
+              {
+                "$ref": "#/definitions/PredefinedProxyTab"
               }
             ]
           },
@@ -2712,6 +2715,64 @@
         "type"
       ],
       "additionalProperties": false
+    },
+    "PredefinedProxyTab": {
+      "type": "object",
+      "description": "Predefined Proxy tab configuration, can be used to reduce length of config",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "proxyTab",
+          "description": "Exactly: proxyTab"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[\\/\\w]+$",
+          "default": "Proxy",
+          "description": "Tab name.",
+          "maxLength": 250
+        },
+        "title": {
+          "type": "string",
+          "default": "Logging",
+          "description": "Tab title.",
+          "maxLength": 50
+        },
+        "entity": {
+          "$ref": "#/definitions/AnyOfEntity"
+        },
+        "options": {
+          "$ref": "#/definitions/SaveValidatorHook"
+        },
+        "restHandlerName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. (Do NOT use with restHandlerModule) "
+        },
+        "restHandlerModule": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerClass) "
+        },
+        "restHandlerClass": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
+        },
+        "hook": {
+          "type": "object",
+          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+        },
+        "warning": {
+          "$ref": "#/definitions/WarningMessage"
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        }
+      },
+      "required": [
+        "type"
+      ]
     },
     "InputPageSingleTable": {
       "type": "object",
