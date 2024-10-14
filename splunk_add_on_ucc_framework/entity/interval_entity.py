@@ -17,6 +17,14 @@ from typing import Optional, Dict, Any
 
 from splunk_add_on_ucc_framework.entity.entity import Entity
 
+CRON_REGEX = (
+    r"^"
+    r"(?:-1|\d+(?:\.\d+)?"  # Non-negative number or -1
+    r"|"
+    r"(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})"  # CRON interval
+    r"$"
+)
+
 
 class IntervalEntity(Entity):
     def short_form(self) -> Dict[str, Any]:
@@ -31,11 +39,7 @@ class IntervalEntity(Entity):
                 {
                     "type": "regex",
                     "errorMsg": f"{self['label']} must be either a non-negative number, CRON interval or -1.",
-                    "pattern": r"^"
-                    r"(?:-1|\d+(?:\.\d+)?"  # Non-negative number or -1
-                    r"|"
-                    r"(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})"  # CRON interval
-                    r"$",
+                    "pattern": CRON_REGEX,
                 }
             ],
         }

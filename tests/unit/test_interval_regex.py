@@ -1,9 +1,9 @@
 import re
 import pytest
 
-cron_regex = re.compile(
-    r"^(?:-1|\d+(?:\.\d+)?|(((\d+,)+\d+|(\d+[/-]\d+)|\d+|\*(\/\d*)?) ?){5})$"
-)
+from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
+
+cron_regex = re.compile(CRON_REGEX)
 
 
 @pytest.mark.parametrize(
@@ -15,10 +15,10 @@ cron_regex = re.compile(
         (True, "0 12 * * 3"),
         (True, "0 22 * * 1-5"),
         (True, "* 0,2 * * *"),
+        (True, "* 0/9 * * *"),
         (True, "*/15 * * * *"),
         (True, "*/15 0 1,15 * 1-5"),
         (True, "0 0,12 1 */2 *"),
-        # (True, "* 0-20/2 * * *"), # 0-20/2 cron syntax is not supported by this regex...
         (True, "1"),
         (True, "-1"),
         (True, "0"),
@@ -27,6 +27,12 @@ cron_regex = re.compile(
         (False, "5 0 * 8 * 1"),
         (False, "5 4 * * sun"),  # This syntax (sun) is not supported
         (False, "@weekly"),  # This syntax is not supported
+        # (True, "* 0-20/2 * * *"), # 0-20/2 cron syntax is not supported by this regex...
+        # (True, "* */9,8 * * *"), # This syntax is not supported
+        # (True, "* */9,9-12 * * *"),  # This syntax is not supported
+        # (True, "* 0/9,8 * * *"),  # This syntax is not supported
+        # (True, "* 9/1,9-12 * * *"),  # This syntax is not supported
+        # (False, "* 0/0 * * *")   # We don't handle this case
     ),
 )
 def test_cron_regex_expression(is_valid, expression):
