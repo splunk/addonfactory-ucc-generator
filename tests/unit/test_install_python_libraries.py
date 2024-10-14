@@ -78,9 +78,7 @@ def test_install_libraries_when_subprocess_returns_non_zero_codes(
         )
 
 
-@mock.patch("subprocess.call", autospec=True)
-def test_install_python_libraries(mock_subprocess_call, tmp_path):
-    mock_subprocess_call.return_value = 0
+def test_install_python_libraries(tmp_path):
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_ucc_lib_target.mkdir()
     tmp_lib_path = tmp_path / "lib"
