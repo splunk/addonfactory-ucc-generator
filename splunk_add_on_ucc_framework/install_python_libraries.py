@@ -115,6 +115,8 @@ def _pip_is_lib_installed(
         my_env["PYTHONPATH"] = target
         if allow_higher_version:
             result = _subprocess_run(command=cmd, env=my_env)
+            if result.returncode != 0:
+                return False
             result_version = result.stdout.decode("utf-8").split("Version:")[1].strip()
             return Version(result_version) >= Version(version)
         else:
