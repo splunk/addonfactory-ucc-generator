@@ -5,7 +5,7 @@ from splunktaucclib.rest_handler.endpoint import (
     field,
     validator,
     RestModel,
-    DataInputModel,
+    SingleModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
 from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
@@ -16,29 +16,23 @@ util.remove_http_proxy_env_vars()
 
 fields = [
     field.RestField(
-        'interval',
+        'text_test',
         required=True,
         encrypted=False,
         default=None,
-        validator=validator.Pattern(
-            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""",
+        validator=validator.String(
+            max_len=100, 
+            min_len=1, 
         )
-    ), 
-
-    field.RestField(
-        'disabled',
-        required=False,
-        validator=None
     )
-
 ]
 model = RestModel(fields, name=None)
 
 
-
-endpoint = DataInputModel(
-    'example_input_four',
+endpoint = SingleModel(
+    'splunk_ta_uccexample_tab_hidden_for_enterprise',
     model,
+    config_name='tab_hidden_for_enterprise'
 )
 
 

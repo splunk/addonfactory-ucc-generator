@@ -33,6 +33,18 @@ class EXAMPLE_INPUT_TWO(smi.Script):
         )
         scheme.add_argument(
             smi.Argument(
+                'input_two_text_hidden_for_cloud',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                'input_two_text_hidden_for_enterprise',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
                 'input_two_multiple_select',
                 required_on_create=True,
             )
