@@ -200,9 +200,9 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.49.0R97694ce7",
+        "version": "5.50.1+8cbb9b3c",
         "displayName": "This is my add-on",
         "schemaVersion": "0.0.8",
-        "_uccVersion": "5.49.0"
+        "_uccVersion": "5.50.1"
     }
 }
