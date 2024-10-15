@@ -59,12 +59,9 @@ def test_ucc_generate_with_config_param():
     Check if globalConfig and app.manifest contains current ucc version
     """
 
-    def check_ucc_versions():
+    def check_ucc_versions(parent_folder):
         global_config_path = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "..",
-            "output",
+            parent_folder,
             "Splunk_TA_UCCExample",
             "appserver",
             "static",
@@ -94,10 +91,12 @@ def test_ucc_generate_with_config_param():
         "package_global_config_everything",
         "globalConfig.json",
     )
+    with tempfile.TemporaryDirectory(prefix="ucc") as temp:
+        build.generate(
+            source=package_folder, config_path=config_path, output_directory=temp
+        )
 
-    build.generate(source=package_folder, config_path=config_path)
-
-    check_ucc_versions()
+        check_ucc_versions(temp)
 
 
 def test_ucc_generate_with_everything():
@@ -356,7 +355,7 @@ def test_ucc_build_verbose_mode(caplog):
             if copy_logs:
                 return_logs.append(record)
 
-            if record.message[:22] == message_to_end:
+            if record.message.startswith(message_to_end):
                 copy_logs = False
 
         return return_logs
