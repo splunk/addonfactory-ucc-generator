@@ -275,13 +275,12 @@ function getLicenseUsageSearchParams(globalConfig: GlobalConfig) {
         };
     };
     const inputNames = globalConfig?.pages.inputs?.services;
-    let determineBy = 's';
     let licUsgCondition = inputNames?.map((item) => `${item.name}*`).join(',');
 
     try {
         const licUsgType = dashboard?.settings?.custom_license_usage?.determine_by || 'Source';
         const licUsgSearchItems = dashboard?.settings?.custom_license_usage?.search_condition;
-        determineBy = queryMap[licUsgType];
+        const determineBy = queryMap[licUsgType] || 's';
 
         const combinedItems = [
             licUsgCondition || [],
@@ -339,7 +338,7 @@ export async function fetchDropdownValuesFromQuery(
                     }
                 },
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                error: (error: any) => {
+                error: (error: unknown) => {
                     reject(error);
                 },
                 complete: () => {
@@ -362,7 +361,7 @@ export async function fetchDropdownValuesFromQuery(
         )
         .catch((error) => {
             // eslint-disable-next-line no-console
-            console.error('Error in fetching parsed values:', error);
-            throw error;
+            console.error('Error in fetching queries data:', error);
+            return [];
         });
 }

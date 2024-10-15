@@ -256,10 +256,6 @@
     margin-bottom: 5px;
 }
 
-/* #data_ingestion_modal_timerange_label_start_viz {
-    grid-row: 2;
-} */
-
 #data_ingestion_modal_timerange_label_end_viz {
     margin-left: 145px;
     display: flex;
@@ -343,7 +339,6 @@
 
 [data-test-panel-id='dataIngestionTabPanel'] [data-test='grid-layout-canvas'] {
     grid-template-columns: repeat(8, 12%);
-    /* grid-template-rows: auto auto auto auto auto; */
     overflow-x: hidden;
 }
 

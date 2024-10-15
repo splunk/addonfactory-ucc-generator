@@ -2,7 +2,6 @@ import * as React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 
 import { http, HttpResponse, RequestHandler } from 'msw';
-import { consoleError } from '../../../../jest.setup';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
 import { server } from '../../../mocks/server';
@@ -17,7 +16,6 @@ const handleSelect = jest.fn();
 
 describe('render data ingestion modal inputs', () => {
     it('renders with all default modal dashboard elements', async () => {
-        consoleError.mockImplementation(() => {});
         server.use(
             http.get('/custom/data_ingestion_modal_definition.json', () =>
                 HttpResponse.json(MOCK_DS_MODAL_DEFINITION)

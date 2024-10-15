@@ -3,6 +3,7 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';
+import { EventType } from '@splunk/react-events-viewer/common-types';
 import { getUnifiedConfigs } from '../../util/util';
 
 import {
@@ -13,7 +14,7 @@ import {
     loadDashboardJsonDefinition,
     queryMap,
 } from './utils';
-import { FieldValue } from './DataIngestion.types';
+import { FieldValue, SearchResponse } from './DataIngestion.types';
 
 /**
  * @param {object} props
@@ -38,6 +39,9 @@ export const DashboardModal = ({
         string,
         unknown
     > | null>(null);
+    const [dropdownFetchedValues, setDropdownFetchedValues] = useState<SearchResponse<EventType>[]>(
+        []
+    );
 
     const globalConfig = useMemo(() => getUnifiedConfigs(), []);
 
@@ -67,33 +71,30 @@ export const DashboardModal = ({
         return [...safeActiveValues, ...safeInactiveValues];
     };
 
-    const processResults = (results: Record<string, string>[], fieldKey: string) => {
-        let extractColumnsValues: Record<string, string>[] = [];
-        results.forEach((value) => {
+    const processResults = (results: Record<string, string>[], fieldKey: string) =>
+        results.reduce((extractColumnsValues: Record<string, string>[], value) => {
             if (queryMap[fieldKey] === value.field) {
                 const dropDownValues = JSON.parse(value.values);
-                extractColumnsValues = dropDownValues.map((item: FieldValue) => ({
+                return dropDownValues.map((item: FieldValue) => ({
                     label: item.value,
                     value: item.value,
                 }));
             }
-        });
-        return extractColumnsValues;
-    };
+            return extractColumnsValues;
+        }, []);
 
-    const updateModalData = useCallback(async () => {
+    const updateModalData = useCallback(() => {
         if (!dataIngestionModalDef) {
             return null;
         }
 
         const copyDataIngestionModalJson = JSON.parse(JSON.stringify(dataIngestionModalDef));
-        const values = await fetchDropdownValuesFromQuery(globalConfig);
         let extractColumnsValues: Record<string, string>[] = [];
 
         if (selectTitleForDropdownInModal === 'Input') {
-            const activeState = values[0]?.results[0]?.Active;
-            const activeInputs = values[0]?.results[0]?.event_input;
-            const inactiveInputs = values[0]?.results[1]?.event_input;
+            const activeState = dropdownFetchedValues[0]?.results[0]?.Active;
+            const activeInputs = dropdownFetchedValues[0]?.results[0]?.event_input;
+            const inactiveInputs = dropdownFetchedValues[0]?.results[1]?.event_input;
 
             // Handle cases where only active or inactive inputs exist
             if (activeState === 'yes') {
@@ -102,9 +103,15 @@ export const DashboardModal = ({
                 extractColumnsValues = mergeInputValues(inactiveInputs, activeInputs);
             }
         } else if (selectTitleForDropdownInModal === 'Account') {
-            extractColumnsValues = processResults(values[1].results, selectTitleForDropdownInModal);
+            extractColumnsValues = processResults(
+                dropdownFetchedValues[1]?.results || [],
+                selectTitleForDropdownInModal
+            );
         } else {
-            extractColumnsValues = processResults(values[2].results, selectTitleForDropdownInModal);
+            extractColumnsValues = processResults(
+                dropdownFetchedValues[2]?.results || [],
+                selectTitleForDropdownInModal
+            );
         }
 
         setDataIngestionDropdownValues(extractColumnsValues);
@@ -152,13 +159,22 @@ export const DashboardModal = ({
         return copyDataIngestionModalJson;
     }, [
         dataIngestionModalDef,
-        globalConfig,
+        dropdownFetchedValues,
         selectTitleForDropdownInModal,
         selectValueForDropdownInModal,
         setDataIngestionDropdownValues,
     ]);
 
-    // Update the dashboard when the definition or selected input changes
+    useEffect(() => {
+        const fetchDropdownValues = async () => {
+            const values = await fetchDropdownValuesFromQuery(globalConfig);
+            setDropdownFetchedValues(values);
+        };
+
+        fetchDropdownValues();
+    }, [globalConfig]);
+
+    // Update the dashboard when the modal data changes
     useEffect(() => {
         const updateDefinitionForDashboardModal = async () => {
             if (dashboardCoreApi.current && dataIngestionModalDef) {

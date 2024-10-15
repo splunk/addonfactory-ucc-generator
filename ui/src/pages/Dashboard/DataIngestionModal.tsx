@@ -1,5 +1,5 @@
 import Modal from '@splunk/react-ui/Modal';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { variables } from '@splunk/themes';
@@ -7,6 +7,7 @@ import Button from '@splunk/react-ui/Button';
 import Dropdown from '@splunk/react-ui/Dropdown';
 import Menu from '@splunk/react-ui/Menu';
 import Checkmark from '@splunk/react-icons/Checkmark';
+import P from '@splunk/react-ui/Paragraph';
 import { StyledButton } from '../EntryPageStyle';
 import { makeVisualAdjustmentsOnDataIngestionModal } from './utils';
 
@@ -70,9 +71,10 @@ export const DataIngestionModal = ({
 
     const filteredItemByValue = (findItem: string) =>
         dataIngestionDropdownValues.filter((item) => item.value === findItem)[0];
-    const filteredItemByLabel = (findItem: string) =>
-        dataIngestionDropdownValues.filter((item) => item.label === findItem)[0];
-
+    const filteredItemByLabel = useCallback(
+        (findItem: string) => dataIngestionDropdownValues.find((item) => item.label === findItem),
+        [dataIngestionDropdownValues]
+    );
     // add selected value
     const selectedItem = filteredItemByValue(selectValueForDropdownInModal);
     items.push(
@@ -98,13 +100,16 @@ export const DataIngestionModal = ({
     });
 
     // handle onchange dropdown values
-    function handleDropdownClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        const selectedValue = (e.target as HTMLElement).textContent || '';
-        const findSelectedValue = filteredItemByLabel(selectedValue);
-        if (findSelectedValue) {
-            setSelectValueForDropdownInModal(findSelectedValue.value);
-        }
-    }
+    const handleDropdownClick = useCallback(
+        (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            const selectedValue = (e.target as HTMLElement).textContent || '';
+            const findSelectedValue = filteredItemByLabel(selectedValue);
+            if (findSelectedValue) {
+                setSelectValueForDropdownInModal(findSelectedValue.value);
+            }
+        },
+        [filteredItemByLabel, setSelectValueForDropdownInModal]
+    );
 
     useEffect(() => {
         makeVisualAdjustmentsOnDataIngestionModal();
@@ -119,7 +124,7 @@ export const DataIngestionModal = ({
             <ModalBody>
                 {children}
                 <div id="data_ingestion_modal_dropdown" className="invisible_before_moving">
-                    <p id="data_ingestion_dropdown_label">{title}</p>
+                    <P id="data_ingestion_dropdown_label">{title}</P>
                     <Dropdown toggle={toggle}>
                         <Menu
                             stopScrollPropagation
@@ -129,7 +134,7 @@ export const DataIngestionModal = ({
                                 padding: '5px 0px',
                                 margin: '10px 0px',
                             }}
-                            onClick={(e) => handleDropdownClick(e)}
+                            onClick={handleDropdownClick}
                         >
                             {items}
                         </Menu>
@@ -146,13 +151,13 @@ export const DataIngestionModal = ({
                             const searchButtonForNumberOfEvents = document.querySelector(
                                 '#data_ingestion_modal_events_count_viz [data-test="open-search-button"]'
                             ) as HTMLElement | null;
-                            const searchButtonForDataVolume = document.querySelector(
-                                '#data_ingestion_modal_data_volume_viz [data-test="open-search-button"]'
-                            ) as HTMLElement | null;
 
                             if (searchButtonForNumberOfEvents) {
                                 searchButtonForNumberOfEvents.click();
                             } else {
+                                const searchButtonForDataVolume = document.querySelector(
+                                    '#data_ingestion_modal_data_volume_viz [data-test="open-search-button"]'
+                                ) as HTMLElement | null;
                                 searchButtonForDataVolume?.click();
                             }
                         }}
