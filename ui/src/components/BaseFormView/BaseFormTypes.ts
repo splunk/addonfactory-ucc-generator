@@ -18,6 +18,7 @@ import {
     TextEntity,
 } from '../../types/globalConfig/entities';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { PageContextProviderType } from '../../context/PageContext';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -71,6 +72,7 @@ export interface BaseFormProps {
     stanzaName: string;
     groupName?: string;
     handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
+    pageContext?: PageContextProviderType;
 }
 
 export interface BaseFormState {

@@ -28,6 +28,9 @@ import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import EntityPage from '../../components/EntityPage/EntityPage';
 import SubDescription from '../../components/SubDescription/SubDescription';
 import useQuery from '../../hooks/useQuery';
+import { PageContextProvider } from '../../context/PageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -68,6 +71,8 @@ function isTableSchema(inputs: InputsPage): inputs is InputsPageTable {
 function InputPage(): ReactElement {
     const [entity, setEntity] = useState<EntityState>({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
+    const platform = usePlatform(unifiedConfigs, 'inputs');
+
     const inputsPage = unifiedConfigs.pages.inputs;
 
     let services: ServiceTable[] = [];
@@ -79,11 +84,16 @@ function InputPage(): ReactElement {
     if (inputsPage) {
         if (isTableSchema(inputsPage)) {
             ({ services, title, table, description, subDescription } = inputsPage);
+            services = services.filter(
+                (service) => !shouldHideForPlatform(service.hideForPlatform, platform)
+            );
         } else {
             ({ services, title } = inputsPage);
+            services = services.filter(
+                (service) => !shouldHideForPlatform(service.hideForPlatform, platform)
+            );
         }
     }
-
     // check if the tabs feature is enabled or not.
     const isTabs = !table;
 
@@ -258,89 +268,94 @@ function InputPage(): ReactElement {
         },
         [activeTabId] // eslint-disable-line react-hooks/exhaustive-deps
     );
-
     return (
         <ErrorBoundary>
-            <TableContextProvider>
-                {entity.isInputPageStyle && entity.open ? generatePageDialog() : null}
-                <div
-                    style={
-                        entity.isInputPageStyle && entity.open
-                            ? { display: 'none' }
-                            : { display: 'block' }
-                    }
-                >
-                    <ColumnLayout gutter={8}>
-                        <Row>
-                            <ColumnLayout.Column
-                                className={isTabs ? 'title_menu_column' : ''}
-                                span={9}
-                            >
-                                <TitleComponent>
-                                    {isTabs ? _(selectedTab?.title || '') : _(title || '')}
-                                </TitleComponent>
-                                <SubTitleComponent className={isTabs ? 'pageSubtitle' : undefined}>
-                                    {isTabs
-                                        ? _(isTableFullSchema ? selectedTab?.description : '')
-                                        : _(description || '')}
-                                </SubTitleComponent>
-                                <SubDescription
-                                    text={subDescription?.text || ''}
-                                    links={subDescription?.links}
-                                />
-                            </ColumnLayout.Column>
-                            <ColumnLayout.Column
-                                className={isTabs ? 'title_menu_column' : 'dropdown'}
-                                span={3}
-                            >
-                                {!isTabs && <MenuInput handleRequestOpen={handleRequestOpen} />}
-                            </ColumnLayout.Column>
-                        </Row>
-                    </ColumnLayout>
-                    {isTabs ? (
-                        <>
-                            <TabBar activeTabId={activeTabId} onChange={onTabChange}>
-                                {services.map((service) => (
-                                    <TabBar.Tab
-                                        key={service.name}
-                                        label={_(service.title)}
-                                        tabId={service.name}
-                                    />
-                                ))}
-                            </TabBar>
-                            {services.map((service) => (
-                                <div
-                                    key={service.name}
-                                    style={
-                                        service.name !== activeTabId
-                                            ? { display: 'none' }
-                                            : { display: 'block' }
-                                    }
-                                    id={`${service.name}Tab`}
+            <PageContextProvider platform={platform}>
+                <TableContextProvider>
+                    {entity.isInputPageStyle && entity.open ? generatePageDialog() : null}
+                    <div
+                        style={
+                            entity.isInputPageStyle && entity.open
+                                ? { display: 'none' }
+                                : { display: 'block' }
+                        }
+                    >
+                        <ColumnLayout gutter={8}>
+                            <Row>
+                                <ColumnLayout.Column
+                                    className={isTabs ? 'title_menu_column' : ''}
+                                    span={9}
                                 >
-                                    <TableWrapper
-                                        page={PAGE_INPUT}
-                                        serviceName={service.name}
-                                        handleRequestModalOpen={() =>
-                                            handleRequestOpen({ serviceName: service.name })
-                                        }
-                                        handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                                    <TitleComponent>
+                                        {isTabs ? _(selectedTab?.title || '') : _(title || '')}
+                                    </TitleComponent>
+                                    <SubTitleComponent
+                                        className={isTabs ? 'pageSubtitle' : undefined}
+                                    >
+                                        {isTabs
+                                            ? _(isTableFullSchema ? selectedTab?.description : '')
+                                            : _(description || '')}
+                                    </SubTitleComponent>
+                                    <SubDescription
+                                        text={subDescription?.text || ''}
+                                        links={subDescription?.links}
                                     />
-                                </div>
-                            ))}
-                        </>
-                    ) : (
-                        <TableWrapper
-                            page={PAGE_INPUT}
-                            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
-                            displayActionBtnAllRows
-                        />
-                    )}
+                                </ColumnLayout.Column>
+                                <ColumnLayout.Column
+                                    className={isTabs ? 'title_menu_column' : 'dropdown'}
+                                    span={3}
+                                >
+                                    {!isTabs && <MenuInput handleRequestOpen={handleRequestOpen} />}
+                                </ColumnLayout.Column>
+                            </Row>
+                        </ColumnLayout>
+                        {isTabs ? (
+                            <>
+                                <TabBar activeTabId={activeTabId} onChange={onTabChange}>
+                                    {services.map((service) => (
+                                        <TabBar.Tab
+                                            key={service.name}
+                                            label={_(service.title)}
+                                            tabId={service.name}
+                                        />
+                                    ))}
+                                </TabBar>
+                                {services.map((service) => (
+                                    <div
+                                        key={service.name}
+                                        style={
+                                            service.name !== activeTabId
+                                                ? { display: 'none' }
+                                                : { display: 'block' }
+                                        }
+                                        id={`${service.name}Tab`}
+                                    >
+                                        <TableWrapper
+                                            page={PAGE_INPUT}
+                                            serviceName={service.name}
+                                            handleRequestModalOpen={() =>
+                                                handleRequestOpen({
+                                                    serviceName: service.name,
+                                                })
+                                            }
+                                            handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                                        />
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <TableWrapper
+                                page={PAGE_INPUT}
+                                handleOpenPageStyleDialog={handleOpenPageStyleDialog}
+                                displayActionBtnAllRows
+                            />
+                        )}
 
-                    <ToastMessages position="top-right" />
-                    {!entity.isInputPageStyle && entity.open ? generateModalDialog() : null}
-                </div>
-            </TableContextProvider>
+                        <ToastMessages position="top-right" />
+                        {!entity.isInputPageStyle && entity.open ? generateModalDialog() : null}
+                    </div>
+                </TableContextProvider>
+            </PageContextProvider>
         </ErrorBoundary>
     );
 }

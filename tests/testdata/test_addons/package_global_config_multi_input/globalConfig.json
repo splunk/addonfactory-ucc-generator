@@ -399,10 +399,18 @@
                         "moreInfo": []
                     },
                     "warning": {
-                        "create": "Warning text for create mode",
-                        "edit": "Warning text for edit mode",
-                        "clone": "Warning text for clone mode",
-                        "config": "Warning text for config mode"
+                      "create": {
+                        "message": "Warning text for create mode"
+                      },
+                      "edit": {
+                        "message": "Warning text for edit mode"
+                      },
+                      "clone": {
+                        "message": "Warning text for clone mode"
+                      },
+                      "config": {
+                        "message": "Warning text for config mode"
+                      }
                     }
                 },
                 {
@@ -424,6 +432,48 @@
                             "src": "custom_row"
                         }
                     }
+                },
+                {
+                    "name": "example_input_three",
+                    "description": "Input hidden for cloud",
+                    "title": "Example Input Three Hidden Cloud",
+                    "entity": [],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "enable",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [],
+                        "moreInfo": [],
+                        "customRow": {
+                            "type": "external",
+                            "src": "custom_row"
+                        }
+                    },
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "example_input_four",
+                    "description": "Input hidden for enterprise",
+                    "title": "Example Input Four Hidden Enterprise",
+                    "entity": [],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "enable",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [],
+                        "moreInfo": [],
+                        "customRow": {
+                            "type": "external",
+                            "src": "custom_row"
+                        }
+                    },
+                    "hideForPlatform": "enterprise"
                 }
             ]
         }

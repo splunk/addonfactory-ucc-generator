@@ -30,6 +30,20 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'text_field_hidden_for_cloud',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'text_field_hidden_for_enterprise',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'url',
         required=False,
         encrypted=False,
