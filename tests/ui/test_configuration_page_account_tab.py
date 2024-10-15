@@ -21,7 +21,6 @@ _ACCOUNT_CONFIG = {
     "endpoint": "",
     "example_help_link": "",
     "url": "https://test.example.com",
-    "basic_oauth_text": "Some_correct_text",
 }
 
 
