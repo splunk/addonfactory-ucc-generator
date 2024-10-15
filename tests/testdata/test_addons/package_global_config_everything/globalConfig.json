@@ -91,6 +91,24 @@
                             }
                         },
                         {
+                            "type": "text",
+                            "label": "Example text hidden for cloud",
+                            "help": "Enter text for field hidden for cloud",
+                            "field": "text_field_hidden_for_cloud",
+                            "options": {
+                                "hideForPlatform": "cloud"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Example text hidden for enterprise",
+                            "help": "Enter text for field hidden for enterprise",
+                            "field": "text_field_hidden_for_enterprise",
+                            "options": {
+                                "hideForPlatform": "enterprise"
+                            }
+                        },
+                        {
                             "field": "url",
                             "label": "URL",
                             "type": "text",
@@ -696,6 +714,142 @@
                         }
                     ],
                     "title": "Custom table row"
+                },
+                {
+                    "name": "tab_hidden_for_cloud",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "Tab hidden for cloud",
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "tab_hidden_for_enterprise",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "Tab hidden for enterprise",
+                    "hideForPlatform": "enterprise"
                 }
             ],
             "title": "Configuration",
@@ -1056,6 +1210,28 @@
                             "required": true
                         },
                         {
+                            "type": "text",
+                            "label": "Text input hidden for cloud",
+                            "field": "input_two_text_hidden_for_cloud",
+                            "help": "Should be hidden for cloud",
+                            "tooltip": "Should be hidden for cloud",
+                            "required": false,
+                            "options": {
+                                "hideForPlatform": "cloud"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Text input hidden for enterprise",
+                            "field": "input_two_text_hidden_for_enterprise",
+                            "help": "Should be hidden for enterprise",
+                            "tooltip": "Should be hidden for enterprise",
+                            "required": false,
+                            "options": {
+                                "hideForPlatform": "enterprise"
+                            }
+                        },
+                        {
                             "type": "multipleSelect",
                             "label": "Example Multiple Select",
                             "field": "input_two_multiple_select",
@@ -1358,8 +1534,6 @@
                 },
                 {
                     "name": "example_input_four",
-                    "restHandlerModule": "splunk_ta_uccexample_custom_rh",
-                    "restHandlerClass": "CustomRestHandler",
                     "entity": [
                         {
                             "type": "text",
@@ -1390,6 +1564,74 @@
                         }
                     ],
                     "title": "Example Input Four"
+                },
+                {
+                    "name": "service_hidden_for_cloud",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service hidden for cloud",
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "service_hidden_for_enterprise",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service hidden for enterprise",
+                    "hideForPlatform": "enterprise"
                 }
             ],
             "title": "Inputs",
