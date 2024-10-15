@@ -595,35 +595,8 @@
         "encrypted": {
           "$ref": "#/definitions/encrypted"
         },
-        "validators": {
-          "type": "array",
-          "description": "It is used to validate the values of fields using various validators.",
-          "minItems": 1,
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/NumberValidator"
-              },
-              {
-                "$ref": "#/definitions/StringValidator"
-              },
-              {
-                "$ref": "#/definitions/RegexValidator"
-              },
-              {
-                "$ref": "#/definitions/EmailValidator"
-              },
-              {
-                "$ref": "#/definitions/Ipv4Validator"
-              },
-              {
-                "$ref": "#/definitions/UrlValidator"
-              },
-              {
-                "$ref": "#/definitions/DateValidator"
-              }
-            ]
-          }
+        "validators":{
+          "$ref": "#/definitions/AnyValidator"
         },
         "options": {
           "type": "object",
@@ -2114,6 +2087,9 @@
         },
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
+        },
+        "validators":{
+          "$ref": "#/definitions/AnyValidator"
         }
       },
       "additionalProperties": false
@@ -2353,6 +2329,36 @@
         "type"
       ],
       "additionalProperties": false
+    },
+    "AnyValidator":{
+      "type": "array",
+      "description": "It is used to validate the values of fields using various validators.",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/NumberValidator"
+          },
+          {
+            "$ref": "#/definitions/StringValidator"
+          },
+          {
+            "$ref": "#/definitions/RegexValidator"
+          },
+          {
+            "$ref": "#/definitions/EmailValidator"
+          },
+          {
+            "$ref": "#/definitions/Ipv4Validator"
+          },
+          {
+            "$ref": "#/definitions/UrlValidator"
+          },
+          {
+            "$ref": "#/definitions/DateValidator"
+          }
+        ]
+      }
     },
     "ValueLabelPair": {
       "type": "object",

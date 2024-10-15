@@ -293,12 +293,25 @@
                                     {
                                         "oauth_field": "some_text",
                                         "label": "Disabled on edit for oauth",
-                                        "help": "Enter text for field disabled on edit",
+                                        "help": "Enter text for field disabled on edit, no special characters allowed",
                                         "field": "basic_oauth_text",
                                         "required": false,
                                         "options": {
                                             "disableonEdit": true
-                                        }
+                                        },
+                                        "validators": [
+                                            {
+                                                "type": "string",
+                                                "errorMsg": "Length should be between 10 and 4096",
+                                                "minLength": 10,
+                                                "maxLength": 4096
+                                            },
+                                            {
+                                                "type": "regex",
+                                                "errorMsg": "Do not use special characters",
+                                                "pattern": "^[a-zA-Z]\\w*$"
+                                            }
+                                        ]
                                     }
                                 ],
                                 "oauth": [
@@ -1864,7 +1877,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.50.1+8cbb9b3c",
+        "version": "5.50.1+b4cfdcd44",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.50.1",
