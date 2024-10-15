@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "AlertEntity": {
+    "AlertSingleSelectSplunkSearchEntity": {
       "type": "object",
       "description": "Alerts configuration. The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.",
       "properties": {
@@ -16,16 +16,9 @@
           "description": "The text that would be shown in the alert action UI."
         },
         "type": {
+          "const": "singleSelectSplunkSearch",
           "type": "string",
-          "enum": [
-            "text",
-            "textarea",
-            "checkbox",
-            "singleSelect",
-            "radio",
-            "singleSelectSplunkSearch"
-          ],
-          "description": "The type of the user input in the alert. Available choices: “text”, “checkbox”, “singleSelect”, “radio”, “singleSelectSplunkSearch”."
+          "description": "Exactly: singleSelectSplunkSearch"
         },
         "help": {
           "type": "string",
@@ -84,7 +77,226 @@
       "required": [
         "field",
         "label",
+        "type",
+        "search",
+        "valueField",
+        "labelField"
+      ],
+      "additionalProperties": false
+    },
+    "AlertTextEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "text",
+          "type": "string",
+          "description": "Exactly: text"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
         "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertTextareaEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "textarea",
+          "type": "string",
+          "description": "Exactly: textarea"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertCheckboxEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "checkbox",
+          "type": "string",
+          "description": "Exactly: checkbox"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertSingleSelectEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "singleSelect",
+          "type": "string",
+          "description": "Exactly: singleSelect"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "options": {
+          "type": "object",
+          "description": "Static choices that a user can select in the alert action UI.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "An array of options with a label and a value.",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "AlertRadioEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "radio",
+          "type": "string",
+          "description": "Exactly: radio"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "options": {
+          "type": "object",
+          "description": "Static choices that a user can select in the alert action UI.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "An array of options with a label and a value.",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
       ],
       "additionalProperties": false
     },
@@ -182,22 +394,22 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/definitions/TextEntity"
+                "$ref": "#/definitions/AlertTextEntity"
               },
               {
-                "$ref": "#/definitions/TextareaEntity"
+                "$ref": "#/definitions/AlertTextareaEntity"
               },
               {
-                "$ref": "#/definitions/SingleSelectEntity"
+                "$ref": "#/definitions/AlertCheckboxEntity"
               },
               {
-                "$ref": "#/definitions/CheckboxEntity"
+                "$ref": "#/definitions/AlertSingleSelectEntity"
               },
               {
-                "$ref": "#/definitions/RadioEntity"
+                "$ref": "#/definitions/AlertRadioEntity"
               },
               {
-                "$ref": "#/definitions/AlertEntity"
+                "$ref": "#/definitions/AlertSingleSelectSplunkSearchEntity"
               }
             ]
           }
