@@ -15,9 +15,9 @@ jest.mock('@splunk/search-job', () => ({
     create: () => ({
         getResults: () => ({
             subscribe: (
-                callbackFunction: (params: { results: { product_type: string }[] }) => void
+                callbackFunction: (params: { results: { instance_type: string }[] }) => void
             ) => {
-                callbackFunction({ results: [{ product_type: 'cloud' }] });
+                callbackFunction({ results: [{ instance_type: 'cloud' }] });
                 return { unsubscribe: () => {} };
             },
         }),
