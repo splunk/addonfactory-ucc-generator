@@ -23,15 +23,16 @@ cron_regex = re.compile(CRON_REGEX)
         (True, "-1"),
         (True, "0"),
         (True, "6371"),
+        (True, "* 0-20/2 * * *"),
+        (True, "* 10-20/12 * * *"),
+        (True, "* */9,8 * * *"),
+        (True, "* */9,9-12 * * *"),
+        (True, "* 0/9,8 * * *"),
+        (True, "* 9/1,9-12 * * *"),
         (False, "-2"),
         (False, "5 0 * 8 * 1"),
         (False, "5 4 * * sun"),  # This syntax (sun) is not supported
-        (False, "@weekly"),  # This syntax is not supported
-        # (True, "* 0-20/2 * * *"), # 0-20/2 cron syntax is not supported by this regex...
-        # (True, "* */9,8 * * *"), # This syntax is not supported
-        # (True, "* */9,9-12 * * *"),  # This syntax is not supported
-        # (True, "* 0/9,8 * * *"),  # This syntax is not supported
-        # (True, "* 9/1,9-12 * * *"),  # This syntax is not supported
+        (False, "@weekly")  # This syntax is not supported
         # (False, "* 0/0 * * *")   # We don't handle this case
     ),
 )
