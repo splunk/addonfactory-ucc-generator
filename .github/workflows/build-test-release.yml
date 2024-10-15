@@ -278,7 +278,7 @@ jobs:
           ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
-      - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - run: poetry run pytest tests/ui -n 8 -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
