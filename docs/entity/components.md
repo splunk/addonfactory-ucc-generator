@@ -505,13 +505,24 @@ The Oauth type entity enables us to use Oauth2.0 for user authentication. Visit 
 ## `Interval`
 
 A [Text](#text) field used to specify [interval](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Inputsconf#Scripted_Input:)
-value, i.e. a number greater than or equal to 0, or -1.
+value, i.e. a number greater than or equal to 0, CRON interval or -1.
 
 <h3> Options </h3>
 
 | Property | Type                         | Description             |
 | -------- | ---------------------------- | ----------------------- |
 | range    | list of numbers (2 elements) | Range of allowed values |
+
+
+Supported CRON schedule:
+
+* "<minute> <hour> <day of month> <month> <day of week>"
+* Cron special characters are acceptable.  ("*", ",", "/", "-" )
+
+Names of months or days are not supported.
+
+Note: Range option is not supposed to be used with CRON interval.
+
 
 See the following example:
 
@@ -525,6 +536,7 @@ See the following example:
     }
 }
 ```
+
 
 ## `Index`
 
