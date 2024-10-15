@@ -302,13 +302,13 @@
                                         "validators": [
                                             {
                                                 "type": "string",
-                                                "errorMsg": "Max host length is 4096",
+                                                "errorMsg": "Length should be between 10 and 4096",
                                                 "minLength": 10,
                                                 "maxLength": 4096
                                             },
                                             {
                                                 "type": "regex",
-                                                "errorMsg": "do not use special characters",
+                                                "errorMsg": "Do not use special characters",
                                                 "pattern": "^[a-zA-Z]\\w*$"
                                             }
                                         ]
@@ -1877,7 +1877,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.50.0Rb2c34d2c8",
+        "version": "5.50.1+b4cfdcd44",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.50.1",
