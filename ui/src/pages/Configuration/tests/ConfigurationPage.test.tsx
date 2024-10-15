@@ -3,14 +3,14 @@ import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { http, HttpResponse } from 'msw';
-import ConfigurationPage from './ConfigurationPage';
-import { getUnifiedConfigs } from '../../util/util';
-import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
-import { type meta as metaType } from '../../types/globalConfig/meta';
-import { mockServerResponseWithContent } from '../../mocks/server-response';
-import { server } from '../../mocks/server';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { server } from '../../../mocks/server';
+import { mockServerResponseWithContent } from '../../../mocks/server-response';
+import { getUnifiedConfigs } from '../../../util/util';
+import ConfigurationPage from '../ConfigurationPage';
+import { type meta as metaType } from '../../../types/globalConfig/meta';
 
-jest.mock('../../util/util');
+jest.mock('../../../util/util');
 
 const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
 

@@ -6,6 +6,7 @@ from os import path
 from pathlib import Path
 from typing import Dict, Any
 
+from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
 from tests.smoke import helpers
 from tests.unit import helpers as unit_helpers
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -631,8 +632,8 @@ def _compare_interval_entities(
                         "type": "text",
                         "validators": [
                             {
-                                "errorMsg": "Interval must be either a non-negative number or -1.",
-                                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                                "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                "pattern": CRON_REGEX,
                                 "type": "regex",
                             }
                         ],

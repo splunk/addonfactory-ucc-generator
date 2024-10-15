@@ -48,6 +48,20 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'text_field_hidden_for_cloud',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'text_field_hidden_for_enterprise',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'url',
         required=False,
         encrypted=False,
@@ -124,7 +138,15 @@ fields = [
         required=False,
         encrypted=False,
         default=None,
-        validator=None
+        validator=validator.AllOf(
+            validator.String(
+                max_len=4096, 
+                min_len=10, 
+            ), 
+            validator.Pattern(
+                regex=r"""^[a-zA-Z]\w*$""", 
+            )
+        )
     ), 
     field.RestField(
         'client_id',

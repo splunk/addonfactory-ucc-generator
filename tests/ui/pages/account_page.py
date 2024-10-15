@@ -90,6 +90,12 @@ class AccountEntity(Entity):
             browser,
             Selector(select='[data-test="control-group"][data-name="redirect_url"]'),
         )
+        self.basic_oauth_text = TextBox(
+            browser,
+            Selector(
+                select='[data-test="control-group"][data-name="basic_oauth_text"]'
+            ),
+        )
         self.search_query = TextBox(
             browser, Selector(select='[data-test="textbox"][role="textbox"]')
         )

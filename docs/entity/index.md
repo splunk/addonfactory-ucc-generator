@@ -5,7 +5,7 @@ title: Entity
 ## Entity Properties
 
 | Property                                                         | Type                      | Description                                                                                                                      | Default Value |
-|------------------------------------------------------------------|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|---------------|
+| ---------------------------------------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------- |
 | field<span class="required-asterisk">\*</span>                   | string                    | To define a particular entity field.                                                                                             | -             |
 | label<span class="required-asterisk">\*</span>                   | string                    | It represents a caption for a field in a user interface.                                                                         | -             |
 | [type](./components.md)<span class="required-asterisk">\*</span> | string                    | To specify the type of entity to be rendered in inputs or configuration form.                                                    | -             |
@@ -26,10 +26,11 @@ title: Entity
 
 This section describes common options that can be used within the `options` object in entity properties.
 
-| Property            | Type    | Description                                                                            | Default Value |
-|---------------------|---------|----------------------------------------------------------------------------------------|---------------|
-| display             | boolean | It chooses whether or not to display the field.                                        | true          |
-| disableonEdit       | boolean | When the form is in edit mode, the field becomes unable to be edited.                  | false         |
-| enable              | boolean | The enable property sets whether a field is enabled or not.                            | true          |
-| requiredWhenVisible | boolean | It makes the field required on the UI when it appears. It is used only for visibility. | false         |
-| placeholder         | string  | (`Renounced`) The grey text is shown when the input is empty.                          | -             |
+| Property            | Type    | Description                                                                                                                                  | Default Value |
+| ------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| display             | boolean | It chooses whether or not to display the field.                                                                                              | true          |
+| disableonEdit       | boolean | When the form is in edit mode, the field becomes unable to be edited.                                                                        | false         |
+| enable              | boolean | The enable property sets whether a field is enabled or not.                                                                                  | true          |
+| requiredWhenVisible | boolean | It makes the field required on the UI when it appears. It is used only for visibility.                                                       | false         |
+| hideForPlatform     | string  | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`. | -             |
+| placeholder         | string  | (`Renounced`) The grey text is shown when the input is empty.                                                                                | -             |

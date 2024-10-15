@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FileInputComponent from './FileInputComponent';
 import fileContants from '../../constants/fileInputConstant';
@@ -375,5 +375,6 @@ test('Check FileInputComponent encodes base64 correctly and passed it to handler
     await userEvent.upload(fileInput, testfile);
 
     // Check that handleChange is called with valid args.
-    expect(handleChange).toHaveBeenCalledWith(field, btoa(fileContent));
+    const fileContentInBase64 = btoa(fileContent);
+    await waitFor(() => expect(handleChange).toHaveBeenCalledWith(field, fileContentInBase64));
 });

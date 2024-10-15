@@ -17,6 +17,9 @@ import OpenApiDownloadButton from '../../components/DownloadButton/OpenApiDownlo
 import SubDescription from '../../components/SubDescription/SubDescription';
 import UccCredit from '../../components/UCCCredit/UCCCredit';
 import { TabSchema } from '../../types/globalConfig/pages';
+import { PageContextProvider } from '../../context/PageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
+import { usePlatform } from '../../hooks/usePlatform';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
@@ -44,10 +47,17 @@ type Tab = z.infer<typeof TabSchema>;
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
-    const permittedTabNames = useMemo(() => tabs.map((tab) => tab.name), [tabs]);
+
+    const platform = usePlatform(unifiedConfigs, 'configuration');
+
+    const filteredTabs = tabs.filter(
+        (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
+    );
+
+    const permittedTabNames = useMemo(() => filteredTabs.map((tab) => tab.name), [filteredTabs]);
     const isComponentMounted = useRef(false);
 
-    const [activeTabId, setActiveTabId] = useState(tabs[0].name);
+    const [activeTabId, setActiveTabId] = useState(filteredTabs[0].name);
     const [isPageOpen, setIsPageOpen] = useState(false);
 
     const query = useQuery();
@@ -118,7 +128,7 @@ function ConfigurationPage() {
 
     return (
         <ErrorBoundary>
-            <>
+            <PageContextProvider platform={platform}>
                 <div style={isPageOpen ? { display: 'none' } : { display: 'block' }}>
                     <ColumnLayout gutter={8}>
                         <Row>
@@ -139,14 +149,14 @@ function ConfigurationPage() {
                         </Row>
                     </ColumnLayout>
                     <TabBar activeTabId={activeTabId} onChange={handleChange}>
-                        {tabs.map((tab) => (
+                        {filteredTabs.map((tab) => (
                             <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
                         ))}
                     </TabBar>
                 </div>
-                {tabs.map((tab) => getTabContent(tab))}
+                {filteredTabs.map((tab) => getTabContent(tab))}
                 <ToastMessages position="top-right" />
-            </>
+            </PageContextProvider>
         </ErrorBoundary>
     );
 }

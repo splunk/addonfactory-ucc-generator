@@ -20,6 +20,22 @@
       "groupName": "{{manager}}"
     },
     {
+      "description": "Ignore python packages that cannot be updated thanks to 3.7 support",
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchPackagePrefixes": [
+        "importlib-metadata",
+        "pytest",
+        "pytest-cov",
+        "pytest-rerunfailures"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
       "matchPackageNames": ["urllib3"],
       "allowedVersions": "<2.0.0"
     },
@@ -30,8 +46,8 @@
       ],
       "matchPackageNames": [
         "@npmcli/git",
-        "@testing-library/react",
         "@testing-library/dom",
+        "@testing-library/react",
         "@types/react",
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
@@ -42,11 +58,12 @@
         "eslint-config-airbnb",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
+        "eslint-plugin-react-hooks",
         "glob-parent",
+        "prettier",
         "react",
         "react-dom",
         "react-is",
-        "prettier",
         "string-width",
         "strip-ansi",
         "styled-components",

@@ -8,7 +8,7 @@ from splunktaucclib.rest_handler.endpoint import (
     DataInputModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
-from splunk_ta_uccexample_custom_rh import CustomRestHandler
+from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
 import logging
 
 util.remove_http_proxy_env_vars()
@@ -39,7 +39,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^(?:-1|\d+(?:\.\d+)?)$""",
+            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""",
         )
     ), 
 
@@ -64,5 +64,5 @@ if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())
     admin_external.handle(
         endpoint,
-        handler=CustomRestHandler,
+        handler=AdminExternalHandler,
     )
