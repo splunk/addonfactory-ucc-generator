@@ -15,7 +15,6 @@
 * support CRON as interval ([#1346](https://github.com/splunk/addonfactory-ucc-generator/issues/1346)) ([8c5a981](https://github.com/splunk/addonfactory-ucc-generator/commit/8c5a9817753e02103ec04d1267781d7030ace7ac))
 
 
-
 ## [5.50.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.0...v5.50.1) (2024-10-04)
 
 
