@@ -3,16 +3,16 @@ import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
 import Clear from '@splunk/react-icons/enterprise/Clear';
-import axios from 'axios';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { StandardPages } from '../../types/components/shareableTypes';
+import { invariant } from '../../util/invariant';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -115,20 +115,22 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         }
 
         let current = true;
-        const source = axios.CancelToken.source();
+        const abortController = new AbortController();
+
+        const url = referenceName
+            ? generateEndPointUrl(encodeURIComponent(referenceName))
+            : endpointUrl;
+        invariant(
+            url,
+            '[SingleInputComponent] referenceName or endpointUrl or autoCompleteFields must be provided'
+        );
 
         const backendCallOptions = {
-            serviceName: '',
-            endpointUrl: '',
-            cancelToken: source.token,
+            signal: abortController.signal,
+            endpointUrl: url,
             handleError: true,
             params: { count: -1 },
-        };
-        if (referenceName) {
-            backendCallOptions.serviceName = referenceName;
-        } else if (endpointUrl) {
-            backendCallOptions.endpointUrl = endpointUrl;
-        }
+        } satisfies AxiosCallType;
 
         if (dependencyValues) {
             backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
@@ -161,9 +163,10 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         } else {
             setOptions([]);
         }
+
         // eslint-disable-next-line consistent-return
         return () => {
-            source.cancel('Operation canceled.');
+            abortController.abort('Operation canceled.');
             current = false;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
