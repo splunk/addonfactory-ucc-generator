@@ -32,33 +32,16 @@ class SplunktaucclibNotFound(Exception):
     pass
 
 
+class WrongSplunktaucclibVersion(Exception):
+    pass
+
+
 class CouldNotInstallRequirements(Exception):
     pass
 
 
 class InvalidArguments(Exception):
     pass
-
-
-def _subprocess_call(
-    command: str,
-    command_desc: Optional[str] = None,
-    env: Optional[Dict[str, str]] = None,
-) -> int:
-    command_desc = command_desc or command
-    try:
-        logger.info(f"Executing: {command}")
-        return_code = subprocess.call(command, shell=True, env=env)
-        if return_code < 0:
-            logger.error(
-                f"Child ({command_desc}) was terminated by signal {-return_code}"
-            )
-        if return_code > 0:
-            logger.error(f"Command ({command_desc}) returned {return_code} status code")
-        return return_code
-    except OSError as e:
-        logger.error(f"Execution ({command_desc}) failed due to {e}")
-        raise e
 
 
 def _subprocess_run(
@@ -72,8 +55,14 @@ def _subprocess_run(
         process_result = subprocess.run(
             command, shell=True, env=env, capture_output=True
         )
+        return_code = process_result.returncode
+        if return_code < 0:
+            logger.error(
+                f"Child ({command_desc}) was terminated by signal {-return_code}"
+            )
+        if return_code > 0:
+            logger.error(f"Command ({command_desc}) returned {return_code} status code")
         return process_result
-
     except OSError as e:
         logger.error(f"Execution ({command_desc}) failed due to {e}")
         raise e
@@ -82,7 +71,7 @@ def _subprocess_run(
 def _pip_install(installer: str, command: str, command_desc: str) -> None:
     cmd = f"{installer} -m pip install {command}"
     try:
-        return_code = _subprocess_call(command=cmd, command_desc=command_desc)
+        return_code = _subprocess_run(command=cmd, command_desc=command_desc).returncode
         if return_code != 0:
             raise CouldNotInstallRequirements
     except OSError as e:
@@ -120,10 +109,43 @@ def _pip_is_lib_installed(
             result_version = result.stdout.decode("utf-8").split("Version:")[1].strip()
             return Version(result_version) >= Version(version)
         else:
-            return_code = _subprocess_call(command=cmd, env=my_env)
+            return_code = _subprocess_run(command=cmd, env=my_env).returncode
             return return_code == 0
     except OSError as e:
         raise CouldNotInstallRequirements from e
+
+
+def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
+    with open(path_to_requirements) as f_reqs:
+        content = f_reqs.readlines()
+    for line in content:
+        if "splunktaucclib" in line:
+            return True
+    return False
+
+
+def _check_libraries_required_for_ui(
+    python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
+) -> None:
+    if not _pip_is_lib_installed(
+        installer=python_binary_name,
+        target=ucc_lib_target,
+        libname="splunktaucclib",
+    ):
+        raise SplunktaucclibNotFound(
+            f"This add-on has an UI, so the splunktaucclib is required but not found in "
+            f"{path_to_requirements_file}. Please add it there and make sure it is at least version 6.4."
+        )
+    if not _pip_is_lib_installed(
+        installer=python_binary_name,
+        target=ucc_lib_target,
+        libname="splunktaucclib",
+        version="6.4",
+        allow_higher_version=True,
+    ):
+        raise WrongSplunktaucclibVersion(
+            "Splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4."
+        )
 
 
 def install_python_libraries(
@@ -147,16 +169,9 @@ def install_python_libraries(
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
         )
-        if includes_ui and not _pip_is_lib_installed(
-            installer=python_binary_name,
-            target=ucc_lib_target,
-            libname="splunktaucclib",
-            version="6.4",
-            allow_higher_version=True,
-        ):
-            raise SplunktaucclibNotFound(
-                f"splunktaucclib is not found in {path_to_requirements_file} or has invalid version. "
-                f"Please add it there and check if it is at least version 6.4, because this add-on has UI."
+        if includes_ui:
+            _check_libraries_required_for_ui(
+                python_binary_name, ucc_lib_target, path_to_requirements_file
             )
 
         cleanup_libraries = install_os_dependent_libraries(
