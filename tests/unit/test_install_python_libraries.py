@@ -16,9 +16,17 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     remove_execute_bit,
     remove_packages,
     validate_conflicting_paths,
+    WrongSplunktaucclibVersion,
+    InvalidArguments,
+    _pip_is_lib_installed,
 )
 
 from splunk_add_on_ucc_framework import global_config as gc
+
+
+class MockSubprocessResult:
+    def __init__(self, returncode):
+        self.returncode = returncode
 
 
 @pytest.mark.parametrize(
@@ -71,9 +79,9 @@ def test_check_ucc_library_in_requirements_file(
     )
 
 
-@mock.patch("subprocess.call", autospec=True)
-def test_install_libraries(mock_subprocess_call):
-    mock_subprocess_call.return_value = 0
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries(mock_subprocess_run):
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
 
     install_libraries(
         "package/lib/requirements.txt",
@@ -87,17 +95,21 @@ def test_install_libraries(mock_subprocess_call):
         '--target "/path/to/output/addon_name/lib"'
     )
     expected_pip_update_command = "python3 -m pip install --upgrade pip"
-    mock_subprocess_call.assert_has_calls(
+    mock_subprocess_run.assert_has_calls(
         [
-            mock.call(expected_pip_update_command, shell=True, env=None),
-            mock.call(expected_install_command, shell=True, env=None),
+            mock.call(
+                expected_pip_update_command, shell=True, env=None, capture_output=True
+            ),
+            mock.call(
+                expected_install_command, shell=True, env=None, capture_output=True
+            ),
         ]
     )
 
 
-@mock.patch("subprocess.call", autospec=True)
-def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_call):
-    mock_subprocess_call.side_effect = OSError
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_run):
+    mock_subprocess_run.side_effect = OSError
 
     with pytest.raises(CouldNotInstallRequirements):
         install_libraries(
@@ -116,12 +128,13 @@ def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_call)
         (0, -1),
     ],
 )
-@mock.patch("subprocess.call", autospec=True)
+@mock.patch("subprocess.run", autospec=True)
 def test_install_libraries_when_subprocess_returns_non_zero_codes(
-    mock_subprocess_call,
+    mock_subprocess_run,
     subprocess_status_codes,
 ):
-    mock_subprocess_call.side_effect = subprocess_status_codes
+    statuses = (MockSubprocessResult(el) for el in subprocess_status_codes)
+    mock_subprocess_run.side_effect = statuses
 
     with pytest.raises(CouldNotInstallRequirements):
         install_libraries(
@@ -162,12 +175,12 @@ def test_install_python_libraries_when_no_requirements_file_found(caplog, tmp_pa
     assert log_message_expected in caplog.text
 
 
-@mock.patch("subprocess.call", autospec=True)
+@mock.patch("subprocess.run", autospec=True)
 def test_install_libraries_when_no_splunktaucclib_is_present_but_no_ui(
-    mock_subprocess_call,
+    mock_subprocess_run,
     tmp_path,
 ):
-    mock_subprocess_call.return_value = 0
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -189,13 +202,19 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("solnlib\nsplunk-sdk\n")
 
-    with pytest.raises(SplunktaucclibNotFound):
+    expected_msg = (
+        f"This add-on has an UI, so the splunktaucclib is required but not found in {tmp_lib_reqs_file}. "
+        f"Please add it there and make sure it is at least version 6.4."
+    )
+
+    with pytest.raises(SplunktaucclibNotFound) as exc:
         install_python_libraries(
             str(tmp_path),
             str(tmp_ucc_lib_target),
             python_binary_name="python3",
             includes_ui=True,
         )
+    assert expected_msg in str(exc.value)
 
 
 def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_path):
@@ -205,13 +224,16 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
 
-    with pytest.raises(SplunktaucclibNotFound):
+    expected_msg = "Splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4."
+
+    with pytest.raises(WrongSplunktaucclibVersion) as exc:
         install_python_libraries(
             str(tmp_path),
             str(tmp_ucc_lib_target),
             python_binary_name="python3",
             includes_ui=True,
         )
+    assert expected_msg in str(exc.value)
 
 
 def test_remove_package_from_installed_path(tmp_path):
@@ -261,15 +283,15 @@ def test_remove_execute_bit(tmp_path):
     assert os.access(tmp_lib_path_bar_file, os.X_OK) is False
 
 
-@mock.patch("subprocess.call", autospec=True)
+@mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.install_libraries",
     autospec=True,
 )
 def test_install_python_libraries_invalid_os_libraries(
-    mock_subprocess_call, install_libraries, caplog, tmp_path
+    install_libraries, mock_subprocess_run, caplog, tmp_path
 ):
-    mock_subprocess_call.return_value = 1
+    mock_subprocess_run.return_value = MockSubprocessResult(1)
     install_libraries.return_value = True
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_invalid_os_libraries.json"
@@ -291,14 +313,14 @@ def test_install_python_libraries_invalid_os_libraries(
         )
 
 
-@mock.patch("subprocess.call", autospec=True)
+@mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
     autospec=True,
 )
 def test_install_libraries_valid_os_libraries(
     mock_remove_packages,
-    mock_subprocess_call,
+    mock_subprocess_run,
     caplog,
     tmp_path,
 ):
@@ -307,7 +329,7 @@ def test_install_libraries_valid_os_libraries(
     )
     global_config = gc.GlobalConfig(global_config_path)
 
-    mock_subprocess_call.return_value = 0
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -371,14 +393,14 @@ def test_install_libraries_valid_os_libraries(
     )
 
 
-@mock.patch("subprocess.call", autospec=True)
+@mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
     autospec=True,
 )
 def test_install_libraries_version_mismatch(
     mock_remove_packages,
-    mock_subprocess_call,
+    mock_subprocess_run,
     caplog,
     tmp_path,
 ):
@@ -397,10 +419,12 @@ def test_install_libraries_version_mismatch(
     version_mismatch_shell_cmd = (
         'python3 -m pip show --version cryptography | grep "Version: 41.0.5"'
     )
-    mock_subprocess_call.side_effect = (
-        lambda command, shell=True, env=None: 1
+    mock_subprocess_run.side_effect = (
+        lambda command, shell=True, env=None, capture_output=True: MockSubprocessResult(
+            1
+        )
         if command == version_mismatch_shell_cmd and ucc_lib_target == env["PYTHONPATH"]
-        else 0
+        else MockSubprocessResult(0)
     )
 
     with pytest.raises(CouldNotInstallRequirements):
@@ -427,9 +451,9 @@ Possible solutions, either:
     mock_remove_packages.assert_not_called()
 
 
-@mock.patch("subprocess.call", autospec=True)
-def test_install_libraries_custom_pip(mock_subprocess_call):
-    mock_subprocess_call.return_value = 0
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries_custom_pip(mock_subprocess_run):
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
 
     install_libraries(
         "package/lib/requirements.txt",
@@ -444,17 +468,21 @@ def test_install_libraries_custom_pip(mock_subprocess_call):
         '--target "/path/to/output/addon_name/lib"'
     )
     expected_pip_update_command = "python3 -m pip install --upgrade pip==21.666.666"
-    mock_subprocess_call.assert_has_calls(
+    mock_subprocess_run.assert_has_calls(
         [
-            mock.call(expected_pip_update_command, shell=True, env=None),
-            mock.call(expected_install_command, shell=True, env=None),
+            mock.call(
+                expected_pip_update_command, shell=True, env=None, capture_output=True
+            ),
+            mock.call(
+                expected_install_command, shell=True, env=None, capture_output=True
+            ),
         ]
     )
 
 
-@mock.patch("subprocess.call", autospec=True)
-def test_install_libraries_legacy_resolver(mock_subprocess_call):
-    mock_subprocess_call.return_value = 0
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries_legacy_resolver(mock_subprocess_run):
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
 
     install_libraries(
         "package/lib/requirements.txt",
@@ -469,10 +497,14 @@ def test_install_libraries_legacy_resolver(mock_subprocess_call):
         '--use-deprecated=legacy-resolver --target "/path/to/output/addon_name/lib"'
     )
     expected_pip_update_command = "python3 -m pip install --upgrade pip"
-    mock_subprocess_call.assert_has_calls(
+    mock_subprocess_run.assert_has_calls(
         [
-            mock.call(expected_pip_update_command, shell=True, env=None),
-            mock.call(expected_install_command, shell=True, env=None),
+            mock.call(
+                expected_pip_update_command, shell=True, env=None, capture_output=True
+            ),
+            mock.call(
+                expected_install_command, shell=True, env=None, capture_output=True
+            ),
         ]
     )
 
@@ -521,3 +553,8 @@ def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, c
 def test_validate_conflicting_paths_empty_list():
     libs: List[OSDependentLibraryConfig] = []
     assert validate_conflicting_paths(libs)
+
+
+def test_is_pip_lib_installed_wrong_arguments():
+    with pytest.raises(InvalidArguments):
+        _pip_is_lib_installed("i", "t", "l", allow_higher_version=True)
