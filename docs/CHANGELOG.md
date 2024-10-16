@@ -1,6 +1,11 @@
 # [5.51.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.1...v5.51.0) (2024-10-16)
 
 
+### Bug Fixes
+
+* follow SemVer guidelines for version in globalConfig ([#1351](https://github.com/splunk/addonfactory-ucc-generator/issues/1351)) ([199c05e](https://github.com/splunk/addonfactory-ucc-generator/commit/199c05e5566556dc7690a8b436c8d3ce68306ccd))
+
+
 ### Features
 
 * allow validators for oauth fields ([#1355](https://github.com/splunk/addonfactory-ucc-generator/issues/1355)) ([ef3b6a9](https://github.com/splunk/addonfactory-ucc-generator/commit/ef3b6a9b89c7be676821cd7a772b9dec1394d7b0))
@@ -8,6 +13,7 @@
 * modal implementation for data ingestion table ([#1244](https://github.com/splunk/addonfactory-ucc-generator/issues/1244)) ([8246870](https://github.com/splunk/addonfactory-ucc-generator/commit/8246870a5199b2f814bdb94d590c26ef9f351fa1))
 * server side validation of name field based on globalConfig ([#1362](https://github.com/splunk/addonfactory-ucc-generator/issues/1362)) ([4e43c27](https://github.com/splunk/addonfactory-ucc-generator/commit/4e43c27c9f98bd07e5179e9cfd8c46988fef278a))
 * support CRON as interval ([#1346](https://github.com/splunk/addonfactory-ucc-generator/issues/1346)) ([8c5a981](https://github.com/splunk/addonfactory-ucc-generator/commit/8c5a9817753e02103ec04d1267781d7030ace7ac))
+
 
 ## [5.50.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.0...v5.50.1) (2024-10-04)
 
