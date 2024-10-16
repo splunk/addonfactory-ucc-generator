@@ -434,39 +434,6 @@ class GlobalConfigValidator:
                     )
                 else:
                     fields.append(entity.get("field"))
-                entity_type = entity.get("type")
-                if entity_type in ("radio", "singleSelect"):
-                    if not entity.get("options"):
-                        raise GlobalConfigValidatorException(
-                            f"{entity_type} type must have options parameter"
-                        )
-                elif (
-                    entity.get("options") and entity_type != "singleSelectSplunkSearch"
-                ):
-                    raise GlobalConfigValidatorException(
-                        f"{entity_type} type must not contain options parameter"
-                    )
-                if entity_type in ("singleSelectSplunkSearch",):
-                    if not all(
-                        [
-                            entity.get("search"),
-                            entity.get("valueField"),
-                            entity.get("labelField"),
-                        ]
-                    ):
-                        raise GlobalConfigValidatorException(
-                            f"{entity_type} type must have search, valueLabel and valueField parameters"
-                        )
-                elif any(
-                    [
-                        entity.get("search"),
-                        entity.get("valueField"),
-                        entity.get("labelField"),
-                    ]
-                ):
-                    raise GlobalConfigValidatorException(
-                        f"{entity_type} type must not contain search, valueField or labelField parameter"
-                    )
 
     def _validate_panels(self) -> None:
         """

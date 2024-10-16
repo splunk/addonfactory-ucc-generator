@@ -21,7 +21,7 @@ repos:
     -   id: check-merge-conflict
     -   id: debug-statements
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.3.2
     hooks:
     -   id: pyupgrade
         args:
@@ -31,17 +31,17 @@ repos:
     hooks:
     -   id: black
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.2.0
+    rev: v1.4.1
     hooks:
     -   id: mypy
         exclude: (^docs/|^splunk_add_on_ucc_framework/commands/imports.py)
         additional_dependencies: ['types-PyYAML']
 -   repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
+    rev: 5.0.4
     hooks:
     -   id: flake8
         exclude: (^splunk_add_on_ucc_framework/commands/init_template/|^splunk_add_on_ucc_framework/commands/imports.py)
 -   repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.40.0
+    rev: v0.42.0
     hooks:
     -   id: markdownlint

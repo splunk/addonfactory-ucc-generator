@@ -33,4 +33,5 @@ docker run \
   -e "SPLUNK_HEC_TOKEN=4a8a737d-5452-426c-a6f7-106dca4e813f" \
   -e "SPLUNK_DISABLE_POPUPS=true" \
   -d \
-  --name splunk splunk/splunk:${1:-"9.1.2"}
+  --pull=always \
+  --name splunk splunk/splunk:${1:-"latest"}

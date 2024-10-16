@@ -14,6 +14,24 @@ import logging
 util.remove_http_proxy_env_vars()
 
 
+special_fields = [
+    field.RestField(
+        'name',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=validator.AllOf(
+            validator.String(
+                max_len=50,
+                min_len=1,
+            ),
+            validator.Pattern(
+                regex=r"""^[a-zA-Z]\w*$""",
+            )
+        )
+    )
+]
+
 fields = [
     field.RestField(
         'custom_endpoint',
@@ -29,6 +47,20 @@ fields = [
         default=None,
         validator=None
     ), 
+    field.RestField(
+        'text_field_hidden_for_cloud',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'text_field_hidden_for_enterprise',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
     field.RestField(
         'url',
         required=False,
@@ -106,7 +138,15 @@ fields = [
         required=False,
         encrypted=False,
         default=None,
-        validator=None
+        validator=validator.AllOf(
+            validator.String(
+                max_len=4096, 
+                min_len=10, 
+            ), 
+            validator.Pattern(
+                regex=r"""^[a-zA-Z]\w*$""", 
+            )
+        )
     ), 
     field.RestField(
         'client_id',
@@ -179,7 +219,7 @@ fields = [
         validator=None
     )
 ]
-model = RestModel(fields, name=None)
+model = RestModel(fields, name=None, special_fields=special_fields)
 
 
 endpoint = SingleModel(

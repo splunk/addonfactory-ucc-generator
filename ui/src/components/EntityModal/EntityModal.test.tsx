@@ -39,11 +39,9 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledOauthField = () =>
-        document.getElementsByClassName('oauth_oauth_text_jest_test')[1];
+    const getDisabledOauthField = () => document.querySelector('.oauth_oauth_text_jest_test input');
 
-    const getDisabledBasicField = () =>
-        document.getElementsByClassName('basic_oauth_text_jest_test')[1];
+    const getDisabledBasicField = () => document.querySelector('.basic_oauth_text_jest_test input');
 
     it('Oauth Oauth - disableonEdit = true, oauth field not disabled on create', async () => {
         setUpConfigWithDisabedOauth();
@@ -144,8 +142,7 @@ describe('Options - Enable field property', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledOauthField = () =>
-        document.getElementsByClassName('oauth_oauth_text_jest_test')[1];
+    const getDisabledOauthField = () => document.querySelector('.oauth_oauth_text_jest_test input');
 
     it('Oauth Oauth - Enable field equal false, so field disabled', async () => {
         setUpConfigWithDisabledComplitelyOauthField();

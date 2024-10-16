@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import json
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -105,10 +105,11 @@ class GlobalConfigBuilderSchema:
             )
             self._endpoints[name] = endpoint
             content = self._get_oauth_enitities(config["entity"])
-            fields = self._parse_fields(content)
+            fields, special_fields = self._parse_fields(content)
             entity = SingleModelEntityBuilder(
                 None,
                 fields,
+                special_fields=special_fields,
                 conf_name=config.get("conf"),
             )
             endpoint.add_entity(entity)
@@ -143,10 +144,11 @@ class GlobalConfigBuilderSchema:
         self._endpoints["settings"] = endpoint
         for setting in self.global_config.settings:
             content = self._get_oauth_enitities(setting["entity"])
-            fields = self._parse_fields(content)
+            fields, special_fields = self._parse_fields(content)
             entity = MultipleModelEntityBuilder(
                 setting["name"],
                 fields,
+                special_fields=special_fields,
             )
             endpoint.add_entity(entity)
             if endpoint.conf_name not in self._settings_conf_file_names:
@@ -174,10 +176,11 @@ class GlobalConfigBuilderSchema:
                 )
                 self._endpoints[name] = single_model_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
-                fields = self._parse_fields(content)
+                fields, special_fields = self._parse_fields(content)
                 single_model_entity = SingleModelEntityBuilder(
                     None,
                     fields,
+                    special_fields=special_fields,
                     conf_name=input_item["conf"],
                 )
                 single_model_endpoint.add_entity(single_model_entity)
@@ -193,28 +196,34 @@ class GlobalConfigBuilderSchema:
                 )
                 self._endpoints[name] = data_input_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
-                fields = self._parse_fields(content)
+                fields, special_fields = self._parse_fields(content)
                 data_input_entity = DataInputEntityBuilder(
                     None,
                     fields,
+                    special_fields=special_fields,
                     input_type=input_item["name"],
                 )
                 data_input_endpoint.add_entity(data_input_entity)
 
     def _parse_fields(
         self, fields_content: List[Dict[str, Any]]
-    ) -> List[RestFieldBuilder]:
-        return [
-            RestFieldBuilder(
+    ) -> Tuple[List[RestFieldBuilder], List[RestFieldBuilder]]:
+        fields = []
+        special_fields = []
+        for field in fields_content:
+            rest_field = RestFieldBuilder(
                 field["field"],
                 _is_true(field.get("required")),
                 _is_true(field.get("encrypted")),
                 field.get("defaultValue"),
                 ValidatorBuilder().build(field.get("validators")),
             )
-            for field in fields_content
-            if field["field"] != "name"
-        ]
+
+            if field["field"] != "name":
+                fields.append(rest_field)
+            else:
+                special_fields.append(rest_field)
+        return fields, special_fields
 
     """
     If the entity contains type oauth then we need to alter the content to generate proper entities to generate
