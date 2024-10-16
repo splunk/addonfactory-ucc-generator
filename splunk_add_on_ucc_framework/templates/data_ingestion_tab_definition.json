@@ -103,7 +103,12 @@
           }
         },
         "count": 10
-      }
+      },
+      "eventHandlers": [
+        {
+          "type": "table.click.handler"
+        }
+      ]
     }
   },
   "dataSources": {
