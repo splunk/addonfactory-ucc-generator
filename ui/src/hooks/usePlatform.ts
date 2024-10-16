@@ -59,17 +59,13 @@ export const usePlatform = (globalConfig: GlobalConfig, page?: StandardPages) =>
 
         const resultsSubscription = mySearchJob
             .getResults()
-            .subscribe(
-                (result: {
-                    results?: Array<{ product_type?: string; instance_type?: string }>;
-                }) => {
-                    if (result.results?.[0]?.product_type === 'cloud') {
-                        setPlatform('cloud');
-                    } else {
-                        setPlatform('enterprise');
-                    }
+            .subscribe((result: { results?: Array<{ instance_type?: string }> }) => {
+                if (result.results?.[0]?.instance_type === 'cloud') {
+                    setPlatform('cloud');
+                } else {
+                    setPlatform('enterprise');
                 }
-            );
+            });
 
         return () => {
             resultsSubscription.unsubscribe();
