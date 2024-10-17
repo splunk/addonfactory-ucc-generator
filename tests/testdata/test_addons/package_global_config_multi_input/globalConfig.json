@@ -391,7 +391,6 @@
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
@@ -399,18 +398,18 @@
                         "moreInfo": []
                     },
                     "warning": {
-                      "create": {
-                        "message": "Warning text for create mode"
-                      },
-                      "edit": {
-                        "message": "Warning text for edit mode"
-                      },
-                      "clone": {
-                        "message": "Warning text for clone mode"
-                      },
-                      "config": {
-                        "message": "Warning text for config mode"
-                      }
+                        "create": {
+                            "message": "Warning text for create mode"
+                        },
+                        "edit": {
+                            "message": "Warning text for edit mode"
+                        },
+                        "clone": {
+                            "message": "Warning text for clone mode"
+                        },
+                        "config": {
+                            "message": "Warning text for config mode"
+                        }
                     }
                 },
                 {
@@ -421,7 +420,6 @@
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
@@ -441,7 +439,6 @@
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
@@ -462,7 +459,6 @@
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
@@ -481,7 +477,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.50.1+8cbb9b3c",
+        "version": "5.50.1+099cf36c",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.50.1"
