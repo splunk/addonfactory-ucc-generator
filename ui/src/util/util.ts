@@ -24,13 +24,6 @@ export function getMetaInfo() {
     };
 }
 
-export function generateEndPointUrl(name: string) {
-    if (!unifiedConfigs) {
-        throw new Error('No GlobalConfig set');
-    }
-    return `${unifiedConfigs.meta.restRoot}_${name}`;
-}
-
 export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
     const result = GlobalConfigSchema.safeParse(unifiedConfig);
     if (!result.success) {
