@@ -52,7 +52,7 @@ it('close model and callback after cancel click', async () => {
 it('correct delete request', async () => {
     server.use(
         http.delete(
-            '/servicesNS/nobody/-/mockGeneratedEndPointUrl',
+            '/servicesNS/nobody/-/restRoot_serviceName/stanzaName',
             () => new HttpResponse(undefined, { status: 201 })
         )
     );

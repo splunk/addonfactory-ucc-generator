@@ -16,7 +16,7 @@ const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
 
 beforeEach(() => {
     server.use(
-        http.get(`/servicesNS/nobody/-/:endpointUrl`, () =>
+        http.get(`/servicesNS/nobody/-/:endpointUrl/:serviceName`, () =>
             HttpResponse.json(mockServerResponseWithContent)
         )
     );

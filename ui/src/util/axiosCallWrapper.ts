@@ -1,20 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { CSRFToken, app } from '@splunk/splunk-utils/config';
 import { createRESTURL } from '@splunk/splunk-utils/url';
-import { generateEndPointUrl, generateToast } from './util';
+import { generateToast, getUnifiedConfigs } from './util';
 import { parseErrorMsg } from './messageUtil';
 
-interface axiosCallWithServiceName {
-    serviceName?: string;
+export interface AxiosCallType {
     endpointUrl: string;
-}
-
-interface axiosCallWithEndpointUrl {
-    serviceName: string;
-    endpointUrl?: string;
-}
-
-interface CommonAxiosCall {
     params?: Record<string, string | number>;
     signal?: AbortSignal;
     customHeaders?: Record<string, string>;
@@ -24,12 +15,17 @@ interface CommonAxiosCall {
     callbackOnError?: (error: unknown) => void;
 }
 
-export type AxiosCallType = (axiosCallWithServiceName | axiosCallWithEndpointUrl) & CommonAxiosCall;
+export function generateEndPointUrl(name: string) {
+    const unifiedConfigs = getUnifiedConfigs();
+
+    return `${unifiedConfigs.meta.restRoot}_${name}`;
+}
+
+const DEFAULT_PARAMS = { output_mode: 'json' };
 
 /**
  *
  * @param {Object} data The object containing required params for request
- * @param {string} data.serviceName service name which is input name or tab name based on the page
  * @param {string} data.endpointUrl rest endpoint path
  * @param {object} data.params object with params as key value pairs
  * @param {object} data.body object with body as key value pairs for post request
@@ -40,7 +36,6 @@ export type AxiosCallType = (axiosCallWithServiceName | axiosCallWithEndpointUrl
  * @returns
  */
 const axiosCallWrapper = ({
-    serviceName,
     endpointUrl,
     params,
     body,
@@ -50,32 +45,25 @@ const axiosCallWrapper = ({
     handleError = false,
     callbackOnError = () => {},
 }: AxiosCallType) => {
-    const endpoint = serviceName ? generateEndPointUrl(serviceName) : endpointUrl;
-    const appData = {
-        app,
-        owner: 'nobody',
-    };
     const baseHeaders = {
         'X-Splunk-Form-Key': CSRFToken,
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json',
     };
     const headers = Object.assign(baseHeaders, customHeaders);
-    const url = createRESTURL(endpoint, appData);
+    const url = createRESTURL(endpointUrl, { app, owner: 'nobody' });
 
-    let newParams = { output_mode: 'json' };
-    if (params) {
-        newParams = { ...newParams, ...params };
-    }
-
-    const options: Record<string, unknown> = {
-        params: newParams,
+    const options: AxiosRequestConfig = {
+        params: {
+            ...DEFAULT_PARAMS,
+            ...params,
+        },
         method,
         url,
         withCredentials: true,
         headers,
         signal,
-    } satisfies AxiosRequestConfig;
+    };
 
     if (method === 'post') {
         options.data = body;

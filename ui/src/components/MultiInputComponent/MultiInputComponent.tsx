@@ -4,9 +4,10 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import { filterResponse } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
+import { invariant } from '../../util/invariant';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
@@ -79,19 +80,20 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         let current = true;
         const abortController = new AbortController();
 
+        const url = referenceName
+            ? generateEndPointUrl(encodeURIComponent(referenceName))
+            : endpointUrl;
+        invariant(
+            url,
+            '[MultiInputComponent] referenceName or endpointUrl or items must be provided'
+        );
+
         const apiCallOptions = {
             signal: abortController.signal,
             handleError: true,
             params: { count: -1 },
-            serviceName: '',
-            endpointUrl: '',
+            endpointUrl: url,
         } satisfies AxiosCallType;
-        if (referenceName) {
-            apiCallOptions.serviceName = referenceName;
-        } else if (endpointUrl) {
-            apiCallOptions.endpointUrl = endpointUrl;
-        }
-
         if (dependencyValues) {
             apiCallOptions.params = { ...apiCallOptions.params, ...dependencyValues };
         }
