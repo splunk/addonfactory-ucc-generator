@@ -120,6 +120,8 @@ gh pr merge develop --auto --merge
 - Ensure CI passes and await team review.
 - PR should be merged using **merge commit** option in GitHub (already included in the command)
 - Releases are made automatically (both on GitHub and PyPI), and a bot will push a commit to `main` with all necessary changes  (i.e. [like this](https://github.com/splunk/addonfactory-ucc-generator/commit/0c5e6802e1e52c37bf7131baf1b8264e5db30545))
+- If necessary, update release notes and CHANGELOG.md accordingly to the content of the release.
+- If any issue was solved by this release, remove **waiting-for-release** label from it and then close the issue.
 - After the release, backport the bot's changes to the `develop` branch (i.e. [#974](https://github.com/splunk/addonfactory-ucc-generator/pull/974)):
 
 ```bash
@@ -133,3 +135,8 @@ gh pr merge main --auto --merge
     + Ensure CI passes and await team review.
     + Merge the PR using the merge commit option on GitHub.
     + Backport the bug fix PR to the develop branch.
+
+
+- After release is done, announce it to community on slack channels:
+    + [Internal UCC channel](https://splunk.enterprise.slack.com/archives/C03T8QCHBTJ)
+    + [Splunk Usergroup UCC channel](https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1)
