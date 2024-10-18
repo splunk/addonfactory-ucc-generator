@@ -228,6 +228,11 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.8")
 
+    if _version_tuple(version) < _version_tuple("0.0.9"):
+        _dump_enable_from_global_config(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.9")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
@@ -316,3 +321,24 @@ def _stop_build_on_placeholder_usage(
                     exc_msg % ("input service", service["name"])
                 )
     global_config.update_schema_version("0.0.8")
+
+
+def _dump_enable_from_global_config(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    if global_config.has_inputs():
+        exc_msg = "`enable` attribute found in input's page table action."
+
+        # Fetch the table object from global_config
+        table = global_config.content.get("pages", {}).get("inputs", {}).get("table", {})
+
+        # Check if "enable" exists in the actions and remove it if present
+        actions = table.get("actions", [])
+        if "enable" in actions:
+            logger.info(exc_msg)
+            logger.info(f"Removing 'enable' from actions: {actions}")
+            actions.remove("enable")  # Remove the 'enable' action
+
+            # Update the actions in the global_config
+            table["actions"] = actions
+            global_config.update_schema_version("0.0.9")
