@@ -196,7 +196,7 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
                 ],
             },
             table: {
-                actions: ['edit', 'enable', 'delete', 'search', 'clone'],
+                actions: ['edit', 'delete', 'search', 'clone'],
                 header: [
                     {
                         label: 'Name',

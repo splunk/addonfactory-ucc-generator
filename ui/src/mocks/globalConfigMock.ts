@@ -184,7 +184,7 @@ const globalConfigMock = {
                 ],
             },
             table: {
-                actions: ['edit', 'enable', 'delete', 'clone'],
+                actions: ['edit', 'delete', 'clone'],
                 header: [
                     {
                         label: 'Name',

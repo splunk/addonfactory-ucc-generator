@@ -254,7 +254,7 @@ export const CONFIG_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         },
                     ],
                     table: {
-                        actions: ['edit', 'enable', 'delete', 'clone'],
+                        actions: ['edit', 'delete', 'clone'],
                         header: [],
                         moreInfo: [],
                     },
@@ -265,7 +265,7 @@ export const CONFIG_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                     title: 'Example Input Two',
                     entity: [],
                     table: {
-                        actions: ['edit', 'enable', 'delete', 'clone'],
+                        actions: ['edit', 'delete', 'clone'],
                         header: [],
                         moreInfo: [],
                         customRow: {
@@ -280,7 +280,7 @@ export const CONFIG_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                     title: 'Example Input Three Hidden Cloud',
                     entity: [],
                     table: {
-                        actions: ['edit', 'enable', 'delete', 'clone'],
+                        actions: ['edit', 'delete', 'clone'],
                         header: [],
                         moreInfo: [],
                         customRow: {
@@ -296,7 +296,7 @@ export const CONFIG_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                     title: 'Example Input Four Hidden Enterprise',
                     entity: [],
                     table: {
-                        actions: ['edit', 'enable', 'delete', 'clone'],
+                        actions: ['edit', 'delete', 'clone'],
                         header: [],
                         moreInfo: [],
                         customRow: {

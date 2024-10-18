@@ -30,7 +30,6 @@ pages:
     table:
       actions:
       - edit
-      - enable
       - delete
       - clone
       header:
