@@ -114,16 +114,17 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             return;
         }
 
-        let current = true;
-        const abortController = new AbortController();
-
         const url = referenceName
             ? generateEndPointUrl(encodeURIComponent(referenceName))
             : endpointUrl;
-        invariant(
-            url,
-            '[SingleInputComponent] referenceName or endpointUrl or autoCompleteFields must be provided'
-        );
+
+        if ((dependencies && !dependencyValues) || !url) {
+            setOptions([]);
+            return;
+        }
+
+        let current = true;
+        const abortController = new AbortController();
 
         const backendCallOptions = {
             signal: abortController.signal,
@@ -135,34 +136,31 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         if (dependencyValues) {
             backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
         }
-        if (!dependencies || dependencyValues) {
-            setLoading(true);
-            axiosCallWrapper(backendCallOptions)
-                .then((response) => {
-                    if (current) {
-                        setOptions(
-                            generateOptions(
-                                filterResponse(
-                                    response.data.entry,
-                                    labelField,
-                                    valueField,
-                                    allowList,
-                                    denyList
-                                )
+
+        setLoading(true);
+        axiosCallWrapper(backendCallOptions)
+            .then((response) => {
+                if (current) {
+                    setOptions(
+                        generateOptions(
+                            filterResponse(
+                                response.data.entry,
+                                labelField,
+                                valueField,
+                                allowList,
+                                denyList
                             )
-                        );
-                        setLoading(false);
-                    }
-                })
-                .catch(() => {
-                    if (current) {
-                        setLoading(false);
-                    }
-                    setOptions([]);
-                });
-        } else {
-            setOptions([]);
-        }
+                        )
+                    );
+                    setLoading(false);
+                }
+            })
+            .catch(() => {
+                if (current) {
+                    setLoading(false);
+                }
+                setOptions([]);
+            });
 
         // eslint-disable-next-line consistent-return
         return () => {

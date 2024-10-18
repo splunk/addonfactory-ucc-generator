@@ -142,8 +142,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
-                ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
-                : `${this.props.serviceName}`;
+                ? `${encodeURIComponent(this.props.serviceName)}/${encodeURIComponent(
+                      this.props.stanzaName
+                  )}`
+                : `${encodeURIComponent(this.props.serviceName)}`;
         this.pageContext = props.pageContext;
 
         this.util = {
@@ -862,7 +864,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
 
         axiosCallWrapper({
-            endpointUrl: generateEndPointUrl(encodeURIComponent(this.endpoint)),
+            endpointUrl: generateEndPointUrl(this.endpoint),
             body,
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',
