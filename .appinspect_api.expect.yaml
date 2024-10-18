@@ -1,0 +1,2 @@
+expected:
+  - message: "A Compiled Python file was detected."
