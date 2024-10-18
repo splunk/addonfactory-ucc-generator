@@ -12,7 +12,6 @@ import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { StandardPages } from '../../types/components/shareableTypes';
-import { invariant } from '../../util/invariant';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
