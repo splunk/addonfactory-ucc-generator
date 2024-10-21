@@ -1,0 +1,2 @@
+check_for_compiled_python:
+  comment: 'Expected failure as compiled python file (socks.cpython-37.pyc) was detected in `lib/__pycache__/` directory.'
