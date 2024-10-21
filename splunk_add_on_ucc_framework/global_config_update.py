@@ -123,9 +123,13 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
-    current_schema_version = global_config.schema_version
+    current_schema_version = global_config.schema_version or "0.0.0"
     version = current_schema_version if current_schema_version else "0.0.0"
     logger.info(f"Current globalConfig schema version is {current_schema_version}")
+    # TODO: update this variable at every schema version update
+    __ucc_latest_schema = "0.0.9"
+    if _version_tuple(current_schema_version) > _version_tuple(__ucc_latest_schema):
+        current_schema_version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
@@ -330,7 +334,9 @@ def _dump_enable_from_global_config(
         exc_msg = "`enable` attribute found in input's page table action."
 
         # Fetch the table object from global_config
-        table = global_config.content.get("pages", {}).get("inputs", {}).get("table", {})
+        table = (
+            global_config.content.get("pages", {}).get("inputs", {}).get("table", {})
+        )
 
         # Check if "enable" exists in the actions and remove it if present
         actions = table.get("actions", [])

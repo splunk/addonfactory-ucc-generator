@@ -398,18 +398,18 @@
                         "moreInfo": []
                     },
                     "warning": {
-                        "create": {
-                            "message": "Warning text for create mode"
-                        },
-                        "edit": {
-                            "message": "Warning text for edit mode"
-                        },
-                        "clone": {
-                            "message": "Warning text for clone mode"
-                        },
-                        "config": {
-                            "message": "Warning text for config mode"
-                        }
+                      "create": {
+                        "message": "Warning text for create mode"
+                      },
+                      "edit": {
+                        "message": "Warning text for edit mode"
+                      },
+                      "clone": {
+                        "message": "Warning text for clone mode"
+                      },
+                      "config": {
+                        "message": "Warning text for config mode"
+                      }
                     }
                 },
                 {
