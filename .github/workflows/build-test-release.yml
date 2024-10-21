@@ -323,6 +323,40 @@ jobs:
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
+  appinspect-api:
+    name: appinspect api ${{ matrix.tags }}
+    needs: build-test-addon
+    if: |
+      !cancelled() &&
+      needs.build-test-addon.result == 'success' &&
+      ( github.base_ref == 'main' || github.ref_name == 'main' )
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tags:
+          - "cloud"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+      - uses: actions/download-artifact@v4
+        with:
+          name: Splunk_TA_UCCExample-packaged
+          path: build/package
+      - uses: splunk/appinspect-api-action@v3.0
+        with:
+          username: ${{secrets.SPL_COM_USER}}
+          password: ${{secrets.SPL_COM_PASSWORD}}
+          app_path: build/package
+          included_tags: ${{ matrix.tags }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appinspect-api-html-report-${{ matrix.tags }}
+          path: AppInspect_response.html
+
   all-checks:
     if: ${{ !cancelled() }}
     needs:
