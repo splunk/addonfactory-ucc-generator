@@ -129,7 +129,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
     # TODO: update this variable at every schema version update
     __ucc_latest_schema = "0.0.9"
     if _version_tuple(current_schema_version) > _version_tuple(__ucc_latest_schema):
-        current_schema_version = "0.0.0"
+        version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
