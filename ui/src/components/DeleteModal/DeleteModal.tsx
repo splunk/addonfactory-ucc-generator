@@ -8,7 +8,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { generateToast } from '../../util/util';
 import { StyledButton } from '../../pages/EntryPageStyle';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import TableContext from '../../context/TableContext';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
@@ -52,9 +52,11 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
             (prevState) => ({ ...prevState, isDeleting: true, ErrorMsg: '' }),
             () => {
                 axiosCallWrapper({
-                    serviceName: `${this.props.serviceName}/${encodeURIComponent(
-                        this.props.stanzaName
-                    )}`,
+                    endpointUrl: generateEndPointUrl(
+                        `${encodeURIComponent(this.props.serviceName)}/${encodeURIComponent(
+                            this.props.stanzaName
+                        )}`
+                    ),
                     customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'delete',
                     handleError: false,
