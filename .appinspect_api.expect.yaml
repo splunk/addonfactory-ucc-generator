@@ -1,2 +1,2 @@
-expected:
-  - message: "A Compiled Python file was detected."
+check_for_compiled_python:
+  comment: 'Expected failure as compiled python file was detected in your build.'
