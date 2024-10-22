@@ -40,7 +40,7 @@ plugins:
             show_source: true
 
 nav:
-  - Home: "index.md"
+  - Overview: "index.md"
   - Quickstart: "quickstart.md"
   - ".conf files": "dot_conf_files.md"
   - Generated files: "generated_files.md"
