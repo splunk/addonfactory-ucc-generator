@@ -1,3 +1,10 @@
+## [5.51.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.0...v5.51.1) (2024-10-22)
+
+
+### Bug Fixes
+
+* **CustomControl:** change order of function parameters ([#1392](https://github.com/splunk/addonfactory-ucc-generator/issues/1392)) ([c3e82f9](https://github.com/splunk/addonfactory-ucc-generator/commit/c3e82f9bf410ff7d0b13d36de6bd6c2486e2d3ac))
+
 # [5.51.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.1...v5.51.0) (2024-10-16)
 
 
