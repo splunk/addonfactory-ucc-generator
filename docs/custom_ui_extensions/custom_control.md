@@ -3,7 +3,7 @@ The Custom Control feature allows you to display any customised input component 
 ### Properties
 
 | Property     | Description                                                                                                                                                                                                                                                                                   |
-|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | globalConfig | It is a hierarchical object that contains the globalConfig file's properties and values.                                                                                                                                                                                                      |
 | el           | The `el` is used to render a custom input element in a form.                                                                                                                                                                                                                                  |
 | data         | The `data` object holds details regarding the execution mode (create, edit, clone), the value of a field, and the service name where this custom component is being rendered.                                                                                                                 |
@@ -13,7 +13,7 @@ The Custom Control feature allows you to display any customised input component 
 ### Methods
 
 | Property   | Description                                                                                                                                                |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | render     | is a method which should have logic for the custom component, and it will be executed automatically when the create, edit, or clone actions are performed. |
 | validation | This method should contain the validation logic for the value of the custom component.                                                                     |
 
@@ -65,6 +65,8 @@ class CustomControl {
         this.data = data;
         this.util = util;
         this.setValue = setValue;
+        
+        this.onSelectOptionChange = this.onSelectOptionChange.bind(this);
     }
 
     onSelectOptionChange(event) {
