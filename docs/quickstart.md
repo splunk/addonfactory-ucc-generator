@@ -1,10 +1,11 @@
-# Quickstart
+# Quickstart guide
 
 ## Prerequisites
 
-You need to have Python 3.7+ and Git available in your machine to be able to use the `ucc-gen` command.
+You need Python 3.7+ <!---or later---> and Git available in your machine to be able to use the `ucc-gen` command. <!--- is Git sth that you have on your machine or you need a Git client?>
 
 > Git is used to generate the add-on version from Git tags. Alternatively, you can use the `--ta-version` parameter.
+
 To be able to create an add-on using the UCC framework, you need to have at least:
 
 * a `globalConfig` file (in `JSON` or `YAML` format, `JSON` is mostly used).
@@ -17,7 +18,11 @@ The `app.manifest` file now is being validated. See [Splunk Packaging Toolkit ap
 
 The JSON schema for the `globalConfig` file can be found in the `splunk_add_on_ucc_framework/schema/schema.json` file.
 
-### Add-on naming convention
+## Installation <!--- I'd move this to Quick start chapter>
+
+`splunk-add-on-ucc-framework` is available on [PyPI](https://pypi.org/project/splunk-add-on-ucc-framework/).
+
+## Add-on naming convention
 
 See [Naming conventions for apps and add-ons in Splunkbase](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/)
 for help naming your add-on.
