@@ -28,24 +28,22 @@ For more information, read [UCC-related libraries](ucc_related_libraries.md).
 ## Features <!--- change this heading to sth more appropriate, these are not features>
 
 UCC does the following:
-UCC generates the following elements/components that are stored in the listed/dedicated/separate folders:
+UCC generates the following elements/components/items that are stored in the listed/dedicated/separate folders:
 When you use UCC to create an add-on, the following components are generated and stored in the appriopriate folders:
 
 * the generated UI is stored in the `appserver` folder.
 * Python REST handlers that support UI CRUD operations are stored in the `bin` folder.
-* inputs and their helper modules. For more information, see [Inputs](./inputs/index.md) and [Helper modules].(/inputs/helper.md).
+* inputs and their helper modules. For more information, see [Inputs](./inputs/index.md) and [Helper modules](./inputs/helper.md).
 * OpenAPI description documents are stored in the `appserver/static/openapi.json` file. For more information, see [OpenAPI description document](openapi.md).
 * `.conf` files. For more information, see [.conf files](dot_conf_files.md).
 * Python requirements are installed in the `lib` folder.
 * metadata files are stored in the `metadata` folder.
 * the monitoring dashboard. For more information, see [Dashboard](dashboard.md).
-* it possibly extends the UI with custom codes (for more information, see [here](custom_ui_extensions/custom_hook.md)).
-* it possibly extends the build process via a `additional_packaging.py` file (more information, [here](additional_packaging.md)).
-* generates the necessary files defined for the Alert Action, if defined in globalConfig (for more informaiton, see [here](alert_actions/index.md)).
+* it possibly extends the UI with custom codes. For more information, see [Custom Hook](custom_ui_extensions/custom_hook.md).
+* it possibly extends the build process via the `additional_packaging.py` file. For more information, see [additional_packaging.py file](additional_packaging.md).
+* the necessary files defined for the Alert Action, if defined in globalConfig. For more informaiton, see [Alert Actions](alert_actions/index.md). <!--- change capitalization?>
 
-## Installation <!--- I'd move this to Quick start chapter>
 
-`splunk-add-on-ucc-framework` is available on [PyPI](https://pypi.org/project/splunk-add-on-ucc-framework/).
 
 ## Caveats
 
