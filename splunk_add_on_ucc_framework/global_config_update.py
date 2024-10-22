@@ -124,12 +124,17 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
     current_schema_version = global_config.schema_version or "0.0.0"
-    version = current_schema_version if current_schema_version else "0.0.0"
-    logger.info(f"Current globalConfig schema version is {current_schema_version}")
+
     # TODO: update this variable at every schema version update
     __ucc_latest_schema = "0.0.9"
-    if _version_tuple(current_schema_version) > _version_tuple(__ucc_latest_schema):
-        version = "0.0.0"
+
+    logger.info(f"Current globalConfig schema version is {current_schema_version}")
+    # Determine the version, reset to "0.0.0" if schema is newer than the latest supported
+    version = (
+        "0.0.0"
+        if _version_tuple(current_schema_version) > _version_tuple(__ucc_latest_schema)
+        else current_schema_version
+    )
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
@@ -138,6 +143,8 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
+            if tab.get("type") in ["loggingTab"]:
+                continue
             if tab["name"] == "account":
                 conf_entities = tab.get("entity")
 
@@ -331,20 +338,36 @@ def _dump_enable_from_global_config(
     global_config: global_config_lib.GlobalConfig,
 ) -> None:
     if global_config.has_inputs():
-        exc_msg = "`enable` attribute found in input's page table action."
-
         # Fetch the table object from global_config
-        table = (
-            global_config.content.get("pages", {}).get("inputs", {}).get("table", {})
-        )
+        table = global_config.content.get("pages", {}).get("inputs", {}).get("table")
 
-        # Check if "enable" exists in the actions and remove it if present
-        actions = table.get("actions", [])
-        if "enable" in actions:
-            logger.info(exc_msg)
-            logger.info(f"Removing 'enable' from actions: {actions}")
-            actions.remove("enable")  # Remove the 'enable' action
+        if table:  # If the table exists
+            actions = table.get("actions", [])
+            if "enable" in actions:
+                logger.warning(
+                    "`enable` attribute found in input's page table action."
+                    + f" Removing 'enable' from actions: {actions}"
+                )
+                actions.remove("enable")
+                table["actions"] = actions  # Update the actions in the global_config
 
-            # Update the actions in the global_config
-            table["actions"] = actions
-            global_config.update_schema_version("0.0.9")
+        else:  # If no table present, loop through services in inputs
+            services = (
+                global_config.content.get("pages", {})
+                .get("inputs", {})
+                .get("services", [])
+            )
+            for service in services:
+                service_table = service.get("table", {})
+                actions = service_table.get("actions", [])
+                if "enable" in actions:
+                    logger.warning(
+                        f"`enable` attribute found in service {service.get('name')}'s table action."
+                        + f" Removing 'enable' from actions in service: {actions}"
+                    )
+                    actions.remove("enable")
+                    service_table[
+                        "actions"
+                    ] = actions  # Update the actions in the service's table
+
+    global_config.update_schema_version("0.0.9")
