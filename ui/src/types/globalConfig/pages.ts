@@ -20,7 +20,7 @@ export const TableSchema = z.object({
         })
     ),
     customRow: z.record(z.any()).optional(),
-    actions: z.array(z.enum(['edit', 'delete', 'clone', 'enable', 'search'])),
+    actions: z.array(z.enum(['edit', 'delete', 'clone', 'search'])),
 });
 
 // TODO add "required": ["entity", "name", "title"] or required": ["customTab", "name", "title"]

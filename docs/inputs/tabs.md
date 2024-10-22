@@ -19,7 +19,6 @@ If `title` and `description` are provided in the global configuration file, then
                 "table": {
                     "actions": [
                         "edit",
-                        "enable",
                         "delete",
                         "clone"
                     ],
@@ -41,7 +40,6 @@ If `title` and `description` are provided in the global configuration file, then
                 "table": {
                     "actions": [
                         "edit",
-                        "enable",
                         "delete",
                         "clone"
                     ],
