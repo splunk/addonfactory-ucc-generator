@@ -9,7 +9,7 @@ import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { getBuildDirPath } from '../../util/script';
 
@@ -142,8 +142,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
-                ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
-                : `${this.props.serviceName}`;
+                ? `${encodeURIComponent(this.props.serviceName)}/${encodeURIComponent(
+                      this.props.stanzaName
+                  )}`
+                : `${encodeURIComponent(this.props.serviceName)}`;
         this.pageContext = props.pageContext;
 
         this.util = {
@@ -862,7 +864,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
 
         axiosCallWrapper({
-            serviceName: this.endpoint,
+            endpointUrl: generateEndPointUrl(this.endpoint),
             body,
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',
@@ -1134,12 +1136,16 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             return false;
         }
 
+        const baseUrl = new URL(
+            `https://${this.datadict.endpoint || this.datadict.endpoint_token}`
+        );
+        baseUrl.pathname = this.oauthConf?.accessTokenEndpoint || '';
+        const url = baseUrl.toString();
+
         const code = decodeURIComponent(message.code);
         const data: Record<string, AcceptableFormValueOrNullish> = {
             method: 'POST',
-            url: `https://${this.datadict.endpoint || this.datadict.endpoint_token}${
-                this.oauthConf?.accessTokenEndpoint
-            }`,
+            url,
             grant_type: 'authorization_code',
             client_id: this.datadict.client_id,
             client_secret: this.datadict.client_secret,
@@ -1159,7 +1165,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
 
-        const OAuthEndpoint = `${this.appName}_oauth/oauth`;
+        const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
         axiosCallWrapper({
             endpointUrl: OAuthEndpoint,
