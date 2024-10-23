@@ -1,16 +1,21 @@
-# Quickstart guide
+# Quickstart guide 
+
+Install the UCC framework and start building your first add-on. Then you can 
 
 ## Prerequisites
 
+Befor you use the `ucc-gen` command, make sure that the following software is installed on your machine:
+* Python 3.7 or later 
+* Git 
 You need Python 3.7+ <!---or later---> and Git available in your machine to be able to use the `ucc-gen` command. <!--- is Git sth that you have on your machine or you need a Git client?>
 
-> Git is used to generate the add-on version from Git tags. Alternatively, you can use the `--ta-version` parameter.
+> Git is used to generate the add-on version from Git tags. Alternatively, you can use the `--ta-version` parameter. <!--- where do I use this parameter? when using ucc?>
 
 To be able to create an add-on using the UCC framework, you need to have at least:
 
 * a `globalConfig` file (in `JSON` or `YAML` format, `JSON` is mostly used).
 * a `package` folder.
-* `app.manifest` in the `package` folder ([documentation here](https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/)).
+* `app.manifest` file in the `package` folder ([documentation here](https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/)). <!--- is this doc only for the last bullet?>
 
 The `app.manifest` file now is being validated. See [Splunk Packaging Toolkit app.manifest schema definition](https://dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/#JSON-schema-200) for more details.
 
@@ -27,56 +32,56 @@ The JSON schema for the `globalConfig` file can be found in the `splunk_add_on_u
 See [Naming conventions for apps and add-ons in Splunkbase](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/)
 for help naming your add-on.
 
-## Initialize new add-on
+## Initialize new add-on <!--- is Create a better word?>
 
 > Initialization of the new add-on is available from version `5.19.0` and up of `ucc-gen`.
 
-The following commands are macOS and Linux specific.
+> The following commands are macOS and Linux specific.
 
-* Set up and activate the Python virtual environment:
+1. Set up and activate the Python virtual environment: <!--- is this clear? do users know what to open?>
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-* Install `splunk-add-on-ucc-framework`:
+1. Install `splunk-add-on-ucc-framework`:
 
 ```bash
 pip install splunk-add-on-ucc-framework
 ```
 
-* Initialize the new add-on:
+1. Initialize the new add-on:
 
 ```bash
 ucc-gen init --addon-name "demo_addon_for_splunk" --addon-display-name "Demo Add-on for Splunk" --addon-input-name demo_input
 ```
 
 The new add-on is located in the `demo_addon_for_splunk` folder and can be built using
-the [the following commands](#build-the-already-existing-add-on):
+the commands listed in the Commands section, see <!---appropriate link> (#build-the-already-existing-add-on).
 
-## Build the already existing add-on
+## Build the already existing add-on <!--- Create an add-on from the exisiting one>
 
-The following commands are macOS and Linux specific:
+> The command used in this task are macOS and Linux specific.<!--- this is the same note as above, create one for the whole page?>
 
-* Set up and activate the Python virtual environment (skip if you already have an environment):
+1. Set up and activate the Python virtual environment (skip if you already have an environment):
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-* Install `splunk-add-on-ucc-framework` and `splunk-packaging-toolkit` (skip if you already installed the libraries):
+1. Install `splunk-add-on-ucc-framework` and `splunk-packaging-toolkit` (skip if you already installed the libraries):
 
 ```bash
 pip install splunk-add-on-ucc-framework splunk-packaging-toolkit
 ```
 
-> Note: `splunk-packaging-toolkit` does not work with Python 3.10+.
+> Note: `splunk-packaging-toolkit` does not work with Python 3.10+. <!---any reason we use word "Note" here and in other instances not?>
 
 > Note: If you use UCC `v5.30.0+`, `ucc-gen package` can be used instead of `slim`.
 
-* Run `ucc-gen build` and package it
+1. Run `ucc-gen build` and package it
 
 > Provide a `--ta-version=<version>` parameter if this repository is not version controlled.
 
@@ -89,7 +94,7 @@ slim package output/<add-on-name>
 
 Now you should see an archive created on the same level as your `globalConfig.json`.
 
-Now you can go to Splunk and install this add-on using the generated archive.
+Now you can go to Splunk and install this add-on using the generated archive. <!--- go to Splunk meaning where?>
 
 After validating that the add-on was loaded correctly and all the basic operations
 are working, you can extend the functionality of the input by copying and
