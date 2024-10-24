@@ -1,10 +1,12 @@
 # Contributing Guidelines
 
+We welcome contributions from the community! This guide will help you understand our contribution process and requirements.
+
 ## Build and Test
 
 Prerequisites:
 
-- Node.js LTS version ([Node.js](https://nodejs.org/en/download), or use [nvm](https://github.com/nvm-sh/nvm))
+- Node.js® LTS version (download [here](https://nodejs.org/en/download/package-manager))
 - Yarn Classic (`npm install --global yarn`)
 - Poetry 1.5.1. [Installation guide](https://python-poetry.org/docs/#installing-with-the-official-installer)
 
@@ -62,7 +64,7 @@ UI tests will run automatically for any PR towards the `main` / `develop` branch
    Default test parameters use Splunk connection details and credentials from the earlier step, and `chromedriver` is used as a default webdriver.  
    To use a different browser or Splunk configuration, set the proper parameters according to the [smartx-ui-test-library](https://addon-factory-smartx-ui-test-library.readthedocs.io/en/latest/how_to_use.html) documentation.
 
-## Linting and Type-checking
+### Linting and Type-checking
 
 `ucc-gen` uses the [`pre-commit`](https://pre-commit.com) framework for linting and type-checking.
 Consult with `pre-commit` documentation about what is the best way to install the software.
@@ -72,6 +74,62 @@ To run it locally:
 ```bash
 pre-commit run --all-files
 ```
+
+
+## Building TA with the Local Version of UCC
+
+UCC is a tool for Technical Add-ons (TAs), so it's important to test TA generation while developing UCC locally.
+
+### Overview
+
+1. Install Dependencies for Your TA
+2. Build the TA Using Your Local UCC Version
+3. Package the TA into a .tar.gz File via ucc-gen package
+
+### Installing TA Dependencies
+
+The method for installing dependencies may vary among different TAs. Common approaches include running Poetry, but please refer to your TA's documentation for specific instructions.
+
+```bash
+# Navigate to your TA repository
+cd /path/to/your/ta
+
+poetry install
+
+mkdir -p package/lib
+
+# Export dependencies to 'requirements.txt'
+poetry export --without-hashes -o package/lib/requirements.txt
+```
+
+> Note: ucc-gen expects dependencies to be listed in `package/lib/requirements.txt`.
+
+### Building TA
+
+Run the following commands from the UCC repository:
+
+```bash
+poetry run ucc-gen build --source /path/to/your/ta/package
+```
+
+Ensure you specify the package folder, not the repository root. Monitor the build process for any errors.
+
+**Caveat**: The build command may run scripts from the TA repository that may not be tested if running from a non-TA repository. For example, `build-ui.sh` may use relative paths for building custom components. You might need to manually run the script and/or copy the files to the output directory of UCC.
+
+```bash
+$ta_repo = /path/to/your/ta
+$ta_name = TA_name
+cp -a $ta_repo/output/$ta_name/appserver/static/js/build/custom output/$ta_name/appserver/static/js/build
+```
+
+### Packaging TA
+
+```bash
+poetry run ucc-gen package --path output/TA_name
+```
+
+This command will generate a packaged TA (.tar.gz file) that you can install into Splunk.
+
 
 ## Documentation changes
 
@@ -91,13 +149,42 @@ If you're seeing some unexpected behavior with `ucc-gen`, create an [issue](http
 
 We love to see pull requests!
 
-We are using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
-The two most important types: "fix" and "feat", would result in the new version of the `ucc-gen` once merged.
+### PR Title
 
-To do the changes you think are needed, run the previous steps (build / test / linting / documentation).
-After you create a PR, all the needed reviewers will be added automatically by GitHub.
+We follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for PR titles. The title format is crucial as we squash commits during merge, and this PR title will be used in the release notes (for feat and fix types).
+Here's a short TL;DR of the format:
 
-Gotcha: The `semgrep` and `fossa` steps might fail if you are an external contributor. This is expected for now.
+```
+<type>(<scope>): <description>
+
+Types:
+- feat: New feature (user facing)
+- fix: Bug fix (user facing)
+- docs: Documentation changes (user facing)
+- style: Code style changes (formatting, etc.)
+- refactor: Code changes that neither fix bugs nor add features
+- perf: Performance improvements
+- test: Adding or updating tests
+- chore: Maintenance tasks
+```
+
+Example: `feat(ui): add new input validation for text fields`
+
+### PR Description
+
+Include:
+
+- Motivation behind the changes (any reference to issues or user stories)
+- Clear description of the changes
+- Description of changes in user experience if applicable.
+- Screenshots for UI changes
+- Steps to reproduce the issue or test the new feature, if possible. This will speed up the review process.
+
+
+After submitting your PR, GitHub will automatically add relevant reviewers, and CI checks will run automatically.
+
+> Note: `semgrep` and `fossa` checks might fail for external contributors. This is expected and will be handled by maintainers.
+
 
 ## Release flow
 
