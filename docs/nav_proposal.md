@@ -1,0 +1,70 @@
+nav:
+  - About UCC: 
+        - "index.md"
+        - Caveats: "caveats.md"
+        - Change log: "CHANGELOG.md"
+  - Getting started: "quickstart.md"
+  - Commands: "commands.md"
+  - Files:
+        - ".conf files": "dot_conf_files.md"
+        - Generated files: "generated_files.md"
+  - Inputs:
+      - "inputs/index.md"
+      - Introduction: "inputs/index.md"
+      - Tabs: "inputs/tabs.md"
+      - Multi-level Menu: "inputs/multilevel_menu.md"
+      - Helper Module: "inputs/helper.md"
+  - Configuration:
+      - "configurations/index.md"
+      - Introduction: "configurations/index.md"
+      - Logging: "configurations/logging.md"
+      - Proxy: "configurations/proxy.md"
+  - Dashboard: "dashboard.md"
+  - Alert actions:
+      - "alert_actions/index.md"
+      - Alert action scripts: "alert_actions/alert_scripts.md"
+      - Adaptive response: "alert_actions/adaptive_response.md"
+  - Entity:
+      - "entity/index.md"
+      - Introduction: "entity/index.md"
+      - Components: "entity/components.md"
+      - Validators: "entity/validators.md"
+      - Modify Fields On Change: "entity/modifyFieldsOnValue.md"
+
+  - Table: "table.md"
+  - Additional packaging: "additional_packaging.md"
+  - UCC Ignore: "uccignore.md"
+  - OpenAPI: "openapi.md"
+  - UCC-related libraries: "ucc_related_libraries.md"
+  - Custom UI Extensions:
+      - Overview: "custom_ui_extensions/overview.md"
+      - Custom Hook: "custom_ui_extensions/custom_hook.md"
+      - Custom Control: "custom_ui_extensions/custom_control.md"
+      - Custom Row: "custom_ui_extensions/custom_row.md"
+      - Custom Cell: "custom_ui_extensions/custom_cell.md"
+      - Custom Menu: "custom_ui_extensions/custom_menu.md"
+      - Custom Tab: "custom_ui_extensions/custom_tab.md"
+  - Advanced:
+      - Custom Mapping: "advanced/custom_mapping.md"
+      - Dependent Dropdown: "advanced/dependent_dropdown.md"
+      - OAuth Support: "advanced/oauth_support.md"
+      - Custom REST Handler: "advanced/custom_rest_handler.md"
+      - Groups Feature: "advanced/groups_feature.md"
+      - Save Validator: "advanced/save_validator.md"
+      - OS-dependent libraries: "advanced/os-dependent_libraries.md"
+      - Sub Description: "advanced/sub_description.md"
+      - Custom Warning: "advanced/custom_warning.md"
+  - Troubleshooting: "troubleshooting.md"
+  - Contributing: "contributing.md"
+  - Metadata: "metadata.md"
+  - Storybook: "storybook/index.html"
+  - UI Tests:
+      - Configuration Page:
+          - General: "ui_tests_config_page_general.md"
+          - Account: "ui_tests_config_page_account.md"
+          - Custom: "ui_tests_config_page_custom.md"
+          - Logging: "ui_tests_config_page_logging.md"
+          - Proxy: "ui_tests_config_page_proxy.md"
+      - Alert Action Page: "ui_tests_alert_actions_page.md"
+      - Input Page: "ui_tests_inputs_page.md"
+  

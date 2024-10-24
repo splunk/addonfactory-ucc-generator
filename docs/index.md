@@ -15,8 +15,8 @@ To work with UCC framework, you can also use Splunk Extension. It helps you to c
 ## Libraries
 
 UCC-based add-ons are powered by the following Splunk libraries:
-* `solnlib`, see (https://github.com/splunk/addonfactory-solutions-library-python)
-* `splunktaucclib`, see (https://github.com/splunk/addonfactory-ucc-library). 
+* `solnlib`, see [https://github.com/splunk/addonfactory-solutions-library-python](https://github.com/splunk/addonfactory-solutions-library-python)
+* `splunktaucclib`, see [https://github.com/splunk/addonfactory-ucc-library](https://github.com/splunk/addonfactory-ucc-library). 
 For more information, see [UCC-related libraries](ucc_related_libraries.md).
 
 ## What UCC generates 
