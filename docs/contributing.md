@@ -54,7 +54,9 @@ UI tests will run automatically for any PR towards the `main` / `develop` branch
     ```
 
    There are mapped default Splunk ports to host. To use a different configuration, see [docker-splunk](https://splunk.github.io/docker-splunk/). Remember to mount the output package to the Splunk apps directory.
+
 3. Install any browser specific to this browser driver, such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
+
 4. Run tests using the following command:
 
     ```bash
@@ -172,12 +174,12 @@ Example: `feat(ui): add new input validation for text fields`
 
 ### PR Description
 
-Include:
+Includes:
 
 - Motivation behind the changes (any reference to issues or user stories)
-- Clear description of the changes
+- High level description of code changes
 - Description of changes in user experience if applicable.
-- Screenshots for UI changes
+- Screenshots for UI changes (before and after)
 - Steps to reproduce the issue or test the new feature, if possible. This will speed up the review process.
 
 
