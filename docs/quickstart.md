@@ -25,23 +25,23 @@ You can initialize new add-ons from `ucc-gen` version `5.19.0` and later.
 
 1. Set up and activate the Python virtual environment:
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
 
-1. Install `splunk-add-on-ucc-framework`:
+2. Install `splunk-add-on-ucc-framework`:
 
-```bash
-pip install splunk-add-on-ucc-framework
-```
+    ```bash
+    pip install splunk-add-on-ucc-framework
+    ```
 
-1. Initialize a new add-on:
+3. Initialize a new add-on:
 
-```bash
-ucc-gen init --addon-name "demo_addon_for_splunk" --addon-display-name "Demo Add-on for Splunk" --addon-input-name demo_input
-```
-For more information about the add-ons naming convention, see [Naming conventions for apps and add-ons in Splunkbase](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/)
+    ```bash
+    ucc-gen init --addon-name "demo_addon_for_splunk" --addon-display-name "Demo Add-on for Splunk" --addon-input-name demo_input
+    ```
+    For more information about the add-ons naming convention, see [Naming conventions for apps and add-ons in Splunkbase](https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/)
 
 The new add-on is located in the `demo_addon_for_splunk` folder. 
 
@@ -55,29 +55,29 @@ After initializing a new add-on, you can continue building it.
 
 1. Set up and activate the Python virtual environment (skip if you already have an environment):
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+    ```bash
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
 
 1. Install `splunk-add-on-ucc-framework`  (skip if you already installed the libraries):
 
-```bash
-pip install splunk-add-on-ucc-framework 
-```
+    ```bash
+    pip install splunk-add-on-ucc-framework 
+    ```
 
-> **Note:** If you use UCC `v5.30.0+`, use the `ucc-gen package` command instead of `slim`. 
+    > **Note:** If you use UCC `v5.30.0+`, use the `ucc-gen package` command instead of `slim`. 
 
 1. Run `ucc-gen build` and package it. Provide a `--ta-version=<version>` parameter if this repository is not version controlled.
 
-```bash
-ucc-gen build
-slim package output/<add-on-name>
-```
+    ```bash
+    ucc-gen build
+    slim package output/<add-on-name>
+    ```
 
-> **Note:** If you use UCC `v5.19.0` or later, use `ucc-gen build` instead of `ucc-gen`. 
+    > **Note:** If you use UCC `v5.19.0` or later, use `ucc-gen build` instead of `ucc-gen`. 
 
-The archive is created on the same level as your `globalConfig.json` file.
+    The archive is created on the same level as your `globalConfig.json` file.
 
 1. Go to your Splunk app instance and install this add-on using the generated archive. 
 

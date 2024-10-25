@@ -1,16 +1,16 @@
 # About UCC
 
-Universal Configuration Console (UCC) is a framework that simplifies the process of add-on creation for developers.You can use UCC to generate UI-based Splunk add-ons. UCC includes UI, REST handlers, modular inputs, OAuth, and alert action templates.
+Universal Configuration Console (UCC) is a framework that simplifies the process of add-on creation for developers. You can use UCC to generate UI-based Splunk add-ons. UCC includes UI, REST handlers, modular inputs, OAuth, and alert action templates.
 
 The UCC framework helps you to maintain consistency and a uniform look and feel across different add-ons. You can easily update and modify your add-ons.
 
 UCC 5 <!--- why do we say 5, everywhere else we say UCC---> uses Splunk UI. See [Splunk UI](https://splunkui.splunk.com/). It is a new UI framework based on React. The UCC UI repository is stored in the `ui` folder. <!-- (but where is this folder exactly, when I install Splunk UI?) -->
 
-> The UCC framework supports add-ons that use only Python 3.
+> **Note:** The UCC framework supports add-ons that use only Python 3.
 
 The UCC framework is available as a GitHub action. See <https://github.com/splunk/addonfactory-ucc-generator-action>.
 
-To work with UCC framework, you can also use Splunk Extension. It helps you to create, test ,and debug the add-ons in a simple way. For more information, see [Visual Studio Code Extension for Splunk](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk).
+To work with UCC framework, you can also use Splunk Extension. It helps you to create, test, and debug the add-ons in a simple way. For more information, see [Visual Studio Code Extension for Splunk](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk).
 
 ## Libraries
 
