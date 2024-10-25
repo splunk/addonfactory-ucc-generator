@@ -9,6 +9,7 @@ export default {
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     modulePathIgnorePatterns: ['<rootDir>/src/main/resources'],
     restoreMocks: true,
+    cacheDirectory: '<rootDir>/node_modules/.cache/jest',
     // Coverage
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
