@@ -8,7 +8,7 @@ Make sure that the following software is installed on your machine:
 * Python 3.7 or later 
 * Git 
 
-> Git is used to generate the add-on version from the Git tags. Alternatively, you can use the `--ta-version` parameter and specify the version by yourself.
+> **Note:** Git is used to generate the add-on version from the Git tags. Alternatively, you can use the `--ta-version` parameter and specify the version by yourself.
 
 ## Install
 
@@ -21,7 +21,7 @@ If you use macOS, ...<!--- Artem to give more info--->
 
 You can initialize new add-ons from `ucc-gen` version `5.19.0` and later.
 
-> The commands used in this task are macOS and Linux specific.
+> **Note:** The commands used in this task are macOS and Linux specific.
 
 1. Set up and activate the Python virtual environment:
 
@@ -51,7 +51,7 @@ Build your newly created add-on using the commands listed in the Commands sectio
 
 After initializing a new add-on, you can continue building it.
 
-> The command used in this task are macOS and Linux specific.
+> **Note:** The command used in this task are macOS and Linux specific.
 
 1. Set up and activate the Python virtual environment (skip if you already have an environment):
 
@@ -66,7 +66,7 @@ source .venv/bin/activate
 pip install splunk-add-on-ucc-framework 
 ```
 
-> If you use UCC `v5.30.0+`, use the `ucc-gen package` command instead of `slim`. 
+> **Note:** If you use UCC `v5.30.0+`, use the `ucc-gen package` command instead of `slim`. 
 
 1. Run `ucc-gen build` and package it. Provide a `--ta-version=<version>` parameter if this repository is not version controlled.
 
@@ -75,9 +75,9 @@ ucc-gen build
 slim package output/<add-on-name>
 ```
 
-> If you use UCC `v5.19.0` or later, use `ucc-gen build` instead of `ucc-gen`. 
+> **Note:** If you use UCC `v5.19.0` or later, use `ucc-gen build` instead of `ucc-gen`. 
 
-The archive is created on the same level as your `globalConfig.json`.
+The archive is created on the same level as your `globalConfig.json` file.
 
 1. Go to your Splunk app instance and install this add-on using the generated archive. 
 

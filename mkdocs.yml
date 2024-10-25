@@ -41,9 +41,7 @@ plugins:
 
 nav:
   - About UCC: "index.md"
-  - Getting started: 
-      - "quickstart.md"
-      - Build an add-on from the existing one: "build_add_on_from_existing_one.md"
+  - Getting started: "quickstart.md"
   - Commands: "commands.md"
   - Caveats: "caveats.md"
   - ".conf files": "dot_conf_files.md"
