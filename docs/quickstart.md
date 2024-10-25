@@ -1,4 +1,4 @@
-# Quickstart guide 
+# Getting started 
 
 Install the UCC framework and start building your first add-on. Then you can build new add-ons from the existing ones.
 
@@ -14,8 +14,8 @@ Make sure that the following software is installed on your machine:
 
 1. Go to the `splunk-add-on-ucc-framework` package that is available on PyPI. For more information about PyPI, see <https://pypi.org/project/splunk-add-on-ucc-framework/>.
 
-If you use Windows, 
-If you use macOS, <!--- Artem to give more info--->
+If you use Windows, ...
+If you use macOS, ...<!--- Artem to give more info--->
 
 ## Create a new add-on
 
@@ -47,9 +47,9 @@ The new add-on is located in the `demo_addon_for_splunk` folder.
 
 Build your newly created add-on using the commands listed in the Commands section, see [Commands](commands.md).
 
-## Build an add-on from the exisiting one
+## Build an add-on from the existing one
 
-After initializing a new add-on, you can continue building your add-on.
+After initializing a new add-on, you can continue building it.
 
 > The command used in this task are macOS and Linux specific.
 
@@ -85,5 +85,4 @@ The archive is created on the same level as your `globalConfig.json`.
 
 After you check that the add-on was loaded correctly and all the basic operations are working, you can extend the functionality of the input by copying and pasting the automatically generated modular inputs file into the `package/bin` folder. The generated inputs use the Splunk SDK for Python. See [https://github.com/splunk/splunk-sdk-python](https://github.com/splunk/splunk-sdk-python). 
 
-After you update the modular input code, you can run `ucc-gen` again, and then `ucc-gen` will
-use updated modular inputs from `package/bin` instead of generating new ones.
+After you update the modular input code, you can run `ucc-gen` again, and then `ucc-gen` uses updated modular inputs from `package/bin` instead of generating new ones.

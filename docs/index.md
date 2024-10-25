@@ -1,8 +1,8 @@
 # About UCC
 
-Universal Configuration Console (UCC) is a fremawerk that simplifys the process of add-on creation for developers.You can use UCC to generate UI-based Splunk add-ons. UCC includes UI, REST handlers, Modular inputs, OAuth, and alert action templates.
+Universal Configuration Console (UCC) is a framework that simplifies the process of add-on creation for developers.You can use UCC to generate UI-based Splunk add-ons. UCC includes UI, REST handlers, modular inputs, OAuth, and alert action templates.
 
-The UCC framework helps you to maintain consistency and a uniform look and feel across different add-ons. You can easily update and modify to your add-ons.
+The UCC framework helps you to maintain consistency and a uniform look and feel across different add-ons. You can easily update and modify your add-ons.
 
 UCC 5 <!--- why do we say 5, everywhere else we say UCC---> uses Splunk UI. See [Splunk UI](https://splunkui.splunk.com/). It is a new UI framework based on React. The UCC UI repository is stored in the `ui` folder. <!-- (but where is this folder exactly, when I install Splunk UI?) -->
 
@@ -21,7 +21,7 @@ For more information, see [UCC-related libraries](ucc_related_libraries.md).
 
 ## What UCC generates 
 
-When you use UCC to create an add-on, the following elements are generated and stored in the appriopriate folders: 
+When you use UCC to create an add-on, the following elements are generated and stored in the appropriate folders: 
 
 * UI is stored in the `appserver` folder,
 * Python REST handlers that support UI CRUD operations are stored in the `bin` folder,
@@ -31,7 +31,7 @@ When you use UCC to create an add-on, the following elements are generated and s
 * Python requirements are installed in the `lib` folder,
 * metadata files are stored in the `metadata` folder,
 * the monitoring dashboard. For more information, see [Dashboard](dashboard.md),
-* the necessary files defined for the alert action <!---who defines the files? can I rewrite to: the files defined for the alert action?, is this part of the basic version or an extended one? --->, if the alert action is defined in globalConfig <!--- is this a file name? --->. For more informaiton, see [Alert actions](alert_actions/index.md). 
+* the necessary files defined for the alert action <!---who defines the files? can I rewrite to: the files defined for the alert action? --->, if the alert action is defined in globalConfig <!--- is this a file name? --->. For more information, see [Alert actions](alert_actions/index.md). 
 
 You can extend your add-ons with the following files:
 
