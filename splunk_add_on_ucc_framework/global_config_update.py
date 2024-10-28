@@ -125,16 +125,15 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
     """Handle changes in globalConfig file."""
     current_schema_version = global_config.schema_version or "0.0.0"
 
-    # TODO: update this variable at every schema version update
-    __ucc_latest_schema = "0.0.9"
-
     logger.info(f"Current globalConfig schema version is {current_schema_version}")
-    # Determine the version, reset to "0.0.0" if schema is newer than the latest supported
-    version = (
-        "0.0.0"
-        if _version_tuple(current_schema_version) > _version_tuple(__ucc_latest_schema)
-        else current_schema_version
-    )
+
+    if _version_tuple(global_config.meta.get("_uccVersion", "0.0.0")) >= _version_tuple(
+        "5.52.0"
+    ):
+        # we hard-code the value of 5.52.0 as this feature would be shipped in that version
+        version = current_schema_version
+    else:
+        version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
