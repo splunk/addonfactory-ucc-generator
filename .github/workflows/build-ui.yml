@@ -15,9 +15,6 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node-version }}
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
         with:
