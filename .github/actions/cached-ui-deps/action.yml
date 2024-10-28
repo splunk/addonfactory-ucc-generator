@@ -1,9 +1,5 @@
 name: "Get & Cache Yarn Dependencies"
 description: "Get & Cache Yarn Dependencies"
-inputs:
-  node-version:
-    description: "Node version"
-    required: true
 
 runs:
   using: composite
@@ -12,7 +8,7 @@ runs:
       with:
         cache: 'yarn'
         cache-dependency-path: 'ui/yarn.lock'
-        node-version: ${{ inputs.node-version }}
+        node-version-file: 'ui/package.json'
     - name: Install Dependencies
       working-directory: ui
       run: yarn install --frozen-lockfile

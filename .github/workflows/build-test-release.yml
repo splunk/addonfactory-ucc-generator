@@ -75,13 +75,7 @@ jobs:
 
   build-ui:
     name: Build UCC UI
-    strategy:
-      matrix:
-        node-version:
-          - "20"
     uses: ./.github/workflows/build-ui.yml
-    with:
-      node-version: ${{ matrix.node-version }}
 
   storybook-screenshots:
     name: Update storybook screenshots
@@ -89,8 +83,6 @@ jobs:
       contents: write
     secrets: inherit
     uses: ./.github/workflows/storybook-visual.yml
-    with:
-      node-version: "20"
   bot-updates:
     name: Generates Documentation
     permissions:
