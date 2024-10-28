@@ -47,7 +47,7 @@
     "react-is": "^16.13.1",
     "react-router-dom": "^6.27.0",
     "styled-components": "^5.3.11",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
