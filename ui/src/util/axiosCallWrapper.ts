@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { CSRFToken, app } from '@splunk/splunk-utils/config';
+import { getDefaultFetchInit } from '@splunk/splunk-utils/fetch';
+import { app } from '@splunk/splunk-utils/config';
 import { createRESTURL } from '@splunk/splunk-utils/url';
 import { generateToast, getUnifiedConfigs } from './util';
 import { parseErrorMsg } from './messageUtil';
@@ -17,70 +17,75 @@ export interface AxiosCallType {
 
 export function generateEndPointUrl(name: string) {
     const unifiedConfigs = getUnifiedConfigs();
-
     return `${unifiedConfigs.meta.restRoot}_${name}`;
 }
 
 const DEFAULT_PARAMS = { output_mode: 'json' };
 
-/**
- *
- * @param {Object} data The object containing required params for request
- * @param {string} data.endpointUrl rest endpoint path
- * @param {object} data.params object with params as key value pairs
- * @param {object} data.body object with body as key value pairs for post request
- * @param {object} data.customHeaders extra headers as key value pair
- * @param {string} data.method rest method type
- * @param {string} data.handleError whether or not show toast notifications on failure
- * @param {string} data.callbackOnError callback function to execute after handling error. Only executed when handleError is set to true
- * @returns
- */
-const axiosCallWrapper = ({
+const createUrl = (endpointUrl: string, params: Record<string, string | number>): URL => {
+    const url = new URL(
+        createRESTURL(endpointUrl, { app, owner: 'nobody' }),
+        window.location.origin
+    );
+    Object.entries({ ...DEFAULT_PARAMS, ...params }).forEach(([key, value]) =>
+        url.searchParams.append(key, value.toString())
+    );
+    return url;
+};
+
+const handleErrorResponse = async (response: Response): Promise<never> => {
+    const errorData = await response.json();
+    const message = parseErrorMsg(errorData);
+    throw new Error(message);
+};
+
+const fetchWithErrorHandling = async (
+    url: URL,
+    options: RequestInit,
+    handleError: boolean,
+    callbackOnError: (error: unknown) => void
+): Promise<Response> => {
+    try {
+        const response = await fetch(url.toString(), options);
+        if (!response.ok) {
+            await handleErrorResponse(response);
+        }
+        return response;
+    } catch (error) {
+        if (handleError) {
+            generateToast(parseErrorMsg(error), 'error');
+            callbackOnError(error);
+        }
+        throw error;
+    }
+};
+
+const axiosCallWrapper = async ({
     endpointUrl,
-    params,
+    params = {},
     body,
     signal,
     customHeaders = {},
     method = 'get',
     handleError = false,
     callbackOnError = () => {},
-}: AxiosCallType) => {
-    const baseHeaders = {
-        'X-Splunk-Form-Key': CSRFToken,
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/json',
-    };
-    const headers = Object.assign(baseHeaders, customHeaders);
-    const url = createRESTURL(endpointUrl, { app, owner: 'nobody' });
+}: AxiosCallType): Promise<Response> => {
+    const defaultInit = getDefaultFetchInit();
+    const headers = { ...defaultInit.headers, ...customHeaders };
+    const url = createUrl(endpointUrl, params);
 
-    const options: AxiosRequestConfig = {
-        params: {
-            ...DEFAULT_PARAMS,
-            ...params,
-        },
-        method,
-        url,
-        withCredentials: true,
+    const options: RequestInit = {
+        ...defaultInit,
+        method: method.toUpperCase(),
         headers,
         signal,
     };
 
-    if (method === 'post') {
-        options.data = body;
+    if (method === 'post' && body) {
+        options.body = body.toString();
     }
 
-    return handleError
-        ? axios(options).catch((error) => {
-              if (axios.isCancel(error)) {
-                  return Promise.reject(error);
-              }
-              const message = parseErrorMsg(error);
-
-              generateToast(message, 'error');
-              callbackOnError(error);
-              return Promise.reject(error);
-          })
-        : axios(options);
+    return fetchWithErrorHandling(url, options, handleError, callbackOnError);
 };
 
 export { axiosCallWrapper };
