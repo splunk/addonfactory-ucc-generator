@@ -25,10 +25,10 @@ export class CustomControlMockForTest {
      */
     constructor(
         globalConfig: GlobalConfig,
+        el: Element | undefined,
         data: { mode: Mode; serviceName: string; value: AcceptableFormValueOrNullish },
         setValue: (newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilControlWrapper,
-        el?: Element
+        util: UtilControlWrapper
     ) {
         this.globalConfig = globalConfig;
         this.el = el;

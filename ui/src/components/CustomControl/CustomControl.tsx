@@ -16,10 +16,10 @@ interface IData {
 interface ICustomCompClass {
     new (
         config: GlobalConfig,
+        el: HTMLElement | undefined,
         data: IData,
         setValue: (field: string, newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilBaseForm,
-        el?: HTMLElement
+        util: UtilBaseForm
     ): {
         render: () => void;
         validation?: (submittedField: string, submittedValue: string) => void;
@@ -87,10 +87,10 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
         ).then((Control) => {
             const customControl = new Control(
                 globalConfig,
+                this.el,
                 this.props.data,
                 this.setValue,
-                this.props.utilCustomFunctions,
-                this.el
+                this.props.utilCustomFunctions
             );
             customControl?.render();
 
