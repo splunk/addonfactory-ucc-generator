@@ -4,6 +4,10 @@ All non-required dependencies fields can be of any type, but all required depend
 
 All dependencies fields' values are added to the endpoint URL as query parameters.
 
+If endpoint is refering to **internal** endpoint, remember to update restmap.conf and web.conf accordingly.
+
+If endpoint is refering to **external** endpoint remember to share content in correct format adjusted to splunk APIs.
+
 ## Usage
 
 ```
