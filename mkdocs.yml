@@ -20,27 +20,23 @@ markdown_extensions:
 theme:
   name: "material"
   palette:
-    primary: "black"
-    accent: "orange"
-  features:
-    - content.code.copy
-    - navigation.indexes
-  palette:
-    - scheme: default
-      media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/brightness-auto
-        name: Switch to light mode
-    - scheme: slate
-      media: "(prefers-color-scheme: dark)"
-      toggle:
-        icon: material/brightness-4
-        name: Switch to system preference
-    - scheme: default
-      media: "(prefers-color-scheme: light)"
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: orange
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.code.copy
+    - navigation.indexes
 
 extra_css:
   - css/extra.css
