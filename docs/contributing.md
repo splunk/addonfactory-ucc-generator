@@ -80,7 +80,7 @@ pre-commit run --all-files
 
 ## Building TA with the Local Version of UCC
 
-UCC is a tool for Technical Add-ons (TAs), so it's important to test TA generation while developing UCC locally.
+UCC is a tool for Technology Add-ons (TAs), so it's important to test TA generation while developing UCC locally.
 
 ### Overview
 
