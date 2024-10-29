@@ -27,7 +27,7 @@ LABEL = "Log level"
 DEFAULTLEVEL = "INFO"
 
 ENTITY_KEYS_REQUIRED = {"type", "label", "options", "field"}
-ENTITY_KEYS_OPTIONAL = {"help", "defaultValue", "required"}
+ENTITY_KEYS_OPTIONAL = {"help", "defaultValue", "required", "validators"}
 AVAILABLE_LEVELS = {"DEBUG", "INFO", "WARN", "WARNING", "ERROR", "CRITICAL"}
 
 
@@ -70,19 +70,27 @@ class LoggingTab(Tab):
         to determine whether the tab is indeed a logging tab.
         """
         if definition.get("type") == "loggingTab":
+            levels = definition.get("levels", LEVELS)
+
             entity = {
                 "type": "singleSelect",
                 "label": definition.get("label", LABEL),
                 "options": {
                     "disableSearch": True,
                     "autoCompleteFields": [
-                        {"value": lvl, "label": lvl}
-                        for lvl in definition.get("levels", LEVELS)
+                        {"value": lvl, "label": lvl} for lvl in levels
                     ],
                 },
                 "defaultValue": definition.get("defaultLevel", DEFAULTLEVEL),
                 "field": definition.get("field", FIELD),
                 "required": True,
+                "validators": [
+                    {
+                        "type": "regex",
+                        "errorMsg": f"Log level must be one of: {', '.join(levels)}",
+                        "pattern": f"^{'|'.join(levels)}$",
+                    }
+                ],
             }
 
             new_definition = {

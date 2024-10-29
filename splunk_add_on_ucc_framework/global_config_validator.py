@@ -31,6 +31,17 @@ from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorExceptio
 
 logger = logging.getLogger("ucc_gen")
 
+# The entity types that do not allow to add validators (so the warning will not appear)
+ENTITY_TYPES_WITHOUT_VALIDATORS = {
+    "radio",
+    "oauth",
+    "index",
+    "helpLink",
+    "checkbox",
+    "interval",
+    "custom",
+}
+
 
 class GlobalConfigValidator:
     """
@@ -214,6 +225,14 @@ class GlobalConfigValidator:
         Validates entity validators.
         """
         validators = entity.get("validators", [])
+
+        if should_warn_on_empty_validators(entity):
+            logger.warning(
+                f"The field '{entity.get('field')}' does not have a validator specified. It's recommended "
+                "to add a validator to ensure the security and integrity of the input data. For more "
+                "information, please refer to the documentation."
+            )
+
         for validator in validators:
             if validator["type"] == "string":
                 self._validate_string_validator(entity["field"], validator)
@@ -691,3 +710,18 @@ class GlobalConfigValidator:
         self._validate_groups()
         self._validate_field_modifications()
         self._validate_meta_default_view()
+
+
+def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
+    if entity.get("type") in ENTITY_TYPES_WITHOUT_VALIDATORS:
+        return False
+
+    # special case for checkbox group
+    if entity.get("type") == "checkboxGroup":
+        for row in entity.get("options", {}).get("rows", []):
+            row_validators = row.get("input", {}).get("validators")
+
+            if not row_validators:
+                return True
+
+    return not entity.get("validators")

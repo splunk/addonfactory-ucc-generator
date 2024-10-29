@@ -34,12 +34,19 @@ special_fields = [
 
 fields = [
     field.RestField(
+        'field_no_validators',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'custom_endpoint',
         required=True,
         encrypted=False,
         default='login.example.com',
         validator=None
-    ), 
+    ),
     field.RestField(
         'endpoint',
         required=False,

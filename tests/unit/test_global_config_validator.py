@@ -1,5 +1,7 @@
 import builtins
+import re
 from contextlib import nullcontext as does_not_raise
+from typing import Dict, Any
 
 import pytest
 
@@ -8,6 +10,8 @@ from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework.global_config_validator import (
     GlobalConfigValidator,
     GlobalConfigValidatorException,
+    ENTITY_TYPES_WITHOUT_VALIDATORS,
+    should_warn_on_empty_validators,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -374,3 +378,145 @@ def test_validate_against_schema_regardless_of_the_default_encoding(
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
     validator._validate_config_against_schema()
+
+
+def test_check_list_of_entities_to_skip_empty_validators_check(schema_json):
+    # This test checks if the ENTITY_TYPES_WITHOUT_VALIDATORS set is up to date with the schema
+    def_pattern = re.compile(r"#/definitions/(\w+)")
+
+    any_of_entity_types = set()
+
+    for any_of in schema_json["definitions"]["AnyOfEntity"]["items"]["anyOf"]:
+        match = def_pattern.search(any_of["$ref"])
+        assert match, any_of
+
+        any_of_entity_types.add(match.group(1))
+
+    types_with_validators = set()
+
+    for tp in any_of_entity_types:
+        entity_props = schema_json["definitions"][tp]["properties"]
+
+        if "validators" not in entity_props:
+            types_with_validators.add(entity_props["type"]["const"])
+
+    assert ENTITY_TYPES_WITHOUT_VALIDATORS == types_with_validators
+
+
+def test_should_warn_on_empty_validators(schema_json):
+    # Radio cannot have validators at all, so no warning should be raised
+    assert not should_warn_on_empty_validators(
+        {
+            "type": "radio",
+            "label": "Example Radio",
+            "field": "input_one_radio",
+            "defaultValue": "yes",
+            "help": "This is an example radio button for the input one entity",
+            "required": False,
+            "options": {
+                "items": [
+                    {"value": "yes", "label": "Yes"},
+                    {"value": "no", "label": "No"},
+                ],
+                "display": True,
+            },
+        }
+    )
+
+    # Text should have validators, so a warning should be raised
+    assert should_warn_on_empty_validators(
+        {
+            "type": "text",
+            "label": "Name",
+            "field": "name",
+            "help": "Enter a unique name for this account.",
+            "required": True,
+        }
+    )
+    assert should_warn_on_empty_validators(
+        {
+            "type": "text",
+            "label": "Name",
+            "field": "name",
+            "help": "Enter a unique name for this account.",
+            "required": True,
+            "validators": [],
+        }
+    )
+    assert not should_warn_on_empty_validators(
+        {
+            "type": "text",
+            "label": "Name",
+            "field": "name",
+            "help": "Enter a unique name for this account.",
+            "required": True,
+            "validators": [
+                {
+                    "type": "regex",
+                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric "
+                    "characters and underscores.",
+                    "pattern": "^[a-zA-Z]\\w*$",
+                },
+                {
+                    "type": "string",
+                    "errorMsg": "Length of input name should be between 1 and 100",
+                    "minLength": 1,
+                    "maxLength": 100,
+                },
+            ],
+        }
+    )
+
+    # Special handling for checkbox group
+    checkbox_group: Dict[str, Any] = {
+        "field": "apis",
+        "label": "APIs/Interval (in seconds)",
+        "type": "checkboxGroup",
+        "options": {
+            "groups": [
+                {
+                    "label": "EC2",
+                    "options": {"isExpandable": True},
+                    "fields": [
+                        "ec2_volumes",
+                        "ec2_instances",
+                        "ec2_reserved_instances",
+                    ],
+                },
+            ],
+            "rows": [
+                {
+                    "field": "ec2_volumes",
+                    "checkbox": {"defaultValue": True},
+                    "input": {"defaultValue": 3600, "required": True},
+                },
+                {
+                    "field": "ec2_instances",
+                    "input": {"defaultValue": 3600, "required": True},
+                },
+                {
+                    "field": "ec2_reserved_instances",
+                    "input": {"defaultValue": 3600, "required": True},
+                },
+            ],
+        },
+    }
+
+    assert should_warn_on_empty_validators(checkbox_group)
+
+    # the group has validators now but the warning should still be raised as the rows don't have validators
+    checkbox_group["validators"] = [
+        {
+            "type": "regex",
+            "pattern": "^\\w+$",
+            "errorMsg": "Characters of Name should match regex ^\\w+$ .",
+        }
+    ]
+    assert should_warn_on_empty_validators(checkbox_group)
+
+    number_validator = {"type": "number", "range": [1, 65535], "isInteger": True}
+
+    for row in checkbox_group["options"]["rows"]:
+        row["input"]["validators"] = [number_validator]
+
+    assert not should_warn_on_empty_validators(checkbox_group)
