@@ -18,6 +18,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     WrongSplunktaucclibVersion,
     InvalidArguments,
     _pip_is_lib_installed,
+    LIBS_REQUIRED_FOR_UI,
 )
 
 from splunk_add_on_ucc_framework import global_config as gc
@@ -151,9 +152,12 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("solnlib\nsplunk-sdk\n")
 
+    lib = list(LIBS_REQUIRED_FOR_UI)[0]
+    ver = LIBS_REQUIRED_FOR_UI[lib]
+
     expected_msg = (
-        f"This add-on has an UI, so the splunktaucclib is required but not found in {tmp_lib_reqs_file}. "
-        f"Please add it there and make sure it is at least version 6.4."
+        f"This add-on has an UI, so the {lib} is required but not found in {tmp_lib_reqs_file}. "
+        f"Please add it there and make sure it is at least version {ver}."
     )
 
     with pytest.raises(SplunktaucclibNotFound) as exc:
@@ -173,7 +177,9 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
 
-    expected_msg = "Splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4."
+    lib = list(LIBS_REQUIRED_FOR_UI)[0]
+    ver = LIBS_REQUIRED_FOR_UI[lib]
+    expected_msg = f"{lib} found but has the wrong version. Please make sure it is at least version {ver}."
 
     with pytest.raises(WrongSplunktaucclibVersion) as exc:
         install_python_libraries(
