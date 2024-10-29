@@ -165,8 +165,8 @@ See the following example usage of validators :
 
 ```json
 {
-    "field": "long_url",
-    "label": "Insert url at least 10 characters long",
+    "field": "https_url",
+    "label": "HTTPS only URL",
     "type": "text",
     "validators": [
         {
