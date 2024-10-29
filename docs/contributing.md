@@ -86,7 +86,7 @@ UCC is a tool for Technology Add-ons (TAs), so it's important to test TA generat
 
 1. Install Dependencies for Your TA
 2. Build the TA Using Your Local UCC Version
-3. Package the TA into a .tar.gz File via ucc-gen package
+3. Package the TA into a .tar.gz file using `ucc-gen package`
 
 ### Installing TA Dependencies
 
