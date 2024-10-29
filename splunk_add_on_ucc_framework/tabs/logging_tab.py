@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import re
 from typing import Dict, Any, Optional
 
 from splunk_add_on_ucc_framework.tabs.tab import Tab
@@ -88,7 +89,7 @@ class LoggingTab(Tab):
                     {
                         "type": "regex",
                         "errorMsg": f"Log level must be one of: {', '.join(levels)}",
-                        "pattern": f"^{'|'.join(levels)}$",
+                        "pattern": f"^{'|'.join(re.escape(lvl) for lvl in levels)}$",
                     }
                 ],
             }
