@@ -159,9 +159,9 @@ See the following example usage:
 
 ### Combinations
 
-You can also make a combinations of many validators by providing all of them in single array.
+You can combine multiple validators in a single array.
 
-See the following example usage of validators :
+Example:
 
 ```json
 {
