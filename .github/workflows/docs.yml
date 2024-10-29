@@ -21,9 +21,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.7
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
         with:
