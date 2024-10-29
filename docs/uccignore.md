@@ -30,3 +30,5 @@ If we want to remove all `.pyc` files just from the `3rdparty` directory, we nee
 If we want to remove only for one specific platform, we need to provide the exact path e.g. **`lib/3rdparty/windows/pycache.pyc`**.
 
 In case no file is found for the specified pattern, you will see an appropriate warning message.
+
+This feature has been deprecated from UCC as of v5.52.0. To use similar feature use [additional_packaging.py](https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/).

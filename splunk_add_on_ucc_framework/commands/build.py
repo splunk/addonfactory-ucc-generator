@@ -566,14 +566,20 @@ def generate(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
 
-    ignore_list = _get_ignore_list(
-        ta_name,
-        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
-        output_directory,
-    )
-    removed_list = _remove_listed_files(ignore_list)
-    if removed_list:
-        logger.info("Removed:\n{}".format("\n".join(removed_list)))
+    # ignore_list = _get_ignore_list(
+    # ta_name,
+    # os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
+    # output_directory,
+    # )
+    if os.path.exists(os.path.abspath(os.path.join(source, os.pardir, ".uccignore"))):
+        logger.warning(
+            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
+            "To achieve the similar functionality use additional_packaging.py."
+            "Refer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+        )
+    # removed_list = _remove_listed_files(ignore_list)
+    # if removed_list:
+    # logger.info("Removed:\n{}".format("\n".join(removed_list)))
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
@@ -629,6 +635,15 @@ def generate(
         os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
         sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
+        try:
+            from additional_packaging import cleanup_output_files
+
+            cleanup_output_files(output_directory, ta_name)
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `cleanup_output_files`. Skipping clean-up."
+            )
+
         try:
             from additional_packaging import additional_packaging
 
