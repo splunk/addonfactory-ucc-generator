@@ -59,7 +59,7 @@
                             "label": "Field no validators",
                             "field": "field_no_validators",
                             "help": "Some field",
-                            "required": true
+                            "required": false
                         },
                         {
                             "type": "singleSelect",
@@ -1884,7 +1884,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.51.1+4c13d7808",
+        "version": "5.51.1+baec7de82",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.51.1",

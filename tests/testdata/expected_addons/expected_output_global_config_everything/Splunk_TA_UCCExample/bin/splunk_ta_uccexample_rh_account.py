@@ -35,7 +35,7 @@ special_fields = [
 fields = [
     field.RestField(
         'field_no_validators',
-        required=True,
+        required=False,
         encrypted=False,
         default=None,
         validator=None
