@@ -173,9 +173,9 @@ See the following example usage of validators :
             "type": "url"
         },
         {
-          "type": "string",
-          "errorMsg": "Length of email should be at least 10 characters",
-          "minLength": 10
+          "type": "regex",
+          "errorMsg": "HTTPS only",
+          "pattern": "^https:\/\/"
         }
     ]
 }
