@@ -115,15 +115,6 @@ def _pip_is_lib_installed(
         raise CouldNotInstallRequirements from e
 
 
-def _check_ucc_library_in_requirements_file(path_to_requirements: str) -> bool:
-    with open(path_to_requirements) as f_reqs:
-        content = f_reqs.readlines()
-    for line in content:
-        if "splunktaucclib" in line:
-            return True
-    return False
-
-
 def _check_libraries_required_for_ui(
     python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
 ) -> None:

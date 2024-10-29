@@ -10,7 +10,6 @@ from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
     SplunktaucclibNotFound,
-    _check_ucc_library_in_requirements_file,
     install_libraries,
     install_python_libraries,
     remove_execute_bit,
@@ -27,56 +26,6 @@ from splunk_add_on_ucc_framework import global_config as gc
 class MockSubprocessResult:
     def __init__(self, returncode):
         self.returncode = returncode
-
-
-@pytest.mark.parametrize(
-    "requirements_content,expected_result",
-    [
-        ("", False),
-        ("splunk-sdk", False),
-        ("splunk-sdk\n", False),
-        ("splunktaucclib", True),
-        ("splunktaucclib\n", True),
-        ("splunktaucclib==6.0.0\n", True),
-        ("solnlib\nsplunktaucclib\n", True),
-        ("solnlib==5.0.0\nsplunktaucclib==6.0.0\n", True),
-        (
-            """splunktalib==2.2.6; python_version >= "3.7" and python_version < "4.0" \
-        --hash=sha256:bba70ac7407cdedcb45437cb152ac0e43aae16b978031308e6bec548d3543119 \
-        --hash=sha256:8d58d697a842319b4c675557b0cc4a9c68e8d909389a98ed240e2bb4ff358d31
-    splunktaucclib==5.0.7; python_version >= "3.7" and python_version < "4.0" \
-        --hash=sha256:3ddc1276c41c809c16ae810cb20e9eb4abd2f94dba5ddf460cf9c49b50f659ac \
-        --hash=sha256:a1e3f710fcb0b24dff8913e6e5df0d36f0693b7f3ed7c0a9a43b08372b08eb90""",
-            True,
-        ),
-        (
-            """splunktaucclib==5.0.7; python_version >= "3.7" and python_version < "4.0" \
-        --hash=sha256:3ddc1276c41c809c16ae810cb20e9eb4abd2f94dba5ddf460cf9c49b50f659ac \
-        --hash=sha256:a1e3f710fcb0b24dff8913e6e5df0d36f0693b7f3ed7c0a9a43b08372b08eb90""",
-            True,
-        ),
-        (
-            """sortedcontainers==2.4.0; python_version >= "3.7" and python_version < "4.0" \
-        --hash=sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0 \
-        --hash=sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88
-    splunk-sdk==1.7.1 \
-        --hash=sha256:4d0de12a87395f28f2a0c90b179882072a39a1f09a3ec9e79ce0de7a16220fe1""",
-            False,
-        ),
-    ],
-)
-def test_check_ucc_library_in_requirements_file(
-    tmp_path, requirements_content, expected_result
-):
-    tmp_lib_path = tmp_path / "lib"
-    tmp_lib_path.mkdir()
-    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
-    tmp_lib_reqs_file.write_text(requirements_content)
-
-    assert (
-        _check_ucc_library_in_requirements_file(str(tmp_lib_reqs_file))
-        == expected_result
-    )
 
 
 @mock.patch("subprocess.run", autospec=True)
