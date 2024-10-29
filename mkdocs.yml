@@ -16,6 +16,8 @@ markdown_extensions:
   - codehilite
   - pymdownx.superfences
   - pymdownx.snippets
+  - admonition
+  - pymdownx.details
 
 theme:
   name: "material"

@@ -1,3 +1,10 @@
+Validators are used to define acceptable values for fields.
+
+!!! warning ""
+
+    It is strongly advised to specify validators for every entity, where applicable.
+    Not specifying validators can make the form vulnerable to security risks and can lead to unexpected behavior.
+
 ### Common Properties
 
 - `type`<span class="required-asterisk">\*</span> specifies which validator type to use.
