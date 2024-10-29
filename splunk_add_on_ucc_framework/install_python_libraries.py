@@ -115,30 +115,6 @@ def _pip_is_lib_installed(
         raise CouldNotInstallRequirements from e
 
 
-def _check_libraries_required_for_ui(
-    python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
-) -> None:
-    if not _pip_is_lib_installed(
-        installer=python_binary_name,
-        target=ucc_lib_target,
-        libname="splunktaucclib",
-    ):
-        raise SplunktaucclibNotFound(
-            f"This add-on has an UI, so the splunktaucclib is required but not found in "
-            f"{path_to_requirements_file}. Please add it there and make sure it is at least version 6.4."
-        )
-    if not _pip_is_lib_installed(
-        installer=python_binary_name,
-        target=ucc_lib_target,
-        libname="splunktaucclib",
-        version="6.4",
-        allow_higher_version=True,
-    ):
-        raise WrongSplunktaucclibVersion(
-            "Splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4."
-        )
-
-
 def install_python_libraries(
     source_path: str,
     ucc_lib_target: str,
@@ -160,9 +136,14 @@ def install_python_libraries(
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
         )
-        if includes_ui:
-            _check_libraries_required_for_ui(
-                python_binary_name, ucc_lib_target, path_to_requirements_file
+        if includes_ui and not _pip_is_lib_installed(
+            installer=python_binary_name,
+            target=ucc_lib_target,
+            libname="splunktaucclib",
+        ):
+            raise SplunktaucclibNotFound(
+                f"splunktaucclib is not found in {path_to_requirements_file}. "
+                f"Please add it there because this add-on has UI."
             )
 
         cleanup_libraries = install_os_dependent_libraries(
