@@ -1,7 +1,7 @@
 ### Common Properties
 
 - `type`<span class="required-asterisk">\*</span> specifies which validator type to use.
-- `errorMsg` optional parameter used to pass custom error message displayed when validation fails. UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/develop/ui/src/constants/messageDict.ts).
+- `errorMsg` is an optional parameter used to specify a custom error message that displays when validation fails. UCC provides [default error messages](https://github.com/splunk/addonfactory-ucc-generator/blob/develop/ui/src/constants/messageDict.ts).
 
 ### String
 
