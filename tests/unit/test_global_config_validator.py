@@ -1,6 +1,7 @@
 import builtins
 import re
 from contextlib import nullcontext as does_not_raise
+from copy import deepcopy
 from typing import Dict, Any
 
 import pytest
@@ -400,7 +401,11 @@ def test_check_list_of_entities_to_skip_empty_validators_check(schema_json):
         if "validators" not in entity_props:
             types_with_validators.add(entity_props["type"]["const"])
 
-    assert ENTITY_TYPES_WITHOUT_VALIDATORS == types_with_validators
+    special_case_entities = {"oauth", "checkboxGroup"}
+
+    assert (
+        ENTITY_TYPES_WITHOUT_VALIDATORS == types_with_validators - special_case_entities
+    )
 
 
 def test_should_warn_on_empty_validators(schema_json):
@@ -520,3 +525,56 @@ def test_should_warn_on_empty_validators(schema_json):
         row["input"]["validators"] = [number_validator]
 
     assert not should_warn_on_empty_validators(checkbox_group)
+
+    oauth_fields = [
+        {
+            "oauth_field": "username",
+            "label": "Username",
+            "help": "Enter the username for this account.",
+            "field": "username",
+        },
+        {
+            "oauth_field": "password",
+            "label": "Password",
+            "encrypted": True,
+            "help": "Enter the password for this account.",
+            "field": "password",
+        },
+        {
+            "oauth_field": "security_token",
+            "label": "Security Token",
+            "encrypted": True,
+            "help": "Enter the security token.",
+            "field": "token",
+        },
+    ]
+    oauth_entity: Dict[str, Any] = {
+        "type": "oauth",
+        "field": "oauth",
+        "label": "Not used",
+        "options": {
+            "auth_type": ["basic", "oauth"],
+            "basic": deepcopy(oauth_fields),
+            "oauth": deepcopy(oauth_fields),
+            "auth_code_endpoint": "/services/oauth2/authorize",
+            "access_token_endpoint": "/services/oauth2/token",
+            "oauth_timeout": 30,
+            "oauth_state_enabled": False,
+        },
+    }
+
+    assert should_warn_on_empty_validators(oauth_entity)
+
+    for auth_type in ("basic", "oauth"):
+        entity = deepcopy(oauth_entity)
+
+        for field in entity["options"][auth_type]:
+            field["validators"] = [number_validator]
+
+        assert should_warn_on_empty_validators(entity)
+
+    for auth_type in ("basic", "oauth"):
+        for field in oauth_entity["options"][auth_type]:
+            field["validators"] = [number_validator]
+
+    assert not should_warn_on_empty_validators(oauth_entity)

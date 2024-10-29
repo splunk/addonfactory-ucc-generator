@@ -34,7 +34,6 @@ logger = logging.getLogger("ucc_gen")
 # The entity types that do not allow to add validators (so the warning will not appear)
 ENTITY_TYPES_WITHOUT_VALIDATORS = {
     "radio",
-    "oauth",
     "index",
     "helpLink",
     "checkbox",
@@ -713,15 +712,37 @@ class GlobalConfigValidator:
 
 
 def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
-    if entity.get("type") in ENTITY_TYPES_WITHOUT_VALIDATORS:
+    entity_type = entity.get("type")
+
+    if entity_type in ENTITY_TYPES_WITHOUT_VALIDATORS:
         return False
 
-    # special case for checkbox group
-    if entity.get("type") == "checkboxGroup":
-        for row in entity.get("options", {}).get("rows", []):
-            row_validators = row.get("input", {}).get("validators")
+    # special cases
+    if entity_type == "oauth":
+        return _should_warn_on_empty_validators_oauth(entity)
 
-            if not row_validators:
-                return True
+    elif entity_type == "checkboxGroup":
+        return _should_warn_on_empty_validators_checkbox_group(entity)
 
     return not entity.get("validators")
+
+
+def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> bool:
+    for row in entity.get("options", {}).get("rows", []):
+        row_validators = row.get("input", {}).get("validators")
+
+        if not row_validators:
+            return True
+
+    return not entity.get("validators")
+
+
+def _should_warn_on_empty_validators_oauth(entity: Dict[str, Any]) -> bool:
+    options = entity.get("options", {})
+
+    for auth_type in ("basic", "oauth"):
+        for oauth_field in options.get(auth_type, []):
+            if not oauth_field.get("validators"):
+                return True
+
+    return False
