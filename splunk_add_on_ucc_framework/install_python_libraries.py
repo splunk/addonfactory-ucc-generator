@@ -28,6 +28,9 @@ from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 logger = logging.getLogger("ucc_gen")
 
 
+LIBS_REQUIRED_FOR_UI = {"splunktaucclib": "6.4"}
+
+
 class SplunktaucclibNotFound(Exception):
     pass
 
@@ -118,25 +121,26 @@ def _pip_is_lib_installed(
 def _check_libraries_required_for_ui(
     python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
 ) -> None:
-    if not _pip_is_lib_installed(
-        installer=python_binary_name,
-        target=ucc_lib_target,
-        libname="splunktaucclib",
-    ):
-        raise SplunktaucclibNotFound(
-            f"This add-on has an UI, so the splunktaucclib is required but not found in "
-            f"{path_to_requirements_file}. Please add it there and make sure it is at least version 6.4."
-        )
-    if not _pip_is_lib_installed(
-        installer=python_binary_name,
-        target=ucc_lib_target,
-        libname="splunktaucclib",
-        version="6.4",
-        allow_higher_version=True,
-    ):
-        raise WrongSplunktaucclibVersion(
-            "Splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4."
-        )
+    for lib, version in LIBS_REQUIRED_FOR_UI.items():
+        if not _pip_is_lib_installed(
+            installer=python_binary_name,
+            target=ucc_lib_target,
+            libname=lib,
+        ):
+            raise SplunktaucclibNotFound(
+                f"This add-on has an UI, so the {lib} is required but not found in "
+                f"{path_to_requirements_file}. Please add it there and make sure it is at least version {version}."
+            )
+        if not _pip_is_lib_installed(
+            installer=python_binary_name,
+            target=ucc_lib_target,
+            libname=lib,
+            version=version,
+            allow_higher_version=True,
+        ):
+            raise WrongSplunktaucclibVersion(
+                f"{lib} found but has the wrong version. Please make sure it is at least version {version}."
+            )
 
 
 def install_python_libraries(
