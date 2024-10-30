@@ -400,9 +400,7 @@
       "title": "Inputs",
       "description": "Manage your data inputs",
       "table": {
-        "actions": [
-          "edit", "enable", "delete","search", "clone"
-        ],
+        "actions": ["edit", "delete", "search", "clone"],
         "header": [
           {
             "label": "Name",
