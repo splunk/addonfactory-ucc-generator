@@ -214,6 +214,7 @@ def test_ucc_generate_with_everything(caplog):
         assert "example_help_link" not in entities
         assert "loglevel" not in entities
         assert "field_no_validators" in entities
+        assert "field_no_validators_suppressed" not in entities
 
 
 def test_ucc_generate_with_multiple_inputs_tabs():

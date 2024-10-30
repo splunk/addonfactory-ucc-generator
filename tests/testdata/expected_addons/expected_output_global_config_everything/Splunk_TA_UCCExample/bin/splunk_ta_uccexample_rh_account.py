@@ -41,6 +41,13 @@ fields = [
         validator=None
     ),
     field.RestField(
+        'field_no_validators_suppressed',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'custom_endpoint',
         required=True,
         encrypted=False,

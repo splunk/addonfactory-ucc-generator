@@ -438,7 +438,8 @@ def test_should_warn_on_empty_validators(schema_json):
             "required": True,
         }
     )
-    assert should_warn_on_empty_validators(
+    # empty list, so a warning should be suppressed
+    assert not should_warn_on_empty_validators(
         {
             "type": "text",
             "label": "Name",

@@ -62,6 +62,14 @@
                             "required": false
                         },
                         {
+                            "type": "text",
+                            "label": "Field no validators (suppressed)",
+                            "field": "field_no_validators_suppressed",
+                            "help": "Some field",
+                            "required": false,
+                            "validators": []
+                        },
+                        {
                             "type": "singleSelect",
                             "label": "Example Environment",
                             "options": {
@@ -1883,9 +1891,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.51.1+baec7de82",
+        "version": "5.51.1+3536793cd",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.8",
+        "schemaVersion": "0.0.9",
         "_uccVersion": "5.51.1",
         "supportedThemes": [
             "light",

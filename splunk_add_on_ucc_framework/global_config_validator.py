@@ -724,7 +724,7 @@ def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
     elif entity_type == "checkboxGroup":
         return _should_warn_on_empty_validators_checkbox_group(entity)
 
-    return not entity.get("validators")
+    return "validators" not in entity
 
 
 def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> bool:
@@ -734,7 +734,7 @@ def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> b
         if not row_validators:
             return True
 
-    return not entity.get("validators")
+    return "validators" not in entity
 
 
 def _should_warn_on_empty_validators_oauth(entity: Dict[str, Any]) -> bool:
@@ -742,7 +742,7 @@ def _should_warn_on_empty_validators_oauth(entity: Dict[str, Any]) -> bool:
 
     for auth_type in ("basic", "oauth"):
         for oauth_field in options.get(auth_type, []):
-            if not oauth_field.get("validators"):
+            if "validators" not in oauth_field:
                 return True
 
     return False
