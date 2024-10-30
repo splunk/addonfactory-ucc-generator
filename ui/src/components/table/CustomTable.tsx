@@ -259,7 +259,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 data.length &&
                 data.map((row) => (
                     <CustomTableRow // nosemgrep: typescript.react.best-practice.react-props-spreading.react-props-spreading
-                        key={row.name || row.id}
+                        key={`${row.serviceName}-${row.name}-row` || row.id}
                         row={row}
                         columns={columns}
                         rowActions={actions}
