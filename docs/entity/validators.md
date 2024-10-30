@@ -1,9 +1,13 @@
-Validators are used to define acceptable values for fields.
+Validators define acceptable values for fields.
 
 !!! warning ""
 
-    It is strongly advised to specify validators for every entity, where applicable.
-    Not specifying validators can make the form vulnerable to security risks and can lead to unexpected behavior.
+    Specifying validators for all applicable entities is strongly recommended.
+    Omitting validators can expose forms to security risks and cause unexpected behavior. If the value is validated and encapsulated downstream, add an empty array to suppress the warning:
+    ```json
+    "validators": []
+    ```
+
 
 ### Common Properties
 
