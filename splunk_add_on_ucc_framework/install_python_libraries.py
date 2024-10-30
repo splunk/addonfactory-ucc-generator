@@ -20,6 +20,8 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
+
+from packaging.version import Version
 from typing import List, Optional, Set, Iterable, Dict
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
@@ -30,26 +32,37 @@ class SplunktaucclibNotFound(Exception):
     pass
 
 
+class WrongSplunktaucclibVersion(Exception):
+    pass
+
+
 class CouldNotInstallRequirements(Exception):
     pass
 
 
-def _subprocess_call(
+class InvalidArguments(Exception):
+    pass
+
+
+def _subprocess_run(
     command: str,
     command_desc: Optional[str] = None,
     env: Optional[Dict[str, str]] = None,
-) -> int:
+) -> "subprocess.CompletedProcess[bytes]":
     command_desc = command_desc or command
     try:
         logger.info(f"Executing: {command}")
-        return_code = subprocess.call(command, shell=True, env=env)
+        process_result = subprocess.run(
+            command, shell=True, env=env, capture_output=True
+        )
+        return_code = process_result.returncode
         if return_code < 0:
             logger.error(
                 f"Child ({command_desc}) was terminated by signal {-return_code}"
             )
         if return_code > 0:
             logger.error(f"Command ({command_desc}) returned {return_code} status code")
-        return return_code
+        return process_result
     except OSError as e:
         logger.error(f"Execution ({command_desc}) failed due to {e}")
         raise e
@@ -58,7 +71,7 @@ def _subprocess_call(
 def _pip_install(installer: str, command: str, command_desc: str) -> None:
     cmd = f"{installer} -m pip install {command}"
     try:
-        return_code = _subprocess_call(command=cmd, command_desc=command_desc)
+        return_code = _subprocess_run(command=cmd, command_desc=command_desc).returncode
         if return_code != 0:
             raise CouldNotInstallRequirements
     except OSError as e:
@@ -66,18 +79,38 @@ def _pip_install(installer: str, command: str, command_desc: str) -> None:
 
 
 def _pip_is_lib_installed(
-    installer: str, target: str, libname: str, version: Optional[str] = None
+    installer: str,
+    target: str,
+    libname: str,
+    version: Optional[str] = None,
+    allow_higher_version: bool = False,
 ) -> bool:
-    lib_installed_cmd = f"{installer} -m pip show --version {libname}"
-    lib_version_match_cmd = f'{lib_installed_cmd} | grep "Version: {version}"'
+    if not version and allow_higher_version:
+        raise InvalidArguments(
+            "Parameter 'allow_higher_version' can not be set to True if 'version' parameter is not provided"
+        )
 
-    cmd = lib_version_match_cmd if version else lib_installed_cmd
+    lib_installed_cmd = f"{installer} -m pip show --version {libname}"
+
+    if version and allow_higher_version:
+        cmd = f'{lib_installed_cmd} | grep "Version"'
+    elif version and not allow_higher_version:
+        cmd = f'{lib_installed_cmd} | grep "Version: {version}"'
+    else:
+        cmd = lib_installed_cmd
 
     try:
         my_env = os.environ.copy()
         my_env["PYTHONPATH"] = target
-        return_code = _subprocess_call(command=cmd, env=my_env)
-        return return_code == 0
+        if allow_higher_version:
+            result = _subprocess_run(command=cmd, env=my_env)
+            if result.returncode != 0:
+                return False
+            result_version = result.stdout.decode("utf-8").split("Version:")[1].strip()
+            return Version(result_version) >= Version(version)
+        else:
+            return_code = _subprocess_run(command=cmd, env=my_env).returncode
+            return return_code == 0
     except OSError as e:
         raise CouldNotInstallRequirements from e
 
