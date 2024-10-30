@@ -49,9 +49,9 @@ const getTableConfigAndServices = (
                 tableConfig: unifiedConfigs.pages.inputs.table,
                 readonlyFieldId: unifiedConfigs.pages.inputs.readonlyFieldId,
                 hideFieldId: unifiedConfigs.pages.inputs.hideFieldId,
+                useInputToggleConfirmation: unifiedConfigs.pages.inputs.useInputToggleConfirmation,
             };
         }
-
         const serviceWithTable = services?.find((x) => x.name === serviceName);
         const tableData = serviceWithTable && 'table' in serviceWithTable && serviceWithTable.table;
 
@@ -120,10 +120,11 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         useTableContext()!;
 
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, tableConfig, readonlyFieldId, hideFieldId } = useMemo(
-        () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
-        [page, unifiedConfigs, serviceName]
-    );
+    const { services, tableConfig, readonlyFieldId, hideFieldId, useInputToggleConfirmation } =
+        useMemo(
+            () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
+            [page, unifiedConfigs, serviceName]
+        );
 
     const moreInfo = tableConfig && 'moreInfo' in tableConfig ? tableConfig?.moreInfo : null;
     const headers = tableConfig && 'header' in tableConfig ? tableConfig?.header : null;
@@ -135,6 +136,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             isComponentMounted.current = false;
         };
     }, []);
+
     useEffect(() => {
         const abortController = new AbortController();
 
@@ -365,6 +367,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                 sortKey={sortKey}
                 handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                 tableConfig={tableConfig}
+                useInputToggleConfirmation={useInputToggleConfirmation}
             />
         </>
     );
