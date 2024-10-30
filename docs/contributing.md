@@ -47,7 +47,7 @@ UI tests will run automatically for any PR towards the `main` / `develop` branch
     poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
     ```
 
-2. Install docker, and run containerized Splunk Enterprise using script:
+1. Install docker, and run containerized Splunk Enterprise using script:
 
     ```bash
     ./scripts/run_splunk.sh
@@ -55,9 +55,9 @@ UI tests will run automatically for any PR towards the `main` / `develop` branch
 
    There are mapped default Splunk ports to host. To use a different configuration, see [docker-splunk](https://splunk.github.io/docker-splunk/). Remember to mount the output package to the Splunk apps directory.
 
-3. Install any browser specific to this browser driver, such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
+1. Install any browser specific to this browser driver, such as [chromedriver](https://chromedriver.chromium.org/getting-started/) for Chrome.
 
-4. Run tests using the following command:
+1. Run tests using the following command:
 
     ```bash
     poetry run pytest tests/ui
@@ -85,8 +85,8 @@ UCC is a tool for Technology Add-ons (TAs), so it's important to test TA generat
 ### Overview
 
 1. Install Dependencies for Your TA
-2. Build the TA Using Your Local UCC Version
-3. Package the TA into a .tar.gz file using `ucc-gen package`
+1. Build the TA Using Your Local UCC Version
+1. Package the TA into a .tar.gz file using `ucc-gen package`
 
 ### Installing TA Dependencies
 
