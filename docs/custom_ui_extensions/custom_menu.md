@@ -27,7 +27,7 @@ In addition to the multiple inputs, we can use this menu to create a custom comp
     "description": "Manage your data inputs",
     "services": [],
     "table": {
-      "actions": ["edit", "enable", "delete", "clone"],
+      "actions": ["edit", "delete", "clone"],
       "header": [],
       "moreInfo": []
     },
