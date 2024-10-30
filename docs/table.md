@@ -73,7 +73,7 @@ If your add-on has multiple modular inputs and you want to show the input type o
             "field": "account"
         }
     ],
-    "actions": ["edit", "enable", "delete", "clone"]
+    "actions": ["edit", "delete", "clone"]
 }
 ```
 
