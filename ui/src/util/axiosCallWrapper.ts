@@ -43,49 +43,70 @@ const fetchWithErrorHandling = async (
     url: URL,
     options: RequestInit,
     handleError: boolean,
-    callbackOnError: (error: unknown) => void
-): Promise<Response> => {
+    callbackOnError?: (error: unknown) => void
+) => {
     try {
         const response = await fetch(url.toString(), options);
         if (!response.ok) {
             await handleErrorResponse(response);
         }
-        return response;
+        return await response.json();
     } catch (error) {
         if (handleError) {
-            generateToast(parseErrorMsg(error), 'error');
-            callbackOnError(error);
+            const errorMsg = parseErrorMsg(error);
+            generateToast(errorMsg, 'error');
+            if (callbackOnError) {
+                callbackOnError(error);
+            }
         }
         throw error;
     }
 };
 
-const axiosCallWrapper = async ({
-    endpointUrl,
-    params = {},
-    body,
-    signal,
-    customHeaders = {},
-    method = 'get',
-    handleError = false,
-    callbackOnError = () => {},
-}: AxiosCallType): Promise<Response> => {
-    const defaultInit = getDefaultFetchInit();
-    const headers = { ...defaultInit.headers, ...customHeaders };
+const getFetch = async ({ endpointUrl, params = {}, signal }: AxiosCallType) => {
     const url = createUrl(endpointUrl, params);
-
-    const options: RequestInit = {
-        ...defaultInit,
-        method: method.toUpperCase(),
-        headers,
+    const options = {
+        method: 'GET',
         signal,
-    };
+    } satisfies RequestInit;
 
-    if (method === 'post' && body) {
-        options.body = body.toString();
-    }
-
-    return fetchWithErrorHandling(url, options, handleError, callbackOnError);
+    return fetchWithErrorHandling(url, options, false);
 };
 
-export { axiosCallWrapper };
+const postFetch = async ({ endpointUrl, params = {}, body, signal }: AxiosCallType) => {
+    const url = createUrl(endpointUrl, params);
+    const defaultInit = getDefaultFetchInit();
+    const headers = {
+        ...defaultInit.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+    } satisfies HeadersInit;
+
+    const options = {
+        method: 'POST',
+        headers,
+        signal,
+        body: body?.toString(),
+    } satisfies RequestInit;
+
+    return fetchWithErrorHandling(url, options, false);
+};
+
+const deleteFetch = async ({ endpointUrl, params = {}, signal }: AxiosCallType) => {
+    const url = createUrl(endpointUrl, params);
+    const options = {
+        method: 'DELETE',
+        signal,
+    } satisfies RequestInit;
+
+    return fetchWithErrorHandling(url, options, false);
+};
+
+/* Public API */
+export const getRequest = ({ endpointUrl, params = {}, signal }: AxiosCallType) =>
+    getFetch({ endpointUrl, params, signal });
+
+export const postRequest = ({ endpointUrl, params = {}, body, signal }: AxiosCallType) =>
+    postFetch({ endpointUrl, params, body, signal });
+
+export const deleteRequest = ({ endpointUrl, params = {}, signal }: AxiosCallType) =>
+    deleteFetch({ endpointUrl, params, signal });

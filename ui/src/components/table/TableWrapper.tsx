@@ -1,9 +1,8 @@
 import React, { useState, useEffect, memo, useCallback, useMemo, useRef } from 'react';
 import update from 'immutability-helper';
-import axios from 'axios';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
-import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { generateEndPointUrl, getRequest, postRequest } from '../../util/axiosCallWrapper';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
@@ -142,17 +141,16 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         function fetchInputs() {
             const requests =
                 services?.map((service) =>
-                    axiosCallWrapper({
+                    getRequest({
                         endpointUrl: generateEndPointUrl(encodeURIComponent(service.name)),
                         params: { count: -1 },
                         signal: abortController.signal,
                     })
                 ) || [];
 
-            axios
-                .all(requests)
+            Promise.all(requests)
                 .catch((caughtError) => {
-                    if (axios.isCancel(caughtError)) {
+                    if (abortController.signal.aborted) {
                         return;
                     }
                     const message = parseErrorMsg(caughtError);
@@ -166,7 +164,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                     }
                     const data = getRowDataFromApiResponse(
                         services,
-                        response.map((res) => res.data.entry)
+                        response.map((res) => res.entry)
                     );
                     setRowData(data);
                 })
@@ -203,13 +201,11 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         );
         const body = new URLSearchParams();
         body.append('disabled', String(!row.disabled));
-        axiosCallWrapper({
+        postRequest({
             endpointUrl: generateEndPointUrl(
                 `${encodeURIComponent(row.serviceName)}/${encodeURIComponent(row.name)}`
             ),
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: true,
             callbackOnError: () => {
                 setRowData((currentRowData: RowDataType) =>

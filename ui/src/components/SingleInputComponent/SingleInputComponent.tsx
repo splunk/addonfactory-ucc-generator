@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { AxiosCallType, generateEndPointUrl, getRequest } from '../../util/axiosCallWrapper';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
@@ -137,7 +137,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         }
 
         setLoading(true);
-        axiosCallWrapper(backendCallOptions)
+        getRequest(backendCallOptions)
             .then((response) => {
                 if (current) {
                     setOptions(

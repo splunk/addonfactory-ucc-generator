@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { AxiosCallType, generateEndPointUrl, getRequest } from '../../util/axiosCallWrapper';
 import { filterResponse } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 import { invariant } from '../../util/invariant';
@@ -99,7 +99,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(apiCallOptions)
+            getRequest(apiCallOptions)
                 .then((response) => {
                     if (current) {
                         setOptions(
@@ -113,10 +113,9 @@ function MultiInputComponent(props: MultiInputComponentProps) {
                                 )
                             )
                         );
-                        setLoading(false);
                     }
                 })
-                .catch(() => {
+                .finally(() => {
                     if (current) {
                         setLoading(false);
                     }

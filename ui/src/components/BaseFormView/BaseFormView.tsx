@@ -9,7 +9,7 @@ import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
-import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { generateEndPointUrl, postRequest } from '../../util/axiosCallWrapper';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { getBuildDirPath } from '../../util/script';
 
@@ -863,11 +863,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             body.delete('name');
         }
 
-        axiosCallWrapper({
+        postRequest({
             endpointUrl: generateEndPointUrl(this.endpoint),
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: false,
         })
             .then((response) => {
@@ -1167,11 +1165,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
         const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
-        axiosCallWrapper({
+        postRequest({
             endpointUrl: OAuthEndpoint,
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: false,
         })
             .then((response) => {
