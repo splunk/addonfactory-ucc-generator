@@ -1119,7 +1119,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
      * using rest call once oauth code received from child window
      */
     // eslint-disable-next-line consistent-return
-    handleOauthToken = (message: { code: string; error: unknown; state: unknown }) => {
+    handleOauthToken = (message: { code: string; error: unknown; state?: string }) => {
         // Check message for error. If error show error message.
         if (!message || (message && message.error) || message.code === undefined) {
             this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
