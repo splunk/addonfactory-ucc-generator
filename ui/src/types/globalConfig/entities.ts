@@ -97,8 +97,7 @@ const AllValidators = z
             UrlValidator,
             DateValidator,
         ])
-    )
-    .nonempty();
+    );
 
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
