@@ -123,9 +123,17 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
-    current_schema_version = global_config.schema_version
-    version = current_schema_version if current_schema_version else "0.0.0"
+    current_schema_version = global_config.schema_version or "0.0.0"
+
     logger.info(f"Current globalConfig schema version is {current_schema_version}")
+
+    if _version_tuple(global_config.meta.get("_uccVersion", "0.0.0")) >= _version_tuple(
+        "5.52.0"
+    ):
+        # we hard-code the value of 5.52.0 as this feature would be shipped in that version
+        version = current_schema_version
+    else:
+        version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
@@ -134,6 +142,8 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
+            if tab.get("type") in ["loggingTab"]:
+                continue
             if tab["name"] == "account":
                 conf_entities = tab.get("entity")
 
@@ -228,6 +238,11 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.8")
 
+    if _version_tuple(version) < _version_tuple("0.0.9"):
+        _dump_enable_from_global_config(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.9")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
@@ -316,3 +331,42 @@ def _stop_build_on_placeholder_usage(
                     exc_msg % ("input service", service["name"])
                 )
     global_config.update_schema_version("0.0.8")
+
+
+def _dump_enable_from_global_config(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    if global_config.has_inputs():
+        # Fetch the table object from global_config
+        table = global_config.content.get("pages", {}).get("inputs", {}).get("table")
+
+        if table:  # If the table exists
+            actions = table.get("actions", [])
+            if "enable" in actions:
+                logger.warning(
+                    "`enable` attribute found in input's page table action."
+                    + f" Removing 'enable' from actions: {actions}"
+                )
+                actions.remove("enable")
+                table["actions"] = actions  # Update the actions in the global_config
+
+        else:  # If no table present, loop through services in inputs
+            services = (
+                global_config.content.get("pages", {})
+                .get("inputs", {})
+                .get("services", [])
+            )
+            for service in services:
+                service_table = service.get("table", {})
+                actions = service_table.get("actions", [])
+                if "enable" in actions:
+                    logger.warning(
+                        f"`enable` attribute found in service {service.get('name')}'s table action."
+                        + f" Removing 'enable' from actions in service: {actions}"
+                    )
+                    actions.remove("enable")
+                    service_table[
+                        "actions"
+                    ] = actions  # Update the actions in the service's table
+
+    global_config.update_schema_version("0.0.9")

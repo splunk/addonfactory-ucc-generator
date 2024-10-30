@@ -86,7 +86,7 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
             title: 'Inputs',
             description: 'Manage your data inputs',
             table: {
-                actions: ['edit', 'enable', 'delete', 'search', 'clone'],
+                actions: ['edit', 'delete', 'search', 'clone'],
                 header: [
                     {
                         label: 'Name',
@@ -218,7 +218,7 @@ export const TABLE_CONFIG_WITH_MAPPING = {
             title: 'Inputs',
             description: 'Manage your data inputs',
             table: {
-                actions: ['edit', 'enable', 'delete', 'search', 'clone'],
+                actions: ['edit', 'delete', 'search', 'clone'],
                 header: [
                     {
                         label: 'Name',
