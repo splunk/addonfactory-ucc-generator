@@ -43,6 +43,14 @@ def generic_tab_def():
                 "defaultValue": "INFO",
                 "field": "loglevel",
                 "required": True,
+                "validators": [
+                    {
+                        "errorMsg": "Log level must be one of: DEBUG, "
+                        "INFO, WARNING, ERROR, CRITICAL",
+                        "pattern": "^DEBUG|INFO|WARNING|ERROR|CRITICAL$",
+                        "type": "regex",
+                    }
+                ],
             }
         ],
         "title": "Logging",

@@ -12,7 +12,23 @@ export default {
     // Coverage
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+    coveragePathIgnorePatterns: [
+        '/node_modules/',
+        '/stories/',
+        // ignore *.d.ts files
+        '\\.d\\.ts$',
+        'mockServiceWorker.js',
+        'styleMock.js',
+    ],
     coverageDirectory: 'coverage',
+    coverageThreshold: {
+        global: {
+            statements: 65,
+            branches: 56,
+            functions: 64,
+            lines: 65,
+        },
+    },
     testEnvironmentOptions: {
         /**
          * @note Opt-out from JSDOM using browser-style resolution
@@ -25,6 +41,7 @@ export default {
          */
         customExportConditions: [''],
     },
+    errorOnDeprecated: true,
     moduleNameMapper: {
         // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
         uuid: require.resolve('uuid'),

@@ -143,7 +143,6 @@
             "table": {
                 "actions": [
                     "edit",
-                    "enable",
                     "delete",
                     "clone"
                 ],
@@ -200,7 +199,7 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.50.1+8cbb9b3c",
+        "version": "5.50.1+099cf36c",
         "displayName": "This is my add-on",
         "schemaVersion": "0.0.8",
         "_uccVersion": "5.50.1"

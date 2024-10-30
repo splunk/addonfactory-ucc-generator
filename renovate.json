@@ -89,6 +89,12 @@
       "matchManagers": ["npm"],
       "matchDepTypes": [ "engines" ],
       "enabled": false
+    },
+    {
+      "description": "Ignore updates for ubuntu in GitHub (ref #1374)",
+      "matchPackageNames": ["ubuntu"],
+      "matchManagers": ["github-actions"],
+      "enabled": false
     }
   ]
 }
