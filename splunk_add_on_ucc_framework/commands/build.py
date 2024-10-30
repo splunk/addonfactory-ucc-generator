@@ -566,20 +566,20 @@ def generate(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
 
-    # ignore_list = _get_ignore_list(
-    # ta_name,
-    # os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
-    # output_directory,
-    # )
+    ignore_list = _get_ignore_list(
+    ta_name,
+    os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
+    output_directory,
+    )
     if os.path.exists(os.path.abspath(os.path.join(source, os.pardir, ".uccignore"))):
         logger.warning(
             "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
             "To achieve the similar functionality use additional_packaging.py."
-            "Refer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
         )
-    # removed_list = _remove_listed_files(ignore_list)
-    # if removed_list:
-    # logger.info("Removed:\n{}".format("\n".join(removed_list)))
+    removed_list = _remove_listed_files(ignore_list)
+    if removed_list:
+        logger.info("Removed:\n{}".format("\n".join(removed_list)))
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
