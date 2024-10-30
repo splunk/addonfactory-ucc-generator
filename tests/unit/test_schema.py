@@ -1,24 +1,9 @@
 import functools
-import json
 from typing import Any, Dict
-from pathlib import Path
 
 import jsonschema
 import pytest
 from jsonschema.exceptions import ValidationError
-
-from splunk_add_on_ucc_framework import __file__ as module_init_path
-
-
-@pytest.fixture
-def schema_path():
-    return Path(module_init_path).parent / "schema" / "schema.json"
-
-
-@pytest.fixture
-def schema_json(schema_path):
-    with schema_path.open() as fp:
-        return json.load(fp)
 
 
 @pytest.fixture

@@ -1,4 +1,5 @@
 import os
+import re
 import tempfile
 import logging
 import json
@@ -100,7 +101,7 @@ def test_ucc_generate_with_config_param():
     check_ucc_versions()
 
 
-def test_ucc_generate_with_everything():
+def test_ucc_generate_with_everything(caplog):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -195,6 +196,25 @@ def test_ucc_generate_with_everything():
             assert not path.exists(actual_file_path)
 
         _compare_expandable_tabs_and_entities(package_folder, actual_folder)
+
+        # check missing validators warnings
+        pattern = re.compile(
+            r"^The field '([^']+)' does not have a validator specified."
+        )
+        entities = set()
+        for record in caplog.records:
+            if record.funcName != "_validate_entity_validators":
+                continue
+
+            match = pattern.search(record.msg)
+            assert match, record.msg
+
+            entities.add(match.group(1))
+
+        assert "example_help_link" not in entities
+        assert "loglevel" not in entities
+        assert "field_no_validators" in entities
+        assert "field_no_validators_suppressed" not in entities
 
 
 def test_ucc_generate_with_multiple_inputs_tabs():
@@ -647,6 +667,14 @@ def _compare_logging_tab(
                 },
                 "type": "singleSelect",
                 "required": True,
+                "validators": [
+                    {
+                        "errorMsg": "Log level must be one of: DEBUG, "
+                        "INFO, WARNING, ERROR, CRITICAL",
+                        "pattern": "^DEBUG|INFO|WARNING|ERROR|CRITICAL$",
+                        "type": "regex",
+                    }
+                ],
             }
         ],
         "name": "logging",
