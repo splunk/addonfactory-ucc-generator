@@ -567,9 +567,9 @@ def generate(
         )
 
     ignore_list = _get_ignore_list(
-    ta_name,
-    os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
-    output_directory,
+        ta_name,
+        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
+        output_directory,
     )
     if os.path.exists(os.path.abspath(os.path.join(source, os.pardir, ".uccignore"))):
         logger.warning(

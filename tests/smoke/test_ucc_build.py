@@ -442,6 +442,7 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.message in expected_logs.keys()
         assert log_line.levelname == expected_logs[log_line.message]
 
+
 def test_ucc_generate_with_everything_uccignore(caplog):
     """
     Checks the deprecation warning of .uccignore present in a repo with
@@ -459,10 +460,12 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         # create `.uccignore` temporarily
         ucc_file = path.join(path.dirname(package_folder), ".uccignore")
         f = open(ucc_file, "w+")
-        f.write("""**/**one.py
+        f.write(
+            """**/**one.py
 bin/splunk_ta_uccexample_rh_example_input_two.py
 bin/wrong_pattern
-""")
+"""
+        )
         f.close()
         build.generate(source=package_folder, output_directory=temp_dir)
 
