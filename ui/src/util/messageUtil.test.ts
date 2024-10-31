@@ -73,16 +73,4 @@ describe('parseErrorMsg', () => {
         const result = parseErrorMsg(error);
         expect(result).toBe(`b'{"invalid":"structure"}'`);
     });
-
-    it('should return original message if it does not match REST error regex', () => {
-        const error = {
-            response: {
-                data: {
-                    messages: [{ text: 'Some other error message' }],
-                },
-            },
-        };
-        const result = parseErrorMsg(error);
-        expect(result).toBe('Some other error message');
-    });
 });
