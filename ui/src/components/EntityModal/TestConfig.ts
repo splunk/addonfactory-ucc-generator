@@ -419,7 +419,7 @@ const entityOauthOauthSeparatedEndpoints = [
             auth_code_endpoint: '/services/oauth2/authorize',
             access_token_endpoint: '/services/oauth2/token',
             oauth_timeout: 3000,
-            oauth_state_enabled: false,
+            oauth_state_enabled: true,
             display: true,
             disableonEdit: false,
             enable: true,
