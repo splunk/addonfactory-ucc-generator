@@ -62,6 +62,10 @@ const getTableConfigAndServices = (
             },
             readonlyFieldId: undefined,
             hideFieldId: undefined,
+            useInputToggleConfirmation:
+                serviceWithTable &&
+                'useInputToggleConfirmation' in serviceWithTable &&
+                Boolean(serviceWithTable.useInputToggleConfirmation),
         };
     }
 
