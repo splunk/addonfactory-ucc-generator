@@ -3287,7 +3287,7 @@
     },
     "useInputToggleConfirmation": {
       "type": "boolean",
-      "description": "Displays additional confirmation modal when toggling single input status",
+      "description": "When true displays additional confirmation modal when toggling single input status.",
       "default": false
     },
     "IntervalEntity": {
