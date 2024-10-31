@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { AxiosResponse } from 'axios';
+import { http, HttpResponse } from 'msw';
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -18,10 +18,14 @@ import {
     getConfigWarningMessageAlwaysDisplay,
     WARNING_MESSAGES_ALWAYS_DISPLAY,
 } from './TestConfig';
-import { ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN } from '../../constants/oAuthErrorMessage';
+import {
+    ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
+    ERROR_STATE_MISSING_TRY_AGAIN,
+} from '../../constants/oAuthErrorMessage';
 import { Mode } from '../../constants/modes';
-import * as axiosWrapper from '../../util/axiosCallWrapper';
 import { StandardPages } from '../../types/components/shareableTypes';
+import { server } from '../../mocks/server';
+import { invariant } from '../../util/invariant';
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
@@ -242,7 +246,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
             await userEvent.type(secretField, 'aaa');
         }
 
-        const addButton = await screen.getByText('Add');
+        const addButton = screen.getByText('Add');
         expect(addButton).toBeInTheDocument();
 
         const windowOpenSpy = jest.spyOn(window, 'open') as jest.Mock;
@@ -384,7 +388,12 @@ describe('Default value', () => {
 });
 
 describe('Oauth - separated endpoint authorization', () => {
-    const handleRequestClose = jest.fn();
+    let handleRequestClose: jest.Mock<() => void>;
+
+    beforeEach(() => {
+        handleRequestClose = jest.fn();
+    });
+
     const setUpConfigWithSeparatedEndpoints = () => {
         const newConfig = getConfigWithSeparatedEndpointsOAuth();
         setUnifiedConfig(newConfig);
@@ -412,15 +421,16 @@ describe('Oauth - separated endpoint authorization', () => {
 
         // mock opening verification window
         windowOpenSpy.mockImplementation((url) => {
-            expect(url).toEqual(
+            expect(url).toContain(
                 'https://authendpoint/services/oauth2/authorize?response_type=code&client_id=Client%20Id&redirect_uri=http%3A%2F%2Flocalhost%2F'
             );
-
+            expect(url).toContain('state=');
             return { closed: true };
         });
 
         await userEvent.click(addButton);
-        windowOpenSpy.mockRestore();
+
+        return windowOpenSpy;
     };
 
     const props = {
@@ -459,29 +469,73 @@ describe('Oauth - separated endpoint authorization', () => {
     });
 
     it('check if correct auth token endpoint created', async () => {
+        const requestHandler = jest.fn();
+        server.use(
+            http.post('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth', ({ request }) => {
+                requestHandler(request);
+                return new HttpResponse(null, { status: 200 });
+            })
+        );
         setUpConfigWithSeparatedEndpoints();
         renderModalWithProps(props);
-        const backendTokenFunction = jest.fn();
 
         await getFilledOauthFields();
         const addButton = screen.getByRole('button', { name: /add/i });
-        expect(addButton).toBeInTheDocument();
 
-        await spyOnWindowOpen(addButton);
+        const openFn = await spyOnWindowOpen(addButton);
 
-        // token is aquired on backend side so only thing we can check is if there is correct url created
-        jest.spyOn(axiosWrapper, 'axiosCallWrapper').mockImplementation((params) => {
-            backendTokenFunction((params?.body as unknown as URLSearchParams)?.get('url'));
-            return new Promise((r) => r({} as unknown as PromiseLike<AxiosResponse>));
-        });
+        expect(openFn).toHaveBeenCalled();
+        const url = new URL(openFn.mock.calls[0][0]);
+        const stateCodeFromUrl = url.searchParams.get('state');
+        invariant(stateCodeFromUrl, 'State code is not present in the url');
 
         // triggering manually external oauth window behaviour after success authorization
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).getMessage({ code: 200, msg: 'testing message for oauth' });
+        const code = '200';
+        window.getMessage({ code, state: stateCodeFromUrl, error: undefined });
 
-        // only purpose is to check if backend function receinved correct token url
-        expect(backendTokenFunction).toHaveBeenCalledWith(
-            'https://tokenendpoint/services/oauth2/token'
-        );
+        await waitFor(async () => {
+            expect(requestHandler).toHaveBeenCalledTimes(1);
+        });
+
+        const receivedRequest: Request = requestHandler.mock.calls[0][0];
+        const receivedBody = await receivedRequest.text();
+
+        const params = new URLSearchParams(receivedBody);
+        const receivedParsedBodyParams: Record<string, string> = {};
+
+        params.forEach((value, key) => {
+            receivedParsedBodyParams[key] = value;
+        });
+
+        expect(receivedParsedBodyParams).toMatchObject({
+            method: 'POST',
+            url: 'https://tokenendpoint/services/oauth2/token',
+            grant_type: 'authorization_code',
+            client_id: 'Client Id',
+            client_secret: 'Client Secret',
+            code,
+            redirect_uri: 'http://localhost/',
+        });
+    });
+
+    it('should throw error if state value mismatch', async () => {
+        setUpConfigWithSeparatedEndpoints();
+        renderModalWithProps(props);
+
+        await getFilledOauthFields();
+        const addButton = screen.getByRole('button', { name: /add/i });
+
+        const openFn = await spyOnWindowOpen(addButton);
+
+        expect(openFn).toHaveBeenCalled();
+        const url = new URL(openFn.mock.calls[0][0]);
+        const stateCodeFromUrl = url.searchParams.get('state');
+
+        // triggering manually external oauth window behaviour after success authorization
+        const code = '200';
+        const passedState = `tests${stateCodeFromUrl}`;
+        window.getMessage({ code, state: passedState, error: undefined });
+
+        expect(screen.getByText(ERROR_STATE_MISSING_TRY_AGAIN)).toBeInTheDocument();
     });
 });
