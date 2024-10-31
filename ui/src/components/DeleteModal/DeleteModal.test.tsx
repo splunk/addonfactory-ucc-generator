@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
+import messageDict from '../../constants/messageDict';
 
 jest.mock('immutability-helper');
 jest.mock('../../util/util');
@@ -60,4 +61,29 @@ it('correct delete request', async () => {
     await userEvent.click(deleteButton);
 
     expect(handleClose).toHaveBeenCalled();
+});
+
+it('failed delete request', async () => {
+    const errorMessage = 'Oopsy doopsy';
+    server.use(
+        http.delete(
+            '/servicesNS/nobody/-/restRoot_serviceName/stanzaName',
+            () =>
+                new HttpResponse(
+                    JSON.stringify({
+                        messages: [
+                            {
+                                text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
+                            },
+                        ],
+                    }),
+                    { status: 500 }
+                )
+        )
+    );
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    await userEvent.click(deleteButton);
+
+    expect(handleClose).not.toHaveBeenCalled();
+    expect(screen.getByText(messageDict.unknown)).toBeInTheDocument();
 });

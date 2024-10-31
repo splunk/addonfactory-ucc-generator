@@ -49,23 +49,17 @@ export const tryTrimErrorMessage = (msg: string) => {
     return msg;
 };
 
-export const parseErrorMsg = (err?: unknown) => {
+export const parseErrorMsg = (data?: unknown) => {
     try {
         if (
-            err &&
-            typeof err === 'object' &&
-            'response' in err &&
-            typeof err.response === 'object' &&
-            err.response &&
-            'data' in err.response &&
-            typeof err.response.data === 'object' &&
-            err.response.data &&
-            'messages' in err.response.data &&
-            Array.isArray(err.response.data.messages) &&
-            err.response.data.messages.length > 0 &&
-            'text' in err.response.data.messages[0]
+            data &&
+            typeof data === 'object' &&
+            'messages' in data &&
+            Array.isArray(data.messages) &&
+            data.messages.length > 0 &&
+            'text' in data.messages[0]
         ) {
-            const msg = err.response.data?.messages?.[0]?.text;
+            const msg = data.messages[0].text;
             if (!msg) {
                 return messageDict.unknown;
             }
