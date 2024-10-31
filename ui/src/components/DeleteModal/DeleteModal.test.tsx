@@ -53,7 +53,7 @@ it('correct delete request', async () => {
     server.use(
         http.delete(
             '/servicesNS/nobody/-/restRoot_serviceName/stanzaName',
-            () => new HttpResponse(undefined, { status: 201 })
+            () => new HttpResponse('{}', { status: 201 })
         )
     );
     const deleteButton = screen.getByRole('button', { name: /delete/i });

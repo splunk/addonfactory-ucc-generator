@@ -37,7 +37,6 @@
     "@splunk/ui-utils": "^1.7.1",
     "@splunk/visualization-context": "^26.3.0",
     "@storybook/test": "^8.3.5",
-    "axios": "^1.7.7",
     "immutability-helper": "^3.1.1",
     "license-webpack-plugin": "^4.0.2",
     "lodash": "^4.17.21",

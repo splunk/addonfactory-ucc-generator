@@ -1,5 +1,5 @@
-import axios from 'axios';
 import yaml from 'js-yaml';
+import { getRequest } from './api';
 // NOTE: if bundle script is put some dir instead of js/build, this function will broken.
 export function getBuildDirPath() {
     const scripts = document.getElementsByTagName('script');
@@ -14,16 +14,26 @@ export function getBuildDirPath() {
     return '';
 }
 
-function loadJSONFile() {
-    return axios
-        .get(`${getBuildDirPath()}/globalConfig.json`)
-        .then((res) => (typeof res.data === 'object' ? res.data : JSON.parse(res.data)));
+async function loadJSONFile() {
+    const data = await getRequest({ endpointUrl: `${getBuildDirPath()}/globalConfig.json` });
+    if (typeof data === 'object') {
+        return data;
+    }
+    if (typeof data === 'string') {
+        return JSON.parse(data);
+    }
+    throw new Error('Invalid data type');
 }
 
-function loadYAMLFile() {
-    return axios
-        .get(`${getBuildDirPath()}/globalConfig.yaml`)
-        .then((res) => (typeof res.data === 'object' ? res.data : yaml.load(res.data)));
+async function loadYAMLFile() {
+    const data = await getRequest({ endpointUrl: `${getBuildDirPath()}/globalConfig.json` });
+    if (typeof data === 'object') {
+        return data;
+    }
+    if (typeof data === 'string') {
+        yaml.load(data);
+    }
+    throw new Error('Invalid data type');
 }
 
 export function loadGlobalConfig() {
