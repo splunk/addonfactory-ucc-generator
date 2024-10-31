@@ -1770,8 +1770,7 @@
                 ]
             },
             "hideFieldId": "hide_in_ui",
-            "readonlyFieldId": "hard_disabled",
-            "useInputToggleConfirmation": true
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [
