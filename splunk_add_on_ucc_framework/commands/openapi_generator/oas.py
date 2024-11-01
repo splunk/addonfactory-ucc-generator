@@ -92,6 +92,9 @@ class ExternalDocumentationObject(Init):
 
 @dataclass
 class ParameterObject(Init):
+    # https://spec.openapis.org/oas/latest.html#parameter-object
+    # https://spec.openapis.org/oas/latest.html#common-fixed-fields
+    # https://spec.openapis.org/oas/latest.html#fixed-fields-for-use-with-schema
     pass
 
 
@@ -139,7 +142,8 @@ class OperationObject(
     description: Optional[str] = None
     externalDocs: Optional[ExternalDocumentationObject] = None
     operationId: Optional[str] = None
-    parameters: Optional[ParameterObject] = None
+    # parameters: Optional[ParameterObject]
+    parameters: Optional[List[Dict[str, Union[str, bool, Dict[str, str]]]]] = None
     requestBody: Optional[RequestBodyObject] = None
     callbacks: Optional[CallbackObjects] = None
     deprecated: Optional[bool] = False
