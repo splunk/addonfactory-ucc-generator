@@ -51,7 +51,11 @@
                         "type": "string"
                     },
                     "auth_type": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "basic",
+                            "oauth"
+                        ]
                     },
                     "username": {
                         "type": "string"
@@ -63,6 +67,16 @@
                     "token": {
                         "type": "string",
                         "format": "password"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "redirect_url": {
+                        "type": "string"
                     }
                 }
             },
@@ -90,7 +104,11 @@
                         "type": "string"
                     },
                     "auth_type": {
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "basic",
+                            "oauth"
+                        ]
                     },
                     "username": {
                         "type": "string"
@@ -102,6 +120,16 @@
                     "token": {
                         "type": "string",
                         "format": "password"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "redirect_url": {
+                        "type": "string"
                     }
                 }
             },
@@ -291,6 +319,17 @@
                     }
                 },
                 "description": "Get list of items for account",
+                "parameters": [
+                    {
+                        "name": "redirect_url",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "URL to redirect after the call",
+                        "in": "query"
+                    }
+                ],
                 "deprecated": false
             },
             "post": {
@@ -382,6 +421,17 @@
                     }
                 },
                 "description": "Get account item details",
+                "parameters": [
+                    {
+                        "name": "redirect_url",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "URL to redirect after the call",
+                        "in": "query"
+                    }
+                ],
                 "deprecated": false
             },
             "post": {
