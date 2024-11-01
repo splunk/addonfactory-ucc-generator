@@ -337,7 +337,7 @@ jobs:
       - name: Copy .appinspect_api.expect.yaml to Working Directory
         run: |
             cp tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect_api.expect.yaml ./.appinspect_api.expect.yaml
-            ls .
+            ls -a .
       - uses: splunk/appinspect-api-action@v3.0
         with:
           username: ${{secrets.SPL_COM_USER}}
