@@ -16,7 +16,7 @@ See the following example for proper usage:
 
 ## Example
 
-Below is an example of additional_package.py containing both the implementations of functions.
+Below is an example of additional_packaging.py containing both the implementations of functions.
 
 ```python
 --8<-- "tests/testdata/test_addons/package_global_config_everything_uccignore/additional_packaging.py"
