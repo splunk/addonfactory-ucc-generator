@@ -3,6 +3,7 @@ import { app } from '@splunk/splunk-utils/config';
 import { createRESTURL } from '@splunk/splunk-utils/url';
 import { generateToast, getUnifiedConfigs } from './util';
 import { parseErrorMsg } from './messageUtil';
+import { ResponseError } from './ResponseError';
 
 export interface RequestParams {
     endpointUrl: string;
@@ -34,7 +35,7 @@ const createUrl = (endpointUrl: string, params: Record<string, string | number>)
 const handleErrorResponse = async (response: Response): Promise<never> => {
     const errorData = await response.json();
     const message = parseErrorMsg(errorData);
-    throw new Error(message);
+    throw new ResponseError({ response, message });
 };
 
 const fetchWithErrorHandling = async <TData>(

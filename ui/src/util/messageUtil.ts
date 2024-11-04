@@ -2,6 +2,8 @@ import * as __ from 'lodash';
 import { _ } from '@splunk/ui-utils/i18n';
 import messageDict from '../constants/messageDict';
 
+import { ResponseError } from './ResponseError';
+
 /**
  * @param code  a int value.
  * @param msg arguments to format the message.
@@ -50,6 +52,9 @@ export const tryTrimErrorMessage = (msg: string) => {
 };
 
 export const parseErrorMsg = (data?: unknown) => {
+    if (data instanceof ResponseError) {
+        return data.message;
+    }
     try {
         if (
             data &&

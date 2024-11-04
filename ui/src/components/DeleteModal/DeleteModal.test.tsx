@@ -85,5 +85,5 @@ it('failed delete request', async () => {
     await userEvent.click(deleteButton);
 
     expect(handleClose).not.toHaveBeenCalled();
-    expect(screen.getByText(messageDict.unknown)).toBeInTheDocument();
+    expect(screen.getByText(errorMessage)).toBeInTheDocument();
 });
