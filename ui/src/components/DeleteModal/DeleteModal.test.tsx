@@ -65,19 +65,17 @@ it('correct delete request', async () => {
 it('failed delete request', async () => {
     const errorMessage = 'Oopsy doopsy';
     server.use(
-        http.delete(
-            '/servicesNS/nobody/-/restRoot_serviceName/stanzaName',
-            () =>
-                new HttpResponse(
-                    JSON.stringify({
-                        messages: [
-                            {
-                                text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
-                            },
-                        ],
-                    }),
-                    { status: 500 }
-                )
+        http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
+            HttpResponse.json(
+                {
+                    messages: [
+                        {
+                            text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
+                        },
+                    ],
+                },
+                { status: 500 }
+            )
         )
     );
     const deleteButton = screen.getByRole('button', { name: /delete/i });
