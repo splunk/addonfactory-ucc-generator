@@ -15,7 +15,10 @@ export function getBuildDirPath() {
 }
 
 async function loadJSONFile() {
-    const data = await getRequest({ endpointUrl: `${getBuildDirPath()}/globalConfig.json` });
+    const data = await getRequest({
+        endpointUrl: `${getBuildDirPath()}/globalConfig.json`,
+        handleError: false,
+    });
     if (typeof data === 'object') {
         return data;
     }
@@ -26,7 +29,10 @@ async function loadJSONFile() {
 }
 
 async function loadYAMLFile() {
-    const data = await getRequest({ endpointUrl: `${getBuildDirPath()}/globalConfig.json` });
+    const data = await getRequest({
+        endpointUrl: `${getBuildDirPath()}/globalConfig.json`,
+        handleError: false,
+    });
     if (typeof data === 'object') {
         return data;
     }

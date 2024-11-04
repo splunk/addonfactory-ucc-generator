@@ -9,7 +9,7 @@ export interface RequestParams {
     params?: Record<string, string | number>;
     signal?: AbortSignal;
     body?: BodyInit;
-    handleError?: boolean;
+    handleError: boolean;
     callbackOnError?: (error: unknown) => void;
 }
 
@@ -61,17 +61,28 @@ const fetchWithErrorHandling = async <TData>(
     }
 };
 
-const getFetch = async <TData>({ endpointUrl, params = {}, signal }: RequestParams) => {
+const getFetch = async <TData>({
+    endpointUrl,
+    params = {},
+    signal,
+    handleError,
+}: RequestParams) => {
     const url = createUrl(endpointUrl, params);
     const options = {
         method: 'GET',
         signal,
     } satisfies RequestInit;
 
-    return fetchWithErrorHandling<TData>(url, options, false);
+    return fetchWithErrorHandling<TData>(url, options, handleError);
 };
 
-const postFetch = async <TData>({ endpointUrl, params = {}, body, signal }: RequestParams) => {
+const postFetch = async <TData>({
+    endpointUrl,
+    params = {},
+    body,
+    signal,
+    handleError,
+}: RequestParams) => {
     const url = createUrl(endpointUrl, params);
     const defaultInit = getDefaultFetchInit();
     const headers = {
@@ -86,25 +97,27 @@ const postFetch = async <TData>({ endpointUrl, params = {}, body, signal }: Requ
         body,
     } satisfies RequestInit;
 
-    return fetchWithErrorHandling<TData>(url, options, false);
+    return fetchWithErrorHandling<TData>(url, options, handleError);
 };
 
-const deleteFetch = async <TData>({ endpointUrl, params = {}, signal }: RequestParams) => {
+const deleteFetch = async <TData>({
+    endpointUrl,
+    params = {},
+    signal,
+    handleError,
+}: RequestParams) => {
     const url = createUrl(endpointUrl, params);
     const options = {
         method: 'DELETE',
         signal,
     } satisfies RequestInit;
 
-    return fetchWithErrorHandling<TData>(url, options, false);
+    return fetchWithErrorHandling<TData>(url, options, handleError);
 };
 
 /* Public API */
-export const getRequest = <TData>({ endpointUrl, params = {}, signal }: RequestParams) =>
-    getFetch<TData>({ endpointUrl, params, signal });
+export const getRequest = <TData>(params: RequestParams) => getFetch<TData>(params);
 
-export const postRequest = <TData>({ endpointUrl, params = {}, body, signal }: RequestParams) =>
-    postFetch<TData>({ endpointUrl, params, body, signal });
+export const postRequest = <TData>(params: RequestParams) => postFetch<TData>(params);
 
-export const deleteRequest = <TData>({ endpointUrl, params = {}, signal }: RequestParams) =>
-    deleteFetch<TData>({ endpointUrl, params, signal });
+export const deleteRequest = <TData>(params: RequestParams) => deleteFetch<TData>(params);
