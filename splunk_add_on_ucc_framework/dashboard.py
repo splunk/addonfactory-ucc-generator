@@ -53,7 +53,7 @@ default_definition_json_filename = {
 data_ingestion = (
     "index=_internal source=*license_usage.log type=Usage "
     "({determine_by} IN ({lic_usg_condition})) | timechart sum(b) as Usage | "
-    'rename Usage as \\"Data volume\\"'
+    'rename Usage as \\"Data volume\\" | appendpipe [ | makeresults ] | dedup _time'
 )
 
 data_ingestion_and_events = (
@@ -61,12 +61,15 @@ data_ingestion_and_events = (
     "({determine_by} IN ({lic_usg_condition})) | timechart sum(b) as Usage "
     '| rename Usage as \\"Data volume\\" '
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
-    '| timechart sum(n_events) as \\"Number of events\\" ]'
+    '| timechart sum(n_events) as \\"Number of events\\" ] | appendpipe [ | makeresults ] | dedup _time'
 )
-errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l"
+errors_count = (
+    "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
+    "| appendpipe [ | makeresults ] | dedup _time"
+)
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
-    'timechart sum(n_events) as \\"Number of events\\"'
+    'timechart sum(n_events) as \\"Number of events\\" | appendpipe [ | makeresults ] | dedup _time'
 )
 
 table_sourcetype_query = (
