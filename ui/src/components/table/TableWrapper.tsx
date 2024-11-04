@@ -146,6 +146,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                         endpointUrl: generateEndPointUrl(encodeURIComponent(service.name)),
                         params: { count: -1 },
                         signal: abortController.signal,
+                        handleError: false,
                     })
                 ) || [];
 
