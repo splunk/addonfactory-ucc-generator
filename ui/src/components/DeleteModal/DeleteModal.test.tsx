@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
-import messageDict from '../../constants/messageDict';
 
 jest.mock('immutability-helper');
 jest.mock('../../util/util');
