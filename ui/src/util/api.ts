@@ -21,7 +21,7 @@ export function generateEndPointUrl(name: string) {
 
 const DEFAULT_PARAMS = { output_mode: 'json' };
 
-const createUrl = (endpointUrl: string, params: Record<string, string | number>): URL => {
+function createUrl(endpointUrl: string, params: Record<string, string | number>): URL {
     const url = new URL(
         createRESTURL(endpointUrl, { app, owner: 'nobody' }),
         window.location.origin
@@ -30,22 +30,27 @@ const createUrl = (endpointUrl: string, params: Record<string, string | number>)
         url.searchParams.append(key, value.toString())
     );
     return url;
-};
+}
 
-const handleErrorResponse = async (response: Response): Promise<never> => {
+async function handleErrorResponse(response: Response): Promise<never> {
     const errorData = await response.json();
     const message = parseErrorMsg(errorData);
     throw new ResponseError({ response, message });
-};
+}
 
-const fetchWithErrorHandling = async <TData>(
+async function fetchWithErrorHandling<TData>(
     url: URL,
     options: RequestInit,
     handleError: boolean,
     callbackOnError?: (error: unknown) => void
-): Promise<TData> => {
+): Promise<TData> {
+    const defaultInit = getDefaultFetchInit();
+
     try {
-        const response = await fetch(url.toString(), options);
+        const response = await fetch(url.toString(), {
+            ...defaultInit,
+            ...options,
+        });
         if (!response.ok) {
             await handleErrorResponse(response);
         }
@@ -60,14 +65,14 @@ const fetchWithErrorHandling = async <TData>(
         }
         throw error;
     }
-};
+}
 
-const getFetch = async <TData>({
+export async function getRequest<TData>({
     endpointUrl,
     params = {},
     signal,
     handleError,
-}: RequestParams) => {
+}: RequestParams) {
     const url = createUrl(endpointUrl, params);
     const options = {
         method: 'GET',
@@ -75,15 +80,15 @@ const getFetch = async <TData>({
     } satisfies RequestInit;
 
     return fetchWithErrorHandling<TData>(url, options, handleError);
-};
+}
 
-const postFetch = async <TData>({
+export async function postRequest<TData>({
     endpointUrl,
     params = {},
     body,
     signal,
     handleError,
-}: RequestParams) => {
+}: RequestParams) {
     const url = createUrl(endpointUrl, params);
     const defaultInit = getDefaultFetchInit();
     const headers = {
@@ -99,26 +104,20 @@ const postFetch = async <TData>({
     } satisfies RequestInit;
 
     return fetchWithErrorHandling<TData>(url, options, handleError);
-};
+}
 
-const deleteFetch = async <TData>({
+export async function deleteRequest<TData>({
     endpointUrl,
     params = {},
     signal,
     handleError,
-}: RequestParams) => {
+}: RequestParams) {
     const url = createUrl(endpointUrl, params);
+
     const options = {
         method: 'DELETE',
         signal,
     } satisfies RequestInit;
 
     return fetchWithErrorHandling<TData>(url, options, handleError);
-};
-
-/* Public API */
-export const getRequest = <TData>(params: RequestParams) => getFetch<TData>(params);
-
-export const postRequest = <TData>(params: RequestParams) => postFetch<TData>(params);
-
-export const deleteRequest = <TData>(params: RequestParams) => deleteFetch<TData>(params);
+}
