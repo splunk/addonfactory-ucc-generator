@@ -107,10 +107,8 @@ def __get_schema_object(
             continue
         if schema_object.properties is not None:
             if entity.field == "oauth":
-                schema_object.properties["auth_type"] = {"type": "string", "enum": []}
                 # check for oauth as basic authentication is also mentioned in oauth
                 if "basic" in entity.options.auth_type:
-                    schema_object.properties["auth_type"]["enum"].append("basic")
                     for fields in entity.options.basic:
                         schema_object.properties[fields.field] = {"type": "string"}
                         if hasattr(fields, "encrypted") and (fields.encrypted is True):
@@ -118,13 +116,18 @@ def __get_schema_object(
                                 "format"
                             ] = "password"
                 if "oauth" in entity.options.auth_type:
-                    schema_object.properties["auth_type"]["enum"].append("oauth")
                     for fields in entity.options.oauth:
                         schema_object.properties[fields.field] = {"type": "string"}
                         if hasattr(fields, "encrypted") and (fields.encrypted is True):
                             schema_object.properties[fields.field][
                                 "format"
                             ] = "password"
+                if len(entity.options.auth_type) == 2:
+                    # As per documentation we can have 2 types of authentication defined in `auth_type`
+                    schema_object.properties["auth_type"] = {
+                        "type": "string",
+                        "enum": ["basic", "oauth"],
+                    }
                 continue
             schema_object.properties[entity.field] = {"type": "string"}
             if hasattr(entity, "options") and hasattr(
@@ -233,9 +236,11 @@ def __get_media_type_object_with_schema_ref(
 
 
 def __get_path_get(
-    *, name: str, description: str, oauth_present: Optional[bool] = False
+    *,
+    name: str,
+    description: str,
 ) -> oas.OperationObject:
-    op_obj = oas.OperationObject(
+    return oas.OperationObject(
         description=description,
         responses={
             "200": oas.ResponseObject(
@@ -248,35 +253,16 @@ def __get_path_get(
             )
         },
     )
-    if oauth_present:
-        op_obj.parameters = __get_redirect_url_for_oauth()
-    return op_obj
 
 
-def __get_path_get_for_list(*, name: str, oauth_present: bool) -> oas.OperationObject:
+def __get_path_get_for_list(*, name: str) -> oas.OperationObject:
     description = f"Get list of items for {name}"
-    return __get_path_get(
-        name=name, description=description, oauth_present=oauth_present
-    )
+    return __get_path_get(name=name, description=description)
 
 
-def __get_path_get_for_item(*, name: str, oauth_present: bool) -> oas.OperationObject:
+def __get_path_get_for_item(*, name: str) -> oas.OperationObject:
     description = f"Get {name} item details"
-    return __get_path_get(
-        name=name, description=description, oauth_present=oauth_present
-    )
-
-
-def __get_redirect_url_for_oauth() -> List[Dict[str, Any]]:
-    return [
-        {
-            "name": "redirect_url",
-            "required": False,
-            "schema": {"type": "string"},
-            "description": "URL to redirect after the call",
-            "in": "query",
-        }
-    ]
+    return __get_path_get(name=name, description=description)
 
 
 def __get_path_post(
@@ -358,11 +344,10 @@ def __assign_ta_paths(
     path_name: str,
     actions: List[str],
     page: GloblaConfigPages,
-    oauth_present: bool,
 ) -> OpenAPIObject:
     if open_api_object.paths is not None:
         open_api_object.paths[path] = oas.PathItemObject(
-            get=__get_path_get_for_list(name=path_name, oauth_present=oauth_present),
+            get=__get_path_get_for_list(name=path_name),
             post=__get_path_post_for_create(name=path_name, page=page),
         )
         open_api_object.paths[path].parameters = [
@@ -371,9 +356,7 @@ def __assign_ta_paths(
         if actions is not None and "clone" in actions:
             path = f"{path}/{{name}}"
             open_api_object.paths[path] = oas.PathItemObject(
-                get=__get_path_get_for_item(
-                    name=path_name, oauth_present=oauth_present
-                ),
+                get=__get_path_get_for_item(name=path_name),
                 post=__get_path_post_for_update(name=path_name),
                 delete=__get_path_delete(name=path_name)
                 if "delete" in actions
@@ -396,10 +379,6 @@ def __add_paths(
     open_api_object: OpenAPIObject, global_config: DataClasses
 ) -> OpenAPIObject:
     for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
-        oauth_present = False
-        for entity in tab.entity:
-            if entity.field == "oauth" and "oauth" in entity.options.auth_type:
-                oauth_present = True
         open_api_object = __assign_ta_paths(
             open_api_object=open_api_object,
             path=f"/{global_config.meta.restRoot}_{tab.name}"  # type: ignore[attr-defined]
@@ -410,7 +389,6 @@ def __add_paths(
             if hasattr(tab, "table") and hasattr(tab.table, "actions")
             else None,
             page=GloblaConfigPages.CONFIGURATION,
-            oauth_present=oauth_present,
         )
     if hasattr(global_config.pages, "inputs") and hasattr(  # type: ignore[attr-defined]
         global_config.pages.inputs, "services"  # type: ignore[attr-defined]
@@ -426,7 +404,6 @@ def __add_paths(
                 path_name=service.name,
                 actions=actions,
                 page=GloblaConfigPages.INPUTS,
-                oauth_present=oauth_present,
             )
     return open_api_object
 
