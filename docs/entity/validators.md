@@ -1,3 +1,14 @@
+Validators define acceptable values for fields.
+
+!!! warning ""
+
+    Specifying validators for all applicable entities is strongly recommended.
+    Omitting validators can expose forms to security risks and cause unexpected behavior. If the value is validated and encapsulated downstream, add an empty array to suppress the warning:
+    ```json
+    "validators": []
+    ```
+
+
 ### Common Properties
 
 - `type`<span class="required-asterisk">\*</span> specifies which validator type to use.

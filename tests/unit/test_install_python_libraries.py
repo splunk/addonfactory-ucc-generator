@@ -15,6 +15,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     remove_execute_bit,
     remove_packages,
     validate_conflicting_paths,
+    WrongSplunktaucclibVersion,
     InvalidArguments,
     _pip_is_lib_installed,
 )
@@ -151,11 +152,30 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
     tmp_lib_reqs_file.write_text("solnlib\nsplunk-sdk\n")
 
     expected_msg = (
-        f"splunktaucclib is not found in {tmp_lib_reqs_file}. "
-        f"Please add it there because this add-on has UI."
+        f"This add-on has an UI, so the splunktaucclib is required but not found in {tmp_lib_reqs_file}. "
+        f"Please add it there and make sure it is at least version 6.4.0."
     )
 
     with pytest.raises(SplunktaucclibNotFound) as exc:
+        install_python_libraries(
+            str(tmp_path),
+            str(tmp_ucc_lib_target),
+            python_binary_name="python3",
+            includes_ui=True,
+        )
+    assert expected_msg in str(exc.value)
+
+
+def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_path):
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
+
+    expected_msg = "splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4.0."
+
+    with pytest.raises(WrongSplunktaucclibVersion) as exc:
         install_python_libraries(
             str(tmp_path),
             str(tmp_ucc_lib_target),

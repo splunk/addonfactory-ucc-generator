@@ -44,12 +44,15 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 ### Instructions
 
 1. Open https://editor.swagger.io/
-   - Alternatively, you can run your own instance of Swagger Editor
-     by running the following command in terminal:
+   - Alternatively, you can run your own instance of Swagger Editor by running the following command in terminal:
 
-     `docker run -p 8081:8080 swaggerapi/swagger-editor`
+    ```bash
+    docker run -p 8081:8080 swaggerapi/swagger-editor
+    ```
 
-     Then go to: http://localhost:8081/
+
+    Then go to: http://localhost:8081/
+
 1. Load the OpenAPI description document (File > Import file)
 1. Check domain and port values for your Splunk instance and Authorize
 1. Select method-path pair (eg. GET - /splunk_ta_snow_settings/logging ) and "Try it out"

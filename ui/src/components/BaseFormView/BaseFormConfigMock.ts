@@ -116,7 +116,7 @@ const globalConfigMockCustomControl = {
                 ],
             },
             table: {
-                actions: ['edit', 'enable', 'delete', 'clone'],
+                actions: ['edit', 'delete', 'clone'],
                 header: [
                     {
                         label: 'Name',

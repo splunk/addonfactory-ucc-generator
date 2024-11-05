@@ -58,8 +58,19 @@
                                         "oauth_state_enabled": {
                                                 "type": "string"
                                         },
-                                        "oauth": {
+                                        "auth_type": {
                                                 "type": "string"
+                                        },
+                                        "username": {
+                                                "type": "string"
+                                        },
+                                        "password": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "token": {
+                                                "type": "string",
+                                                "format": "password"
                                         },
                                         "textarea_field": {
                                                 "type": "string"
@@ -96,8 +107,19 @@
                                         "oauth_state_enabled": {
                                                 "type": "string"
                                         },
-                                        "oauth": {
+                                        "auth_type": {
                                                 "type": "string"
+                                        },
+                                        "username": {
+                                                "type": "string"
+                                        },
+                                        "password": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "token": {
+                                                "type": "string",
+                                                "format": "password"
                                         },
                                         "textarea_field": {
                                                 "type": "string"
