@@ -55,21 +55,6 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Field no validators",
-                            "field": "field_no_validators",
-                            "help": "Some field",
-                            "required": false
-                        },
-                        {
-                            "type": "text",
-                            "label": "Field no validators (suppressed)",
-                            "field": "field_no_validators_suppressed",
-                            "help": "Some field",
-                            "required": false,
-                            "validators": []
-                        },
-                        {
                             "type": "singleSelect",
                             "label": "Example Environment",
                             "options": {
@@ -477,6 +462,145 @@
                     "title": "Account",
                     "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
                     "restHandlerClass": "CustomAccountValidator"
+                },
+                {
+                    "name": "account_two",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Endpoint",
+                                "field": "endpoint"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Endpoint URL",
+                            "help": "Enter the endpoint URL.",
+                            "field": "endpoint",
+                            "options": {
+                                "display": false,
+                                "requiredWhenVisible": true
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Your Username",
+                            "help": "enter your username",
+                            "field": "your_username",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Your Password",
+                            "field": "your_passwd",
+                            "encrypted": true,
+                            "required": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "account_checkbox",
+                            "help": "This is an example checkbox for the account entity"
+                        }
+                    ],
+                    "title": "Account Two"
+                },
+                {
+                    "name": "account_three",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Endpoint",
+                                "field": "endpoint"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Endpoint URL",
+                            "help": "Enter the endpoint URL.",
+                            "field": "endpoint",
+                            "options": {
+                                "display": false,
+                                "requiredWhenVisible": true
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Your Key of API",
+                            "field": "your_key",
+                            "encrypted": true,
+                            "required": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "account_checkbox",
+                            "help": "This is an example checkbox for the account entity"
+                        }
+                    ],
+                    "title": "Account Three"
                 },
                 {
                     "name": "proxy",
@@ -1677,6 +1801,7 @@
             "table": {
                 "actions": [
                     "edit",
+                    "enable",
                     "delete",
                     "clone",
                     "search"
@@ -1891,9 +2016,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.51.1+3536793cd",
+        "version": "1.0.0",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.9",
+        "schemaVersion": "0.0.8",
         "_uccVersion": "5.51.1",
         "supportedThemes": [
             "light",

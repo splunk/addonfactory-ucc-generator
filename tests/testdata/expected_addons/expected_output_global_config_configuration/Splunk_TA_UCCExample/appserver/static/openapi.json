@@ -50,8 +50,19 @@
                     "account_multiple_select": {
                         "type": "string"
                     },
-                    "oauth": {
+                    "auth_type": {
                         "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "token": {
+                        "type": "string",
+                        "format": "password"
                     }
                 }
             },
@@ -78,8 +89,19 @@
                     "account_multiple_select": {
                         "type": "string"
                     },
-                    "oauth": {
+                    "auth_type": {
                         "type": "string"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "token": {
+                        "type": "string",
+                        "format": "password"
                     }
                 }
             },

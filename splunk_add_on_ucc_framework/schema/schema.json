@@ -2544,7 +2544,6 @@
     "AnyValidator":{
       "type": "array",
       "description": "It is used to validate the values of fields using various validators.",
-      "minItems": 1,
       "items": {
         "anyOf": [
           {

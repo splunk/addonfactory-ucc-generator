@@ -44,17 +44,20 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
 ### Instructions
 
 1. Open https://editor.swagger.io/
-   - Alternatively, you can run your own instance of Swagger Editor
-     by running the following command in terminal:
+   - Alternatively, you can run your own instance of Swagger Editor by running the following command in terminal:
 
-     `docker run -p 8081:8080 swaggerapi/swagger-editor`
+    ```bash
+    docker run -p 8081:8080 swaggerapi/swagger-editor
+    ```
 
-     Then go to: http://localhost:8081/
-2. Load the OpenAPI description document (File > Import file)
-3. Check domain and port values for your Splunk instance and Authorize
-4. Select method-path pair (eg. GET - /splunk_ta_snow_settings/logging ) and "Try it out"
-5. Define parameters and "Execute"
-6. Copy curl value, paste to your terminal, ADD `-k` PARAMETER, and run
+
+    Then go to: http://localhost:8081/
+
+1. Load the OpenAPI description document (File > Import file)
+1. Check domain and port values for your Splunk instance and Authorize
+1. Select method-path pair (eg. GET - /splunk_ta_snow_settings/logging ) and "Try it out"
+1. Define parameters and "Execute"
+1. Copy curl value, paste to your terminal, ADD `-k` PARAMETER, and run
 
 > See [Swagger Editor documentation](https://swagger.io/tools/swagger-editor/) for questions related to the tool.
 
@@ -79,7 +82,7 @@ Make sure you clicked the Authorize button, gave the username and password, and 
 ### Instruction
 
 1. Go to the directory where you downloaded `openapi.json` file
-2. Run the following command: `docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client`
+1. Run the following command: `docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client`
 
     - make sure `openapi.json` is in the current directory
     - you can generate clients for other languages as well - run
@@ -88,9 +91,9 @@ Make sure you clicked the Authorize button, gave the username and password, and 
 
      to see the list of supported languages
 
-3. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
-4. Install the client (`pip install .`)
-5. See `README.md` for an example of usage
+1. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
+1. Install the client (`pip install .`)
+1. See `README.md` for an example of usage
 
 ### Troubleshooting
 

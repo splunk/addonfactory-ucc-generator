@@ -72,7 +72,6 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         const { text, link, color, markdownType, token, linkText } =
             this.props.markdownMessage || {};
         let rowView;
-        // console.log('render custom component', this.props);
 
         if (this.props?.entity?.type === 'custom') {
             const data = {

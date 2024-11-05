@@ -1,3 +1,17 @@
+# [5.52.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.1...v5.52.0) (2024-10-30)
+
+
+### Bug Fixes
+
+* generate basic authentication fields for OpenAPI integration ([#1407](https://github.com/splunk/addonfactory-ucc-generator/issues/1407)) ([584b832](https://github.com/splunk/addonfactory-ucc-generator/commit/584b83255e73b42870a9c1ad7c2e15764b7b65eb))
+* remove support for the "enable" action in table inputs ([#1386](https://github.com/splunk/addonfactory-ucc-generator/issues/1386)) ([26a4bb9](https://github.com/splunk/addonfactory-ucc-generator/commit/26a4bb90ccea63233e2fcc263ec23ad9f4649853))
+
+
+### Features
+
+* print warning when entity does not have validators ([#1409](https://github.com/splunk/addonfactory-ucc-generator/issues/1409)) ([ad12cea](https://github.com/splunk/addonfactory-ucc-generator/commit/ad12cea6e62b6796553f2f570b8cfc501601362f))
+* require splunktaucclib 6.4.0 during the build phase ([#1412](https://github.com/splunk/addonfactory-ucc-generator/issues/1412)) ([0d20269](https://github.com/splunk/addonfactory-ucc-generator/commit/0d20269238c76ce77a011f1875dcfc14087efe06))
+
 ## [5.51.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.0...v5.51.1) (2024-10-22)
 
 

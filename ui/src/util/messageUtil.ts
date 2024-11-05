@@ -49,15 +49,29 @@ export const tryTrimErrorMessage = (msg: string) => {
     return msg;
 };
 
-export const parseErrorMsg = (err?: {
-    response?: { data?: { messages?: { text?: string }[] } };
-}) => {
+export const parseErrorMsg = (err?: unknown) => {
     try {
-        const msg = err?.response?.data?.messages?.[0]?.text;
-        if (!msg) {
-            return messageDict.unknown;
+        if (
+            err &&
+            typeof err === 'object' &&
+            'response' in err &&
+            typeof err.response === 'object' &&
+            err.response &&
+            'data' in err.response &&
+            typeof err.response.data === 'object' &&
+            err.response.data &&
+            'messages' in err.response.data &&
+            Array.isArray(err.response.data.messages) &&
+            err.response.data.messages.length > 0 &&
+            'text' in err.response.data.messages[0]
+        ) {
+            const msg = err.response.data?.messages?.[0]?.text;
+            if (!msg) {
+                return messageDict.unknown;
+            }
+            return tryTrimErrorMessage(msg);
         }
-        return tryTrimErrorMessage(msg);
+        return messageDict.unknown;
     } catch (e) {
         return _('Error in processing the request');
     }

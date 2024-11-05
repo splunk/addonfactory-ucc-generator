@@ -174,11 +174,15 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     // hideClearBtn=true only passed for OAuth else its undefined
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
     const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
-
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                value={props.value}
+                value={
+                    // if value is empty use empty string as ComboBox accepts only string
+                    props.value === null || typeof props.value === 'undefined'
+                        ? ''
+                        : props.value.toString()
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
@@ -195,7 +199,10 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                value={props.value}
+                value={
+                    // if value is empty use empty string as Select accepts only string
+                    props.value === null || typeof props.value === 'undefined' ? '' : props.value
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}

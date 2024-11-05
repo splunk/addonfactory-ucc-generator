@@ -1,10 +1,12 @@
 import functools
 import json
+from pathlib import Path
 
 import pytest
 
-from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import __file__ as module_init_path
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
@@ -54,6 +56,15 @@ def global_config_only_logging() -> global_config_lib.GlobalConfig:
     return global_config
 
 
+@pytest.fixture
+def global_config_multiple_account() -> global_config_lib.GlobalConfig:
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_multiple_account.json"
+    )
+    global_config = global_config_lib.GlobalConfig(global_config_path)
+    return global_config
+
+
 @pytest.fixture()
 def os_dependent_library_config():
     return lambda name="lib1", python_version="37", target="t", os="os": OSDependentLibraryConfig(
@@ -97,3 +108,14 @@ def monkeypatch(monkeypatch):
     monkeypatch.function = function
 
     return monkeypatch
+
+
+@pytest.fixture
+def schema_path():
+    return Path(module_init_path).parent / "schema" / "schema.json"
+
+
+@pytest.fixture
+def schema_json(schema_path):
+    with schema_path.open() as fp:
+        return json.load(fp)
