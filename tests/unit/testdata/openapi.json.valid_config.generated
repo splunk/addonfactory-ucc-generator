@@ -648,17 +648,6 @@
                                         }
                                 },
                                 "description": "Get list of items for account",
-                                "parameters": [
-                                        {
-                                                "name": "redirect_url",
-                                                "required": false,
-                                                "schema": {
-                                                        "type": "string"
-                                                },
-                                                "description": "URL to redirect after the call",
-                                                "in": "query"
-                                        }
-                                ],
                                 "deprecated": false
                         },
                         "post": {
@@ -750,17 +739,6 @@
                                         }
                                 },
                                 "description": "Get account item details",
-                                "parameters": [
-                                        {
-                                                "name": "redirect_url",
-                                                "required": false,
-                                                "schema": {
-                                                        "type": "string"
-                                                },
-                                                "description": "URL to redirect after the call",
-                                                "in": "query"
-                                        }
-                                ],
                                 "deprecated": false
                         },
                         "post": {
