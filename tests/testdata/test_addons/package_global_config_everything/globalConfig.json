@@ -76,7 +76,7 @@
                                 "disableSearch": true,
                                 "autoCompleteFields": [
                                     {
-                                        "value": "login.example.com",
+                                        "value": 1,
                                         "label": "Value1"
                                     },
                                     {
@@ -92,7 +92,7 @@
                             },
                             "help": "",
                             "field": "custom_endpoint",
-                            "defaultValue": "login.example.com",
+                            "defaultValue": 1,
                             "required": true
                         },
                         {
