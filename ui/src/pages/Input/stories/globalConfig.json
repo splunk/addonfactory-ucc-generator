@@ -53,6 +53,7 @@
             {
               "type": "singleSelect",
               "label": "Account to use",
+              "defaultValue": 3,
               "options": {
                 "autoCompleteFields": [
                   {
@@ -62,6 +63,10 @@
                   {
                     "value": "value2",
                     "label": "Value2"
+                  },
+                  {
+                    "value": 3,
+                    "label": "Numeric value 3"
                   }
                 ]
               },

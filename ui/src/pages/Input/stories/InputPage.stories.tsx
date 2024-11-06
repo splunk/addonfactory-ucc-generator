@@ -29,21 +29,23 @@ const meta = {
                             return HttpResponse.json(
                                 getMockServerResponseForInput([
                                     {
-                                        name: 'my disabled input',
+                                        name: 'my_disabled_input',
                                         content: {
                                             disabled: '1',
                                             hard_disabled: 'f',
                                             hide_in_ui: 'N',
+                                            interval: 111,
+                                            account: 3,
                                         },
                                     },
                                     {
-                                        name: 'my read only input',
+                                        name: 'my_read_only_input',
                                         content: {
                                             hard_disabled: '1',
                                         },
                                     },
                                     {
-                                        name: 'my hidden input',
+                                        name: 'my_hidden_input',
                                         content: {
                                             hide_in_ui: 'y',
                                         },
@@ -102,6 +104,26 @@ export const InputPageViewAdd: Story = {
         await userEvent.click(await body.findByText('demo_input'));
     },
 };
+
+export const InputPageViewUpdateInput: Story = {
+    play: async ({ canvasElement }) => {
+        const body = within(canvasElement.ownerDocument.body);
+        const canvas = within(canvasElement);
+
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await userEvent.click(closeBtn);
+        }
+
+        const editButtons = await canvas.findAllByRole('button', { name: 'Edit' });
+        await userEvent.click(editButtons[0]);
+
+        await expect(
+            await body.findByRole('dialog', { name: 'Update demo_input' })
+        ).toBeInTheDocument();
+    },
+};
+
 export const InputTabViewAdd: Story = {
     play: async ({ canvasElement }) => {
         const body = within(canvasElement.ownerDocument.body);
