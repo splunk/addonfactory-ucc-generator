@@ -5,6 +5,7 @@ Install the UCC framework and start building your first add-on. Then you can bui
 ## Prerequisites
 
 Make sure that the following software is installed on your machine:
+
 * Python 3.7 or later 
 * Git 
 
