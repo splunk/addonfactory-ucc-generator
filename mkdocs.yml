@@ -53,6 +53,7 @@ plugins:
             show_if_no_docstring: true
             filters: ["!^_"]
             show_source: true
+  - autorefs
   - print-site  # should be at the end
 
 nav:

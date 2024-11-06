@@ -1,3 +1,5 @@
+# Proxy
+
 There are fields that need to be specified in order to enable proxy.
 
 ### Fields

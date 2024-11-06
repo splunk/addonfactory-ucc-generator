@@ -2,6 +2,8 @@
 title: Inputs
 ---
 
+# Inputs
+
 The input page stores configuration information for data collection. Multiple inputs can be created on the Inputs page.
 
 Developers are required to add services in the global config file to create a new Input. If multiple services are

@@ -1,3 +1,5 @@
+# Logging
+
 The logging tab is a predefined component that allows to create the page for changing
 the log level. It is added in the `pages.configuration.tabs` array
 
