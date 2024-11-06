@@ -582,7 +582,7 @@ All attributes provided:
 Index field has two internal validators:
 
 1. REGEX that forces index names to start with a letter or digit and can only contain letters, numbers, underscores or hyphens.
-2. LENGTH which allows for an index name to have of 1 to 80 characters.
+1. LENGTH which allows for an index name to have of 1 to 80 characters.
 
 `endpointUrl` for that entity is `data/indexes?search=isInternal=0+disabled=0`
 

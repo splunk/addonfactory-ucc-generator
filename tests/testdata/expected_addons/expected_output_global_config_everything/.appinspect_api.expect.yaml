@@ -1,2 +1,4 @@
 check_for_compiled_python:
   comment: 'Expected failure as compiled python file was detected in your build.'
+check_for_search_v1_endpoint:
+  comment: 'The error is generated from splunklib, hence will be fixed once fixed in the library'
