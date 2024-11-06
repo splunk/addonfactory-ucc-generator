@@ -201,6 +201,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     : tab.name === props.stanzaName && props.serviceName === 'settings';
 
                 if (flag) {
+                    this.groups = tab.groups;
+                    this.updateGroupEntities();
                     this.entities = tab.entity;
                     this.options = tab.options;
                     if (props.mode !== 'delete') {
