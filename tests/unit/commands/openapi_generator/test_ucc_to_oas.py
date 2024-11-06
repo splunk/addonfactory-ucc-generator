@@ -24,3 +24,17 @@ def test_transform_multiple_account(
         "openapi.json.multiple_account.generated"
     )
     assert json.loads(expected_open_api_json) == openapi_object.json
+
+
+def test_transform_one_auth_type(
+    global_config_single_authentication, app_manifest_correct
+):
+    global_config_single_authentication.expand()
+    openapi_object = ucc_to_oas.transform(
+        global_config_single_authentication, app_manifest_correct
+    )
+
+    expected_open_api_json = get_testdata_file(
+        "openapi.json.single_authentication.generated"
+    )
+    assert json.loads(expected_open_api_json) == openapi_object.json
