@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import Paginator from '@splunk/react-ui/Paginator';
+import { Typography } from '@splunk/react-ui/Typography';
+
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import { variables } from '@splunk/themes';
 import TableFilter from './TableFilter';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
 import { PAGE_INPUT } from '../../constants/pages';
@@ -24,10 +25,6 @@ const TableHeaderWrapper = styled.div`
 const TableFilterWrapper = styled.div`
     max-width: 300px;
     width: 100%;
-`;
-
-const StatusCountWrapper = styled.span`
-    padding-left: ${variables.spacingXSmall};
 `;
 
 function TableHeader({
@@ -76,28 +73,23 @@ function TableHeader({
         );
     };
 
-    const getStatusCount = () => {
+    const getInputCountStatus = () => {
         const enabledRowCount = allFilteredData.filter((item) => !item.disabled).length;
-
-        if (totalElement <= pageSize) {
-            return '';
-        }
+        const showCountstatus = `(${enabledRowCount} of ${totalElement} enabled)`;
 
         return (
-            <StatusCountWrapper>
-                ({enabledRowCount} of {totalElement} enabled)
-            </StatusCountWrapper>
+            <Typography as="span">
+                {totalElement}
+                {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
+                &nbsp; {totalElement >= pageSize && showCountstatus}
+            </Typography>
         );
     };
 
     return (
         <TableHeaderWrapper>
             <div>
-                <span className="inputNumber">
-                    {totalElement}
-                    {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                </span>
-                {getStatusCount()}
+                {getInputCountStatus()}
                 {page === PAGE_INPUT ? (
                     <TableSelectBoxWrapper>
                         <Select
