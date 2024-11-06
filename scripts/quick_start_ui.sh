@@ -52,7 +52,7 @@ docker run \
   -e "SPLUNK_DISABLE_POPUPS=true" \
   -d \
   --pull=always \
-  --name splunk splunk/splunk:${1:-"latest"}
+  --name $CONTAINER_NAME splunk/splunk:${1:-"latest"}
 
 echo -n "Waiting Splunk for run"
 until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "." && sleep 5 ; done
