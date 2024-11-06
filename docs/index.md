@@ -4,10 +4,6 @@ Universal Configuration Console (UCC) is a framework that simplifies the process
 
 The UCC framework helps you to maintain consistency and a uniform look and feel across different add-ons. You can easily update and modify your add-ons.
 
-UCC 5 <!--- why do we say 5, everywhere else we say UCC---> uses Splunk UI. See [Splunk UI](https://splunkui.splunk.com/). It is a new UI framework based on React. The UCC UI repository is stored in the `ui` folder. <!-- (but where is this folder exactly, when I install Splunk UI?) -->
-
-> **Note:** The UCC framework supports add-ons that use only Python 3.
-
 The UCC framework is available as a GitHub action. See <https://github.com/splunk/addonfactory-ucc-generator-action>.
 
 To work with UCC framework, you can also use Splunk Extension. It helps you to create, test, and debug the add-ons in a simple way. For more information, see [Visual Studio Code Extension for Splunk](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk).
@@ -19,6 +15,8 @@ UCC-based add-ons are powered by the following Splunk libraries:
 * `splunktaucclib`, see [https://github.com/splunk/addonfactory-ucc-library](https://github.com/splunk/addonfactory-ucc-library). 
 
 For more information, see [UCC-related libraries](ucc_related_libraries.md).
+
+> Note: Some specific Python libraries (such as `google-cloud-bigquery`) use `.so` files to operate. `pip` installs OS-specific versions of those `.so` files, which makes it impossible to use such add-ons on a Windows machine because it was built for macOS.
 
 ## What UCC generates 
 
@@ -32,7 +30,7 @@ When you use UCC to create an add-on, the following elements are generated and s
 * Python requirements are installed in the `lib` folder,
 * metadata files are stored in the `metadata` folder,
 * the monitoring dashboard. For more information, see [Dashboard](dashboard.md),
-* the necessary files defined for the alert action <!---who defines the files? can I rewrite to: the files defined for the alert action? --->, if the alert action is defined in globalConfig <!--- is this a file name? --->. For more information, see [Alert actions](alert_actions/index.md). 
+* the necessary files defined for the alert action, if you defined the alert action in the `globalConfig` file. For more information, see [Alert actions](alert_actions/index.md). 
 
 You can extend your add-ons with the following files:
 

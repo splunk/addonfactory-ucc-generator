@@ -37,7 +37,7 @@ Now you can go to your Splunk instance and install this add-on using the generat
 
 Open the add-on in your spaln instance, click around and check if it works as intended.
 
-After validating <!--- is there a procedure to validate?> 
+After validating  
 that the add-on was loaded correctly and all the basic operations
 are working, you can extend the functionality of the input by copying and
 pasting the automatically generated modular inputs file into the `package/bin`

@@ -1,6 +1,6 @@
 # Commands
 
-Use the commands to build the add-on that you already initialized.
+These are the commands that are available in UCC framework.
 
 ## `ucc-gen build`
 
@@ -56,8 +56,8 @@ modular input which you, as a developer, can extend for your needs.
 
 Apart from standard files needed for the add-on, it also adds search head
 clustering files in the `default/server.conf` file and reload triggers in the
-`default/app.conf` file. Those files will be soon <!--- verb is missing ---> by generated automatically by the
-`ucc-gen build` command itself. For now, you need to include them manually
+`default/app.conf` file. Those files will be soon by generated automatically by the
+`ucc-gen build` command itself.
 during the add-on development.
 
 It takes the following parameters:

@@ -57,7 +57,6 @@ nav:
   - About UCC: "index.md"
   - Getting started: "quickstart.md"
   - Commands: "commands.md"
-  - Caveats: "caveats.md"
   - ".conf files": "dot_conf_files.md"
   - Generated files: "generated_files.md"
   - Inputs:
