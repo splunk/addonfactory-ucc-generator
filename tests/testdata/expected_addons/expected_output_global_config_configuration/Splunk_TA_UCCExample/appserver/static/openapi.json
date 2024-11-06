@@ -50,9 +50,6 @@
                     "account_multiple_select": {
                         "type": "string"
                     },
-                    "auth_type": {
-                        "type": "string"
-                    },
                     "username": {
                         "type": "string"
                     },
@@ -63,6 +60,23 @@
                     "token": {
                         "type": "string",
                         "format": "password"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "redirect_url": {
+                        "type": "string"
+                    },
+                    "auth_type": {
+                        "type": "string",
+                        "enum": [
+                            "basic",
+                            "oauth"
+                        ]
                     }
                 }
             },
@@ -89,9 +103,6 @@
                     "account_multiple_select": {
                         "type": "string"
                     },
-                    "auth_type": {
-                        "type": "string"
-                    },
                     "username": {
                         "type": "string"
                     },
@@ -102,6 +113,23 @@
                     "token": {
                         "type": "string",
                         "format": "password"
+                    },
+                    "client_id": {
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "redirect_url": {
+                        "type": "string"
+                    },
+                    "auth_type": {
+                        "type": "string",
+                        "enum": [
+                            "basic",
+                            "oauth"
+                        ]
                     }
                 }
             },
