@@ -31,4 +31,4 @@ If we want to remove only for one specific platform, we need to provide the exac
 
 In case no file is found for the specified pattern, you will see an appropriate warning message.
 
-This feature has been deprecated from UCC as of v5.52.0. To use similar feature use [additional_packaging.py](https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/).
+This feature has been deprecated from UCC framework as of v5.53.0 as the feature is ambiguous. You can achieve the same functionality using [additional_packaging.py](https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/). The `cleanup_output_files` provides a feature to clean up files after the source code has been copied.
