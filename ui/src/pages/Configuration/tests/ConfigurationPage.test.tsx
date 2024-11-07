@@ -9,6 +9,7 @@ import { mockServerResponseWithContent } from '../../../mocks/server-response';
 import { getUnifiedConfigs } from '../../../util/util';
 import ConfigurationPage from '../ConfigurationPage';
 import { type meta as metaType } from '../../../types/globalConfig/meta';
+import { consoleError } from '../../../../jest.setup';
 
 jest.mock('../../../util/util');
 
@@ -63,4 +64,30 @@ it('should show UCC version', async () => {
 
     const uccVersion = await page.findByTestId('ucc-credit');
     expect(uccVersion).toHaveTextContent(expectedUccVersion);
+});
+
+it('should display error when server returns error', async () => {
+    consoleError.mockImplementation(() => {});
+    const errorMessage = 'Oopsie doopsie';
+    server.use(
+        http.get(`/servicesNS/nobody/-/:endpointUrl`, () =>
+            HttpResponse.json(
+                {
+                    messages: [
+                        {
+                            text: errorMessage,
+                        },
+                    ],
+                },
+                { status: 500 }
+            )
+        )
+    );
+
+    const page = setup({
+        _uccVersion: undefined,
+    });
+
+    const errorText = await page.findByText(errorMessage);
+    expect(errorText).toBeInTheDocument();
 });
