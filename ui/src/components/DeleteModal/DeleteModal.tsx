@@ -59,11 +59,6 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                     ),
                     handleError: false,
                 })
-                    .catch((err) => {
-                        const errorSubmitMsg = parseErrorMsg(err);
-                        this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
-                        return Promise.reject(err);
-                    })
                     .then(() => {
                         this.context?.setRowData(
                             update(this.context.rowData, {

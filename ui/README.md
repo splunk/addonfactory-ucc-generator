@@ -9,8 +9,8 @@ For a quickstart, please check [quick_start_ui.sh](../scripts/quick_start_ui.sh)
 ## Getting Started
 
 1. Clone the repo.
-2. Install yarn (>= 1.2) if you haven't already: `npm install --global yarn`.
-3. Run the setup task: `yarn run setup`.
+1. Install yarn (>= 1.2) if you haven't already: `npm install --global yarn`.
+1. Run the setup task: `yarn run setup`.
 
 After completing these steps, the following tasks will be available:
 
@@ -82,7 +82,7 @@ Due to differences in application appearance between MacOS and Linux (especially
     yarn run storybook
     ```
 
-2. Capture and Update Screenshots:
+1. Capture and Update Screenshots:
 
     Once Storybook is running, use Docker Compose to update the screenshots:
 

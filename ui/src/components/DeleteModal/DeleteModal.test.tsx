@@ -51,9 +51,8 @@ it('close model and callback after cancel click', async () => {
 
 it('correct delete request', async () => {
     server.use(
-        http.delete(
-            '/servicesNS/nobody/-/restRoot_serviceName/stanzaName',
-            () => new HttpResponse('{}', { status: 201 })
+        http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
+            HttpResponse.json({}, { status: 201 })
         )
     );
     const deleteButton = screen.getByRole('button', { name: /delete/i });
