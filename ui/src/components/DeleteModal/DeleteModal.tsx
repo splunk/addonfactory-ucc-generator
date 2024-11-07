@@ -61,11 +61,6 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                     method: 'delete',
                     handleError: false,
                 })
-                    .catch((err) => {
-                        const errorSubmitMsg = parseErrorMsg(err);
-                        this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
-                        return Promise.reject(err);
-                    })
                     .then(() => {
                         this.context?.setRowData(
                             update(this.context.rowData, {
@@ -75,6 +70,10 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                         this.setState({ isDeleting: false });
                         this.handleRequestClose();
                         generateToast(`Deleted "${this.props.stanzaName}"`, 'success');
+                    })
+                    .catch((err) => {
+                        const errorSubmitMsg = parseErrorMsg(err);
+                        this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
                     });
             }
         );
