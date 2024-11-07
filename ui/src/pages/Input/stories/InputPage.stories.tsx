@@ -34,8 +34,7 @@ const meta = {
                                             disabled: '1',
                                             hard_disabled: 'f',
                                             hide_in_ui: 'N',
-                                            interval: 111,
-                                            account: 3,
+                                            account: 'value1',
                                         },
                                     },
                                     {
