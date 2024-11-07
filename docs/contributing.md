@@ -93,41 +93,40 @@ UCC is a tool for Technology Add-ons (TAs), so it's important to test TA generat
 The method for installing dependencies may vary among different TAs. Common approaches include running Poetry, but please refer to your TA's documentation for specific instructions.
 
 ```bash
-# Navigate to your TA repository
-cd /path/to/your/ta
+# These variables would be used in the further steps
+ta_repo=/path/to/ta
+ta_name=TA_Name_From_app.manifest
 
-poetry install
+poetry install --directory=$ta_repo
 
-mkdir -p package/lib
+mkdir -p $ta_repo/package/lib
 
 # Export dependencies to 'requirements.txt'
-poetry export --without-hashes -o package/lib/requirements.txt
+poetry export --without-hashes -o $ta_repo/package/lib/requirements.txt --directory $ta_repo
 ```
 
 > Note: ucc-gen expects dependencies to be listed in `package/lib/requirements.txt`.
 
 ### Building TA
 
-Run the following commands from the UCC repository:
-
 ```bash
-poetry run ucc-gen build --source /path/to/your/ta/package
+poetry run ucc-gen build --source $ta_repo/package
 ```
 
-Ensure you specify the package folder, not the repository root. Monitor the build process for any errors.
+Ensure you specify the `package` folder, not the repository root. Monitor the build process for any errors.
 
 **Caveat**: The build command may run scripts from the TA repository that may not be tested if running from a non-TA repository. For example, `build-ui.sh` may use relative paths for building custom components. You might need to manually run the script and/or copy the files to the output directory of UCC.
 
 ```bash
-$ta_repo = /path/to/your/ta
-$ta_name = TA_name
+# in case if TA has custom UI components
+mkdir -p output/$ta_name/appserver/static/js/build
 cp -a $ta_repo/output/$ta_name/appserver/static/js/build/custom output/$ta_name/appserver/static/js/build
 ```
 
 ### Packaging TA
 
 ```bash
-poetry run ucc-gen package --path output/TA_name
+poetry run ucc-gen package --path output/$ta_name
 ```
 
 This command will generate a packaged TA (.tar.gz file) that you can install into Splunk.
