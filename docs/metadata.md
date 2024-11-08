@@ -2,6 +2,8 @@
 title: globalConfig Meta Data
 ---
 
+# Metadata
+
 Metadata contains general information about add-on build.
 
 ## Metadata Properties

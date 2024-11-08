@@ -2,6 +2,8 @@
 title: Input Helper Module
 ---
 
+# Input Helper Module
+
 Input scripts are regenerated during every build step, in order to keep the arguments
 and options up to date with the global config. To not discard changes made by developers,
 additional helper modules were introduced. Those modules must contain

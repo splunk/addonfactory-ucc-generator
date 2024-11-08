@@ -2,6 +2,8 @@
 title: Inputs
 ---
 
+# Inputs
+
 The input page stores configuration information for data collection. Multiple inputs can be created on the Inputs page.
 
 Developers are required to add services in the global config file to create a new Input. If multiple services are
@@ -53,4 +55,4 @@ This is how the global configuration looks like without tabs
 
 ### Output
 
-<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></ifame>
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></iframe>

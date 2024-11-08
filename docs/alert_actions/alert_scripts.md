@@ -1,3 +1,5 @@
+# Alert Action Scripts
+
 The following files would be created/ updated in the output folder once you executed the `ucc-gen` command:
 
 | File Location | Content Description | Action |
