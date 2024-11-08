@@ -12,7 +12,10 @@ import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { Mode } from '../../../constants/modes';
 import { BaseFormProps } from '../BaseFormTypes';
 import { Platforms } from '../../../types/globalConfig/pages';
-import { getGlobalConfigMockGroupsForConfigPage } from '../BaseFormConfigMock';
+import {
+    getGlobalConfigMockGroupsFoInputPage,
+    getGlobalConfigMockGroupsForConfigPage,
+} from '../BaseFormConfigMock';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
@@ -110,6 +113,19 @@ export const ConfigPageGroups: Story = {
         stanzaName: 'unknownStanza',
         handleFormSubmit: fn(),
         config: getGlobalConfigMockGroupsForConfigPage(),
+        platform: 'cloud',
+    },
+};
+
+export const InputPageGroups: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'demo_input',
+        mode: 'create' as Mode,
+        page: 'inputs',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getGlobalConfigMockGroupsFoInputPage(),
         platform: 'cloud',
     },
 };

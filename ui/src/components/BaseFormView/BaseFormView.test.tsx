@@ -9,8 +9,10 @@ import { getBuildDirPath } from '../../util/script';
 import mockCustomControlMockForTest from '../CustomControl/CustomControlMockForTest';
 import {
     getGlobalConfigMockCustomControl,
+    getGlobalConfigMockGroupsFoInputPage,
     getGlobalConfigMockGroupsForConfigPage,
 } from './BaseFormConfigMock';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 const handleFormSubmit = jest.fn();
 
@@ -72,58 +74,51 @@ it('should pass default values to custom component correctly', async () => {
     expect((customModal as HTMLSelectElement)?.value).toEqual('input_three');
 });
 
-it('entities grouping for config page works properly', async () => {
-    const mockConfig = getGlobalConfigMockGroupsForConfigPage();
-    setUnifiedConfig(mockConfig);
-
+it.each([
+    { page: 'configuration', config: getGlobalConfigMockGroupsForConfigPage(), service: 'account' },
+    { page: 'inputs', config: getGlobalConfigMockGroupsFoInputPage(), service: 'demo_input' },
+])('entities grouping for page works properly %s', async ({ config, page, service }) => {
+    setUnifiedConfig(config);
     const getElementsByGroup = (group: string) => {
         const firstField = screen.queryByText(`Text 1 Group ${group}`);
         const secondField = screen.queryByText(`Text 2 Group ${group}`);
         return { firstField, secondField };
     };
-
     const verfyDisplayedElement = (group: string) => {
         const { firstField, secondField } = getElementsByGroup(group);
         expect(firstField).toBeInTheDocument();
         expect(secondField).toBeInTheDocument();
     };
-
     const verifyNotDisplayedElement = (group: string) => {
         const { firstField, secondField } = getElementsByGroup(group);
         expect(firstField).not.toBeInTheDocument();
         expect(secondField).not.toBeInTheDocument();
     };
-
     render(
         <BaseFormView
-            page={PAGE_CONF}
+            page={page as StandardPages}
             stanzaName={STANZA_NAME}
-            serviceName={SERVICE_NAME}
+            serviceName={service}
             mode="create"
             currentServiceState={{}}
             handleFormSubmit={handleFormSubmit}
         />
     );
-
     const group1Header = await screen.findByText('Group 1', { exact: true });
     expect(group1Header).toBeInTheDocument();
     const group2Header = await screen.findByRole('button', { name: 'Group 2' });
     expect(group2Header).toBeInTheDocument();
     const group3Header = await screen.findByRole('button', { name: 'Group 3' });
     expect(group3Header).toBeInTheDocument();
-
     verfyDisplayedElement('1');
     verfyDisplayedElement('2');
     verifyNotDisplayedElement('3'); // group 3 is not expanded by default
-
     expect(group3Header.getAttribute('aria-expanded')).toEqual('false');
     await userEvent.click(group3Header);
     verfyDisplayedElement('3');
     expect(group3Header.getAttribute('aria-expanded')).toEqual('true');
-
     await userEvent.click(group1Header); // does not change anything
     verfyDisplayedElement('1');
-
     expect(group2Header.getAttribute('aria-expanded')).toEqual('true');
     await userEvent.click(group2Header);
     expect(group2Header.getAttribute('aria-expanded')).toEqual('false');
@@ -133,9 +128,7 @@ it('entities grouping for config page works properly', async () => {
      * they are removed in browser
      * todo: verify behaviour
      */
-
     await userEvent.click(group2Header);
-
     verfyDisplayedElement('1');
     verfyDisplayedElement('2');
     verfyDisplayedElement('3'); // after modifications all groups should be displayed
