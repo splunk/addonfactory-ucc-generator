@@ -59,6 +59,7 @@ function CustomTableRow(props) {
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
                                 appearance="flat"
+                                aria-label={_('Edit')}
                                 icon={<Pencil screenReaderText={null} size={1} />}
                                 onClick={() => handleEditActionClick(selectedRow)}
                                 className="editBtn"
@@ -69,6 +70,7 @@ function CustomTableRow(props) {
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
                                 appearance="flat"
+                                aria-label={_('Clone')}
                                 icon={<Clone screenReaderText={null} size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
                                 className="cloneBtn"
@@ -95,6 +97,7 @@ function CustomTableRow(props) {
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
                                 appearance="flat"
+                                aria-label={_('Delete')}
                                 icon={<Trash screenReaderText={null} size={1} />}
                                 onClick={() => handleDeleteActionClick(selectedRow)}
                                 className="deleteBtn"
