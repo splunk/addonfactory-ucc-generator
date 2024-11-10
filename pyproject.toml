@@ -47,7 +47,7 @@ jsonschema = "^4.4.0"
 PyYAML = "^6.0"
 defusedxml = "^0.7.1"
 colorama = "^0.4.6"
-packaging = "24.0"
+packaging = "24.2"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs = "^1.4.2"
