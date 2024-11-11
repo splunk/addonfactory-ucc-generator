@@ -41,7 +41,7 @@ def test_install_libraries(mock_subprocess_run):
     expected_install_command = (
         'python3 -m pip install -r "package/lib/requirements.txt"'
         " --no-compile --prefer-binary --ignore-installed "
-        '--target "/path/to/output/addon_name/lib"'
+        '--target "/path/to/output/addon_name/lib" '
     )
     expected_pip_update_command = "python3 -m pip install --upgrade pip"
     mock_subprocess_run.assert_has_calls(
@@ -414,7 +414,7 @@ def test_install_libraries_custom_pip(mock_subprocess_run):
     expected_install_command = (
         'python3 -m pip install -r "package/lib/requirements.txt"'
         " --no-compile --prefer-binary --ignore-installed "
-        '--target "/path/to/output/addon_name/lib"'
+        '--target "/path/to/output/addon_name/lib" '
     )
     expected_pip_update_command = "python3 -m pip install --upgrade pip==21.666.666"
     mock_subprocess_run.assert_has_calls(
@@ -443,7 +443,7 @@ def test_install_libraries_legacy_resolver(mock_subprocess_run):
     expected_install_command = (
         'python3 -m pip install -r "package/lib/requirements.txt"'
         " --no-compile --prefer-binary --ignore-installed "
-        '--use-deprecated=legacy-resolver --target "/path/to/output/addon_name/lib"'
+        '--use-deprecated=legacy-resolver --target "/path/to/output/addon_name/lib" '
     )
     expected_pip_update_command = "python3 -m pip install --upgrade pip"
     mock_subprocess_run.assert_has_calls(
