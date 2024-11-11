@@ -27,7 +27,18 @@ class CustomTableControl extends Component {
         this.shouldRender = true;
     }
 
-    componentDidMount() {
+    static getDerivedStateFromProps(nextProps, prevState) {
+        // Update row if props.row has changed
+        if (nextProps.row !== prevState.row) {
+            return {
+                row: { ...nextProps.row },
+                loading: false, // Set loading to false when new row data is received
+            };
+        }
+        return null;
+    }
+
+    async componentDidMount() {
         const globalConfig = getUnifiedConfigs();
         this.loadCustomControl()
             .then(async (Control) => {
