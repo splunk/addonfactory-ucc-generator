@@ -27,21 +27,17 @@ logger = logging.getLogger("ucc_gen")
 # defaults
 NAME = "proxy"
 TITLE = "Proxy"
-ENTITY_KEYS_REQUIRED = {"type", "label", "options", "field"}
-ENTITY_KEYS_OPTIONAL = {"help", "defaultValue", "required"}
 
 DEFAULT_PROXY_ENABLE = {"type": "checkbox", "label": "Enable", "field": "proxy_enabled"}
 
-# in singleselect required is type,lable,options and field
 DEFAULT_PROXY_TYPE = {
     "type": "singleSelect",
     "label": "Proxy Type",
-    "required": True,
+    "required": False,
     "options": {
         "disableSearch": True,
         "autoCompleteFields": [
             {"value": "http", "label": "http"},
-            {"value": "https", "label": "https"},
             {"value": "socks4", "label": "socks4"},
             {"value": "socks5", "label": "socks5"},
         ],
@@ -50,11 +46,9 @@ DEFAULT_PROXY_TYPE = {
     "field": "proxy_type",
 }
 
-# in txt attribute required attribute are field, label and type and we will provide dafault validator
 DEFAULT_HOST = {
     "type": "text",
     "label": "Host",
-    "required": True,
     "validators": [
         {
             "type": "string",
@@ -74,7 +68,6 @@ DEFAULT_HOST = {
 DEFAULT_PORT = {
     "type": "text",
     "label": "Port",
-    "required": True,
     "validators": [{"type": "number", "range": [1, 65535], "isInteger": True}],
     "field": "proxy_port",
 }
@@ -118,28 +111,7 @@ DEFAULT_DNS_RESOLUTION = {
 class ProxyTab(Tab):
     @property
     def tab_type(self) -> Optional[str]:
-        return "ProxyTab"
-
-    # def short_form(self) -> Dict[str, Any]:
-    #     entity = self["entity"][0]
-    #     levels = [i["value"] for i in entity["options"]["autoCompleteFields"]]
-    #     new_definition = {"type": "ProxyTab"}
-
-    #     for key, value, default in [
-    #         ("name", self["name"], NAME),
-    #         ("title", self["title"], TITLE),
-    #         ("label", entity["label"], LABEL),
-    #         ("field", entity["field"], FIELD),
-    #         ("levels", levels, LEVELS),
-    #         ("defaultLevel", entity.get("defaultValue", DEFAULTLEVEL), DEFAULTLEVEL),
-    #     ]:
-    #         if value != default:
-    #             new_definition[key] = value
-
-    #     if "help" in entity:
-    #         new_definition["help"] = entity["help"]
-
-    #     return new_definition
+        return "proxyTab"
 
     @classmethod
     def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
@@ -158,8 +130,8 @@ class ProxyTab(Tab):
             entity_key_const_dict = {
                 "enable_proxy": DEFAULT_PROXY_ENABLE,
                 "proxy_type": DEFAULT_PROXY_TYPE,
-                "port": DEFAULT_PORT,
                 "host": DEFAULT_HOST,
+                "port": DEFAULT_PORT,
                 "username": DEFAULT_USERNAME,
                 "password": DEFAULT_PASSWORD,
                 "dns_resolution": DEFAULT_DNS_RESOLUTION,
@@ -167,20 +139,44 @@ class ProxyTab(Tab):
 
             def updating_dictionaries(key_name, const):
                 for key, value in const.items():
-                    print("\n key and value in const are", key, value)
                     if key not in definition.get(key_name):
                         definition.get(key_name)[key] = value
                 entity.append(definition.get(key_name))
 
             # TODO: update check when false and null are used
-            if definition.get("username") != definition.get("password"):
-                logger.error("you had set conflicting value for username and password")
-                sys.exit(1)
-            for key_name, value in entity_key_const_dict.items():
-                print(
-                    "\n definition with key_name:", key_name, definition.get(key_name)
-                )
 
+            if ("username" not in definition) ^ ("password" not in definition):
+                logger.error("Either of username or password is not mentioned.")
+                sys.exit(1)
+
+            elif definition.get("username") != definition.get("password"):
+                if (
+                    isinstance(definition.get("username"), dict)
+                    and definition.get("password") is False
+                ):
+                    logger.error(
+                        "You had updated the username but set the password to 'false' which is not allowed "
+                        "set `password = True` for default configuration."
+                    )
+                    sys.exit(1)
+                elif (
+                    isinstance(definition.get("password"), dict)
+                    and definition.get("username") is False
+                ):
+                    logger.error(
+                        "You had updated the password but set username to `false` which is not allowed "
+                        "set `username = True` for default configuration."
+                    )
+                    sys.exit(1)
+                elif (
+                    type(definition.get("username")) is bool
+                    and type(definition.get("password")) is bool
+                ):
+                    logger.error(
+                        "You had set conflicting values for username and password."
+                    )
+                    sys.exit(1)
+            for key_name, value in entity_key_const_dict.items():
                 if definition.get(key_name) is True:
                     entity.append(value)
                 elif (not definition.get(key_name)) and key_name in [
@@ -201,8 +197,6 @@ class ProxyTab(Tab):
                 "entity": entity,
             }
 
-            # Now new_difinition has all the required attribute,now update the new_definition with customization
-            # set by user
             for key, value in definition.items():
                 if key not in [
                     "name",
@@ -218,58 +212,6 @@ class ProxyTab(Tab):
                 ]:
                     new_definition[key] = value
 
-            # if "help" in definition:
-            #     entity["help"] = definition["help"]
-
-            print("\n\n new_defination that is being", new_definition)
-
             return ProxyTab(new_definition)
 
-        if "type" in definition:
-            return None
-
-        # if definition.keys() != {"name", "title", "entity"}:
-        #     return None
-
-        # if len(definition["entity"]) != 1:
-        #     return None
-
-        # entities = definition["entity"]
-
-        # for dict in entities:
-        #     if dict["type"] == "singleSelect":
-        #         if not all(key in dict.keys() for key in ENTITY_KEYS_REQUIRED):
-        #             return None
-
-        # entity = definition["entity"][0]
-
-        # if not all(key in entity.keys() for key in ENTITY_KEYS_REQUIRED):
-        #     return None
-
-        # if entity.keys() - ENTITY_KEYS_REQUIRED - ENTITY_KEYS_OPTIONAL:
-        #     return None
-
-        # if entity["type"] != "singleSelect":
-        #     return None
-
-        # if entity["options"].keys() != {
-        #     "disableSearch",
-        #     "autoCompleteFields",
-        # } and entity["options"].keys() != {"autoCompleteFields"}:
-        #     return None
-
-        # levels = []
-
-        # for field in entity["options"]["autoCompleteFields"]:
-        #     if "value" not in field:
-        #         return None
-
-        #     level = field["value"]
-
-        #     if level not in AVAILABLE_LEVELS:
-        #         return None
-
-        #     levels.append(level)
-
-        # entity["required"] = True
-        # entity["options"]["disableSearch"] = True
+        return None
