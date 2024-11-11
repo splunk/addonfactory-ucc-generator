@@ -161,8 +161,8 @@ It takes the following parameters:
 * `--addon-display-name` - [required] add-on "official" name.
 * `--addon-input-name` - [required] name of the generated input.
 * `--addon-version` - [optional] version of the generated add-on, with `0.0.1` by default.
-* `--overwrite` - [optional] overwrites the already existing folder.
-    By default, you can't generate a new add-on to an already existing folder.
+* `--overwrite` - [optional] overwrites the already existing folder. By default, you can't generate a new add-on to an already existing folder.
+* `--need-proxy` - [optional] It generates default [proxy tab](./configurations/proxy.md) according to new schema.
 
 ### `ucc-gen import-from-aob`
 
