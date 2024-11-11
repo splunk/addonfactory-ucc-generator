@@ -85,6 +85,7 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_display_name": "Addon For Demo",
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
+                "need_proxy": True,
             },
             (
                 "addon_name",
@@ -93,6 +94,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_name",
                 False,
+                True,
             ),
         ),
         (
@@ -102,6 +104,7 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_display_name": "Addon For Demo",
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
+                "overwrite": True,
             },
             (
                 "addon_name",
@@ -109,6 +112,7 @@ def test__is_valid_input_name(input_name, expected):
                 "input_name",
                 "0.0.1",
                 "addon_name",
+                True,
                 False,
             ),
         ),
@@ -127,6 +131,26 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_rest_root",
                 False,
+                False,
+            ),
+        ),
+        (
+            {
+                "addon_name": "addon_name",
+                "addon_display_name": "Addon For Demo",
+                "addon_input_name": "input_name",
+                "addon_version": "0.0.1",
+                "overwrite": True,
+                "need_proxy": True,
+            },
+            (
+                "addon_name",
+                "Addon For Demo",
+                "input_name",
+                "0.0.1",
+                "addon_name",
+                True,
+                True,
             ),
         ),
     ],
