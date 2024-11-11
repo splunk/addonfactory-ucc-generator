@@ -2,6 +2,12 @@
 
 We welcome contributions from the community! This guide will help you understand our contribution process and requirements.
 
+## Development guidelines
+
+1. Small PRs ([blogpost](https://testing.googleblog.com/2024/07/in-praise-of-small-pull-requests.html))
+1. If you are fixing a bug, write a test reproducing a bug (the test should fail without your changes)
+1. If you are refactoring, make sure there are tests covering this area, if not - introduce tests first, then continue with refactoring
+
 ## Build and Test
 
 Prerequisites:
