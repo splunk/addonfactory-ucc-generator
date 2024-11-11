@@ -49,6 +49,11 @@
                     ],
                     "title": "Accounts"
                 },
+                {%- if need_proxy %}
+                {
+                    "type": "proxyTab"
+                },
+                {%- endif %}
                 {
                     "type": "loggingTab"
                 }

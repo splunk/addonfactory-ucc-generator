@@ -67,6 +67,7 @@ def _generate_addon(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    need_proxy: bool = False,
 ) -> str:
     generated_addon_path = os.path.join(
         os.getcwd(),
@@ -97,6 +98,7 @@ def _generate_addon(
             addon_version=addon_version,
             addon_display_name=addon_display_name,
             addon_input_name=addon_input_name,
+            need_proxy=need_proxy,
         )
     )
     with open(global_config_path, "w") as _f:
@@ -160,6 +162,7 @@ def init(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    need_proxy: bool = False,
 ) -> str:
     if not _is_valid_addon_name(addon_name):
         logger.error(
@@ -199,6 +202,7 @@ def init(
         addon_version,
         addon_rest_root,
         overwrite,
+        need_proxy,
     )
     logger.info(f"Generated add-on is located here {generated_addon_path}")
     logger.info(

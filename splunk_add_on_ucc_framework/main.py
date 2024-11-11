@@ -193,6 +193,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         default=False,
         help="overwrite already generated add-on folder",
     )
+    init_parser.add_argument(
+        "--need-proxy",
+        action="store_true",
+        required=False,
+        help="Specifies if proxy is needed or not",
+    )
 
     import_from_aob_parser = subparsers.add_parser(
         "import-from-aob", description="[Experimental] Import from AoB"
@@ -227,6 +233,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_input_name=args.addon_input_name,
             addon_version=args.addon_version,
             overwrite=args.overwrite,
+            need_proxy=args.need_proxy,
         )
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(
