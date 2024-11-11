@@ -507,3 +507,32 @@ def test_validate_conflicting_paths_empty_list():
 def test_is_pip_lib_installed_wrong_arguments():
     with pytest.raises(InvalidArguments):
         _pip_is_lib_installed("i", "t", "l", allow_higher_version=True)
+
+
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries_pip_custom_flag(mock_subprocess_run):
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
+
+    install_libraries(
+        "package/lib/requirements.txt",
+        "/path/to/output/addon_name/lib",
+        "python3",
+        pip_custom_flag="--report path/to/json.json",
+    )
+
+    expected_install_command = (
+        'python3 -m pip install -r "package/lib/requirements.txt"'
+        " --no-compile --prefer-binary --ignore-installed "
+        '--target "/path/to/output/addon_name/lib" --report path/to/json.json'
+    )
+    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    mock_subprocess_run.assert_has_calls(
+        [
+            mock.call(
+                expected_pip_update_command, shell=True, env=None, capture_output=True
+            ),
+            mock.call(
+                expected_install_command, shell=True, env=None, capture_output=True
+            ),
+        ]
+    )

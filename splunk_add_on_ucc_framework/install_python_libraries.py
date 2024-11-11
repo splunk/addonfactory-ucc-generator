@@ -151,6 +151,7 @@ def install_python_libraries(
     os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
+    pip_custom_flag: Optional[str] = None,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -163,6 +164,7 @@ def install_python_libraries(
             installer=python_binary_name,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
+            pip_custom_flag=pip_custom_flag,
         )
         if includes_ui:
             _check_libraries_required_for_ui(
@@ -202,6 +204,7 @@ def install_libraries(
     installer: str,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
+    pip_custom_flag: Optional[str] = None,
 ) -> None:
     """
     Upgrades `pip` version to the latest one and installs requirements to the
@@ -222,13 +225,15 @@ def install_libraries(
         sys.exit(1)
 
     deps_resolver = "--use-deprecated=legacy-resolver " if pip_legacy_resolver else ""
+    custom_flag = pip_custom_flag if pip_custom_flag else ""
     pip_install_command = (
         f'-r "{requirements_file_path}" '
         f"--no-compile "
         f"--prefer-binary "
         f"--ignore-installed "
         f"{deps_resolver}"
-        f'--target "{installation_path}"'
+        f'--target "{installation_path}" '
+        f"{custom_flag}"
     )
     _pip_install(
         installer=installer, command=pip_update_command, command_desc="pip upgrade"
