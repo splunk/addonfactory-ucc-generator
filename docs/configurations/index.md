@@ -1,3 +1,5 @@
+# Configuration
+
 The `Configuration` tab can have multiple subtabs, for example, a tab for
 account configuration (to configure the account by adding account credentials),
 proxy configuration, and logging level configuration.

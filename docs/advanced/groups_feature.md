@@ -1,3 +1,5 @@
+# Groups Feature
+
 Using this functionality, the Inputs page form can be divided into distinct sections, each comprising relevant fields. If the `isExpandable` property is set to true in the global configuration file, the group will be in the [collapsible panel](https://splunkui.splunk.com/Packages/react-ui/CollapsiblePanel) type.
 
 The groups will be displayed at the bottom of the form.
