@@ -56,7 +56,7 @@ modular input which you, as a developer, can extend for your needs.
 
 Apart from standard files needed for the add-on, it also adds search head
 clustering files in the `default/server.conf` file and reload triggers in the
-`default/app.conf` file. Those files will be soon by generated automatically by the
+`default/app.conf` file. Those files will be soon generated automatically by the
 `ucc-gen build` command itself.
 during the add-on development.
 
