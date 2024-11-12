@@ -45,7 +45,7 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-is": "^16.13.1",
-    "react-router-dom": "^6.28.0",
+    "react-router-dom": "6.27.0",
     "styled-components": "^5.3.11",
     "uuid": "^11.0.2",
     "zod": "^3.23.8"
