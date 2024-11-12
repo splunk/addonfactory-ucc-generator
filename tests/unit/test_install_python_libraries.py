@@ -536,3 +536,32 @@ def test_install_libraries_pip_custom_flag(mock_subprocess_run):
             ),
         ]
     )
+
+
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries_multiple_pip_custom_flags(mock_subprocess_run):
+    mock_subprocess_run.return_value = MockSubprocessResult(0)
+
+    install_libraries(
+        "package/lib/requirements.txt",
+        "/path/to/output/addon_name/lib",
+        "python3",
+        pip_custom_flag="--report path/to/json.json --progress-bar on --require-hashes",
+    )
+
+    expected_install_command = (
+        'python3 -m pip install -r "package/lib/requirements.txt"'
+        " --no-compile --prefer-binary --ignore-installed "
+        '--target "/path/to/output/addon_name/lib" --report path/to/json.json --progress-bar on --require-hashes'
+    )
+    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    mock_subprocess_run.assert_has_calls(
+        [
+            mock.call(
+                expected_pip_update_command, shell=True, env=None, capture_output=True
+            ),
+            mock.call(
+                expected_install_command, shell=True, env=None, capture_output=True
+            ),
+        ]
+    )
