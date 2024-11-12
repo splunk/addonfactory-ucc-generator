@@ -1,5 +1,8 @@
 # `.uccignore` file
 
+!!! warning "Deprecation Notice"
+    This feature has been deprecated from UCC framework as of v5.53.0 as the feature is ambiguous. You can achieve the same functionality using [additional_packaging.py](./additional_packaging.md). The `cleanup_output_files` provides a feature to clean up files after the source code has been copied.
+
 This feature can be used to remove files from the output **after** the UCC template files were copied and **before** the source of the
 add-on recursively overrides the output folder.
 
@@ -30,5 +33,3 @@ If we want to remove all `.pyc` files just from the `3rdparty` directory, we nee
 If we want to remove only for one specific platform, we need to provide the exact path e.g. **`lib/3rdparty/windows/pycache.pyc`**.
 
 In case no file is found for the specified pattern, you will see an appropriate warning message.
-
-This feature has been deprecated from UCC framework as of v5.53.0 as the feature is ambiguous. You can achieve the same functionality using [additional_packaging.py](https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/). The `cleanup_output_files` provides a feature to clean up files after the source code has been copied.
