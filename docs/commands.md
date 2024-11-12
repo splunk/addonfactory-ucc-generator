@@ -28,7 +28,7 @@ It takes the following parameters:
     This option is in the experimental mode. The default is `False`.
 * `--pip-version` - [optional] pip version that is used to install python libraries. The default is `latest`.
 * `--pip-legacy-resolver` - [optional] Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver'
-    to pip install command. The default is`False`. 
+    to pip install command. The default is`False`.
     >**NOTE:** This flag is deprecated and will be removed from pip in the future.
     Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead.
 * `--ui-source-map` - [optional] if present generates front-end source maps (.js.map files), that helps with code debugging.
@@ -109,24 +109,3 @@ It accepts the following parameters:
 * `-o` / `--output` - [optional] output folder to store the packaged add-on.
     By default, it will be saved in the `current directory` folder.
     It accepts absolute paths as well.
-
-## `ucc-gen build`
-
-The `ucc-gen build`command has the following functions:
-
-* It cleans the output folder.
-* It retrieves the package ID of the add-on.
-* It copies the UCC template directory under the `output/<package_ID>` directory.
-* It copies the globalConfig.json or the globalConfig.yaml file to
-    the `output/<package_ID>/appserver/static/js/build` directory.
-* It collects and installs the add-on's requirements into the
-    `output/<package_ID>/lib` directory of add-on's package.
-* It replaces tokens in views.
-* It copies the add-on's `package/*` to the `output/<package_ID>/*` directory.
-* If an add-on requires some additional configurations in packaging,
-    then `ucc-gen` runs the code in the `additional_packaging.py` file as well.
-> **NOTE:** For the add-on's requirements, the packages are installed according to following information:
-    - `lib/requirements.txt` installs Python3 compatible packages into the `output/<package_ID>/lib`.
-    - It removes `setuptools*`, `bin*`, `pip*`, `distribute*`, and `wheel*` if they exist from `output/<package_ID>/lib`.
-    - It removes the execute bit from every file under `output/<package_ID>/lib`.
-> **NOTE:** The build won't be generated only when the add-on name in `meta[name]` of `globalConfig` and `info[id][name]` in `app.manifest` are not same.

@@ -11,16 +11,17 @@ To work with UCC framework, you can also use Splunk Extension. It helps you to c
 ## Libraries
 
 UCC-based add-ons are powered by the following Splunk libraries:
+
 * `solnlib`, see [https://github.com/splunk/addonfactory-solutions-library-python](https://github.com/splunk/addonfactory-solutions-library-python)
-* `splunktaucclib`, see [https://github.com/splunk/addonfactory-ucc-library](https://github.com/splunk/addonfactory-ucc-library). 
+* `splunktaucclib`, see [https://github.com/splunk/addonfactory-ucc-library](https://github.com/splunk/addonfactory-ucc-library).
 
 For more information, see [UCC-related libraries](ucc_related_libraries.md).
 
 > Note: Some specific Python libraries (such as `google-cloud-bigquery`) use `.so` files to operate. `pip` installs OS-specific versions of those `.so` files, which makes it impossible to use such add-ons on a Windows machine because it was built for macOS.
 
-## What UCC generates 
+## What UCC generates
 
-When you use UCC to create an add-on, the following elements are generated and stored in the appropriate folders: 
+When you use UCC to create an add-on, the following elements are generated and stored in the appropriate folders:
 
 * UI is stored in the `appserver` folder,
 * Python REST handlers that support UI CRUD operations are stored in the `bin` folder,
@@ -30,7 +31,7 @@ When you use UCC to create an add-on, the following elements are generated and s
 * Python requirements are installed in the `lib` folder,
 * metadata files are stored in the `metadata` folder,
 * the monitoring dashboard. For more information, see [Dashboard](dashboard.md),
-* the necessary files defined for the alert action, if you defined the alert action in the `globalConfig` file. For more information, see [Alert actions](alert_actions/index.md). 
+* the necessary files defined for the alert action, if you defined the alert action in the `globalConfig` file. For more information, see [Alert actions](alert_actions/index.md).
 
 You can extend your add-ons with the following files:
 
