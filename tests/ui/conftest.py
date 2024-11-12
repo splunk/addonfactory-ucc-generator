@@ -1,3 +1,5 @@
+from typing import Any, Iterator
+
 import pytest
 
 from tests.ui.pages.account_page import AccountPage
@@ -21,14 +23,14 @@ def add_delete_account(ucc_smartx_rest_helper):
     account.backend_conf.delete_all_stanzas()
 
 
-@pytest.hookimpl(hookwrapper=False)
-def pytest_runtest_call(item: pytest.Item) -> None:
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
     """
     Implemented hook to:
     - check browser logs for severe logs after each test run.
     """
 
-    item.runtest()
+    yield
 
     browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)
     severe_logs = [log for log in browser_logs if log.level == s_utils.LogLevel.SEVERE]
