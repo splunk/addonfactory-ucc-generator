@@ -9,7 +9,7 @@ import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
-import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { generateEndPointUrl, postRequest } from '../../util/api';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { getBuildDirPath } from '../../util/script';
 
@@ -863,15 +863,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             body.delete('name');
         }
 
-        axiosCallWrapper({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        postRequest<{ entry: [any] }>({
             endpointUrl: generateEndPointUrl(this.endpoint),
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: false,
         })
-            .then((response) => {
-                const val = response?.data?.entry[0];
+            .then((data) => {
+                const val = data?.entry[0];
                 if (this.props.mode !== MODE_CONFIG) {
                     const tmpObj: Record<string, Record<string, AcceptableFormValueOrNull>> = {};
 
@@ -1167,18 +1166,17 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
         const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
-        axiosCallWrapper({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        postRequest<{ entry: [{ content: any }] }>({
             endpointUrl: OAuthEndpoint,
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: false,
         })
-            .then((response) => {
-                if (response.data.entry[0].content.error === undefined) {
-                    const accessToken = response.data.entry[0].content.access_token;
-                    const instanceUrl = response.data.entry[0].content.instance_url;
-                    const refreshToken = response.data.entry[0].content.refresh_token;
+            .then((responseData) => {
+                if (responseData.entry[0].content.error === undefined) {
+                    const accessToken = responseData.entry[0].content.access_token;
+                    const instanceUrl = responseData.entry[0].content.instance_url;
+                    const refreshToken = responseData.entry[0].content.refresh_token;
                     // TODO refactor those variables
                     this.datadict.instance_url = instanceUrl;
                     this.datadict.refresh_token = refreshToken;
@@ -1186,7 +1184,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     this.isResponse = true;
                     return true;
                 }
-                this.setErrorMsg(response.data.entry[0].content.error);
+                this.setErrorMsg(responseData.entry[0].content.error);
                 this.isError = true;
                 this.isResponse = true;
                 return false;

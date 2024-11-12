@@ -7,9 +7,9 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
-import { filterResponse } from '../../util/util';
+import { filterResponse, FilterResponseParams } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { AcceptableFormValue, StandardPages } from '../../types/components/shareableTypes';
 
@@ -136,25 +136,19 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             endpointUrl: url,
             handleError: true,
             params: { count: -1 },
-        } satisfies AxiosCallType;
+        } satisfies RequestParams;
 
         if (dependencyValues) {
             backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
         }
 
         setLoading(true);
-        axiosCallWrapper(backendCallOptions)
-            .then((response) => {
+        getRequest<{ entry: FilterResponseParams }>(backendCallOptions)
+            .then((data) => {
                 if (current) {
                     setOptions(
                         generateOptions(
-                            filterResponse(
-                                response.data.entry,
-                                labelField,
-                                valueField,
-                                allowList,
-                                denyList
-                            )
+                            filterResponse(data.entry, labelField, valueField, allowList, denyList)
                         )
                     );
                     setLoading(false);

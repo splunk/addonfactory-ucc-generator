@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
-import { filterResponse } from '../../util/util';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
+import { filterResponse, FilterResponseParams } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 import { invariant } from '../../util/invariant';
 import { AcceptableFormValue } from '../../types/components/shareableTypes';
@@ -94,19 +94,19 @@ function MultiInputComponent(props: MultiInputComponentProps) {
             handleError: true,
             params: { count: -1 },
             endpointUrl: url,
-        } satisfies AxiosCallType;
+        } satisfies RequestParams;
         if (dependencyValues) {
             apiCallOptions.params = { ...apiCallOptions.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(apiCallOptions)
-                .then((response) => {
+            getRequest<{ entry: FilterResponseParams }>(apiCallOptions)
+                .then((data) => {
                     if (current) {
                         setOptions(
                             generateOptions(
                                 filterResponse(
-                                    response.data.entry,
+                                    data.entry,
                                     labelField,
                                     valueField,
                                     allowList,
@@ -114,10 +114,9 @@ function MultiInputComponent(props: MultiInputComponentProps) {
                                 )
                             )
                         );
-                        setLoading(false);
                     }
                 })
-                .catch(() => {
+                .finally(() => {
                     if (current) {
                         setLoading(false);
                     }

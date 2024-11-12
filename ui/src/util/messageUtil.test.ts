@@ -4,11 +4,7 @@ import messageDict from '../constants/messageDict';
 describe('parseErrorMsg', () => {
     it('should parse error message from error object', () => {
         const error = {
-            response: {
-                data: {
-                    messages: [{ text: 'Error message' }],
-                },
-            },
+            messages: [{ text: 'Error message' }],
         };
         const result = parseErrorMsg(error);
         expect(result).toBe('Error message');
@@ -28,15 +24,11 @@ describe('parseErrorMsg', () => {
 
     it('should parse REST error with JSON message', () => {
         const error = {
-            response: {
-                data: {
-                    messages: [
-                        {
-                            text: 'Unexpected error "<class \'splunktaucclib.rest_handler.error.RestError\'>" from python handler: "REST Error [404]: Not Found -- HTTP 404 Not Found -- b\'{"messages":[{"type":"ERROR","text":"Not Found"}]}\'". See splunkd.log/python.log for more details.',
-                        },
-                    ],
+            messages: [
+                {
+                    text: 'Unexpected error "<class \'splunktaucclib.rest_handler.error.RestError\'>" from python handler: "REST Error [404]: Not Found -- HTTP 404 Not Found -- b\'{"messages":[{"type":"ERROR","text":"Not Found"}]}\'". See splunkd.log/python.log for more details.',
                 },
-            },
+            ],
         };
         const result = parseErrorMsg(error);
         expect(result).toBe('Not Found');
@@ -44,15 +36,11 @@ describe('parseErrorMsg', () => {
 
     it('should return original message if REST error message is not valid JSON', () => {
         const error = {
-            response: {
-                data: {
-                    messages: [
-                        {
-                            text: 'Unexpected error "<class \'splunktaucclib.rest_handler.error.RestError\'>" from python handler: "REST Error [404]: Not Found -- HTTP 404 Not Found -- b\'Invalid JSON\'". See splunkd.log/python.log for more details.',
-                        },
-                    ],
+            messages: [
+                {
+                    text: 'Unexpected error "<class \'splunktaucclib.rest_handler.error.RestError\'>" from python handler: "REST Error [404]: Not Found -- HTTP 404 Not Found -- b\'Invalid JSON\'". See splunkd.log/python.log for more details.',
                 },
-            },
+            ],
         };
         const result = parseErrorMsg(error);
         expect(result).toBe(`b'Invalid JSON'`);
@@ -60,15 +48,11 @@ describe('parseErrorMsg', () => {
 
     it('should return original message if REST error message does not contain expected structure', () => {
         const error = {
-            response: {
-                data: {
-                    messages: [
-                        {
-                            text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [404]: Not Found -- HTTP 404 Not Found -- b'{"invalid":"structure"}'". See splunkd.log/python.log for more details.`,
-                        },
-                    ],
+            messages: [
+                {
+                    text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [404]: Not Found -- HTTP 404 Not Found -- b'{"invalid":"structure"}'". See splunkd.log/python.log for more details.`,
                 },
-            },
+            ],
         };
         const result = parseErrorMsg(error);
         expect(result).toBe(`b'{"invalid":"structure"}'`);
