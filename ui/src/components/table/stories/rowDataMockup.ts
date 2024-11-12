@@ -407,4 +407,7 @@ export const ServerHandlers = [
     http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_account`, () =>
         HttpResponse.json(MockRowData)
     ),
+    http.get('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one', () =>
+        HttpResponse.json(MockRowData)
+    ),
 ];

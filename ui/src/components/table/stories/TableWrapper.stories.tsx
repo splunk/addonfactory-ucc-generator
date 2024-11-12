@@ -5,7 +5,7 @@ import { fn } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
-import { getSimpleConfig } from './configMockups';
+import { getSimpleConfig, getSimpleConfigStylePage } from './configMockups';
 import { TableContextProvider } from '../../../context/TableContext';
 import { ServerHandlers } from './rowDataMockup';
 
@@ -36,6 +36,22 @@ export const OuathBasic: Story = {
         handleOpenPageStyleDialog: fn(),
         displayActionBtnAllRows: false,
         config: getSimpleConfig() as GlobalConfig,
+    },
+    parameters: {
+        msw: {
+            handlers: ServerHandlers,
+        },
+    },
+};
+
+export const SimpleTableStylePage: Story = {
+    args: {
+        page: 'inputs',
+        serviceName: 'example_input_one',
+        handleRequestModalOpen: fn(),
+        handleOpenPageStyleDialog: fn(),
+        displayActionBtnAllRows: false,
+        config: getSimpleConfigStylePage() as GlobalConfig,
     },
     parameters: {
         msw: {

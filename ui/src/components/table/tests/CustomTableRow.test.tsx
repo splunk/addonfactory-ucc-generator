@@ -9,7 +9,7 @@ import { server } from '../../../mocks/server';
 import { setUnifiedConfig } from '../../../util/util';
 import { MockRowData } from '../stories/rowDataMockup';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
-import { SIMPLE_NAME_TABLE_MOCK_DATA } from '../stories/configMockups';
+import { getSimpleConfigStylePage } from '../stories/configMockups';
 
 const handleRequestModalOpen = jest.fn();
 const handleOpenPageStyleDialog = jest.fn();
@@ -29,7 +29,7 @@ beforeEach(() => {
         )
     );
 
-    setUnifiedConfig(SIMPLE_NAME_TABLE_MOCK_DATA);
+    setUnifiedConfig(getSimpleConfigStylePage());
 
     render(
         <TableContextProvider>
@@ -38,7 +38,6 @@ beforeEach(() => {
         { wrapper: BrowserRouter }
     );
 });
-
 
 it('Render action icons correctly', async () => {
     await screen.findByRole('table');
@@ -54,4 +53,37 @@ it('Render action icons correctly', async () => {
 
     const allSearchButtons = document.querySelectorAll('.searchBtn');
     expect(allSearchButtons.length).toEqual(9);
+});
+
+it('Correctly call action handlers for page dialog', async () => {
+    await screen.findByRole('table');
+
+    const editButton = document.querySelector('.editBtn'); // Clicking edit
+    expect(editButton).toBeInTheDocument();
+
+    await userEvent.click(editButton!);
+
+    expect(handleOpenPageStyleDialog).toHaveBeenCalledWith(expect.objectContaining({}), 'edit');
+
+    const cloneBtn = document.querySelector('.cloneBtn'); // Clicking clone
+    expect(cloneBtn).toBeInTheDocument();
+
+    await userEvent.click(cloneBtn!);
+
+    expect(handleOpenPageStyleDialog).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({}),
+        'clone'
+    );
+});
+
+it('Correctly render modal for actions click', async () => {
+    await screen.findByRole('table');
+
+    const deleteBtn = document.querySelector('.deleteBtn'); // Clicking delete renders modal
+    expect(deleteBtn).toBeInTheDocument();
+
+    await userEvent.click(deleteBtn!);
+
+    await screen.findByText('Delete Confirmation');
 });
