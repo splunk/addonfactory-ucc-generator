@@ -1,3 +1,5 @@
+# Configuration
+
 The `Configuration` tab can have multiple subtabs, for example, a tab for
 account configuration (to configure the account by adding account credentials),
 proxy configuration, and logging level configuration.
@@ -28,6 +30,7 @@ proxy configuration, and logging level configuration.
 | [restHandlerModule](../advanced/custom_rest_handler.md)               | string | It specify name of the REST handler script that implements the custom actions to be performed on CRUD operations for the given input. (Use with restHandlerClass)                                                                                                                   |
 | [restHandlerClass](../advanced/custom_rest_handler.md)                | string | It specify name of the class present in the restHandlerModule, which implements methods like handleCreate, handleEdit, handleList, handleDelete and is child class of splunktaucclib.rest_handler.admin_external.AdminExternalHandler. (Use with restHandlerModule)                 |
 | customTab                                                             | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab.md) feature.                                                                                                                                                                                 |
+| hideForPlatform                                                       | string | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`.                                                                                                                                        |
 
 ### Tab components
 

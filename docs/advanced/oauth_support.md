@@ -1,3 +1,5 @@
+# OAuth Support
+
 UCC allows you to add Auth support in the configuration page. In UCC, OAuth2.0 of the Authorization Code Flow `grant` type is used. It only supports the standard parameters specified in [RFCP749](https://www.rfc-editor.org/rfc/rfc6749) for obtaining an authorization code.
 
 Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list and specify the `options` next to the `type: "oauth"`.
@@ -36,13 +38,15 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `encrypted` should be true if the user wants that particular field encrypted, otherwise, there is no need to have this parameter.
         - `required` specifies whether the field is required or not. The default value is true.
         - `defaultValue` is the initial input value (string, number, or boolean).
+        - `validators` array that is used to validate the values of fields using various [validators](../entity/validators.md). It is strongly advised to specify validators for every entity.
         - `options`:
             + `placeholder`: (RENOUNCED) The placeholder for the field.
             + `disableonEdit`: When the form is in edit mode, the field becomes unable to be edited. The default value is false.
             + `enable`: The enable property sets whether a field is enabled or not. The default value is true.
 
-> [!WARNING]
-> The [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced. Instead, we recommend to use the "help" attribute.
+!!! warning "Placeholder deprecation"
+
+    The [Placeholder](https://splunkui.splunkeng.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced. Instead, we recommend to use the "help" attribute.
 
 ### Usage
 

@@ -1,3 +1,5 @@
+# Custom Tab
+
 Custom Tab feature can be used to render any customized UI component in the Configuration tabs. With this feature, you can design and render any complex input with ease. This is an advanced feature and can be leveraged with limitless functionalities. Modern add-ons are receiving complex use cases and this feature will allow you to design the UI perfectly for your case without having to depend on newer releases of UCC for support.
 
 ### Properties

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
+import { userEvent, within } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import ConfigurationPage from '../ConfigurationPage';
@@ -42,3 +43,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ConfigurationPageView: Story = {};
+
+export const ConfigurationViewAdd: Story = {
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await userEvent.click(closeBtn);
+        }
+        const addButton = await canvas.findByRole('button', { name: 'Add' });
+        await userEvent.click(addButton);
+    },
+};

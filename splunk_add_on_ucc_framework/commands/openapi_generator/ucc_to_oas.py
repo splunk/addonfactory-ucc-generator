@@ -106,6 +106,29 @@ def __get_schema_object(
         ):
             continue
         if schema_object.properties is not None:
+            if entity.field == "oauth":
+                # check for oauth as basic authentication is also mentioned in oauth
+                if "basic" in entity.options.auth_type:
+                    for fields in entity.options.basic:
+                        schema_object.properties[fields.field] = {"type": "string"}
+                        if hasattr(fields, "encrypted") and (fields.encrypted is True):
+                            schema_object.properties[fields.field][
+                                "format"
+                            ] = "password"
+                if "oauth" in entity.options.auth_type:
+                    for fields in entity.options.oauth:
+                        schema_object.properties[fields.field] = {"type": "string"}
+                        if hasattr(fields, "encrypted") and (fields.encrypted is True):
+                            schema_object.properties[fields.field][
+                                "format"
+                            ] = "password"
+                if len(entity.options.auth_type) == 2:
+                    # As per documentation we can have 2 types of authentication defined in `auth_type`
+                    schema_object.properties["auth_type"] = {
+                        "type": "string",
+                        "enum": ["basic", "oauth"],
+                    }
+                continue
             schema_object.properties[entity.field] = {"type": "string"}
             if hasattr(entity, "options") and hasattr(
                 entity.options, "autoCompleteFields"
@@ -212,7 +235,11 @@ def __get_media_type_object_with_schema_ref(
     return oas.MediaTypeObject(schema=schema)
 
 
-def __get_path_get(*, name: str, description: str) -> oas.OperationObject:
+def __get_path_get(
+    *,
+    name: str,
+    description: str,
+) -> oas.OperationObject:
     return oas.OperationObject(
         description=description,
         responses={

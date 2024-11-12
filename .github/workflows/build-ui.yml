@@ -1,27 +1,18 @@
 name: "Build UI"
 on:
   workflow_call:
-    inputs:
-      node-version:
-        required: true
-        type: string
 
 jobs:
   build-ui:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: ui
         shell: bash
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node-version }}
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
-        with:
-          node-version: ${{ inputs.node-version }}
       - name: Code linting
         run: yarn run lint
       - name: Unit test

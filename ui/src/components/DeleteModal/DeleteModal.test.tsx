@@ -51,13 +51,35 @@ it('close model and callback after cancel click', async () => {
 
 it('correct delete request', async () => {
     server.use(
-        http.delete(
-            '/servicesNS/nobody/-/mockGeneratedEndPointUrl',
-            () => new HttpResponse(undefined, { status: 201 })
+        http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
+            HttpResponse.json({}, { status: 201 })
         )
     );
     const deleteButton = screen.getByRole('button', { name: /delete/i });
     await userEvent.click(deleteButton);
 
     expect(handleClose).toHaveBeenCalled();
+});
+
+it('failed delete request', async () => {
+    const errorMessage = 'Oopsy doopsy';
+    server.use(
+        http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
+            HttpResponse.json(
+                {
+                    messages: [
+                        {
+                            text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
+                        },
+                    ],
+                },
+                { status: 500 }
+            )
+        )
+    );
+    const deleteButton = screen.getByRole('button', { name: /delete/i });
+    await userEvent.click(deleteButton);
+
+    expect(handleClose).not.toHaveBeenCalled();
+    expect(screen.getByText(errorMessage)).toBeInTheDocument();
 });

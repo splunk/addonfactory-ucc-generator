@@ -13,6 +13,7 @@ import {
     TableSchema,
 } from '../../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
+import { PageContextProvider } from '../../context/PageContext';
 
 jest.mock('../../util/util');
 
@@ -35,9 +36,11 @@ function setup(inputs: z.infer<typeof pages.shape.inputs>) {
         },
     }));
     render(
-        <AnimationToggleProvider enabled={false}>
-            <MenuInput handleRequestOpen={mockHandleRequestOpen} />
-        </AnimationToggleProvider>
+        <PageContextProvider platform={undefined}>
+            <AnimationToggleProvider enabled={false}>
+                <MenuInput handleRequestOpen={mockHandleRequestOpen} />
+            </AnimationToggleProvider>
+        </PageContextProvider>
     );
     return { mockHandleRequestOpen };
 }

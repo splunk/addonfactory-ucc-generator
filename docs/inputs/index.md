@@ -2,6 +2,8 @@
 title: Inputs
 ---
 
+# Inputs
+
 The input page stores configuration information for data collection. Multiple inputs can be created on the Inputs page.
 
 Developers are required to add services in the global config file to create a new Input. If multiple services are
@@ -10,7 +12,7 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 ### Properties
 
 | Property                                                                  | Type   | Description                                                                                                                                                                                                                                                                                                                                          |
-|---------------------------------------------------------------------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | title<span class="required-asterisk">\*</span>                            | string | -                                                                                                                                                                                                                                                                                                                                                    |
 | description                                                               | string | It provides a brief summary of an inputs page.                                                                                                                                                                                                                                                                                                       |
 | [subDescription](../advanced/sub_description.md)                          | object | It provides broader description of an inputs page.                                                                                                                                                                                                                                                                                                   |
@@ -24,7 +26,7 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 ### Services Properties
 
 | Property                                                              | Type   | Description                                                                                                                                                                                                                                                                         |
-|-----------------------------------------------------------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | name<span class="required-asterisk">\*</span>                         | string | It defines the particular service name.                                                                                                                                                                                                                                             |
 | title<span class="required-asterisk">\*</span>                        | string | It shows the title of the service.                                                                                                                                                                                                                                                  |
 | subTitle                                                              | string | It shows the subtitle (or additional information) of the service.                                                                                                                                                                                                                   |
@@ -39,6 +41,7 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 | restHandlerName                                                       | string | It specify name of the REST handler script, that provides fields, models and validators for the fields supported under the specified input and any specific actions to be performed on CRUD operations for the given input. (Do NOT use with restHandlerModule or restHandlerClass) |
 | [restHandlerModule](../advanced/custom_rest_handler.md)               | string | It specify name of the REST handler script that implements the custom actions to be performed on CRUD operations for the given input. (Use with restHandlerClass)                                                                                                                   |
 | [restHandlerClass](../advanced/custom_rest_handler.md)                | string | It specify name of the class present in the restHandlerModule, which implements methods like handleCreate, handleEdit, handleList, handleDelete and is child class of splunktaucclib.rest_handler.admin_external.AdminExternalHandler. (Use with restHandlerModule)                 |
+| hideForPlatform                                                       | string | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`.                                                                                                                                        |
 
 ### Usage
 
@@ -52,4 +55,4 @@ This is how the global configuration looks like without tabs
 
 ### Output
 
-<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></ifame>
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></iframe>

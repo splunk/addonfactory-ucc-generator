@@ -1,3 +1,41 @@
+# [5.52.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.1...v5.52.0) (2024-10-30)
+
+
+### Bug Fixes
+
+* generate basic authentication fields for OpenAPI integration ([#1407](https://github.com/splunk/addonfactory-ucc-generator/issues/1407)) ([584b832](https://github.com/splunk/addonfactory-ucc-generator/commit/584b83255e73b42870a9c1ad7c2e15764b7b65eb))
+* remove support for the "enable" action in table inputs ([#1386](https://github.com/splunk/addonfactory-ucc-generator/issues/1386)) ([26a4bb9](https://github.com/splunk/addonfactory-ucc-generator/commit/26a4bb90ccea63233e2fcc263ec23ad9f4649853))
+
+
+### Features
+
+* print warning when entity does not have validators ([#1409](https://github.com/splunk/addonfactory-ucc-generator/issues/1409)) ([ad12cea](https://github.com/splunk/addonfactory-ucc-generator/commit/ad12cea6e62b6796553f2f570b8cfc501601362f))
+* require splunktaucclib 6.4.0 during the build phase ([#1412](https://github.com/splunk/addonfactory-ucc-generator/issues/1412)) ([0d20269](https://github.com/splunk/addonfactory-ucc-generator/commit/0d20269238c76ce77a011f1875dcfc14087efe06))
+
+## [5.51.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.0...v5.51.1) (2024-10-22)
+
+
+### Bug Fixes
+
+* **CustomControl:** change order of function parameters ([#1392](https://github.com/splunk/addonfactory-ucc-generator/issues/1392)) ([c3e82f9](https://github.com/splunk/addonfactory-ucc-generator/commit/c3e82f9bf410ff7d0b13d36de6bd6c2486e2d3ac))
+
+# [5.51.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.1...v5.51.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* follow SemVer guidelines for version in globalConfig ([#1351](https://github.com/splunk/addonfactory-ucc-generator/issues/1351)) ([199c05e](https://github.com/splunk/addonfactory-ucc-generator/commit/199c05e5566556dc7690a8b436c8d3ce68306ccd))
+
+
+### Features
+
+* allow validators for oauth fields ([#1355](https://github.com/splunk/addonfactory-ucc-generator/issues/1355)) ([ef3b6a9](https://github.com/splunk/addonfactory-ucc-generator/commit/ef3b6a9b89c7be676821cd7a772b9dec1394d7b0))
+* hide elements for cloud or enterprise ([#1364](https://github.com/splunk/addonfactory-ucc-generator/issues/1364)) ([21aa28f](https://github.com/splunk/addonfactory-ucc-generator/commit/21aa28f7ea290fe14dc8617b4e2b757905f0d420))
+* modal implementation for data ingestion table ([#1244](https://github.com/splunk/addonfactory-ucc-generator/issues/1244)) ([8246870](https://github.com/splunk/addonfactory-ucc-generator/commit/8246870a5199b2f814bdb94d590c26ef9f351fa1))
+* server side validation of name field based on globalConfig ([#1362](https://github.com/splunk/addonfactory-ucc-generator/issues/1362)) ([4e43c27](https://github.com/splunk/addonfactory-ucc-generator/commit/4e43c27c9f98bd07e5179e9cfd8c46988fef278a))
+* support CRON as interval ([#1346](https://github.com/splunk/addonfactory-ucc-generator/issues/1346)) ([8c5a981](https://github.com/splunk/addonfactory-ucc-generator/commit/8c5a9817753e02103ec04d1267781d7030ace7ac))
+
+
 ## [5.50.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.0...v5.50.1) (2024-10-04)
 
 

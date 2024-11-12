@@ -52,6 +52,51 @@
             },
             {
               "type": "singleSelect",
+              "field": "select1",
+              "label": "Select 1",
+              "help": "Default value is Numeric 1",
+              "defaultValue": 1,
+              "options": {
+                "autoCompleteFields": [
+                  {
+                    "value": 1,
+                    "label": "Numeric 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "singleSelect",
+              "field": "select2",
+              "label": "Select 2",
+              "help": "Default value is Numeric 3",
+              "defaultValue": 1,
+              "options": {
+                "autoCompleteFields": [
+                  {
+                    "value": 3,
+                    "label": "Numeric 3"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "multipleSelect",
+              "field": "multipleselect1",
+              "label": "MultiSelect 1",
+              "help": "Default value is Numeric 1",
+              "defaultValue": "1",
+              "options": {
+                "items": [
+                  {
+                    "value": 1,
+                    "label": "Numeric 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "singleSelect",
               "label": "Account to use",
               "options": {
                 "autoCompleteFields": [
@@ -400,9 +445,7 @@
       "title": "Inputs",
       "description": "Manage your data inputs",
       "table": {
-        "actions": [
-          "edit", "enable", "delete","search", "clone"
-        ],
+        "actions": ["edit", "delete", "search", "clone"],
         "header": [
           {
             "label": "Name",

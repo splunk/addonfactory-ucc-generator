@@ -58,7 +58,32 @@
                                         "oauth_state_enabled": {
                                                 "type": "string"
                                         },
-                                        "oauth": {
+                                        "auth_type": {
+                                                "type": "string",
+                                                "enum": [
+                                                        "basic",
+                                                        "oauth"
+                                                ]
+                                        },
+                                        "username": {
+                                                "type": "string"
+                                        },
+                                        "password": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "token": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "client_id": {
+                                                "type": "string"
+                                        },
+                                        "client_secret": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "redirect_url": {
                                                 "type": "string"
                                         },
                                         "textarea_field": {
@@ -96,7 +121,32 @@
                                         "oauth_state_enabled": {
                                                 "type": "string"
                                         },
-                                        "oauth": {
+                                        "auth_type": {
+                                                "type": "string",
+                                                "enum": [
+                                                        "basic",
+                                                        "oauth"
+                                                ]
+                                        },
+                                        "username": {
+                                                "type": "string"
+                                        },
+                                        "password": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "token": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "client_id": {
+                                                "type": "string"
+                                        },
+                                        "client_secret": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "redirect_url": {
                                                 "type": "string"
                                         },
                                         "textarea_field": {

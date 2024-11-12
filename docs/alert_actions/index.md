@@ -2,6 +2,8 @@
 title: Alert Actions
 ---
 
+# Alert Actions
+
 The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.
 An add-on can have multiple alert actions based on the use cases the add-on provides. You can know more about alert actions from [this documentation](https://docs.splunk.com/Documentation/Splunk/latest/Alert/Aboutalerts).
 

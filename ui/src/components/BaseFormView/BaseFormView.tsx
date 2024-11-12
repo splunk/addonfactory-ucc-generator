@@ -9,7 +9,7 @@ import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { getBuildDirPath } from '../../util/script';
 
@@ -50,6 +50,8 @@ import {
     getModifiedState,
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { PageContextProviderType } from '../../context/PageContext';
+import { shouldHideForPlatform } from '../../util/pageContext';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -62,6 +64,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
     context!: React.ContextType<typeof TableContext>;
+
+    pageContext?: PageContextProviderType;
 
     flag: boolean;
 
@@ -138,8 +142,11 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
-                ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
-                : `${this.props.serviceName}`;
+                ? `${encodeURIComponent(this.props.serviceName)}/${encodeURIComponent(
+                      this.props.stanzaName
+                  )}`
+                : `${encodeURIComponent(this.props.serviceName)}`;
+        this.pageContext = props.pageContext;
 
         this.util = {
             setState: (callback) => {
@@ -382,6 +389,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
@@ -393,6 +407,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         if (e.field === 'name') {
@@ -404,8 +426,17 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     } else if (props.mode === MODE_CLONE) {
                         tempEntity.value =
                             e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
+
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
@@ -419,6 +450,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         if (e.field === 'name') {
@@ -825,7 +864,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         }
 
         axiosCallWrapper({
-            serviceName: this.endpoint,
+            endpointUrl: generateEndPointUrl(this.endpoint),
             body,
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',
@@ -1080,7 +1119,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
      * using rest call once oauth code received from child window
      */
     // eslint-disable-next-line consistent-return
-    handleOauthToken = (message: { code: string; error: unknown; state: unknown }) => {
+    handleOauthToken = (message: { code: string; error: unknown; state?: string }) => {
         // Check message for error. If error show error message.
         if (!message || (message && message.error) || message.code === undefined) {
             this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
@@ -1097,12 +1136,16 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             return false;
         }
 
+        const baseUrl = new URL(
+            `https://${this.datadict.endpoint || this.datadict.endpoint_token}`
+        );
+        baseUrl.pathname = this.oauthConf?.accessTokenEndpoint || '';
+        const url = baseUrl.toString();
+
         const code = decodeURIComponent(message.code);
         const data: Record<string, AcceptableFormValueOrNullish> = {
             method: 'POST',
-            url: `https://${this.datadict.endpoint || this.datadict.endpoint_token}${
-                this.oauthConf?.accessTokenEndpoint
-            }`,
+            url,
             grant_type: 'authorization_code',
             client_id: this.datadict.client_id,
             client_secret: this.datadict.client_secret,
@@ -1122,7 +1165,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
 
-        const OAuthEndpoint = `${this.appName}_oauth/oauth`;
+        const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
         axiosCallWrapper({
             endpointUrl: OAuthEndpoint,

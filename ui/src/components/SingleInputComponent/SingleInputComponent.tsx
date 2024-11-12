@@ -3,12 +3,11 @@ import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
 import Clear from '@splunk/react-icons/enterprise/Clear';
-import axios from 'axios';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
@@ -114,56 +113,57 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             return;
         }
 
+        const url = referenceName
+            ? generateEndPointUrl(encodeURIComponent(referenceName))
+            : endpointUrl;
+
+        if ((dependencies && !dependencyValues) || !url) {
+            setOptions([]);
+            return;
+        }
+
         let current = true;
-        const source = axios.CancelToken.source();
+        const abortController = new AbortController();
 
         const backendCallOptions = {
-            serviceName: '',
-            endpointUrl: '',
-            cancelToken: source.token,
+            signal: abortController.signal,
+            endpointUrl: url,
             handleError: true,
             params: { count: -1 },
-        };
-        if (referenceName) {
-            backendCallOptions.serviceName = referenceName;
-        } else if (endpointUrl) {
-            backendCallOptions.endpointUrl = endpointUrl;
-        }
+        } satisfies AxiosCallType;
 
         if (dependencyValues) {
             backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
         }
-        if (!dependencies || dependencyValues) {
-            setLoading(true);
-            axiosCallWrapper(backendCallOptions)
-                .then((response) => {
-                    if (current) {
-                        setOptions(
-                            generateOptions(
-                                filterResponse(
-                                    response.data.entry,
-                                    labelField,
-                                    valueField,
-                                    allowList,
-                                    denyList
-                                )
+
+        setLoading(true);
+        axiosCallWrapper(backendCallOptions)
+            .then((response) => {
+                if (current) {
+                    setOptions(
+                        generateOptions(
+                            filterResponse(
+                                response.data.entry,
+                                labelField,
+                                valueField,
+                                allowList,
+                                denyList
                             )
-                        );
-                        setLoading(false);
-                    }
-                })
-                .catch(() => {
-                    if (current) {
-                        setLoading(false);
-                    }
-                    setOptions([]);
-                });
-        } else {
-            setOptions([]);
-        }
+                        )
+                    );
+                    setLoading(false);
+                }
+            })
+            .catch(() => {
+                if (current) {
+                    setLoading(false);
+                }
+                setOptions([]);
+            });
+
         // eslint-disable-next-line consistent-return
         return () => {
-            source.cancel('Operation canceled.');
+            abortController.abort('Operation canceled.');
             current = false;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -174,11 +174,15 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     // hideClearBtn=true only passed for OAuth else its undefined
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
     const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
-
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                value={props.value}
+                value={
+                    // if value is empty use empty string as ComboBox accepts only string
+                    props.value === null || typeof props.value === 'undefined'
+                        ? ''
+                        : props.value.toString()
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
@@ -195,7 +199,10 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                value={props.value}
+                value={
+                    // if value is empty use empty string as Select accepts only string
+                    props.value === null || typeof props.value === 'undefined' ? '' : props.value
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}

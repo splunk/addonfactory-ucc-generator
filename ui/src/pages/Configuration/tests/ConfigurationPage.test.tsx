@@ -3,20 +3,21 @@ import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { http, HttpResponse } from 'msw';
-import ConfigurationPage from './ConfigurationPage';
-import { getUnifiedConfigs } from '../../util/util';
-import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
-import { type meta as metaType } from '../../types/globalConfig/meta';
-import { mockServerResponseWithContent } from '../../mocks/server-response';
-import { server } from '../../mocks/server';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { server } from '../../../mocks/server';
+import { mockServerResponseWithContent } from '../../../mocks/server-response';
+import { getUnifiedConfigs } from '../../../util/util';
+import ConfigurationPage from '../ConfigurationPage';
+import { type meta as metaType } from '../../../types/globalConfig/meta';
+import { consoleError } from '../../../../jest.setup';
 
-jest.mock('../../util/util');
+jest.mock('../../../util/util');
 
 const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
 
 beforeEach(() => {
     server.use(
-        http.get(`/servicesNS/nobody/-/:endpointUrl`, () =>
+        http.get(`/servicesNS/nobody/-/:endpointUrl/:serviceName`, () =>
             HttpResponse.json(mockServerResponseWithContent)
         )
     );
@@ -63,4 +64,30 @@ it('should show UCC version', async () => {
 
     const uccVersion = await page.findByTestId('ucc-credit');
     expect(uccVersion).toHaveTextContent(expectedUccVersion);
+});
+
+it('should display error when server returns error', async () => {
+    consoleError.mockImplementation(() => {});
+    const errorMessage = 'Oopsie doopsie';
+    server.use(
+        http.get(`/servicesNS/nobody/-/:endpointUrl`, () =>
+            HttpResponse.json(
+                {
+                    messages: [
+                        {
+                            text: errorMessage,
+                        },
+                    ],
+                },
+                { status: 500 }
+            )
+        )
+    );
+
+    const page = setup({
+        _uccVersion: undefined,
+    });
+
+    const errorText = await page.findByText(errorMessage);
+    expect(errorText).toBeInTheDocument();
 });

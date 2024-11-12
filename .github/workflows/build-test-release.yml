@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
@@ -26,7 +26,7 @@ jobs:
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -54,7 +54,7 @@ jobs:
       failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -68,20 +68,14 @@ jobs:
       SEMGREP_KEY: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
   compliance-copyrights:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: apache/skywalking-eyes@v0.6.0
 
   build-ui:
     name: Build UCC UI
-    strategy:
-      matrix:
-        node-version:
-          - "20"
     uses: ./.github/workflows/build-ui.yml
-    with:
-      node-version: ${{ matrix.node-version }}
 
   storybook-screenshots:
     name: Update storybook screenshots
@@ -89,8 +83,6 @@ jobs:
       contents: write
     secrets: inherit
     uses: ./.github/workflows/storybook-visual.yml
-    with:
-      node-version: "20"
   bot-updates:
     name: Generates Documentation
     permissions:
@@ -104,7 +96,7 @@ jobs:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -133,7 +125,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -166,7 +158,7 @@ jobs:
     name: test-smoke ${{ matrix.python-version }}
     needs:
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -202,7 +194,7 @@ jobs:
       failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - build-ui
     steps:
@@ -234,7 +226,7 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       contents: read
@@ -293,7 +285,7 @@ jobs:
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -323,6 +315,40 @@ jobs:
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
+  appinspect-api:
+    name: appinspect api ${{ matrix.tags }}
+    needs: build-test-addon
+    if: |
+      !cancelled() &&
+      needs.build-test-addon.result == 'success' &&
+      ( github.base_ref == 'main' || github.ref_name == 'main' )
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tags:
+          - "cloud"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Splunk_TA_UCCExample-packaged
+          path: build/package
+      - name: Copy .appinspect_api.expect.yaml to Working Directory
+        run: |
+            cp tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect_api.expect.yaml ./.appinspect_api.expect.yaml
+      - uses: splunk/appinspect-api-action@v3.0
+        with:
+          username: ${{secrets.SPL_COM_USER}}
+          password: ${{secrets.SPL_COM_PASSWORD}}
+          app_path: build/package
+          included_tags: ${{ matrix.tags }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appinspect-api-html-report-${{ matrix.tags }}
+          path: AppInspect_response.html
+
   all-checks:
     if: ${{ !cancelled() }}
     needs:
@@ -332,7 +358,7 @@ jobs:
       - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
@@ -365,7 +391,7 @@ jobs:
       - semgrep
       - pre-commit
       - all-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: "! github.event.pull_request.head.repo.fork "
     steps:
       - uses: actions/checkout@v4
@@ -407,7 +433,7 @@ jobs:
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - meta
       - build-test-addon

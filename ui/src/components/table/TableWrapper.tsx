@@ -3,7 +3,7 @@ import update from 'immutability-helper';
 import axios from 'axios';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
@@ -143,7 +143,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             const requests =
                 services?.map((service) =>
                     axiosCallWrapper({
-                        serviceName: service.name,
+                        endpointUrl: generateEndPointUrl(encodeURIComponent(service.name)),
                         params: { count: -1 },
                         signal: abortController.signal,
                     })
@@ -204,7 +204,9 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         const body = new URLSearchParams();
         body.append('disabled', String(!row.disabled));
         axiosCallWrapper({
-            serviceName: `${row.serviceName}/${row.name}`,
+            endpointUrl: generateEndPointUrl(
+                `${encodeURIComponent(row.serviceName)}/${encodeURIComponent(row.name)}`
+            ),
             body,
             customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
             method: 'post',

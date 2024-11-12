@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "AlertEntity": {
+    "AlertSingleSelectSplunkSearchEntity": {
       "type": "object",
       "description": "Alerts configuration. The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.",
       "properties": {
@@ -16,16 +16,9 @@
           "description": "The text that would be shown in the alert action UI."
         },
         "type": {
+          "const": "singleSelectSplunkSearch",
           "type": "string",
-          "enum": [
-            "text",
-            "textarea",
-            "checkbox",
-            "singleSelect",
-            "radio",
-            "singleSelectSplunkSearch"
-          ],
-          "description": "The type of the user input in the alert. Available choices: “text”, “checkbox”, “singleSelect”, “radio”, “singleSelectSplunkSearch”."
+          "description": "Exactly: singleSelectSplunkSearch"
         },
         "help": {
           "type": "string",
@@ -84,7 +77,226 @@
       "required": [
         "field",
         "label",
+        "type",
+        "search",
+        "valueField",
+        "labelField"
+      ],
+      "additionalProperties": false
+    },
+    "AlertTextEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "text",
+          "type": "string",
+          "description": "Exactly: text"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
         "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertTextareaEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "textarea",
+          "type": "string",
+          "description": "Exactly: textarea"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertCheckboxEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "checkbox",
+          "type": "string",
+          "description": "Exactly: checkbox"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertSingleSelectEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "singleSelect",
+          "type": "string",
+          "description": "Exactly: singleSelect"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "options": {
+          "type": "object",
+          "description": "Static choices that a user can select in the alert action UI.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "An array of options with a label and a value.",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "AlertRadioEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "radio",
+          "type": "string",
+          "description": "Exactly: radio"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "options": {
+          "type": "object",
+          "description": "Static choices that a user can select in the alert action UI.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "An array of options with a label and a value.",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
       ],
       "additionalProperties": false
     },
@@ -182,22 +394,22 @@
           "items": {
             "anyOf": [
               {
-                "$ref": "#/definitions/TextEntity"
+                "$ref": "#/definitions/AlertTextEntity"
               },
               {
-                "$ref": "#/definitions/TextareaEntity"
+                "$ref": "#/definitions/AlertTextareaEntity"
               },
               {
-                "$ref": "#/definitions/SingleSelectEntity"
+                "$ref": "#/definitions/AlertCheckboxEntity"
               },
               {
-                "$ref": "#/definitions/CheckboxEntity"
+                "$ref": "#/definitions/AlertSingleSelectEntity"
               },
               {
-                "$ref": "#/definitions/RadioEntity"
+                "$ref": "#/definitions/AlertRadioEntity"
               },
               {
-                "$ref": "#/definitions/AlertEntity"
+                "$ref": "#/definitions/AlertSingleSelectSplunkSearchEntity"
               }
             ]
           }
@@ -402,7 +614,8 @@
                   {
                     "type": "string",
                     "enum": [
-                      "ERROR", "CRITICAL"
+                      "ERROR",
+                      "CRITICAL"
                     ]
                   }
                 ]
@@ -535,6 +748,9 @@
             "link": {
               "type": "string",
               "description": "It is a link where the user will be redirected."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "required": [
@@ -594,35 +810,8 @@
         "encrypted": {
           "$ref": "#/definitions/encrypted"
         },
-        "validators": {
-          "type": "array",
-          "description": "It is used to validate the values of fields using various validators.",
-          "minItems": 1,
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/NumberValidator"
-              },
-              {
-                "$ref": "#/definitions/StringValidator"
-              },
-              {
-                "$ref": "#/definitions/RegexValidator"
-              },
-              {
-                "$ref": "#/definitions/EmailValidator"
-              },
-              {
-                "$ref": "#/definitions/Ipv4Validator"
-              },
-              {
-                "$ref": "#/definitions/UrlValidator"
-              },
-              {
-                "$ref": "#/definitions/DateValidator"
-              }
-            ]
-          }
+        "validators":{
+          "$ref": "#/definitions/AnyValidator"
         },
         "options": {
           "type": "object",
@@ -639,6 +828,9 @@
             },
             "requiredWhenVisible": {
               "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -734,6 +926,9 @@
               "type": "number",
               "default": 8,
               "description": "Minimum number of rows to display."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -878,6 +1073,9 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1021,6 +1219,9 @@
               "type": "string",
               "maxLength": 1,
               "description": "It delimits each value of the field with a predefined character."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1088,6 +1289,9 @@
             },
             "requiredWhenVisible": {
               "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1299,6 +1503,9 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "required": [
@@ -1397,6 +1604,9 @@
               "type": "boolean",
               "default": false,
               "description": "It defines used encoding for files. If true base64 will be used, if false utf-8 is applied."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1527,6 +1737,9 @@
               "type": "boolean",
               "default": false,
               "description": "Used to include the state for oauth authentication"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "allOf": [
@@ -1811,7 +2024,6 @@
               "edit",
               "delete",
               "clone",
-              "enable",
               "search"
             ]
           }
@@ -2089,6 +2301,9 @@
         },
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
+        },
+        "validators":{
+          "$ref": "#/definitions/AnyValidator"
         }
       },
       "additionalProperties": false
@@ -2261,6 +2476,9 @@
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
         }
       },
       "anyOf": [
@@ -2325,6 +2543,35 @@
         "type"
       ],
       "additionalProperties": false
+    },
+    "AnyValidator":{
+      "type": "array",
+      "description": "It is used to validate the values of fields using various validators.",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/NumberValidator"
+          },
+          {
+            "$ref": "#/definitions/StringValidator"
+          },
+          {
+            "$ref": "#/definitions/RegexValidator"
+          },
+          {
+            "$ref": "#/definitions/EmailValidator"
+          },
+          {
+            "$ref": "#/definitions/Ipv4Validator"
+          },
+          {
+            "$ref": "#/definitions/UrlValidator"
+          },
+          {
+            "$ref": "#/definitions/DateValidator"
+          }
+        ]
+      }
     },
     "ValueLabelPair": {
       "type": "object",
@@ -2498,6 +2745,9 @@
         },
         "markdownMessage": {
           "$ref": "#/definitions/markdownMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
         }
       },
       "required": [
@@ -2901,6 +3151,9 @@
               },
               "warning": {
                 "$ref": "#/definitions/WarningMessage"
+              },
+              "hideForPlatform": {
+                "$ref": "#/definitions/HideForPlatform"
               }
             },
             "not": {
@@ -3015,6 +3268,9 @@
               "table",
               "entity"
             ]
+          },    
+          "hideForPlatform": {
+            "$ref": "#/definitions/HideForPlatform"
           }
         },
         "hideFieldId": {
@@ -3058,6 +3314,9 @@
       "type": "boolean",
       "description": "It chooses whether or not to display the field.",
       "default": true
+    },
+    "hideForPlatform": {
+      "$ref": "#/definitions/HideForPlatform"
     },
     "disableonEdit": {
       "type": "boolean",
@@ -3123,6 +3382,17 @@
       ],
       "additionalProperties": false
     },
+    "HideForPlatform":{
+      "description": "Defines for which platform element should be hidden from UI perspective.",
+      "anyOf": [
+        {
+          "const": "cloud"
+        },
+        {
+          "const": "enterprise"
+        }
+      ]
+    },
     "IntervalValue": {
       "anyOf": [
         {
@@ -3135,7 +3405,7 @@
         },
         {
           "type": "string",
-          "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$"
+          "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
         }
       ]
     },

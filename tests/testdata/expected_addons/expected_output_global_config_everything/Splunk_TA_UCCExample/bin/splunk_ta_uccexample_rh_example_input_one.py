@@ -14,6 +14,24 @@ import logging
 util.remove_http_proxy_env_vars()
 
 
+special_fields = [
+    field.RestField(
+        'name',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=validator.AllOf(
+            validator.Pattern(
+                regex=r"""^[a-zA-Z]\w*$""",
+            ),
+            validator.String(
+                max_len=100,
+                min_len=1,
+            )
+        )
+    )
+]
+
 fields = [
     field.RestField(
         'input_one_checkbox',
@@ -49,7 +67,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^(?:-1|\d+(?:\.\d+)?)$""",
+            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""",
         )
     ), 
     field.RestField(
@@ -161,7 +179,7 @@ fields = [
     )
 
 ]
-model = RestModel(fields, name=None)
+model = RestModel(fields, name=None, special_fields=special_fields)
 
 
 

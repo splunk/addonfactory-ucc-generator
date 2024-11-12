@@ -23,7 +23,7 @@ export const OverviewDashboard = ({
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
         >
-            <DashboardCore width="100%" height="auto" actionMenus={getActionButtons('overview')} />
+            <DashboardCore width="99%" height="auto" actionMenus={getActionButtons('overview')} />
         </DashboardContextProvider>
     ) : null;
 };
