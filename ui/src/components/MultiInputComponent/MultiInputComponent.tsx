@@ -8,6 +8,7 @@ import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util
 import { filterResponse } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 import { invariant } from '../../util/invariant';
+import { AcceptableFormValue } from '../../types/components/shareableTypes';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
@@ -23,7 +24,7 @@ export interface MultiInputComponentProps {
     field: string;
     controlOptions: z.TypeOf<typeof MultipleSelectCommonOptions>;
     disabled?: boolean;
-    value?: string;
+    value?: AcceptableFormValue;
     error?: boolean;
     dependencyValues?: Record<string, unknown>;
 }
@@ -62,7 +63,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         return itemList.map((item) => (
             <Multiselect.Option
                 label={item.label}
-                value={item.value}
+                value={String(item.value)}
                 key={typeof item.value === 'boolean' ? String(item.value) : item.value}
             />
         ));
@@ -133,7 +134,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     const effectiveDisabled = loading ? true : disabled;
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
-    const valueList = value ? value.split(delimiter) : [];
+    const valueList = value ? String(value).split(delimiter) : [];
 
     return (
         <>
