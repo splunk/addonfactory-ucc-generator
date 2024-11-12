@@ -12,7 +12,6 @@ import {
     getGlobalConfigMockGroupsFoInputPage,
     getGlobalConfigMockGroupsForConfigPage,
 } from './BaseFormConfigMock';
-import { StandardPages } from '../../types/components/shareableTypes';
 
 const handleFormSubmit = jest.fn();
 
@@ -20,6 +19,22 @@ const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
 const STANZA_NAME = 'stanzaName';
 const CUSTOM_MODULE = 'CustomControl';
+
+const getElementsByGroup = (group: string) => {
+    const firstField = screen.queryByText(`Text 1 Group ${group}`);
+    const secondField = screen.queryByText(`Text 2 Group ${group}`);
+    return { firstField, secondField };
+};
+const verifyDisplayedGroup = (group: string) => {
+    const { firstField, secondField } = getElementsByGroup(group);
+    expect(firstField).toBeInTheDocument();
+    expect(secondField).toBeInTheDocument();
+};
+const verifyNotDisplayedElement = (group: string) => {
+    const { firstField, secondField } = getElementsByGroup(group);
+    expect(firstField).not.toBeInTheDocument();
+    expect(secondField).not.toBeInTheDocument();
+};
 
 it('should render base form correctly with name and File fields', async () => {
     const mockConfig = getGlobalConfigMock();
@@ -75,28 +90,22 @@ it('should pass default values to custom component correctly', async () => {
 });
 
 it.each([
-    { page: 'configuration', config: getGlobalConfigMockGroupsForConfigPage(), service: 'account' },
-    { page: 'inputs', config: getGlobalConfigMockGroupsFoInputPage(), service: 'demo_input' },
+    {
+        page: 'configuration' as const,
+        config: getGlobalConfigMockGroupsForConfigPage(),
+        service: 'account',
+    },
+    {
+        page: 'inputs' as const,
+        config: getGlobalConfigMockGroupsFoInputPage(),
+        service: 'demo_input',
+    },
 ])('entities grouping for page works properly %s', async ({ config, page, service }) => {
     setUnifiedConfig(config);
-    const getElementsByGroup = (group: string) => {
-        const firstField = screen.queryByText(`Text 1 Group ${group}`);
-        const secondField = screen.queryByText(`Text 2 Group ${group}`);
-        return { firstField, secondField };
-    };
-    const verfyDisplayedElement = (group: string) => {
-        const { firstField, secondField } = getElementsByGroup(group);
-        expect(firstField).toBeInTheDocument();
-        expect(secondField).toBeInTheDocument();
-    };
-    const verifyNotDisplayedElement = (group: string) => {
-        const { firstField, secondField } = getElementsByGroup(group);
-        expect(firstField).not.toBeInTheDocument();
-        expect(secondField).not.toBeInTheDocument();
-    };
+
     render(
         <BaseFormView
-            page={page as StandardPages}
+            page={page}
             stanzaName={STANZA_NAME}
             serviceName={service}
             mode="create"
@@ -105,23 +114,27 @@ it.each([
         />
     );
     const group1Header = await screen.findByText('Group 1', { exact: true });
-    expect(group1Header).toBeInTheDocument();
+
     const group2Header = await screen.findByRole('button', { name: 'Group 2' });
-    expect(group2Header).toBeInTheDocument();
+
     const group3Header = await screen.findByRole('button', { name: 'Group 3' });
-    expect(group3Header).toBeInTheDocument();
-    verfyDisplayedElement('1');
-    verfyDisplayedElement('2');
+
+    verifyDisplayedGroup('1');
+    verifyDisplayedGroup('2');
     verifyNotDisplayedElement('3'); // group 3 is not expanded by default
-    expect(group3Header.getAttribute('aria-expanded')).toEqual('false');
+
+    expect(group3Header).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(group3Header);
-    verfyDisplayedElement('3');
-    expect(group3Header.getAttribute('aria-expanded')).toEqual('true');
+    verifyDisplayedGroup('3');
+    expect(group3Header).toHaveAttribute('aria-expanded', 'true');
+
     await userEvent.click(group1Header); // does not change anything
-    verfyDisplayedElement('1');
-    expect(group2Header.getAttribute('aria-expanded')).toEqual('true');
+    verifyDisplayedGroup('1');
+
+    expect(group2Header).toHaveAttribute('aria-expanded', 'true');
     await userEvent.click(group2Header);
-    expect(group2Header.getAttribute('aria-expanded')).toEqual('false');
+    expect(group2Header).toHaveAttribute('aria-expanded', 'false');
+
     /**
      * verifying aria-expanded attribute as in tests
      * child elements are not removed from the DOM
@@ -129,7 +142,7 @@ it.each([
      * todo: verify behaviour
      */
     await userEvent.click(group2Header);
-    verfyDisplayedElement('1');
-    verfyDisplayedElement('2');
-    verfyDisplayedElement('3'); // after modifications all groups should be displayed
+    verifyDisplayedGroup('1');
+    verifyDisplayedGroup('2');
+    verifyDisplayedGroup('3'); // after modifications all groups should be displayed
 });

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { GlobalConfig, GlobalConfigSchema } from '../../types/globalConfig/globalConfig';
+import { AnyOfEntity } from '../../types/globalConfig/entities';
 
 const globalConfigMockCustomControl = {
     pages: {
@@ -212,7 +213,7 @@ const EXAMPLE_GROUPS_ENTITIES = [
         field: 'text_field_2_group_3',
         required: false,
     },
-];
+] satisfies z.input<typeof AnyOfEntity>[];
 
 const GROUPS_FOR_EXAMPLE_ENTITIES = [
     {
@@ -301,7 +302,7 @@ const globalConfigMockGroupsForConfigPage = {
         checkForUpdates: false,
         searchViewDefault: false,
     },
-};
+} satisfies z.input<typeof GlobalConfigSchema>;
 
 export function getGlobalConfigMockGroupsForConfigPage(): GlobalConfig {
     return GlobalConfigSchema.parse(globalConfigMockGroupsForConfigPage);
@@ -400,7 +401,7 @@ const globalConfigMockGroupsForInputPage = {
         checkForUpdates: false,
         searchViewDefault: false,
     },
-};
+} satisfies z.input<typeof GlobalConfigSchema>;
 
 export function getGlobalConfigMockGroupsFoInputPage(): GlobalConfig {
     return GlobalConfigSchema.parse(globalConfigMockGroupsForInputPage);
