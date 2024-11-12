@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useCallback, useState } from 'react';
 
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import Switch from '@splunk/react-ui/Switch';
@@ -16,6 +15,8 @@ import { _ } from '@splunk/ui-utils/i18n';
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getTableCellValue } from './table.utils';
+import AcceptModal from '../AcceptModal/AcceptModal';
+import { RowDataFields } from '../../context/TableContext';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -30,7 +31,20 @@ const SwitchWrapper = styled.div`
     }
 `;
 
-function CustomTableRow(props) {
+interface CustomTableRowProps {
+    row: RowDataFields;
+    readonly?: boolean;
+    columns: Array<{ customCell?: { src?: string; type?: string }; field: string }>;
+    rowActions: string[];
+    headerMapping: Record<string, Record<string, string> | undefined>;
+    handleToggleActionClick: (row: RowDataFields) => void;
+    handleEditActionClick: (row: RowDataFields) => void;
+    handleCloneActionClick: (row: RowDataFields) => void;
+    handleDeleteActionClick: (row: RowDataFields) => void;
+    useInputToggleConfirmation?: boolean;
+}
+
+function CustomTableRow(props: CustomTableRowProps) {
     const {
         row,
         columns,
@@ -40,9 +54,17 @@ function CustomTableRow(props) {
         handleEditActionClick,
         handleCloneActionClick,
         handleDeleteActionClick,
+        useInputToggleConfirmation,
     } = props;
 
-    const getCustomCell = (customRow, header) =>
+    const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
+
+    const getCustomCell = (
+        customRow: RowDataFields,
+        header: { field: string; customCell?: { src?: string; type?: string } }
+    ) =>
+        header.customCell?.src &&
+        header.customCell?.type &&
         React.createElement(CustomTableControl, {
             serviceName: row.serviceName,
             field: header.field,
@@ -60,7 +82,7 @@ function CustomTableRow(props) {
                             <ActionButtonComponent
                                 appearance="flat"
                                 aria-label={_('Edit')}
-                                icon={<Pencil screenReaderText={null} size={1} />}
+                                icon={<Pencil />}
                                 onClick={() => handleEditActionClick(selectedRow)}
                                 className="editBtn"
                             />
@@ -71,7 +93,7 @@ function CustomTableRow(props) {
                             <ActionButtonComponent
                                 appearance="flat"
                                 aria-label={_('Clone')}
-                                icon={<Clone screenReaderText={null} size={1} />}
+                                icon={<Clone size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
                                 className="cloneBtn"
                             />
@@ -85,7 +107,7 @@ function CustomTableRow(props) {
                         >
                             <ActionButtonComponent
                                 appearance="flat"
-                                icon={<Magnifier screenReaderText={null} size={1} />}
+                                icon={<Magnifier />}
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
                                 inline={false}
@@ -111,14 +133,25 @@ function CustomTableRow(props) {
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
-    let statusContent = 'Active';
+    const handleAcceptModal = (accepted: boolean) => {
+        if (accepted) {
+            handleToggleActionClick(row);
+        }
+        setDisplayAcceptToggling(false);
+    };
+
+    const verifyToggleActionClick = () => {
+        setDisplayAcceptToggling(true);
+    };
+
+    let statusContent: string | ReactElement = 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
     } else if (row.disabled) {
         statusContent =
-            headerMapping?.disabled && headerMapping.disabled[row.disabled]
-                ? headerMapping.disabled[row.disabled]
+            headerMapping?.disabled && headerMapping.disabled[String(row.disabled)]
+                ? headerMapping.disabled[String(row.disabled)]
                 : 'Inactive';
     }
 
@@ -131,24 +164,38 @@ function CustomTableRow(props) {
             {columns &&
                 columns.length &&
                 columns.map((header) => {
-                    let cellHTML = '';
+                    let cellHTML: string | ReactElement = '';
                     if (header.customCell && header.customCell.src) {
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
-                                {getCustomCell(row, header)}
+                                {header.customCell && getCustomCell(row, header)}
                             </Table.Cell>
                         );
                     } else if (header.field === 'disabled') {
+                        const activeText = headerMapping?.disabled?.false
+                            ? headerMapping.disabled.false
+                            : 'Active';
+
+                        const inactiveText = headerMapping?.disabled?.true
+                            ? headerMapping.disabled.true
+                            : 'Inactive';
+
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
                                 <SwitchWrapper>
                                     <Switch
                                         key={row.name}
                                         value={row.disabled}
-                                        onClick={() => handleToggleActionClick(row)}
+                                        onClick={() =>
+                                            useInputToggleConfirmation
+                                                ? verifyToggleActionClick()
+                                                : handleToggleActionClick(row)
+                                        }
                                         selected={!row.disabled}
-                                        // eslint-disable-next-line no-underscore-dangle
-                                        disabled={row.__toggleShowSpinner || props.readonly}
+                                        disabled={
+                                            // eslint-disable-next-line no-underscore-dangle
+                                            Boolean(row.__toggleShowSpinner) || props.readonly
+                                        }
                                         appearance="toggle"
                                         className="toggle_switch"
                                         selectedLabel={_(
@@ -163,6 +210,20 @@ function CustomTableRow(props) {
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>
+                                    {displayAcceptToggling && (
+                                        <AcceptModal
+                                            message={`Do you want to make input ${
+                                                row.disabled ? activeText : inactiveText
+                                            }?`}
+                                            open={displayAcceptToggling}
+                                            handleRequestClose={handleAcceptModal}
+                                            title={`Make input ${
+                                                row.disabled ? activeText : inactiveText
+                                            }?`}
+                                            declineBtnLabel="No"
+                                            acceptBtnLabel="Yes"
+                                        />
+                                    )}
                                 </SwitchWrapper>
                             </Table.Cell>
                         );
@@ -184,17 +245,5 @@ function CustomTableRow(props) {
         </Table.Row>
     );
 }
-
-CustomTableRow.propTypes = {
-    row: PropTypes.any,
-    readonly: PropTypes.bool,
-    columns: PropTypes.array,
-    rowActions: PropTypes.array,
-    headerMapping: PropTypes.object,
-    handleToggleActionClick: PropTypes.func,
-    handleEditActionClick: PropTypes.func,
-    handleCloneActionClick: PropTypes.func,
-    handleDeleteActionClick: PropTypes.func,
-};
 
 export default React.memo(CustomTableRow);

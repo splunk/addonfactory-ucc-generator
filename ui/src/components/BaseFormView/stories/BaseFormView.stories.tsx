@@ -10,7 +10,7 @@ import {
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { Mode } from '../../../constants/modes';
-import { BaseFormProps } from '../BaseFormTypes';
+import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 import { Platforms } from '../../../types/globalConfig/pages';
 
 interface BaseFormStoriesProps extends BaseFormProps {
