@@ -1,0 +1,4 @@
+mkdocs==1.6.1
+mkdocs-material==9.5.44
+mkdocstrings[python]==0.27.0
+mkdocs-print-site-plugin==2.6.0
