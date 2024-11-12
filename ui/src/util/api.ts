@@ -72,6 +72,7 @@ export async function getRequest<TData>({
     params = {},
     signal,
     handleError,
+    callbackOnError,
 }: RequestParams) {
     const url = createUrl(endpointUrl, params);
     const options = {
@@ -79,7 +80,7 @@ export async function getRequest<TData>({
         signal,
     } satisfies RequestInit;
 
-    return fetchWithErrorHandling<TData>(url, options, handleError);
+    return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
 }
 
 export async function postRequest<TData>({
@@ -88,6 +89,7 @@ export async function postRequest<TData>({
     body,
     signal,
     handleError,
+    callbackOnError,
 }: RequestParams) {
     const url = createUrl(endpointUrl, params);
     const defaultInit = getDefaultFetchInit();
@@ -103,7 +105,7 @@ export async function postRequest<TData>({
         body,
     } satisfies RequestInit;
 
-    return fetchWithErrorHandling<TData>(url, options, handleError);
+    return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
 }
 
 export async function deleteRequest<TData>({
@@ -111,6 +113,7 @@ export async function deleteRequest<TData>({
     params = {},
     signal,
     handleError,
+    callbackOnError,
 }: RequestParams) {
     const url = createUrl(endpointUrl, params);
 
@@ -119,5 +122,5 @@ export async function deleteRequest<TData>({
         signal,
     } satisfies RequestInit;
 
-    return fetchWithErrorHandling<TData>(url, options, handleError);
+    return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
 }
