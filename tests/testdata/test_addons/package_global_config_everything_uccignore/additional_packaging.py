@@ -2,18 +2,6 @@
 from os.path import sep, exists, dirname, realpath, join
 from os import remove, system, _exit, WEXITSTATUS
 
-def additional_packaging(ta_name=None):
-    """
-    `build-ui.sh` builds custom component present in source code and ships them in the output directory
-    """
-    if exists(
-        join(dirname(realpath(__file__)), "build-ui.sh")
-    ):
-        system("chmod +x ./build-ui.sh")
-        return_code = system("./build-ui.sh")
-        if return_code != 0:
-            _exit(WEXITSTATUS(return_code))
-
 def cleanup_output_files(output_path: str, ta_name: str) -> None:
     """
     prepare a list for the files to be deleted after the source code has been copied to output directory

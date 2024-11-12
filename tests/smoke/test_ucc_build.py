@@ -508,8 +508,13 @@ bin/wrong_pattern
             "To achieve the similar functionality use additional_packaging.py."
             "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
         )
+        exp_info_msg = (
+            "additional_packaging.py is present but does not have `additional_packaging`."
+            " Skipping additional packaging."
+        )
 
         assert exp_msg in caplog.text
+        assert exp_info_msg in caplog.text
         assert expected_warning_msg in caplog.text
         assert edm_paths == removed
         # on successful assertion, we delete the file
