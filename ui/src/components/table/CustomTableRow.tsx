@@ -146,15 +146,12 @@ function CustomTableRow(props: CustomTableRowProps) {
         setDisplayAcceptToggling(true);
     };
 
-    let statusContent: string | ReactElement = 'Active';
+    let statusContent: string | ReactElement = row.disabled ? 'Inactive' : 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
-    } else if (row.disabled !== undefined) {
-        statusContent =
-            headerMapping?.disabled && headerMapping.disabled[String(row.disabled)]
-                ? headerMapping.disabled[String(row.disabled)]
-                : 'Inactive';
+    } else if (headerMapping.disabled?.[String(row.disabled)]) {
+        statusContent = headerMapping.disabled[String(row.disabled)];
     }
 
     // Fix set of props are passed to Table.Row element
