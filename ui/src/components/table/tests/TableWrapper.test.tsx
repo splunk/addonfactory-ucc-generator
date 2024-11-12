@@ -148,3 +148,40 @@ it('sort items after filtering', async () => {
         ]
     `);
 });
+
+it('Correctly render status labels with mapped values', async () => {
+    const props = {
+        page: 'configuration',
+        serviceName: 'account',
+        handleRequestModalOpen,
+        handleOpenPageStyleDialog,
+        displayActionBtnAllRows: false,
+    } satisfies ITableWrapperProps;
+
+    server.use(
+        http.get('/servicesNS/nobody/-/splunk_ta_uccexample_account', () =>
+            HttpResponse.json(MockRowData)
+        )
+    );
+
+    setUnifiedConfig(TABLE_CONFIG_WITH_MAPPING);
+
+    render(
+        <TableContextProvider>
+            <TableWrapper {...props} />
+        </TableContextProvider>,
+        { wrapper: BrowserRouter }
+    );
+
+    await screen.findByRole('table');
+
+    const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
+    const activeRow = await screen.findByLabelText(`row-${active?.name}`);
+    const activeRowDisabledCellText = activeRow.querySelector('[data-test="status"]');
+    expect(activeRowDisabledCellText).toHaveTextContent('Enabled Field');
+
+    const inactive = MockRowData.entry.find((entry) => entry.content.disabled === true);
+    const inActiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
+    const inActiveRowDisabledCellText = inActiveRow.querySelector('[data-test="status"]');
+    expect(inActiveRowDisabledCellText).toHaveTextContent('Disabled Field');
+});

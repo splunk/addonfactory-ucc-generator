@@ -139,6 +139,14 @@ export const TABLE_CONFIG_WITH_MAPPING = {
                                     abcd: 'z=abcd',
                                 },
                             },
+                            {
+                                field: 'disabled',
+                                label: 'Field Status',
+                                mapping: {
+                                    false: 'Enabled Field',
+                                    true: 'Disabled Field',
+                                },
+                            },
                         ],
                     },
                     entity: [
@@ -335,6 +343,10 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                     {
                         label: 'Name',
                         field: 'name',
+                    },
+                    {
+                        label: 'Input Status',
+                        field: 'disabled',
                     },
                 ],
                 moreInfo: [

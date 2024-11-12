@@ -44,6 +44,11 @@ interface CustomTableRowProps {
     useInputToggleConfirmation?: boolean;
 }
 
+interface CellHeader {
+    field: string;
+    customCell?: { src?: string; type?: string };
+}
+
 function CustomTableRow(props: CustomTableRowProps) {
     const {
         row,
@@ -59,10 +64,7 @@ function CustomTableRow(props: CustomTableRowProps) {
 
     const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
 
-    const getCustomCell = (
-        customRow: RowDataFields,
-        header: { field: string; customCell?: { src?: string; type?: string } }
-    ) =>
+    const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
         header.customCell?.type &&
         React.createElement(CustomTableControl, {
@@ -74,7 +76,7 @@ function CustomTableRow(props: CustomTableRowProps) {
         });
 
     const rowActionsPrimaryButton = useCallback(
-        (selectedRow, header) => (
+        (selectedRow: RowDataFields, header: CellHeader) => (
             <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
                     {!props.readonly && rowActions.includes('edit') && (
@@ -120,7 +122,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             <ActionButtonComponent
                                 appearance="flat"
                                 aria-label={_('Delete')}
-                                icon={<Trash screenReaderText={null} size={1} />}
+                                icon={<Trash size={1} />}
                                 onClick={() => handleDeleteActionClick(selectedRow)}
                                 className="deleteBtn"
                             />
@@ -148,7 +150,7 @@ function CustomTableRow(props: CustomTableRowProps) {
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
-    } else if (row.disabled) {
+    } else if (row.disabled !== undefined) {
         statusContent =
             headerMapping?.disabled && headerMapping.disabled[String(row.disabled)]
                 ? headerMapping.disabled[String(row.disabled)]
@@ -160,6 +162,7 @@ function CustomTableRow(props: CustomTableRowProps) {
         <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
             key={row.name || row.id}
             {...props}
+            aria-label={`row-${row.name || row.id}`}
         >
             {columns &&
                 columns.length &&

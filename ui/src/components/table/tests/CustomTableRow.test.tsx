@@ -87,3 +87,17 @@ it('Correctly render modal for actions click', async () => {
 
     await screen.findByText('Delete Confirmation');
 });
+
+it('Correctly render status labels with default values', async () => {
+    await screen.findByRole('table');
+
+    const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
+    const activeRow = await screen.findByLabelText(`row-${active?.name}`);
+    const activeRowDisabledCellText = activeRow.querySelector('[data-test="status"]');
+    expect(activeRowDisabledCellText).toHaveTextContent('Active');
+
+    const inactive = MockRowData.entry.find((entry) => entry.content.disabled === true);
+    const inActiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
+    const inActiveRowDisabledCellText = inActiveRow.querySelector('[data-test="status"]');
+    expect(inActiveRowDisabledCellText).toHaveTextContent('Inactive');
+});
