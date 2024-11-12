@@ -141,7 +141,7 @@ To verify changes locally:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements-docs.txt
+pip install -r docs/requirements-docs.txt
 mkdocs serve -a localhost:8081 
 ```
 

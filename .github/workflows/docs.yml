@@ -25,7 +25,7 @@ jobs:
           cd ui
           yarn run build-storybook --quiet --output-dir ../docs/storybook/
           cd ../
-      - run: pip install -r requirements-docs.txt
+      - run: pip install -r docs/requirements-docs.txt
       - name: Deploy to GitHub Pages
         if: github.ref_name == 'main'
         run: mkdocs gh-deploy --force --strict
