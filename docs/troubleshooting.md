@@ -57,38 +57,36 @@ something.
 
 ![img.png](images/troubleshooting_input_error.png)
 
-It happens that during the creation of the add-on an error will be made in the code of modinput scripts,
-such as incorrect import, unhandled exception etc. During the building of the add-on it will not be caught
-and such a package can be installed in splunk without any problems. Unfortunately, when trying to enter
-the add-on page we will see the message as shown above. The information itself is not very
-clear and certainly will not make it easier to find the rootcause of the problem.
+During the creation of the add-on, an error, such as incorrect import, unhandled exception etc., can be made in the code of modinput scripts.
+When the add-on is built, this error is not caught and a package can be installed in Splunk without any problems. However, when you try to enter
+the add-on page, you will see the message presented above. As this message is not
+clear, it is not helpful in finding the root cause of the problem.
 
-Fortunately, most errors are logged in Splunk on internal indexes and one such index is `_internal`.
+Fortunately, most errors are logged in Splunk on the internal indexes. One of these indexes is `_internal`.
 
-The very first thing we can do is search the above index for the word `ERROR` or `stderr`.
+First, search the `_internal` index for the word `ERROR` or `stderr`.
 Usually the source of these logs is the `splunkd` process, so it can be used to pre-filter data.
 
 `index = _internal source=*splunkd* ERROR` or `index = _internal source=*splunkd* stderr`
 
-In the case of small infrastructures, this simple query can return the information we need, unfortunately, often
-the instances are large and have many applications, each of which may have errors.
-In addition, some errors are recorded only once at the time of add-on installation so it can be difficult to determine the correct timerange.
+In the case of small infrastructures, this simple query can return information you need.
 
-In this case, we can narrow our search to a specific add-on. This is not trivial because we do not log any
-specific parameter that would easily filter out data for a specific add-on.
-What we can do, however, is use the `scheme` parameter, which is directly correlated with the names of inputs in the add-on.
+When the instances are large and they have many applications, each of them can have errors.
+In addition, some errors are recorded only once when the add-on is installed, so it can be difficult to determine the correct time range.
 
-example of logged error:
+In this case, you can narrow your search to a specific add-on. This may not be easy because no unique parameter is logged
+that would easily filter out data for a specific add-on. However, you can use the `scheme` parameter, which is directly correlated with the names of inputs in the add-on.
+
+The example of a logged error:
 ![img.png](images/troubleshooting_error_example.png)
 
-Schema logs the input name with a colon at the end, so to be sure we can use an asterisk after entering the name:
+Schema logs the input name with a colon at the end, so use an asterisk after entering the name:
 
 `index = _internal source=*splunkd* (component=ModularInputs stderr) OR component=ExecProcessor (scheme IN (example_input_one*, example_input_two*, example_input_three_abc*))`
 
-or a shortened version, using the wildcard mechanic:
+Or you can use a shortened version, using the wildcard mechanic:
 
 `index = _internal source=*splunkd* (component=ModularInputs stderr) OR component=ExecProcessor (scheme IN (*example_input*))`
 
-Since in the above examples we are talking about errors coming from modular input scripts,
-so we have added another filtering factor – the `ModularInputs` component. In addition, we have also included
-the `ExecProcessor` component, which is responsible for running and managing scripts.
+Since in this example we are talking about errors coming from the modular input scripts,
+another filtering factor, the `ModularInputs` component, is added. The `ExecProcessor` component is also included. It is responsible for running and managing scripts.
