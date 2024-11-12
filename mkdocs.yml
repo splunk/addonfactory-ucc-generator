@@ -21,6 +21,7 @@ markdown_extensions:
 
 theme:
   name: "material"
+  custom_dir: docs/theme_overrides
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -52,6 +53,8 @@ plugins:
             show_if_no_docstring: true
             filters: ["!^_"]
             show_source: true
+  - autorefs
+  - print-site  # should be at the end
 
 nav:
   - About UCC: "index.md"

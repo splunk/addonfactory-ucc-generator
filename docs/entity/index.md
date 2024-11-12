@@ -2,6 +2,8 @@
 title: Entity
 ---
 
+# Entity
+
 ## Entity Properties
 
 | Property                                                         | Type                      | Description                                                                                                                          | Default Value |

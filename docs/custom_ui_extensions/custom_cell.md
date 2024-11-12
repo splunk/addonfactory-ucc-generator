@@ -1,3 +1,5 @@
+# Custom Cell
+
 A Custom Cell is used to update the content of a table cell.
 
 `customCell` attribute will be used in the table header on the inputs and configuration page.
