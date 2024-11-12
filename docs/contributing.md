@@ -5,7 +5,7 @@ We welcome contributions from the community! This guide will help you understand
 ## Development guidelines
 
 1. Small PRs ([blogpost](https://testing.googleblog.com/2024/07/in-praise-of-small-pull-requests.html))
-1. If you are fixing a bug, write a test reproducing a bug (the test should fail without your changes)
+1. When fixing a bug, include a test that reproduces the issue in the same pull request (the test should fail without your changes)
 1. If you are refactoring, ensure adequate test coverage exists for the target area. If coverage is insufficient, create tests in a separate pull request first. This approach provides a safety net for validating current behavior and simplifies code reviews.
 
 ## Build and Test
