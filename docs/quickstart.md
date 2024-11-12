@@ -14,9 +14,39 @@ Make sure that the following software is installed on your machine:
 ## Install
 
 1. Go to the `splunk-add-on-ucc-framework` package that is available on PyPI. For more information about PyPI, see <https://pypi.org/project/splunk-add-on-ucc-framework/>.
+   Depending which operating system you use, follow one of the procedures:
 
-If you use Windows, ...
-If you use macOS, ...<!--- Artem to give more info--->
+    * Windows
+
+        1. Set up the Python virtual environment:
+
+            ```bash
+            python3 -m venv .venv
+            ```
+        1.If you use cmd.exe, activate the virtual environment with the following command:
+
+            ```bash
+            .venv\Scripts\activate.bat
+            ```
+        1. If you use PowerShell, activate the virtual environment with the following command:
+
+            ```bash
+            .venv\Scripts\activate.ps1
+            ```
+
+    * macOS, Linux
+
+        1. Set up and activate the Python virtual environment:
+
+            ```bash 
+            python3 -m venv .venv
+            source .venv/bin/activate
+            ```
+1. Package the installation:
+
+    ```bash
+    pip install splunk-add-on-ucc-framework
+    ```
 
 ## Create a new add-on
 
