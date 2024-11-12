@@ -18,7 +18,7 @@ app.conf uses the `app.manifest` file to determine the add-on description, the a
 the add-on title, and the add-on author (taking the first one if multiple are defined).
 Make sure that your `app.manifest` is up-to-date, so `app.conf` will have all relevant information.
 
-Also the `triggers` stanza is created by `ucc-gen`. It determines what
+Also the `triggers` stanza is created by the `ucc-gen build` command. `ucc-gen build` determines what
 the `.conf` files are used in the add-on and generates the relevant key-value
 pairs.
 
