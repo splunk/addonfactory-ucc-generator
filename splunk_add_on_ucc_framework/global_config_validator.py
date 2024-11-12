@@ -21,18 +21,25 @@ from typing import Any, Dict, List
 import logging
 import itertools
 
-
 import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
+from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
 
-
-class GlobalConfigValidatorException(Exception):
-    pass
+# The entity types that do not allow to add validators (so the warning will not appear)
+ENTITY_TYPES_WITHOUT_VALIDATORS = {
+    "radio",
+    "index",
+    "helpLink",
+    "checkbox",
+    "interval",
+    "custom",
+}
 
 
 class GlobalConfigValidator:
@@ -43,6 +50,7 @@ class GlobalConfigValidator:
 
     def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
         self._source_dir = source_dir
+        self._global_config = global_config
         self._config = global_config.content
 
     @property
@@ -57,7 +65,7 @@ class GlobalConfigValidator:
         Raises jsonschema.ValidationError if config is not valid.
         """
         schema_path = os.path.join(self._source_dir, "schema", "schema.json")
-        with open(schema_path) as f_schema:
+        with open(schema_path, encoding="utf-8") as f_schema:
             schema_raw = f_schema.read()
             schema = json.loads(schema_raw)
         try:
@@ -72,7 +80,7 @@ class GlobalConfigValidator:
         """
         for tab in self.config_tabs:
             if "table" in tab:
-                entities = tab.entity
+                entities = tab["entity"]
                 has_name_field = False
                 for entity in entities:
                     if entity["field"] == "name":
@@ -132,7 +140,7 @@ class GlobalConfigValidator:
         and we need to throw a validation error.
         """
         for tab in self.config_tabs:
-            entities = tab.entity
+            entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
                     is_required = entity.get("required", False)
@@ -204,11 +212,26 @@ class GlobalConfigValidator:
                 f"pattern provided in the 'pattern' field is not compilable."
             )
 
+    def _validate_interval(self, entity: Dict[str, Any]) -> None:
+        """
+        Validate options of the 'interval' entity
+        """
+        if "range" in entity.get("options", {}):
+            self._validate_number_validator(entity["field"], entity["options"])
+
     def _validate_entity_validators(self, entity: Dict[str, Any]) -> None:
         """
         Validates entity validators.
         """
         validators = entity.get("validators", [])
+
+        if should_warn_on_empty_validators(entity):
+            logger.warning(
+                f"The field '{entity.get('field')}' does not have a validator specified. It's recommended "
+                "to add a validator to ensure the security and integrity of the input data. For more "
+                "information, please refer to the documentation."
+            )
+
         for validator in validators:
             if validator["type"] == "string":
                 self._validate_string_validator(entity["field"], validator)
@@ -217,6 +240,9 @@ class GlobalConfigValidator:
             if validator["type"] == "regex":
                 self._validate_regex_validator(entity["field"], validator)
 
+        if entity.get("type", "") == "interval":
+            self._validate_interval(entity)
+
     def _validate_validators(self) -> None:
         """
         Validates both configuration and services validators, currently string,
@@ -224,7 +250,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
         for tab in self.config_tabs:
-            entities = tab.entity
+            entities = tab["entity"]
             for entity in entities:
                 self._validate_entity_validators(entity)
 
@@ -362,13 +388,13 @@ class GlobalConfigValidator:
         """
         names, titles, types = [], [], []
         for tab in tabs:
-            names.append(tab.name.lower())
-            titles.append(tab.title.lower())
+            names.append(tab["name"].lower())
+            titles.append(tab["title"].lower())
 
             if tab.tab_type is not None:
                 types.append(tab.tab_type.lower())
 
-            self._validate_entity_duplicates(tab.entity)
+            self._validate_entity_duplicates(tab["entity"])
         if (
             self._find_duplicates_in_list(names)
             or self._find_duplicates_in_list(titles)
@@ -426,39 +452,6 @@ class GlobalConfigValidator:
                     )
                 else:
                     fields.append(entity.get("field"))
-                entity_type = entity.get("type")
-                if entity_type in ("radio", "singleSelect"):
-                    if not entity.get("options"):
-                        raise GlobalConfigValidatorException(
-                            f"{entity_type} type must have options parameter"
-                        )
-                elif (
-                    entity.get("options") and entity_type != "singleSelectSplunkSearch"
-                ):
-                    raise GlobalConfigValidatorException(
-                        f"{entity_type} type must not contain options parameter"
-                    )
-                if entity_type in ("singleSelectSplunkSearch",):
-                    if not all(
-                        [
-                            entity.get("search"),
-                            entity.get("valueField"),
-                            entity.get("labelField"),
-                        ]
-                    ):
-                        raise GlobalConfigValidatorException(
-                            f"{entity_type} type must have search, valueLabel and valueField parameters"
-                        )
-                elif any(
-                    [
-                        entity.get("search"),
-                        entity.get("valueField"),
-                        entity.get("labelField"),
-                    ]
-                ):
-                    raise GlobalConfigValidatorException(
-                        f"{entity_type} type must not contain search, valueField or labelField parameter"
-                    )
 
     def _validate_panels(self) -> None:
         """
@@ -471,33 +464,6 @@ class GlobalConfigValidator:
                     raise GlobalConfigValidatorException(
                         f"'{panel['name']}' is not a supported panel name. "
                         f"Supported panel names: {dashboard_lib.SUPPORTED_PANEL_NAMES_READABLE}"
-                    )
-
-    def _warn_on_placeholder_usage(self) -> None:
-        """
-        Warns if placeholder is used.
-        More details here: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
-        """
-        pages = self._config["pages"]
-        for tab in self.config_tabs:
-            for entity in tab.entity:
-                if "placeholder" in entity.get("options", {}):
-                    logger.warning(
-                        f"`placeholder` option found for configuration tab '{tab['name']}' "
-                        f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
-                    )
-        inputs = pages.get("inputs")
-        if inputs is None:
-            return
-        services = inputs["services"]
-        for service in services:
-            for entity in service["entity"]:
-                if "placeholder" in entity.get("options", {}):
-                    logger.warning(
-                        f"`placeholder` option found for input service '{service['name']}' "
-                        f"-> entity field '{entity['field']}'. "
-                        f"Please take a look at https://github.com/splunk/addonfactory-ucc-generator/issues/831."
                     )
 
     def _validate_checkbox_group(self) -> None:
@@ -603,11 +569,11 @@ class GlobalConfigValidator:
                     visited = self._is_circular(
                         mods, visited, all_entity_fields, influenced_field
                     )
-        # all of dependent modifications fields are dead_end
+        # All dependent modifications fields are dead_end
         visited[current_field] = DEAD_END
         return visited
 
-    def _check_if_cilcular(
+    def _check_if_circular(
         self,
         all_entity_fields: List[Any],
         fields_with_mods: List[Any],
@@ -662,7 +628,7 @@ class GlobalConfigValidator:
 
         return all_fields
 
-    def _get_all_modifiction_data(
+    def _get_all_modification_data(
         self,
         collections: List[Dict[str, Any]],
     ) -> List[Any]:
@@ -682,9 +648,9 @@ class GlobalConfigValidator:
     def _validate_field_modifications(self) -> None:
         """
         Validates:
-        Circular dependencies
-        If fields try modify itself
-        If fields try modify unexisting field
+        * Circular dependencies
+        * If fields try to modify itself
+        * If fields try to modify field that do not exist
         """
         pages = self._config["pages"]
 
@@ -696,9 +662,9 @@ class GlobalConfigValidator:
                 fields_with_mods_config,
                 all_modifications_config,
                 all_fields_config,
-            ) = self._get_all_modifiction_data(tabs)
+            ) = self._get_all_modification_data(tabs)
 
-            self._check_if_cilcular(
+            self._check_if_circular(
                 all_fields_config, fields_with_mods_config, all_modifications_config
             )
 
@@ -710,10 +676,23 @@ class GlobalConfigValidator:
                 fields_with_mods_inputs,
                 all_modifications_inputs,
                 all_fields_inputs,
-            ) = self._get_all_modifiction_data(services)
+            ) = self._get_all_modification_data(services)
 
-            self._check_if_cilcular(
+            self._check_if_circular(
                 all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs
+            )
+
+    def _validate_meta_default_view(self) -> None:
+        default_view = self._global_config.meta.get(
+            "defaultView", data_ui_generator.DEFAULT_VIEW
+        )
+        if default_view == "inputs" and not self._global_config.has_inputs():
+            raise GlobalConfigValidatorException(
+                'meta.defaultView == "inputs" but there is no inputs defined in globalConfig'
+            )
+        if default_view == "dashboard" and not self._global_config.has_dashboard():
+            raise GlobalConfigValidatorException(
+                'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
             )
 
     def validate(self) -> None:
@@ -726,7 +705,44 @@ class GlobalConfigValidator:
         self._validate_duplicates()
         self._validate_alerts()
         self._validate_panels()
-        self._warn_on_placeholder_usage()
         self._validate_checkbox_group()
         self._validate_groups()
         self._validate_field_modifications()
+        self._validate_meta_default_view()
+
+
+def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
+    entity_type = entity.get("type")
+
+    if entity_type in ENTITY_TYPES_WITHOUT_VALIDATORS:
+        return False
+
+    # special cases
+    if entity_type == "oauth":
+        return _should_warn_on_empty_validators_oauth(entity)
+
+    elif entity_type == "checkboxGroup":
+        return _should_warn_on_empty_validators_checkbox_group(entity)
+
+    return "validators" not in entity
+
+
+def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> bool:
+    for row in entity.get("options", {}).get("rows", []):
+        row_validators = row.get("input", {}).get("validators")
+
+        if not row_validators:
+            return True
+
+    return "validators" not in entity
+
+
+def _should_warn_on_empty_validators_oauth(entity: Dict[str, Any]) -> bool:
+    options = entity.get("options", {})
+
+    for auth_type in ("basic", "oauth"):
+        for oauth_field in options.get(auth_type, []):
+            if "validators" not in oauth_field:
+                return True
+
+    return False

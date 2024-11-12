@@ -1,3 +1,5 @@
+# Sub Description
+
 This feature allows us to pass a broader description on the Input and Configuration pages displayed under main description.
 
 ### Sub Descritpion Properties

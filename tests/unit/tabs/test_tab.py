@@ -32,27 +32,26 @@ def definition():
 
 @pytest.fixture
 def tab(definition):
-    return Tab(definition)
+    return Tab.from_definition(definition)
 
 
 def test_tab_object_equal_to_definition(definition, tab):
-    assert definition == tab
+    assert definition == tab == tab.short_form()
 
 
 def test_tab_parameters(tab, definition):
-    assert definition["name"] == tab["name"] == tab.name
-    assert definition["title"] == tab["title"] == tab.title
-    assert definition["entity"] == tab["entity"] == tab.entity
+    assert definition["name"] == tab["name"]
+    assert definition["title"] == tab["title"]
+    assert definition["entity"] == tab["entity"]
 
 
 def test_resolve_tab_normal(definition):
     tab = resolve_tab(definition)
     assert type(tab) is Tab
-    assert definition["name"] == tab["name"] == tab.name
+    assert definition["name"] == tab["name"]
 
 
 def test_resolve_tab_other():
     tab = resolve_tab({"type": "loggingTab"})
     assert type(tab) is LoggingTab
-    assert "name" not in tab
-    assert tab.name is not None
+    assert tab["name"] == "logging"

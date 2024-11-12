@@ -1,0 +1,185 @@
+{
+  "visualizations": {
+    "resource_tab_label_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "## Resource consumption",
+        "fontSize": "large"
+      }
+    },
+    "resource_tab_description_viz": {
+      "type": "splunk.markdown",
+      "options": {
+        "markdown": "View the resource consumption for your add-on.",
+        "customFontSize": 12
+      }
+    },
+    "resource_tab_timerange_label_start_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "resource_tab_data_time_label_start_ds"
+      }
+    },
+    "resource_tab_timerange_label_end_viz": {
+      "type": "splunk.singlevalue",
+      "options": {
+        "majorFontSize": 12,
+        "backgroundColor": "transparent",
+        "majorColor": "#9fa4af"
+      },
+      "dataSources": {
+        "primary": "resource_tab_data_time_label_end_ds"
+      }
+    },
+    "resource_tab_cpu_consumption_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
+        "seriesColors": [
+          "#A870EF"
+        ],
+        "yAxisTitleText": "CPU (%)"
+      },
+      "title": "CPU consumption",
+      "dataSources": {
+        "primary": "resource_tab_cpu_consumption_ds"
+      }
+    },
+    "resource_tab_memory_consumption_viz": {
+      "type": "splunk.line",
+      "options": {
+        "xAxisVisibility": "hide",
+        "xAxisTitleText": "Time",
+        "seriesColors": [
+          "#A870EF"
+        ],
+        "yAxisTitleText": "Memory (%)"
+      },
+      "title": "Memory consumption",
+      "dataSources": {
+        "primary": "resource_tab_memory_consumption_ds"
+      }
+    }
+  },
+  "dataSources": {
+    "resource_tab_data_time_label_start_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval StartDate = strftime(info_min_time, \"%e %b %Y %I:%M%p\") | table StartDate",
+        "queryParameters": {
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
+        }
+      }
+    },
+    "resource_tab_data_time_label_end_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "| makeresults | addinfo | eval EndDate = strftime(info_max_time, \"%e %b %Y %I:%M%p\") | table EndDate",
+        "queryParameters": {
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
+        }
+      }
+    },
+    "resource_tab_cpu_consumption_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "{{resource_cpu}}",
+        "queryParameters": {
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
+        }
+      }
+    },
+    "resource_tab_memory_consumption_ds": {
+      "type": "ds.search",
+      "options": {
+        "query": "{{resource_memory}}",
+        "queryParameters": {
+          "earliest": "$resource_tab_time.earliest$",
+          "latest": "$resource_tab_time.latest$"
+        }
+      }
+    }
+  },
+  "defaults": {},
+  "inputs": {
+    "resource_tab_input": {
+      "options": {
+        "defaultValue": "-24h,now",
+        "token": "resource_tab_time"
+      },
+      "title": "Time",
+      "type": "input.timerange"
+    }
+  },
+  "layout": {
+    "type": "grid",
+    "globalInputs": [
+      "resource_tab_input"
+    ],
+    "structure": [
+      {
+        "item": "resource_tab_label_viz",
+        "position": {
+          "x": 20,
+          "y": 500,
+          "w": 300,
+          "h": 20
+        }
+      },
+      {
+        "item": "resource_tab_description_viz",
+        "position": {
+          "x": 20,
+          "y": 520,
+          "w": 500,
+          "h": 50
+        }
+      },
+      {
+        "item": "resource_tab_timerange_label_start_viz",
+        "position": {
+          "x": 20,
+          "y": 530,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "resource_tab_timerange_label_end_viz",
+        "position": {
+          "x": 120,
+          "y": 530,
+          "w": 100,
+          "h": 20
+        }
+      },
+      {
+        "item": "resource_tab_cpu_consumption_viz",
+        "position": {
+          "x": 20,
+          "y": 550,
+          "w": 620,
+          "h": 150
+        }
+      },
+      {
+        "item": "resource_tab_memory_consumption_viz",
+        "position": {
+          "x": 640,
+          "y": 550,
+          "w": 620,
+          "h": 150
+        }
+      }
+    ]
+  }
+}

@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import copy
 import functools
 import json
 from typing import Optional, Any, List, Dict
@@ -22,7 +21,8 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
-from splunk_add_on_ucc_framework.tabs import resolve_tab
+from splunk_add_on_ucc_framework.entity import expand_entity
+from splunk_add_on_ucc_framework.tabs import resolve_tab, LoggingTab
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
@@ -52,44 +52,62 @@ class OSDependentLibraryConfig:
         }
         deps_flag = "" if result.get("dependencies") else "--no-deps"
         result.update({"deps_flag": deps_flag})
+        result.update(
+            {"python_version": cls._format_python_version(result["python_version"])}
+        )
         return cls(**result)
+
+    @staticmethod
+    def _format_python_version(python_version: str) -> str:
+        """Remove all non-numeric characters from the python version string to simplify processing"""
+        return "".join(x for x in python_version if x.isnumeric())
 
 
 class GlobalConfig:
-    def __init__(self, global_config_path: str, is_global_config_yaml: bool) -> None:
+    def __init__(self, global_config_path: str) -> None:
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
-        self._content = (
-            yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
+        self._is_global_config_yaml = (
+            True if global_config_path.endswith(".yaml") else False
         )
-        self._resolve_tabs()
-        self._is_global_config_yaml = is_global_config_yaml
+        self._content = (
+            yaml_load(config_raw)
+            if self._is_global_config_yaml
+            else json.loads(config_raw)
+        )
         self._original_path = global_config_path
 
-    def dump(self, path: str, rendered: bool = False) -> None:
-        content = self.content_rendered if rendered else self._content
-
+    def dump(self, path: str) -> None:
         if self._is_global_config_yaml:
-            utils.dump_yaml_config(content, path)
+            utils.dump_yaml_config(self.content, path)
         else:
-            utils.dump_json_config(content, path)
+            utils.dump_json_config(self.content, path)
 
-    def _resolve_tabs(self) -> None:
+    def expand(self) -> None:
+        self.expand_tabs()
+        self.expand_entities()
+
+    def expand_tabs(self) -> None:
         for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
             self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+
+    def expand_entities(self) -> None:
+        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
+        self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
+        self._expand_entities(self._content.get("alerts"))
+
+    @staticmethod
+    def _expand_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
+        if items is None:
+            return
+
+        for item in items:
+            for i, entity in enumerate(item.get("entity", [])):
+                item["entity"][i] = expand_entity(entity)
 
     @property
     def content(self) -> Any:
         return self._content
-
-    @property
-    def content_rendered(self) -> Any:
-        content = copy.deepcopy(self._content)
-
-        for i, tab in enumerate(content["pages"]["configuration"]["tabs"]):
-            content["pages"]["configuration"]["tabs"][i] = tab.render()
-
-        return content
 
     @property
     def inputs(self) -> List[Any]:
@@ -110,8 +128,15 @@ class GlobalConfig:
         settings = []
         for tab in self.tabs:
             if "table" not in tab:
-                settings.append(tab.render())
+                settings.append(tab)
         return settings
+
+    @property
+    def logging_tab(self) -> Dict[str, Any]:
+        for tab in self.tabs:
+            if LoggingTab.from_definition(tab) is not None:
+                return tab
+        return {}
 
     @property
     def configs(self) -> List[Any]:
@@ -126,7 +151,7 @@ class GlobalConfig:
         return self._content.get("alerts", [])
 
     @property
-    def meta(self) -> Dict[str, str]:
+    def meta(self) -> Dict[str, Any]:
         return self._content["meta"]
 
     @property
@@ -186,8 +211,8 @@ class GlobalConfig:
 
     def has_oauth(self) -> bool:
         for tab in self.tabs:
-            if tab.name == "account":
-                for entity in tab.entity:
+            if tab["name"] == "account":
+                for entity in tab["entity"]:
                     if entity["type"] == "oauth":
                         return True
         return False

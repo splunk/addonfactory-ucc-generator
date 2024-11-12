@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
-import Text from '@splunk/react-ui/Text';
+import React from 'react';
 import PropTypes from 'prop-types';
-import TableContext from '../../context/TableContext';
+import Search from '@splunk/react-ui/Search';
+import { useTableContext } from '../../context/useTableContext';
 
 function TableFilter(props) {
-    const { searchText } = useContext(TableContext);
+    const { searchText } = useTableContext();
 
-    return <Text appearance="search" onChange={props.handleChange} value={searchText} />;
+    return <Search onChange={props.handleChange} value={searchText} />;
 }
 
 TableFilter.propTypes = {

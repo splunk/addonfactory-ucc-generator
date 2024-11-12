@@ -19,3 +19,13 @@
 .md-grid {
   max-width: 65rem;
 }
+
+
+iframe {
+    width: 100%;
+    min-height: 36rem;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: hsla(var(--md-hue), 15%, 14%, 1);
+}

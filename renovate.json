@@ -20,6 +20,22 @@
       "groupName": "{{manager}}"
     },
     {
+      "description": "Ignore python packages that cannot be updated thanks to 3.7 support",
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchPackagePrefixes": [
+        "importlib-metadata",
+        "pytest",
+        "pytest-cov",
+        "pytest-rerunfailures"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
       "matchPackageNames": ["urllib3"],
       "allowedVersions": "<2.0.0"
     },
@@ -30,6 +46,7 @@
       ],
       "matchPackageNames": [
         "@npmcli/git",
+        "@testing-library/dom",
         "@testing-library/react",
         "@types/react",
         "@typescript-eslint/eslint-plugin",
@@ -41,11 +58,12 @@
         "eslint-config-airbnb",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
+        "eslint-plugin-react-hooks",
         "glob-parent",
+        "prettier",
         "react",
         "react-dom",
         "react-is",
-        "prettier",
         "string-width",
         "strip-ansi",
         "styled-components",
@@ -59,16 +77,6 @@
       "enabled": false
     },
     {
-      "description": "Ignore msw-storybook-addon since they bumps incorrectly while canary version is using",
-      "matchManagers": [
-        "npm"
-      ],
-      "matchPackageNames": [
-        "msw-storybook-addon"
-      ],
-      "enabled": false
-    },
-    {
       "description": "Update package.json versions together with yarn.lock",
       "matchManagers": [
         "npm"
@@ -77,9 +85,22 @@
     },
     {
       "description": "Ignore NodeJS",
-      "matchPackageNames": ["node"],
+      "matchPackageNames": ["node", "@types/node"],
       "matchManagers": ["npm"],
-      "matchDepTypes": [ "engines" ],
+      "matchDepTypes": [ "engines", "devDependencies" ],
+      "enabled": false
+    },
+    {
+      "description": "Ignore updates for ubuntu in GitHub (ref #1374)",
+      "matchPackageNames": ["ubuntu"],
+      "matchManagers": ["github-actions"],
+      "enabled": false
+    },
+    {
+      "description": "react-router-dom throws not-dismissible warnings",
+      "matchPackageNames": ["react-router-dom"],
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor"],
       "enabled": false
     }
   ]

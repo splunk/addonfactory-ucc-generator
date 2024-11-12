@@ -1,8 +1,10 @@
+# Custom Hook
+
 Custom Hook is a JavaScript function that allows us to reuse some code throughout the app. It is used to validate form/dialog inputs.
 
 Hook is nothing more than a Javascript event handling on the events `onCreate`, `onChange`, `onRender`, `onSave`, `onSaveSuccess`, `onSaveFail`, and `onEditLoad`.
 
-Hooks can be used inside the services and tabs that are placed next to the entity tag. 
+Hooks can be used inside the services and tabs that are placed next to the entity tag.
 
 The `type` key needs to be set as external to webpack the custom extensions. UCC  expects scripts marked as external to follow the ESM syntax for exporting and importing modules. Any other value, or not specifying type, will default to the old requireJS (AMD) import syntax. Aditionally, the custom javascript file and the imported modules will not get webpack-ed.
 

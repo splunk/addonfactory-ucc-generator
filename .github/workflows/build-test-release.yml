@@ -5,14 +5,10 @@ on:
     branches:
       - "main"
       - "develop"
-      - "release/**"
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
   pull_request:
     branches:
-      - "main"
-      - "develop"
-      - "release/**"
+      - "**"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
@@ -20,17 +16,17 @@ concurrency:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - uses: actions/checkout@v4
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v1.13
+        uses: splunk/addonfactory-test-matrix-action@v2.1
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -47,9 +43,18 @@ jobs:
           fossa test --debug
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -58,29 +63,19 @@ jobs:
       - uses: pre-commit/action@v3.0.1
 
   semgrep:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - id: semgrep
-        uses: semgrep/semgrep-action@v1
-        with:
-          publishToken: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
+    uses: splunk/sast-scanning/.github/workflows/sast-scan.yml@main
+    secrets:
+      SEMGREP_KEY: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
   compliance-copyrights:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: apache/skywalking-eyes@v0.6.0
 
   build-ui:
     name: Build UCC UI
-    strategy:
-      matrix:
-        node-version:
-          - "20"
     uses: ./.github/workflows/build-ui.yml
-    with:
-      node-version: ${{ matrix.node-version }}
 
   storybook-screenshots:
     name: Update storybook screenshots
@@ -88,14 +83,20 @@ jobs:
       contents: write
     secrets: inherit
     uses: ./.github/workflows/storybook-visual.yml
+  bot-updates:
+    name: Generates Documentation
+    permissions:
+      contents: write
+    secrets: inherit
+    uses: ./.github/workflows/automatic_doc_generation.yml
     with:
-      node-version: "20"
+      python-version: "3.7"
 
   build:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -114,8 +115,6 @@ jobs:
         if: "! github.event.pull_request.head.repo.fork "
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: poetry install
-      - name: Check docs
-        run: poetry run mkdocs build --strict
       - name: Build UCC
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
@@ -126,7 +125,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -145,12 +144,21 @@ jobs:
       - run: |
           poetry install
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   test-smoke:
     name: test-smoke ${{ matrix.python-version }}
     needs:
-      - build
-    runs-on: ubuntu-latest
+      - build-ui
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -162,21 +170,31 @@ jobs:
           - "3.11"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
           poetry install
           poetry run pytest tests/smoke
+      - name: Check for failed steps for jobs with continue-on-error
+        if: ${{ failure() }}
+        run: echo "failed=true" >> $GITHUB_ENV
+
+      - name: Set output if steps failed
+        run: |
+          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+    outputs:
+      failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - build-ui
     steps:
@@ -208,15 +226,7 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    if: |
-      github.base_ref == 'main' ||
-      github.ref_name == 'main' ||
-      github.base_ref == 'develop' ||
-      github.ref_name == 'develop' ||
-      startsWith(github.ref_name, 'release') ||
-      startsWith(github.base_ref, 'release') ||
-      contains(github.event.pull_request.labels.*.name, 'run-ui-tests')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       contents: read
@@ -275,7 +285,7 @@ jobs:
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -298,20 +308,57 @@ jobs:
           poetry install
           mkdir tests/packaged
           poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
-      - uses: splunk/appinspect-cli-action@v2.6
+      - uses: splunk/appinspect-cli-action@v2.8
         with:
           app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
+  appinspect-api:
+    name: appinspect api ${{ matrix.tags }}
+    needs: build-test-addon
+    if: |
+      !cancelled() &&
+      needs.build-test-addon.result == 'success' &&
+      ( github.base_ref == 'main' || github.ref_name == 'main' )
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tags:
+          - "cloud"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Splunk_TA_UCCExample-packaged
+          path: build/package
+      - name: Copy .appinspect_api.expect.yaml to Working Directory
+        run: |
+            cp tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect_api.expect.yaml ./.appinspect_api.expect.yaml
+      - uses: splunk/appinspect-api-action@v3.0
+        with:
+          username: ${{secrets.SPL_COM_USER}}
+          password: ${{secrets.SPL_COM_PASSWORD}}
+          app_path: build/package
+          included_tags: ${{ matrix.tags }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appinspect-api-html-report-${{ matrix.tags }}
+          path: AppInspect_response.html
+
   all-checks:
     if: ${{ !cancelled() }}
     needs:
+      - test-unit
+      - test-smoke
       - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
-    runs-on: ubuntu-latest
+      - bot-updates
+    runs-on: ubuntu-22.04
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
@@ -319,7 +366,7 @@ jobs:
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq "all(.[]; .result == \"success\")")
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" and (.outputs.failed // "false") != "true")')
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
@@ -344,7 +391,7 @@ jobs:
       - semgrep
       - pre-commit
       - all-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: "! github.event.pull_request.head.repo.fork "
     steps:
       - uses: actions/checkout@v4
@@ -386,7 +433,7 @@ jobs:
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - meta
       - build-test-addon

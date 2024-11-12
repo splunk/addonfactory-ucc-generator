@@ -8,13 +8,15 @@ import { ButtonClickHandler } from '@splunk/react-ui/Button';
 import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import { StyledButton } from '../../pages/EntryPageStyle';
 import BaseFormView from '../BaseFormView/BaseFormView';
+import { StandardPages } from '../../types/components/shareableTypes';
+import PageContext from '../../context/PageContext';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
 export interface EntityModalProps {
-    page: string;
+    page: StandardPages;
     mode: Mode;
     serviceName: string;
     handleRequestClose: () => void;
@@ -80,15 +82,20 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
                     onRequestClose={this.handleRequestClose}
                 />
                 <Modal.Body>
-                    <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
-                        ref={this.form}
-                        page={this.props.page}
-                        serviceName={this.props.serviceName}
-                        mode={this.props.mode}
-                        stanzaName={this.props.stanzaName || 'unknownStanza'}
-                        handleFormSubmit={this.handleFormSubmit}
-                        groupName={this.props.groupName}
-                    />
+                    <PageContext.Consumer>
+                        {(pageContext) => (
+                            <BaseFormView
+                                ref={this.form}
+                                page={this.props.page}
+                                serviceName={this.props.serviceName}
+                                mode={this.props.mode}
+                                stanzaName={this.props.stanzaName || 'unknownStanza'}
+                                handleFormSubmit={this.handleFormSubmit}
+                                groupName={this.props.groupName}
+                                pageContext={pageContext}
+                            />
+                        )}
+                    </PageContext.Consumer>
                 </Modal.Body>
                 <Modal.Footer>
                     <StyledButton

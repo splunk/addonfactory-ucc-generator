@@ -1,5 +1,6 @@
 import { Mode } from '../../constants/modes';
-import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { AcceptableFormValueOrNullish, StandardPages } from '../../types/components/shareableTypes';
+import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import {
     BaseFormState,
     AnyEntity,
@@ -32,8 +33,8 @@ export const handleStateFieldModificationProp = (
 };
 
 export const handleEntityModificationProp = (
-    key: 'help' | 'label',
-    propValue: string,
+    key: 'help' | 'label' | 'required',
+    propValue: string | boolean,
     fieldId: string,
     state: BaseFormState
 ) => {
@@ -79,13 +80,23 @@ export function getAllFieldsWithModifications(
 const getModificationForEntity = (
     entity: EntitiesAllowingModifications,
     stateShallowCopy: BaseFormState,
-    mode: Mode
+    mode: Mode,
+    page: StandardPages
 ) => {
-    let modification = entity.modifyFieldsOnValue?.find(
-        (mod) =>
-            stateShallowCopy.data?.[entity.field]?.value === mod.fieldValue &&
+    let modification = entity.modifyFieldsOnValue?.find((mod) => {
+        const currentFieldValue = stateShallowCopy.data?.[entity.field]?.value;
+        return (
+            // do not compare empty values for modifications
+            currentFieldValue !== undefined &&
+            currentFieldValue !== null &&
+            // values are directly equal or they are equal after type conversion
+            (currentFieldValue === mod.fieldValue ||
+                // here conversion is needed as splunk keeps boolish data on configuration page as 1 and 0
+                getValueMapTruthyFalse(currentFieldValue, page) ===
+                    getValueMapTruthyFalse(mod.fieldValue, page)) &&
             (!mod.mode || mod.mode === mode)
-    );
+        );
+    });
 
     if (!modification) {
         modification = entity.modifyFieldsOnValue?.find(
@@ -106,8 +117,8 @@ const isStateField = (
     propKey === 'disabled' ||
     propKey === 'markdownMessage';
 
-const isEntityField = (propKey: string): propKey is 'help' | 'label' =>
-    propKey === 'help' || propKey === 'label';
+const isEntityField = (propKey: string): propKey is 'help' | 'label' | 'required' =>
+    propKey === 'help' || propKey === 'label' || propKey === 'required';
 
 const getStateAfterModification = (
     modificationKey: string,
@@ -123,7 +134,10 @@ const getStateAfterModification = (
             stateShallowCopy
         );
     }
-    if (isEntityField(modificationKey) && typeof modificationValue === 'string') {
+    if (
+        isEntityField(modificationKey) &&
+        (typeof modificationValue === 'string' || typeof modificationValue === 'boolean')
+    ) {
         return handleEntityModificationProp(
             modificationKey,
             modificationValue,
@@ -140,13 +154,13 @@ const getStateAfterModification = (
 export const getModifiedState = (
     state: BaseFormState,
     mode: Mode,
-    entitiesToModify: EntitiesAllowingModifications[]
+    entitiesToModify: EntitiesAllowingModifications[],
+    page: StandardPages
 ) => {
     let stateShallowCopy = { ...state };
     let shouldUpdateState = false;
-
     entitiesToModify.forEach((entity: EntitiesAllowingModifications) => {
-        const modifications = getModificationForEntity(entity, stateShallowCopy, mode);
+        const modifications = getModificationForEntity(entity, stateShallowCopy, mode, page);
 
         modifications?.fieldsToModify.forEach((modificationFields) => {
             const { fieldId, ...fieldProps } = modificationFields;

@@ -10,10 +10,14 @@
  */
 
 const { TextDecoder, TextEncoder } = require('node:util');
+const { TransformStream } = require('node:stream/web');
+const { BroadcastChannel } = require('node:worker_threads');
 
 Object.defineProperties(globalThis, {
     TextDecoder: { value: TextDecoder },
     TextEncoder: { value: TextEncoder },
+    TransformStream: { value: TransformStream },
+    BroadcastChannel: { value: BroadcastChannel },
 });
 
 const { Blob } = require('node:buffer');
@@ -24,7 +28,17 @@ Object.defineProperties(globalThis, {
     Blob: { value: Blob },
     Headers: { value: Headers },
     FormData: { value: FormData },
-    Request: { value: Request },
-    Response: { value: Response },
+    BroadcastChannel: { value: BroadcastChannel },
+    Request: { value: Request, configurable: true },
+    Response: { value: Response, configurable: true },
 });
+
+Object.defineProperty(URL, 'createObjectURL', {
+    // needed for package import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset'
+    writable: true,
+    value: jest.fn(),
+});
+
+HTMLCanvasElement.prototype.getContext = jest.fn();
+
 // --- END of unnecessary polyfills

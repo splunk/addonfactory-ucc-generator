@@ -290,41 +290,7 @@
                     "title": "Proxy"
                 },
                 {
-                    "name": "logging",
-                    "entity": [
-                        {
-                            "type": "singleSelect",
-                            "label": "Log level",
-                            "options": {
-                                "disableSearch": true,
-                                "autoCompleteFields": [
-                                    {
-                                        "value": "DEBUG",
-                                        "label": "DEBUG"
-                                    },
-                                    {
-                                        "value": "INFO",
-                                        "label": "INFO"
-                                    },
-                                    {
-                                        "value": "WARNING",
-                                        "label": "WARNING"
-                                    },
-                                    {
-                                        "value": "ERROR",
-                                        "label": "ERROR"
-                                    },
-                                    {
-                                        "value": "CRITICAL",
-                                        "label": "CRITICAL"
-                                    }
-                                ]
-                            },
-                            "defaultValue": "INFO",
-                            "field": "loglevel"
-                        }
-                    ],
-                    "title": "Logging"
+                    "type": "loggingTab"
                 },
                 {
                     "name": "custom_abc",
@@ -425,7 +391,6 @@
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
@@ -433,10 +398,18 @@
                         "moreInfo": []
                     },
                     "warning": {
-                        "create": "Warning text for create mode",
-                        "edit": "Warning text for edit mode",
-                        "clone": "Warning text for clone mode",
-                        "config": "Warning text for config mode"
+                      "create": {
+                        "message": "Warning text for create mode"
+                      },
+                      "edit": {
+                        "message": "Warning text for edit mode"
+                      },
+                      "clone": {
+                        "message": "Warning text for clone mode"
+                      },
+                      "config": {
+                        "message": "Warning text for config mode"
+                      }
                     }
                 },
                 {
@@ -447,7 +420,6 @@
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
@@ -458,6 +430,46 @@
                             "src": "custom_row"
                         }
                     }
+                },
+                {
+                    "name": "example_input_three",
+                    "description": "Input hidden for cloud",
+                    "title": "Example Input Three Hidden Cloud",
+                    "entity": [],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [],
+                        "moreInfo": [],
+                        "customRow": {
+                            "type": "external",
+                            "src": "custom_row"
+                        }
+                    },
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "example_input_four",
+                    "description": "Input hidden for enterprise",
+                    "title": "Example Input Four Hidden Enterprise",
+                    "entity": [],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [],
+                        "moreInfo": [],
+                        "customRow": {
+                            "type": "external",
+                            "src": "custom_row"
+                        }
+                    },
+                    "hideForPlatform": "enterprise"
                 }
             ]
         }
@@ -465,9 +477,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.41.0Reda406cf",
+        "version": "5.50.1+099cf36c",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.41.0"
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.50.1"
     }
 }

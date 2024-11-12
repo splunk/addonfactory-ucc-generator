@@ -3,6 +3,7 @@ import { Mode } from '../../constants/modes';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
+    StandardPages,
 } from '../../types/components/shareableTypes';
 import { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
 import {
@@ -17,6 +18,7 @@ import {
     TextEntity,
 } from '../../types/globalConfig/entities';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { PageContextProviderType } from '../../context/PageContext';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -57,6 +59,7 @@ export interface BaseFormStateData {
         modifiedEntitiesData?: {
             help?: string;
             label?: string;
+            required?: boolean;
         };
     };
 }
@@ -65,16 +68,17 @@ export interface BaseFormProps {
     currentServiceState?: Record<string, AcceptableFormValueOrNull>;
     serviceName: string;
     mode: Mode;
-    page: string;
+    page: StandardPages;
     stanzaName: string;
     groupName?: string;
     handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
+    pageContext?: PageContextProviderType;
 }
 
 export interface BaseFormState {
     serviceName?: string;
     mode?: Mode;
-    page?: string;
+    page?: StandardPages;
     stanzaName?: string;
     data: BaseFormStateData;
     errorMsg?: string;

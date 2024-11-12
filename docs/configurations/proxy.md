@@ -1,3 +1,5 @@
+# Proxy
+
 There are fields that need to be specified in order to enable proxy.
 
 ### Fields
@@ -116,4 +118,3 @@ There are fields that need to be specified in order to enable proxy.
 The example above creates the following form:
 
 ![image](../images/configuration/configuration_without_table_output.png)
-

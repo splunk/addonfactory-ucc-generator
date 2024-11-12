@@ -1,12 +1,12 @@
 import import_declare_test
 
 import sys
-import json
 
 from splunklib import modularinput as smi
+from helper_two import stream_events, validate_input
+
 
 class EXAMPLE_INPUT_TWO(smi.Script):
-
     def __init__(self):
         super(EXAMPLE_INPUT_TWO, self).__init__()
 
@@ -25,78 +25,85 @@ class EXAMPLE_INPUT_TWO(smi.Script):
                 required_on_create=True
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'account',
                 required_on_create=True,
             )
         )
-        
+        scheme.add_argument(
+            smi.Argument(
+                'input_two_text_hidden_for_cloud',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                'input_two_text_hidden_for_enterprise',
+                required_on_create=False,
+            )
+        )
         scheme.add_argument(
             smi.Argument(
                 'input_two_multiple_select',
                 required_on_create=True,
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'input_two_checkbox',
                 required_on_create=False,
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'input_two_radio',
                 required_on_create=True,
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'use_existing_checkpoint',
                 required_on_create=False,
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'start_date',
                 required_on_create=False,
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'example_help_link',
                 required_on_create=False,
             )
         )
-        
         scheme.add_argument(
             smi.Argument(
                 'apis',
                 required_on_create=False,
             )
         )
-        
+        scheme.add_argument(
+            smi.Argument(
+                'hide_in_ui',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                'hard_disabled',
+                required_on_create=False,
+            )
+        )
         return scheme
 
-    def validate_input(self, definition):
-        return
+    def validate_input(self, definition: smi.ValidationDefinition):
+        return validate_input(definition)
 
-    def stream_events(self, inputs, ew):
-        input_items = [{'count': len(inputs.inputs)}]
-        for input_name, input_item in inputs.inputs.items():
-            input_item['name'] = input_name
-            input_items.append(input_item)
-        event = smi.Event(
-            data=json.dumps(input_items),
-            sourcetype='example_input_two',
-        )
-        ew.write_event(event)
+    def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
+        return stream_events(inputs, ew)
 
 
 if __name__ == '__main__':

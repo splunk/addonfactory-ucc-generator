@@ -1,0 +1,4 @@
+{% for stanza in settings_stanzas %}
+[{{ stanza[0] }}]
+{{ stanza[1] | sort() | join("\n") }}
+{% endfor %}

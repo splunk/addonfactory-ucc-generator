@@ -1107,7 +1107,6 @@
             "table": {
                 "actions": [
                     "edit",
-                    "enable",
                     "delete",
                     "clone"
                 ],
@@ -1186,7 +1185,13 @@
                 {
                     "name": "default"
                 }
-            ]
+            ],
+            "settings": {
+                "error_panel_log_lvl": [
+                    "ERROR",
+                    "CRITICAL"
+                ]
+            }
         }
     },
     "alerts": [

@@ -8,17 +8,18 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { generateToast } from '../../util/util';
 import { StyledButton } from '../../pages/EntryPageStyle';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { deleteRequest, generateEndPointUrl } from '../../util/api';
 import TableContext from '../../context/TableContext';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
 interface DeleteModalProps {
-    page: string;
+    page: StandardPages;
     handleRequestClose: () => void;
     serviceName: string;
     stanzaName: string;
@@ -50,19 +51,14 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
         this.setState(
             (prevState) => ({ ...prevState, isDeleting: true, ErrorMsg: '' }),
             () => {
-                axiosCallWrapper({
-                    serviceName: `${this.props.serviceName}/${encodeURIComponent(
-                        this.props.stanzaName
-                    )}`,
-                    customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    method: 'delete',
+                deleteRequest({
+                    endpointUrl: generateEndPointUrl(
+                        `${encodeURIComponent(this.props.serviceName)}/${encodeURIComponent(
+                            this.props.stanzaName
+                        )}`
+                    ),
                     handleError: false,
                 })
-                    .catch((err) => {
-                        const errorSubmitMsg = parseErrorMsg(err);
-                        this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
-                        return Promise.reject(err);
-                    })
                     .then(() => {
                         this.context?.setRowData(
                             update(this.context.rowData, {
@@ -72,6 +68,10 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                         this.setState({ isDeleting: false });
                         this.handleRequestClose();
                         generateToast(`Deleted "${this.props.stanzaName}"`, 'success');
+                    })
+                    .catch((err) => {
+                        const errorSubmitMsg = parseErrorMsg(err);
+                        this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
                     });
             }
         );

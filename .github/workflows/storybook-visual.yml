@@ -1,10 +1,6 @@
 name: "Storybook Visual"
 on:
   workflow_call:
-    inputs:
-      node-version:
-        required: true
-        type: string
 
 jobs:
   update-screenshots:
@@ -12,7 +8,7 @@ jobs:
       run:
         working-directory: ui
         shell: bash
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' }}
     steps:
@@ -20,13 +16,8 @@ jobs:
         with:
           lfs: true
           ref: ${{ github.event.pull_request.head.ref }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node-version }}
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
-        with:
-          node-version: ${{ inputs.node-version }}
       - name: Install Playwright
         run: yarn playwright install
       - name: Build Storybook

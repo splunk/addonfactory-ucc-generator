@@ -14,9 +14,16 @@
 # limitations under the License.
 #
 import logging
-from typing import Any, Dict, Tuple, List
+from typing import Any, Dict, Tuple, List, Optional
 
-from splunk_add_on_ucc_framework import global_config as global_config_lib
+from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
+from splunk_add_on_ucc_framework.entity import (
+    collapse_entity,
+    IntervalEntity,
+)
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
+from splunk_add_on_ucc_framework.tabs import resolve_tab
+from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
 
@@ -116,9 +123,17 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
-    current_schema_version = global_config.schema_version
-    version = current_schema_version if current_schema_version else "0.0.0"
+    current_schema_version = global_config.schema_version or "0.0.0"
+
     logger.info(f"Current globalConfig schema version is {current_schema_version}")
+
+    if _version_tuple(global_config.meta.get("_uccVersion", "0.0.0")) >= _version_tuple(
+        "5.52.0"
+    ):
+        # we hard-code the value of 5.52.0 as this feature would be shipped in that version
+        version = current_schema_version
+    else:
+        version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
@@ -127,7 +142,9 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
-            if tab.name == "account":
+            if tab.get("type") in ["loggingTab"]:
+                continue
+            if tab["name"] == "account":
                 conf_entities = tab.get("entity")
 
                 if conf_entities is None:
@@ -203,3 +220,153 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _handle_xml_dashboard_update(global_config)
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.5")
+
+    if _version_tuple(version) < _version_tuple("0.0.6"):
+        global_config.update_schema_version("0.0.6")
+        _dump_with_migrated_tabs(global_config, global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.6")
+
+    if _version_tuple(version) < _version_tuple("0.0.7"):
+        global_config.update_schema_version("0.0.7")
+        _dump_with_migrated_entities(
+            global_config, global_config.original_path, [IntervalEntity]
+        )
+        logger.info("Updated globalConfig schema to version 0.0.7")
+
+    if _version_tuple(version) < _version_tuple("0.0.8"):
+        _stop_build_on_placeholder_usage(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.8")
+
+    if _version_tuple(version) < _version_tuple("0.0.9"):
+        _dump_enable_from_global_config(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.9")
+
+
+def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
+    for i, tab in enumerate(
+        global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
+    ):
+        global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
+
+    _dump(global_config.content, path, global_config._is_global_config_yaml)
+
+
+def _dump_with_migrated_entities(
+    global_config: GlobalConfig,
+    path: str,
+    entity_type: List[Any],
+) -> None:
+    _collapse_entities(
+        global_config.content["pages"].get("inputs", {}).get("services"), entity_type
+    )
+    _collapse_entities(
+        global_config.content["pages"]["configuration"].get("tabs"), entity_type
+    )
+    _collapse_entities(global_config.content.get("alerts"), entity_type)
+
+    _dump(global_config.content, path, global_config._is_global_config_yaml)
+
+
+def _collapse_entities(
+    items: Optional[List[Dict[Any, Any]]],
+    entity_type: List[Any],
+) -> None:
+    if items is None:
+        return
+
+    for item in items:
+        for i, entity in enumerate(item.get("entity", [])):
+            item["entity"][i] = collapse_entity(entity, entity_type)
+
+
+def _dump(content: Dict[Any, Any], path: str, is_yaml: bool) -> None:
+    if is_yaml:
+        utils.dump_yaml_config(content, path)
+    else:
+        utils.dump_json_config(content, path)
+
+
+def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
+    return resolve_tab(tab).short_form()
+
+
+def _stop_build_on_placeholder_usage(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    """
+    Stops the build of addon and logs error if placeholder is used.
+    Deprecation Notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
+    Allows to update the schema version if placeholder isn't found.
+    """
+    log_msg = (
+        "`placeholder` option found for %s '%s' -> entity field '%s'. "
+        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+        "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+    )
+    exc_msg = (
+        "`placeholder` option found for %s '%s'. It has been removed from UCC. "
+        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+    )
+    for tab in global_config.tabs:
+        for entity in tab.get("entity", []):
+            if "placeholder" in entity.get("options", {}):
+                logger.error(
+                    log_msg % ("configuration tab", tab["name"], entity["field"])
+                )
+                raise GlobalConfigValidatorException(
+                    exc_msg % ("configuration tab", tab["name"])
+                )
+    services = global_config.inputs
+    if not services:
+        return
+    for service in services:
+        for entity in service.get("entity", {}):
+            if "placeholder" in entity.get("options", {}):
+                logger.error(
+                    log_msg % ("input service", service["name"], entity["field"])
+                )
+                raise GlobalConfigValidatorException(
+                    exc_msg % ("input service", service["name"])
+                )
+    global_config.update_schema_version("0.0.8")
+
+
+def _dump_enable_from_global_config(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    if global_config.has_inputs():
+        # Fetch the table object from global_config
+        table = global_config.content.get("pages", {}).get("inputs", {}).get("table")
+
+        if table:  # If the table exists
+            actions = table.get("actions", [])
+            if "enable" in actions:
+                logger.warning(
+                    "`enable` attribute found in input's page table action."
+                    + f" Removing 'enable' from actions: {actions}"
+                )
+                actions.remove("enable")
+                table["actions"] = actions  # Update the actions in the global_config
+
+        else:  # If no table present, loop through services in inputs
+            services = (
+                global_config.content.get("pages", {})
+                .get("inputs", {})
+                .get("services", [])
+            )
+            for service in services:
+                service_table = service.get("table", {})
+                actions = service_table.get("actions", [])
+                if "enable" in actions:
+                    logger.warning(
+                        f"`enable` attribute found in service {service.get('name')}'s table action."
+                        + f" Removing 'enable' from actions in service: {actions}"
+                    )
+                    actions.remove("enable")
+                    service_table[
+                        "actions"
+                    ] = actions  # Update the actions in the service's table
+
+    global_config.update_schema_version("0.0.9")

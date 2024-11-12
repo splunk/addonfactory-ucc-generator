@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import configparser
 import glob
 import json
 import logging
@@ -26,8 +25,6 @@ import colorama as c
 import fnmatch
 import filecmp
 
-from openapi3 import OpenAPI
-
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -36,12 +33,9 @@ from splunk_add_on_ucc_framework import (
     utils,
 )
 from splunk_add_on_ucc_framework import dashboard
-from splunk_add_on_ucc_framework import app_conf as app_conf_lib
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
-from splunk_add_on_ucc_framework import server_conf as server_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     builder as alert_builder,
 )
@@ -56,6 +50,8 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
+from splunk_add_on_ucc_framework.generators.file_generator import begin
+from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
 
 
 logger = logging.getLogger("ucc_gen")
@@ -105,22 +101,6 @@ def _modify_and_replace_token_for_oauth_templates(
             "templates",
             ta_name.lower() + "_redirect.html",
         )
-        with open(
-            os.path.join(
-                outputdir,
-                ta_name,
-                "default",
-                "data",
-                "ui",
-                "views",
-                f"{ta_name.lower()}_redirect.xml",
-            ),
-            "w",
-        ) as addon_redirect_xml_file:
-            addon_redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
-                ta_name,
-            )
-            addon_redirect_xml_file.write(addon_redirect_xml_content)
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
     else:
@@ -138,11 +118,14 @@ def _add_modular_input(
         entity = service.get("entity")
         field_allow_list = frozenset(["name", "interval", "index", "sourcetype"])
         template = "input.template"
+
         if "template" in service:
             template = service.get("template") + ".template"
 
         # filter fields in allow list
         entity = [x for x in entity if x.get("field") not in field_allow_list]
+
+        input_helper_module = service.get("inputHelperModule")
 
         content = (
             utils.get_j2_env()
@@ -152,24 +135,28 @@ def _add_modular_input(
                 class_name=class_name,
                 description=description,
                 entity=entity,
+                input_helper_module=input_helper_module,
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
         with open(input_file_name, "w") as input_file:
             input_file.write(content)
 
-        input_default = os.path.join(outputdir, ta_name, "default", "inputs.conf")
-        config = configparser.ConfigParser()
-        if os.path.exists(input_default):
-            config.read(input_default)
+        if input_helper_module is not None:
+            helper_module_template = "input.module-template"
+            helper_filename = os.path.join(
+                outputdir, ta_name, "bin", f"{input_helper_module}.py"
+            )
 
-        if config.has_section(input_name):
-            config[input_name]["python.version"] = "python3"
-        else:
-            config[input_name] = {"python.version": "python3"}
-
-        with open(input_default, "w") as configfile:
-            config.write(configfile)
+            content = (
+                utils.get_j2_env()
+                .get_template(helper_module_template)
+                .render(
+                    input_name=input_name,
+                )
+            )
+            with open(helper_filename, "w") as helper_file:
+                helper_file.write(content)
 
 
 def _get_ignore_list(
@@ -222,61 +209,6 @@ def _remove_listed_files(ignore_list: List[str]) -> List[str]:
                     shutil.rmtree(path, ignore_errors=True)
                 removed_list.append(path)
     return removed_list
-
-
-def generate_data_ui(
-    output_directory: str,
-    addon_name: str,
-    include_inputs: bool,
-    include_dashboard: bool,
-) -> None:
-    # Create directories in the output folder for add-on's UI nav and views.
-    os.makedirs(
-        os.path.join(output_directory, addon_name, "default", "data", "ui", "nav"),
-        exist_ok=True,
-    )
-    os.makedirs(
-        os.path.join(output_directory, addon_name, "default", "data", "ui", "views"),
-        exist_ok=True,
-    )
-    default_ui_path = os.path.join(
-        output_directory, addon_name, "default", "data", "ui"
-    )
-    default_xml_path = os.path.join(default_ui_path, "nav", "default.xml")
-    if os.path.exists(default_xml_path):
-        logger.info(
-            "Skipping generating data/ui/nav/default.xml because file already exists."
-        )
-    else:
-        with open(default_xml_path, "w") as default_xml_file:
-            default_xml_content = data_ui_generator.generate_nav_default_xml(
-                include_inputs=include_inputs,
-                include_dashboard=include_dashboard,
-            )
-            default_xml_file.write(default_xml_content)
-    with open(
-        os.path.join(default_ui_path, "views", "configuration.xml"), "w"
-    ) as configuration_xml_file:
-        configuration_xml_content = data_ui_generator.generate_views_configuration_xml(
-            addon_name,
-        )
-        configuration_xml_file.write(configuration_xml_content)
-    if include_inputs:
-        with open(
-            os.path.join(default_ui_path, "views", "inputs.xml"), "w"
-        ) as input_xml_file:
-            inputs_xml_content = data_ui_generator.generate_views_inputs_xml(
-                addon_name,
-            )
-            input_xml_file.write(inputs_xml_content)
-    if include_dashboard:
-        with open(
-            os.path.join(default_ui_path, "views", "dashboard.xml"), "w"
-        ) as dashboard_xml_file:
-            dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(
-                addon_name
-            )
-            dashboard_xml_file.write(dashboard_xml_content)
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -339,6 +271,20 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         raise exceptions.CouldNotIdentifyPythonVersionException(
             f"Failed to identify python version for binary {python_binary_name}"
         )
+
+
+def _get_and_check_global_config_path(source: str, config_path: Optional[str]) -> str:
+    if not config_path:
+        config_path = os.path.abspath(
+            os.path.join(source, os.pardir, "globalConfig.json")
+        )
+        if not os.path.isfile(config_path):
+            config_path = os.path.abspath(
+                os.path.join(source, os.pardir, "globalConfig.yaml")
+            )
+    if os.path.isfile(config_path):
+        return config_path
+    return ""
 
 
 def summary_report(
@@ -463,6 +409,7 @@ def generate(
     verbose_file_summary_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
+    ui_source_map: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -487,31 +434,21 @@ def generate(
     logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
-    if not config_path:
-        is_global_config_yaml = False
-        config_path = os.path.abspath(
-            os.path.join(source, os.pardir, "globalConfig.json")
-        )
-        if not os.path.isfile(config_path):
-            config_path = os.path.abspath(
-                os.path.join(source, os.pardir, "globalConfig.yaml")
-            )
-            is_global_config_yaml = True
-    else:
-        is_global_config_yaml = True if config_path.endswith(".yaml") else False
+    generated_files = []
 
-    if os.path.isfile(config_path):
-        logger.info(f"Using globalConfig file located @ {config_path}")
-        global_config = global_config_lib.GlobalConfig(
-            config_path, is_global_config_yaml
-        )
+    gc_path = _get_and_check_global_config_path(source, config_path)
+    if gc_path:
+        logger.info(f"Using globalConfig file located @ {gc_path}")
+        global_config = global_config_lib.GlobalConfig(gc_path)
+        # handle the update of globalConfig before validating
+        global_config_update.handle_global_config_update(global_config)
         try:
             validator = global_config_validator.GlobalConfigValidator(
                 internal_root_dir, global_config
             )
             validator.validate()
             logger.info("globalConfig file is valid")
-        except global_config_validator.GlobalConfigValidatorException as e:
+        except exceptions.GlobalConfigValidatorException as e:
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
@@ -520,21 +457,21 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        global_config_update.handle_global_config_update(global_config)
+        global_config.expand()
+        if ta_name != global_config.product:
+            logger.error(
+                "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
+                "please unify them to build the add-on."
+            )
+            sys.exit(1)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
+            ui_source_map,
         )
-        generate_data_ui(
-            output_directory,
-            ta_name,
-            global_config.has_inputs(),
-            global_config.has_dashboard(),
-        )
-        logger.info("Copied UCC template directory")
         global_config_file = (
-            "globalConfig.yaml" if is_global_config_yaml else "globalConfig.json"
+            "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
         )
         output_global_config_path = os.path.join(
             output_directory,
@@ -545,7 +482,7 @@ def generate(
             "build",
             global_config_file,
         )
-        global_config.dump(output_global_config_path, rendered=True)
+        global_config.dump(output_global_config_path)
         logger.info("Copied globalConfig to output")
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
@@ -564,6 +501,19 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
+        generated_files.extend(
+            begin(
+                global_config=global_config,
+                input_dir=source,
+                output_dir=output_directory,
+                ucc_dir=internal_root_dir,
+                addon_name=ta_name,
+                app_manifest=app_manifest,
+                addon_version=addon_version,
+                has_ui=global_config.meta.get("isVisible", True),
+            )
+        )
+        # TODO: all FILES GENERATED object: generated_files, use it for comparison
         builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
         builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
@@ -576,31 +526,13 @@ def generate(
             _add_modular_input(ta_name, global_config, output_directory)
         if global_config.has_alerts():
             logger.info("Generating alerts code")
-            alert_builder.generate_alerts(
-                global_config, ta_name, internal_root_dir, output_directory
-            )
+            alert_builder.generate_alerts(global_config, ta_name, output_directory)
 
         conf_file_names = []
         conf_file_names.extend(list(scheme.settings_conf_file_names))
         conf_file_names.extend(list(scheme.configs_conf_file_names))
         conf_file_names.extend(list(scheme.oauth_conf_file_names))
 
-        source_server_conf_path = os.path.join(source, "default", "server.conf")
-        # For now, only create server.conf only if no server.conf is present in
-        # the source package.
-        if not os.path.isfile(source_server_conf_path):
-            server_conf = server_conf_lib.ServerConf()
-            server_conf.create_default(conf_file_names)
-            output_server_conf_path = os.path.join(
-                output_directory,
-                ta_name,
-                "default",
-                server_conf_lib.SERVER_CONF_FILE_NAME,
-            )
-            server_conf.write(output_server_conf_path)
-            logger.info(
-                f"Created default {server_conf_lib.SERVER_CONF_FILE_NAME} file in the output folder"
-            )
         if global_config.has_dashboard():
             logger.info("Including dashboard")
             dashboard_definition_json_path = os.path.join(
@@ -651,8 +583,7 @@ def generate(
     if not os.path.exists(default_meta_conf_path):
         os.makedirs(os.path.join(output_directory, ta_name, "metadata"), exist_ok=True)
         meta_conf = meta_conf_lib.MetaConf()
-        meta_conf.create_default()
-        meta_conf.write(default_meta_conf_path)
+        meta_conf.write_default(default_meta_conf_path)
         logger.info(
             f"Created default {meta_conf_lib.DEFAULT_META_FILE_NAME} file in the output folder"
         )
@@ -673,26 +604,20 @@ def generate(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
 
-    app_conf = app_conf_lib.AppConf()
-    output_app_conf_path = os.path.join(
-        output_directory, ta_name, "default", app_conf_lib.APP_CONF_FILE_NAME
-    )
-    app_conf.read(output_app_conf_path)
-    should_be_visible = True if global_config else False
-    if global_config and global_config.meta.get("checkForUpdates") is False:
-        check_for_updates = False
-    else:
-        check_for_updates = True
-    app_conf.update(
-        addon_version,
-        app_manifest,
-        conf_file_names,
-        should_be_visible,
-        check_for_updates,
-    )
-    app_conf.write(output_app_conf_path)
-    logger.info(f"Updated {app_conf_lib.APP_CONF_FILE_NAME} file in the output folder")
-
+    ui_available = False
+    if global_config:
+        ui_available = global_config.meta.get("isVisible", True)
+    # NOTE: merging source and generated 'app.conf' as per previous design
+    AppConf(
+        global_config=global_config,
+        input_dir=source,
+        output_dir=output_directory,
+        ucc_dir=internal_root_dir,
+        addon_name=ta_name,
+        app_manifest=app_manifest,
+        addon_version=addon_version,
+        has_ui=ui_available,
+    ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
@@ -717,7 +642,6 @@ def generate(
     if global_config:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
-        open_api = OpenAPI(open_api_object.json)
 
         output_openapi_folder = os.path.abspath(
             os.path.join(output_directory, ta_name, "appserver", "static")
@@ -727,7 +651,7 @@ def generate(
             os.makedirs(os.path.join(output_openapi_folder))
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
-            json.dump(open_api.raw_element, openapi_file, indent=4)
+            json.dump(open_api_object.json, openapi_file, indent=4)
 
     summary_report(
         source,

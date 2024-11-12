@@ -57,7 +57,7 @@
                 "disableSearch": true,
                 "autoCompleteFields": [
                   {
-                    "value": "login.example.com",
+                    "value": 1,
                     "label": "Value1"
                   },
                   {
@@ -73,7 +73,7 @@
               },
               "help": "",
               "field": "custom_endpoint",
-              "defaultValue": "login.example.com",
+              "defaultValue": 1,
               "required": true
             },
             {
@@ -92,9 +92,6 @@
               "type": "text",
               "help": "Enter the URL, for example",
               "required": false,
-              "options": {
-                "placeholder": "Required"
-              },
               "validators": [
                 {
                   "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
@@ -163,16 +160,17 @@
               "type": "multipleSelect",
               "label": "Example Multiple Select",
               "field": "account_multiple_select",
-              "help": "This is an example multipleSelect for account entity",
+              "help": "default value is Numeric Two",
               "required": true,
+              "defaultValue": "2",
               "options": {
                 "items": [
                   {
-                    "value": "one",
+                    "value": 1,
                     "label": "Option One"
                   },
                   {
-                    "value": "two",
+                    "value": 2,
                     "label": "Option Two"
                   }
                 ]
@@ -517,7 +515,8 @@
               "validators": [
                 {
                   "type": "number",
-                  "range": [1, 65535]
+                  "range": [1, 65535],
+                  "isInteger": true
                 }
               ],
               "field": "proxy_port"
@@ -687,7 +686,7 @@
       "title": "Inputs",
       "description": "Manage your data inputs",
       "table": {
-        "actions": ["edit", "enable", "delete", "clone"],
+        "actions": ["edit", "delete","search", "clone"],
         "header": [
           {
             "label": "Name",

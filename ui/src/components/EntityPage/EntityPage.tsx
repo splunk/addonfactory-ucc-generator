@@ -14,12 +14,14 @@ import BaseFormView from '../BaseFormView/BaseFormView';
 import { SubTitleComponent } from '../../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StyledButton } from '../../pages/EntryPageStyle';
+import { StandardPages } from '../../types/components/shareableTypes';
+import PageContext from '../../context/PageContext';
 
 interface EntityPageProps {
     handleRequestClose: () => void;
     serviceName: string;
     mode: Mode;
-    page: string;
+    page: StandardPages;
     stanzaName?: string;
     formLabel?: string;
     groupName?: string;
@@ -89,15 +91,21 @@ function EntityPage({
                         <Heading style={{ paddingLeft: '30px' }} level={3}>
                             {_(formLabel)}
                         </Heading>
-                        <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
-                            ref={form}
-                            page={page}
-                            serviceName={serviceName}
-                            mode={mode}
-                            stanzaName={stanzaName || ''}
-                            handleFormSubmit={handleFormSubmit}
-                            groupName={groupName}
-                        />
+
+                        <PageContext.Consumer>
+                            {(pageContext) => (
+                                <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+                                    ref={form}
+                                    page={page}
+                                    serviceName={serviceName}
+                                    mode={mode}
+                                    stanzaName={stanzaName || ''}
+                                    handleFormSubmit={handleFormSubmit}
+                                    groupName={groupName}
+                                    pageContext={pageContext}
+                                />
+                            )}
+                        </PageContext.Consumer>
                     </ShadowedDiv>
                     <ButtonRow>
                         <StyledButton

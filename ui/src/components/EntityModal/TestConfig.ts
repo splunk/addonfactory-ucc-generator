@@ -274,85 +274,6 @@ export const getConfigWarningMessageAlwaysDisplay = () => {
     return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
 };
 
-export const getConfigWarningMessageForInputServices = () => {
-    const globalConfig = getGlobalConfigMock();
-    const newConfig = {
-        ...globalConfig,
-        pages: {
-            ...globalConfig.pages,
-            input: {
-                ...globalConfig.pages.configuration,
-                services: [
-                    { entity: accessTokenMock, ...defaultTableProps, warning: WARNING_MESSAGES },
-                ],
-            },
-        },
-    };
-    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
-};
-
-export const getConfigEnableFalseForOauthBasic = () => {
-    const globalConfig = getGlobalConfigMock();
-    const newConfig = {
-        ...globalConfig,
-        pages: {
-            ...globalConfig.pages,
-            configuration: {
-                ...globalConfig.pages.configuration,
-                tabs: [{ entity: entityEnableFalseForOauthField, ...defaultTableProps }],
-            },
-        },
-    };
-    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
-};
-
-const entityEnableFalseForBasicOauthField = [
-    {
-        type: 'oauth',
-        field: 'oauth_jest_test',
-        label: 'Not used',
-        required: true,
-        encrypted: false,
-        options: {
-            auth_type: ['basic'],
-            basic: [
-                {
-                    oauth_field: 'some_text_jest_test',
-                    label: 'some_text Token',
-                    help: 'Enter some_text',
-                    field: 'basic_oauth_text_jest_test',
-                    options: {
-                        disableonEdit: true,
-                        enable: false,
-                    },
-                },
-            ],
-            auth_code_endpoint: '/services/oauth2/authorize',
-            access_token_endpoint: '/services/oauth2/token',
-            oauth_timeout: 30,
-            oauth_state_enabled: false,
-            display: true,
-            disableonEdit: false,
-            enable: true,
-        },
-    } satisfies z.infer<typeof OAuthEntity>,
-];
-
-export const getConfigEnableTrueForOauthBasic = () => {
-    const globalConfig = getGlobalConfigMock();
-    const newConfig = {
-        ...globalConfig,
-        pages: {
-            ...globalConfig.pages,
-            configuration: {
-                ...globalConfig.pages.configuration,
-                tabs: [{ entity: entityEnableFalseForBasicOauthField, ...defaultTableProps }],
-            },
-        },
-    };
-    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
-};
-
 const entityBasicOauthFullyEnabledField = [
     {
         type: 'oauth',
@@ -498,7 +419,7 @@ const entityOauthOauthSeparatedEndpoints = [
             auth_code_endpoint: '/services/oauth2/authorize',
             access_token_endpoint: '/services/oauth2/token',
             oauth_timeout: 3000,
-            oauth_state_enabled: false,
+            oauth_state_enabled: true,
             display: true,
             disableonEdit: false,
             enable: true,

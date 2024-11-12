@@ -81,7 +81,8 @@
                                 ]
                             },
                             "defaultValue": "INFO",
-                            "field": "loglevel"
+                            "field": "loglevel",
+                            "required": true
                         }
                     ],
                     "title": "Logging"
@@ -116,19 +117,12 @@
                             "required": true
                         },
                         {
-                            "type": "text",
-                            "label": "Interval",
-                            "validators": [
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
-                                }
-                            ],
-                            "defaultValue": "300",
+                            "type": "interval",
                             "field": "interval",
+                            "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
-                            "required": true
+                            "required": true,
+                            "defaultValue": "300"
                         },
                         {
                             "type": "singleSelect",
@@ -149,7 +143,6 @@
             "table": {
                 "actions": [
                     "edit",
-                    "enable",
                     "delete",
                     "clone"
                 ],
@@ -206,9 +199,9 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.41.0Reda406cf",
+        "version": "5.50.1+099cf36c",
         "displayName": "This is my add-on",
-        "schemaVersion": "0.0.3",
-        "_uccVersion": "5.41.0"
+        "schemaVersion": "0.0.8",
+        "_uccVersion": "5.50.1"
     }
 }

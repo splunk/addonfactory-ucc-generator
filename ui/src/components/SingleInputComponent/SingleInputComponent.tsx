@@ -3,12 +3,15 @@ import Select from '@splunk/react-ui/Select';
 import Button from '@splunk/react-ui/Button';
 import ComboBox from '@splunk/react-ui/ComboBox';
 import Clear from '@splunk/react-icons/enterprise/Clear';
-import axios from 'axios';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import { z } from 'zod';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { filterResponse } from '../../util/util';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
+import { SelectCommonOptions } from '../../types/globalConfig/entities';
+import { filterResponse, FilterResponseParams } from '../../util/util';
+import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
+import { AcceptableFormValue, StandardPages } from '../../types/components/shareableTypes';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -24,33 +27,28 @@ const StyledDiv = styled.div`
     }
 `;
 
-interface FormItem {
-    label: string;
-    value: string;
-    children?: { label: string; value: string }[];
-}
+type BasicFormItem = { value: AcceptableFormValue; label: string };
 
-interface SingleInputComponentProps {
+type FormItem =
+    | BasicFormItem
+    | {
+          label: string;
+          children: BasicFormItem[];
+      };
+
+export interface SingleInputComponentProps {
     id?: string;
     disabled?: boolean;
-    value: string;
+    value: AcceptableFormValue;
     error?: boolean;
-    handleChange: (field: string, value: string | number | boolean) => void;
+    handleChange: (field: string, value: string) => void;
     field: string;
     dependencyValues?: Record<string, unknown>;
-    controlOptions: {
-        autoCompleteFields?: FormItem[];
-        endpointUrl?: string;
-        denyList?: string;
-        allowList?: string;
-        dependencies?: [];
-        createSearchChoice?: boolean;
-        referenceName?: string;
-        disableSearch?: boolean;
-        labelField?: string;
+    controlOptions: z.TypeOf<typeof SelectCommonOptions> & {
         hideClearBtn?: boolean;
     };
     required: boolean;
+    page?: StandardPages;
 }
 
 function SingleInputComponent(props: SingleInputComponentProps) {
@@ -71,30 +69,41 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         referenceName,
         disableSearch,
         labelField,
+        valueField,
         autoCompleteFields,
         hideClearBtn,
     } = controlOptions;
 
-    function handleChange(e: unknown, obj: { value: string | number | boolean }) {
-        restProps.handleChange(field, obj.value);
-    }
+    const handleChange = (e: unknown, obj: { value: AcceptableFormValue }) => {
+        restProps.handleChange(field, String(obj.value));
+    };
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
 
     function generateOptions(items: FormItem[]) {
         const data: ReactElement[] = [];
         items.forEach((item) => {
-            if (item.value && item.label) {
+            if (
+                'value' in item &&
+                item.value !== null &&
+                item.value !== undefined &&
+                item.value !== '' &&
+                item.label
+            ) {
+                // splunk will maps those when sending post form
+                // so worth doing it earlier to keep same state before and after post
+                const itemValue = String(getValueMapTruthyFalse(item.value, props.page));
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
-                data.push(<Option label={item.label} value={item.value} key={item.value} />);
+                data.push(<Option label={item.label} value={itemValue} key={item.value} />);
             }
-            if (item.children && item.label) {
+            if ('children' in item && item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
+                    const childValue = String(getValueMapTruthyFalse(child.value, props.page));
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
-                    data.push(<Option label={child.label} value={child.value} key={child.value} />);
+                    data.push(<Option label={child.label} value={childValue} key={childValue} />);
                 });
             }
         });
@@ -110,50 +119,51 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             return;
         }
 
+        const url = referenceName
+            ? generateEndPointUrl(encodeURIComponent(referenceName))
+            : endpointUrl;
+
+        if ((dependencies && !dependencyValues) || !url) {
+            setOptions([]);
+            return;
+        }
+
         let current = true;
-        const source = axios.CancelToken.source();
+        const abortController = new AbortController();
 
         const backendCallOptions = {
-            serviceName: '',
-            endpointUrl: '',
-            cancelToken: source.token,
+            signal: abortController.signal,
+            endpointUrl: url,
             handleError: true,
             params: { count: -1 },
-        };
-        if (referenceName) {
-            backendCallOptions.serviceName = referenceName;
-        } else if (endpointUrl) {
-            backendCallOptions.endpointUrl = endpointUrl;
-        }
+        } satisfies RequestParams;
 
         if (dependencyValues) {
             backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
         }
-        if (!dependencies || dependencyValues) {
-            setLoading(true);
-            axiosCallWrapper(backendCallOptions)
-                .then((response) => {
-                    if (current) {
-                        setOptions(
-                            generateOptions(
-                                filterResponse(response.data.entry, labelField, allowList, denyList)
-                            )
-                        );
-                        setLoading(false);
-                    }
-                })
-                .catch(() => {
-                    if (current) {
-                        setLoading(false);
-                    }
-                    setOptions([]);
-                });
-        } else {
-            setOptions([]);
-        }
+
+        setLoading(true);
+        getRequest<{ entry: FilterResponseParams }>(backendCallOptions)
+            .then((data) => {
+                if (current) {
+                    setOptions(
+                        generateOptions(
+                            filterResponse(data.entry, labelField, valueField, allowList, denyList)
+                        )
+                    );
+                    setLoading(false);
+                }
+            })
+            .catch(() => {
+                if (current) {
+                    setLoading(false);
+                }
+                setOptions([]);
+            });
+
         // eslint-disable-next-line consistent-return
         return () => {
-            source.cancel('Operation canceled.');
+            abortController.abort('Operation canceled.');
             current = false;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,15 +174,19 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     // hideClearBtn=true only passed for OAuth else its undefined
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
     const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
-
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                value={props.value === null ? '' : props.value}
+                value={
+                    // if value is empty use empty string as ComboBox accepts only string
+                    props.value === null || typeof props.value === 'undefined'
+                        ? ''
+                        : String(props.value)
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
-                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                onChange={handleChange}
                 inline
             >
                 {options && options.length > 0 && options}
@@ -185,11 +199,16 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                value={props.value}
+                value={
+                    // if value is empty use empty string as Select accepts only string
+                    props.value === null || typeof props.value === 'undefined'
+                        ? ''
+                        : String(props.value)
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
-                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
+                onChange={handleChange}
                 filter={!disableSearch}
                 inline
             >

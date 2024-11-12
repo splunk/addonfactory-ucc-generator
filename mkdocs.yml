@@ -15,68 +15,110 @@ markdown_extensions:
   - sane_lists
   - codehilite
   - pymdownx.superfences
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.details
 
 theme:
   name: "material"
+  custom_dir: docs/theme_overrides
   palette:
-    primary: "black"
-    accent: "orange"
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
     - content.code.copy
     - navigation.indexes
 
 extra_css:
-    - css/extra.css
+  - css/extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_if_no_docstring: true
+            filters: ["!^_"]
+            show_source: true
+  - autorefs
+  - print-site  # should be at the end
 
 nav:
-  - Home: "index.md"
-  - Quickstart: "quickstart.md"
+  - About UCC: "index.md"
+  - Getting started: "quickstart.md"
+  - Commands: "commands.md"
   - ".conf files": "dot_conf_files.md"
+  - Generated files: "generated_files.md"
   - Inputs:
-    - "inputs/index.md"
-    - Introduction: "inputs/index.md"
-    - Tabs: "inputs/tabs.md"
-    - Multi-level Menu: "inputs/multilevel_menu.md"
+      - "inputs/index.md"
+      - Introduction: "inputs/index.md"
+      - Tabs: "inputs/tabs.md"
+      - Multi-level menu: "inputs/multilevel_menu.md"
+      - Helper module: "inputs/helper.md"
   - Configuration:
       - "configurations/index.md"
       - Introduction: "configurations/index.md"
       - Logging: "configurations/logging.md"
       - Proxy: "configurations/proxy.md"
   - Dashboard: "dashboard.md"
-  - Alert Actions:
-    - "alert_actions/index.md"
-    - Alert Action Scripts: "alert_actions/alert_scripts.md"
-    - Adaptive Response: "alert_actions/adaptive_response.md"
+  - Alert actions:
+      - "alert_actions/index.md"
+      - Alert action scripts: "alert_actions/alert_scripts.md"
+      - Adaptive response: "alert_actions/adaptive_response.md"
   - Entity:
-    - "entity/index.md"
-    - Introduction: "entity/index.md"
-    - Components: "entity/components.md"
-    - Validators: "entity/validators.md"
-    - Modify Fields On Change: "entity/modifyFieldsOnValue.md"
+      - "entity/index.md"
+      - Introduction: "entity/index.md"
+      - Components: "entity/components.md"
+      - Validators: "entity/validators.md"
+      - Modify fields On change: "entity/modifyFieldsOnValue.md"
 
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
-  - UCC Ignore: "uccignore.md"
+  - UCC ignore: "uccignore.md"
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
-  - Custom UI Extensions:
-    - Overview: "custom_ui_extensions/overview.md"
-    - Custom Hook: "custom_ui_extensions/custom_hook.md"
-    - Custom Control: "custom_ui_extensions/custom_control.md"
-    - Custom Row: "custom_ui_extensions/custom_row.md"
-    - Custom Cell: "custom_ui_extensions/custom_cell.md"
-    - Custom Menu: "custom_ui_extensions/custom_menu.md"
-    - Custom Tab: "custom_ui_extensions/custom_tab.md"
+  - Custom UI extensions:
+      - Overview: "custom_ui_extensions/overview.md"
+      - Custom hook: "custom_ui_extensions/custom_hook.md"
+      - Custom control: "custom_ui_extensions/custom_control.md"
+      - Custom row: "custom_ui_extensions/custom_row.md"
+      - Custom cell: "custom_ui_extensions/custom_cell.md"
+      - Custom menu: "custom_ui_extensions/custom_menu.md"
+      - Custom tab: "custom_ui_extensions/custom_tab.md"
   - Advanced:
-    - Custom Mapping: "advanced/custom_mapping.md"
-    - Dependent Dropdown: "advanced/dependent_dropdown.md"
-    - OAuth Support: "advanced/oauth_support.md"
-    - Custom REST Handler: "advanced/custom_rest_handler.md"
-    - Groups Feature: "advanced/groups_feature.md"
-    - Save Validator: "advanced/save_validator.md"
-    - OS-dependent libraries: "advanced/os-dependent_libraries.md"
-    - Sub Description: "advanced/sub_description.md"
-    - Custom Warning: "advanced/custom_warning.md"
+      - Custom mapping: "advanced/custom_mapping.md"
+      - Dependent dropdown: "advanced/dependent_dropdown.md"
+      - OAuth support: "advanced/oauth_support.md"
+      - Custom REST handler: "advanced/custom_rest_handler.md"
+      - Groups feature: "advanced/groups_feature.md"
+      - Save validator: "advanced/save_validator.md"
+      - OS-dependent libraries: "advanced/os-dependent_libraries.md"
+      - Sub description: "advanced/sub_description.md"
+      - Custom warning: "advanced/custom_warning.md"
   - Troubleshooting: "troubleshooting.md"
   - Contributing: "contributing.md"
   - Changelog: "CHANGELOG.md"
+  - Metadata: "metadata.md"
+  - Storybook: "storybook/index.html"
+  - UI Tests:
+      - Configuration Page:
+          - General: "ui_tests_config_page_general.md"
+          - Account: "ui_tests_config_page_account.md"
+          - Custom: "ui_tests_config_page_custom.md"
+          - Logging: "ui_tests_config_page_logging.md"
+          - Proxy: "ui_tests_config_page_proxy.md"
+      - Alert Action Page: "ui_tests_alert_actions_page.md"
+      - Input Page: "ui_tests_inputs_page.md"

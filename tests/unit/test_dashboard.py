@@ -9,10 +9,8 @@ from splunk_add_on_ucc_framework import dashboard
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import global_config as gc
 
-
 expected_folder = path.join(path.dirname(__file__), "expected_results")
 definition_jsons_path = dashboard.default_definition_json_filename
-
 
 custom_definition = {
     "visualizations": {
@@ -65,7 +63,7 @@ def setup(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_custom_dashboard.json"
     )
-    global_config = gc.GlobalConfig(global_config_path, False)
+    global_config = gc.GlobalConfig(global_config_path)
     tmp_ta_path = tmp_path / "test_ta"
     os.makedirs(tmp_ta_path)
     custom_dash_path = os.path.join(tmp_ta_path, "custom_dashboard.json")
@@ -108,7 +106,7 @@ def test_generate_dashboard_only_custom_components(setup, tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_custom_dashboard.json"
     )
-    global_config = gc.GlobalConfig(global_config_path, False)
+    global_config = gc.GlobalConfig(global_config_path)
 
     with open(custom_dash_path, "w") as file:
         file.write(json.dumps(custom_definition))
@@ -175,6 +173,7 @@ def test_generate_dashboard_with_custom_components_invalid_xml_file(
 
 def test_generate_dashboard_with_custom_components_no_content(setup, tmp_path, caplog):
     global_config, custom_dash_path, definition_jsons_file_path = setup
+
     with open(custom_dash_path, "w") as file:
         file.write("{}")
 
@@ -193,3 +192,72 @@ def test_generate_dashboard_with_custom_components_no_content(setup, tmp_path, c
         f"(see https://splunk.github.io/addonfactory-ucc-generator/dashboard/)"
     )
     assert expected_msg in caplog.text
+
+
+@pytest.mark.parametrize(
+    "custom_settings, expected_result",
+    [
+        (
+            ("source", ["*cond1", "*cond2"]),
+            'index=_internal source=*license_usage.log type=Usage (s IN ("*cond1","*cond2")) |',
+        ),
+        (
+            ("sourcetype", ["*cond1*"]),
+            'index=_internal source=*license_usage.log type=Usage (st IN ("*cond1*")) |',
+        ),
+        (
+            ("host", ["*cond1", "cond2*", "cond3*"]),
+            'index=_internal source=*license_usage.log type=Usage (h IN ("*cond1","cond2*","cond3*")) |',
+        ),
+        (
+            ("index", ["cond1", "cond2"]),
+            'index=_internal source=*license_usage.log type=Usage (idx IN ("cond1","cond2")) |',
+        ),
+    ],
+)
+def test_custom_license_usage_search(
+    setup, tmp_path, caplog, custom_settings, expected_result
+):
+    global_config, custom_dash_path, definition_jsons_file_path = setup
+
+    settings = {
+        "settings": {
+            "custom_license_usage": {
+                "determine_by": custom_settings[0],
+                "search_condition": custom_settings[1],
+            }
+        }
+    }
+
+    global_config.dashboard.update(settings)
+
+    with open(custom_dash_path, "w") as file:
+        file.write(json.dumps(custom_definition))
+
+    with mock.patch("os.path.abspath") as path_abs:
+        path_abs.return_value = custom_dash_path
+        dashboard.generate_dashboard(
+            global_config,
+            "Splunk_TA_UCCExample",
+            str(definition_jsons_file_path),
+        )
+
+    with open(
+        os.path.join(definition_jsons_file_path, "overview_definition.json")
+    ) as file:
+        def_json = json.loads(file.read())
+        query = def_json["dataSources"]["overview_data_volume_ds"]["options"]["query"]
+        assert query.startswith(expected_result)
+
+    with open(
+        os.path.join(definition_jsons_file_path, "data_ingestion_tab_definition.json")
+    ) as file:
+        def_json = json.loads(file.read())
+        query_1 = def_json["dataSources"]["data_ingestion_data_volume_ds"]["options"][
+            "query"
+        ]
+        assert query_1.startswith(expected_result)
+
+        for el in def_json["inputs"]["data_ingestion_table_input"]["options"]["items"]:
+            if el["label"] in ("Source type", "Source", "Host", "Index"):
+                assert el["value"].startswith(expected_result)

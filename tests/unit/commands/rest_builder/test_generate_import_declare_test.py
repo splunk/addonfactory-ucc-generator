@@ -5,7 +5,10 @@ from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_sch
     GlobalConfigBuilderSchema,
 )
 from splunk_add_on_ucc_framework import global_config as gc
-from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
+from splunk_add_on_ucc_framework.commands.rest_builder.builder import (
+    RestBuilder,
+    group_libs_by_python_version_and_platform,
+)
 
 base_file_content = [
     "\n",
@@ -27,12 +30,15 @@ file_content_with_os_lib = base_file_content + [
     "bindir = os.path.dirname(os.path.realpath(os.path.dirname(__file__)))\n",
     'libdir = os.path.join(bindir, "lib")\n',
     "platform = sys.platform\n",
-    'if platform.startswith("win"):\n',
-    '\tsys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))\n',
-    'if platform.startswith("darwin"):\n',
-    '\tsys.path.insert(0, os.path.join(libdir, "3rdparty/darwin"))\n',
-    'if platform.startswith("linux"):\n',
-    '\tsys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))\n',
+    'python_version = "".join(str(x) for x in sys.version_info[:2])\n',
+    "\n",
+    'if python_version == "37":\n',
+    '\tif platform.startswith("win"):\n',
+    '\t\tsys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))\n',
+    '\tif platform.startswith("darwin"):\n',
+    '\t\tsys.path.insert(0, os.path.join(libdir, "3rdparty/darwin"))\n',
+    '\tif platform.startswith("linux"):\n',
+    '\t\tsys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))\n',
 ]
 
 
@@ -40,7 +46,7 @@ def test_generate_import_declare_test_with_os_lib(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path, False)
+    global_config = gc.GlobalConfig(global_config_path)
 
     tmp_lib_path = tmp_path / "output"
     run_rest_builder_build(global_config, tmp_lib_path)
@@ -54,7 +60,7 @@ def test_generate_import_declare_test_without_os_lib(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_configuration.json"
     )
-    global_config = gc.GlobalConfig(global_config_path, False)
+    global_config = gc.GlobalConfig(global_config_path)
 
     tmp_lib_path = tmp_path / "output"
     run_rest_builder_build(global_config, tmp_lib_path)
@@ -73,3 +79,48 @@ def run_rest_builder_build(global_config, tmp_lib_path):
 
     os.listdir(tmp_lib_path)
     os.walk(tmp_lib_path)
+
+
+def test_group_libs_by_python_version_and_platform_single_version(
+    os_dependent_library_config,
+):
+    libraries = [
+        os_dependent_library_config(
+            name="lib1", python_version="37", os="linux", target="/path/to/lib1"
+        ),
+        os_dependent_library_config(
+            name="lib2", python_version="37", os="linux", target="/path/to/lib2"
+        ),
+    ]
+    expected = {"37": {"linux": {"/path/to/lib1", "/path/to/lib2"}}}
+    assert group_libs_by_python_version_and_platform(libraries) == expected
+
+
+def test_group_libs_by_python_version_and_platform_multiple_versions(
+    os_dependent_library_config,
+):
+    libraries = [
+        os_dependent_library_config(
+            name="lib1", python_version="37", os="linux", target="/path/to/lib1"
+        ),
+        os_dependent_library_config(
+            name="lib2", python_version="38", os="linux", target="/path/to/lib2"
+        ),
+    ]
+    expected = {"37": {"linux": {"/path/to/lib1"}}, "38": {"linux": {"/path/to/lib2"}}}
+    assert group_libs_by_python_version_and_platform(libraries) == expected
+
+
+def test_group_libs_by_python_version_and_platform_multiple_os(
+    os_dependent_library_config,
+):
+    libraries = [
+        os_dependent_library_config(
+            name="lib1", python_version="37", os="linux", target="/path/to/lib1"
+        ),
+        os_dependent_library_config(
+            name="lib2", python_version="37", os="windows", target="C:\\path\\to\\lib2"
+        ),
+    ]
+    expected = {"37": {"linux": {"/path/to/lib1"}, "windows": {"C:\\path\\to\\lib2"}}}
+    assert group_libs_by_python_version_and_platform(libraries) == expected

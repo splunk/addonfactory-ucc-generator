@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "Use the Monitoring dashboard to track behaviors for your add-on.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "overview_main_label_viz": {
@@ -53,10 +52,12 @@
           "#A870EF",
           "#029ceb"
         ],
-        "yAxisTitleText": "Volume[GB]",
+        "yAxisTitleText": "Volume (bytes)",
         "overlayFields": "Number of events",
         "y2AxisTitleText": "Number of events",
+        "xAxisTitleText": "Time",
         "y2AxisLineVisibility": "show",
+        "showRoundedY2AxisLabels": true,
         "showOverlayY2Axis": true
       },
       "title": "Data ingestion",
@@ -68,9 +69,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
-        "seriesColors": [
-          "#A870EF"
-        ],
+        "xAxisTitleText": "Time",
         "yAxisTitleText": "Error count"
       },
       "title": "Errors",
@@ -103,7 +102,7 @@
     "overview_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart span=1d sum(b) as Usage | eval Usage=round(Usage/1024/1024/1024,3) | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ] ",
+        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart sum(b) as Usage | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ]",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -113,7 +112,7 @@
     "overview_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* ERROR | timechart span=1d count as Errors",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR, CRITICAL) | timechart count as Errors by exc_l",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -125,10 +124,10 @@
   "inputs": {
     "overview_input": {
       "options": {
-        "defaultValue": "-7d,now",
+        "defaultValue": "-24h,now",
         "token": "overview_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
     }
   },
@@ -189,7 +188,7 @@
           "x": 20,
           "y": 150,
           "w": 620,
-          "h": 400
+          "h": 300
         }
       },
       {
@@ -198,7 +197,7 @@
           "x": 640,
           "y": 150,
           "w": 620,
-          "h": 400
+          "h": 300
         }
       }
     ]

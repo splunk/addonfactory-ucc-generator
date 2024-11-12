@@ -1,10 +1,210 @@
-# [5.41.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.40.0...v5.41.0) (2024-04-02)
+# [5.52.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.1...v5.52.0) (2024-10-30)
 
 
 ### Bug Fixes
 
-* **storybook:** fix errors related to uncaught network requests ([#1117](https://github.com/splunk/addonfactory-ucc-generator/issues/1117)) ([ee79967](https://github.com/splunk/addonfactory-ucc-generator/commit/ee79967de414219fc1d5f557f212dfe3670b1b3a))
+* generate basic authentication fields for OpenAPI integration ([#1407](https://github.com/splunk/addonfactory-ucc-generator/issues/1407)) ([584b832](https://github.com/splunk/addonfactory-ucc-generator/commit/584b83255e73b42870a9c1ad7c2e15764b7b65eb))
+* remove support for the "enable" action in table inputs ([#1386](https://github.com/splunk/addonfactory-ucc-generator/issues/1386)) ([26a4bb9](https://github.com/splunk/addonfactory-ucc-generator/commit/26a4bb90ccea63233e2fcc263ec23ad9f4649853))
 
+
+### Features
+
+* print warning when entity does not have validators ([#1409](https://github.com/splunk/addonfactory-ucc-generator/issues/1409)) ([ad12cea](https://github.com/splunk/addonfactory-ucc-generator/commit/ad12cea6e62b6796553f2f570b8cfc501601362f))
+* require splunktaucclib 6.4.0 during the build phase ([#1412](https://github.com/splunk/addonfactory-ucc-generator/issues/1412)) ([0d20269](https://github.com/splunk/addonfactory-ucc-generator/commit/0d20269238c76ce77a011f1875dcfc14087efe06))
+
+## [5.51.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.0...v5.51.1) (2024-10-22)
+
+
+### Bug Fixes
+
+* **CustomControl:** change order of function parameters ([#1392](https://github.com/splunk/addonfactory-ucc-generator/issues/1392)) ([c3e82f9](https://github.com/splunk/addonfactory-ucc-generator/commit/c3e82f9bf410ff7d0b13d36de6bd6c2486e2d3ac))
+
+# [5.51.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.1...v5.51.0) (2024-10-16)
+
+
+### Bug Fixes
+
+* follow SemVer guidelines for version in globalConfig ([#1351](https://github.com/splunk/addonfactory-ucc-generator/issues/1351)) ([199c05e](https://github.com/splunk/addonfactory-ucc-generator/commit/199c05e5566556dc7690a8b436c8d3ce68306ccd))
+
+
+### Features
+
+* allow validators for oauth fields ([#1355](https://github.com/splunk/addonfactory-ucc-generator/issues/1355)) ([ef3b6a9](https://github.com/splunk/addonfactory-ucc-generator/commit/ef3b6a9b89c7be676821cd7a772b9dec1394d7b0))
+* hide elements for cloud or enterprise ([#1364](https://github.com/splunk/addonfactory-ucc-generator/issues/1364)) ([21aa28f](https://github.com/splunk/addonfactory-ucc-generator/commit/21aa28f7ea290fe14dc8617b4e2b757905f0d420))
+* modal implementation for data ingestion table ([#1244](https://github.com/splunk/addonfactory-ucc-generator/issues/1244)) ([8246870](https://github.com/splunk/addonfactory-ucc-generator/commit/8246870a5199b2f814bdb94d590c26ef9f351fa1))
+* server side validation of name field based on globalConfig ([#1362](https://github.com/splunk/addonfactory-ucc-generator/issues/1362)) ([4e43c27](https://github.com/splunk/addonfactory-ucc-generator/commit/4e43c27c9f98bd07e5179e9cfd8c46988fef278a))
+* support CRON as interval ([#1346](https://github.com/splunk/addonfactory-ucc-generator/issues/1346)) ([8c5a981](https://github.com/splunk/addonfactory-ucc-generator/commit/8c5a9817753e02103ec04d1267781d7030ace7ac))
+
+
+## [5.50.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.50.0...v5.50.1) (2024-10-04)
+
+
+### Bug Fixes
+
+* use title for app conf ([#1356](https://github.com/splunk/addonfactory-ucc-generator/issues/1356)) ([adfd987](https://github.com/splunk/addonfactory-ucc-generator/commit/adfd9879832b66cd6749fb530bf575ad1a18d053))
+
+# [5.50.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.49.0...v5.50.0) (2024-10-02)
+
+
+### Bug Fixes
+
+* boolean values are converted to 1 and 0 only on configuration page ([#1347](https://github.com/splunk/addonfactory-ucc-generator/issues/1347)) ([d0d0c11](https://github.com/splunk/addonfactory-ucc-generator/commit/d0d0c113f959e11b52573a5105d2bb51d6410165))
+* custom row loading on many tabs ([#1336](https://github.com/splunk/addonfactory-ucc-generator/issues/1336)) ([f124b5e](https://github.com/splunk/addonfactory-ucc-generator/commit/f124b5e91cfd3690ab1869895f38a7cb9a217120))
+* **globalConfig:** update name and rest root convention ([#1335](https://github.com/splunk/addonfactory-ucc-generator/issues/1335)) ([bdfa8c3](https://github.com/splunk/addonfactory-ucc-generator/commit/bdfa8c3131e2971100de9f61e8567620ae796db9)), closes [#1333](https://github.com/splunk/addonfactory-ucc-generator/issues/1333)
+
+
+### Features
+
+* **dashboard:** add possibility to display CRITICAL log lvl in dashboard ([#1337](https://github.com/splunk/addonfactory-ucc-generator/issues/1337)) ([d937986](https://github.com/splunk/addonfactory-ucc-generator/commit/d93798623302a444cf4aa333397324ed80e6d5b9))
+* option for configuring is_visible from globalConfig.json ([#1345](https://github.com/splunk/addonfactory-ucc-generator/issues/1345)) ([04c80e3](https://github.com/splunk/addonfactory-ucc-generator/commit/04c80e35488301522e19735fb06168160a8b0b86)), closes [#1334](https://github.com/splunk/addonfactory-ucc-generator/issues/1334)
+* provide support for Python 3.9 for OS-dependent libraries ([#1338](https://github.com/splunk/addonfactory-ucc-generator/issues/1338)) ([5cfc889](https://github.com/splunk/addonfactory-ucc-generator/commit/5cfc889357a8a19695b7e43cf07a327b00ed600d))
+* restructure conf and spec file generation ([#1328](https://github.com/splunk/addonfactory-ucc-generator/issues/1328)) ([bc6a36b](https://github.com/splunk/addonfactory-ucc-generator/commit/bc6a36bd323a31ac2284f0a621caa2bfaa4c93ac))
+* restructure html file generation ([#1311](https://github.com/splunk/addonfactory-ucc-generator/issues/1311)) ([ed2c2bd](https://github.com/splunk/addonfactory-ucc-generator/commit/ed2c2bd66c5c62fbd09fc1ed28dfaa2fc49a05fa))
+* restructure xml file generation ([#1312](https://github.com/splunk/addonfactory-ucc-generator/issues/1312)) ([a171c8d](https://github.com/splunk/addonfactory-ucc-generator/commit/a171c8dc74d01268f4a4cb50df2d0e5b6956d883))
+
+# [5.49.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.2...v5.49.0) (2024-08-21)
+
+
+### Bug Fixes
+
+* add basic textarea in alerts ([50bd0e1](https://github.com/splunk/addonfactory-ucc-generator/commit/50bd0e1a5a97713fffc93363307227d87fe99c1b))
+* disallow alerts textarea to has option param ([f7605df](https://github.com/splunk/addonfactory-ucc-generator/commit/f7605df302d827dfd46412d7b4d62168792065a7))
+
+
+### Features
+
+* add basic textarea field to alerts ([#1308](https://github.com/splunk/addonfactory-ucc-generator/issues/1308)) ([cc1706f](https://github.com/splunk/addonfactory-ucc-generator/commit/cc1706ff527269e57ab7998800184015ac2f03b3))
+* add new index entity ([#1313](https://github.com/splunk/addonfactory-ucc-generator/issues/1313)) ([df77f51](https://github.com/splunk/addonfactory-ucc-generator/commit/df77f514b7dbf1bab9b89be3222db0e8fafbe6fd))
+* add required as modifiable property ([#1309](https://github.com/splunk/addonfactory-ucc-generator/issues/1309)) ([a94cdc9](https://github.com/splunk/addonfactory-ucc-generator/commit/a94cdc9a80e7754b12a56f3c9095022d323404ca))
+* default value for custom mapping ([#1304](https://github.com/splunk/addonfactory-ucc-generator/issues/1304)) ([8c5a3a6](https://github.com/splunk/addonfactory-ucc-generator/commit/8c5a3a6ff9f92259f3716f68ad63dd7b523b378d)), closes [#1282](https://github.com/splunk/addonfactory-ucc-generator/issues/1282)
+* use log_level in dashboard queries ([#1289](https://github.com/splunk/addonfactory-ucc-generator/issues/1289)) ([3fc86c3](https://github.com/splunk/addonfactory-ucc-generator/commit/3fc86c3003003273415de7b2ac71ea51da5e04e3))
+
+## [5.48.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.1...v5.48.2) (2024-07-25)
+
+
+### Bug Fixes
+
+* **inputs:** fix parsing '0' as false for readonlyField and hideField ([#1290](https://github.com/splunk/addonfactory-ucc-generator/issues/1290)) ([ec676a1](https://github.com/splunk/addonfactory-ucc-generator/commit/ec676a1f7ca4a63e111aca355610161bc9e0fc1d))
+* **NumberValidator:** Number validators allows integer value ([#1293](https://github.com/splunk/addonfactory-ucc-generator/issues/1293)) ([dbd287c](https://github.com/splunk/addonfactory-ucc-generator/commit/dbd287c406957867da1c01a7804a314242de420a)), closes [#876](https://github.com/splunk/addonfactory-ucc-generator/issues/876)
+
+# [5.48.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.48.0...v5.48.1) (2024-07-11)
+
+
+### Bug Fixes
+
+* schema for mapping custom api value ([#1281](https://github.com/splunk/addonfactory-ucc-generator/issues/1281)) ([571bef7](https://github.com/splunk/addonfactory-ucc-generator/commit/571bef7450e994bac4fecf98376f58525cceec85))
+
+# [5.48.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.47.0...v5.48.0) (2024-07-10)
+
+
+### Bug Fixes
+
+* allow using globalConfig validator regardless of the default encoding ([#1276](https://github.com/splunk/addonfactory-ucc-generator/issues/1276)) ([480798f](https://github.com/splunk/addonfactory-ucc-generator/commit/480798f5819770755b083a56f4a4aaccb4f90cce))
+* correctly map truly and falsy values for inputs ([#1270](https://github.com/splunk/addonfactory-ucc-generator/issues/1270)) ([2b8c2c2](https://github.com/splunk/addonfactory-ucc-generator/commit/2b8c2c24557351dfd6f8dc05c2317c4efd16eceb))
+
+### Features
+
+* **theme:** add dark theme support ([#1257](https://github.com/splunk/addonfactory-ucc-generator/issues/1257)) ([8bd5d33](https://github.com/splunk/addonfactory-ucc-generator/commit/8bd5d33076dbb730b5e24a5033b2b59751732006))
+* **inputs:** add hidable or readonly inputs ([#1258](https://github.com/splunk/addonfactory-ucc-generator/issues/1258)) ([8c70476](https://github.com/splunk/addonfactory-ucc-generator/commit/8c70476a5de4ec7cdf18e26b39494a2d5452f61c))
+* remove placeholder option from globalConfig ([#1256](https://github.com/splunk/addonfactory-ucc-generator/issues/1256)) ([044c2d0](https://github.com/splunk/addonfactory-ucc-generator/commit/044c2d09630dcd762f247bac55d429704e852f9c))
+* update add-on generated by ucc-gen init command ([#1263](https://github.com/splunk/addonfactory-ucc-generator/issues/1263)) ([76e8e52](https://github.com/splunk/addonfactory-ucc-generator/commit/76e8e52181e6153b19ba01844cd14424402e928f))
+* **select entity:** allow custom mapping for values ([#1265](https://github.com/splunk/addonfactory-ucc-generator/issues/1265)) ([202f046](https://github.com/splunk/addonfactory-ucc-generator/commit/202f046c662427b7123825d42b5baecba9355071))
+
+
+# [5.47.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.46.0...v5.47.0) (2024-06-25)
+
+
+### Bug Fixes
+
+* allow 2 blank lines in markdown ([3832c3c](https://github.com/splunk/addonfactory-ucc-generator/commit/3832c3c1f5458665923d14dba962dc2c3cc53223))
+
+
+### Features
+
+* **custom_row:** pass default row value to custom row component ([#1218](https://github.com/splunk/addonfactory-ucc-generator/issues/1218)) ([1fdebfa](https://github.com/splunk/addonfactory-ucc-generator/commit/1fdebfa28a3cecc7498fb7e1c441f3e0742d89d4))
+* **dashboard:** add custom filtering options for the license_usage file ([#1247](https://github.com/splunk/addonfactory-ucc-generator/issues/1247)) ([3e8d864](https://github.com/splunk/addonfactory-ucc-generator/commit/3e8d86476fbf1521785c236c3af15ef3d6fd754d))
+* **dashboard:** add globalconfig configuration for custom dashboard tab name ([#1239](https://github.com/splunk/addonfactory-ucc-generator/issues/1239)) ([fce1df4](https://github.com/splunk/addonfactory-ucc-generator/commit/fce1df428b6761ddd20360c6cfc9e8eda1982d74))
+
+# [5.46.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.45.0...v5.46.0) (2024-06-13)
+
+
+### Bug Fixes
+
+* **oauth:** set loglevel in oauth rh template to use log level set in add-on ([#1227](https://github.com/splunk/addonfactory-ucc-generator/issues/1227)) ([3b7b9e1](https://github.com/splunk/addonfactory-ucc-generator/commit/3b7b9e1b7d02a80acda20c1f3b7619120f7bbefc))
+
+
+### Features
+
+* allow developers to choose the default view ([#1197](https://github.com/splunk/addonfactory-ucc-generator/issues/1197)) ([21610e2](https://github.com/splunk/addonfactory-ucc-generator/commit/21610e20957796bdc1208b8d9c050f5327fbb2c6)), closes [#1041](https://github.com/splunk/addonfactory-ucc-generator/issues/1041)
+* **configuration:** display UCC version ([#1221](https://github.com/splunk/addonfactory-ucc-generator/issues/1221)) ([a63d8b3](https://github.com/splunk/addonfactory-ucc-generator/commit/a63d8b389c1a56c23c647c31866786c05b84dcf8))
+* **dashboard:** add error categories to chart and event table in the error panel ([#1225](https://github.com/splunk/addonfactory-ucc-generator/issues/1225)) ([cd2907a](https://github.com/splunk/addonfactory-ucc-generator/commit/cd2907ae1f2369ba5736fa92692bc9afe4854d5d))
+* **dashboard:** add resource monitoring tab and information about input status ([#1209](https://github.com/splunk/addonfactory-ucc-generator/issues/1209)) ([e8acfd9](https://github.com/splunk/addonfactory-ucc-generator/commit/e8acfd9d76df207c8344467e95cb6f77d4bd2e3e))
+* globalConfig file passed through `--config` accepts only JSON or YAML formats ([#1216](https://github.com/splunk/addonfactory-ucc-generator/issues/1216)) ([f661475](https://github.com/splunk/addonfactory-ucc-generator/commit/f661475201be6e2d9da478e24a20d7a385d7bccc))
+* sort table by visible text ([#1205](https://github.com/splunk/addonfactory-ucc-generator/issues/1205)) ([8561e0f](https://github.com/splunk/addonfactory-ucc-generator/commit/8561e0fd5ea99daab5030bec00bb2fcac3b7c9b1))
+
+# [5.45.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.44.0...v5.45.0) (2024-05-28)
+
+### Bug Fixes
+
+* explicitly pass required field ([#1202](https://github.com/splunk/addonfactory-ucc-generator/issues/1202)) ([a0ddbf8](https://github.com/splunk/addonfactory-ucc-generator/commit/a0ddbf896e2598afa6126d752b19aded43f34255))
+
+### Features
+
+* add built-in interval entity ([#1179](https://github.com/splunk/addonfactory-ucc-generator/issues/1179)) ([10ae8e3](https://github.com/splunk/addonfactory-ucc-generator/commit/10ae8e3304e6f7ab6a603ac089df24dbf822f236))
+* add flag to add UI source map files during the build process ([#1183](https://github.com/splunk/addonfactory-ucc-generator/issues/1183)) ([6e4944b](https://github.com/splunk/addonfactory-ucc-generator/commit/6e4944b26a6b63eb7a9cc1fde44cc201174ccbc9))
+* Improve input helper module init scripts ([#1204](https://github.com/splunk/addonfactory-ucc-generator/issues/1204)) ([9abb12c](https://github.com/splunk/addonfactory-ucc-generator/commit/9abb12c8d46588c85d8e629b3fd6d24b1e86220f))
+
+# [5.44.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.43.0...v5.44.0) (2024-05-14)
+
+### Bug Fixes
+
+* **alert:** graceful handle for usage of activeResponse ([#1185](https://github.com/splunk/addonfactory-ucc-generator/issues/1185)) ([c43f38f](https://github.com/splunk/addonfactory-ucc-generator/commit/c43f38f800b6156a66b6905bdcdfcf4809f280f2))
+* **style:** fix label overflow issue for 'OpenAPI.json' button in configuration page ([#1181](https://github.com/splunk/addonfactory-ucc-generator/issues/1181)) ([917f9c9](https://github.com/splunk/addonfactory-ucc-generator/commit/917f9c9972007bddddd1d9a307f58710b85fc260))
+
+### Features
+
+* **auto-gen:** notify users for existing features of UCC framework  ([#1177](https://github.com/splunk/addonfactory-ucc-generator/issues/1177)) ([305dbbd](https://github.com/splunk/addonfactory-ucc-generator/commit/305dbbdeeea6726d363bf8435cb13c5e3ff128b3))
+* file input component, supports base64 encoding ([#1167](https://github.com/splunk/addonfactory-ucc-generator/issues/1167)) ([46417c2](https://github.com/splunk/addonfactory-ucc-generator/commit/46417c2351543a35c2e76b787224e3bc3963bb33))
+* helper modules for modular inputs ([#1126](https://github.com/splunk/addonfactory-ucc-generator/issues/1126)) ([fde1a33](https://github.com/splunk/addonfactory-ucc-generator/commit/fde1a33f2f9d272f2de5250bd0afbbb22ae87380)), closes [#331](https://github.com/splunk/addonfactory-ucc-generator/issues/331)
+* **search:** relocate button from dropdown to action column In input page ([#1148](https://github.com/splunk/addonfactory-ucc-generator/issues/1148)) ([696e5a9](https://github.com/splunk/addonfactory-ucc-generator/commit/696e5a92278fb79851d5927b9d5979a00eeeab0e))
+
+# [5.43.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.42.1...v5.43.0) (2024-04-30)
+
+### Bug Fixes
+
+* do not migrate a logging tab when defaultValue is not set ([#1157](https://github.com/splunk/addonfactory-ucc-generator/issues/1157)) ([5335f5b](https://github.com/splunk/addonfactory-ucc-generator/commit/5335f5bac383b19a6ddd0a36ee71bbfacebf552f))
+
+### Features
+
+* improve front for dashboard page ([#1164](https://github.com/splunk/addonfactory-ucc-generator/issues/1164)) ([efc904f](https://github.com/splunk/addonfactory-ucc-generator/commit/efc904f2eb601e4af296190435f957f7df6f4448))
+
+## [5.42.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.42.0...v5.42.1) (2024-04-22)
+
+### Bug Fixes
+
+* **dashboard:** pin @splunk/react-ui version ([#1158](https://github.com/splunk/addonfactory-ucc-generator/issues/1158)) ([0e9a479](https://github.com/splunk/addonfactory-ucc-generator/commit/0e9a4793a83b81f3e71d7f8093a1a4b05254854b))
+
+# [5.42.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.41.0...v5.42.0) (2024-04-19)
+
+### Bug Fixes
+
+* add customScript for alert action ([#1143](https://github.com/splunk/addonfactory-ucc-generator/issues/1143)) ([12d8392](https://github.com/splunk/addonfactory-ucc-generator/commit/12d8392cc87b8f8c8cd08e0e2f294a413beee7a6))
+* add schema version update for alert action ([#1150](https://github.com/splunk/addonfactory-ucc-generator/issues/1150)) ([94f3070](https://github.com/splunk/addonfactory-ucc-generator/commit/94f3070d92bff98aa6212f59230a1f3cd1b5d0aa))
+* update idna to 3.7 ([#1146](https://github.com/splunk/addonfactory-ucc-generator/issues/1146)) ([ece8f65](https://github.com/splunk/addonfactory-ucc-generator/commit/ece8f650430e0e5f8cc51f04c5d23caf5d582b14))
+
+### Features
+
+* **adaptiveResponse:** add verbose details for AR alert action ([#1135](https://github.com/splunk/addonfactory-ucc-generator/issues/1135)) ([b19d678](https://github.com/splunk/addonfactory-ucc-generator/commit/b19d678baa0abda207dcf669eaf2a9180bc6585d))
+* add iconFileName for alert action ([#1134](https://github.com/splunk/addonfactory-ucc-generator/issues/1134)) ([5a76706](https://github.com/splunk/addonfactory-ucc-generator/commit/5a76706df91ab115c285619adf5db5af712c4581)), closes [#1105](https://github.com/splunk/addonfactory-ucc-generator/issues/1105)
+* **CheckboxGroup:** add support for required field ([#1131](https://github.com/splunk/addonfactory-ucc-generator/issues/1131)) ([e101aa3](https://github.com/splunk/addonfactory-ucc-generator/commit/e101aa37263b4c26968c573682c29661a0ccd34a))
+* create a playground for global config ([#1144](https://github.com/splunk/addonfactory-ucc-generator/issues/1144)) ([791a6dc](https://github.com/splunk/addonfactory-ucc-generator/commit/791a6dc7ec6abea179c5601093a9bde86ba64ab4))
+* enhanced monitoring dashboard ([#1125](https://github.com/splunk/addonfactory-ucc-generator/issues/1125)) ([2d2b143](https://github.com/splunk/addonfactory-ucc-generator/commit/2d2b143c2e8d17341ad8860a4681a096e56eba4a))
+
+# [5.41.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.40.0...v5.41.0) (2024-04-02)
+
+### Bug Fixes
+
+* **storybook:** fix errors related to uncaught network requests ([#1117](https://github.com/splunk/addonfactory-ucc-generator/issues/1117)) ([ee79967](https://github.com/splunk/addonfactory-ucc-generator/commit/ee79967de414219fc1d5f557f212dfe3670b1b3a))
 
 ### Features
 
@@ -12,12 +212,10 @@
 
 # [5.40.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.39.1...v5.40.0) (2024-03-21)
 
-
 ### Bug Fixes
 
 * allow using only one Configuration tab ([#1106](https://github.com/splunk/addonfactory-ucc-generator/issues/1106)) ([f6a7fbd](https://github.com/splunk/addonfactory-ucc-generator/commit/f6a7fbd065d2025292e0d81b809ae031b186b19b))
 * custom value passed to component ([#1104](https://github.com/splunk/addonfactory-ucc-generator/issues/1104)) ([729f661](https://github.com/splunk/addonfactory-ucc-generator/commit/729f661b986bf71babbf914b5a9f762d6038c171))
-
 
 ### Features
 
@@ -26,20 +224,17 @@
 
 ## [5.39.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.39.0...v5.39.1) (2024-03-05)
 
-
 ### Bug Fixes
 
 * modifyFieldsOnValue schema and tests ([#1087](https://github.com/splunk/addonfactory-ucc-generator/issues/1087)) ([4629aa1](https://github.com/splunk/addonfactory-ucc-generator/commit/4629aa1dc5ef4bfae78390809ed2b1a1ca4d8b60))
 
 # [5.39.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.38.0...v5.39.0) (2024-02-20)
 
-
 ### Bug Fixes
 
 * **a11y:** associate labels with inputs ([#1055](https://github.com/splunk/addonfactory-ucc-generator/issues/1055)) ([a880c45](https://github.com/splunk/addonfactory-ucc-generator/commit/a880c45938d3ed7ccfe9300ffc6d910ef2fb7989))
 * Add page for proxy configuration ([#1057](https://github.com/splunk/addonfactory-ucc-generator/issues/1057)) ([a76c0c2](https://github.com/splunk/addonfactory-ucc-generator/commit/a76c0c248c7c4f01d60bc4733f7ff2a85b82a691))
 * return back div wrapper that shifts layout ([#1061](https://github.com/splunk/addonfactory-ucc-generator/issues/1061)) ([c6a42c6](https://github.com/splunk/addonfactory-ucc-generator/commit/c6a42c6233ea81918d5da067316654526bd1ca7c)), closes [#1055](https://github.com/splunk/addonfactory-ucc-generator/issues/1055)
-
 
 ### Features
 
@@ -50,12 +245,10 @@
 
 # [5.38.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.37.0...v5.38.0) (2024-02-06)
 
-
 ### Bug Fixes
 
 * **EntityModal:** prevent Enter from submitting the form in Modal window ([#1047](https://github.com/splunk/addonfactory-ucc-generator/issues/1047)) ([b7f179a](https://github.com/splunk/addonfactory-ucc-generator/commit/b7f179ab20e3bae831f1e7ed5b499ceff59ce6bd)), closes [#875](https://github.com/splunk/addonfactory-ucc-generator/issues/875)
 * OpenAPI schema generator fixes for when multiple inputs are defined ([#1016](https://github.com/splunk/addonfactory-ucc-generator/issues/1016)) ([332db43](https://github.com/splunk/addonfactory-ucc-generator/commit/332db4361556b865418b16c6fbd8ce4912ba5084))
-
 
 ### Features
 
@@ -68,13 +261,11 @@
 
 # [5.37.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.2...v5.37.0) (2024-01-31)
 
-
 ### Features
 
 * **checkboxGroup:** correctly parsing values with spaces ([#1034](https://github.com/splunk/addonfactory-ucc-generator/issues/1034)) ([73358ee](https://github.com/splunk/addonfactory-ucc-generator/commit/73358ee58c211e55608e09e1b45e1eeed8ec8df7))
 
 ## [5.36.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.1...v5.36.2) (2024-01-12)
-
 
 ### Bug Fixes
 
@@ -82,13 +273,11 @@
 
 ## [5.36.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.36.0...v5.36.1) (2024-01-12)
 
-
 ### Bug Fixes
 
 * update jinja2 to v3.1.3 to fix CVE ([#1017](https://github.com/splunk/addonfactory-ucc-generator/issues/1017)) ([25b652f](https://github.com/splunk/addonfactory-ucc-generator/commit/25b652f003b8e58e42e0db67fed31f353bc3e805))
 
 # [5.36.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.1...v5.36.0) (2024-01-10)
-
 
 ### Bug Fixes
 
@@ -97,7 +286,6 @@
 * pass disabled props for radio bar component ([#997](https://github.com/splunk/addonfactory-ucc-generator/issues/997)) ([a4eb6f9](https://github.com/splunk/addonfactory-ucc-generator/commit/a4eb6f947088a3e88be8c0d61e97aad4140b9bde))
 * typo in the error message ([#1004](https://github.com/splunk/addonfactory-ucc-generator/issues/1004)) ([312c8be](https://github.com/splunk/addonfactory-ucc-generator/commit/312c8be565f49724a92ac6d8c938ba4ecd978bfc))
 * update axios along with follow redirect ([#1003](https://github.com/splunk/addonfactory-ucc-generator/issues/1003)) ([7bc5a35](https://github.com/splunk/addonfactory-ucc-generator/commit/7bc5a35e93aea05aa5546c28ebd188fff5265f86))
-
 
 ### Features
 
@@ -109,7 +297,6 @@
 
 ## [5.35.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.35.0...v5.35.1) (2023-12-14)
 
-
 ### Bug Fixes
 
 * add missing colorama dependency ([#973](https://github.com/splunk/addonfactory-ucc-generator/issues/973)) ([f17d47d](https://github.com/splunk/addonfactory-ucc-generator/commit/f17d47d7cf576f5da76c4cc03a21f7d5fe44592a))
@@ -117,11 +304,9 @@
 
 # [5.35.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.1...v5.35.0) (2023-12-13)
 
-
 ### Bug Fixes
 
 * add tests and auth_access_token to schema ([#969](https://github.com/splunk/addonfactory-ucc-generator/issues/969)) ([6e1e743](https://github.com/splunk/addonfactory-ucc-generator/commit/6e1e743e29b5e7dcd0a47b9b4e23930838cd9923))
-
 
 ### Features
 
@@ -130,13 +315,11 @@
 
 ## [5.34.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.34.0...v5.34.1) (2023-12-06)
 
-
 ### Bug Fixes
 
 * add control group wrapper max width to 750px ([#966](https://github.com/splunk/addonfactory-ucc-generator/issues/966)) ([0213c45](https://github.com/splunk/addonfactory-ucc-generator/commit/0213c457154cfbe56014ed358c13afa23e184049))
 
 # [5.34.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.33.0...v5.34.0) (2023-11-28)
-
 
 ### Bug Fixes
 
@@ -144,7 +327,6 @@
 * globalConfig validator respects numbers in values in autoCompleteFields ([#957](https://github.com/splunk/addonfactory-ucc-generator/issues/957)) ([1716494](https://github.com/splunk/addonfactory-ucc-generator/commit/17164942afdc7002f3b83107a067687cb873e8f2))
 * revert to static width of modal ([#955](https://github.com/splunk/addonfactory-ucc-generator/issues/955)) ([aec869f](https://github.com/splunk/addonfactory-ucc-generator/commit/aec869f391709496092397cc9164c5a34070975e))
 * update urllib3 ([#922](https://github.com/splunk/addonfactory-ucc-generator/issues/922)) ([11ff4c6](https://github.com/splunk/addonfactory-ucc-generator/commit/11ff4c6113930b684985ba1ba6f217e96d59b9d2))
-
 
 ### Features
 
@@ -157,13 +339,11 @@
 
 # [5.33.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.32.0...v5.33.0) (2023-11-14)
 
-
 ### Features
 
 * release v5.33.0 ([#942](https://github.com/splunk/addonfactory-ucc-generator/issues/942)) ([c5968d2](https://github.com/splunk/addonfactory-ucc-generator/commit/c5968d2828c4c1662ad01427c68e98497722753a)), closes [#906](https://github.com/splunk/addonfactory-ucc-generator/issues/906) [#922](https://github.com/splunk/addonfactory-ucc-generator/issues/922) [#916](https://github.com/splunk/addonfactory-ucc-generator/issues/916) [#888](https://github.com/splunk/addonfactory-ucc-generator/issues/888)
 
 # [5.32.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.31.1...v5.32.0) (2023-10-13)
-
 
 ### Features
 
@@ -171,13 +351,11 @@
 
 ## [5.31.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.31.0...v5.31.1) (2023-10-06)
 
-
 ### Bug Fixes
 
 * include UCC UI into UCC during the release step ([#891](https://github.com/splunk/addonfactory-ucc-generator/issues/891)) ([5207dca](https://github.com/splunk/addonfactory-ucc-generator/commit/5207dca4d134b970d71f65949f7922daf0955775)), closes [#890](https://github.com/splunk/addonfactory-ucc-generator/issues/890) [#890](https://github.com/splunk/addonfactory-ucc-generator/issues/890)
 
 ## [5.31.1-beta.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.31.0...v5.31.1-beta.1) (2023-10-06)
-
 
 ### Bug Fixes
 
@@ -193,13 +371,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.30.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.29.0...v5.30.0) (2023-10-01)
 
-
 ### Features
 
 * release v5.30.0 ([#848](https://github.com/splunk/addonfactory-ucc-generator/issues/848)) ([fb93601](https://github.com/splunk/addonfactory-ucc-generator/commit/fb93601573c1083bdb4cdffaea1df8ac00009db8)), closes [#846](https://github.com/splunk/addonfactory-ucc-generator/issues/846) [#847](https://github.com/splunk/addonfactory-ucc-generator/issues/847) [#849](https://github.com/splunk/addonfactory-ucc-generator/issues/849) [#850](https://github.com/splunk/addonfactory-ucc-generator/issues/850)
 
 # [5.29.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.6...v5.29.0) (2023-09-22)
-
 
 ### Features
 
@@ -207,13 +383,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.28.6](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.5...v5.28.6) (2023-09-13)
 
-
 ### Bug Fixes
 
 * update UCC UI to v1.29.2 ([#829](https://github.com/splunk/addonfactory-ucc-generator/issues/829)) ([bffdc74](https://github.com/splunk/addonfactory-ucc-generator/commit/bffdc741c09cdeb3e61f6d567eded848cab3afb2))
 
 ## [5.28.5](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.4...v5.28.5) (2023-09-06)
-
 
 ### Bug Fixes
 
@@ -221,13 +395,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.28.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.3...v5.28.4) (2023-07-19)
 
-
 ### Bug Fixes
 
 * add-on without globalConfig file should not be visible ([#811](https://github.com/splunk/addonfactory-ucc-generator/issues/811)) ([b2017f6](https://github.com/splunk/addonfactory-ucc-generator/commit/b2017f6fe758b86df870396911ddf5b47ee40aa8))
 
 ## [5.28.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.2...v5.28.3) (2023-07-17)
-
 
 ### Bug Fixes
 
@@ -235,13 +407,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.28.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.1...v5.28.2) (2023-07-07)
 
-
 ### Bug Fixes
 
 * input.template should not render interval field ([#799](https://github.com/splunk/addonfactory-ucc-generator/issues/799)) ([6375de1](https://github.com/splunk/addonfactory-ucc-generator/commit/6375de1537236fa2eb0d8f62bbc2b0fbafd9e198))
 
 ## [5.28.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.28.0...v5.28.1) (2023-06-22)
-
 
 ### Bug Fixes
 
@@ -249,13 +419,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.28.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.3...v5.28.0) (2023-06-22)
 
-
 ### Features
 
 * added support for subTitle field in service ([#790](https://github.com/splunk/addonfactory-ucc-generator/issues/790)) ([378f362](https://github.com/splunk/addonfactory-ucc-generator/commit/378f362109a49e2bb6dc6f01d5b3c4c851a40e19))
 
 ## [5.27.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.2...v5.27.3) (2023-06-06)
-
 
 ### Bug Fixes
 
@@ -263,13 +431,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.27.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.1...v5.27.2) (2023-06-02)
 
-
 ### Bug Fixes
 
 * update UCC UI to v1.27.1 ([#785](https://github.com/splunk/addonfactory-ucc-generator/issues/785)) ([ce25019](https://github.com/splunk/addonfactory-ucc-generator/commit/ce25019ae0c07551e13da6201d88c16e1acfef6f))
 
 ## [5.27.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.27.0...v5.27.1) (2023-05-26)
-
 
 ### Bug Fixes
 
@@ -277,13 +443,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.27.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.26.0...v5.27.0) (2023-05-17)
 
-
 ### Features
 
 * release v5.27.0 ([#765](https://github.com/splunk/addonfactory-ucc-generator/issues/765)) ([5b55833](https://github.com/splunk/addonfactory-ucc-generator/commit/5b55833086966984acb0526a5708abb599fc1899)), closes [#749](https://github.com/splunk/addonfactory-ucc-generator/issues/749) [#750](https://github.com/splunk/addonfactory-ucc-generator/issues/750) [#751](https://github.com/splunk/addonfactory-ucc-generator/issues/751) [#752](https://github.com/splunk/addonfactory-ucc-generator/issues/752) [#753](https://github.com/splunk/addonfactory-ucc-generator/issues/753) [#754](https://github.com/splunk/addonfactory-ucc-generator/issues/754) [/dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest/#JSON-schema-200](https://github.com//dev.splunk.com/enterprise/reference/packagingtoolkit/pkgtoolkitappmanifest//issues/JSON-schema-200) [#755](https://github.com/splunk/addonfactory-ucc-generator/issues/755)
 
 # [5.26.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.25.0...v5.26.0) (2023-05-02)
-
 
 ### Features
 
@@ -292,13 +456,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.25.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.24.0...v5.25.0) (2023-04-18)
 
-
 ### Features
 
 * release v5.25.0 ([#733](https://github.com/splunk/addonfactory-ucc-generator/issues/733)) ([6b3e649](https://github.com/splunk/addonfactory-ucc-generator/commit/6b3e6496dc78728393737569cc9c1cbd14159e66)), closes [#718](https://github.com/splunk/addonfactory-ucc-generator/issues/718) [#719](https://github.com/splunk/addonfactory-ucc-generator/issues/719) [#722](https://github.com/splunk/addonfactory-ucc-generator/issues/722) [#723](https://github.com/splunk/addonfactory-ucc-generator/issues/723) [#724](https://github.com/splunk/addonfactory-ucc-generator/issues/724) [#726](https://github.com/splunk/addonfactory-ucc-generator/issues/726) [#727](https://github.com/splunk/addonfactory-ucc-generator/issues/727) [#725](https://github.com/splunk/addonfactory-ucc-generator/issues/725) [#728](https://github.com/splunk/addonfactory-ucc-generator/issues/728) [#734](https://github.com/splunk/addonfactory-ucc-generator/issues/734) [#735](https://github.com/splunk/addonfactory-ucc-generator/issues/735)
 
 # [5.24.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.23.2...v5.24.0) (2023-04-04)
-
 
 ### Features
 
@@ -306,13 +468,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.23.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.23.1...v5.23.2) (2023-03-23)
 
-
 ### Bug Fixes
 
 * move mkdocs-material to dev dependency ([#707](https://github.com/splunk/addonfactory-ucc-generator/issues/707)) ([504dbfa](https://github.com/splunk/addonfactory-ucc-generator/commit/504dbfae57393340636473c8196b452a1f539972))
 
 ## [5.23.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.23.0...v5.23.1) (2023-03-20)
-
 
 ### Bug Fixes
 
@@ -320,13 +480,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.23.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.22.0...v5.23.0) (2023-03-20)
 
-
 ### Features
 
 * release v5.23.0 ([#705](https://github.com/splunk/addonfactory-ucc-generator/issues/705)) ([f8211f6](https://github.com/splunk/addonfactory-ucc-generator/commit/f8211f663bd79ec186a9ebfe0185876f2d40e93b)), closes [#699](https://github.com/splunk/addonfactory-ucc-generator/issues/699) [#700](https://github.com/splunk/addonfactory-ucc-generator/issues/700) [#703](https://github.com/splunk/addonfactory-ucc-generator/issues/703) [#704](https://github.com/splunk/addonfactory-ucc-generator/issues/704) [#702](https://github.com/splunk/addonfactory-ucc-generator/issues/702) [#701](https://github.com/splunk/addonfactory-ucc-generator/issues/701)
 
 # [5.22.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.21.0...v5.22.0) (2023-03-09)
-
 
 ### Features
 
@@ -334,13 +492,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.21.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.20.0...v5.21.0) (2023-02-22)
 
-
 ### Features
 
 * release v5.21.0 ([#659](https://github.com/splunk/addonfactory-ucc-generator/issues/659)) ([fdd7164](https://github.com/splunk/addonfactory-ucc-generator/commit/fdd7164548e3ac874c50d005e64979576ab38864)), closes [#656](https://github.com/splunk/addonfactory-ucc-generator/issues/656) [#658](https://github.com/splunk/addonfactory-ucc-generator/issues/658) [#657](https://github.com/splunk/addonfactory-ucc-generator/issues/657) [#650](https://github.com/splunk/addonfactory-ucc-generator/issues/650)
 
 # [5.20.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.19.0...v5.20.0) (2023-02-13)
-
 
 ### Features
 
@@ -349,13 +505,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.19.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.18.0...v5.19.0) (2023-01-03)
 
-
 ### Features
 
 * release v5.19.0 ([#601](https://github.com/splunk/addonfactory-ucc-generator/issues/601)) ([2dc1ae1](https://github.com/splunk/addonfactory-ucc-generator/commit/2dc1ae16b8b69d09d386802e7030b4d9a1718992)), closes [#593](https://github.com/splunk/addonfactory-ucc-generator/issues/593) [#594](https://github.com/splunk/addonfactory-ucc-generator/issues/594) [#595](https://github.com/splunk/addonfactory-ucc-generator/issues/595) [/github.com/splunk/addonfactory-ucc-base-ui/blob/283d5abcf8f462ac10de876464bc1719fd19ff90/src/main/webapp/util/uccConfigurationValidators.js#L170-L184](https://github.com//github.com/splunk/addonfactory-ucc-base-ui/blob/283d5abcf8f462ac10de876464bc1719fd19ff90/src/main/webapp/util/uccConfigurationValidators.js/issues/L170-L184) [#584](https://github.com/splunk/addonfactory-ucc-generator/issues/584)
 
 # [5.18.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.17.1...v5.18.0) (2022-12-12)
-
 
 ### Features
 
@@ -363,13 +517,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.17.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.17.0...v5.17.1) (2022-11-30)
 
-
 ### Bug Fixes
 
 * update UCC UI to v1.15.1 ([#578](https://github.com/splunk/addonfactory-ucc-generator/issues/578)) ([173a8f2](https://github.com/splunk/addonfactory-ucc-generator/commit/173a8f2a33299f66c5d5f5041caf532a4710500f))
 
 # [5.17.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.16.1...v5.17.0) (2022-11-29)
-
 
 ### Features
 
@@ -377,13 +529,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.16.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.16.0...v5.16.1) (2022-11-28)
 
-
 ### Bug Fixes
 
 * update UCC UI to 1.14.2 ([#573](https://github.com/splunk/addonfactory-ucc-generator/issues/573)) ([20d2a5c](https://github.com/splunk/addonfactory-ucc-generator/commit/20d2a5c50704d65669028967980712ea6a7939f2))
 
 # [5.16.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.15.1...v5.16.0) (2022-11-23)
-
 
 ### Features
 
@@ -391,13 +541,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.15.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.15.0...v5.15.1) (2022-11-09)
 
-
 ### Bug Fixes
 
 * build add-on if config param is present ([536634a](https://github.com/splunk/addonfactory-ucc-generator/commit/536634af784685b98f563c3ae5543ac63e064825))
 
 # [5.15.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.2...v5.15.0) (2022-11-07)
-
 
 ### Features
 
@@ -405,13 +553,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.14.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.1...v5.14.2) (2022-11-02)
 
-
 ### Bug Fixes
 
 * update UCC UI to v1.12.4 ([#546](https://github.com/splunk/addonfactory-ucc-generator/issues/546)) ([65da70b](https://github.com/splunk/addonfactory-ucc-generator/commit/65da70bb0c2ac931dbc9f400d9007612e1d17283))
 
 ## [5.14.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.14.0...v5.14.1) (2022-10-18)
-
 
 ### Bug Fixes
 
@@ -419,13 +565,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.14.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.13.0...v5.14.0) (2022-10-18)
 
-
 ### Features
 
 * added support for YAML file ([#536](https://github.com/splunk/addonfactory-ucc-generator/issues/536)) ([10eebaa](https://github.com/splunk/addonfactory-ucc-generator/commit/10eebaa4a8d9f51f47b8e86262866d592940054b))
 
 # [5.13.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.12.0...v5.13.0) (2022-08-02)
-
 
 ### Features
 
@@ -433,13 +577,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.12.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.11.0...v5.12.0) (2022-07-08)
 
-
 ### Features
 
 * new version of UCC UI ([#479](https://github.com/splunk/addonfactory-ucc-generator/issues/479)) ([db72816](https://github.com/splunk/addonfactory-ucc-generator/commit/db728163afc208d3fe0f623f3f9653a17fa911e2))
 
 # [5.11.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.4...v5.11.0) (2022-07-08)
-
 
 ### Features
 
@@ -447,13 +589,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.10.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.3...v5.10.4) (2022-07-04)
 
-
 ### Bug Fixes
 
 * better exception handling when could not get the version from git tags ([#476](https://github.com/splunk/addonfactory-ucc-generator/issues/476)) ([2aafc09](https://github.com/splunk/addonfactory-ucc-generator/commit/2aafc09517982e9c701b073181cdd3b9da6807b0))
 
 ## [5.10.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.2...v5.10.3) (2022-07-03)
-
 
 ### Bug Fixes
 
@@ -461,13 +601,11 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 ## [5.10.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.1...v5.10.2) (2022-02-01)
 
-
 ### Bug Fixes
 
 * update ucc ui version to 1.9.1 ([#418](https://github.com/splunk/addonfactory-ucc-generator/issues/418)) ([822361c](https://github.com/splunk/addonfactory-ucc-generator/commit/822361c47b5d199ac9944489619b47dddd0c628d))
 
 ## [5.10.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.10.0...v5.10.1) (2021-11-29)
-
 
 ### Bug Fixes
 
@@ -475,152 +613,106 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 
 # [5.10.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.9.0...v5.10.0) (2021-11-16)
 
-
 ### Features
 
 * migrate to separate conf-parser library ([2ab9fe9](https://github.com/splunk/addonfactory-ucc-generator/commit/2ab9fe94157da0000a2360c008a9c78cb93782c2))
 
 # [5.9.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.8.2...v5.9.0) (2021-10-04)
 
-
 ### Features
 
 * trigger v5.9.0 release ([a01259c](https://github.com/splunk/addonfactory-ucc-generator/commit/a01259cb7006cbad918edd33251133e94c1be24d))
 
-
-
 ## [5.8.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.8.1...v5.8.2) (2021-08-18)
-
 
 ### Bug Fixes
 
 * add icon_path to each modular alert conf ([c6828b9](https://github.com/splunk/addonfactory-ucc-generator/commit/c6828b9c4488281b0efd9ba00dbdef37c0cf6aa5))
 
-
-
 ## [5.8.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.8.0...v5.8.1) (2021-08-17)
-
 
 ### Bug Fixes
 
 * alert html generation ([7dc8860](https://github.com/splunk/addonfactory-ucc-generator/commit/7dc8860301d605ab8c05ec3aada6f4da6e615a17))
 
-
-
 # [5.8.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.7.0...v5.8.0) (2021-08-16)
-
 
 ### Features
 
 * delete `apiVersion` from globalConfig.json and bump schemaVersion ([6c22704](https://github.com/splunk/addonfactory-ucc-generator/commit/6c22704229b454876715214f1371b2746eee38c7))
 
-
-
 # [5.7.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.6.2...v5.7.0) (2021-08-14)
-
 
 ### Bug Fixes
 
 * Dont remove jsonschema metadata files ([539d8f6](https://github.com/splunk/addonfactory-ucc-generator/commit/539d8f6cfedd3a78aa102578f02a922fd2fb2759))
 * release ([185dd15](https://github.com/splunk/addonfactory-ucc-generator/commit/185dd1544d6ce9bd9079d96730b7dabda857c5f7))
 
-
 ### Features
 
 * generate metadata/default.meta ([629b248](https://github.com/splunk/addonfactory-ucc-generator/commit/629b2488e0bac01f981a4f4c75586fa5c79b9064))
 * **python:** retain dist info files ([7c8616a](https://github.com/splunk/addonfactory-ucc-generator/commit/7c8616a37b5395014777a2fb60163c240bc075d6))
 
-
-
 ## [5.6.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.6.1...v5.6.2) (2021-08-10)
-
 
 ### Bug Fixes
 
 * dump dunamai to 1.5.5 version ([6cc76bd](https://github.com/splunk/addonfactory-ucc-generator/commit/6cc76bdff683628b77e0368639a3915d947d7eb5))
 
-
-
 ## [5.6.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.6.0...v5.6.1) (2021-08-09)
-
 
 ### Bug Fixes
 
 * do not ignore UCC UI folder ([25cec26](https://github.com/splunk/addonfactory-ucc-generator/commit/25cec26138c8720c42fa8b9fc8bbb2cfe5a37beb))
 
-
-
 # [5.6.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.9...v5.6.0) (2021-08-09)
-
 
 ### Bug Fixes
 
 * update ucc ui version to 1.8.4 ([2daa655](https://github.com/splunk/addonfactory-ucc-generator/commit/2daa65538e37fa47eb56aa66d45eaaa1c994830d))
 
-
 ### Features
 
 * remove splunktaucclib ([661eb64](https://github.com/splunk/addonfactory-ucc-generator/commit/661eb646737f3841351c389352323cf8e3100b74))
 
-
-
 ## [5.5.8](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.7...v5.5.8) (2021-07-27)
-
 
 ### Bug Fixes
 
 * splunktaucclib update ([26eb068](https://github.com/splunk/addonfactory-ucc-generator/commit/26eb0687d31418e46608a510f4052bafe597d7f3))
 
-
-
 ## [5.5.7](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.6...v5.5.7) (2021-07-26)
-
 
 ### Bug Fixes
 
 * remove non-valid Python code ([b7adf48](https://github.com/splunk/addonfactory-ucc-generator/commit/b7adf484a1ff24e225828c511bf288f077becd29))
 
-
-
 ## [5.5.6](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.5...v5.5.6) (2021-07-20)
-
 
 ### Bug Fixes
 
 * **deps:** bump jinja2 from 2.11.3 to 3.0.1 ([#274](https://github.com/splunk/addonfactory-ucc-generator/issues/274)) ([1a736af](https://github.com/splunk/addonfactory-ucc-generator/commit/1a736af6cfe3304051e11463b5e77075910dcafc))
 
-
-
 ## [5.5.5](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.4...v5.5.5) (2021-07-19)
-
 
 ### Bug Fixes
 
 * TABConfigParser.remove_section() is not working read() ([8c82a45](https://github.com/splunk/addonfactory-ucc-generator/commit/8c82a454c0644a99eed6c83b397f4f3bd09a875b))
 * update ucc ui version to 1.8.3 ([49a89d5](https://github.com/splunk/addonfactory-ucc-generator/commit/49a89d59d28bc052ac22a51cb2db0b58d90e6b38))
 
-
-
 ## [5.5.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.2...v5.5.3) (2021-07-12)
-
 
 ### Bug Fixes
 
 * validate that a configuration tab with table has field "name" ([#261](https://github.com/splunk/addonfactory-ucc-generator/issues/261)) ([234f1e9](https://github.com/splunk/addonfactory-ucc-generator/commit/234f1e91f97b8e2b254ef0b04cca9553b12d26da))
 
-
-
 ## [5.5.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.1...v5.5.2) (2021-07-07)
-
 
 ### Bug Fixes
 
 * issue with indent function ([#257](https://github.com/splunk/addonfactory-ucc-generator/issues/257)) ([898fdb4](https://github.com/splunk/addonfactory-ucc-generator/commit/898fdb479c1eb224137780323c31b577599134ae))
 
-
-
 ## [5.5.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.5.0...v5.5.1) (2021-07-07)
-
 
 ### Bug Fixes
 
@@ -632,57 +724,40 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * update ucc version to 1.7.6 ([2e47cc3](https://github.com/splunk/addonfactory-ucc-generator/commit/2e47cc32de960b177512cfe9f4e49d1680a9e63a))
 * update ucc version to 1.8.1 ([d7fa1c6](https://github.com/splunk/addonfactory-ucc-generator/commit/d7fa1c6728a62792108bd407069a20251490fccb))
 
-
 ### Features
 
 * support app.manifest file with comments ([70eb38e](https://github.com/splunk/addonfactory-ucc-generator/commit/70eb38ee8ed74722d911be19700f92a621428e16)), closes [/github.com/splunk/appinspect/blob/fabd1387cf41e087edd86fb7f28e2f9e69a1467c/splunk_appinspect/checks/check_support_and_installation_standards.py#L169-L180](https://github.com//github.com/splunk/appinspect/blob/fabd1387cf41e087edd86fb7f28e2f9e69a1467c/splunk_appinspect/checks/check_support_and_installation_standards.py/issues/L169-L180)
 * update ucc ui version ([cf04fa7](https://github.com/splunk/addonfactory-ucc-generator/commit/cf04fa7b8612188082bc2624be93fd5c22bb702b))
 
-
-
 ## [5.3.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.3.0...v5.3.1) (2021-06-15)
-
 
 ### Bug Fixes
 
 * remove splunktalib as not used ([#231](https://github.com/splunk/addonfactory-ucc-generator/issues/231)) ([757c260](https://github.com/splunk/addonfactory-ucc-generator/commit/757c260edf57aa9b6a0ee8dbf7f6a5cc86a07d78))
 
-
-
 # [5.3.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.2.1...v5.3.0) (2021-06-14)
-
 
 ### Bug Fixes
 
 * update Splunk libraries to latest versions ([#229](https://github.com/splunk/addonfactory-ucc-generator/issues/229)) ([1bddfd6](https://github.com/splunk/addonfactory-ucc-generator/commit/1bddfd62633df52dc001ce3fed61e3147acfc96e))
 
-
 ### Features
 
 * pip causing app inspect failures and NOTICE ([#224](https://github.com/splunk/addonfactory-ucc-generator/issues/224)) ([d83b687](https://github.com/splunk/addonfactory-ucc-generator/commit/d83b6876e485a67a954a4bb17662a1b2a4fe6393))
 
-
-
 ## [5.2.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.2.0...v5.2.1) (2021-06-13)
-
 
 ### Bug Fixes
 
 * switch to slim docker image ([7bde41c](https://github.com/splunk/addonfactory-ucc-generator/commit/7bde41c6d677fa7c986fa1e71724789da8d2d5c4))
 
-
-
 # [5.2.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.1.0...v5.2.0) (2021-06-12)
-
 
 ### Features
 
 * drop support for py2/py3 compatible libraries ([#225](https://github.com/splunk/addonfactory-ucc-generator/issues/225)) ([29fafad](https://github.com/splunk/addonfactory-ucc-generator/commit/29fafadf477a99b2eae1a9dd5a0915ab66e97a76))
 
-
-
 # [5.1.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.0.3...v5.1.0) (2021-06-09)
-
 
 ### Features
 
@@ -690,10 +765,7 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * ucc as a library ([#218](https://github.com/splunk/addonfactory-ucc-generator/issues/218)) ([7f06c29](https://github.com/splunk/addonfactory-ucc-generator/commit/7f06c292f30cbaf234dfb481fd4127434cc35674))
 * update ucc ui version ([df8687e](https://github.com/splunk/addonfactory-ucc-generator/commit/df8687e94d45cddad3ce237a583b786f81ccb318))
 
-
-
 ## [5.0.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.0.2...v5.0.3) (2021-06-08)
-
 
 ### Bug Fixes
 
@@ -705,16 +777,12 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * ucc-gen to replace token for redirect.xml ([1128842](https://github.com/splunk/addonfactory-ucc-generator/commit/11288424389ac5b3b7f017d80b4a47d2e77b13e4))
 * use defusedxml instead of xml library ([c3fdfc0](https://github.com/splunk/addonfactory-ucc-generator/commit/c3fdfc0897205742246055d0a5020bb11eb79521))
 
-
-
 # [5.0.0-develop.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.4.0-develop.3...v5.0.0-develop.1) (2021-05-31)
-
 
 ### Bug Fixes
 
 * consume schema.json from ucc ui ([6069ce2](https://github.com/splunk/addonfactory-ucc-generator/commit/6069ce2bdf1d79c9130b32d228c25a3786e251d1))
 * update ucc ui version ([1cf1d59](https://github.com/splunk/addonfactory-ucc-generator/commit/1cf1d59a0d1593f8d7bb92824f40a983dca7e9bc))
-
 
 ### Features
 
@@ -722,16 +790,12 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * migrated to splunk-ui ([42b9a20](https://github.com/splunk/addonfactory-ucc-generator/commit/42b9a204f265afe393d9dcec85aeefb355f14403))
 * update splunktaucclib to 4.2.0 ([be831af](https://github.com/splunk/addonfactory-ucc-generator/commit/be831af7190db72d42c04077898b0ac5524fa1e0))
 
-
 ### BREAKING CHANGES
 
 * Migrate UI to SplunkUI framework
 * Migrate UI to SplunkUI framework
 
-
-
 # [4.4.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.3.0...v4.4.0) (2021-04-14)
-
 
 ### Bug Fixes
 
@@ -757,7 +821,6 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * update ucc ui version ([e340376](https://github.com/splunk/addonfactory-ucc-generator/commit/e3403768dcff3104f3de23466faba1f4795510f9))
 * use primitive type in useEffect for query param updates to reduce executions ([a4a0542](https://github.com/splunk/addonfactory-ucc-generator/commit/a4a05429f8690da698e41468da8bf78c35e46abd))
 
-
 ### Features
 
 * add page style dialog and its routing ([a475235](https://github.com/splunk/addonfactory-ucc-generator/commit/a47523510afffc27aeb0b24ba46ff67f5a336fef))
@@ -803,10 +866,7 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * Used i18n in custom cell ([06d0f02](https://github.com/splunk/addonfactory-ucc-generator/commit/06d0f02806578893daa244dce65bc16845ea45e4))
 * validate JSON configuration before generating build ([0c80d62](https://github.com/splunk/addonfactory-ucc-generator/commit/0c80d6242c26245a6318109491fbf200ecdf1f6d))
 
-
-
 # [4.4.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.3.0...v4.4.0) (2021-04-14)
-
 
 ### Bug Fixes
 
@@ -830,7 +890,6 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * update ucc ui version ([b6dc8b4](https://github.com/splunk/addonfactory-ucc-generator/commit/b6dc8b48ae18b27a06c1bcd110d1ca50720b451b))
 * update ucc ui version ([e340376](https://github.com/splunk/addonfactory-ucc-generator/commit/e3403768dcff3104f3de23466faba1f4795510f9))
 * use primitive type in useEffect for query param updates to reduce executions ([a4a0542](https://github.com/splunk/addonfactory-ucc-generator/commit/a4a05429f8690da698e41468da8bf78c35e46abd))
-
 
 ### Features
 
@@ -876,19 +935,13 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * Used i18n in custom cell ([06d0f02](https://github.com/splunk/addonfactory-ucc-generator/commit/06d0f02806578893daa244dce65bc16845ea45e4))
 * validate JSON configuration before generating build ([0c80d62](https://github.com/splunk/addonfactory-ucc-generator/commit/0c80d6242c26245a6318109491fbf200ecdf1f6d))
 
-
-
 # [4.4.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.3.0...v4.4.0) (2021-04-14)
-
 
 ### Features
 
 * validate JSON configuration before generating build ([0c80d62](https://github.com/splunk/addonfactory-ucc-generator/commit/0c80d6242c26245a6318109491fbf200ecdf1f6d))
 
-
-
 # [4.3.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.2.3...v4.3.0) (2021-04-06)
-
 
 ### Bug Fixes
 
@@ -898,69 +951,39 @@ It's a technical release to conclude the migration of UCC UI into this repositor
 * location of files was incorrect on commit ([47d494d](https://github.com/splunk/addonfactory-ucc-generator/commit/47d494d2ee1fc00cacc47e5af975614d714bc4fc))
 * Update CI to new standard ([fe6b46b](https://github.com/splunk/addonfactory-ucc-generator/commit/fe6b46b81e6c8813b19ec4e91757cdfe31f8c284))
 
-
 ### Features
 
 * supporting the new version mechanism ([1768138](https://github.com/splunk/addonfactory-ucc-generator/commit/1768138825c301f049867c420391d48a9cd8d995))
 * **version:** Support develop versions ([ea42e81](https://github.com/splunk/addonfactory-ucc-generator/commit/ea42e81b292a637bdedcf2e80b43542936ba0920))
 
-
-
 ## [4.1.9-b.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.9-a.1...v4.1.9-b.1) (2020-11-13)
-
-
 
 ## [4.1.8-b.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.8-a.2...v4.1.8-b.1) (2020-11-13)
 
-
-
 ## [4.1.6-a.7](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.6-a.6...v4.1.6-a.7) (2020-11-09)
-
-
 
 ## [4.1.1-b.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.1-a.4...v4.1.1-b.1) (2020-10-08)
 
-
-
 ## [4.1.1-a.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.1-a.2...v4.1.1-a.3) (2020-10-08)
-
-
 
 ## [4.1.1-a.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.1-a.1...v4.1.1-a.2) (2020-10-08)
 
-
-
 ## [4.1.1-a.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.1.2...v4.1.1-a.1) (2020-10-08)
-
-
 
 ## [4.0.5-a.9](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.5-a.8...v4.0.5-a.9) (2020-09-23)
 
-
-
 ## [4.0.5-a.8](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.5-a.7...v4.0.5-a.8) (2020-09-22)
 
-
-
 ## [4.0.5-a.7](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.5-a.6...v4.0.5-a.7) (2020-09-22)
-
 
 ### Reverts
 
 * Revert "Modified include in pyproject.toml with a glob" ([14304e3](https://github.com/splunk/addonfactory-ucc-generator/commit/14304e3e6170f996c0b52e9792dbb8da9975fc63))
 
-
-
 ## [4.0.5-a.5](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.5-a.4...v4.0.5-a.5) (2020-09-19)
-
-
 
 ## [4.0.5-a.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.5-a.1...v4.0.5-a.2) (2020-09-19)
 
-
-
 ## [4.0.5-a.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.4...v4.0.5-a.1) (2020-09-19)
-
-
 
 ## [4.0.4](https://github.com/splunk/addonfactory-ucc-generator/compare/v4.0.3...v4.0.4) (2020-09-17)

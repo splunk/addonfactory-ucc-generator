@@ -3,7 +3,7 @@
     "errors_tab_label_viz": {
       "type": "splunk.markdown",
       "options": {
-        "markdown": "# Errors",
+        "markdown": "## Errors",
         "fontSize": "large"
       }
     },
@@ -11,8 +11,7 @@
       "type": "splunk.markdown",
       "options": {
         "markdown": "View error messages for your add-on within the selected time range.",
-        "customFontSize": 12,
-        "fontColor": "#6c7685"
+        "customFontSize": 12
       }
     },
     "errors_tab_timerange_label_start_viz": {
@@ -41,9 +40,7 @@
       "type": "splunk.line",
       "options": {
         "xAxisVisibility": "hide",
-        "seriesColors": [
-          "#A870EF"
-        ],
+        "xAxisTitleText": "Time",
         "yAxisTitleText": "Errors count"
       },
       "title": "Errors count",
@@ -93,7 +90,7 @@
     "errors_tab_errors_list_ds": {
       "type": "ds.search",
       "options": {
-        "query": "{{errors_list}}",
+        "query": "{{errors_list}} exc_l IN ($error_types$)",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"
@@ -105,17 +102,52 @@
   "inputs": {
     "errors_tab_input": {
       "options": {
-        "defaultValue": "-7d,now",
+        "defaultValue": "-24h,now",
         "token": "errors_tab_time"
       },
-      "title": "Time:",
+      "title": "Time",
       "type": "input.timerange"
+    },
+    "errors_type_input": {
+      "options": {
+                "items": [
+            {
+                "label": "All",
+                "value": "*"
+            },
+            {
+                "label": "Permission Error",
+                "value": "\"Permission Error\""
+            },
+            {
+                "label": "Authentication Error",
+                "value": "\"Authentication Error\""
+            },
+            {
+                "label": "Connection Error",
+                "value": "\"Connection Error\""
+            },
+            {
+                "label": "Configuration Error",
+                "value": "\"Configuration Error\""
+            },
+            {
+                "label": "Server Error",
+                "value": "\"Server Error\""
+            }
+                ],
+        "token": "error_types",
+        "defaultValue": "*"
+      },
+      "title": "Error types",
+      "type": "input.multiselect"
     }
   },
   "layout": {
     "type": "grid",
     "globalInputs": [
-      "errors_tab_input"
+      "errors_tab_input",
+      "errors_type_input"
     ],
     "structure": [
       {

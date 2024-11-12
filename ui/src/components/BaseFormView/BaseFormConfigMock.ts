@@ -116,7 +116,7 @@ const globalConfigMockCustomControl = {
                 ],
             },
             table: {
-                actions: ['edit', 'enable', 'delete', 'clone'],
+                actions: ['edit', 'delete', 'clone'],
                 header: [
                     {
                         label: 'Name',
@@ -167,6 +167,7 @@ const globalConfigMockCustomControl = {
         displayName: 'Demo Add-on for Splunk',
         schemaVersion: '0.0.3',
         checkForUpdates: false,
+        searchViewDefault: false,
     },
 } satisfies z.input<typeof GlobalConfigSchema>;
 

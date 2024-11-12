@@ -1,11 +1,14 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import Multiselect from '@splunk/react-ui/Multiselect';
 import styled from 'styled-components';
-import axios from 'axios';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
+import { z } from 'zod';
 
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { filterResponse } from '../../util/util';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
+import { filterResponse, FilterResponseParams } from '../../util/util';
+import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
+import { invariant } from '../../util/invariant';
+import { AcceptableFormValue } from '../../types/components/shareableTypes';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
@@ -19,22 +22,9 @@ export interface MultiInputComponentProps {
     id?: string;
     handleChange: (field: string, data: string) => void;
     field: string;
-    controlOptions: {
-        delimiter?: string;
-        createSearchChoice?: boolean;
-        referenceName?: string;
-        dependencies?: unknown[];
-        endpointUrl?: string;
-        denyList?: string;
-        allowList?: string;
-        labelField?: string;
-        items?: {
-            label: string;
-            value: string;
-        }[];
-    };
+    controlOptions: z.TypeOf<typeof MultipleSelectCommonOptions>;
     disabled?: boolean;
-    value?: string;
+    value?: AcceptableFormValue;
     error?: boolean;
     dependencyValues?: Record<string, unknown>;
 }
@@ -59,6 +49,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         referenceName,
         createSearchChoice,
         labelField,
+        valueField,
         delimiter = ',',
     } = controlOptions;
 
@@ -68,9 +59,13 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
     }
 
-    function generateOptions(itemList: { label: string; value: string }[]) {
+    function generateOptions(itemList: { label: string; value: string | number | boolean }[]) {
         return itemList.map((item) => (
-            <Multiselect.Option label={item.label} value={item.value} key={item.value} />
+            <Multiselect.Option
+                label={item.label}
+                value={String(item.value)}
+                key={typeof item.value === 'boolean' ? String(item.value) : item.value}
+            />
         ));
     }
 
@@ -84,38 +79,44 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
 
         let current = true;
-        const source = axios.CancelToken.source();
+        const abortController = new AbortController();
+
+        const url = referenceName
+            ? generateEndPointUrl(encodeURIComponent(referenceName))
+            : endpointUrl;
+        invariant(
+            url,
+            '[MultiInputComponent] referenceName or endpointUrl or items must be provided'
+        );
 
         const apiCallOptions = {
-            cancelToken: source.token,
+            signal: abortController.signal,
             handleError: true,
             params: { count: -1 },
-            serviceName: '',
-            endpointUrl: '',
-        };
-        if (referenceName) {
-            apiCallOptions.serviceName = referenceName;
-        } else if (endpointUrl) {
-            apiCallOptions.endpointUrl = endpointUrl;
-        }
-
+            endpointUrl: url,
+        } satisfies RequestParams;
         if (dependencyValues) {
             apiCallOptions.params = { ...apiCallOptions.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(apiCallOptions)
-                .then((response) => {
+            getRequest<{ entry: FilterResponseParams }>(apiCallOptions)
+                .then((data) => {
                     if (current) {
                         setOptions(
                             generateOptions(
-                                filterResponse(response.data.entry, labelField, allowList, denyList)
+                                filterResponse(
+                                    data.entry,
+                                    labelField,
+                                    valueField,
+                                    allowList,
+                                    denyList
+                                )
                             )
                         );
-                        setLoading(false);
                     }
                 })
-                .catch(() => {
+                .finally(() => {
                     if (current) {
                         setLoading(false);
                     }
@@ -123,7 +124,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         }
         // eslint-disable-next-line consistent-return
         return () => {
-            source.cancel('Operation canceled.');
+            abortController.abort('Operation canceled.');
             current = false;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +133,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     const effectiveDisabled = loading ? true : disabled;
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
-    const valueList = value ? value.split(delimiter) : [];
+    const valueList = value ? String(value).split(delimiter) : [];
 
     return (
         <>

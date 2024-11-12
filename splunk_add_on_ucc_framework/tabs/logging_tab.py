@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, List, Any, Optional
+import re
+from typing import Dict, Any, Optional
 
 from splunk_add_on_ucc_framework.tabs.tab import Tab
 
@@ -26,55 +27,36 @@ FIELD = "loglevel"
 LABEL = "Log level"
 DEFAULTLEVEL = "INFO"
 
+ENTITY_KEYS_REQUIRED = {"type", "label", "options", "field"}
+ENTITY_KEYS_OPTIONAL = {"help", "defaultValue", "required", "validators"}
+AVAILABLE_LEVELS = {"DEBUG", "INFO", "WARN", "WARNING", "ERROR", "CRITICAL"}
+
 
 class LoggingTab(Tab):
     @property
-    def name(self) -> str:
-        return self.get("name", NAME)
+    def tab_type(self) -> Optional[str]:
+        return "loggingTab"
 
-    @property
-    def title(self) -> str:
-        return self.get("title", TITLE)
+    def short_form(self) -> Dict[str, Any]:
+        entity = self["entity"][0]
+        levels = [i["value"] for i in entity["options"]["autoCompleteFields"]]
+        new_definition = {"type": "loggingTab"}
 
-    @property
-    def label(self) -> str:
-        return self.get("label", LABEL)
+        for key, value, default in [
+            ("name", self["name"], NAME),
+            ("title", self["title"], TITLE),
+            ("label", entity["label"], LABEL),
+            ("field", entity["field"], FIELD),
+            ("levels", levels, LEVELS),
+            ("defaultLevel", entity.get("defaultValue", DEFAULTLEVEL), DEFAULTLEVEL),
+        ]:
+            if value != default:
+                new_definition[key] = value
 
-    @property
-    def field(self) -> str:
-        return self.get("field", FIELD)
+        if "help" in entity:
+            new_definition["help"] = entity["help"]
 
-    @property
-    def levels(self) -> List[str]:
-        return self.get("levels", LEVELS)
-
-    @property
-    def default_level(self) -> str:
-        return self.get("defaultLevel", DEFAULTLEVEL)
-
-    @property
-    def entity(self) -> List[Dict[str, Any]]:
-        return [
-            {
-                "type": "singleSelect",
-                "label": self.label,
-                "options": {
-                    "disableSearch": True,
-                    "autoCompleteFields": [
-                        {"value": lvl, "label": lvl} for lvl in self.levels
-                    ],
-                },
-                "defaultValue": self.default_level,
-                "field": self.field,
-            }
-        ]
-
-    def render(self) -> Dict[str, Any]:
-        return {
-            "name": self.name,
-            "title": self.title,
-            "entity": self.entity,
-        }
+        return new_definition
 
     @classmethod
     def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
@@ -89,7 +71,42 @@ class LoggingTab(Tab):
         to determine whether the tab is indeed a logging tab.
         """
         if definition.get("type") == "loggingTab":
-            return LoggingTab(definition)
+            levels = definition.get("levels", LEVELS)
+
+            entity = {
+                "type": "singleSelect",
+                "label": definition.get("label", LABEL),
+                "options": {
+                    "disableSearch": True,
+                    "autoCompleteFields": [
+                        {"value": lvl, "label": lvl} for lvl in levels
+                    ],
+                },
+                "defaultValue": definition.get("defaultLevel", DEFAULTLEVEL),
+                "field": definition.get("field", FIELD),
+                "required": True,
+                "validators": [
+                    {
+                        "type": "regex",
+                        "errorMsg": f"Log level must be one of: {', '.join(levels)}",
+                        "pattern": f"^{'|'.join(re.escape(lvl) for lvl in levels)}$",
+                    }
+                ],
+            }
+
+            new_definition = {
+                "name": definition.get("name", NAME),
+                "title": definition.get("title", TITLE),
+                "entity": [entity],
+            }
+
+            if "help" in definition:
+                entity["help"] = definition["help"]
+
+            return LoggingTab(new_definition)
+
+        if "type" in definition:
+            return None
 
         if definition.keys() != {"name", "title", "entity"}:
             return None
@@ -99,31 +116,35 @@ class LoggingTab(Tab):
 
         entity = definition["entity"][0]
 
+        if not all(key in entity.keys() for key in ENTITY_KEYS_REQUIRED):
+            return None
+
+        if entity.keys() - ENTITY_KEYS_REQUIRED - ENTITY_KEYS_OPTIONAL:
+            return None
+
         if entity["type"] != "singleSelect":
             return None
 
-        if entity["options"] != {
-            "disableSearch": True,
-            "autoCompleteFields": [
-                {"value": "DEBUG", "label": "DEBUG"},
-                {"value": "INFO", "label": "INFO"},
-                {"value": "WARNING", "label": "WARNING"},
-                {"value": "ERROR", "label": "ERROR"},
-                {"value": "CRITICAL", "label": "CRITICAL"},
-            ],
-        }:
+        if entity["options"].keys() != {
+            "disableSearch",
+            "autoCompleteFields",
+        } and entity["options"].keys() != {"autoCompleteFields"}:
             return None
 
-        new_definition = {"type": "loggingTab"}
+        levels = []
 
-        for key, value, default in {
-            ("name", definition["name"], NAME),
-            ("title", definition["title"], TITLE),
-            ("label", entity["label"], LABEL),
-            ("field", entity["field"], FIELD),
-            ("defaultLevel", entity["defaultValue"], DEFAULTLEVEL),
-        }:
-            if value != default:
-                new_definition[key] = value
+        for field in entity["options"]["autoCompleteFields"]:
+            if "value" not in field:
+                return None
 
-        return LoggingTab(new_definition)
+            level = field["value"]
+
+            if level not in AVAILABLE_LEVELS:
+                return None
+
+            levels.append(level)
+
+        entity["required"] = True
+        entity["options"]["disableSearch"] = True
+
+        return LoggingTab(definition)

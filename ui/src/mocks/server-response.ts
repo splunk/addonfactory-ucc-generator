@@ -17,6 +17,7 @@ export const mockServerResponseWithContent = {
     updated: '2023-08-21T11:54:12+00:00',
     entry: [
         {
+            id: 1,
             content: {
                 disabled: true,
             },
@@ -24,3 +25,28 @@ export const mockServerResponseWithContent = {
     ],
     messages: [],
 };
+
+export const mockServerResponseForInput = {
+    links: {
+        create: `/servicesNS/nobody/${MOCKED_TA_NAME}/${MOCKED_TA_INPUT}/_new`,
+    },
+    updated: '2023-08-21T11:54:12+00:00',
+    entry: [
+        {
+            name: 'name',
+            content: {},
+        },
+    ],
+    messages: [],
+};
+
+export function getMockServerResponseForInput(entries: object[]) {
+    return {
+        links: {
+            create: `/servicesNS/nobody/${MOCKED_TA_NAME}/${MOCKED_TA_INPUT}/_new`,
+        },
+        updated: '2023-08-21T11:54:12+00:00',
+        entry: entries,
+        messages: [],
+    };
+}

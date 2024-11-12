@@ -53,11 +53,11 @@ const CommonEditableEntityFields = CommonEntityFields.extend({
 });
 
 const CommonEditableEntityOptions = z.object({
-    placeholder: z.string().optional(),
     display: z.boolean().default(true).optional(),
     disableonEdit: z.boolean().default(false).optional(),
     enable: z.boolean().default(true).optional(),
     requiredWhenVisible: z.boolean().default(false).optional(),
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 
 export const MarkdownMessageType = z.union([
@@ -76,6 +76,7 @@ const FieldToModify = z.object({
             display: z.boolean().optional(),
             value: z.union([z.number(), z.string(), z.boolean()]).optional(),
             disabled: z.boolean().optional(),
+            required: z.boolean().optional(),
             help: z.string().optional(),
             label: z.string().optional(),
             markdownMessage: MarkdownMessageType.optional(),
@@ -85,24 +86,26 @@ const FieldToModify = z.object({
 
 const ModifyFieldsOnValue = z.array(FieldToModify).optional();
 
-const AllValidators = z
-    .array(
-        z.union([
-            NumberValidator,
-            StringValidator,
-            RegexValidator,
-            EmailValidator,
-            Ipv4Validator,
-            UrlValidator,
-            DateValidator,
-        ])
-    )
-    .nonempty();
+const AllValidators = z.array(
+    z.union([
+        NumberValidator,
+        StringValidator,
+        RegexValidator,
+        EmailValidator,
+        Ipv4Validator,
+        UrlValidator,
+        DateValidator,
+    ])
+);
 
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
     label: z.string().optional(),
-    options: z.object({ text: z.string(), link: z.string() }),
+    options: z.object({
+        text: z.string(),
+        link: z.string(),
+        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    }),
     required: z.literal(false).default(false).optional(),
 });
 
@@ -137,7 +140,7 @@ const AutoCompleteFields = z.array(
     ])
 );
 
-const SelectCommonOptions = CommonEditableEntityOptions.extend({
+export const SelectCommonOptions = CommonEditableEntityOptions.extend({
     disableSearch: z.boolean().default(false).optional(),
     createSearchChoice: z.boolean().default(false).optional(),
     referenceName: z.string().optional(),
@@ -145,6 +148,7 @@ const SelectCommonOptions = CommonEditableEntityOptions.extend({
     allowList: z.string().optional(),
     denyList: z.string().optional(),
     labelField: z.string().optional(),
+    valueField: z.string().optional(),
     autoCompleteFields: AutoCompleteFields.optional(),
     dependencies: z.array(z.string()).optional(),
     items: ValueLabelPair.array().optional(),
@@ -157,20 +161,22 @@ export const SingleSelectEntity = CommonEditableEntityFields.extend({
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
+export const MultipleSelectCommonOptions = SelectCommonOptions.extend({
+    delimiter: z.string().length(1).optional(),
+});
+
 export const MultipleSelectEntity = CommonEditableEntityFields.extend({
     type: z.literal('multipleSelect'),
     validators: AllValidators.optional(),
     defaultValue: z.string().optional(),
-    options: SelectCommonOptions.extend({
-        delimiter: z.string().length(1).optional(),
-    }),
+    options: MultipleSelectCommonOptions,
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
 export const CheckboxEntity = CommonEditableEntityFields.extend({
     type: z.literal('checkbox'),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }).optional(),
+    options: CommonEditableEntityOptions.optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
@@ -178,7 +184,7 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
     type: z.literal('checkboxGroup'),
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true }).extend({
+    options: CommonEditableEntityOptions.extend({
         groups: z
             .array(
                 z.object({
@@ -227,13 +233,12 @@ export const FileEntity = CommonEditableEntityFields.extend({
     type: z.literal('file'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: CommonEditableEntityOptions.omit({ placeholder: true })
-        .extend({
-            maxFileSize: z.number().optional(),
-            fileSupportMessage: z.string().optional(),
-            supportedFileTypes: z.array(z.string()),
-        })
-        .optional(),
+    options: CommonEditableEntityOptions.extend({
+        maxFileSize: z.number().optional(),
+        fileSupportMessage: z.string().optional(),
+        supportedFileTypes: z.array(z.string()),
+        useBase64Encoding: z.boolean().default(false).optional(),
+    }).optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
 });
 
@@ -246,16 +251,9 @@ export const OAuthFields = z.object({
     encrypted: z.boolean().default(false).optional(),
     required: z.boolean().default(false).optional(),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
-    options: z
-        .object({
-            placeholder: z.string().optional(),
-            disableonEdit: z.boolean().optional(),
-            enable: z.boolean().default(true).optional(),
-            display: z.literal(true).default(true).optional(),
-            requiredWhenVisible: z.boolean().default(false).optional(),
-        })
-        .optional(),
+    options: CommonEditableEntityOptions.optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
+    validators: AllValidators.optional(),
 });
 
 export const OAuthEntity = CommonEditableEntityFields.extend({
@@ -263,7 +261,6 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
     options: CommonEditableEntityOptions.omit({
-        placeholder: true,
         requiredWhenVisible: true,
     }).extend({
         auth_type: z.array(z.union([z.literal('basic'), z.literal('oauth')])),
@@ -285,6 +282,7 @@ export const CustomEntity = CommonEditableEntityFields.extend({
     options: z.object({
         type: z.literal('external'),
         src: z.string(),
+        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     }),
 });
 

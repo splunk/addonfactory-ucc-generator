@@ -1,0 +1,6 @@
+{% for alert, params in alerts.items() %}
+[{{ alert }}]
+    {% for param in params %}
+{{ param }}
+    {% endfor %}
+{% endfor %}

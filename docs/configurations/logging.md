@@ -1,3 +1,5 @@
+# Logging
+
 The logging tab is a predefined component that allows to create the page for changing
 the log level. It is added in the `pages.configuration.tabs` array
 
@@ -45,6 +47,7 @@ It is placed just like every other configuration tab.
 | field        | Configuration field name. Default is `loglevel`                                                 |
 | levels       | List of all possible log levels. Default is `["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]` |
 | defaultLevel | Default log level at the beginning. Default is `INFO`                                           |
+| help         | It is displayed directly below the input field. By default it is not shown.                     |
 
 ### Example
 
@@ -56,7 +59,7 @@ It is placed just like every other configuration tab.
     "label": "Log level",
     "field": "loglevel",
     "levels": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
-    "defaultLevel": "INFO"
+    "defaultLevel": "INFO",
+    "help": "The logging level you want to use"
 }
 ```
-

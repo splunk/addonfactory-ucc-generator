@@ -1,3 +1,5 @@
+# Alert Action Scripts
+
 The following files would be created/ updated in the output folder once you executed the `ucc-gen` command:
 
 | File Location | Content Description | Action |
@@ -9,16 +11,16 @@ The following files would be created/ updated in the output folder once you exec
 In the python file that is created, below are the methods that you can use or override for varying use cases:
 
 - `process_event()`
-    - This is the start point of where you require to write the logic of sending data from Splunk to any other 
-service via its APIs. Additionally, you can validate the parameters that are provided in the alert action 
-as client side validation (via JavaScript) isn't allowed in Splunk's alert action's HTML page for 
+    + This is the start point of where you require to write the logic of sending data from Splunk to any other
+service via its APIs. Additionally, you can validate the parameters that are provided in the alert action
+as client side validation (via JavaScript) isn't allowed in Splunk's alert action's HTML page for
 security reasons. <br> Note: This method must be overwritten.
 - `get_events()` -> List[dict]
-    - Used to get the events that triggered the alert. It returns a list of dictionary. A dictionary points to an event that triggered the alert, and each dictionary has the fields extracted by Splunk.
+    + Used to get the events that triggered the alert. It returns a list of dictionary. A dictionary points to an event that triggered the alert, and each dictionary has the fields extracted by Splunk.
 - `addevent(raw: str, sourcetype: str)`
-    - If you are bringing additional information from an outer service, you can write that information using this method. You write a single record using the method. This method will append all the records and will dump it to Splunk when `writeevents()` method is called.
+    + If you are bringing additional information from an outer service, you can write that information using this method. You write a single record using the method. This method will append all the records and will dump it to Splunk when `writeevents()` method is called.
 - `writeevents(index: str, host: str, source: str)`
-    - All the events added to the queue using `addevent()` method are written to Splunk with the details passed in the arguments.
+    + All the events added to the queue using `addevent()` method are written to Splunk with the details passed in the arguments.
 
 An example of a script with validations:
 
@@ -76,16 +78,16 @@ if __name__ == "__main__":
 
 ```
 
-In this example, `modalert_test_alert_helper`'s `process_event()` method contains the logic of the actions to be 
-performed when the alert is triggered. It could either be fetch additional information from a service 
+In this example, `modalert_test_alert_helper`'s `process_event()` method contains the logic of the actions to be
+performed when the alert is triggered. It could either be fetch additional information from a service
 into Splunk or to send any data from Splunk to a service via its APIs.
 
 ### Custom Script for Alert Action
 
-Alternatively, you can provide the `process_event()` and `validate_params()` in the script you mentioned in 
+Alternatively, you can provide the `process_event()` and `validate_params()` in the script you mentioned in
 the `customScript` parameter in the globalConfig. If the parameter isn't provided in the globalConfig, UCC framework would provide a boiler plate code that you can leverage in writing your logic for alert action.
 
-This script should be present at `<YOUR_ADD-ON_REPOSITORY_PACKAGE>/bin/` in your respository and it should 
+This script should be present at `<YOUR_ADD-ON_REPOSITORY_PACKAGE>/bin/` in your respository and it should
 have `process_event()` function defined. An example declaration could be:
 
 ```python
@@ -109,5 +111,5 @@ def process_event(helper, *args, **kwargs):
 ```
 
 This function then can have validations and the alert action logic required for your add-on. The preliminary check for required field validations is already provided by the UCC framework. However, if you have any other validations or pre-checks, you can call that function from `process_event()`.
-The `helper` variable would be an object of `splunktaucclib.alert_actions_base.ModularAlertBase` class. 
+The `helper` variable would be an object of `splunktaucclib.alert_actions_base.ModularAlertBase` class.
 This script would be then be copied to `output/` directory after you execute the `ucc-gen` command.

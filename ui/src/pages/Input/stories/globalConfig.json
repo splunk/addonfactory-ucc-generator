@@ -52,6 +52,51 @@
             },
             {
               "type": "singleSelect",
+              "field": "select1",
+              "label": "Select 1",
+              "help": "Default value is Numeric 1",
+              "defaultValue": 1,
+              "options": {
+                "autoCompleteFields": [
+                  {
+                    "value": 1,
+                    "label": "Numeric 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "singleSelect",
+              "field": "select2",
+              "label": "Select 2",
+              "help": "Default value is Numeric 3",
+              "defaultValue": 3,
+              "options": {
+                "autoCompleteFields": [
+                  {
+                    "value": 3,
+                    "label": "Numeric 3"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "multipleSelect",
+              "field": "multipleselect1",
+              "label": "MultiSelect 1",
+              "help": "Default value is Numeric 1",
+              "defaultValue": "1",
+              "options": {
+                "items": [
+                  {
+                    "value": 1,
+                    "label": "Numeric 1"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "singleSelect",
               "label": "Account to use",
               "options": {
                 "autoCompleteFields": [
@@ -225,6 +270,22 @@
               }
             },
             {
+              "type": "checkbox",
+              "label": "Hide in UI boolean value",
+              "field": "hide_in_ui",
+              "options": {
+                "display": false
+              }
+            },
+            {
+              "type": "checkbox",
+              "label": "Is input readonly?",
+              "field": "hard_disabled",
+              "options": {
+                "display": false
+              }
+            },
+            {
               "type": "text",
               "label": "Interval",
               "validators": [
@@ -384,9 +445,7 @@
       "title": "Inputs",
       "description": "Manage your data inputs",
       "table": {
-        "actions": [
-          "edit", "enable", "delete", "clone"
-        ],
+        "actions": ["edit", "delete", "search", "clone"],
         "header": [
           {
             "label": "Name",
@@ -426,8 +485,18 @@
             "label": "Status",
             "field": "disabled",
             "mapping": {
+              "1": "Disabled",
               "true": "Disabled",
               "false": "Enabled"
+            }
+          },
+          {
+            "label": "Exported",
+            "field": "hard_disabled",
+            "mapping": {
+              "1": "Yes",
+              "0": "No",
+              "f": "No"
             }
           },
           {
@@ -435,7 +504,9 @@
             "field": "someselectdropdown2"
           }
         ]
-      }
+      },
+      "readonlyFieldId": "hard_disabled",
+      "hideFieldId": "hide_in_ui"
     },
     "dashboard": {
       "panels": [
@@ -446,8 +517,8 @@
     }
   },
   "meta": {
-    "name": "demo_addon_for_splunk2",
-    "restRoot": "demo_addon_for_splunk2",
+    "name": "demo_addon_for_splunk",
+    "restRoot": "demo_addon_for_splunk",
     "version": "5.32.0R0e2087fe",
     "displayName": "Demo Add-on for Splunk",
     "schemaVersion": "0.0.3"

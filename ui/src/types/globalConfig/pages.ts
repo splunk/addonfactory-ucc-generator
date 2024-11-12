@@ -20,7 +20,7 @@ export const TableSchema = z.object({
         })
     ),
     customRow: z.record(z.any()).optional(),
-    actions: z.array(z.enum(['edit', 'delete', 'clone', 'enable'])),
+    actions: z.array(z.enum(['edit', 'delete', 'clone', 'search'])),
 });
 
 // TODO add "required": ["entity", "name", "title"] or required": ["customTab", "name", "title"]
@@ -60,6 +60,7 @@ export const TabSchema = z.object({
     restHandlerClass: z.string().optional(),
     customTab: z.record(z.any()).optional(),
     warning: WarningSchema,
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 
 const GroupsSchema = z
@@ -91,6 +92,8 @@ export const TableLessServiceSchema = z.object({
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
     warning: WarningSchema,
+    inputHelperModule: z.string().optional(),
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
@@ -143,8 +146,13 @@ export const InputsPageTableSchema = z
         // The strict method disallows a table field to distinguish between
         // TableLessServiceSchema and TableFullServiceSchema
         services: z.array(TableLessServiceSchema.strict()),
+        hideFieldId: z.string().optional(),
+        readonlyFieldId: z.string().optional(),
     })
     .strict();
+
+const InputsPageSchema = z.union([InputsPageRegular, InputsPageTableSchema]).optional();
+const ServiceTableSchema = z.union([TableFullServiceSchema, TableLessServiceSchema]);
 
 export const pages = z.object({
     configuration: z.object({
@@ -153,10 +161,21 @@ export const pages = z.object({
         subDescription: SubDescriptionSchema,
         tabs: z.array(TabSchema).min(1),
     }),
-    inputs: z.union([InputsPageRegular, InputsPageTableSchema]).optional(),
+    inputs: InputsPageSchema,
     dashboard: z
         .object({
             panels: z.array(z.object({ name: z.string() })).min(1),
+            troubleshooting_url: z.string().optional(),
+            settings: z.object({ custom_tab_name: z.string().optional() }).optional(),
         })
         .optional(),
 });
+
+export type Platforms = 'enterprise' | 'cloud' | undefined;
+
+// Define the types based on the Zod schemas
+export type InputsPage = z.infer<typeof InputsPageSchema>;
+export type InputsPageTable = z.infer<typeof InputsPageTableSchema>;
+export type ServiceTable = z.infer<typeof ServiceTableSchema>;
+export type SubDescriptionType = z.infer<typeof SubDescriptionSchema>;
+export type ITableConfig = z.infer<typeof TableSchema>;

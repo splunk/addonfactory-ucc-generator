@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
     GlobalConfigBuilderSchema,
 )
@@ -12,15 +14,15 @@ def test_global_config_builder_schema(global_config_all_json):
     # TODO: add more tests to check the endpoints.
     assert global_config_builder_schema.product == "Splunk_TA_UCCExample"
     assert global_config_builder_schema.namespace == "splunk_ta_uccexample"
-    assert global_config_builder_schema.settings_conf_file_names == {
+    assert global_config_builder_schema.settings_conf_file_names == [
         "splunk_ta_uccexample_settings"
-    }
-    assert global_config_builder_schema.configs_conf_file_names == {
+    ]
+    assert global_config_builder_schema.configs_conf_file_names == [
         "splunk_ta_uccexample_account"
-    }
-    assert global_config_builder_schema.oauth_conf_file_names == {
+    ]
+    assert global_config_builder_schema.oauth_conf_file_names == [
         "splunk_ta_uccexample_oauth"
-    }
+    ]
 
 
 def test_global_config_builder_schema_custom_rh_config(global_config_all_json):
@@ -44,4 +46,20 @@ def test_global_config_builder_schema_custom_rh_config(global_config_all_json):
             "account", RestEndpointBuilder("", "")
         ).rh_class
         == "CustomAccountValidator"
+    )
+
+
+@patch(
+    "splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema.OAuthModelEndpointBuilder",
+    autospec=True,
+)
+def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
+    GlobalConfigBuilderSchema(global_config_all_json)
+
+    mock_oauth_model.assert_called_once_with(
+        app_name="Splunk_TA_UCCExample",
+        log_level_field="loglevel",
+        log_stanza="logging",
+        name="oauth",
+        namespace="splunk_ta_uccexample",
     )

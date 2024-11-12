@@ -46,7 +46,8 @@ fields_proxy = [
         default=None,
         validator=validator.Number(
             max_val=65535, 
-            min_val=1, 
+            min_val=1,
+            is_int=True,
         )
     ), 
     field.RestField(
@@ -83,10 +84,12 @@ model_proxy = RestModel(fields_proxy, name='proxy')
 fields_logging = [
     field.RestField(
         'loglevel',
-        required=False,
+        required=True,
         encrypted=False,
         default='INFO',
-        validator=None
+        validator=validator.Pattern(
+            regex=r"""^DEBUG|INFO|WARNING|ERROR|CRITICAL$""",
+        )
     )
 ]
 model_logging = RestModel(fields_logging, name='logging')
@@ -109,8 +112,8 @@ fields_custom_abc = [
         encrypted=False,
         default=None,
         validator=validator.Number(
-            max_val=10, 
-            min_val=1, 
+            max_val=10,
+            min_val=1,
         )
     ), 
     field.RestField(

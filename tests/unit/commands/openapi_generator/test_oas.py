@@ -1,6 +1,5 @@
 from typing import Any, List, Dict
 
-from openapi3 import OpenAPI
 from splunk_add_on_ucc_framework.commands.openapi_generator import oas
 from splunk_add_on_ucc_framework.commands.openapi_generator.oas import (
     OpenAPIObject,
@@ -163,7 +162,6 @@ def test_paths_get():
     open_api_object.security = security
 
     j = open_api_object.json
-    open_api = OpenAPI(j)
     assert j["openapi"] == oas.OPENAPI_300
     assert j["components"]["schemas"][logging]["type"] == object
     assert j["components"]["securitySchemes"][basic_auth]["type"] == http
@@ -177,9 +175,6 @@ def test_paths_get():
         == path_settings_logging_get_description
     )
     assert j["security"][0][basic_auth] == []
-    assert (
-        open_api.paths[path_settings_logging].get.security[0].name == basic_auth
-    )  # conceptually, root level security is populated down
 
 
 def test_paths_post():

@@ -184,7 +184,7 @@ const globalConfigMock = {
                 ],
             },
             table: {
-                actions: ['edit', 'enable', 'delete', 'clone'],
+                actions: ['edit', 'delete', 'clone'],
                 header: [
                     {
                         label: 'Name',
@@ -230,13 +230,7 @@ const globalConfigMock = {
         dashboard: {
             panels: [
                 {
-                    name: 'addon_version',
-                },
-                {
-                    name: 'events_ingested_by_sourcetype',
-                },
-                {
-                    name: 'errors_in_the_addon',
+                    name: 'default',
                 },
             ],
         },
@@ -248,6 +242,7 @@ const globalConfigMock = {
         displayName: 'Demo Add-on for Splunk',
         schemaVersion: '0.0.3',
         checkForUpdates: false,
+        searchViewDefault: false,
     },
 } satisfies z.input<typeof GlobalConfigSchema>;
 

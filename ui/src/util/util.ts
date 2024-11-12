@@ -1,7 +1,7 @@
 import { TOAST_TYPES } from '@splunk/react-toast-notifications/ToastConstants';
 import Toaster, { makeCreateToast } from '@splunk/react-toast-notifications/Toaster';
 import { GlobalConfig, GlobalConfigSchema } from '../types/globalConfig/globalConfig';
-import { AcceptableFormValueOrNullish } from '../types/components/shareableTypes';
+import { invariant } from './invariant';
 
 interface AppData {
     app: string;
@@ -22,29 +22,6 @@ export function getMetaInfo() {
     return {
         appData,
     };
-}
-
-export function isFalse(value: AcceptableFormValueOrNullish) {
-    return (
-        value === null ||
-        value === undefined ||
-        ['0', 'FALSE', 'F', 'N', 'NO', 'NONE', ''].includes(value.toString().toUpperCase())
-    );
-}
-
-export function isTrue(value: AcceptableFormValueOrNullish) {
-    return (
-        value !== null &&
-        value !== undefined &&
-        ['1', 'TRUE', 'T', 'Y', 'YES'].includes(value.toString().toUpperCase())
-    );
-}
-
-export function generateEndPointUrl(name: string) {
-    if (!unifiedConfigs) {
-        throw new Error('No GlobalConfig set');
-    }
-    return `${unifiedConfigs.meta.restRoot}_${name}`;
 }
 
 export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
@@ -111,20 +88,26 @@ export function filterByDenyList(fields: { value: string; label: string }[], den
     return fields.filter((item) => !denyRegex.test(item.value));
 }
 
+export type FilterResponseParams = { content?: Record<string, string>; name: string }[];
+
 export function filterResponse(
-    items: { content?: Record<string, string>; name: string }[],
+    items: FilterResponseParams,
     labelField?: string,
+    valueField?: string,
     allowList?: string,
     denyList?: string
 ) {
     let newItems: { value: string; label: string }[] = items.map((item) => {
         const label = labelField ? item.content?.[labelField] : item.name;
-        if (typeof label !== 'string') {
-            throw new Error(`Label not found for ${item.name}`);
-        }
+
+        invariant(typeof label === 'string', `Label not found for ${item.name}`);
+
+        const value = valueField ? item.content?.[valueField] : item.name;
+        invariant(typeof value === 'string', `Value not found for ${item.name}`);
+
         return {
             label,
-            value: item.name,
+            value,
         };
     });
 
@@ -135,6 +118,5 @@ export function filterResponse(
     if (denyList) {
         newItems = filterByDenyList(newItems, denyList);
     }
-
     return newItems;
 }
