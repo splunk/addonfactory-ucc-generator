@@ -139,7 +139,10 @@ Documentation changes are also welcome!
 To verify changes locally:
 
 ```bash
-poetry run mkdocs serve -a localhost:8001
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-docs.txt
+mkdocs serve -a localhost:8081 
 ```
 
 ## Issues and bug reports
