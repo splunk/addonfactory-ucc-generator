@@ -313,10 +313,9 @@
         display: inline-flex;
         padding: 0;
     }
-    [data-test='input-title-remove-container'] {
-        margin: 5px;
-    }
+    /* Time selector */
     [data-test='input-title'] {
+        margin: 5px;
         font-size: 14px;
     }
 }
