@@ -1,7 +1,7 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import SingleInputComponent, { SingleInputComponentProps } from './SingleInputComponent';
 import { setUnifiedConfig } from '../../util/util';
@@ -131,4 +131,39 @@ describe.each(mockedEntries)('handler endpoint data loading', (entry) => {
             `${entry.content.testValue}`
         );
     });
+});
+
+it('should render Select... when value does not exist in autoCompleteFields', () => {
+    renderFeature({
+        value: 'notExistingValue',
+        controlOptions: {
+            autoCompleteFields: [
+                {
+                    label: 'label1',
+                    value: 'value1',
+                },
+            ],
+        },
+    });
+    const inputComponent = screen.getByRole('combobox');
+    expect(inputComponent).toBeInTheDocument();
+    expect(within(inputComponent).getByText('Select...')).toBeInTheDocument();
+});
+
+it.each([
+    { value: true, autoCompleteFields: [{ label: 'trueLabel', value: true }] },
+    {
+        value: false,
+        autoCompleteFields: [{ label: 'falseLabel', value: false }],
+    },
+    { value: 0, autoCompleteFields: [{ label: 'falseLabel', value: '0' }] },
+    { value: 0, autoCompleteFields: [{ label: 'falseLabel', value: 0 }] },
+])('should render label with value $value', ({ value, autoCompleteFields }) => {
+    renderFeature({
+        value,
+        controlOptions: { autoCompleteFields },
+    });
+    const inputComponent = screen.getByRole('combobox');
+    const { label } = autoCompleteFields[0];
+    expect(within(inputComponent).getByText(label)).toBeInTheDocument();
 });

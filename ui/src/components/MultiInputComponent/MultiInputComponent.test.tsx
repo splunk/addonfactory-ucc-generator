@@ -1,7 +1,7 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import MultiInputComponent, { MultiInputComponentProps } from './MultiInputComponent';
 import { server } from '../../mocks/server';
@@ -159,4 +159,81 @@ describe.each(mockedEntries)('handler endpoint data loading', (mockedEntry) => {
             apiEntry.content.testValue
         );
     });
+});
+
+it('should render label (boolean-like)', () => {
+    renderFeature({
+        value: 'true',
+        controlOptions: {
+            items: [
+                {
+                    label: 'truevalue',
+                    value: true,
+                },
+                {
+                    label: 'falsevalue',
+                    value: false,
+                },
+                {
+                    label: 'optionone',
+                    value: 1,
+                },
+            ],
+        },
+    });
+    const inputComponent = screen.getByTestId('multiselect');
+
+    expect(within(inputComponent).getByText('truevalue')).toBeInTheDocument();
+    expect(within(inputComponent).queryByText('falsevalue')).not.toBeInTheDocument();
+    expect(within(inputComponent).queryByText('optionone')).not.toBeInTheDocument();
+});
+
+it('should render singe value (numeric)', () => {
+    renderFeature({
+        value: 1,
+        controlOptions: {
+            items: [
+                {
+                    label: 'label1',
+                    value: 1,
+                },
+                {
+                    label: 'label2',
+                    value: 2,
+                },
+            ],
+        },
+    });
+    const inputComponent = screen.getByTestId('multiselect');
+
+    expect(within(inputComponent).getByText('label1')).toBeInTheDocument();
+    expect(within(inputComponent).queryByText('label2')).not.toBeInTheDocument();
+});
+
+it('should render two values (number + boolean)', () => {
+    renderFeature({
+        value: '1;false',
+        controlOptions: {
+            delimiter: ';',
+            items: [
+                {
+                    label: 'label1',
+                    value: 1,
+                },
+                {
+                    label: 'label2',
+                    value: false,
+                },
+                {
+                    label: 'label3',
+                    value: 3,
+                },
+            ],
+        },
+    });
+    const inputComponent = screen.getByTestId('multiselect');
+
+    expect(within(inputComponent).getByText('label1')).toBeInTheDocument();
+    expect(within(inputComponent).getByText('label2')).toBeInTheDocument();
+    expect(within(inputComponent).queryByText('label3')).not.toBeInTheDocument();
 });

@@ -88,8 +88,10 @@ export function filterByDenyList(fields: { value: string; label: string }[], den
     return fields.filter((item) => !denyRegex.test(item.value));
 }
 
+export type FilterResponseParams = { content?: Record<string, string>; name: string }[];
+
 export function filterResponse(
-    items: { content?: Record<string, string>; name: string }[],
+    items: FilterResponseParams,
     labelField?: string,
     valueField?: string,
     allowList?: string,

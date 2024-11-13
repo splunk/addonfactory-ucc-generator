@@ -1,3 +1,5 @@
+# Overview
+
 The UCC package simplifies the deployment of React applications featuring the Splunk UI by eliminating the need for NodeJS, Yarn, or front-end dependencies installation. The core requirement for deployment is a `globalConfig.json` file. While UCC is designed to support a broad spectrum of use cases, there may be scenarios where the provided API options do not fully meet your needs.
 
 For such instances, UCC has a runtime custom JavaScript loading mechanism. This feature allows for the invocation of specific functionalities at pivotal moments within the application lifecycle, including `onChange` and `onRender` events.

@@ -1,3 +1,5 @@
+# OS-dependent libraries
+
 This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
 To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries** field. This field takes the following attributes:
 

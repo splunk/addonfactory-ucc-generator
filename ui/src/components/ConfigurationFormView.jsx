@@ -5,10 +5,9 @@ import { _ } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
-import axios from 'axios';
 import BaseFormView from './BaseFormView/BaseFormView';
 import { StyledButton } from '../pages/EntryPageStyle';
-import { axiosCallWrapper, generateEndPointUrl } from '../util/axiosCallWrapper';
+import { getRequest, generateEndPointUrl } from '../util/api';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
 import { PAGE_CONF } from '../constants/pages';
@@ -27,7 +26,7 @@ function ConfigurationFormView({ serviceName }) {
 
     useEffect(() => {
         const abortController = new AbortController();
-        axiosCallWrapper({
+        getRequest({
             endpointUrl: generateEndPointUrl(`settings/${encodeURIComponent(serviceName)}`),
             handleError: true,
             signal: abortController.signal,
@@ -39,16 +38,16 @@ function ConfigurationFormView({ serviceName }) {
             },
         })
             .catch((caughtError) => {
-                if (axios.isCancel(caughtError)) {
+                if (abortController.signal.aborted) {
                     return null;
                 }
                 throw caughtError;
             })
-            .then((response) => {
-                if (!response) {
+            .then((data) => {
+                if (!data) {
                     return;
                 }
-                setCurrentServiceState(response.data.entry[0].content);
+                setCurrentServiceState(data.entry[0].content);
             });
 
         return () => {

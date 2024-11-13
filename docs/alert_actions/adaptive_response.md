@@ -1,3 +1,5 @@
+# Adaptive Response
+
 The Adaptive Response framework provides a mechanism for running preconfigured actions
 within the Splunk platform or by integrating with external applications.
 These actions can be automatically triggered by correlation search results or manually
