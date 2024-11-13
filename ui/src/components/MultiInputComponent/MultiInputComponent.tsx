@@ -4,10 +4,11 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
-import { filterResponse } from '../../util/util';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
+import { filterResponse, FilterResponseParams } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 import { invariant } from '../../util/invariant';
+import { AcceptableFormValue } from '../../types/components/shareableTypes';
 
 const MultiSelectWrapper = styled(Multiselect)`
     width: 320px !important;
@@ -23,7 +24,7 @@ export interface MultiInputComponentProps {
     field: string;
     controlOptions: z.TypeOf<typeof MultipleSelectCommonOptions>;
     disabled?: boolean;
-    value?: string;
+    value?: AcceptableFormValue;
     error?: boolean;
     dependencyValues?: Record<string, unknown>;
 }
@@ -62,7 +63,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         return itemList.map((item) => (
             <Multiselect.Option
                 label={item.label}
-                value={item.value}
+                value={String(item.value)}
                 key={typeof item.value === 'boolean' ? String(item.value) : item.value}
             />
         ));
@@ -93,19 +94,19 @@ function MultiInputComponent(props: MultiInputComponentProps) {
             handleError: true,
             params: { count: -1 },
             endpointUrl: url,
-        } satisfies AxiosCallType;
+        } satisfies RequestParams;
         if (dependencyValues) {
             apiCallOptions.params = { ...apiCallOptions.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(apiCallOptions)
-                .then((response) => {
+            getRequest<{ entry: FilterResponseParams }>(apiCallOptions)
+                .then((data) => {
                     if (current) {
                         setOptions(
                             generateOptions(
                                 filterResponse(
-                                    response.data.entry,
+                                    data.entry,
                                     labelField,
                                     valueField,
                                     allowList,
@@ -113,10 +114,9 @@ function MultiInputComponent(props: MultiInputComponentProps) {
                                 )
                             )
                         );
-                        setLoading(false);
                     }
                 })
-                .catch(() => {
+                .finally(() => {
                     if (current) {
                         setLoading(false);
                     }
@@ -133,7 +133,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     const effectiveDisabled = loading ? true : disabled;
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
-    const valueList = value ? value.split(delimiter) : [];
+    const valueList = value ? String(value).split(delimiter) : [];
 
     return (
         <>
