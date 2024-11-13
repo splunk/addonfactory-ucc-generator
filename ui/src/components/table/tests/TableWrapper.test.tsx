@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
@@ -173,15 +173,13 @@ it('Correctly render status labels with mapped values', async () => {
         { wrapper: BrowserRouter }
     );
 
-    await screen.findByRole('table');
-
     const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
     const activeRow = await screen.findByLabelText(`row-${active?.name}`);
-    const activeRowDisabledCellText = activeRow.querySelector('[data-test="status"]');
-    expect(activeRowDisabledCellText).toHaveTextContent('Enabled Field');
+    const statusCell = within(activeRow).getByTestId('status');
+    expect(statusCell).toHaveTextContent('Enabled Field');
 
     const inactive = MockRowData.entry.find((entry) => entry.content.disabled === true);
     const inActiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
-    const inActiveRowDisabledCellText = inActiveRow.querySelector('[data-test="status"]');
-    expect(inActiveRowDisabledCellText).toHaveTextContent('Disabled Field');
+    const inActiveStatusCell = within(inActiveRow).getByTestId('status');
+    expect(inActiveStatusCell).toHaveTextContent('Disabled Field');
 });

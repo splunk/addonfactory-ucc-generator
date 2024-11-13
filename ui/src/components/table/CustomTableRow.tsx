@@ -103,6 +103,9 @@ function CustomTableRow(props: CustomTableRowProps) {
                             )}
                         >
                             <ActionButtonComponent
+                                aria-label={_(
+                                    `Go to search for events associated with ${selectedRow.name}`
+                                )}
                                 appearance="flat"
                                 icon={<Magnifier />}
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
