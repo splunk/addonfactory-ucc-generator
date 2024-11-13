@@ -39,8 +39,7 @@ beforeEach(() => {
 });
 
 it('Render action icons correctly', async () => {
-    await screen.findByRole('table');
-    const allEditButtons = screen.getAllByRole('button', { name: /edit/i });
+    const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
     expect(allEditButtons).toHaveLength(9);
     const allDeleteBtns = screen.getAllByRole('button', { name: /delete/i });
     expect(allDeleteBtns).toHaveLength(9);
@@ -53,9 +52,7 @@ it('Render action icons correctly', async () => {
 });
 
 it('Correctly call action handlers for page dialog', async () => {
-    await screen.findByRole('table');
-
-    screen.getAllByRole('button', { name: /edit/i })[0].click();
+    (await screen.findAllByRole('button', { name: /edit/i }))[0].click();
 
     expect(handleOpenPageStyleDialog).toHaveBeenCalledWith(expect.objectContaining({}), 'edit');
 
@@ -69,17 +66,13 @@ it('Correctly call action handlers for page dialog', async () => {
 });
 
 it('Correctly render modal for delete action click', async () => {
-    await screen.findByRole('table');
-
     // Clicking delete renders modal
-    screen.getAllByRole('button', { name: /delete/i })[0].click();
+    (await screen.findAllByRole('button', { name: /delete/i }))[0].click();
 
     expect(await screen.findByRole('dialog')).toHaveTextContent('Delete Confirmation');
 });
 
 it('Correctly render status labels with default values', async () => {
-    await screen.findByRole('table');
-
     const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
     const activeRow = await screen.findByLabelText(`row-${active?.name}`);
     const statusCell = within(activeRow).getByTestId('status');
