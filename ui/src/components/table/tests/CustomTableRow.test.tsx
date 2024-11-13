@@ -68,7 +68,7 @@ it('Correctly call action handlers for page dialog', async () => {
     );
 });
 
-it('Correctly render modal for actions click', async () => {
+it('Correctly render modal for delete action click', async () => {
     await screen.findByRole('table');
 
     // Clicking delete renders modal
