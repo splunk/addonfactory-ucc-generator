@@ -15,15 +15,12 @@ import {
 } from '../stories/rowDataMockup';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 
-const handleRequestModalOpen = jest.fn();
-const handleOpenPageStyleDialog = jest.fn();
-
 beforeEach(() => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
-        handleRequestModalOpen,
-        handleOpenPageStyleDialog,
+        handleRequestModalOpen: jest.fn(),
+        handleOpenPageStyleDialog: jest.fn(),
         displayActionBtnAllRows: false,
     } satisfies ITableWrapperProps;
 
@@ -47,25 +44,28 @@ beforeEach(() => {
 });
 
 it('Status toggling with acceptance model displayed correctly', async () => {
-    const inputSwitches = await screen.findAllByRole('switch');
+    const active = MockRowData.entry.find(
+        (entry) => entry.content.disabled === false && entry.name === 'aaaaaa' // api mocks are created for aaaaaa entity
+    );
+    const activeRow = await screen.findByLabelText(`row-${active?.name}`);
+
+    const inputSwitches = within(activeRow).getByRole('switch');
 
     // open accept modal for first switch
-    await userEvent.click(inputSwitches[0]);
+    await userEvent.click(inputSwitches);
 
     const acceptModal = await screen.findByRole('dialog');
-
-    expect(acceptModal).toBeInTheDocument();
 
     const headerText = screen.getByText('Make input Inactive?');
     expect(headerText).toBeInTheDocument();
 
-    const warningMessage = screen.getByText('Do you want to make input Inactive?');
+    const warningMessage = screen.getByText(`Do you want to make ${active?.name} input Inactive?`);
     expect(warningMessage).toBeInTheDocument();
 
     const noBtn = screen.getByRole('button', { name: 'No' });
     expect(noBtn).toBeInTheDocument();
 
-    const yesBtn = await screen.findByRole('button', { name: 'Yes' });
+    const yesBtn = screen.getByRole('button', { name: 'Yes' });
     expect(yesBtn).toBeInTheDocument();
 
     await userEvent.click(noBtn);
@@ -78,7 +78,7 @@ it('Status toggling with acceptance model toggles state', async () => {
         (entry) => entry.content.disabled === false && entry.name === 'aaaaaa' // api mocks are created for aaaaaa entity
     );
     const activeRow = await screen.findByLabelText(`row-${active?.name}`);
-    const statusToggle = await within(activeRow).findByRole('switch');
+    const statusToggle = within(activeRow).getByRole('switch');
 
     const statusCell = within(activeRow).getByTestId('status');
     expect(statusCell).toHaveTextContent('Active');
