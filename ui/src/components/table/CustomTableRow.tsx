@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback } from 'react';
 
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import Switch from '@splunk/react-ui/Switch';
@@ -15,7 +15,6 @@ import { _ } from '@splunk/ui-utils/i18n';
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getTableCellValue } from './table.utils';
-import AcceptModal from '../AcceptModal/AcceptModal';
 import { RowDataFields } from '../../context/TableContext';
 
 const TableCellWrapper = styled(Table.Cell)`
@@ -41,7 +40,6 @@ interface CustomTableRowProps {
     handleEditActionClick: (row: RowDataFields) => void;
     handleCloneActionClick: (row: RowDataFields) => void;
     handleDeleteActionClick: (row: RowDataFields) => void;
-    useInputToggleConfirmation?: boolean;
 }
 
 interface CellHeader {
@@ -59,10 +57,7 @@ function CustomTableRow(props: CustomTableRowProps) {
         handleEditActionClick,
         handleCloneActionClick,
         handleDeleteActionClick,
-        useInputToggleConfirmation,
     } = props;
-
-    const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
 
     const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
@@ -135,17 +130,6 @@ function CustomTableRow(props: CustomTableRowProps) {
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
-    const handleAcceptModal = (accepted: boolean) => {
-        if (accepted) {
-            handleToggleActionClick(row);
-        }
-        setDisplayAcceptToggling(false);
-    };
-
-    const verifyToggleActionClick = () => {
-        setDisplayAcceptToggling(true);
-    };
-
     let statusContent: string | ReactElement = row.disabled ? 'Inactive' : 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
@@ -172,25 +156,13 @@ function CustomTableRow(props: CustomTableRowProps) {
                             </Table.Cell>
                         );
                     } else if (header.field === 'disabled') {
-                        const activeText = headerMapping?.disabled?.false
-                            ? headerMapping.disabled.false
-                            : 'Active';
-
-                        const inactiveText = headerMapping?.disabled?.true
-                            ? headerMapping.disabled.true
-                            : 'Inactive';
-
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
                                 <SwitchWrapper>
                                     <Switch
                                         key={row.name}
                                         value={row.disabled}
-                                        onClick={() =>
-                                            useInputToggleConfirmation
-                                                ? verifyToggleActionClick()
-                                                : handleToggleActionClick(row)
-                                        }
+                                        onClick={() => handleToggleActionClick(row)}
                                         selected={!row.disabled}
                                         disabled={
                                             // eslint-disable-next-line no-underscore-dangle
@@ -210,20 +182,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>
-                                    {displayAcceptToggling && (
-                                        <AcceptModal
-                                            message={`Do you want to make input ${
-                                                row.disabled ? activeText : inactiveText
-                                            }?`}
-                                            open={displayAcceptToggling}
-                                            handleRequestClose={handleAcceptModal}
-                                            title={`Make input ${
-                                                row.disabled ? activeText : inactiveText
-                                            }?`}
-                                            declineBtnLabel="No"
-                                            acceptBtnLabel="Yes"
-                                        />
-                                    )}
                                 </SwitchWrapper>
                             </Table.Cell>
                         );
