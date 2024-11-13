@@ -14,7 +14,7 @@
 
 If your change doesn't seem to apply, please leave them unchecked.
 
-* [ ] I have performed a self-review of this change
-* [ ] Changes have been tested
+* [ ] I have performed a self-review of this change according to the [development guidelines](https://splunk.github.io/addonfactory-ucc-generator/contributing/#development-guidelines)
+* [ ] Changes have been [tested](https://splunk.github.io/addonfactory-ucc-generator/contributing/#build-and-test)
 * [ ] Changes are documented
-* [ ] PR title follows [conventional commit semantics](https://www.conventionalcommits.org/en/v1.0.0/)
+* [ ] PR title and description follows the [contributing principles](https://splunk.github.io/addonfactory-ucc-generator/contributing/#pull-requests)
