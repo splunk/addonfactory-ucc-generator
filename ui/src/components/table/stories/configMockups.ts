@@ -251,6 +251,11 @@ export const TABLE_CONFIG_WITH_MAPPING = {
     },
 } satisfies GlobalConfig;
 
+export const getSimpleConfigWithMapping = () => {
+    const configCp = JSON.parse(JSON.stringify(TABLE_CONFIG_WITH_MAPPING));
+    return configCp;
+};
+
 export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
     pages: {
         configuration: {

@@ -8,7 +8,7 @@ import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
-import { SIMPLE_NAME_TABLE_MOCK_DATA, TABLE_CONFIG_WITH_MAPPING } from '../stories/configMockups';
+import { getSimpleConfigWithMapping, SIMPLE_NAME_TABLE_MOCK_DATA } from '../stories/configMockups';
 
 jest.mock('immutability-helper');
 
@@ -79,7 +79,7 @@ it('sort items after filtering', async () => {
         )
     );
 
-    setUnifiedConfig(TABLE_CONFIG_WITH_MAPPING);
+    setUnifiedConfig(getSimpleConfigWithMapping());
 
     render(
         <TableContextProvider>
@@ -164,7 +164,7 @@ it('Correctly render status labels with mapped values', async () => {
         )
     );
 
-    setUnifiedConfig(TABLE_CONFIG_WITH_MAPPING);
+    setUnifiedConfig(getSimpleConfigWithMapping());
 
     render(
         <TableContextProvider>

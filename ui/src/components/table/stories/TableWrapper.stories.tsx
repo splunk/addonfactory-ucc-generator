@@ -5,7 +5,11 @@ import { fn } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
-import { getSimpleConfig, getSimpleConfigStylePage } from './configMockups';
+import {
+    getSimpleConfig,
+    getSimpleConfigStylePage,
+    getSimpleConfigWithMapping,
+} from './configMockups';
 import { TableContextProvider } from '../../../context/TableContext';
 import { ServerHandlers } from './rowDataMockup';
 
@@ -52,6 +56,22 @@ export const SimpleTableStylePage: Story = {
         handleOpenPageStyleDialog: fn(),
         displayActionBtnAllRows: false,
         config: getSimpleConfigStylePage() as GlobalConfig,
+    },
+    parameters: {
+        msw: {
+            handlers: ServerHandlers,
+        },
+    },
+};
+
+export const SimpleConfigWithStatusMapped: Story = {
+    args: {
+        page: 'configuration',
+        serviceName: 'account',
+        handleRequestModalOpen: fn(),
+        handleOpenPageStyleDialog: fn(),
+        displayActionBtnAllRows: false,
+        config: getSimpleConfigWithMapping() as GlobalConfig,
     },
     parameters: {
         msw: {
