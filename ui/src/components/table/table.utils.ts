@@ -9,7 +9,7 @@ export function isReadonlyRow(readonlyFieldId: string | undefined, row: Acceptab
 export function getTableCellValue(
     row: AcceptableFormRecord,
     field: string,
-    mapping: Record<string, string>
+    mapping?: Record<string, string>
 ) {
     const value = row[field];
     const valueIsEmpty = value === null || value === undefined || value === '';

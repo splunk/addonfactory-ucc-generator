@@ -4,7 +4,7 @@ import SearchJob from '@splunk/search-job';
 import { Platforms } from '../types/globalConfig/pages';
 import { GlobalConfig } from '../types/globalConfig/globalConfig';
 import { StandardPages } from '../types/components/shareableTypes';
-import { AnyEntity } from '../components/BaseFormView/BaseFormTypes';
+import { AnyEntity } from '../types/components/BaseFormTypes';
 
 const checkIfHideInAnyEntity = (entities: AnyEntity[]): boolean => {
     const isUsed = entities.find((entity) => {

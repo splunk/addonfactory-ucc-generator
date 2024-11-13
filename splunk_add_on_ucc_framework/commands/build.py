@@ -176,6 +176,11 @@ def _get_ignore_list(
     if not os.path.exists(ucc_ignore_path):
         return []
     else:
+        logger.warning(
+            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
+            "To achieve the similar functionality use additional_packaging.py."
+            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+        )
         with open(ucc_ignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
@@ -630,14 +635,23 @@ def generate(
     ):
         sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
         try:
+            from additional_packaging import cleanup_output_files
+
+            cleanup_output_files(output_directory, ta_name)
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `cleanup_output_files`. Skipping clean-up."
+            )
+
+        try:
             from additional_packaging import additional_packaging
 
             additional_packaging(ta_name)
-        except ImportError as e:
-            logger.exception(
-                "additional_packaging.py is present but not importable.", e
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `additional_packaging`. "
+                "Skipping additional packaging."
             )
-            raise e
 
     if global_config:
         logger.info("Generating OpenAPI file")
