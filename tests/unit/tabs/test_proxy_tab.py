@@ -64,12 +64,7 @@ def expected_generation():
                 "field": "proxy_password",
             },
         ],
-        "options": {
-            "saveValidator": "function(formData) { "
-            "if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } "
-            "if(!formData.proxy_url) { return 'Proxy Host can not be empty'; } "
-            "if(!formData.proxy_port) { return 'Proxy Port can not be empty'; } return true; }"
-        },
+        "warning": {"config": {"message": "Some warning message"}},
     }
 
 
@@ -85,12 +80,7 @@ def test_proxy_tab(expected_generation):
         },
         "username": True,
         "password": {"label": "Password for Proxy"},
-        "options": {
-            "saveValidator": "function(formData) { "
-            "if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } "
-            "if(!formData.proxy_url) { return 'Proxy Host can not be empty'; } "
-            "if(!formData.proxy_port) { return 'Proxy Port can not be empty'; } return true; }"
-        },
+        "warning": {"config": {"message": "Some warning message"}},
     }
     new_definition = ProxyTab.from_definition(proxy_input)
     assert new_definition == expected_generation
@@ -123,7 +113,7 @@ def test_proxy_short_tab_has_default_parameters():
                 "username": False,
             },
             "You had updated the password but set username to `false` which is not allowed "
-            "set `username = True` for default configuration."
+            "set `username = True` for default configuration.",
         ),
         (
             {
@@ -133,7 +123,7 @@ def test_proxy_short_tab_has_default_parameters():
                 "password": False,
             },
             "You had updated the username but set the password to 'false' which is not allowed "
-            "set `password = True` for default configuration."
+            "set `password = True` for default configuration.",
         ),
         (
             {
