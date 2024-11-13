@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 
-# type: ignore
-
 import logging
 import sys
 from typing import Dict, Any, Optional
@@ -103,7 +101,7 @@ DEFAULT_PASSWORD = {
 
 DEFAULT_DNS_RESOLUTION = {
     "type": "checkbox",
-    "label": "Reverse DNS resolution",
+    "label": "DNS resolution",
     "field": "proxy_rdns",
 }
 
@@ -137,13 +135,12 @@ class ProxyTab(Tab):
                 "dns_resolution": DEFAULT_DNS_RESOLUTION,
             }
 
-            def updating_dictionaries(key_name, const):
+            def updating_dictionaries(key_name: str, const: Any) -> None:
                 for key, value in const.items():
-                    if key not in definition.get(key_name):
-                        definition.get(key_name)[key] = value
+                    nonlocal definition
+                    if key not in definition.get(key_name, {}):
+                        definition[key_name][key] = value
                 entity.append(definition.get(key_name))
-
-            # TODO: update check when false and null are used
 
             if ("username" not in definition) ^ ("password" not in definition):
                 logger.error("Either of username or password is not mentioned.")
