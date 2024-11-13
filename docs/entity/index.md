@@ -2,6 +2,8 @@
 title: Entity
 ---
 
+# Entity
+
 ## Entity Properties
 
 | Property                                                         | Type                      | Description                                                                                                                          | Default Value |
@@ -18,9 +20,10 @@ title: Entity
 | [validators](./validators.md)                                    | array                     | It is used to validate the values of fields using various validators. It is strongly advised to specify validators for every entity. | -             |
 | [modifyFieldsOnValue](./modifyFieldsOnValue.md)                  | array                     | It is used to specify values and parameters that will influence visually other entities.                                             | -             |
 
-> [!WARNING]  
-> The [Placeholder](https://splunkui.splunk.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced.
-> The placeholder text is no longer displayed in the UI. Instead, use the `help` attribute.
+!!! warning "Placeholder deprecation"
+
+    The [Placeholder](https://splunkui.splunk.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced.
+    The placeholder text is no longer displayed in the UI. Instead, use the `help` attribute.
 
 ## Common Options
 

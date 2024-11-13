@@ -15,18 +15,23 @@ export default {
     coveragePathIgnorePatterns: [
         '/node_modules/',
         '/stories/',
-        // ignore *.d.ts files
-        '\\.d\\.ts$',
         'mockServiceWorker.js',
         'styleMock.js',
+        /*
+         TYPES
+         */
+        // *.d.ts files
+        '\\.d\\.ts$',
+        '/types/',
+        '\\.types\\.ts$',
     ],
     coverageDirectory: 'coverage',
     coverageThreshold: {
         global: {
-            statements: 65,
-            branches: 56,
-            functions: 64,
-            lines: 65,
+            statements: 66,
+            branches: 57,
+            functions: 65,
+            lines: 66,
         },
     },
     testEnvironmentOptions: {

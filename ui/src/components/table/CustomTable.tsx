@@ -76,7 +76,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
             : undefined;
     const { moreInfo, header: headers, actions } = tableConfig;
 
-    const headerMapping: Record<string, unknown> = {};
+    const headerMapping: Record<string, Record<string, string> | undefined> = {};
 
     headers.forEach((x) => {
         headerMapping[x.field] = x.mapping;

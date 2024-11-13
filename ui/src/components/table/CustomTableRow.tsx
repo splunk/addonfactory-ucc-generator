@@ -1,5 +1,4 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useCallback } from 'react';
 
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import Switch from '@splunk/react-ui/Switch';
@@ -16,6 +15,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getTableCellValue } from './table.utils';
+import { RowDataFields } from '../../context/TableContext';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -30,7 +30,24 @@ const SwitchWrapper = styled.div`
     }
 `;
 
-function CustomTableRow(props) {
+interface CustomTableRowProps {
+    row: RowDataFields;
+    readonly?: boolean;
+    columns: Array<{ customCell?: { src?: string; type?: string }; field: string }>;
+    rowActions: string[];
+    headerMapping: Record<string, Record<string, string> | undefined>;
+    handleToggleActionClick: (row: RowDataFields) => void;
+    handleEditActionClick: (row: RowDataFields) => void;
+    handleCloneActionClick: (row: RowDataFields) => void;
+    handleDeleteActionClick: (row: RowDataFields) => void;
+}
+
+interface CellHeader {
+    field: string;
+    customCell?: { src?: string; type?: string };
+}
+
+function CustomTableRow(props: CustomTableRowProps) {
     const {
         row,
         columns,
@@ -42,7 +59,9 @@ function CustomTableRow(props) {
         handleDeleteActionClick,
     } = props;
 
-    const getCustomCell = (customRow, header) =>
+    const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
+        header.customCell?.src &&
+        header.customCell?.type &&
         React.createElement(CustomTableControl, {
             serviceName: row.serviceName,
             field: header.field,
@@ -52,14 +71,15 @@ function CustomTableRow(props) {
         });
 
     const rowActionsPrimaryButton = useCallback(
-        (selectedRow, header) => (
+        (selectedRow: RowDataFields, header: CellHeader) => (
             <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
                     {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
                                 appearance="flat"
-                                icon={<Pencil screenReaderText={null} size={1} />}
+                                aria-label={_('Edit')}
+                                icon={<Pencil />}
                                 onClick={() => handleEditActionClick(selectedRow)}
                                 className="editBtn"
                             />
@@ -69,7 +89,8 @@ function CustomTableRow(props) {
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
                                 appearance="flat"
-                                icon={<Clone screenReaderText={null} size={1} />}
+                                aria-label={_('Clone')}
+                                icon={<Clone size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
                                 className="cloneBtn"
                             />
@@ -82,8 +103,11 @@ function CustomTableRow(props) {
                             )}
                         >
                             <ActionButtonComponent
+                                aria-label={_(
+                                    `Go to search for events associated with ${selectedRow.name}`
+                                )}
                                 appearance="flat"
-                                icon={<Magnifier screenReaderText={null} size={1} />}
+                                icon={<Magnifier />}
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
                                 inline={false}
@@ -95,7 +119,8 @@ function CustomTableRow(props) {
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
                                 appearance="flat"
-                                icon={<Trash screenReaderText={null} size={1} />}
+                                aria-label={_('Delete')}
+                                icon={<Trash size={1} />}
                                 onClick={() => handleDeleteActionClick(selectedRow)}
                                 className="deleteBtn"
                             />
@@ -108,15 +133,12 @@ function CustomTableRow(props) {
         [handleEditActionClick, handleCloneActionClick, handleDeleteActionClick]
     );
 
-    let statusContent = 'Active';
+    let statusContent: string | ReactElement = row.disabled ? 'Inactive' : 'Active';
     // eslint-disable-next-line no-underscore-dangle
     if (row.__toggleShowSpinner) {
         statusContent = <WaitSpinner />;
-    } else if (row.disabled) {
-        statusContent =
-            headerMapping?.disabled && headerMapping.disabled[row.disabled]
-                ? headerMapping.disabled[row.disabled]
-                : 'Inactive';
+    } else if (headerMapping.disabled?.[String(row.disabled)]) {
+        statusContent = headerMapping.disabled[String(row.disabled)];
     }
 
     // Fix set of props are passed to Table.Row element
@@ -124,15 +146,16 @@ function CustomTableRow(props) {
         <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
             key={row.name || row.id}
             {...props}
+            aria-label={`row-${row.name || row.id}`}
         >
             {columns &&
                 columns.length &&
                 columns.map((header) => {
-                    let cellHTML = '';
+                    let cellHTML: string | ReactElement = '';
                     if (header.customCell && header.customCell.src) {
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
-                                {getCustomCell(row, header)}
+                                {header.customCell && getCustomCell(row, header)}
                             </Table.Cell>
                         );
                     } else if (header.field === 'disabled') {
@@ -144,8 +167,10 @@ function CustomTableRow(props) {
                                         value={row.disabled}
                                         onClick={() => handleToggleActionClick(row)}
                                         selected={!row.disabled}
-                                        // eslint-disable-next-line no-underscore-dangle
-                                        disabled={row.__toggleShowSpinner || props.readonly}
+                                        disabled={
+                                            // eslint-disable-next-line no-underscore-dangle
+                                            Boolean(row.__toggleShowSpinner) || props.readonly
+                                        }
                                         appearance="toggle"
                                         className="toggle_switch"
                                         selectedLabel={_(
@@ -181,17 +206,5 @@ function CustomTableRow(props) {
         </Table.Row>
     );
 }
-
-CustomTableRow.propTypes = {
-    row: PropTypes.any,
-    readonly: PropTypes.bool,
-    columns: PropTypes.array,
-    rowActions: PropTypes.array,
-    headerMapping: PropTypes.object,
-    handleToggleActionClick: PropTypes.func,
-    handleEditActionClick: PropTypes.func,
-    handleCloneActionClick: PropTypes.func,
-    handleDeleteActionClick: PropTypes.func,
-};
 
 export default React.memo(CustomTableRow);

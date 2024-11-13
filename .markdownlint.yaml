@@ -33,6 +33,10 @@ MD025: false
 # MD028/no-blanks-blockquote
 MD028: false
 
+# MD029/ordered-list-item-prefix
+MD029:
+  style: one
+
 # MD033/no-inline-html
 MD033: false
 
@@ -43,7 +47,7 @@ MD034: false
 MD040: false
 
 # MD041/first-line-heading/first-line-h1
-MD041: false
+MD041: true
 
 # MD046/code-block-style
 MD046: false

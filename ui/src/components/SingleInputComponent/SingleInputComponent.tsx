@@ -7,11 +7,11 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
-import { filterResponse } from '../../util/util';
+import { filterResponse, FilterResponseParams } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
-import { StandardPages } from '../../types/components/shareableTypes';
+import { AcceptableFormValue, StandardPages } from '../../types/components/shareableTypes';
 
 const SelectWrapper = styled(Select)`
     width: 320px !important;
@@ -27,7 +27,7 @@ const StyledDiv = styled.div`
     }
 `;
 
-type BasicFormItem = { value: string | number | boolean; label: string };
+type BasicFormItem = { value: AcceptableFormValue; label: string };
 
 type FormItem =
     | BasicFormItem
@@ -39,9 +39,9 @@ type FormItem =
 export interface SingleInputComponentProps {
     id?: string;
     disabled?: boolean;
-    value: string;
+    value: AcceptableFormValue;
     error?: boolean;
-    handleChange: (field: string, value: string | number | boolean) => void;
+    handleChange: (field: string, value: string) => void;
     field: string;
     dependencyValues?: Record<string, unknown>;
     controlOptions: z.TypeOf<typeof SelectCommonOptions> & {
@@ -74,8 +74,8 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         hideClearBtn,
     } = controlOptions;
 
-    const handleChange = (e: unknown, obj: { value: string | number | boolean }) => {
-        restProps.handleChange(field, obj.value);
+    const handleChange = (e: unknown, obj: { value: AcceptableFormValue }) => {
+        restProps.handleChange(field, String(obj.value));
     };
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
@@ -83,10 +83,16 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     function generateOptions(items: FormItem[]) {
         const data: ReactElement[] = [];
         items.forEach((item) => {
-            if ('value' in item && item.value && item.label) {
-                // splunk will mape those when sending post form
+            if (
+                'value' in item &&
+                item.value !== null &&
+                item.value !== undefined &&
+                item.value !== '' &&
+                item.label
+            ) {
+                // splunk will maps those when sending post form
                 // so worth doing it earlier to keep same state before and after post
-                const itemValue = getValueMapTruthyFalse(item.value, props.page);
+                const itemValue = String(getValueMapTruthyFalse(item.value, props.page));
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                 data.push(<Option label={item.label} value={itemValue} key={item.value} />);
@@ -94,7 +100,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             if ('children' in item && item.children && item.label) {
                 data.push(<Heading key={item.label}>{item.label}</Heading>);
                 item.children.forEach((child) => {
-                    const childValue = getValueMapTruthyFalse(child.value, props.page);
+                    const childValue = String(getValueMapTruthyFalse(child.value, props.page));
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore JSX element type 'Option' does not have any construct or call signatures.
                     data.push(<Option label={child.label} value={childValue} key={childValue} />);
@@ -130,25 +136,19 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             endpointUrl: url,
             handleError: true,
             params: { count: -1 },
-        } satisfies AxiosCallType;
+        } satisfies RequestParams;
 
         if (dependencyValues) {
             backendCallOptions.params = { ...backendCallOptions.params, ...dependencyValues };
         }
 
         setLoading(true);
-        axiosCallWrapper(backendCallOptions)
-            .then((response) => {
+        getRequest<{ entry: FilterResponseParams }>(backendCallOptions)
+            .then((data) => {
                 if (current) {
                     setOptions(
                         generateOptions(
-                            filterResponse(
-                                response.data.entry,
-                                labelField,
-                                valueField,
-                                allowList,
-                                denyList
-                            )
+                            filterResponse(data.entry, labelField, valueField, allowList, denyList)
                         )
                     );
                     setLoading(false);
@@ -174,11 +174,15 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     // hideClearBtn=true only passed for OAuth else its undefined
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
     const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
-
     return createSearchChoice ? (
         <StyledDiv className="dropdownBox">
             <ComboBox
-                value={props.value}
+                value={
+                    // if value is empty use empty string as ComboBox accepts only string
+                    props.value === null || typeof props.value === 'undefined'
+                        ? ''
+                        : String(props.value)
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}
@@ -195,7 +199,12 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 inputId={props.id}
                 className="dropdownBox"
                 data-test-loading={loading}
-                value={props.value}
+                value={
+                    // if value is empty use empty string as Select accepts only string
+                    props.value === null || typeof props.value === 'undefined'
+                        ? ''
+                        : String(props.value)
+                }
                 name={field}
                 error={error}
                 disabled={effectiveDisabled}

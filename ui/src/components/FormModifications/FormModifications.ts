@@ -5,7 +5,7 @@ import {
     BaseFormState,
     AnyEntity,
     EntitiesAllowingModifications,
-} from '../BaseFormView/BaseFormTypes';
+} from '../../types/components/BaseFormTypes';
 import { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
 
 const VALUE_TO_TRIGGER_UPDATE_FOR_ANY_NOT_LISTED_VALUES = '[[any_other_value]]';

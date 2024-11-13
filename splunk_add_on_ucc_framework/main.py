@@ -131,6 +131,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "to pip install command.",
     )
     build_parser.add_argument(
+        "--pip-custom-flag",
+        help="Custom flag that will be add to pip install command",
+        type=str,
+        default=False,
+        required=False,
+    )
+    build_parser.add_argument(
         "--ui-source-map",
         help="Adds front-end source-map files .js.map",
         default=False,
@@ -216,6 +223,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             pip_version=args.pip_version,
             pip_legacy_resolver=args.pip_legacy_resolver,
             ui_source_map=args.ui_source_map,
+            pip_custom_flag=args.pip_custom_flag,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)

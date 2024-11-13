@@ -3,7 +3,7 @@ import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
-import { AnyEntity, UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
+import { AnyEntity, UtilControlWrapper } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
@@ -72,7 +72,6 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         const { text, link, color, markdownType, token, linkText } =
             this.props.markdownMessage || {};
         let rowView;
-        // console.log('render custom component', this.props);
 
         if (this.props?.entity?.type === 'custom') {
             const data = {

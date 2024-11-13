@@ -50,6 +50,7 @@ Check [swagger](https://swagger.io/) or [other tools](https://github.com/OAI/Ope
     docker run -p 8081:8080 swaggerapi/swagger-editor
     ```
 
+
     Then go to: http://localhost:8081/
 
 1. Load the OpenAPI description document (File > Import file)
@@ -81,7 +82,7 @@ Make sure you clicked the Authorize button, gave the username and password, and 
 ### Instruction
 
 1. Go to the directory where you downloaded `openapi.json` file
-2. Run the following command: `docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client`
+1. Run the following command: `docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g python -o /local/restapi_client`
 
     - make sure `openapi.json` is in the current directory
     - you can generate clients for other languages as well - run
@@ -90,9 +91,9 @@ Make sure you clicked the Authorize button, gave the username and password, and 
 
      to see the list of supported languages
 
-3. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
-4. Install the client (`pip install .`)
-5. See `README.md` for an example of usage
+1. The client should appear in `restapi_client`. Open that directory (`cd restapi_client`)
+1. Install the client (`pip install .`)
+1. See `README.md` for an example of usage
 
 ### Troubleshooting
 

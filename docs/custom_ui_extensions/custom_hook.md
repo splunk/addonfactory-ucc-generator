@@ -1,3 +1,5 @@
+# Custom Hook
+
 Custom Hook is a JavaScript function that allows us to reuse some code throughout the app. It is used to validate form/dialog inputs.
 
 Hook is nothing more than a Javascript event handling on the events `onCreate`, `onChange`, `onRender`, `onSave`, `onSaveSuccess`, `onSaveFail`, and `onEditLoad`.
