@@ -40,6 +40,7 @@ tab.
 Currently available tab components:
 
 - [Logging tab](./logging.md)
+- [Proxy tab](./proxy.md)
 
 ### Usage
 
@@ -55,12 +56,16 @@ Currently available tab components:
             "entity": []
         },
         {
-            "name": "proxy",
-            "title": "Proxy",
-            "entity": [],
-            "options": {
-                "saveValidator": ""
-            }
+            "type": "proxyTab",
+             "warning": {
+                "config": {
+                    "message": "Some warning message"
+                }
+            },
+            "proxy_type": true,
+            "username": true,
+            "password": true,
+            "dns_resolution": true
         },
         {
             "type": "loggingTab"
@@ -80,6 +85,6 @@ This is how table looks in the UI:
 
 This is how form looks in the UI:
 
-![image](../images/configuration/configuration_without_table_output.png)
+![image](../images/configuration/proxy_tab_with_warning.png)
 
 More information about how to set Proxy tab, can be found [here](./proxy.md).
