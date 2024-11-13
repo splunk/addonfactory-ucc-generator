@@ -164,7 +164,7 @@ def install_python_libraries(
             installer=python_binary_name,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
-            pip_custom_flag=pip_custom_flag if pip_custom_flag else "",
+            pip_custom_flag=pip_custom_flag,
         )
         if includes_ui:
             _check_libraries_required_for_ui(
@@ -204,7 +204,7 @@ def install_libraries(
     installer: str,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
-    pip_custom_flag: str = "--no-compile --prefer-binary --ignore-installed ",
+    pip_custom_flag: Optional[str] = "--no-compile --prefer-binary --ignore-installed ",
 ) -> None:
     """
     Upgrades `pip` version to the latest one and installs requirements to the
