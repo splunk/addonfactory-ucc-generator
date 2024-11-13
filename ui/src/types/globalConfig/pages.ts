@@ -44,6 +44,21 @@ const WarningSchema = z
     })
     .optional();
 
+const GroupsSchema = z
+    .array(
+        z.object({
+            options: z
+                .object({
+                    isExpandable: z.boolean().optional(),
+                    expand: z.boolean().optional(),
+                })
+                .optional(),
+            label: z.string(),
+            fields: z.array(z.string()),
+        })
+    )
+    .optional();
+
 export const TabSchema = z.object({
     entity: z.array(AnyOfEntity).optional(),
     name: z.string(),
@@ -61,22 +76,8 @@ export const TabSchema = z.object({
     customTab: z.record(z.any()).optional(),
     warning: WarningSchema,
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    groups: GroupsSchema,
 });
-
-const GroupsSchema = z
-    .array(
-        z.object({
-            options: z
-                .object({
-                    isExpandable: z.boolean().optional(),
-                    expand: z.boolean().optional(),
-                })
-                .optional(),
-            label: z.string(),
-            fields: z.array(z.string()),
-        })
-    )
-    .optional();
 
 export const TableLessServiceSchema = z.object({
     name: z.string(),
