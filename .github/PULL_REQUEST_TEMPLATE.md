@@ -4,11 +4,11 @@
 
 ### Changes
 
-> Please provide a summary of what's being changed
+Please provide a summary of what's being changed
 
 ### User experience
 
-> Please describe what the user experience looks like before and after this change
+Please describe what the user experience looks like before and after this change
 
 ## Checklist
 
