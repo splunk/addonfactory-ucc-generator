@@ -204,7 +204,7 @@ def install_libraries(
     installer: str,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
-    pip_custom_flag: Optional[str] = "--no-compile --prefer-binary --ignore-installed ",
+    pip_custom_flag: Optional[str] = None,
 ) -> None:
     """
     Upgrades `pip` version to the latest one and installs requirements to the
@@ -225,11 +225,16 @@ def install_libraries(
         sys.exit(1)
 
     deps_resolver = "--use-deprecated=legacy-resolver " if pip_legacy_resolver else ""
+    custom_flag = (
+        pip_custom_flag
+        if pip_custom_flag
+        else "--no-compile --prefer-binary --ignore-installed "
+    )
     pip_install_command = (
         f'-r "{requirements_file_path}" '
         f"{deps_resolver}"
         f'--target "{installation_path}" '
-        f"{pip_custom_flag}"
+        f"{custom_flag}"
     )
     _pip_install(
         installer=installer, command=pip_update_command, command_desc="pip upgrade"
