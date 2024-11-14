@@ -14,6 +14,7 @@ import {
     MockRowDataTogglingResponseDisableTrue,
 } from '../stories/rowDataMockup';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
+import { invariant } from '../../../util/invariant';
 
 beforeEach(() => {
     const props = {
@@ -27,9 +28,6 @@ beforeEach(() => {
     server.use(
         http.get('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one', () =>
             HttpResponse.json(MockRowData)
-        ),
-        http.post('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one/aaaaaa', () =>
-            HttpResponse.json(MockRowDataTogglingResponseDisableTrue)
         )
     );
 
@@ -43,67 +41,112 @@ beforeEach(() => {
     );
 });
 
-it('Status toggling with acceptance model displayed correctly', async () => {
+const getRowData = (isDisabled: boolean) => {
     const active = MockRowData.entry.find(
-        (entry) => entry.content.disabled === false && entry.name === 'aaaaaa' // api mocks are created for aaaaaa entity
+        (entry) => entry.content.disabled === isDisabled // api mocks are created for aaaaaa entity
     );
-    const activeRow = await screen.findByLabelText(`row-${active?.name}`);
+    return active;
+};
 
-    const inputSwitches = within(activeRow).getByRole('switch');
+const serverUseDisabledForEntity = (entity: string, isDisabledTrue: boolean) => {
+    server.use(
+        http.post(`/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one/${entity}`, () =>
+            HttpResponse.json(
+                isDisabledTrue
+                    ? MockRowDataTogglingResponseDisableTrue
+                    : MockRowDataTogglingResponseDisableFalse
+            )
+        )
+    );
+};
 
-    // open accept modal for first switch
-    await userEvent.click(inputSwitches);
+const getRowElements = async (isDisabled: boolean) => {
+    const activeRowData = getRowData(isDisabled);
+    invariant(activeRowData, 'Active row not found');
+    const activeRow = await screen.findByLabelText(`row-${activeRowData?.name}`);
 
-    const acceptModal = await screen.findByRole('dialog');
+    const statusCell = within(activeRow).getByTestId('status');
 
-    const headerText = screen.getByText('Make input Inactive?');
-    expect(headerText).toBeInTheDocument();
+    const statusToggle = within(activeRow).getByRole('switch');
 
-    const warningMessage = screen.getByText(`Do you want to make ${active?.name} input Inactive?`);
-    expect(warningMessage).toBeInTheDocument();
+    return { activeRowData, activeRow, statusCell, statusToggle };
+};
 
+it('Status toggling with acceptance model - displayed correctly', async () => {
+    const { activeRowData, statusToggle } = await getRowElements(false);
+
+    statusToggle.click();
+
+    const acceptModal = await screen.findByRole('dialog', { name: /Make input Inactive?/i });
+
+    screen.getByText(`Do you want to make ${activeRowData?.name} input Inactive?`);
+
+    screen.getByRole('button', { name: 'Yes' });
     const noBtn = screen.getByRole('button', { name: 'No' });
-    expect(noBtn).toBeInTheDocument();
-
-    const yesBtn = screen.getByRole('button', { name: 'Yes' });
-    expect(yesBtn).toBeInTheDocument();
 
     await userEvent.click(noBtn);
 
     expect(acceptModal).not.toBeInTheDocument();
 });
 
-it('Status toggling with acceptance model toggles state', async () => {
-    const active = MockRowData.entry.find(
-        (entry) => entry.content.disabled === false && entry.name === 'aaaaaa' // api mocks are created for aaaaaa entity
-    );
-    const activeRow = await screen.findByLabelText(`row-${active?.name}`);
-    const statusToggle = within(activeRow).getByRole('switch');
+it('Status toggling with acceptance model - toggles state', async () => {
+    const { activeRowData, statusCell, statusToggle } = await getRowElements(false);
 
-    const statusCell = within(activeRow).getByTestId('status');
     expect(statusCell).toHaveTextContent('Active');
+
+    serverUseDisabledForEntity(activeRowData.name, true);
 
     statusToggle.click();
 
-    const acceptModal = await screen.findByRole('dialog');
-    expect(acceptModal).toBeInTheDocument();
+    await screen.findByRole('dialog', { name: 'Make input Inactive?' });
 
     const yesBtn = await screen.findByRole('button', { name: 'Yes' });
-    expect(yesBtn).toBeInTheDocument();
-
     await userEvent.click(yesBtn);
 
     expect(statusCell).toHaveTextContent('Inactive');
 
-    server.use(
-        http.post('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one/aaaaaa', () =>
-            HttpResponse.json(MockRowDataTogglingResponseDisableFalse)
-        )
-    );
+    serverUseDisabledForEntity(activeRowData.name, false);
 
     statusToggle.click();
+
+    await screen.findByRole('dialog', { name: 'Make input Active?' });
+
     const yesBtn2 = await screen.findByRole('button', { name: 'Yes' });
     await userEvent.click(yesBtn2);
 
     expect(statusCell).toHaveTextContent('Active');
+});
+
+it('Status toggling with acceptance model - decline modal still Active', async () => {
+    const { activeRowData, statusCell, statusToggle } = await getRowElements(false);
+
+    expect(statusCell).toHaveTextContent('Active');
+
+    serverUseDisabledForEntity(activeRowData.name, true);
+
+    statusToggle.click();
+
+    await screen.findByRole('dialog', { name: 'Make input Inactive?' });
+
+    const noBtn = await screen.findByRole('button', { name: 'No' });
+    await userEvent.click(noBtn);
+
+    expect(statusCell).toHaveTextContent('Active');
+});
+
+it('Status toggling with acceptance model - decline modal still Inactive', async () => {
+    const { activeRowData, statusCell, statusToggle } = await getRowElements(true);
+
+    expect(statusCell).toHaveTextContent('Inactive');
+
+    serverUseDisabledForEntity(activeRowData.name, true);
+
+    statusToggle.click();
+
+    await screen.findByRole('dialog', { name: 'Make input Active?' });
+
+    const noBtn = await screen.findByRole('button', { name: 'No' });
+    await userEvent.click(noBtn);
+
+    expect(statusCell).toHaveTextContent('Inactive');
 });
