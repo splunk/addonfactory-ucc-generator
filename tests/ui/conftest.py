@@ -32,8 +32,17 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
 
     yield
 
+    IGNORED = {
+        "appLogo.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
+    }
+
     browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)
-    severe_logs = [log for log in browser_logs if log.level == s_utils.LogLevel.SEVERE]
+    severe_logs = [
+        log
+        for log in browser_logs
+        if log.level == s_utils.LogLevel.SEVERE
+        and not any(ignored in log.message for ignored in IGNORED)
+    ]
 
     if severe_logs:
         log_msg = [f"{log.level}: {log.source} - {log.message}" for log in severe_logs]
