@@ -248,6 +248,10 @@ def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
         global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
     ):
+        if tab.get("type") == "proxyTab":
+            # Collapsing the tab is not required for ProxyTab because we can't be certain
+            # that a particular tab is a Proxy tab, as we can with a Logging tab.
+            continue
         global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
 
     _dump(global_config.content, path, global_config._is_global_config_yaml)

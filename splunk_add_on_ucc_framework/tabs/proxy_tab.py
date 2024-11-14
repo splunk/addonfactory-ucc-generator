@@ -114,14 +114,8 @@ class ProxyTab(Tab):
     @classmethod
     def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
         """
-        This function checks if the definition either has type==ProxyTab, or if it is a normal tab (which later will
-        be converted), that satisfies the following conditions:
-        1. This dictionary has only 3 keys: name, title and entity (e.g. no keys like warnings)
-        2. It has only one entity
-        3. The entity is singleSelect and has the predefined log levels.
-
-        Note: Although it is possible to set custom levels, this function will omit other levels, as it would be harder
-        to determine whether the tab is indeed a logging tab.
+        This function checks if the definition has type == ProxyTab; if it does, it gets converted;
+        otherwise, it returns None.
         """
         if definition.get("type") == "proxyTab":
             entity = []
