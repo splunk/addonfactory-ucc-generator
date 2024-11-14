@@ -1,5 +1,8 @@
 # `.uccignore` file
 
+!!! warning "Deprecation Notice"
+    This feature has been deprecated from UCC framework as of v5.53.0 as the feature is ambiguous. You can achieve the same functionality using [additional_packaging.py](./additional_packaging.md). The `cleanup_output_files` provides a feature to clean up files after the source code has been copied.
+
 This feature can be used to remove files from the output **after** the UCC template files were copied and **before** the source of the
 add-on recursively overrides the output folder.
 

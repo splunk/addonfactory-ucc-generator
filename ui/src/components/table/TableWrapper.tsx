@@ -1,9 +1,8 @@
 import React, { useState, useEffect, memo, useCallback, useMemo, useRef } from 'react';
 import update from 'immutability-helper';
-import axios from 'axios';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
-import { axiosCallWrapper, generateEndPointUrl } from '../../util/axiosCallWrapper';
+import { generateEndPointUrl, getRequest, postRequest } from '../../util/api';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
@@ -142,17 +141,18 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         function fetchInputs() {
             const requests =
                 services?.map((service) =>
-                    axiosCallWrapper({
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    getRequest<{ entry: [any] }>({
                         endpointUrl: generateEndPointUrl(encodeURIComponent(service.name)),
                         params: { count: -1 },
                         signal: abortController.signal,
+                        handleError: false,
                     })
                 ) || [];
 
-            axios
-                .all(requests)
+            Promise.all(requests)
                 .catch((caughtError) => {
-                    if (axios.isCancel(caughtError)) {
+                    if (abortController.signal.aborted) {
                         return;
                     }
                     const message = parseErrorMsg(caughtError);
@@ -160,13 +160,13 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                     generateToast(message, 'error');
                     setError(caughtError);
                 })
-                .then((response) => {
-                    if (!response) {
+                .then((responsesData) => {
+                    if (!responsesData) {
                         return;
                     }
                     const data = getRowDataFromApiResponse(
                         services,
-                        response.map((res) => res.data.entry)
+                        responsesData.map((responseData) => responseData.entry)
                     );
                     setRowData(data);
                 })
@@ -203,13 +203,12 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         );
         const body = new URLSearchParams();
         body.append('disabled', String(!row.disabled));
-        axiosCallWrapper({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        postRequest<{ entry: [any] }>({
             endpointUrl: generateEndPointUrl(
                 `${encodeURIComponent(row.serviceName)}/${encodeURIComponent(row.name)}`
             ),
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: true,
             callbackOnError: () => {
                 setRowData((currentRowData: RowDataType) =>
@@ -222,13 +221,13 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                     })
                 );
             },
-        }).then((response) => {
+        }).then((data) => {
             setRowData((currentRowData: RowDataType) =>
                 update(currentRowData, {
                     [row.serviceName]: {
                         [row.name]: {
                             // ADDON-39125: isTrue required if splunktaucclib resthandlers' super() is not invoked
-                            disabled: { $set: isTrue(response.data.entry[0].content.disabled) },
+                            disabled: { $set: isTrue(data.entry[0].content.disabled) },
                             __toggleShowSpinner: { $set: false },
                         },
                     },
