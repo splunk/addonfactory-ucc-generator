@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
@@ -8,7 +8,7 @@ import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
-import { SIMPLE_NAME_TABLE_MOCK_DATA, TABLE_CONFIG_WITH_MAPPING } from '../stories/configMockups';
+import { getSimpleConfigWithMapping, SIMPLE_NAME_TABLE_MOCK_DATA } from '../stories/configMockups';
 
 jest.mock('immutability-helper');
 
@@ -79,7 +79,7 @@ it('sort items after filtering', async () => {
         )
     );
 
-    setUnifiedConfig(TABLE_CONFIG_WITH_MAPPING);
+    setUnifiedConfig(getSimpleConfigWithMapping());
 
     render(
         <TableContextProvider>
@@ -147,4 +147,39 @@ it('sort items after filtering', async () => {
           "222222",
         ]
     `);
+});
+
+it('Correctly render status labels with mapped values', async () => {
+    const props = {
+        page: 'configuration',
+        serviceName: 'account',
+        handleRequestModalOpen,
+        handleOpenPageStyleDialog,
+        displayActionBtnAllRows: false,
+    } satisfies ITableWrapperProps;
+
+    server.use(
+        http.get('/servicesNS/nobody/-/splunk_ta_uccexample_account', () =>
+            HttpResponse.json(MockRowData)
+        )
+    );
+
+    setUnifiedConfig(getSimpleConfigWithMapping());
+
+    render(
+        <TableContextProvider>
+            <TableWrapper {...props} />
+        </TableContextProvider>,
+        { wrapper: BrowserRouter }
+    );
+
+    const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
+    const activeRow = await screen.findByLabelText(`row-${active?.name}`);
+    const statusCell = within(activeRow).getByTestId('status');
+    expect(statusCell).toHaveTextContent('Enabled Field');
+
+    const inactive = MockRowData.entry.find((entry) => entry.content.disabled === true);
+    const inActiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
+    const inActiveStatusCell = within(inActiveRow).getByTestId('status');
+    expect(inActiveStatusCell).toHaveTextContent('Disabled Field');
 });

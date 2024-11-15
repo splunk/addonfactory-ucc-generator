@@ -176,6 +176,11 @@ def _get_ignore_list(
     if not os.path.exists(ucc_ignore_path):
         return []
     else:
+        logger.warning(
+            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
+            "To achieve the similar functionality use additional_packaging.py."
+            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+        )
         with open(ucc_ignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
@@ -410,6 +415,7 @@ def generate(
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     ui_source_map: bool = False,
+    pip_custom_flag: Optional[str] = None,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -494,6 +500,7 @@ def generate(
                 os_libraries=global_config.os_libraries,
                 pip_version=pip_version,
                 pip_legacy_resolver=pip_legacy_resolver,
+                pip_custom_flag=pip_custom_flag,
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -561,6 +568,7 @@ def generate(
             python_binary_name,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
+            pip_custom_flag=pip_custom_flag,
         )
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
@@ -630,14 +638,23 @@ def generate(
     ):
         sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
         try:
+            from additional_packaging import cleanup_output_files
+
+            cleanup_output_files(output_directory, ta_name)
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `cleanup_output_files`. Skipping clean-up."
+            )
+
+        try:
             from additional_packaging import additional_packaging
 
             additional_packaging(ta_name)
-        except ImportError as e:
-            logger.exception(
-                "additional_packaging.py is present but not importable.", e
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `additional_packaging`. "
+                "Skipping additional packaging."
             )
-            raise e
 
     if global_config:
         logger.info("Generating OpenAPI file")

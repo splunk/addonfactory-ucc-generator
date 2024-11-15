@@ -10,8 +10,12 @@ import {
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { Mode } from '../../../constants/modes';
-import { BaseFormProps } from '../BaseFormTypes';
+import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 import { Platforms } from '../../../types/globalConfig/pages';
+import {
+    getGlobalConfigMockGroupsFoInputPage,
+    getGlobalConfigMockGroupsForConfigPage,
+} from '../BaseFormConfigMock';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
@@ -96,6 +100,32 @@ export const OuathBasicCloud: Story = {
         stanzaName: 'unknownStanza',
         handleFormSubmit: fn(),
         config: getConfigOauthBasic() as GlobalConfig,
+        platform: 'cloud',
+    },
+};
+
+export const ConfigPageGroups: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'account',
+        mode: 'create' as Mode,
+        page: 'configuration',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getGlobalConfigMockGroupsForConfigPage(),
+        platform: 'cloud',
+    },
+};
+
+export const InputPageGroups: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'demo_input',
+        mode: 'create' as Mode,
+        page: 'inputs',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getGlobalConfigMockGroupsFoInputPage(),
         platform: 'cloud',
     },
 };

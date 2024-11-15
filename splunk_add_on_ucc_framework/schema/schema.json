@@ -2479,6 +2479,9 @@
         },
         "hideForPlatform": {
           "$ref": "#/definitions/HideForPlatform"
+        },
+        "groups": {
+          "$ref": "#/definitions/Groups"
         }
       },
       "anyOf": [

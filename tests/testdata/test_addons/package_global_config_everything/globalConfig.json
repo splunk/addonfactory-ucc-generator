@@ -474,6 +474,21 @@
                             }
                         }
                     ],
+                    "groups": [
+                        {
+                            "label": "Hidden entities",
+                            "fields": [
+                                "text_field_hidden_for_cloud",
+                                "text_field_hidden_for_enterprise",
+                                "field_no_validators",
+                                "field_no_validators_suppressed"
+                            ],
+                            "options": {
+                                "isExpandable": true,
+                                "expand": false
+                            }
+                        }
+                    ],
                     "title": "Account",
                     "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
                     "restHandlerClass": "CustomAccountValidator"
@@ -1806,10 +1821,10 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.51.1+3536793cd",
+        "version": "5.52.0+70c7e9d6b",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
-        "_uccVersion": "5.51.1",
+        "_uccVersion": "5.52.0",
         "supportedThemes": [
             "light",
             "dark"

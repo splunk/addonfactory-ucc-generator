@@ -338,7 +338,7 @@ export const ROW_DATA = [
             account_radio: '1',
             auth_type: 'basic',
             custom_endpoint: 'login.example.com',
-            disabled: false,
+            disabled: true,
             'eai:acl': null,
             'eai:appName': 'Splunk_TA_UCCExample',
             'eai:userName': 'nobody',
@@ -382,7 +382,7 @@ export const ROW_DATA = [
             account_radio: '1',
             auth_type: 'basic',
             custom_endpoint: 'login.example.com',
-            disabled: false,
+            disabled: true,
             'eai:acl': null,
             'eai:appName': 'Splunk_TA_UCCExample',
             'eai:userName': 'nobody',
@@ -405,6 +405,9 @@ export const MockRowData = {
 
 export const ServerHandlers = [
     http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_account`, () =>
+        HttpResponse.json(MockRowData)
+    ),
+    http.get('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one', () =>
         HttpResponse.json(MockRowData)
     ),
 ];

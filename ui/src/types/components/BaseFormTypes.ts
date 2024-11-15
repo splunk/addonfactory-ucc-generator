@@ -4,8 +4,8 @@ import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
     StandardPages,
-} from '../../types/components/shareableTypes';
-import { MarkdownMessageProps } from '../MarkdownMessage/MarkdownMessage';
+} from './shareableTypes';
+import { MarkdownMessageProps } from '../../components/MarkdownMessage/MarkdownMessage';
 import {
     AnyOfEntity,
     CheckboxEntity,
@@ -16,8 +16,8 @@ import {
     SingleSelectEntity,
     TextAreaEntity,
     TextEntity,
-} from '../../types/globalConfig/entities';
-import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+} from '../globalConfig/entities';
+import { GlobalConfig } from '../globalConfig/globalConfig';
 import { PageContextProviderType } from '../../context/PageContext';
 
 export type CurrentBaseFormInput =
