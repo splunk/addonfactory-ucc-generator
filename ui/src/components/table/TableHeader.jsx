@@ -82,7 +82,7 @@ function TableHeader({
                 {totalElement}
                 {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
                 &nbsp;
-                {isTabs && totalElement >= pageSize ? showCountStatus : null}
+                {page === PAGE_INPUT && totalElement >= pageSize ? showCountStatus : null}
             </Typography>
         );
     };
