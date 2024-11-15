@@ -137,7 +137,7 @@ Proxy
 ```json
 {
     "type": "checkbox",
-    "label": "Reverse DNS resolution",
+    "label": "DNS resolution",
     "field": "proxy_rdns",
 }
 ```
