@@ -49,8 +49,8 @@ const renderFeature = (additionalProps?: Partial<SingleInputComponentProps>) => 
 const mockedEntries = [
     { name: 'dataApiTest1', content: { testLabel: 'firstLabel', testValue: 'firstValue' } },
     { name: 'dataApiTest2', content: { testLabel: 'secondLabel', testValue: 'secondValue' } },
-    { name: 'dataApiTest3', content: { testLabel: 'thirdLabel', testValue: 'thirdValue' } },
-    { name: 'dataApiTest4', content: { testLabel: 'fourthLabel', testValue: 'fourthValue' } },
+    { name: 'true', content: { testLabel: 'thirdLabel', testValue: 'thirdValue' } },
+    { name: '0', content: { testLabel: 'fourthLabel', testValue: 'fourthValue' } },
 ];
 
 const MOCK_API_URL = '/demo_addon_for_splunk/some_API_endpint_for_select_data';
@@ -199,25 +199,35 @@ it('should fetch options from API when endpointUrl is provided', async () => {
     await screen.findByRole('menuitem', { name: 'No matches' });
 
     // undefined value must be omitted
+    const firstEntry = mockedEntries[0];
     rerender(
         <SingleInputComponent
             {...baseProps}
-            dependencyValues={{ name: 'dataApiTest1', region: undefined }}
+            dependencyValues={{ name: firstEntry.name, region: undefined }}
         />
     );
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('option', { name: 'firstLabel' });
+    await screen.findByRole('option', { name: firstEntry.content.testLabel });
 
-    rerender(<SingleInputComponent {...baseProps} dependencyValues={{ name: 'dataApiTest2' }} />);
-    await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('option', { name: 'secondLabel' });
-
+    const secondEntry = mockedEntries[1];
     rerender(
         <SingleInputComponent
             {...baseProps}
-            dependencyValues={{ name: undefined, region: undefined }}
+            dependencyValues={{ name: secondEntry.name, region: 1 }}
         />
     );
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('menuitem', { name: 'No matches' });
+    await screen.findByRole('option', { name: secondEntry.content.testLabel });
+
+    const thirdEntry = mockedEntries[2];
+    rerender(
+        <SingleInputComponent {...baseProps} dependencyValues={{ name: true, region: false }} />
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('option', { name: thirdEntry.content.testLabel });
+
+    const fourthEntry = mockedEntries[3];
+    rerender(<SingleInputComponent {...baseProps} dependencyValues={{ name: 0, region: 0 }} />);
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('option', { name: fourthEntry.content.testLabel });
 });
