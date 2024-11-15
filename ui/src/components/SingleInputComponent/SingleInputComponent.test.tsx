@@ -167,3 +167,60 @@ it.each([
     const { label } = autoCompleteFields[0];
     expect(within(inputComponent).getByText(label)).toBeInTheDocument();
 });
+
+it('should fetch options from API when endpointUrl is provided', async () => {
+    // server responses with a filtered mockedEntries based on the name parameter
+    server.use(
+        http.get(MOCK_API_URL, ({ request }) => {
+            const url = new URL(request.url);
+
+            const nameParameter = url.searchParams.get('name');
+            return HttpResponse.json(
+                getMockServerResponseForInput(
+                    mockedEntries.filter((entry) => entry.name === nameParameter)
+                )
+            );
+        })
+    );
+    const baseProps = {
+        ...defaultInputProps,
+        value: '',
+        dependencyValues: {
+            account: undefined,
+        },
+        controlOptions: {
+            createSearchChoice: true,
+            dependencies: ['account', 'region'],
+            endpointUrl: MOCK_API_URL,
+            labelField: 'testLabel',
+            valueField: 'testValue',
+        },
+    };
+    const { rerender } = render(<SingleInputComponent {...baseProps} />);
+
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('menuitem', { name: 'No matches' });
+
+    // undefined value must be omitted
+    rerender(
+        <SingleInputComponent
+            {...baseProps}
+            dependencyValues={{ name: 'dataApiTest1', region: undefined }}
+        />
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('option', { name: 'firstLabel' });
+
+    rerender(<SingleInputComponent {...baseProps} dependencyValues={{ name: 'dataApiTest2' }} />);
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('option', { name: 'secondLabel' });
+
+    rerender(
+        <SingleInputComponent
+            {...baseProps}
+            dependencyValues={{ name: undefined, region: undefined }}
+        />
+    );
+    await userEvent.click(screen.getByRole('combobox'));
+    await screen.findByRole('menuitem', { name: 'No matches' });
+});

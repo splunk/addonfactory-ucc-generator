@@ -5,9 +5,11 @@ import { generateToast, getUnifiedConfigs } from './util';
 import { parseErrorMsg } from './messageUtil';
 import { ResponseError } from './ResponseError';
 
+type ParamsRecord = Record<string, string | number>;
+
 export interface RequestParams {
     endpointUrl: string;
-    params?: Record<string, string | number>;
+    params?: ParamsRecord;
     signal?: AbortSignal;
     body?: BodyInit;
     handleError: boolean;
@@ -21,14 +23,14 @@ export function generateEndPointUrl(name: string) {
 
 const DEFAULT_PARAMS = { output_mode: 'json' };
 
-function createUrl(endpointUrl: string, params: Record<string, string | number>): URL {
+function createUrl(endpointUrl: string, params: ParamsRecord): URL {
     const url = new URL(
         createRESTURL(endpointUrl, { app, owner: 'nobody' }),
         window.location.origin
     );
-    Object.entries({ ...DEFAULT_PARAMS, ...params }).forEach(([key, value]) =>
-        url.searchParams.append(key, value.toString())
-    );
+    Object.entries({ ...DEFAULT_PARAMS, ...params })
+        .filter(([, value]) => value !== undefined && value !== null)
+        .forEach(([key, value]) => url.searchParams.append(key, value.toString()));
     return url;
 }
 
