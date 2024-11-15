@@ -75,7 +75,7 @@ function TableHeader({
 
     const getInputCountStatus = () => {
         const enabledRowCount = allFilteredData.filter((item) => !item.disabled).length;
-        const showCountstatus = `(${enabledRowCount} of ${totalElement} enabled)`;
+        const showCountStatus = `(${enabledRowCount} of ${totalElement} enabled)`;
 
         return (
             <Typography as="span">
