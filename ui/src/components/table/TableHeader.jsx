@@ -81,7 +81,8 @@ function TableHeader({
             <Typography as="span">
                 {totalElement}
                 {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                &nbsp; {totalElement >= pageSize && showCountStatus}
+                &nbsp;
+                {isTabs && totalElement >= pageSize ? showCountStatus : null}
             </Typography>
         );
     };
