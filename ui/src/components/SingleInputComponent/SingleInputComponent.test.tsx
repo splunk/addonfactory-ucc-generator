@@ -185,12 +185,9 @@ it('should fetch options from API when endpointUrl is provided', async () => {
     const baseProps = {
         ...defaultInputProps,
         value: '',
-        dependencyValues: {
-            account: undefined,
-        },
         controlOptions: {
             createSearchChoice: true,
-            dependencies: ['account', 'region'],
+            dependencies: ['name', 'region'],
             endpointUrl: MOCK_API_URL,
             labelField: 'testLabel',
             valueField: 'testValue',
