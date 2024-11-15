@@ -5,7 +5,7 @@ import { generateToast, getUnifiedConfigs } from './util';
 import { parseErrorMsg } from './messageUtil';
 import { ResponseError } from './ResponseError';
 
-type ParamsRecord = Record<string, string | number>;
+type ParamsRecord = Record<string, string | number | undefined>;
 
 export interface RequestParams {
     endpointUrl: string;
