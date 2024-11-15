@@ -1,3 +1,19 @@
+# [5.53.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.52.0...v5.53.0) (2024-11-13)
+
+
+### Bug Fixes
+
+* **Dropdown:** fix showing selected option when value is numeric ([#1439](https://github.com/splunk/addonfactory-ucc-generator/issues/1439)) ([9e7394a](https://github.com/splunk/addonfactory-ucc-generator/commit/9e7394a2312238a79b9b5cb8d55f1427a6073696))
+* generate oauth authentication fields for OpenAPI integration ([#1425](https://github.com/splunk/addonfactory-ucc-generator/issues/1425)) ([beb561b](https://github.com/splunk/addonfactory-ucc-generator/commit/beb561b25755cbcc51326848bc78891f89cf47b3))
+* **table:** custom mapping for values in Status column ([#1451](https://github.com/splunk/addonfactory-ucc-generator/issues/1451)) ([4721738](https://github.com/splunk/addonfactory-ucc-generator/commit/472173801a50be6c9ac7ae91ab4a9d129d1bfd86))
+
+
+### Features
+
+* add ability to provide custom pip flags ([#1447](https://github.com/splunk/addonfactory-ucc-generator/issues/1447)) ([718c897](https://github.com/splunk/addonfactory-ucc-generator/commit/718c897347bd2db539354f6625be074e6d90d988))
+* add grouping to configuration page ([#1432](https://github.com/splunk/addonfactory-ucc-generator/issues/1432)) ([b94b228](https://github.com/splunk/addonfactory-ucc-generator/commit/b94b2289fec8e33d53414db36c6504428d84546c))
+* deprecate .uccignore and upgrade additional_package ([#1415](https://github.com/splunk/addonfactory-ucc-generator/issues/1415)) ([f6dd96f](https://github.com/splunk/addonfactory-ucc-generator/commit/f6dd96feadef395d92ca3c7c0a3a6ff70c3c8f10))
+
 # [5.52.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.51.1...v5.52.0) (2024-10-30)
 
 
