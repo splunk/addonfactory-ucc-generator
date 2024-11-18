@@ -78,7 +78,7 @@ function TableHeader({
         const showCountStatus = `(${enabledRowCount} of ${totalElement} enabled)`;
 
         return (
-            <Typography as="span">
+            <Typography as="span" className="inputNumber">
                 {totalElement}
                 {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
                 &nbsp;
