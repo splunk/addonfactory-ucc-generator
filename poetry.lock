@@ -1240,6 +1240,20 @@ packaging = ">=17.1"
 pytest = ">=5.3"
 
 [[package]]
+name = "pytest-split-tests"
+version = "1.1.0"
+description = "A Pytest plugin for running a subset of your tests by splitting them in to equally sized groups. Forked from Mark Adams' original project pytest-test-groups."
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytest-split-tests-1.1.0.tar.gz", hash = "sha256:e55bbf127d94ff913a248f32e64f07cd3201e8a82397e8152694e4ffe456e21c"},
+    {file = "pytest_split_tests-1.1.0-py2.py3-none-any.whl", hash = "sha256:21be7d6f95291002790fe24e28faa950059694e7abc430d4993d99a4c773bde4"},
+]
+
+[package.dependencies]
+pytest = ">=2.5"
+
+[[package]]
 name = "pytest-splunk-addon"
 version = "5.4.1"
 description = "A Dynamic test tool for Splunk Apps and Add-ons"
@@ -1768,4 +1782,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<3.13"
-content-hash = "f0072f7b472f7556af341f351358bed09701afd1b0b014e296a4c5fec118c4c6"
+content-hash = "0435209576291a24a097f17bcf32f89216d592fb01e88fe72c521cb7379ff474"
