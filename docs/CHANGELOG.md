@@ -1,3 +1,10 @@
+## [5.53.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.0...v5.53.1) (2024-11-18)
+
+
+### Bug Fixes
+
+* **select:** fetching options when some dependency is null ([#1463](https://github.com/splunk/addonfactory-ucc-generator/issues/1463)) ([feb9bdf](https://github.com/splunk/addonfactory-ucc-generator/commit/feb9bdf27488fcd357e57e47173d72971cf24f35))
+
 # [5.53.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.52.0...v5.53.0) (2024-11-13)
 
 
