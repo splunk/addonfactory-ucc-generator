@@ -26,6 +26,7 @@ module.exports = {
         // https://typescript-eslint.io/rules/no-use-before-define/#how-to-use
         'no-use-before-define': 'off',
         '@typescript-eslint/no-use-before-define': ['error', { variables: false }],
+        'jest/expect-expect': 'error',
     },
     root: true,
 };
