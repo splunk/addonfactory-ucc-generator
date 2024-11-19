@@ -44,7 +44,7 @@ import {
     ChangeRecord,
     CustomHookClass,
     EntitiesAllowingModifications,
-} from './BaseFormTypes';
+} from '../../types/components/BaseFormTypes';
 import {
     getAllFieldsWithModifications,
     getModifiedState,

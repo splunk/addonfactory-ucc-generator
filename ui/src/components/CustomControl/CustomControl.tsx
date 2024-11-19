@@ -3,7 +3,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { UtilBaseForm } from '../BaseFormView/BaseFormTypes';
+import { UtilBaseForm } from '../../types/components/BaseFormTypes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { Mode } from '../../constants/modes';
 
