@@ -86,17 +86,19 @@ const FieldToModify = z.object({
 
 const ModifyFieldsOnValue = z.array(FieldToModify).optional();
 
-const AllValidators = z.array(
-    z.union([
-        NumberValidator,
-        StringValidator,
-        RegexValidator,
-        EmailValidator,
-        Ipv4Validator,
-        UrlValidator,
-        DateValidator,
-    ])
-);
+const AllValidators = z
+    .array(
+        z.union([
+            NumberValidator,
+            StringValidator,
+            RegexValidator,
+            EmailValidator,
+            Ipv4Validator,
+            UrlValidator,
+            DateValidator,
+        ])
+    )
+    .nonempty();
 
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
