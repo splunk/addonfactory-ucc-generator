@@ -201,11 +201,12 @@ it('Check inputs count is visible', async () => {
             HttpResponse.json(MockRowDataForStatusCount)
         )
     );
+
     setUnifiedConfig(getSimpleConfigStylePage());
+
     render(
         <TableContextProvider>
-            {' '}
-            <TableWrapper {...props} />{' '}
+            <TableWrapper {...props} />
         </TableContextProvider>,
         { wrapper: BrowserRouter }
     );
