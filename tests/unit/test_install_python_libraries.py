@@ -1,5 +1,6 @@
 import os
 import stat
+from collections import namedtuple
 from typing import List
 from unittest import mock
 
@@ -7,6 +8,9 @@ import pytest
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
+from splunk_add_on_ucc_framework import (
+    install_python_libraries as install_python_libraries_module,
+)
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
     SplunktaucclibNotFound,
@@ -369,11 +373,12 @@ def test_install_libraries_version_mismatch(
         'python3 -m pip show --version cryptography | grep "Version: 41.0.5"'
     )
     mock_subprocess_run.side_effect = (
-        lambda command, shell=True, env=None, capture_output=True: MockSubprocessResult(
-            1
+        lambda command, shell=True, env=None, capture_output=True: (
+            MockSubprocessResult(1)
+            if command == version_mismatch_shell_cmd
+            and ucc_lib_target == env["PYTHONPATH"]
+            else MockSubprocessResult(0)
         )
-        if command == version_mismatch_shell_cmd and ucc_lib_target == env["PYTHONPATH"]
-        else MockSubprocessResult(0)
     )
 
     with pytest.raises(CouldNotInstallRequirements):
@@ -507,6 +512,19 @@ def test_validate_conflicting_paths_empty_list():
 def test_is_pip_lib_installed_wrong_arguments():
     with pytest.raises(InvalidArguments):
         _pip_is_lib_installed("i", "t", "l", allow_higher_version=True)
+
+
+def test_is_pip_lib_installed_do_not_write_bytecode(monkeypatch):
+    Result = namedtuple("Result", ["returncode", "stdout", "stderr"])
+
+    def run(command, env):
+        assert command == "python3 -m pip show --version libname"
+        assert env["PYTHONPATH"] == "target"
+        assert env["PYTHONDONTWRITEBYTECODE"] == "1"
+        return Result(0, b"", b"")
+
+    monkeypatch.setattr(install_python_libraries_module, "_subprocess_run", run)
+    assert _pip_is_lib_installed("python3", "target", "libname")
 
 
 @mock.patch("subprocess.run", autospec=True)
