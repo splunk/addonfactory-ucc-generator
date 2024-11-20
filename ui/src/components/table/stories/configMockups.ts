@@ -359,6 +359,14 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                         label: 'Name',
                         field: 'name',
                     },
+                    {
+                        label: 'Status',
+                        field: 'disabled',
+                        mapping: {
+                            true: 'Inactive',
+                            false: 'Active',
+                        },
+                    },
                 ],
             },
         },

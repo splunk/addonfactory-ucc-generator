@@ -1,8 +1,9 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import React from 'react';
 
 import { BrowserRouter } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
+import userEvent from '@testing-library/user-event';
 import { TableContextProvider } from '../../../context/TableContext';
 import { server } from '../../../mocks/server';
 import { setUnifiedConfig } from '../../../util/util';
@@ -82,4 +83,43 @@ it('Correctly render status labels with default values', async () => {
     const inactiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
     const inactiveStatusCell = within(inactiveRow).getByTestId('status');
     expect(inactiveStatusCell).toHaveTextContent('Inactive');
+});
+
+it('check status is changed in moreinfo after toggle', async () => {
+    // Wait for spinner to disappear
+    await waitForElementToBeRemoved(() => document.querySelector('[data-test="wait-spinner"]'));
+
+    const rows = await screen.findAllByTestId('row');
+    const row = rows[1]; // Selecting a specific row (1st row in the list)
+
+    // Expand the row if not already expanded
+    const arrow = within(row).getByRole('cell', { name: /expandable/i });
+    const isExpanded = arrow.getAttribute('aria-expanded');
+    if (isExpanded === 'false') {
+        await userEvent.click(arrow); // Click the expand icon
+    }
+    // Wait until the row's state changes to expanded
+    await waitFor(() => expect(arrow.getAttribute('aria-expanded')).not.toBe('false'));
+
+    // Wait for loading to complete if present
+    const loading = screen.queryByText('Loading...');
+    if (loading) {
+        await waitForElementToBeRemoved(loading);
+    }
+
+    const descriptionActive = await screen.findAllByTestId('description'); // This gets an array
+    expect(descriptionActive[1]).toHaveTextContent('Active'); // Check the first element for 'Active'
+
+    // const switchContainers = screen.getAllByTestId('switch');
+    const switchButtons = screen.getAllByTestId('button'); // Locate all switch buttons
+
+    const switchButton = switchButtons[0]; // Use the first switch for demonstration
+    await userEvent.click(switchButton);
+    await waitFor(() => expect(switchButton).toHaveAttribute('aria-checked', 'false')); // Wait for toggle
+
+    // Additional checks for terms and descriptions
+    const descriptionInactive = await screen.findAllByTestId('description'); // This gets an array
+    expect(descriptionInactive[1]).toHaveTextContent('Inactive'); // Check the first element for 'Inactive'
+
+    // screen.debug(undefined, 70000);
 });
