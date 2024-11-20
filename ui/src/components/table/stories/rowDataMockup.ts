@@ -394,12 +394,112 @@ export const ROW_DATA = [
     },
 ];
 
+export const ROW_DATA_FOR_COUNT = [
+    ...ROW_DATA,
+    {
+        name: 'testsomethingelse1',
+        id: 'https://localhost:8000/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/testsomethingelse',
+        updated: '1970-01-01T00:00:00+00:00',
+        links: {
+            alternate:
+                '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/testsomethingelse',
+            list: '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/testsomethingelse',
+            edit: '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/testsomethingelse',
+            remove: '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/testsomethingelse',
+        },
+        author: 'admin',
+        acl: {
+            app: 'Splunk_TA_UCCExample',
+            can_change_perms: true,
+            can_list: true,
+            can_share_app: true,
+            can_share_global: true,
+            can_share_user: true,
+            can_write: true,
+            modifiable: true,
+            owner: 'admin',
+            perms: {
+                read: ['*'],
+                write: ['admin', 'sc_admin'],
+            },
+            removable: true,
+            sharing: 'global',
+        },
+        content: {
+            account_multiple_select: 'two',
+            account_radio: '1',
+            auth_type: 'basic',
+            custom_endpoint: 'login.example.com',
+            disabled: true,
+            'eai:acl': null,
+            'eai:appName': 'Splunk_TA_UCCExample',
+            'eai:userName': 'nobody',
+            password: '******',
+            custom_text: 'testsomethingelse',
+            token: '******',
+            username: 'test1',
+        },
+    },
+    {
+        name: 'zzzzzzzz',
+        id: 'https://localhost:8000/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/zzzzzzz',
+        updated: '1970-01-01T00:00:00+00:00',
+        links: {
+            alternate:
+                '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/zzzzzzz',
+            list: '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/zzzzzzz',
+            edit: '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/zzzzzzz',
+            remove: '/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account/zzzzzzz',
+        },
+        author: 'admin',
+        acl: {
+            app: 'Splunk_TA_UCCExample',
+            can_change_perms: true,
+            can_list: true,
+            can_share_app: true,
+            can_share_global: true,
+            can_share_user: true,
+            can_write: true,
+            modifiable: true,
+            owner: 'admin',
+            perms: {
+                read: ['*'],
+                write: ['admin', 'sc_admin'],
+            },
+            removable: true,
+            sharing: 'global',
+        },
+        content: {
+            account_multiple_select: 'one',
+            account_radio: '1',
+            auth_type: 'basic',
+            custom_endpoint: 'login.example.com',
+            disabled: true,
+            'eai:acl': null,
+            'eai:appName': 'Splunk_TA_UCCExample',
+            'eai:userName': 'nobody',
+            password: '******',
+            custom_text: '222222',
+            token: '******',
+            username: 'zzzzz',
+        },
+    },
+];
+
 export const MockRowData = {
     links: {
         create: `/servicesNS/nobody/-/splunk_ta_uccexample_account/_new`,
     },
     updated: '2023-08-21T11:54:12+00:00',
     entry: ROW_DATA,
+    messages: [],
+};
+export const MockRowDataForStatusCount = {
+    links: {
+        create: `/servicesNS/nobody/-/splunk_ta_uccexample_account/_new`,
+    },
+    updated: '2023-08-21T11:54:12+00:00',
+    entry: ROW_DATA_FOR_COUNT,
     messages: [],
 };
 

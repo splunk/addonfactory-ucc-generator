@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from '@splunk/react-ui/Select';
 import Paginator from '@splunk/react-ui/Paginator';
+import { Typography } from '@splunk/react-ui/Typography';
+
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
@@ -71,13 +73,24 @@ function TableHeader({
         );
     };
 
+    const getInputCountStatus = () => {
+        const enabledRowCount = allFilteredData.filter((item) => !item.disabled).length;
+        const showCountStatus = `(${enabledRowCount} of ${totalElement} enabled)`;
+
+        return (
+            <Typography as="span" className="inputNumber">
+                {totalElement}
+                {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
+                &nbsp;
+                {page === PAGE_INPUT && totalElement >= pageSize ? showCountStatus : null}
+            </Typography>
+        );
+    };
+
     return (
         <TableHeaderWrapper>
             <div>
-                <span className="inputNumber">
-                    {totalElement}
-                    {totalElement > 1 ? _(` ${itemLabel}s`) : _(` ${itemLabel}`)}
-                </span>
+                {getInputCountStatus()}
                 {page === PAGE_INPUT ? (
                     <TableSelectBoxWrapper>
                         <Select

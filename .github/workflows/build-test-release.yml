@@ -227,7 +227,7 @@ jobs:
           path: Splunk_TA_UCCExample*.tar.gz
 
   test-ui:
-    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
+    name: test-ui Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
     runs-on: ubuntu-22.04
     permissions:
       id-token: write
@@ -243,14 +243,17 @@ jobs:
       fail-fast: false
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-        test-mark:
-          - "logging"
-          - "proxy"
-          - "account"
-          - "custom"
-          - "alert"
-          - "input"
-          - "configuration"
+        test-group:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8"
+          - "9"
+          - "10"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -272,16 +275,16 @@ jobs:
           ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
-      - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - run: poetry run pytest tests/ui --test-group-count 10 --test-group ${{ matrix.test-group }} --test-group-random-seed 123456 --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
-          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
+          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
           path: test-results/*
       - uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
+          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
           path: "test-results/*.xml"
           reporter: java-junit
 
