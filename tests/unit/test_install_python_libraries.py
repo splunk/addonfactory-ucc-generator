@@ -16,6 +16,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     remove_packages,
     validate_conflicting_paths,
     WrongSplunktaucclibVersion,
+    WrongSolnlibVersion,
     InvalidArguments,
     _pip_is_lib_installed,
 )
@@ -181,6 +182,28 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
             str(tmp_ucc_lib_target),
             python_binary_name="python3",
             includes_ui=True,
+        )
+    assert expected_msg in str(exc.value)
+
+
+def test_install_libraries_when_wrong_solnlib_is_present_but_has_oauth(tmp_path):
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
+    tmp_lib_reqs_file.write_text("solnlib==5.4.0\n")
+
+    expected_msg = (
+        f"solnlib found at {tmp_lib_reqs_file}, but is not of latest version. "
+        "Please make sure solnlib is of version greater than or equal to 5.5.0"
+    )
+
+    with pytest.raises(WrongSolnlibVersion) as exc:
+        install_python_libraries(
+            str(tmp_path),
+            str(tmp_ucc_lib_target),
+            python_binary_name="python3",
+            includes_oauth=True,
         )
     assert expected_msg in str(exc.value)
 
