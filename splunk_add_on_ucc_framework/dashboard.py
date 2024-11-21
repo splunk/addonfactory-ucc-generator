@@ -63,10 +63,32 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ] | appendpipe [ | makeresults ] | dedup _time'
 )
+
 errors_count = (
     "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
-    "| appendpipe [ | makeresults ] | dedup _time"
+    "| append [ gentimes increment=1m [ makeresults "
+    "| eval start=strftime( "
+    'if(\\"$overview_time.earliest$\\"=\\"now\\"'
+    ",now(),"
+    'if( match(\\"$overview_time.earliest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
+    'strptime(\\"$overview_time.earliest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\")'
+    ',relative_time(now(), \\"$overview_time.earliest$\\")'
+    ")"
+    "), "
+    '\\"%m/%d/%Y:%T\\")'
+    "| eval end=strftime("
+    'if(\\"$overview_time.latest$\\"=\\"now\\",'
+    "now(),"
+    'if(match(\\"$overview_time.latest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
+    'strptime(\\"$overview_time.latest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\") '
+    ',relative_time(now(), \\"$overview_time.latest$\\")'
+    ")"
+    "), "
+    '\\"%m/%d/%Y:%T\\")'
+    "| return start end] "
+    "| eval Errors = 0 | fields - endhuman starthuman starttime| rename endtime as _time] | head (sum(Errors)==0)"
 )
+
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\" | appendpipe [ | makeresults ] | dedup _time'
