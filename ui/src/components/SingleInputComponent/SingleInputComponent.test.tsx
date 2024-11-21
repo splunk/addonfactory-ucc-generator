@@ -207,7 +207,9 @@ it('should fetch options from API when endpointUrl is provided', async () => {
         />
     );
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('option', { name: firstEntry.content.testLabel });
+    expect(
+        await screen.findByRole('option', { name: firstEntry.content.testLabel })
+    ).toBeInTheDocument();
 
     const secondEntry = mockedEntries[1];
     rerender(
@@ -217,17 +219,23 @@ it('should fetch options from API when endpointUrl is provided', async () => {
         />
     );
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('option', { name: secondEntry.content.testLabel });
+    expect(
+        await screen.findByRole('option', { name: secondEntry.content.testLabel })
+    ).toBeInTheDocument();
 
     const thirdEntry = mockedEntries[2];
     rerender(
         <SingleInputComponent {...baseProps} dependencyValues={{ name: true, region: false }} />
     );
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('option', { name: thirdEntry.content.testLabel });
+    expect(
+        await screen.findByRole('option', { name: thirdEntry.content.testLabel })
+    ).toBeInTheDocument();
 
     const fourthEntry = mockedEntries[3];
     rerender(<SingleInputComponent {...baseProps} dependencyValues={{ name: 0, region: 0 }} />);
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('option', { name: fourthEntry.content.testLabel });
+    expect(
+        await screen.findByRole('option', { name: fourthEntry.content.testLabel })
+    ).toBeInTheDocument();
 });
