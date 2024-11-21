@@ -501,6 +501,7 @@ def generate(
                 pip_version=pip_version,
                 pip_legacy_resolver=pip_legacy_resolver,
                 pip_custom_flag=pip_custom_flag,
+                includes_oauth=global_config.has_oauth(),
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))

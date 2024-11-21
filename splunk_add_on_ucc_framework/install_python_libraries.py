@@ -29,6 +29,7 @@ logger = logging.getLogger("ucc_gen")
 
 
 LIBS_REQUIRED_FOR_UI = {"splunktaucclib": "6.4.0"}
+LIBS_REQUIRED_FOR_OAUTH = {"solnlib": "5.5.0"}
 
 
 class SplunktaucclibNotFound(Exception):
@@ -36,6 +37,10 @@ class SplunktaucclibNotFound(Exception):
 
 
 class WrongSplunktaucclibVersion(Exception):
+    pass
+
+
+class WrongSolnlibVersion(Exception):
     pass
 
 
@@ -118,6 +123,23 @@ def _pip_is_lib_installed(
         raise CouldNotInstallRequirements from e
 
 
+def _check_libraries_required_for_oauth(
+    python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
+) -> None:
+    for lib, version in LIBS_REQUIRED_FOR_OAUTH.items():
+        if not _pip_is_lib_installed(
+            installer=python_binary_name,
+            target=ucc_lib_target,
+            libname=lib,
+            version=version,
+            allow_higher_version=True,
+        ):
+            raise WrongSolnlibVersion(
+                f"{lib} found at {path_to_requirements_file}, but is not of latest version."
+                f" Please make sure {lib} is of version greater than or equal to {version}."
+            )
+
+
 def _check_libraries_required_for_ui(
     python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
 ) -> None:
@@ -152,6 +174,7 @@ def install_python_libraries(
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     pip_custom_flag: Optional[str] = None,
+    includes_oauth: bool = False,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
     if os.path.isfile(path_to_requirements_file):
@@ -168,6 +191,10 @@ def install_python_libraries(
         )
         if includes_ui:
             _check_libraries_required_for_ui(
+                python_binary_name, ucc_lib_target, path_to_requirements_file
+            )
+        if includes_oauth:
+            _check_libraries_required_for_oauth(
                 python_binary_name, ucc_lib_target, path_to_requirements_file
             )
 
