@@ -1,8 +1,14 @@
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 import { generateEndPointUrl, getRequest } from './api';
 import { getGlobalConfigMock } from '../mocks/globalConfigMock';
 import { setUnifiedConfig } from './util';
 import { server } from '../mocks/server';
+
+const mockGenerateToastFn = jest.fn();
+jest.mock('./util', () => ({
+    ...jest.requireActual('./util'),
+    generateToast: () => mockGenerateToastFn(),
+}));
 
 describe('generateEndPointUrl', () => {
     it('should return the correct endpoint URL', () => {
@@ -23,7 +29,7 @@ describe('generateEndPointUrl', () => {
 });
 
 describe('getRequest', () => {
-    beforeEach(() => {
+    function setup() {
         const mockConfig = getGlobalConfigMock();
         setUnifiedConfig({
             ...mockConfig,
@@ -32,9 +38,12 @@ describe('getRequest', () => {
                 restRoot: 'testing_name',
             },
         });
-        server.use(http.get('*', () => HttpResponse.json({}, { status: 500 })));
-    });
+    }
+
     it('should call callbackOnError if handleError is true', async () => {
+        setup();
+        server.use(http.get('*', () => HttpResponse.json({}, { status: 500 })));
+
         const callbackOnError = jest.fn();
 
         await expect(() =>
@@ -45,9 +54,12 @@ describe('getRequest', () => {
             })
         ).rejects.toThrow();
 
+        expect(mockGenerateToastFn).toHaveBeenCalledTimes(1);
         expect(callbackOnError).toHaveBeenCalled();
     });
     it('should not call callbackOnError if handleError is false', async () => {
+        setup();
+        server.use(http.get('*', () => HttpResponse.json({}, { status: 500 })));
         const callbackOnError = jest.fn();
 
         await expect(() =>
@@ -58,6 +70,30 @@ describe('getRequest', () => {
             })
         ).rejects.toThrow();
 
+        expect(mockGenerateToastFn).not.toHaveBeenCalled();
         expect(callbackOnError).not.toHaveBeenCalled();
+    });
+
+    it('should not show error if request is cancelled', async () => {
+        setup();
+        server.use(
+            http.get('*', async () => {
+                await delay('infinite');
+
+                return HttpResponse.json();
+            })
+        );
+        const abortController = new AbortController();
+
+        const request = getRequest({
+            endpointUrl: 'testing_endpoint',
+            handleError: true,
+            signal: abortController.signal,
+        });
+
+        abortController.abort();
+
+        await expect(request).rejects.toThrow();
+        expect(mockGenerateToastFn).not.toHaveBeenCalled();
     });
 });
