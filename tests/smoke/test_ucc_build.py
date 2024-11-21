@@ -1,3 +1,4 @@
+import sys
 import os
 import re
 import tempfile
@@ -467,6 +468,8 @@ def test_ucc_generate_with_everything_uccignore(caplog):
     Checks the deprecation warning of .uccignore present in a repo with
     its functionality still working.
     """
+    # clean-up cached `additional_packaging` module when running all tests
+    sys.modules.pop("additional_packaging", "")
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
