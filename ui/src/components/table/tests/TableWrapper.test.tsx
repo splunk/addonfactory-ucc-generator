@@ -196,7 +196,6 @@ it('Check inputs count is visible', async () => {
         handleOpenPageStyleDialog,
         displayActionBtnAllRows: false,
     } satisfies ITableWrapperProps;
-
     server.use(
         http.get('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one', () =>
             HttpResponse.json(MockRowDataForStatusCount)
