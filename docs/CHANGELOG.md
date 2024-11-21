@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.53.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.1...v5.53.2) (2024-11-21)
+
+
+### Bug Fixes
+
+* **api:** cancelled requests don't emit user facing errors ([#1472](https://github.com/splunk/addonfactory-ucc-generator/issues/1472)) ([0970441](https://github.com/splunk/addonfactory-ucc-generator/commit/09704416b5a56ddb518eabd01d596ec5e23157e3))
 
 ## [5.53.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.0...v5.53.1) (2024-11-18)
 
