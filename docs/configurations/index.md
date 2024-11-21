@@ -75,7 +75,7 @@ Currently available tab components:
 }
 ```
 
-Note: The example above creates a Configuration page with two **empty** tabs: Account and Proxy.
+Note: The example above creates a Configuration page with an **empty** Account tab.
 Specify your properties in `"table"` and `"entity"`.
 
 ### Output
@@ -84,7 +84,7 @@ This is how table looks in the UI:
 
 ![image](../images/configuration/configuration_with_table_output.png)
 
-This is how form looks in the UI:
+This is how Proxy tab looks in the UI:
 
 ![image](../images/configuration/proxy_tab_with_warning.png)
 

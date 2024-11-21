@@ -142,7 +142,7 @@ Proxy
 }
 ```
 
-If you only specify `"type": "proxyTab"` in your globalConfig file, entities such as `proxy_type`, `username`, `password`, and `dns_resolution` will not be generated, only the `host`, `port`, `enabled` entities will be generated.  To include the optional entities in your add-on (from the [available configurations](#available-configurations) listed above), you need to set them to `True`.
+If you only specify `"type": "proxyTab"` in your globalConfig file, then entities such as `proxy_type`, `username`, `password`, and `dns_resolution` will not be generated, only `host`, `port`, `enabled` entities will be generated.  To include the optional entities in your add-on (refer [available configurations](#available-configurations) listed above), you need to set them to `True`.
 
 ### Usage
 
@@ -164,7 +164,7 @@ It is placed just like every other configuration tab.
 }
 ```
 
-To customize these entities, you can define them in JSON with specific keys for each one (see the [keys section](#keys) for details on the required keys for each entity). You only need to specify your custom values in the JSON there's no need to include required fields like `type`, `fields` (if you don't need to change them) etc. Refer to the [Example](#example) for further clarification.
+TTo customize these entities, you can define them in JSON format by specifying certain keys unique to each entity (refer the [keys section](#keys) for details on the required keys for each entity). When creating the JSON, you only need to include the values you want to customize. For example, if you don’t need to modify fields like `lable` or `field`, you can skip including them in your globalConfig.  For better understanding, refer to the provided [Example](#example) which demonstrates how to apply customizations effectively.
 
 > **_NOTE:_**
     There are 2 ways to exclude optional entities in your add-on, either omit them from the proxy tab, or set the entities to false.
@@ -220,6 +220,6 @@ The above will get converted to the older definition (mentioned below) in your o
 
 ```json
 {
---8<-- "tests/unit/tabs/test_proxy_tab.py:9:71"
+--8<-- "tests/unit/tabs/test_proxy_tab.py:9:69"
 }
 ```
