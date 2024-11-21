@@ -1,3 +1,6 @@
+# Changelog
+
+
 ## [5.53.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.0...v5.53.1) (2024-11-18)
 
 
