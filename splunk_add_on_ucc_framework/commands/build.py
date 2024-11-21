@@ -415,6 +415,7 @@ def generate(
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     ui_source_map: bool = False,
+    pip_custom_flag: Optional[str] = None,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -499,6 +500,7 @@ def generate(
                 os_libraries=global_config.os_libraries,
                 pip_version=pip_version,
                 pip_legacy_resolver=pip_legacy_resolver,
+                pip_custom_flag=pip_custom_flag,
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -566,6 +568,7 @@ def generate(
             python_binary_name,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
+            pip_custom_flag=pip_custom_flag,
         )
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
