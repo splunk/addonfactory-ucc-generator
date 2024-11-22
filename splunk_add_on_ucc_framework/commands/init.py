@@ -67,6 +67,7 @@ def _generate_addon(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    add_license: str | None = None,
 ) -> str:
     generated_addon_path = os.path.join(
         os.getcwd(),
@@ -103,9 +104,38 @@ def _generate_addon(
         _f.write(global_config_rendered_content)
     package_path = os.path.join(generated_addon_path, "package")
     os.makedirs(package_path)
-    package_license_path = os.path.join(package_path, "LICENSE.txt")
-    with open(package_license_path, "w") as _f:
-        pass
+    package_license_dir = os.path.join(package_path, "LICENSES")
+    os.makedirs(package_license_dir)
+
+    if add_license:
+        if add_license in [
+            "Apache License 2.0",
+            "MIT License",
+            "SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT",
+        ]:
+            package_license_path = os.path.join(
+                package_license_dir, f"{add_license}.txt"
+            )
+            template_path = utils.get_license_path(add_license)
+
+            with open(template_path) as content:
+                license_content = content.read()
+            with open(package_license_path, "w") as _f:
+                _f.write(license_content)
+        else:
+            logger.error(
+                "Incorrect license name provided."
+                " It should be one of 'Apache License 2.0', 'MIT License',"
+                " or 'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT'."
+                "Please provide a correct license name."
+            )
+            sys.exit(1)
+
+    else:
+        # add-on licenses are to be kept in package/LICENSES directory only
+        package_license_path = os.path.join(package_license_dir, "LICENSE.txt")
+        with open(package_license_path, "w") as _f:
+            pass
     package_readme_path = os.path.join(package_path, "README.txt")
     with open(package_readme_path, "w") as _f:
         pass
@@ -160,6 +190,7 @@ def init(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    add_license: str | None = None,
 ) -> str:
     if not _is_valid_addon_name(addon_name):
         logger.error(
@@ -199,12 +230,12 @@ def init(
         addon_version,
         addon_rest_root,
         overwrite,
+        add_license,
     )
     logger.info(f"Generated add-on is located here {generated_addon_path}")
-    logger.info(
-        "LICENSE.txt and README.txt are empty, "
-        "you may need to modify the content of those files\n"
-    )
+    if add_license:
+        logger.info(f"Specified {add_license} has been added to Licenses directory.")
+    logger.info("README.txt is empty, you may need to modify the content of this file.")
     logger.info(
         f"""You have generated your add-on and are wondering what to do next? \
 UCC offers many solutions to improve add-ons!
