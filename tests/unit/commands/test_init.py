@@ -93,6 +93,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_name",
                 False,
+                None,
             ),
         ),
         (
@@ -110,6 +111,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_name",
                 False,
+                None,
             ),
         ),
         (
@@ -119,6 +121,7 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_display_name": "Addon For Demo",
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
+                "add_license": "Apache License 2.0",
             },
             (
                 "addon_name",
@@ -127,6 +130,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_rest_root",
                 False,
+                "Apache License 2.0",
             ),
         ),
     ],
@@ -174,6 +178,15 @@ def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon)
                 "addon_version": "0.0.1",
             }
         ),
+        (
+            {
+                "addon_name": "addon_name",
+                "addon_display_name": "Addon For Demo",
+                "addon_input_name": "input_name",
+                "addon_version": "0.0.1",
+                "add_license": "Apache License",
+            }
+        ),
     ],
 )
 def test_init_when_incorrect_parameters_then_sys_exit(init_kwargs):
@@ -195,6 +208,21 @@ def test_init_when_folder_already_exists(mock_generate_addon, caplog):
         expected_error_message = (
             "The location is already taken, use `--overwrite` "
             "option to overwrite the content of existing folder."
+        )
+        assert expected_error_message in caplog.text
+
+
+@mock.patch("splunk_add_on_ucc_framework.commands.init._generate_addon")
+def test_init_when_wrong_license_name_given(mock_generate_addon, caplog):
+    mock_generate_addon.side_effect = SystemExit
+
+    with pytest.raises(SystemExit):
+        init.init("addon_name", "Addon For Demo", "input_name", "0.0.1", "MIT")
+        expected_error_message = (
+            "Incorrect license name provided."
+            " It should be one of 'Apache License 2.0', 'MIT License',"
+            " or 'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT'."
+            "Please provide a correct license name."
         )
         assert expected_error_message in caplog.text
 
