@@ -123,6 +123,9 @@ export const ErrorDashboard = ({
         <DashboardContextProvider
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
+            featureFlags={{
+                enableSmartSourceDS: true,
+            }}
         >
             <>
                 <OpenSearchStyledBtn

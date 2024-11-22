@@ -74,7 +74,7 @@
       },
       "title": "Errors",
       "dataSources": {
-        "primary": "overview_errors_count_ds"
+        "primary": "overview_errors_count_ds_chain"
       }
     }
   },
@@ -113,6 +113,19 @@
       "type": "ds.search",
       "options": {
         "query": "{{errors_count}}",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "error_search"
+    },
+    "overview_errors_count_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "overview_errors_count_ds",
+        "query": "{{errors_count_zero_line}}",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"

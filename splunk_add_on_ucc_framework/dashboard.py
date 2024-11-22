@@ -64,9 +64,10 @@ data_ingestion_and_events = (
     '| timechart sum(n_events) as \\"Number of events\\" ] | appendpipe [ | makeresults ] | dedup _time'
 )
 
-errors_count = (
-    "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
-    "| append [ gentimes increment=1m [ makeresults "
+errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
+
+errors_count_zero_line = (
+    "| append [ gentimes increment=5m [ makeresults "
     "| eval start=strftime( "
     'if(\\"$overview_time.earliest$\\"=\\"now\\"'
     ",now(),"
@@ -86,7 +87,8 @@ errors_count = (
     "), "
     '\\"%m/%d/%Y:%T\\")'
     "| return start end] "
-    "| eval Errors = 0 | fields - endhuman starthuman starttime| rename endtime as _time] | head (sum(Errors)==0)"
+    "| eval {value_label} = 0 | fields - endhuman starthuman starttime "
+    "| rename endtime as _time | head ($error_search:job.resultCount$==0)]"
 )
 
 events_count = (
@@ -198,6 +200,9 @@ def generate_dashboard_content(
                 ),
                 errors_count=errors_count.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
+                errors_count_zero_line=errors_count_zero_line.format(
+                    value_label="Errors"
                 ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
             )
