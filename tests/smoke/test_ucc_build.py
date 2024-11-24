@@ -190,6 +190,7 @@ def test_ucc_generate_with_everything(caplog):
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("appserver", "static", "js", "build", "entry_page.js.map"),
+            ("lib", "__pycache__"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
