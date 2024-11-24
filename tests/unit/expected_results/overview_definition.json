@@ -62,7 +62,7 @@
       },
       "title": "Data ingestion",
       "dataSources": {
-        "primary": "overview_data_volume_ds"
+        "primary": "overview_data_volume_ds_chain"
       }
     },
     "overview_errors_viz": {
@@ -74,7 +74,7 @@
       },
       "title": "Errors",
       "dataSources": {
-        "primary": "overview_errors_count_ds"
+        "primary": "overview_errors_count_ds_chain"
       }
     }
   },
@@ -102,7 +102,20 @@
     "overview_data_volume_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*)) | timechart sum(b) as Usage | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ]",
+        "query": "index=_internal source=*license_usage.log type=Usage (s IN (example_input_one*,example_input_two*,example_input_three*,example_input_four*,service_hidden_for_cloud*,service_hidden_for_enterprise*)) | timechart sum(b) as Usage | rename Usage as \"Data volume\" | join _time [search index=_internal source=*splunk_ta_uccexample* action=events_ingested | timechart sum(n_events) as \"Number of events\" ]",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "data_volume"
+    },
+    "overview_data_volume_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "overview_data_volume_ds",
+        "query": "| append [ gentimes increment=5m [ makeresults | eval start=strftime( if(\"$overview_time.earliest$\"=\"now\",now(),if(match(\"$overview_time.earliest$\",\"^\\d+-\\d+-\\d+(T?\\d+:\\d+:\\d+(\\.\\d{3}Z)?)$\"),strptime(\"$overview_time.earliest$\", \"%Y-%m-%dT%H:%M:%S.%N\"),relative_time(now(), \"$overview_time.earliest$\"))), \"%m/%d/%Y:%T\")| eval end=strftime(if(\"$overview_time.latest$\"=\"now\",now(),if(match(\"$overview_time.latest$\",\"^\\d+-\\d+-\\d+(T?\\d+:\\d+:\\d+(\\.\\d{3}Z)?)$\"),strptime(\"$overview_time.latest$\", \"%Y-%m-%dT%H:%M:%S.%N\") ,relative_time(now(), \"$overview_time.latest$\"))), \"%m/%d/%Y:%T\")| return start end] | eval Number of events = 0 | fields - endhuman starthuman starttime | rename endtime as _time | head ($data_volume:job.resultCount$==0)]",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
@@ -112,7 +125,20 @@
     "overview_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR, CRITICAL) | timechart count as Errors by exc_l",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR) | timechart count as Errors by exc_l ",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "error_count"
+    },
+    "overview_errors_count_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "overview_errors_count_ds",
+        "query": "| append [ gentimes increment=5m [ makeresults | eval start=strftime( if(\"$overview_time.earliest$\"=\"now\",now(),if(match(\"$overview_time.earliest$\",\"^\\d+-\\d+-\\d+(T?\\d+:\\d+:\\d+(\\.\\d{3}Z)?)$\"),strptime(\"$overview_time.earliest$\", \"%Y-%m-%dT%H:%M:%S.%N\"),relative_time(now(), \"$overview_time.earliest$\"))), \"%m/%d/%Y:%T\")| eval end=strftime(if(\"$overview_time.latest$\"=\"now\",now(),if(match(\"$overview_time.latest$\",\"^\\d+-\\d+-\\d+(T?\\d+:\\d+:\\d+(\\.\\d{3}Z)?)$\"),strptime(\"$overview_time.latest$\", \"%Y-%m-%dT%H:%M:%S.%N\") ,relative_time(now(), \"$overview_time.latest$\"))), \"%m/%d/%Y:%T\")| return start end] | eval Errors = 0 | fields - endhuman starthuman starttime | rename endtime as _time | head ($error_count:job.resultCount$==0)]",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
