@@ -103,7 +103,7 @@
     "errors_tab_errors_list_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR) exc_l IN ($error_types$)",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR, CRITICAL) exc_l IN ($error_types$)",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"
