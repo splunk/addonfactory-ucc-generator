@@ -53,7 +53,7 @@ default_definition_json_filename = {
 data_ingestion = (
     "index=_internal source=*license_usage.log type=Usage "
     "({determine_by} IN ({lic_usg_condition})) | timechart sum(b) as Usage | "
-    'rename Usage as \\"Data volume\\" | appendpipe [ | makeresults ] | dedup _time'
+    'rename Usage as \\"Data volume\\"'
 )
 
 data_ingestion_and_events = (
@@ -61,39 +61,39 @@ data_ingestion_and_events = (
     "({determine_by} IN ({lic_usg_condition})) | timechart sum(b) as Usage "
     '| rename Usage as \\"Data volume\\" '
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
-    '| timechart sum(n_events) as \\"Number of events\\" ] | appendpipe [ | makeresults ] | dedup _time'
+    '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
 
 errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
 
-errors_count_zero_line = (
+zero_line_search_query = (
     "| append [ gentimes increment=5m [ makeresults "
     "| eval start=strftime( "
-    'if(\\"$overview_time.earliest$\\"=\\"now\\"'
+    'if(\\"${time_token}.earliest$\\"=\\"now\\"'
     ",now(),"
-    'if( match(\\"$overview_time.earliest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
-    'strptime(\\"$overview_time.earliest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\")'
-    ',relative_time(now(), \\"$overview_time.earliest$\\")'
+    'if(match(\\"${time_token}.earliest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
+    'strptime(\\"${time_token}.earliest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\")'
+    ',relative_time(now(), \\"${time_token}.earliest$\\")'
     ")"
     "), "
     '\\"%m/%d/%Y:%T\\")'
     "| eval end=strftime("
-    'if(\\"$overview_time.latest$\\"=\\"now\\",'
+    'if(\\"${time_token}.latest$\\"=\\"now\\",'
     "now(),"
-    'if(match(\\"$overview_time.latest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
-    'strptime(\\"$overview_time.latest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\") '
-    ',relative_time(now(), \\"$overview_time.latest$\\")'
+    'if(match(\\"${time_token}.latest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
+    'strptime(\\"${time_token}.latest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\") '
+    ',relative_time(now(), \\"${time_token}.latest$\\")'
     ")"
     "), "
     '\\"%m/%d/%Y:%T\\")'
     "| return start end] "
     "| eval {value_label} = 0 | fields - endhuman starthuman starttime "
-    "| rename endtime as _time | head ($error_search:job.resultCount$==0)]"
+    "| rename endtime as _time | head (${basic_query_token}:job.resultCount$==0)]"
 )
 
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
-    'timechart sum(n_events) as \\"Number of events\\" | appendpipe [ | makeresults ] | dedup _time'
+    'timechart sum(n_events) as \\"Number of events\\"'
 )
 
 table_sourcetype_query = (
@@ -108,6 +108,7 @@ table_sourcetype_query = (
     '| rename st as \\"Source type\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
     'sparkvolume as \\"Volume trendline (Bytes)\\", sparkevent as \\"Event trendline\\"'
 )
+
 table_source_query = (
     "index=_internal source=*license_usage.log type=Usage ({determine_by} IN ({lic_usg_condition})) "
     "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by s "
@@ -201,8 +202,15 @@ def generate_dashboard_content(
                 errors_count=errors_count.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
                 ),
-                errors_count_zero_line=errors_count_zero_line.format(
-                    value_label="Errors"
+                errors_count_zero_line=zero_line_search_query.format(
+                    value_label="Errors",
+                    basic_query_token="error_count",
+                    time_token="overview_time",
+                ),
+                data_ingestion_and_events_zero_line=zero_line_search_query.format(
+                    value_label="Number of events",
+                    basic_query_token="data_volume",
+                    time_token="overview_time",
                 ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
             )
@@ -216,10 +224,17 @@ def generate_dashboard_content(
                 data_ingestion=data_ingestion.format(
                     lic_usg_condition=lic_usg_condition, determine_by=determine_by
                 ),
-                errors_count=errors_count.format(
-                    addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                data_ingestion_volume_zero_line=zero_line_search_query.format(
+                    value_label="Data volume",
+                    basic_query_token="data_volume",
+                    time_token="data_ingestion_time",
                 ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
+                data_ingestion_event_count_zero_line=zero_line_search_query.format(
+                    value_label="Number of events",
+                    basic_query_token="data_ingestion_events_count",
+                    time_token="data_ingestion_time",
+                ),
                 table_sourcetype=table_sourcetype_query.format(
                     lic_usg_condition=lic_usg_condition,
                     addon_name=addon_name.lower(),
@@ -254,6 +269,11 @@ def generate_dashboard_content(
             .render(
                 errors_count=errors_count.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
+                errors_count_tab_zero_line=zero_line_search_query.format(
+                    value_label="Errors",
+                    basic_query_token="error_count_tab",
+                    time_token="errors_tab_time",
                 ),
                 errors_list=errors_list_query.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
