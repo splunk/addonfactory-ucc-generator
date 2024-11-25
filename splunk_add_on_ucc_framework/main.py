@@ -203,6 +203,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     init_parser.add_argument(
         "--add-license",
         type=str,
+        choices=[
+            "Apache License 2.0",
+            "MIT License",
+            "SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT",
+        ],
         help=(
             "adds any one of license agreement such as 'Apache License 2.0', 'MIT License', or "
             "'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT' to the `<your_add-on_name>/package/LICENSES` directory."

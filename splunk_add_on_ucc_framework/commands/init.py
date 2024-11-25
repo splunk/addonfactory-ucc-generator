@@ -108,29 +108,12 @@ def _generate_addon(
     os.makedirs(package_license_dir)
 
     if add_license:
-        if add_license in [
-            "Apache License 2.0",
-            "MIT License",
-            "SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT",
-        ]:
-            package_license_path = os.path.join(
-                package_license_dir, f"{add_license}.txt"
-            )
-            template_path = utils.get_license_path(add_license)
-
-            with open(template_path) as content:
-                license_content = content.read()
-            with open(package_license_path, "w") as _f:
-                _f.write(license_content)
-        else:
-            logger.error(
-                "Incorrect license name provided."
-                " It should be one of 'Apache License 2.0', 'MIT License',"
-                " or 'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT'."
-                "Please provide a correct license name."
-            )
-            sys.exit(1)
-
+        package_license_path = os.path.join(package_license_dir, f"{add_license}.txt")
+        template_path = utils.get_license_path(add_license)
+        with open(template_path) as content:
+            license_content = content.read()
+        with open(package_license_path, "w") as _f:
+            _f.write(license_content)
     else:
         # add-on licenses are to be kept in package/LICENSES directory only
         package_license_path = os.path.join(package_license_dir, "LICENSE.txt")
@@ -147,6 +130,7 @@ def _generate_addon(
             addon_name=addon_name,
             addon_version=addon_version,
             addon_display_name=addon_display_name,
+            add_license=add_license,
         )
     )
     with open(package_app_manifest_path, "w") as _f:
