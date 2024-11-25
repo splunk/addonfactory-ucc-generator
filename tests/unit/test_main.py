@@ -385,6 +385,25 @@ def test_init_command(mock_init_command, args, expected_parameters):
 
 
 @pytest.mark.parametrize(
+    "args",
+    [
+        (
+            {
+                "addon_name": "foo/bar",
+                "addon_display_name": "Addon For Demo",
+                "addon_input_name": "input_name",
+                "addon_version": "0.0.1",
+                "add_license": "Apache License",
+            }
+        ),
+    ],
+)
+def test_init_command_incorrect_license(args):
+    with pytest.raises(SystemExit):
+        main.main(args)
+
+
+@pytest.mark.parametrize(
     "args,expected_parameters",
     [
         (

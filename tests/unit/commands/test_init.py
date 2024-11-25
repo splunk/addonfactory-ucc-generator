@@ -212,21 +212,6 @@ def test_init_when_folder_already_exists(mock_generate_addon, caplog):
         assert expected_error_message in caplog.text
 
 
-@mock.patch("splunk_add_on_ucc_framework.commands.init._generate_addon")
-def test_init_when_wrong_license_name_given(mock_generate_addon, caplog):
-    mock_generate_addon.side_effect = SystemExit
-
-    with pytest.raises(SystemExit):
-        init.init("addon_name", "Addon For Demo", "input_name", "0.0.1", "MIT")
-        expected_error_message = (
-            "Incorrect license name provided."
-            " It should be one of 'Apache License 2.0', 'MIT License',"
-            " or 'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT'."
-            "Please provide a correct license name."
-        )
-        assert expected_error_message in caplog.text
-
-
 def test_valid_regex():
     file_path = f"{helpers.get_path_to_source_dir()}/schema/schema.json"
     with open(file_path) as file:
