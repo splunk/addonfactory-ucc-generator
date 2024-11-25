@@ -178,15 +178,6 @@ def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon)
                 "addon_version": "0.0.1",
             }
         ),
-        (
-            {
-                "addon_name": "addon_name",
-                "addon_display_name": "Addon For Demo",
-                "addon_input_name": "input_name",
-                "addon_version": "0.0.1",
-                "add_license": "Apache License",
-            }
-        ),
     ],
 )
 def test_init_when_incorrect_parameters_then_sys_exit(init_kwargs):

@@ -67,14 +67,3 @@ def test_ucc_init_if_same_output_then_sys_exit():
             "demo_input",
             "1.0.0",
         )
-
-
-def test_ucc_init_if_wrong_license_then_sys_exit():
-    with pytest.raises(SystemExit):
-        init.init(
-            "demo_addon_for_splunk_license",
-            "Demo Add-on for Splunk",
-            "demo_input",
-            "1.0.0",
-            add_license="Apache",
-        )

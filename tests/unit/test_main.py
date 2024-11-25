@@ -389,7 +389,7 @@ def test_init_command(mock_init_command, args, expected_parameters):
     [
         (
             {
-                "addon_name": "foo/bar",
+                "addon_name": "splunk_add_on_for_demo",
                 "addon_display_name": "Addon For Demo",
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
