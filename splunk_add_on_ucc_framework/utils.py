@@ -38,6 +38,10 @@ def get_j2_env() -> jinja2.Environment:
     )
 
 
+def get_license_path(file_name: str) -> str:
+    return join(dirname(__file__), "templates", "Licenses", f"{file_name}.txt")
+
+
 def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> None:
     """
     Method to copy from src to dest recursively.

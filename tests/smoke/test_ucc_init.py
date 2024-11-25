@@ -17,6 +17,7 @@ def test_ucc_init():
         "1.0.0",
         "demo-addon-for-splunk",
         overwrite=True,
+        add_license="MIT License",
     )
     expected_folder = os.path.join(
         os.path.dirname(__file__),
@@ -30,10 +31,10 @@ def test_ucc_init():
         ("README.md",),
         ("globalConfig.json",),
         ("package", "README.txt"),
-        ("package", "LICENSE.txt"),
         ("package", "app.manifest"),
         ("package", "bin", "demo_input_helper.py"),
         ("package", "lib", "requirements.txt"),
+        ("package", "LICENSES", "MIT License.txt"),
     ]
     helpers.compare_file_content(
         files_to_be_equal,
