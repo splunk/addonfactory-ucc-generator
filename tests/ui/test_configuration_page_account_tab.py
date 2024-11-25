@@ -1033,8 +1033,11 @@ class TestAccount(UccTester):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         go_to_link = "https://docs.splunk.com/Documentation"
         account.entity.open()
-        with account.entity.help_link.open_link():
-            self.assert_util(account.entity.help_link.get_current_url, go_to_link)
+
+        assert (
+            account.entity.help_link.internal_container.get_attribute("href")
+            == go_to_link
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
