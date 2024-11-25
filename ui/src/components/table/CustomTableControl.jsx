@@ -21,73 +21,49 @@ class CustomTableControl extends Component {
         this.state = {
             loading: true,
             row: { ...props.row },
-            checkMethodIsPresent: false,
-            methodNotPresentError: '',
+            checkMethodIsPresent: false, // Flag to track if methods are available in custom control
+            methodNotPresentError: '', // Stores error message if a method is missing
+            rowUpdatedByControl: false, // Flag to track if the row was updated by custom control
         };
-        this.shouldRender = true;
+        this.shouldRender = true; // Flag to control rendering logic
     }
 
-    componentDidMount() {
-        const globalConfig = getUnifiedConfigs();
-        this.loadCustomControl()
-            .then(async (Control) => {
-                if (typeof Control !== 'function') {
-                    this.setState({
-                        loading: false,
-                        methodNotPresentError: 'Loaded module is not a constructor function',
-                    });
-                    return;
-                }
-                this.customControl = new Control(
-                    globalConfig,
-                    this.props.serviceName,
-                    this.el,
-                    this.state.row,
-                    this.props.field
-                );
+    // Lifecycle method that updates the component's state when props change
+    static getDerivedStateFromProps(nextProps, prevState) {
+        // Update row data only if the row prop has changed and it wasn't updated by control itself
+        if (!prevState.rowUpdatedByControl && nextProps.row !== prevState.row) {
+            return {
+                row: { ...nextProps.row },
+                loading: false, // Set loading to false when new row data is received
+            };
+        }
+        return null;
+    }
 
-                const result = await this.callCustomMethod('getDLRows');
-                try {
-                    // check if getDLRow is exist in the custom input row file
-                    if (result && typeof result === 'object' && !Array.isArray(result)) {
-                        this.setState({
-                            row: { ...result },
-                            checkMethodIsPresent: true,
-                            loading: false,
-                        });
-                    } else if (result !== null) {
-                        // check if getDLRow return invalid object
-                        this.setState({
-                            loading: false,
-                            checkMethodIsPresent: true,
-                            methodNotPresentError: 'getDLRows method did not return a valid object',
-                        });
-                    } else {
-                        // if getDLRow is not present then check render method is present or not
-                        this.handleNoGetDLRows();
-                    }
-                } catch (error) {
-                    onCustomControlError({ methodName: 'getDLRows', error });
-                    this.handleNoGetDLRows();
-                }
-            })
-            .catch(() =>
-                this.setState({
-                    loading: false,
-                    methodNotPresentError: 'Error loading custom control',
-                })
-            );
+    // Lifecycle method called after the component has been mounted (first render)
+    componentDidMount() {
+        this.initializeCustomControl();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.row !== nextProps.row) {
+        // Trigger re-render if row prop or state has changed
+        if (this.props.row !== nextProps.row || this.state.row !== nextState.row) {
             return true;
         }
+        // Check if loading state is false and shouldRender flag is true to trigger re-render
         if (!nextState.loading && this.shouldRender) {
-            this.shouldRender = false;
+            this.shouldRender = false; // Disable further re-renders
             return true;
         }
         return false;
+    }
+
+    componentDidUpdate(prevProps) {
+        // If the row prop has changed, re-initialize the custom control
+        if (prevProps.row !== this.props.row) {
+            this.initializeCustomControl();
+            this.setState({ rowUpdatedByControl: false });
+        }
     }
 
     loadCustomControl = () =>
@@ -141,6 +117,61 @@ class CustomTableControl extends Component {
             loading: false,
         }));
     };
+
+    // Function to initialize the custom control, loading the module and calling methods on it
+    async initializeCustomControl() {
+        const globalConfig = getUnifiedConfigs();
+        this.loadCustomControl()
+            .then(async (Control) => {
+                if (typeof Control !== 'function') {
+                    this.setState({
+                        loading: false,
+                        methodNotPresentError: 'Loaded module is not a constructor function',
+                    });
+                    return;
+                }
+
+                this.customControl = new Control(
+                    globalConfig,
+                    this.props.serviceName,
+                    this.el,
+                    this.state.row,
+                    this.props.field
+                );
+
+                // Call the "getDLRows" method on the custom control instance
+                const result = await this.callCustomMethod('getDLRows');
+                try {
+                    if (result && typeof result === 'object' && !Array.isArray(result)) {
+                        // If getDLRows returns a valid object, update state with new row data
+                        this.setState({
+                            row: { ...result },
+                            checkMethodIsPresent: true,
+                            loading: false,
+                            rowUpdatedByControl: true,
+                        });
+                    } else if (result !== null) {
+                        // If result is not valid, show an error
+                        this.setState({
+                            loading: false,
+                            checkMethodIsPresent: true,
+                            methodNotPresentError: 'getDLRows method did not return a valid object',
+                        });
+                    } else {
+                        this.handleNoGetDLRows();
+                    }
+                } catch (error) {
+                    onCustomControlError({ methodName: 'getDLRows', error });
+                    this.handleNoGetDLRows();
+                }
+            })
+            .catch(() =>
+                this.setState({
+                    loading: false,
+                    methodNotPresentError: 'Error loading custom control',
+                })
+            );
+    }
 
     render() {
         const { row, loading, checkMethodIsPresent, methodNotPresentError } = this.state;
