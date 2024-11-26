@@ -119,7 +119,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
     expect(allDefinitions).toContain(`${expectedInterval} sec`);
 }
 
-it.failing('should update custom Expansion Row when Input has changed', async () => {
+it('should update custom Expansion Row when Input has changed', async () => {
     setup();
     const inputRow = await screen.findByRole('row', { name: `row-${inputName}` });
 

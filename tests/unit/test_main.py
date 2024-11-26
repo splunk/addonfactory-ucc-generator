@@ -348,6 +348,7 @@ def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
                 "addon_version": "0.0.1",
                 "addon_rest_root": None,
                 "overwrite": False,
+                "add_license": None,
             },
         ),
         (
@@ -361,6 +362,8 @@ def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
                 "Splunk Add-on for Demo",
                 "--addon-input-name",
                 "demo_input",
+                "--add-license",
+                "MIT License",
             ],
             {
                 "addon_name": "splunk_add_on_for_demo",
@@ -369,6 +372,7 @@ def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
                 "addon_version": "0.0.1",
                 "addon_rest_root": "splunk_add_on_for_demo",
                 "overwrite": False,
+                "add_license": "MIT License",
             },
         ),
     ],
@@ -378,6 +382,25 @@ def test_init_command(mock_init_command, args, expected_parameters):
     main.main(args)
 
     mock_init_command.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        (
+            {
+                "addon_name": "splunk_add_on_for_demo",
+                "addon_display_name": "Addon For Demo",
+                "addon_input_name": "input_name",
+                "addon_version": "0.0.1",
+                "add_license": "Apache License",
+            }
+        ),
+    ],
+)
+def test_init_command_incorrect_license(args):
+    with pytest.raises(SystemExit):
+        main.main(args)
 
 
 @pytest.mark.parametrize(

@@ -1037,8 +1037,11 @@ class TestInputPage(UccTester):
         go_to_link = "https://docs.splunk.com/Documentation"
         input_page.create_new_input.select("Example Input One")
         input_page.entity1.example_account.wait_for_values()
-        with input_page.entity1.help_link.open_link():
-            self.assert_util(input_page.entity1.help_link.get_current_url, go_to_link)
+
+        assert (
+            input_page.entity1.help_link.internal_container.get_attribute("href")
+            == go_to_link
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
