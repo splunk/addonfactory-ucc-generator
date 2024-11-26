@@ -132,25 +132,15 @@ def test_dump_yaml_config(tmp_path):
     assert expected_content == content
 
 
-def test_get_os_path_remove_first_separator():
-    test_path = "/home/john/Test/test.txt"
-    expected_path = "home/john/Test/test.txt"
-
+@pytest.mark.parametrize(
+    "test_path,expected_path",
+    [
+        ("/home/john/Test/test.txt", "home/john/Test/test.txt"),
+        ("\\home\\john\\Test\\test.txt", "home/john/Test/test.txt"),
+        ("\\\\home\\\\john\\\\Test\\\\test.txt", "home/john/Test/test.txt"),
+    ],
+)
+def test_get_os_path(test_path, expected_path):
     stripped_path = utils.get_os_path(test_path)
 
     assert stripped_path == expected_path
-
-
-def test_get_os_path_replace_separators():
-    test_path_2_separators = "\\home\\john\\Test\\test.txt"
-    test_path_4_separators = "\\\\home\\\\john\\\\Test\\\\test.txt"
-
-    expected_path = "home/john/Test/test.txt"
-
-    stripped_path_2_separators = utils.get_os_path(test_path_2_separators)
-
-    assert stripped_path_2_separators == expected_path
-
-    stripped_path_4_separators = utils.get_os_path(test_path_4_separators)
-
-    assert stripped_path_4_separators == expected_path
