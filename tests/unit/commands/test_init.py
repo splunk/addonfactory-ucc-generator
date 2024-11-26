@@ -158,6 +158,28 @@ def test__is_valid_input_name(input_name, expected):
                 "test_author",
             ),
         ),
+        (
+            {
+                "addon_name": "addon_name",
+                "addon_rest_root": "addon_rest_root",
+                "addon_display_name": "Addon For Demo",
+                "addon_input_name": "input_name",
+                "addon_version": "0.0.1",
+                "overwrite": True,
+                "add_license": "Apache License 2.0",
+                "include_author": "   test author   ",
+            },
+            (
+                "addon_name",
+                "Addon For Demo",
+                "input_name",
+                "0.0.1",
+                "addon_rest_root",
+                True,
+                "Apache License 2.0",
+                "test author",
+            ),
+        ),
     ],
 )
 def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon):
