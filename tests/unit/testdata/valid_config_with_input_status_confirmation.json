@@ -1,0 +1,90 @@
+{
+  "pages": {
+    "configuration": {
+      "tabs": [
+        {
+          "name": "account",
+          "table": {
+            "actions": ["edit", "delete", "clone"],
+            "header": [
+              {
+                "label": "Name",
+                "field": "name"
+              }
+            ]
+          },
+          "entity": [
+            {
+              "type": "text",
+              "label": "Name",
+              "validators": [
+                {
+                  "type": "string",
+                  "errorMsg": "Length of ID should be between 1 and 50",
+                  "minLength": 1,
+                  "maxLength": 50
+                },
+                {
+                  "type": "regex",
+                  "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                  "pattern": "^[a-zA-Z]\\w*$"
+                }
+              ],
+              "field": "name",
+              "help": "Enter a unique name for this account.",
+              "required": true
+            }
+          ],
+          "title": "Account"
+        }
+      ],
+      "title": "Configuration",
+      "description": "Set up your add-on"
+    },
+    "inputs": {
+      "title": "Status toggle confirmation test",
+      "services": [
+        {
+          "name": "example_input_one",
+          "title": "Input one status toggle confirmation test",
+          "entity": [
+            {
+              "type": "text",
+              "label": "Name",
+              "field": "name"
+            }
+          ]
+        },
+        {
+          "name": "example_input_two",
+          "title": "Input two status toggle confirmation test",
+          "entity": [
+            {
+              "type": "text",
+              "label": "Name",
+              "field": "name"
+            }
+          ]
+        }
+      ],
+      "table": {
+        "actions": ["edit", "delete", "clone"],
+        "header": [
+          {
+            "label": "Name",
+            "field": "name"
+          }
+        ]
+      },
+      "useInputToggleConfirmation": true
+    }
+  },
+  "meta": {
+    "name": "Splunk_TA_UCCExample",
+    "restRoot": "splunk_ta_uccexample",
+    "version": "5.39.0Ra9e840a6",
+    "displayName": "Splunk UCC test Add-on",
+    "schemaVersion": "0.0.3",
+    "_uccVersion": "5.39.0"
+  }
+}
