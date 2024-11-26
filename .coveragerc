@@ -6,4 +6,4 @@ omit =
     splunk_add_on_ucc_framework/templates/input.module-template
 
 [report]
-fail_under = 81
+fail_under = 81.5
