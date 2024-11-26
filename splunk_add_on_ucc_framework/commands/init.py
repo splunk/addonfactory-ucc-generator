@@ -210,6 +210,9 @@ def init(
             f"it should follow '{ADDON_INPUT_NAME_RE_STR}' regex and be less than 50 characters."
         )
         sys.exit(1)
+    if include_author == "":
+        logger.error("The author name cannot be left empty, please provide some input.")
+        sys.exit(1)
     generated_addon_path = _generate_addon(
         addon_name,
         addon_display_name,

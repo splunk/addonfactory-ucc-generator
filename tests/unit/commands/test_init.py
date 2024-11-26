@@ -203,6 +203,16 @@ def test_init(mock_generate_addon, init_kwargs, expected_args_to_generate_addon)
                 "addon_version": "0.0.1",
             }
         ),
+        (
+            {
+                "addon_name": "addon_name",
+                "addon_rest_root": "addon_rest_root",
+                "addon_display_name": "Addon For Demo",
+                "addon_input_name": "input_name",
+                "addon_version": "0.0.1",
+                "include_author": "",
+            }
+        ),
     ],
 )
 def test_init_when_incorrect_parameters_then_sys_exit(init_kwargs):
@@ -224,6 +234,24 @@ def test_init_when_folder_already_exists(mock_generate_addon, caplog):
         expected_error_message = (
             "The location is already taken, use `--overwrite` "
             "option to overwrite the content of existing folder."
+        )
+        assert expected_error_message in caplog.text
+
+
+@mock.patch("splunk_add_on_ucc_framework.commands.init._generate_addon")
+def test_init_when_empty_string_passed_for_author(mock_generate_addon, caplog):
+    mock_generate_addon.side_effect = SystemExit
+
+    with pytest.raises(SystemExit):
+        init.init(
+            "test_addon",
+            "Addon For Demo Already Exists",
+            "input_name",
+            "0.0.1",
+            include_author="",
+        )
+        expected_error_message = (
+            "The author name cannot be left empty, please provide some input. "
         )
         assert expected_error_message in caplog.text
 
