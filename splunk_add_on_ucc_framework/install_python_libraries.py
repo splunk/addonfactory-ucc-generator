@@ -95,10 +95,8 @@ def _pip_is_lib_installed(
 
     lib_installed_cmd = f"{installer} -m pip show --version {libname}"
 
-    if version and allow_higher_version:
+    if version:
         cmd = f'{lib_installed_cmd} | grep "Version"'
-    elif version and not allow_higher_version:
-        cmd = f'{lib_installed_cmd} | grep "Version: {version}"'
     else:
         cmd = lib_installed_cmd
 
@@ -109,18 +107,21 @@ def _pip_is_lib_installed(
         # Disable writing of .pyc files (__pycache__)
         my_env["PYTHONDONTWRITEBYTECODE"] = "1"
 
-        if allow_higher_version:
-            result = _subprocess_run(command=cmd, env=my_env)
+        result = _subprocess_run(command=cmd, env=my_env)
+        if result.returncode != 0:
+            cmd_windows = cmd.replace("grep", "findstr")
+            result = _subprocess_run(command=cmd_windows, env=my_env)
             if result.returncode != 0:
-                cmd_windows = cmd.replace("grep", "findstr")
-                result = _subprocess_run(command=cmd_windows, env=my_env)
-                if result.returncode != 0:
-                    return False
+                return False
+
+        if version:
             result_version = result.stdout.decode("utf-8").split("Version:")[1].strip()
-            return Version(result_version) >= Version(version)
+            if allow_higher_version:
+                return Version(result_version) >= Version(version)
+            return Version(result_version) == Version(version)
         else:
-            return_code = _subprocess_run(command=cmd, env=my_env).returncode
-            return return_code == 0
+            return result.returncode == 0
+
     except OSError as e:
         raise CouldNotInstallRequirements from e
 
