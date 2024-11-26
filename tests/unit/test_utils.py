@@ -133,24 +133,24 @@ def test_dump_yaml_config(tmp_path):
 
 
 def test_get_os_path_remove_first_separator():
-    standardPath = "/home/john/Test/test.txt"
-    expectedPath = "home/john/Test/test.txt"
+    test_path = "/home/john/Test/test.txt"
+    expected_path = "home/john/Test/test.txt"
 
-    stripped_path = utils.get_os_path(standardPath)
+    stripped_path = utils.get_os_path(test_path)
 
-    assert stripped_path == expectedPath
+    assert stripped_path == expected_path
 
 
 def test_get_os_path_replace_separators():
-    standard_path_2_separators = "\\home\\john\\Test\\test.txt"
-    standard_path_4_separators = "\\\\home\\\\john\\\\Test\\\\test.txt"
+    test_path_2_separators = "\\home\\john\\Test\\test.txt"
+    test_path_4_separators = "\\\\home\\\\john\\\\Test\\\\test.txt"
 
-    expectedPath = "home/john/Test/test.txt"
+    expected_path = "home/john/Test/test.txt"
 
-    stripped_path_2_separators = utils.get_os_path(standard_path_2_separators)
+    stripped_path_2_separators = utils.get_os_path(test_path_2_separators)
 
-    assert stripped_path_2_separators == expectedPath
+    assert stripped_path_2_separators == expected_path
 
-    stripped_path_4_separators = utils.get_os_path(standard_path_4_separators)
+    stripped_path_4_separators = utils.get_os_path(test_path_4_separators)
 
-    assert stripped_path_4_separators == expectedPath
+    assert stripped_path_4_separators == expected_path
