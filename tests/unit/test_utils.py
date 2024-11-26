@@ -130,3 +130,17 @@ def test_dump_yaml_config(tmp_path):
         content = f.read()
 
     assert expected_content == content
+
+
+@pytest.mark.parametrize(
+    "test_path,expected_path",
+    [
+        ("/home/john/Test/test.txt", "home/john/Test/test.txt"),
+        ("\\home\\john\\Test\\test.txt", "home/john/Test/test.txt"),
+        ("\\\\home\\\\john\\\\Test\\\\test.txt", "home/john/Test/test.txt"),
+    ],
+)
+def test_get_os_path(test_path, expected_path):
+    stripped_path = utils.get_os_path(test_path)
+
+    assert stripped_path == expected_path
