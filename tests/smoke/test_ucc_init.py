@@ -18,6 +18,7 @@ def test_ucc_init():
         "demo-addon-for-splunk",
         overwrite=True,
         add_license="MIT License",
+        include_author="test_author",
     )
     expected_folder = os.path.join(
         os.path.dirname(__file__),
