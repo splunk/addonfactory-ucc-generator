@@ -29,6 +29,7 @@ interface CustomTableProps {
     sortDir: SortDirection;
     sortKey?: string;
     tableConfig: ITableConfig;
+    useInputToggleConfirmation?: boolean;
 }
 
 interface IEntityModal {
@@ -63,6 +64,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     sortDir,
     sortKey,
     tableConfig,
+    useInputToggleConfirmation,
 }) => {
     const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
     const [entityModal, setEntityModal] = useState<IEntityModal>({ open: false });
@@ -263,6 +265,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                         rowActions={actions}
                         headerMapping={headerMapping}
                         readonly={isReadonlyRow(readonlyFieldId, row)}
+                        useInputToggleConfirmation={useInputToggleConfirmation}
                         {...{
                             handleEditActionClick,
                             handleCloneActionClick,

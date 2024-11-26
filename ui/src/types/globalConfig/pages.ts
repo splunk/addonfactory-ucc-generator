@@ -96,10 +96,13 @@ export const TableLessServiceSchema = z.object({
     inputHelperModule: z.string().optional(),
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
+
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
     table: TableSchema,
+    useInputToggleConfirmation: z.boolean().optional(),
 });
+
 export const InputsPageRegular = z
     .object({
         title: z.string(),
@@ -149,6 +152,7 @@ export const InputsPageTableSchema = z
         services: z.array(TableLessServiceSchema.strict()),
         hideFieldId: z.string().optional(),
         readonlyFieldId: z.string().optional(),
+        useInputToggleConfirmation: z.boolean().optional(),
     })
     .strict();
 

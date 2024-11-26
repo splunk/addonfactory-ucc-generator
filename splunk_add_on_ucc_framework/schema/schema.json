@@ -3115,6 +3115,9 @@
         },
         "readonlyFieldId": {
           "type": "string"
+        },
+        "useInputToggleConfirmation": {
+          "$ref": "#/definitions/useInputToggleConfirmation"
         }
       },
       "required": [
@@ -3161,6 +3164,9 @@
               },
               "table": {
                 "$ref": "#/definitions/InputsTable"
+              },
+              "useInputToggleConfirmation": {
+                "$ref": "#/definitions/useInputToggleConfirmation"
               },
               "entity": {
                 "$ref": "#/definitions/AnyOfEntity"
@@ -3278,6 +3284,11 @@
     "entityLabel": {
       "type": "string",
       "description": "Text displayed next to entity field"
+    },
+    "useInputToggleConfirmation": {
+      "type": "boolean",
+      "description": "When true displays additional confirmation modal when toggling single input status.",
+      "default": false
     },
     "IntervalEntity": {
       "type": "object",
