@@ -75,7 +75,7 @@ const getRowElements = async (isDisabled: boolean) => {
 it('Status toggling with acceptance model - displayed correctly', async () => {
     const { activeRowData, statusToggle } = await getRowElements(false);
 
-    statusToggle.click();
+    await userEvent.click(statusToggle);
 
     const acceptModal = await screen.findByRole('dialog', { name: /Make input Inactive?/i });
 
@@ -96,7 +96,7 @@ it('Status toggling with acceptance model - toggles state', async () => {
 
     serverUseDisabledForEntity(activeRowData.name, true);
 
-    statusToggle.click();
+    await userEvent.click(statusToggle);
 
     await screen.findByRole('dialog', { name: 'Make input Inactive?' });
 
@@ -107,7 +107,7 @@ it('Status toggling with acceptance model - toggles state', async () => {
 
     serverUseDisabledForEntity(activeRowData.name, false);
 
-    statusToggle.click();
+    await userEvent.click(statusToggle);
 
     await screen.findByRole('dialog', { name: 'Make input Active?' });
 
@@ -124,7 +124,7 @@ it('Status toggling with acceptance model - decline modal still Active', async (
 
     serverUseDisabledForEntity(activeRowData.name, true);
 
-    statusToggle.click();
+    await userEvent.click(statusToggle);
 
     await screen.findByRole('dialog', { name: 'Make input Inactive?' });
 
@@ -141,7 +141,7 @@ it('Status toggling with acceptance model - decline modal still Inactive', async
 
     serverUseDisabledForEntity(activeRowData.name, true);
 
-    statusToggle.click();
+    await userEvent.click(statusToggle);
 
     await screen.findByRole('dialog', { name: 'Make input Active?' });
 
