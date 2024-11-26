@@ -579,3 +579,15 @@ def test_should_warn_on_empty_validators(schema_json):
             field["validators"] = [number_validator]
 
     assert not should_warn_on_empty_validators(oauth_entity)
+
+
+def test_config_validation_status_toggle_confirmation():
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_with_input_status_confirmation.json"
+    )
+    global_config = global_config_lib.GlobalConfig(global_config_path)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with does_not_raise():
+        validator.validate()

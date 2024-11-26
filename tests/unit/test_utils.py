@@ -130,3 +130,27 @@ def test_dump_yaml_config(tmp_path):
         content = f.read()
 
     assert expected_content == content
+
+
+def test_get_os_path_remove_first_separator():
+    standardPath = "/home/john/Test/test.txt"
+    expectedPath = "home/john/Test/test.txt"
+
+    stripped_path = utils.get_os_path(standardPath)
+
+    assert stripped_path == expectedPath
+
+
+def test_get_os_path_replace_separators():
+    standard_path_2_separators = "\\home\\john\\Test\\test.txt"
+    standard_path_4_separators = "\\\\home\\\\john\\\\Test\\\\test.txt"
+
+    expectedPath = "home/john/Test/test.txt"
+
+    stripped_path_2_separators = utils.get_os_path(standard_path_2_separators)
+
+    assert stripped_path_2_separators == expectedPath
+
+    stripped_path_4_separators = utils.get_os_path(standard_path_4_separators)
+
+    assert stripped_path_4_separators == expectedPath
