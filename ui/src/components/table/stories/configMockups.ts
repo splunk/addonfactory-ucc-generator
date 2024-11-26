@@ -113,7 +113,7 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
 
 export const getSimpleConfig = () => {
     const configCp = JSON.parse(JSON.stringify(SIMPLE_NAME_TABLE_MOCK_DATA));
-    return configCp;
+    return configCp as GlobalConfig;
 };
 
 export const TABLE_CONFIG_WITH_MAPPING = {

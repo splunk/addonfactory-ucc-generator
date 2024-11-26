@@ -110,6 +110,10 @@ def _pip_is_lib_installed(
     try:
         my_env = os.environ.copy()
         my_env["PYTHONPATH"] = target
+
+        # Disable writing of .pyc files (__pycache__)
+        my_env["PYTHONDONTWRITEBYTECODE"] = "1"
+
         if allow_higher_version:
             result = _subprocess_run(command=cmd, env=my_env)
             if result.returncode != 0:

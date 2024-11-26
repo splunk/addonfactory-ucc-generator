@@ -2,7 +2,7 @@
 
 To extend the build process, you can create a `additional_packaging.py` file in the same file level where you have your globalConfig file.
 
-This file should at least have:
+This file should have either of the below two functions:
 
 - the `cleanup_output_files` function, which accepts `output_path` (str), `add-on name` (str) as its arguments.
 - the `additional_packaging` function, which accepts `add-on name` (str) as its only argument.
@@ -19,5 +19,5 @@ See the following example for proper usage:
 Below is an example of additional_packaging.py containing both the implementations of functions.
 
 ```python
---8<-- "tests/testdata/test_addons/package_global_config_everything_uccignore/additional_packaging.py"
+--8<-- "tests/testdata/test_addons/package_global_config_everything/additional_packaging.py"
 ```
