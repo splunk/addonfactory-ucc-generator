@@ -22,7 +22,7 @@ Depending on which operating system you use, follow one of the procedures:
 Set up the Python virtual environment:
 
 ```bash
- python3 -m venv .venv
+python3 -m venv .venv
 ```
 
 If you use cmd.exe, activate the virtual environment with the following command:
@@ -42,8 +42,8 @@ If you use PowerShell, activate the virtual environment with the following comma
 Set up and activate the Python virtual environment:
 
 ```bash
- python3 -m venv .venv
- source .venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### Install UCC package
@@ -75,7 +75,7 @@ ucc-gen build --source demo_addon_for_splunk/package
 ### Package the add-on
 
 ```bash
-ucc-gen package --path output/<add-on-name>
+ucc-gen package --path output/demo_addon_for_splunk
 ```
 
 The archive is created on the same level as your `globalConfig.json` file.

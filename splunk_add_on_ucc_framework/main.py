@@ -200,6 +200,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         default=False,
         help="overwrite already generated add-on folder",
     )
+    init_parser.add_argument(
+        "--add-license",
+        type=str,
+        choices=[
+            "Apache License 2.0",
+            "MIT License",
+            "SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT",
+        ],
+        help=(
+            "adds any one of license agreement such as 'Apache License 2.0', 'MIT License', or "
+            "'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT' to the `<your_add-on_name>/package/LICENSES` directory."
+        ),
+        required=False,
+        default=None,
+    )
 
     import_from_aob_parser = subparsers.add_parser(
         "import-from-aob", description="[Experimental] Import from AoB"
@@ -235,6 +250,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_input_name=args.addon_input_name,
             addon_version=args.addon_version,
             overwrite=args.overwrite,
+            add_license=args.add_license,
         )
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(

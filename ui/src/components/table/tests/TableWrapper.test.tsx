@@ -3,14 +3,16 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
 import { BrowserRouter } from 'react-router-dom';
-import { MockRowData } from '../stories/rowDataMockup';
+import { MockRowData, MockRowDataForStatusCount } from '../stories/rowDataMockup';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
-import { getSimpleConfigWithMapping, SIMPLE_NAME_TABLE_MOCK_DATA } from '../stories/configMockups';
-
-jest.mock('immutability-helper');
+import {
+    getSimpleConfigStylePage,
+    getSimpleConfigWithMapping,
+    SIMPLE_NAME_TABLE_MOCK_DATA,
+} from '../stories/configMockups';
 
 const handleRequestModalOpen = jest.fn();
 const handleOpenPageStyleDialog = jest.fn();
@@ -182,4 +184,30 @@ it('Correctly render status labels with mapped values', async () => {
     const inActiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
     const inActiveStatusCell = within(inActiveRow).getByTestId('status');
     expect(inActiveStatusCell).toHaveTextContent('Disabled Field');
+});
+
+it('Check inputs count is visible', async () => {
+    const props = {
+        page: 'inputs',
+        serviceName: 'example_input_one',
+        handleRequestModalOpen,
+        handleOpenPageStyleDialog,
+        displayActionBtnAllRows: false,
+    } satisfies ITableWrapperProps;
+    server.use(
+        http.get('/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one', () =>
+            HttpResponse.json(MockRowDataForStatusCount)
+        )
+    );
+
+    setUnifiedConfig(getSimpleConfigStylePage());
+
+    render(
+        <TableContextProvider>
+            <TableWrapper {...props} />
+        </TableContextProvider>,
+        { wrapper: BrowserRouter }
+    );
+    const statusCount = await screen.findByText('11 Inputs (7 of 11 enabled)');
+    expect(statusCount).toBeInTheDocument();
 });

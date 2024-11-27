@@ -93,6 +93,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_name",
                 False,
+                None,
             ),
         ),
         (
@@ -110,6 +111,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_name",
                 False,
+                None,
             ),
         ),
         (
@@ -119,6 +121,7 @@ def test__is_valid_input_name(input_name, expected):
                 "addon_display_name": "Addon For Demo",
                 "addon_input_name": "input_name",
                 "addon_version": "0.0.1",
+                "add_license": "Apache License 2.0",
             },
             (
                 "addon_name",
@@ -127,6 +130,7 @@ def test__is_valid_input_name(input_name, expected):
                 "0.0.1",
                 "addon_rest_root",
                 False,
+                "Apache License 2.0",
             ),
         ),
     ],

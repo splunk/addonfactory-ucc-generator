@@ -25,8 +25,13 @@
         },
         "commonInformationModels": null,
         "license": {
-            "name": null,
-            "text": "LICENSE.txt",
+            {% if add_license -%}
+            "name": "{{add_license}}",
+            "text": "./LICENSES/{{add_license}}.txt",
+            {%- else -%}
+            "name": "LICENSE.txt",
+            "text": "./LICENSES/LICENSE.txt",
+            {%- endif %}
             "uri": null
         },
         "privacyPolicy": {

@@ -2,7 +2,7 @@
   "Detailed information about created/copied/modified/conflict files": "INFO",
   "Read more about it here: https://splunk.github.io/addonfactory-ucc-generator/quickstart/#verbose-mode": "INFO",
   "\u001b[33mapp.manifest                                                                    modified\u001b[0m": "INFO",
-  "\u001b[32mLICENSE.txt                                                                     copied\u001b[0m": "INFO",
+  "\u001b[32mLICENSES/LICENSE.txt                                                            copied\u001b[0m": "INFO",
   "\u001b[32mREADME.txt                                                                      copied\u001b[0m": "INFO",
   "VERSION                                                                         created\u001b[0m": "INFO",
   "\u001b[31mbin/import_declare_test.py                                                      conflict\u001b[0m": "INFO",

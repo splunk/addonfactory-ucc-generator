@@ -655,6 +655,8 @@ def generate(
                 "additional_packaging.py is present but does not have `additional_packaging`. "
                 "Skipping additional packaging."
             )
+        # clean-up sys.path manipulation
+        sys.path.pop(0)
 
     if global_config:
         logger.info("Generating OpenAPI file")

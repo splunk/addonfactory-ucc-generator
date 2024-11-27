@@ -25,8 +25,8 @@
         },
         "commonInformationModels": null,
         "license": {
-            "name": null,
-            "text": "LICENSE.txt",
+            "name": "MIT License",
+            "text": "./LICENSES/MIT License.txt",
             "uri": null
         },
         "privacyPolicy": {

@@ -3,6 +3,7 @@ from unittest import mock
 
 import dunamai
 import pytest
+from unittest.mock import patch
 
 from splunk_add_on_ucc_framework import exceptions, utils
 
@@ -33,6 +34,14 @@ def test_get_j2_env():
         "conf_files/web_conf.template",
     ]
     assert sorted(expected_list_of_templates) == sorted(list_of_templates)
+
+
+@patch("splunk_add_on_ucc_framework.utils.__file__", "/mocked/path/utils")
+def test_get_license_path():
+    file_name = "example_license"
+    expected_path = "/mocked/path/templates/Licenses/example_license.txt"
+    actual_path = utils.get_license_path(file_name)
+    assert actual_path == expected_path
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)
@@ -121,3 +130,17 @@ def test_dump_yaml_config(tmp_path):
         content = f.read()
 
     assert expected_content == content
+
+
+@pytest.mark.parametrize(
+    "test_path,expected_path",
+    [
+        ("/home/john/Test/test.txt", "home/john/Test/test.txt"),
+        ("\\home\\john\\Test\\test.txt", "home/john/Test/test.txt"),
+        ("\\\\home\\\\john\\\\Test\\\\test.txt", "home/john/Test/test.txt"),
+    ],
+)
+def test_get_os_path(test_path, expected_path):
+    stripped_path = utils.get_os_path(test_path)
+
+    assert stripped_path == expected_path
