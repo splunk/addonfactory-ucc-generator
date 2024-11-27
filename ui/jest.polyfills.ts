@@ -9,15 +9,19 @@
  * you don't want to deal with this.
  */
 
+const { performance } = require('node:perf_hooks');
 const { TextDecoder, TextEncoder } = require('node:util');
 const { TransformStream } = require('node:stream/web');
 const { BroadcastChannel } = require('node:worker_threads');
+const { clearImmediate } = require('node:timers');
 
 Object.defineProperties(globalThis, {
     TextDecoder: { value: TextDecoder },
     TextEncoder: { value: TextEncoder },
     TransformStream: { value: TransformStream },
     BroadcastChannel: { value: BroadcastChannel },
+    clearImmediate: { value: clearImmediate },
+    performance: { value: performance },
 });
 
 const { Blob } = require('node:buffer');
