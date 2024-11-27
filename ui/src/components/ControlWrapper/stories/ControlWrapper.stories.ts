@@ -49,3 +49,69 @@ export const Base: Story = {
         fileNameToDisplay: 'Previous File',
     },
 };
+
+export const WithModifications: Story = {
+    args: {
+        utilityFuncts: {
+            utilCustomFunctions: {
+                setState: () => {},
+                setErrorFieldMsg: () => {},
+                clearAllErrorMsg: () => {},
+                setErrorMsg: () => {},
+            },
+            handleChange: () => {},
+            addCustomValidator: () => {},
+        },
+        value: '',
+        display: true,
+        error: false,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: 'Enter the URL, for example',
+            required: true,
+            encrypted: false,
+        },
+        serviceName: 'settings',
+        mode: 'config',
+        disabled: false,
+        dependencyValues: null,
+        modifiedEntitiesData: { required: false, label: 'Modified URL', help: 'Modified help' },
+    },
+};
+
+export const WithModificationsMakeRequired: Story = {
+    args: {
+        utilityFuncts: {
+            utilCustomFunctions: {
+                setState: () => {},
+                setErrorFieldMsg: () => {},
+                clearAllErrorMsg: () => {},
+                setErrorMsg: () => {},
+            },
+            handleChange: () => {},
+            addCustomValidator: () => {},
+        },
+        value: '',
+        display: true,
+        error: false,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: 'Enter the URL, for example',
+            required: false,
+            encrypted: false,
+        },
+        serviceName: 'settings',
+        mode: 'config',
+        disabled: false,
+        dependencyValues: null,
+        modifiedEntitiesData: {
+            required: true,
+            label: 'Modified URL',
+            help: 'Modified help required',
+        },
+    },
+};

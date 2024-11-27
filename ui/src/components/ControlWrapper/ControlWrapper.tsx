@@ -26,7 +26,7 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: strin
     }
 `;
 
-interface ControlWrapperProps {
+export interface ControlWrapperProps {
     mode: Mode;
     utilityFuncts: UtilControlWrapper;
     value: AcceptableFormValueOrNullish;
