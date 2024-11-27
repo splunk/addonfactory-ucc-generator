@@ -45,7 +45,7 @@ classifiers = [
 "Bug Tracker" = "https://github.com/splunk/addonfactory-ucc-generator/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.7,<3.13"
+python = ">=3.13,<3.14"
 jinja2 = ">=2,<4"
 addonfactory-splunk-conf-parser-lib = "^0.4.3"
 dunamai = "^1.22.0"
