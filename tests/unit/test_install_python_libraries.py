@@ -386,9 +386,7 @@ def test_install_libraries_version_mismatch(
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib\n")
 
-    version_mismatch_shell_cmd = (
-        'python3 -m pip show --version cryptography | grep "Version"'
-    )
+    version_mismatch_shell_cmd = "python3 -m pip show --version cryptography"
     mock_subprocess_run.side_effect = (
         lambda command, shell=True, env=None, capture_output=True: (
             MockSubprocessResult(1)
@@ -538,7 +536,7 @@ def test_is_pip_lib_installed_do_not_write_bytecode(monkeypatch):
         assert command == "python3 -m pip show --version libname"
         assert env["PYTHONPATH"] == "target"
         assert env["PYTHONDONTWRITEBYTECODE"] == "1"
-        return Result(0, b"", b"")
+        return Result(0, b"Version: 1.0.0", b"")
 
     monkeypatch.setattr(install_python_libraries_module, "_subprocess_run", run)
     assert _pip_is_lib_installed("python3", "target", "libname")

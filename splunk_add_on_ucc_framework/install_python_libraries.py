@@ -95,11 +95,6 @@ def _pip_is_lib_installed(
 
     lib_installed_cmd = f"{installer} -m pip show --version {libname}"
 
-    if version:
-        cmd = f'{lib_installed_cmd} | grep "Version"'
-    else:
-        cmd = lib_installed_cmd
-
     try:
         my_env = os.environ.copy()
         my_env["PYTHONPATH"] = target
@@ -107,15 +102,14 @@ def _pip_is_lib_installed(
         # Disable writing of .pyc files (__pycache__)
         my_env["PYTHONDONTWRITEBYTECODE"] = "1"
 
-        result = _subprocess_run(command=cmd, env=my_env)
-        if result.returncode != 0:
-            cmd_windows = cmd.replace("grep", "findstr")
-            result = _subprocess_run(command=cmd_windows, env=my_env)
-            if result.returncode != 0:
-                return False
+        result = _subprocess_run(command=lib_installed_cmd, env=my_env)
+        if result.returncode != 0 or "Version:" not in result.stdout.decode("utf-8"):
+            return False
 
         if version:
-            result_version = result.stdout.decode("utf-8").split("Version:")[1].strip()
+            pip_show_result = result.stdout.decode("utf-8").splitlines()
+            result_row = next(el for el in pip_show_result if el.startswith("Version:"))
+            result_version = result_row.split("Version:")[1].strip()
             if allow_higher_version:
                 return Version(result_version) >= Version(version)
             return Version(result_version) == Version(version)
