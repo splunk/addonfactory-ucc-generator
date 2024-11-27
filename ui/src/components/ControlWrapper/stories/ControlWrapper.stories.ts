@@ -52,19 +52,7 @@ export const Base: Story = {
 
 export const WithModifications: Story = {
     args: {
-        utilityFuncts: {
-            utilCustomFunctions: {
-                setState: () => {},
-                setErrorFieldMsg: () => {},
-                clearAllErrorMsg: () => {},
-                setErrorMsg: () => {},
-            },
-            handleChange: () => {},
-            addCustomValidator: () => {},
-        },
-        value: '',
-        display: true,
-        error: false,
+        ...Base.args,
         entity: {
             field: 'url',
             label: 'URL',
@@ -73,29 +61,13 @@ export const WithModifications: Story = {
             required: true,
             encrypted: false,
         },
-        serviceName: 'settings',
-        mode: 'config',
-        disabled: false,
-        dependencyValues: null,
         modifiedEntitiesData: { required: false, label: 'Modified URL', help: 'Modified help' },
     },
 };
 
 export const WithModificationsMakeRequired: Story = {
     args: {
-        utilityFuncts: {
-            utilCustomFunctions: {
-                setState: () => {},
-                setErrorFieldMsg: () => {},
-                clearAllErrorMsg: () => {},
-                setErrorMsg: () => {},
-            },
-            handleChange: () => {},
-            addCustomValidator: () => {},
-        },
-        value: '',
-        display: true,
-        error: false,
+        ...Base.args,
         entity: {
             field: 'url',
             label: 'URL',
@@ -104,10 +76,6 @@ export const WithModificationsMakeRequired: Story = {
             required: false,
             encrypted: false,
         },
-        serviceName: 'settings',
-        mode: 'config',
-        disabled: false,
-        dependencyValues: null,
         modifiedEntitiesData: {
             required: true,
             label: 'Modified URL',

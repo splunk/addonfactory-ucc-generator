@@ -43,13 +43,13 @@ const renderControlWrapper = (props: Partial<ControlWrapperProps>) => {
     );
 };
 
-it('check if required start displayed correctly', () => {
+it('check if required star displayed correctly', () => {
     renderControlWrapper({});
     const requiredStar = screen.queryByText('*');
     expect(requiredStar).toBeInTheDocument();
 });
 
-it('check if required start not displayed', () => {
+it('check if required star not displayed', () => {
     renderControlWrapper({
         entity: {
             field: 'url',
@@ -62,7 +62,7 @@ it('check if required start not displayed', () => {
     expect(requiredStar).not.toBeInTheDocument();
 });
 
-it('check if required start displayed correctly from modifiedEntitiesData', () => {
+it('check if required star displayed correctly from modifiedEntitiesData', () => {
     renderControlWrapper({
         entity: {
             field: 'url',
@@ -76,7 +76,7 @@ it('check if required start displayed correctly from modifiedEntitiesData', () =
     expect(requiredStar).toBeInTheDocument();
 });
 
-it('check if required start not displayed due to modifiedEntitiesData', () => {
+it('check if required star not displayed due to modifiedEntitiesData', () => {
     renderControlWrapper({
         entity: {
             field: 'url',
