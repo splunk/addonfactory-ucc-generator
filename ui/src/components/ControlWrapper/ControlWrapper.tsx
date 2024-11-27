@@ -26,7 +26,7 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: strin
     }
 `;
 
-interface ControlWrapperProps {
+export interface ControlWrapperProps {
     mode: Mode;
     utilityFuncts: UtilControlWrapper;
     value: AcceptableFormValueOrNullish;
@@ -128,12 +128,17 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             </>
         );
 
-        const isFieldRequired = // modifiedEntitiesData takes precedence over entity
-            this.props?.modifiedEntitiesData?.required || this.props.entity?.required === undefined
-                ? 'oauth_field' in (this.props.entity || {}) // if required is undefined use true for oauth fields and false for others
-                : this.props.entity?.required; // if required present use required
-        const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
+        const isRequiredModified =
+            typeof this.props?.modifiedEntitiesData?.required === 'boolean'
+                ? this.props?.modifiedEntitiesData?.required
+                : this.props.entity?.required;
 
+        const isFieldRequired =
+            isRequiredModified === undefined // // if oauth_field exists field required by default
+                ? 'oauth_field' in (this.props.entity || {}) // if oauth_field does not exists not required by default
+                : isRequiredModified;
+
+        const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
         return (
             this.props.display && (
                 <ControlGroupWrapper
