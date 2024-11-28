@@ -146,7 +146,7 @@ class ProxyTab(Tab):
                     and definition.get("password") is False
                 ):
                     logger.error(
-                        "You had updated the username but set the password to 'false' which is not allowed "
+                        "You have updated the username but set the password to 'false' which is not allowed "
                         "set `password = True` for default configuration."
                     )
                     sys.exit(1)
@@ -155,7 +155,7 @@ class ProxyTab(Tab):
                     and definition.get("username") is False
                 ):
                     logger.error(
-                        "You had updated the password but set username to `false` which is not allowed "
+                        "You have updated the password but set username to `false` which is not allowed "
                         "set `username = True` for default configuration."
                     )
                     sys.exit(1)
@@ -164,7 +164,8 @@ class ProxyTab(Tab):
                     and type(definition.get("password")) is bool
                 ):
                     logger.error(
-                        "You had set conflicting values for username and password."
+                        f"You have set different values for username ({definition.get('username')})"
+                        f" and password ({definition.get('password')}). They should be same."
                     )
                     sys.exit(1)
             for key_name, value in entity_key_const_dict.items():

@@ -112,7 +112,7 @@ def test_proxy_short_tab_has_default_parameters():
                 "password": {"label": "Password for Proxy"},
                 "username": False,
             },
-            "You had updated the password but set username to `false` which is not allowed "
+            "You have updated the password but set username to `false` which is not allowed "
             "set `username = True` for default configuration.",
         ),
         (
@@ -122,7 +122,7 @@ def test_proxy_short_tab_has_default_parameters():
                 "username": {"label": "Username for Proxy"},
                 "password": False,
             },
-            "You had updated the username but set the password to 'false' which is not allowed "
+            "You have updated the username but set the password to 'false' which is not allowed "
             "set `password = True` for default configuration.",
         ),
         (
@@ -132,7 +132,7 @@ def test_proxy_short_tab_has_default_parameters():
                 "username": True,
                 "password": False,
             },
-            "You had set conflicting values for username and password.",
+            "You have set different values for username (True) and password (False). They should be same.",
         ),
     ],
 )
