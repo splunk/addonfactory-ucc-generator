@@ -15,7 +15,7 @@
 
 * add license during init command ([#1475](https://github.com/splunk/addonfactory-ucc-generator/issues/1475)) ([471294a](https://github.com/splunk/addonfactory-ucc-generator/commit/471294ae8e4c266a2f685aa4c01eb75fd1974db1))
 * confirmation modal when activate/deactivate single input ([#1421](https://github.com/splunk/addonfactory-ucc-generator/issues/1421)) ([34c8ec2](https://github.com/splunk/addonfactory-ucc-generator/commit/34c8ec250861eb06bd1cd4b22b430e5aa7e26a7c))
-* do not create \_\_pycache\_\_ in lib dir ([#1469](https://github.com/splunk/addonfactory-ucc-generator/issues/1469)) ([ad58e50](https://github.com/splunk/addonfactory-ucc-generator/commit/ad58e50ca2b5588f6824a4da95a15e8c0857f032))
+* do not create `__pycache__` in lib dir ([#1469](https://github.com/splunk/addonfactory-ucc-generator/issues/1469)) ([ad58e50](https://github.com/splunk/addonfactory-ucc-generator/commit/ad58e50ca2b5588f6824a4da95a15e8c0857f032))
 * **inputs:** show input services status count ([#1430](https://github.com/splunk/addonfactory-ucc-generator/issues/1430)) ([2574451](https://github.com/splunk/addonfactory-ucc-generator/commit/257445159898a2207cdf7a397345c218678c8fcb))
 
 ## [5.53.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.1...v5.53.2) (2024-11-21)
