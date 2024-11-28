@@ -51,3 +51,7 @@ MD041: true
 
 # MD046/code-block-style
 MD046: false
+
+# MD050/strong-style 
+MD050:
+  style: "asterisk"
