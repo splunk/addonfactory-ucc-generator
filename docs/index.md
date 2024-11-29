@@ -4,9 +4,9 @@ Universal Configuration Console (UCC) is a framework that simplifies the process
 
 The UCC framework helps you to maintain consistency and a uniform look and feel across different add-ons. You can easily update and modify your add-ons.
 
-The UCC framework is available as a GitHub action. See <https://github.com/splunk/addonfactory-ucc-generator-action>.
-
 To work with UCC framework, you can also use Splunk Extension. It helps you to create, test, and debug the add-ons in a simple way. For more information, see [Visual Studio Code Extension for Splunk](https://marketplace.visualstudio.com/items?itemName=Splunk.splunk).
+
+To see how UCC can be used in an add-on, see [Example TA](https://github.com/splunk/splunk-example-ta).
 
 ## Libraries
 

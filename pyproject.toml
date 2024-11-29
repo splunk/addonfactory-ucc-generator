@@ -16,7 +16,7 @@
 
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
-version = "5.53.2"
+version = "5.54.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 license = "Apache-2.0"
 authors = ["Splunk <addonfactory@splunk.com>"]
@@ -53,7 +53,7 @@ jsonschema = "^4.4.0"
 PyYAML = "^6.0"
 defusedxml = "^0.7.1"
 colorama = "^0.4.6"
-packaging = "24.0"
+packaging = ">=23.0"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs = "^1.4.2"

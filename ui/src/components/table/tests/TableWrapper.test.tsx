@@ -14,8 +14,6 @@ import {
     SIMPLE_NAME_TABLE_MOCK_DATA,
 } from '../stories/configMockups';
 
-jest.mock('immutability-helper');
-
 const handleRequestModalOpen = jest.fn();
 const handleOpenPageStyleDialog = jest.fn();
 

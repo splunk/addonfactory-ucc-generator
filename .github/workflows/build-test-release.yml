@@ -325,8 +325,7 @@ jobs:
     needs: build-test-addon
     if: |
       !cancelled() &&
-      needs.build-test-addon.result == 'success' &&
-      ( github.base_ref == 'main' || github.ref_name == 'main' )
+      needs.build-test-addon.result == 'success'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
