@@ -156,10 +156,13 @@ jobs:
       failed: ${{ env.failed }}
 
   test-smoke:
-    name: test-smoke ${{ matrix.python-version }}
+    name: test-smoke ${{ matrix.python-version }} (${{ matrix.os }})
     needs:
       - build-ui
     continue-on-error: true
+    defaults:
+      run:
+        shell: bash
     strategy:
       matrix:
         python-version:
