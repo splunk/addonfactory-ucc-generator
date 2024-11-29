@@ -51,12 +51,16 @@
                 },
                 {%- if need_proxy %}
                 {
-                    "type": "proxyTab"
+                    "type": "loggingTab"
                 },
-                {%- endif %}
+                {
+                    "type": "proxyTab"
+                }
+                {%- else %}
                 {
                     "type": "loggingTab"
                 }
+                {%- endif %}
             ],
             "title": "Configuration",
             "description": "Set up your add-on"

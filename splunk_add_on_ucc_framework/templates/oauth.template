@@ -12,7 +12,7 @@ from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
 from solnlib import log
 from solnlib import conf_manager
-from solnlib.conf_manager import InvalidHostnameError,InvalidPortError
+from solnlib.conf_manager import InvalidHostnameError, InvalidPortError
 from solnlib.utils import is_true
 import json
 

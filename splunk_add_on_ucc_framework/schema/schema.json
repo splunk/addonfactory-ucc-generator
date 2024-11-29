@@ -2987,7 +2987,7 @@
         },
         "title": {
           "type": "string",
-          "default": "Logging",
+          "default": "Proxy",
           "description": "Tab title.",
           "maxLength": 50
         },
