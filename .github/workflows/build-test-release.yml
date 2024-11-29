@@ -188,6 +188,9 @@ jobs:
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: echo "$env:APPDATA\Python\Scripts" >> $env:GITHUB_PATH
+        shell: pwsh
+        if: runner.os == 'Windows'
       - run: |
           poetry install
           poetry run pytest tests/smoke
