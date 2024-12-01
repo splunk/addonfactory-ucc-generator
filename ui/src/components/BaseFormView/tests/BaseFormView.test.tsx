@@ -2,16 +2,16 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
-import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
-import { setUnifiedConfig } from '../../util/util';
-import BaseFormView from './BaseFormView';
-import { getBuildDirPath } from '../../util/script';
-import mockCustomControlMockForTest from '../CustomControl/CustomControlMockForTest';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { getBuildDirPath } from '../../../util/script';
+import { setUnifiedConfig } from '../../../util/util';
 import {
     getGlobalConfigMockCustomControl,
     getGlobalConfigMockGroupsForInputPage,
     getGlobalConfigMockGroupsForConfigPage,
-} from './BaseFormConfigMock';
+} from '../BaseFormConfigMock';
+import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
+import BaseFormView from '../BaseFormView';
 
 const handleFormSubmit = jest.fn();
 

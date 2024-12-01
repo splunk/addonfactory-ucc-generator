@@ -17,6 +17,7 @@ import {
     getGlobalConfigMockGroupsForConfigPage,
     getGlobalConfigMockModificationToGroupsConfig,
 } from '../BaseFormConfigMock';
+import { getGlobalConfigMockModificationToFieldItself } from '../tests/configMocks';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
@@ -141,5 +142,17 @@ export const GroupModificationsConfig: Story = {
         handleFormSubmit: fn(),
         config: getGlobalConfigMockModificationToGroupsConfig(),
         platform: 'cloud',
+    },
+};
+
+export const FieldModifyItself: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'account',
+        mode: 'create' as Mode,
+        page: 'configuration',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getGlobalConfigMockModificationToFieldItself(),
     },
 };
