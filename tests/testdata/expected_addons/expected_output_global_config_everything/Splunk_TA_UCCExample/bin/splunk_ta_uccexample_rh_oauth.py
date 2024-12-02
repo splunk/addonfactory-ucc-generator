@@ -22,8 +22,8 @@ logger = log.Logs().get_logger('splunk_ta_uccexample_rh_oauth2_token')
 # Map for available proxy type
 _PROXY_TYPE_MAP = {
     'http': socks.PROXY_TYPE_HTTP,
-    # uncomment the below line if the add-on is compatible with 'http_no_tunnel' protocol
-    # 'http_no_tunnel': socks.PROXY_TYPE_HTTP_NO_TUNNEL,
+    # comment the below line if your add-on is not compatible with 'http_no_tunnel' protocol
+    'http_no_tunnel': socks.PROXY_TYPE_HTTP_NO_TUNNEL,
     'socks4': socks.PROXY_TYPE_SOCKS4,
     'socks5': socks.PROXY_TYPE_SOCKS5,
 }
