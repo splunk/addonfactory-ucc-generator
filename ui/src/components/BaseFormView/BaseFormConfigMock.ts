@@ -395,6 +395,10 @@ const GROUP_ENTITIES_MODIFICATIONS = [
                             text: 'markdown message after mods 2-1',
                         },
                     },
+                    {
+                        fieldId: 'text_field_1_group_1',
+                        disabled: true,
+                    },
                 ],
             },
         ],
