@@ -62,7 +62,8 @@ def test_check_author_names_conflict(mock_logger, mock_tab_config_parser, mock_i
     check_path = join(source, "default", "app.conf")
     mock_isfile.assert_called_once_with(check_path)
     mock_logger.warning.assert_called_once_with(
-        "Conflicting author names are identified between app.manifest and app.conf in the source directory."
+        "Conflicting author names are identified between app.manifest and app.conf in the source directory. "
+        "Please specify the author name in app.manifest."
     )
 
 

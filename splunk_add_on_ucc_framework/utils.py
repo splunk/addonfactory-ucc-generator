@@ -54,7 +54,8 @@ def check_author_name(source: str, app_manifest: AppManifest) -> None:
             != app_conf_content["launcher"]["author"]
         ):
             logger.warning(
-                "Conflicting author names are identified between app.manifest and app.conf in the source directory."
+                "Conflicting author names are identified between app.manifest and app.conf in the source directory. "
+                "Please specify the author name in app.manifest."
             )
 
 
