@@ -810,7 +810,7 @@
         "encrypted": {
           "$ref": "#/definitions/encrypted"
         },
-        "validators":{
+        "validators": {
           "$ref": "#/definitions/AnyValidator"
         },
         "options": {
@@ -2302,7 +2302,7 @@
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
         },
-        "validators":{
+        "validators": {
           "$ref": "#/definitions/AnyValidator"
         }
       },
@@ -2547,7 +2547,7 @@
       ],
       "additionalProperties": false
     },
-    "AnyValidator":{
+    "AnyValidator": {
       "type": "array",
       "description": "It is used to validate the values of fields using various validators.",
       "items": {
@@ -2991,8 +2991,155 @@
           "description": "Tab title.",
           "maxLength": 50
         },
-        "entity": {
-          "$ref": "#/definitions/AnyOfEntity"
+        "enable_proxy": {
+          "type": "object",
+          "default": {
+            "type": "checkbox",
+            "label": "Enable",
+            "field": "proxy_enabled"
+          },
+          "description": "Checkbox for enabling proxy"
+        },
+        "proxy_type": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "singleSelect",
+                "label": "Proxy Type",
+                "required": false,
+                "options": {
+                  "disableSearch": true,
+                  "autoCompleteFields": [
+                    {
+                      "value": "http",
+                      "label": "http"
+                    },
+                    {
+                      "value": "socks4",
+                      "label": "socks4"
+                    },
+                    {
+                      "value": "socks5",
+                      "label": "socks5"
+                    }
+                  ]
+                },
+                "defaultValue": "http",
+                "field": "proxy_type"
+              }
+            }
+          ],
+          "description": "Proxy type. Available values: http, socks4, socks5"
+        },
+        "host": {
+          "type": "object",
+          "default": {
+            "type": "text",
+            "label": "Host",
+            "validators": [
+              {
+                "type": "string",
+                "errorMsg": "Max host length is 4096",
+                "minLength": 0,
+                "maxLength": 4096
+              },
+              {
+                "type": "regex",
+                "errorMsg": "Proxy Host should not have special characters",
+                "pattern": "^[a-zA-Z]\\w*$"
+              }
+            ],
+            "field": "proxy_url"
+          },
+          "description": "Host of the proxy"
+        },
+        "port": {
+          "type": "object",
+          "default": {
+            "type": "text",
+            "label": "Port",
+            "validators": [
+              {
+                "type": "number",
+                "range": [
+                  1,
+                  65535
+                ],
+                "isInteger": true
+              }
+            ],
+            "field": "proxy_port"
+          },
+          "description": "Port of the proxy"
+        },
+        "username": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "text",
+                "label": "Username",
+                "validators": [
+                  {
+                    "type": "string",
+                    "errorMsg": "Max length of username is 50",
+                    "minLength": 0,
+                    "maxLength": 50
+                  }
+                ],
+                "field": "proxy_username"
+              }
+            }
+          ],
+          "description": "Username used to access the proxy server."
+        },
+        "password": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "text",
+                "label": "Password",
+                "validators": [
+                  {
+                    "type": "string",
+                    "errorMsg": "Max length of password is 8192",
+                    "minLength": 0,
+                    "maxLength": 8192
+                  }
+                ],
+                "encrypted": true,
+                "field": "proxy_password"
+              }
+            }
+          ],
+          "description": "Password assigned for the username"
+        },
+        "dns_resolution": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "checkbox",
+                "label": "DNS resolution",
+                "field": "proxy_rdns"
+              }
+            }
+          ],
+          "description": "Specifies whether DNS resolution should be used or not."
         },
         "options": {
           "$ref": "#/definitions/SaveValidatorHook"
@@ -3025,7 +3172,8 @@
       },
       "required": [
         "type"
-      ]
+      ],
+      "additionalProperties": false
     },
     "InputPageSingleTable": {
       "type": "object",
@@ -3277,7 +3425,7 @@
               "table",
               "entity"
             ]
-          },    
+          },
           "hideForPlatform": {
             "$ref": "#/definitions/HideForPlatform"
           }
@@ -3396,7 +3544,7 @@
       ],
       "additionalProperties": false
     },
-    "HideForPlatform":{
+    "HideForPlatform": {
       "description": "Defines for which platform element should be hidden from UI perspective.",
       "anyOf": [
         {
