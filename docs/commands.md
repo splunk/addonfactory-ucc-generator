@@ -77,6 +77,7 @@ It takes the following parameters:
 * `--overwrite` - [optional] overwrites the already existing folder. By default, you can't generate a new add-on to an already existing folder.
 * `--add-license` - [optional] Adds license agreement such as [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt), [MIT License](https://mit-license.org/), or
 [SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT](https://www.splunk.com/en_us/legal/splunk-pre-release-software-license-agreement.html) in your `package/LICENSES` directory. If not mentioned an empty License.txt will be generated.
+* `--include-author` - [optional] Allows you to specify the author of the add-on during initialization. The author's name will appear in `app.manifest` under `info -> author -> name` and in `app.conf` (after building your add-on) under `launcher -> author` field.
 
 > **Note:** The add-on will not build if the input for `--add-license` is not one of the following: `Apache License 2.0`, `MIT License`, or `SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT`. If you want to keep another license in your add-on, place it in `package/LICENSES` directory and it will be shipped
 

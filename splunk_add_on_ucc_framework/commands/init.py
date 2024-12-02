@@ -68,6 +68,7 @@ def _generate_addon(
     addon_rest_root: str | None = None,
     overwrite: bool = False,
     add_license: str | None = None,
+    include_author: str | None = None,
 ) -> str:
     generated_addon_path = os.path.join(
         os.getcwd(),
@@ -131,6 +132,7 @@ def _generate_addon(
             addon_version=addon_version,
             addon_display_name=addon_display_name,
             add_license=add_license,
+            include_author=include_author,
         )
     )
     with open(package_app_manifest_path, "w") as _f:
@@ -175,6 +177,7 @@ def init(
     addon_rest_root: str | None = None,
     overwrite: bool = False,
     add_license: str | None = None,
+    include_author: str | None = None,
 ) -> str:
     if not _is_valid_addon_name(addon_name):
         logger.error(
@@ -207,6 +210,11 @@ def init(
             f"it should follow '{ADDON_INPUT_NAME_RE_STR}' regex and be less than 50 characters."
         )
         sys.exit(1)
+    if include_author == "":
+        logger.error("The author name cannot be left empty, please provide some input.")
+        sys.exit(1)
+    if include_author:
+        include_author = include_author.strip()
     generated_addon_path = _generate_addon(
         addon_name,
         addon_display_name,
@@ -215,6 +223,7 @@ def init(
         addon_rest_root,
         overwrite,
         add_license,
+        include_author,
     )
     logger.info(f"Generated add-on is located here {generated_addon_path}")
     if add_license:
