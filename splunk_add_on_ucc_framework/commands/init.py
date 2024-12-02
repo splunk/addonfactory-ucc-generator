@@ -104,6 +104,18 @@ def _generate_addon(
         _f.write(global_config_rendered_content)
     package_path = os.path.join(generated_addon_path, "package")
     os.makedirs(package_path)
+    icons_path = os.path.join(package_path, "static")
+    os.makedirs(icons_path)
+    for name in [
+        "appIcon_2x.png",
+        "appIcon.png",
+        "appIconAlt_2x.png",
+        "appIconAlt.png",
+        "appLogo.png",
+        "appLogo_2x.png",
+    ]:
+        icons = utils.get_icons_path(name)
+        shutil.copy(icons, icons_path)
     package_license_dir = os.path.join(package_path, "LICENSES")
     os.makedirs(package_license_dir)
 

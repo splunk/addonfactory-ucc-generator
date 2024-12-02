@@ -42,6 +42,10 @@ def get_license_path(file_name: str) -> str:
     return join(dirname(__file__), "templates", "Licenses", f"{file_name}.txt")
 
 
+def get_icons_path(name: str) -> str:
+    return join(dirname(__file__), "templates", "Icons", f"{name}")
+
+
 def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> None:
     """
     Method to copy from src to dest recursively.

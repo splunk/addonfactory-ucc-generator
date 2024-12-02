@@ -44,6 +44,14 @@ def test_get_license_path():
     assert actual_path == expected_path
 
 
+@patch("splunk_add_on_ucc_framework.utils.__file__", "/mocked/path/utils")
+def test_get_icons_path():
+    file_name = "testIcon.png"
+    expected_path = "/mocked/path/templates/Icons/testIcon.png"
+    actual_path = utils.get_icons_path(file_name)
+    assert actual_path == expected_path
+
+
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)
 def test_get_version_from_git_when_runtime_error_from_dunamai(mock_version_class):
     mock_version_class.from_git.side_effect = RuntimeError
