@@ -57,7 +57,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                     setIsDisabling(false);
                 }}
                 role="button"
-                disabled={props.dataRows.length < 1}
+                disabled={props.dataRows.length < 1 && 'dimmed'}
             >
                 Activate all
             </InteractAllActionButton>
@@ -68,7 +68,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                     setIsDisabling(true);
                 }}
                 role="button"
-                disabled={props.dataRows.length < 1}
+                disabled={props.dataRows.length < 1 && 'dimmed'}
             >
                 Deactivate all
             </InteractAllActionButton>

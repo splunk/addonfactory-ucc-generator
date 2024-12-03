@@ -93,7 +93,7 @@ function ConfigurationFormView({ serviceName }) {
                     appearance="primary"
                     label={isSubmitting ? <WaitSpinner /> : _('Save')}
                     onClick={handleSubmit}
-                    disabled={isSubmitting}
+                    disabled={isSubmitting && 'dimmed'}
                 />
             </ButtonWrapper>
         </>

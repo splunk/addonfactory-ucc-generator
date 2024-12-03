@@ -113,13 +113,13 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                         appearance="secondary"
                         onClick={this.handleRequestClose}
                         label={_('Cancel')}
-                        disabled={this.state.isDeleting}
+                        disabled={this.state.isDeleting && 'dimmed'}
                     />
                     <StyledButton
                         appearance="primary"
                         label={this.state.isDeleting ? <WaitSpinner /> : _('Delete')}
                         onClick={this.handleDelete}
-                        disabled={this.state.isDeleting}
+                        disabled={this.state.isDeleting && 'dimmed'}
                     />
                 </Modal.Footer>
             </ModalWrapper>

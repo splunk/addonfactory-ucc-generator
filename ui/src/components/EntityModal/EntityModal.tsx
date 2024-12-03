@@ -102,14 +102,14 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
                         appearance="secondary"
                         onClick={this.handleRequestClose}
                         label={_('Cancel')}
-                        disabled={this.state.isSubmititng}
+                        disabled={this.state.isSubmititng && 'dimmed'}
                     />
                     <StyledButton
                         className="saveBtn"
                         appearance="primary"
                         label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}
                         onClick={this.handleSubmit}
-                        disabled={this.state.isSubmititng}
+                        disabled={this.state.isSubmititng && 'dimmed'}
                     />
                 </Modal.Footer>
             </ModalWrapper>

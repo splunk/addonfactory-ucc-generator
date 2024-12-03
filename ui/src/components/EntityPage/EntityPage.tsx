@@ -112,7 +112,7 @@ function EntityPage({
                             appearance="secondary"
                             onClick={handleRequestClose}
                             label={_('Cancel')}
-                            disabled={isSubmitting}
+                            disabled={isSubmitting && 'dimmed'}
                             style={{ width: '80px' }}
                         />
                         <StyledButton
@@ -120,7 +120,7 @@ function EntityPage({
                             appearance="primary"
                             label={isSubmitting ? <WaitSpinner /> : buttonText}
                             onClick={handleSubmit}
-                            disabled={isSubmitting}
+                            disabled={isSubmitting && 'dimmed'}
                             style={{ width: '80px' }}
                         />
                     </ButtonRow>
