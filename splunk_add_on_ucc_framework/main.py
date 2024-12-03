@@ -221,6 +221,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         required=False,
         default=None,
     )
+    init_parser.add_argument(
+        "--include-author",
+        type=str,
+        help="adds author in app.mainifest under `info -> author -> name` field",
+        required=False,
+        default=None,
+    )
 
     import_from_aob_parser = subparsers.add_parser(
         "import-from-aob", description="[Experimental] Import from AoB"
@@ -258,6 +265,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             overwrite=args.overwrite,
             need_proxy=args.need_proxy,
             add_license=args.add_license,
+            include_author=args.include_author,
         )
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(
