@@ -378,9 +378,10 @@ jobs:
             --add-license "Apache License 2.0" \
             --include-author Splunk
           poetry run ucc-gen build --source demo_addon_for_splunk/package --ta-version 0.0.1
+          poetry run ucc-gen package --path output/demo_addon_for_splunk -o packaged
       - uses: splunk/appinspect-cli-action@v2.8
         with:
-          app_path: output/demo_addon_for_splunk
+          app_path: packaged
           included_tags: "cloud"
 
   build-test-addon-openapi-client:
