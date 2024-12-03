@@ -351,6 +351,7 @@ def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
                 "overwrite": False,
                 "need_proxy": True,
                 "add_license": None,
+                "include_author": None,
             },
         ),
         (
@@ -429,6 +430,7 @@ def test_build_command(mock_ucc_gen_generate, args, expected_parameters):
                 "addon_version": "0.0.1",
                 "addon_rest_root": "splunk_add_on_for_demo",
                 "overwrite": True,
+                "need_proxy": False,
                 "add_license": "MIT License",
                 "include_author": "test_author",
             },
