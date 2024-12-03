@@ -353,6 +353,36 @@ jobs:
           name: appinspect-api-html-report-${{ matrix.tags }}
           path: AppInspect_response.html
 
+  init-build-run-appinspect-cli:
+    runs-on: ubuntu-22.04
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+      - uses: actions/download-artifact@v4
+        with:
+          name: UCC-build
+          path: built-ui/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          poetry install --only main
+      - run: |
+          poetry run ucc-gen init \
+            --addon-name "demo_addon_for_splunk" \
+            --addon-display-name "Demo Add-on for Splunk" \
+            --addon-input-name demo_input \
+            --add-license "Apache License 2.0" \
+            --include-author Splunk
+          poetry run ucc-gen build --source demo_addon_for_splunk/package --ta-version 0.0.1
+      - uses: splunk/appinspect-cli-action@v2.8
+        with:
+          app_path: output/demo_addon_for_splunk
+          included_tags: "cloud"
+
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
     runs-on: ubuntu-22.04
