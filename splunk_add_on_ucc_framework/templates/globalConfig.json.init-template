@@ -49,16 +49,11 @@
                     ],
                     "title": "Accounts"
                 },
-                {%- if need_proxy %}
                 {
                     "type": "loggingTab"
-                },
+                }{%- if need_proxy %},
                 {
                     "type": "proxyTab"
-                }
-                {%- else %}
-                {
-                    "type": "loggingTab"
                 }
                 {%- endif %}
             ],

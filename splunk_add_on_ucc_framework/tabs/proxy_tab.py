@@ -119,7 +119,7 @@ class ProxyTab(Tab):
         """
         if definition.get("type") == "proxyTab":
             entity = []
-            entity_key_const_dict = {
+            entity_key_const_dict: Dict[str, Dict[str, Any]] = {
                 "enable_proxy": DEFAULT_PROXY_ENABLE,
                 "proxy_type": DEFAULT_PROXY_TYPE,
                 "host": DEFAULT_HOST,
@@ -128,13 +128,6 @@ class ProxyTab(Tab):
                 "password": DEFAULT_PASSWORD,
                 "dns_resolution": DEFAULT_DNS_RESOLUTION,
             }
-
-            def updating_dictionaries(key_name: str, const: Any) -> None:
-                for key, value in const.items():
-                    nonlocal definition
-                    if key not in definition.get(key_name, {}):
-                        definition[key_name][key] = value
-                entity.append(definition.get(key_name))
 
             if ("username" not in definition) ^ ("password" not in definition):
                 logger.error("Either of username or password is not mentioned.")
@@ -179,7 +172,10 @@ class ProxyTab(Tab):
                 ]:
                     continue
                 elif definition.get(key_name):
-                    updating_dictionaries(key_name, value)
+                    for key, i_value in value.items():
+                        if key not in definition.get(key_name, {}):
+                            definition[key_name][key] = i_value
+                    entity.append(definition[key_name])
                 else:
                     entity.append(value)
 
