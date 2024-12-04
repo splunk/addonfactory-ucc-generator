@@ -1,0 +1,101 @@
+{
+  "meta": {
+    "name": "Splunk_TA_aws",
+    "displayName": "Splunk Add-on for AWS",
+    "version": "7.1.0",
+    "restRoot": "restRoot",
+    "schemaVersion": "0.0.3"
+  },
+  "pages": {
+    "configuration": {
+      "title": "",
+      "tabs": [
+        {
+          "name": "a",
+          "title": "",
+          "entity": []
+        }
+      ]
+    },
+    "inputs": {
+      "title": "Inputs",
+      "table": {
+        "header": [
+          {
+            "field": "name",
+            "label": "Input Name"
+          }
+        ],
+        "moreInfo": [
+          {
+            "field": "name",
+            "label": "Name"
+          }
+        ],
+        "actions": ["edit", "delete", "search", "clone"]
+      },
+      "services": [
+        {
+          "name": "example_input_four",
+          "title": "Title example",
+          "entity": [
+            {
+              "type": "CheckboxTree",
+              "label": "CheckboxTreeTitle",
+              "field": "api3",
+              "options": {
+                "groups": [
+                  {
+                    "label": "Group 1",
+                    "options": {
+                      "isExpandable": true,
+                      "expand": true
+                    },
+                    "fields": ["rowUnderGroup1"]
+                  },
+                  {
+                    "label": "Group 3",
+                    "options": {
+                      "isExpandable": true,
+                      "expand": true
+                    },
+                    "fields": ["requiredField", "160validation"]
+                  }
+                ],
+                "rows": [
+                  {
+                    "field": "rowWithoutGroup",
+                    "checkbox": {
+                      "label": "Row without group",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "rowUnderGroup1",
+                    "checkbox": {
+                      "label": "Row under Group 1",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "requiredField",
+                    "checkbox": {
+                      "label": "Required field",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "160validation",
+                    "checkbox": {
+                      "label": "from 1 to 60 validation"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

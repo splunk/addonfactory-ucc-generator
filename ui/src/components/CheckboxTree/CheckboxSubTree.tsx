@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
-import { getCheckedCheckboxesCount, GroupWithRows, ValueByField } from './CheckboxTree.utils';
+import { getCheckedCheckboxesCount } from './CheckboxTree.utils';
 import {
     CheckboxContainer,
     CheckboxWrapper,
@@ -9,6 +9,7 @@ import {
     RowContainer,
     StyledCollapsiblePanel,
 } from './StyledComponent';
+import { GroupWithRows, ValueByField } from './types';
 
 interface CheckboxSubTreeProps {
     group: GroupWithRows;

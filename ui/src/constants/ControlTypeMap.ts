@@ -1,3 +1,4 @@
+import CheckboxTree from '../components/CheckboxTree/CheckboxTree';
 import HelpLinkComponent from '../components/HelpLinkComponent/HelpLinkComponent';
 import TextComponent from '../components/TextComponent/TextComponent';
 import TextAreaComponent from '../components/TextAreaComponent/TextAreaComponent';
@@ -12,6 +13,7 @@ import CheckboxGroup from '../components/CheckboxGroup/CheckboxGroup';
 const componentsMap = {
     checkbox: CheckBoxComponent,
     checkboxGroup: CheckboxGroup,
+    CheckboxTree,
     custom: CustomControl,
     file: FileInputComponent,
     helpLink: HelpLinkComponent,

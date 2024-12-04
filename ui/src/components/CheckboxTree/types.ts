@@ -31,6 +31,8 @@ export type GroupWithRows = Group & { rows: Row[] };
 export interface CheckboxTreeProps {
     field: string;
     value?: string;
+    required?: boolean;
+    label: string;
     controlOptions: {
         groups?: Group[];
         rows: Row[];
@@ -43,3 +45,7 @@ export interface CheckboxTreeProps {
     handleChange: (field: string, value: string, componentType?: 'CheckboxTree') => void;
     disabled?: boolean;
 }
+
+export type SearchChangeData = {
+    value: string;
+};

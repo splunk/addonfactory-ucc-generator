@@ -19,10 +19,13 @@ export const CheckboxContainer = styled.div`
 `;
 
 export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
+    margin-top: ${variables.spacingXSmall};
     & > *:not(:last-child) {
-        background-color: ${variables.neutral300};
+        button {
+            background-color: ${variables.neutral300} !important;
+        }
         font-size: 14px;
-        margin-bottom: ${variables.spacingSmall};
+        margin-bottom: ${variables.spacingXSmall};
     }
 `;
 

@@ -1,27 +1,11 @@
 import { ValueByField, Field, Value } from './types';
 
 export function parseValue(collection?: string): ValueByField {
-    const resultMap = new Map<Field, Value>();
-
     if (!collection) {
-        return resultMap;
+        return new Map<Field, Value>();
     }
 
-    const splitValues = collection.split(',');
-    splitValues.forEach((rawValue) => {
-        const [field, inputValue] = rawValue.trim().split('/');
-        const parsedInputValue = inputValue === '' ? undefined : Number(inputValue);
-        if (!field || Number.isNaN(parsedInputValue)) {
-            throw new Error(`Value is not parsable: ${collection}`);
-        }
-
-        resultMap.set(field, {
-            checkbox: true,
-            inputValue: parsedInputValue,
-        });
-    });
-
-    return resultMap;
+    return new Map(collection.split(',').map((rawValue) => [rawValue.trim(), { checkbox: true }]));
 }
 
 export function packValue(map: ValueByField): string {

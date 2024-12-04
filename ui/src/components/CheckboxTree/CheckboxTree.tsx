@@ -12,15 +12,12 @@ import {
 import CheckboxSubTree from './CheckboxSubTree';
 import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { MODE_CREATE } from '../../constants/modes';
-import { CheckboxTreeProps, ValueByField } from './types';
+import { CheckboxTreeProps, SearchChangeData, ValueByField } from './types';
 import { packValue, parseValue } from './utils';
-
-type SearchChangeData = {
-    value: string;
-};
+import { checkValidationForRequired } from './validation';
 
 function CheckboxTree(props: CheckboxTreeProps) {
-    const { field, handleChange, controlOptions, disabled } = props;
+    const { field, handleChange, controlOptions, disabled, required } = props;
     const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
     const shouldUseDefaultValue =
         props.mode === MODE_CREATE && (props.value === null || props.value === undefined);
@@ -30,6 +27,9 @@ function CheckboxTree(props: CheckboxTreeProps) {
 
     const [values, setValues] = useState(initialValues);
     const [searchForCheckBoxValue, setSearchForCheckBoxValue] = useState('');
+    if (required) {
+        checkValidationForRequired(props.field, props.label, controlOptions.rows);
+    }
 
     // Propagate default values on mount if applicable
     useEffect(() => {
