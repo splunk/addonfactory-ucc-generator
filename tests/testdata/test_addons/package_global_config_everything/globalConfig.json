@@ -1576,6 +1576,7 @@
                             "type": "CheckboxTree",
                             "label": "Event Filters",
                             "field": "apis",
+                            "required": true,
                             "options": {
                                 "groups": [
                                     {

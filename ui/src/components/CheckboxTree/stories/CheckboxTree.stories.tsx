@@ -17,6 +17,7 @@ export const Base: Story = {
         mode: MODE_EDIT,
         field: 'api',
         value: 'collect_collaboration,collect_file,collect_task',
+        label: 'checkboxtree',
         controlOptions: {
             rows: [
                 {
@@ -48,6 +49,7 @@ export const Multiline: Story = {
         mode: MODE_EDIT,
         field: 'api',
         value: 'neigh,like',
+        label: 'checkboxtree',
         controlOptions: {
             rows: [
                 {
