@@ -1984,7 +1984,7 @@
         "version": "5.53.2+ed749a5ec",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
-        "_uccVersion": "5.53.1",
+        "_uccVersion": "5.53.2",
         "supportedThemes": [
             "light",
             "dark"
