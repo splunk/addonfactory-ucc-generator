@@ -78,7 +78,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
             return;
         }
 
-        let current = true;
+        let mounted = true;
         const abortController = new AbortController();
 
         const url = referenceName
@@ -102,7 +102,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
             setLoading(true);
             getRequest<{ entry: FilterResponseParams }>(apiCallOptions)
                 .then((data) => {
-                    if (current) {
+                    if (mounted) {
                         setOptions(
                             generateOptions(
                                 filterResponse(
@@ -117,15 +117,15 @@ function MultiInputComponent(props: MultiInputComponentProps) {
                     }
                 })
                 .finally(() => {
-                    if (current) {
+                    if (mounted) {
                         setLoading(false);
                     }
                 });
         }
         // eslint-disable-next-line consistent-return
         return () => {
-            abortController.abort('Operation canceled.');
-            current = false;
+            mounted = false;
+            abortController.abort();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dependencyValues]);

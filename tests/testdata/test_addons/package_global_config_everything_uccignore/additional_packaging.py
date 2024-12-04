@@ -1,6 +1,6 @@
 
-from os.path import sep, exists, dirname, realpath, join
-from os import remove, system, _exit, WEXITSTATUS
+from os.path import sep
+from os import remove
 
 def cleanup_output_files(output_path: str, ta_name: str) -> None:
     """

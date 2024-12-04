@@ -1,3 +1,4 @@
+import sys
 import os
 import re
 import tempfile
@@ -189,6 +190,7 @@ def test_ucc_generate_with_everything(caplog):
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("appserver", "static", "js", "build", "entry_page.js.map"),
+            ("lib", "__pycache__"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
@@ -467,6 +469,8 @@ def test_ucc_generate_with_everything_uccignore(caplog):
     Checks the deprecation warning of .uccignore present in a repo with
     its functionality still working.
     """
+    # clean-up cached `additional_packaging` module when running all tests
+    sys.modules.pop("additional_packaging", "")
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
