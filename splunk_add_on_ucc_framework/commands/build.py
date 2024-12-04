@@ -582,6 +582,7 @@ def generate(
     removed_list = _remove_listed_files(ignore_list)
     if removed_list:
         logger.info("Removed:\n{}".format("\n".join(removed_list)))
+    utils.check_author_name(source, app_manifest)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
@@ -655,6 +656,8 @@ def generate(
                 "additional_packaging.py is present but does not have `additional_packaging`. "
                 "Skipping additional packaging."
             )
+        # clean-up sys.path manipulation
+        sys.path.pop(0)
 
     if global_config:
         logger.info("Generating OpenAPI file")

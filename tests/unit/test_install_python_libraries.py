@@ -1,12 +1,17 @@
 import os
 import stat
+from collections import namedtuple
 from typing import List
 from unittest import mock
 
 import pytest
+
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
+from splunk_add_on_ucc_framework import (
+    install_python_libraries as install_python_libraries_module,
+)
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
     SplunktaucclibNotFound,
@@ -24,8 +29,9 @@ from splunk_add_on_ucc_framework import global_config as gc
 
 
 class MockSubprocessResult:
-    def __init__(self, returncode):
+    def __init__(self, returncode, stdout=b""):
         self.returncode = returncode
+        self.stdout = stdout
 
 
 @mock.patch("subprocess.run", autospec=True)
@@ -277,8 +283,23 @@ def test_install_libraries_valid_os_libraries(
         "valid_config_with_os_libraries.json"
     )
     global_config = gc.GlobalConfig(global_config_path)
-
-    mock_subprocess_run.return_value = MockSubprocessResult(0)
+    mock_subprocess_run.side_effect = [
+        MockSubprocessResult(0),  # mock subprocess.run from _pip_install
+        MockSubprocessResult(0),  # mock subprocess.run from _pip_install
+        MockSubprocessResult(
+            0, b"Version: 41.0.5"
+        ),  # mock subprocess.run from _pip_is_lib_installed
+        MockSubprocessResult(0),  # mock subprocess.run from _pip_install
+        MockSubprocessResult(
+            0, b"Version: 41.0.5"
+        ),  # mock subprocess.run from _pip_is_lib_installed
+        MockSubprocessResult(0),  # mock subprocess.run from _pip_install
+        MockSubprocessResult(
+            0, b"Version: 1.5.1"
+        ),  # mock subprocess.run from _pip_is_lib_installed
+        MockSubprocessResult(0),  # mock subprocess.run from _pip_install
+        MockSubprocessResult(0),  # mock subprocess.run from _pip_install
+    ]
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -365,15 +386,14 @@ def test_install_libraries_version_mismatch(
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib\n")
 
-    version_mismatch_shell_cmd = (
-        'python3 -m pip show --version cryptography | grep "Version: 41.0.5"'
-    )
+    version_mismatch_shell_cmd = "python3 -m pip show --version cryptography"
     mock_subprocess_run.side_effect = (
-        lambda command, shell=True, env=None, capture_output=True: MockSubprocessResult(
-            1
+        lambda command, shell=True, env=None, capture_output=True: (
+            MockSubprocessResult(1)
+            if command == version_mismatch_shell_cmd
+            and ucc_lib_target == env["PYTHONPATH"]
+            else MockSubprocessResult(0, b"Version: 40.0.0")
         )
-        if command == version_mismatch_shell_cmd and ucc_lib_target == env["PYTHONPATH"]
-        else MockSubprocessResult(0)
     )
 
     with pytest.raises(CouldNotInstallRequirements):
@@ -507,6 +527,19 @@ def test_validate_conflicting_paths_empty_list():
 def test_is_pip_lib_installed_wrong_arguments():
     with pytest.raises(InvalidArguments):
         _pip_is_lib_installed("i", "t", "l", allow_higher_version=True)
+
+
+def test_is_pip_lib_installed_do_not_write_bytecode(monkeypatch):
+    Result = namedtuple("Result", ["returncode", "stdout", "stderr"])
+
+    def run(command, env):
+        assert command == "python3 -m pip show --version libname"
+        assert env["PYTHONPATH"] == "target"
+        assert env["PYTHONDONTWRITEBYTECODE"] == "1"
+        return Result(0, b"Version: 1.0.0", b"")
+
+    monkeypatch.setattr(install_python_libraries_module, "_subprocess_run", run)
+    assert _pip_is_lib_installed("python3", "target", "libname")
 
 
 @mock.patch("subprocess.run", autospec=True)

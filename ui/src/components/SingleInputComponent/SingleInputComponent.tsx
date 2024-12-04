@@ -128,7 +128,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
             return;
         }
 
-        let current = true;
+        let mounted = true;
         const abortController = new AbortController();
 
         const backendCallOptions = {
@@ -145,7 +145,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         setLoading(true);
         getRequest<{ entry: FilterResponseParams }>(backendCallOptions)
             .then((data) => {
-                if (current) {
+                if (mounted) {
                     setOptions(
                         generateOptions(
                             filterResponse(data.entry, labelField, valueField, allowList, denyList)
@@ -155,16 +155,16 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 }
             })
             .catch(() => {
-                if (current) {
+                if (mounted) {
                     setLoading(false);
+                    setOptions([]);
                 }
-                setOptions([]);
             });
 
         // eslint-disable-next-line consistent-return
         return () => {
-            abortController.abort('Operation canceled.');
-            current = false;
+            mounted = false;
+            abortController.abort();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dependencyValues]);

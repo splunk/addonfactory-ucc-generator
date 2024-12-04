@@ -503,6 +503,14 @@ export const MockRowDataForStatusCount = {
     messages: [],
 };
 
+export const MockRowDataTogglingResponseDisableTrue = {
+    entry: [{ content: { disabled: true } }],
+};
+
+export const MockRowDataTogglingResponseDisableFalse = {
+    entry: [{ content: { disabled: false } }],
+};
+
 export const ServerHandlers = [
     http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_account`, () =>
         HttpResponse.json(MockRowData)

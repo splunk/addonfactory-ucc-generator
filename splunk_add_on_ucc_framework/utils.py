@@ -18,7 +18,8 @@ import logging
 import shutil
 from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
-from os.path import dirname, exists, isdir, join
+from os.path import dirname, exists, isdir, join, isfile
+from splunk_add_on_ucc_framework.app_manifest import AppManifest
 from typing import Any, Dict
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -36,6 +37,26 @@ def get_j2_env() -> jinja2.Environment:
     return jinja2.Environment(
         loader=jinja2.FileSystemLoader(join(dirname(__file__), "templates"))
     )
+
+
+def get_license_path(file_name: str) -> str:
+    return join(dirname(__file__), "templates", "Licenses", f"{file_name}.txt")
+
+
+def check_author_name(source: str, app_manifest: AppManifest) -> None:
+    check_path = join(source, "default", "app.conf")
+    if isfile(check_path):
+        app_conf = conf_parser.TABConfigParser()
+        app_conf.read(check_path)
+        app_conf_content = app_conf.item_dict()
+        if (
+            app_manifest.get_authors()[0]["name"]
+            != app_conf_content["launcher"]["author"]
+        ):
+            logger.warning(
+                "Conflicting author names are identified between app.manifest and app.conf in the source directory. "
+                "Please specify the author name in app.manifest."
+            )
 
 
 def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> None:

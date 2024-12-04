@@ -8,6 +8,7 @@ export type RowDataFields = {
     disabled?: boolean;
     id?: string;
     index?: string;
+    __toggleShowSpinner?: boolean;
 } & AcceptableFormRecord;
 
 // serviceName > specificRowName > dataForRow

@@ -5,7 +5,6 @@ import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
 
-jest.mock('immutability-helper');
 jest.mock('../../util/util');
 
 const handleClose = jest.fn();
