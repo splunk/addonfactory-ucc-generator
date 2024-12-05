@@ -1,7 +1,10 @@
 import { getStoryContext, TestRunnerConfig } from '@storybook/test-runner';
-import '../src/tests/expectExtenders';
+import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 const config: TestRunnerConfig = {
+    setup() {
+        expect.extend({ toMatchImageSnapshot });
+    },
     async preVisit(page, context) {
         const storyContext = await getStoryContext(page, context);
         const parameters = storyContext.parameters;

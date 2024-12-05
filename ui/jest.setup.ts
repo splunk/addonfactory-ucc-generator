@@ -13,11 +13,11 @@ configure({ testIdAttribute: 'data-test' });
 /**
  * MSW mocking
  */
-beforeAll(() => {
+beforeAll(() =>
     server.listen({
         onUnhandledRequest: 'warn',
-    });
-});
+    })
+);
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
