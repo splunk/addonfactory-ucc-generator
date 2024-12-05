@@ -9,7 +9,7 @@ import { getBuildDirPath } from '../../util/script';
 import mockCustomControlMockForTest from '../CustomControl/CustomControlMockForTest';
 import {
     getGlobalConfigMockCustomControl,
-    getGlobalConfigMockGroupsFoInputPage,
+    getGlobalConfigMockGroupsForInputPage,
     getGlobalConfigMockGroupsForConfigPage,
 } from './BaseFormConfigMock';
 
@@ -97,7 +97,7 @@ it.each([
     },
     {
         page: 'inputs' as const,
-        config: getGlobalConfigMockGroupsFoInputPage(),
+        config: getGlobalConfigMockGroupsForInputPage(),
         service: 'demo_input',
     },
 ])('entities grouping for page works properly %s', async ({ config, page, service }) => {
