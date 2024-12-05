@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/jest-globals';
-
 import { configure } from '@testing-library/react';
+
 import { server } from './src/mocks/server';
+import { toBeDisabled, toBeEnabled } from './src/tests/expectExtenders';
 
 /**
  * Configure test attributes
@@ -12,11 +13,15 @@ configure({ testIdAttribute: 'data-test' });
 /**
  * MSW mocking
  */
-beforeAll(() =>
+beforeAll(() => {
     server.listen({
         onUnhandledRequest: 'warn',
-    })
-);
+    });
+    expect.extend({
+        toBeDisabled,
+        toBeEnabled,
+    });
+});
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
