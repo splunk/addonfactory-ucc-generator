@@ -1,3 +1,5 @@
+import { toMatchImageSnapshot } from 'jest-image-snapshot';
+
 import { invariant } from '../util/invariant';
 
 expect.extend({
@@ -42,6 +44,7 @@ expect.extend({
                 `Attribute "aria-disabled" is incorrect expected "true", got ${ariaDisabled}`,
         };
     },
+    toMatchImageSnapshot,
 });
 
 declare global {
