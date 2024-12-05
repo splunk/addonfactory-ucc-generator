@@ -11,7 +11,7 @@ import TableContext from '../../context/TableContext';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
-import { UCCButton } from '../Button/Button';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;

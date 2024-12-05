@@ -5,7 +5,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
 
 import BaseFormView from './BaseFormView/BaseFormView';
-import { UCCButton } from './Button/Button';
+import { UCCButton } from './UCCButton/UCCButton';
 import { getRequest, generateEndPointUrl } from '../util/api';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';

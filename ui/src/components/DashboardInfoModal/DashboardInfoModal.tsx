@@ -6,7 +6,7 @@ import Heading from '@splunk/react-ui/Heading';
 import P from '@splunk/react-ui/Paragraph';
 import QuestionCircle from '@splunk/react-icons/QuestionCircle';
 
-import { UCCButton } from '../Button/Button';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 700px;

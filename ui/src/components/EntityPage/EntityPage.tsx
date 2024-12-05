@@ -15,7 +15,7 @@ import { SubTitleComponent } from '../../pages/Input/InputPageStyle';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
-import { UCCButton } from '../Button/Button';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 interface EntityPageProps {
     handleRequestClose: () => void;

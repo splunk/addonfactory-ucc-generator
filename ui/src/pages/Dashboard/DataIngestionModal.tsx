@@ -10,7 +10,7 @@ import Checkmark from '@splunk/react-icons/Checkmark';
 import P from '@splunk/react-ui/Paragraph';
 
 import { makeVisualAdjustmentsOnDataIngestionModal } from './utils';
-import { UCCButton } from '../../components/Button/Button';
+import { UCCButton } from '../../components/UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 60vw;

@@ -4,7 +4,7 @@ import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
 
 import { getFormattedMessage } from '../../util/messageUtil';
-import { UCCButton } from '../Button/Button';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 600px;

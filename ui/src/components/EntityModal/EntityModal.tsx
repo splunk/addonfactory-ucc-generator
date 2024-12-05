@@ -8,7 +8,7 @@ import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes'
 import BaseFormView from '../BaseFormView/BaseFormView';
 import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
-import { UCCButton } from '../Button/Button';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;

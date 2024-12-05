@@ -15,7 +15,7 @@ import CustomMenu from '../CustomMenu';
 import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
-import { UCCButton } from '../Button/Button';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
