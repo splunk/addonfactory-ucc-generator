@@ -4,7 +4,7 @@ import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
 
 import { getFormattedMessage } from '../../util/messageUtil';
-import { StyledButton } from '../../pages/EntryPageStyle';
+import { UCCButton } from '../Button/Button';
 
 const ModalWrapper = styled(Modal)`
     width: 600px;
@@ -31,7 +31,7 @@ function ErrorModal(props: ErrorModalProps) {
                 </Message>
             </Modal.Body>
             <Modal.Footer>
-                <StyledButton appearance="primary" onClick={handleRequestClose} label="OK" />
+                <UCCButton onClick={handleRequestClose} label="OK" />
             </Modal.Footer>
         </ModalWrapper>
     );

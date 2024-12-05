@@ -8,8 +8,9 @@ import Dropdown from '@splunk/react-ui/Dropdown';
 import Menu from '@splunk/react-ui/Menu';
 import Checkmark from '@splunk/react-icons/Checkmark';
 import P from '@splunk/react-ui/Paragraph';
-import { StyledButton } from '../EntryPageStyle';
+
 import { makeVisualAdjustmentsOnDataIngestionModal } from './utils';
+import { UCCButton } from '../../components/Button/Button';
 
 const ModalWrapper = styled(Modal)`
     width: 60vw;
@@ -162,10 +163,9 @@ export const DataIngestionModal = ({
                             }
                         }}
                     />
-                    <StyledButton
+                    <UCCButton
                         id="done_button_footer"
                         className="footerBtn"
-                        appearance="primary"
                         onClick={handleRequestClose}
                         label={acceptBtnLabel}
                     />

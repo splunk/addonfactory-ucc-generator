@@ -7,10 +7,10 @@ import { Typography } from '@splunk/react-ui/Typography';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
+import { UCCButton } from '../Button/Button';
 import TableFilter from './TableFilter';
 import { TableSelectBoxWrapper } from './CustomTableStyle';
 import { PAGE_INPUT } from '../../constants/pages';
-import { StyledButton } from '../../pages/EntryPageStyle';
 import { InteractAllStatusButtons } from '../InteractAllStatusButton';
 import { useTableContext } from '../../context/useTableContext';
 
@@ -124,13 +124,7 @@ function TableHeader({
                     alwaysShowLastPageLink
                     totalPages={Math.ceil(totalElement / pageSize)}
                 />
-                {isTabs && (
-                    <StyledButton
-                        label={_('Add')}
-                        appearance="primary"
-                        onClick={handleRequestModalOpen}
-                    />
-                )}
+                {isTabs && <UCCButton label={_('Add')} onClick={handleRequestModalOpen} />}
             </div>
             <InteractAllStatusButtons
                 displayActionBtnAllRows={displayActionBtnAllRows}

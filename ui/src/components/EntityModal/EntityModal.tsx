@@ -1,15 +1,14 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
-import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { _ } from '@splunk/ui-utils/i18n';
-
 import { ButtonClickHandler } from '@splunk/react-ui/Button';
+
 import { Mode, MODE_CLONE, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
-import { StyledButton } from '../../pages/EntryPageStyle';
 import BaseFormView from '../BaseFormView/BaseFormView';
 import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
+import { UCCButton } from '../Button/Button';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
@@ -33,7 +32,7 @@ interface EntityModalState {
 class EntityModal extends Component<EntityModalProps, EntityModalState> {
     form: React.RefObject<BaseFormView>;
 
-    buttonText: string | ReactElement;
+    buttonText: string;
 
     constructor(props: EntityModalProps) {
         super(props);
@@ -98,18 +97,17 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
                     </PageContext.Consumer>
                 </Modal.Body>
                 <Modal.Footer>
-                    <StyledButton
+                    <UCCButton
                         appearance="secondary"
                         onClick={this.handleRequestClose}
                         label={_('Cancel')}
-                        disabled={this.state.isSubmititng && 'dimmed'}
+                        disabled={this.state.isSubmititng}
                     />
-                    <StyledButton
+                    <UCCButton
                         className="saveBtn"
-                        appearance="primary"
-                        label={this.state.isSubmititng ? <WaitSpinner /> : this.buttonText}
+                        label={this.buttonText}
+                        loading={this.state.isSubmititng}
                         onClick={this.handleSubmit}
-                        disabled={this.state.isSubmititng && 'dimmed'}
                     />
                 </Modal.Footer>
             </ModalWrapper>

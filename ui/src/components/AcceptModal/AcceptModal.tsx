@@ -2,7 +2,8 @@ import React from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
-import { StyledButton } from '../../pages/EntryPageStyle';
+
+import { UCCButton } from '../Button/Button';
 
 const ModalWrapper = styled(Modal)`
     width: 600px;
@@ -30,13 +31,11 @@ function AcceptModal(props: AcceptModalProps) {
                 </Message>
             </Modal.Body>
             <Modal.Footer>
-                <StyledButton
-                    appearance="primary"
+                <UCCButton
                     onClick={() => props.handleRequestClose(false)}
                     label={props.declineBtnLabel || 'Cancel'}
                 />
-                <StyledButton
-                    appearance="primary"
+                <UCCButton
                     onClick={() => props.handleRequestClose(true)}
                     label={props.acceptBtnLabel || 'OK'}
                 />

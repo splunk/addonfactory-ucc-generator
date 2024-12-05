@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 
 import { _ } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
-import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 import BaseFormView from './BaseFormView/BaseFormView';
-import { StyledButton } from '../pages/EntryPageStyle';
+import { UCCButton } from './Button/Button';
 import { getRequest, generateEndPointUrl } from '../util/api';
 import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
@@ -88,12 +87,11 @@ function ConfigurationFormView({ serviceName }) {
                 )}
             </PageContext.Consumer>
             <ButtonWrapper>
-                <StyledButton
+                <UCCButton
                     className="saveBtn"
-                    appearance="primary"
-                    label={isSubmitting ? <WaitSpinner /> : _('Save')}
+                    label={_('Save')}
                     onClick={handleSubmit}
-                    disabled={isSubmitting && 'dimmed'}
+                    loading={isSubmitting}
                 />
             </ButtonWrapper>
         </>
