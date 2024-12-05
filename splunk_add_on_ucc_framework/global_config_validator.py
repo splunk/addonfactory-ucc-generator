@@ -551,41 +551,29 @@ class GlobalConfigValidator:
             # no more dependent modification fields
             visited[current_field] = DEAD_END
             return visited
-        else:
-            for influenced_field in current_field_mods["influenced_fields"]:
-                if influenced_field not in all_entity_fields:
-                    raise GlobalConfigValidatorException(
-                        f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
-                    )
-                if (
-                    current_field
-                    in current_field_mods["influenced_fields_value_change"]
-                ):
-                    # field can't modify itself value
-                    raise GlobalConfigValidatorException(
-                        f"""Field '{current_field}' tries to modify itself value"""
-                    )
-                    # field can modify itself except value field
-                if (
-                    visited[influenced_field] == VISITING
-                    and influenced_field != current_field
-                    and (
-                        influenced_field
-                        in current_field_mods["influenced_fields_value_change"]
-                    )  # it is conserning only if circular dependency is about value
-                ):
+
+        if current_field in current_field_mods["influenced_fields_value_change"]:
+            # field can modify itself except "value" property
+            raise GlobalConfigValidatorException(
+                f"""Field '{current_field}' tries to modify itself value"""
+            )
+
+        for influenced_field in current_field_mods["influenced_fields"]:
+            if influenced_field not in all_entity_fields:
+                raise GlobalConfigValidatorException(
+                    f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
+                )
+
+            if influenced_field in current_field_mods["influenced_fields_value_change"]:
+                if visited[influenced_field] == VISITING:
                     raise GlobalConfigValidatorException(
                         f"""Circular modifications for field '{influenced_field}' in field '{current_field}'"""
                     )
-                else:
-                    # check next field only if value is changed
-                    if (
-                        influenced_field
-                        in current_field_mods["influenced_fields_value_change"]
-                    ):
-                        visited = self._is_circular_modification(
-                            mods, visited, all_entity_fields, influenced_field
-                        )
+                # check next influenced by value change field
+                visited = self._is_circular_modification(
+                    mods, visited, all_entity_fields, influenced_field
+                )
+
         # All dependent modifications fields are dead_end
         visited[current_field] = DEAD_END
         return visited
