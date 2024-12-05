@@ -1,4 +1,5 @@
 import { getStoryContext, TestRunnerConfig } from '@storybook/test-runner';
+import '../src/tests/expectExtenders';
 
 const config: TestRunnerConfig = {
     async preVisit(page, context) {
