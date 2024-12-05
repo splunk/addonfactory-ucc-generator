@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn } from '@storybook/test';
+import { fn, userEvent, within } from '@storybook/test';
+
 import BaseFormView from '../BaseFormView';
 import {
     PAGE_CONFIG_BOTH_OAUTH,
@@ -17,6 +18,8 @@ import {
     getGlobalConfigMockGroupsForConfigPage,
     getGlobalConfigMockModificationToGroupsConfig,
 } from '../BaseFormConfigMock';
+import { getGlobalConfigMockModificationToFieldItself } from '../tests/configMocks';
+import { invariant } from '../../../util/invariant';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
@@ -141,5 +144,33 @@ export const GroupModificationsConfig: Story = {
         handleFormSubmit: fn(),
         config: getGlobalConfigMockModificationToGroupsConfig(),
         platform: 'cloud',
+    },
+};
+
+export const FieldModifyItself: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'account',
+        mode: 'create' as Mode,
+        page: 'configuration',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getGlobalConfigMockModificationToFieldItself(),
+    },
+};
+
+export const FieldModifyItselfAfterMods: Story = {
+    args: FieldModifyItself.args,
+    play: async ({ canvasElement }) => {
+        const canvas = within(canvasElement);
+
+        const modifyInputText = canvas
+            .getAllByRole('textbox')
+            .find((el) => el.getAttribute('value') === 'default value');
+
+        invariant(modifyInputText, 'modification input field should be defined');
+
+        await userEvent.clear(modifyInputText);
+        await userEvent.type(modifyInputText, 'modify itself');
     },
 };

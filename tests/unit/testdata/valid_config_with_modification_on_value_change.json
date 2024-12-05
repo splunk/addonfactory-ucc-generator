@@ -54,6 +54,10 @@
                                         {
                                             "fieldId": "text2",
                                             "disabled": false
+                                        },
+                                        {
+                                            "fieldId": "text1",
+                                            "label": "change label for itself"
                                         }
                                     ]
                                 },
