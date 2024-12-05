@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/jest-globals';
 import { configure } from '@testing-library/react';
 
 import { server } from './src/mocks/server';
-import { toBeDisabled, toBeEnabled } from './src/tests/expectExtenders';
+import './src/tests/expectExtenders';
 
 /**
  * Configure test attributes
@@ -16,10 +16,6 @@ configure({ testIdAttribute: 'data-test' });
 beforeAll(() => {
     server.listen({
         onUnhandledRequest: 'warn',
-    });
-    expect.extend({
-        toBeDisabled,
-        toBeEnabled,
     });
 });
 afterEach(() => server.resetHandlers());
