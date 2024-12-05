@@ -128,21 +128,23 @@ it('verify modification after text components change', async () => {
     };
 
     expect(componentInput).toHaveAttribute('readonly');
-    expect(componentInput.getAttribute('aria-disabled')).toBe('true');
+    expect(componentInput).toHaveAttribute('aria-disabled', 'true');
+
     verifyAllProps(componentParentElement, componentInput, mods1Field1);
 
     expect(component2Input).toHaveAttribute('readonly');
-    expect(component2Input.getAttribute('aria-disabled')).toBe('true');
+    expect(component2Input).toHaveAttribute('aria-disabled', 'true');
+
     verifyAllProps(component2ParentElement, component2Input, mods1Field2);
 
     await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
 
     expect(componentInput).not.toHaveAttribute('readonly');
-    expect(componentInput.getAttribute('aria-disabled')).toBe('false');
+    expect(componentInput).toHaveAttribute('aria-disabled', 'false');
     verifyAllProps(componentParentElement, componentInput, mods2Field1);
 
     expect(component2Input).not.toHaveAttribute('readonly');
-    expect(component2Input.getAttribute('aria-disabled')).toBe('false');
+    expect(component2Input).toHaveAttribute('aria-disabled', 'false');
     verifyAllProps(component2ParentElement, component2Input, mods2Field2);
 });
 

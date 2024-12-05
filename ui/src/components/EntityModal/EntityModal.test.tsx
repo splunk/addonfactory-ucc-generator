@@ -27,6 +27,18 @@ import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
 
+const isTextDisabled = (field: HTMLElement | null | Element) => {
+    invariant(field);
+    expect(field).toHaveAttribute('readonly');
+    expect(field).toHaveAttribute('aria-disabled', 'true');
+};
+
+const isTextEnabled = (field: HTMLElement | null | Element) => {
+    invariant(field);
+    expect(field).not.toHaveAttribute('readonly');
+    expect(field).toHaveAttribute('aria-disabled', 'false');
+};
+
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
 
@@ -62,8 +74,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('false');
+        isTextEnabled(oauthTextBox);
     });
 
     it('Oauth Oauth - disableonEdit = true, oauth field disabled on edit', async () => {
@@ -83,8 +94,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('true');
+        isTextDisabled(oauthTextBox);
     });
 
     it('Oauth Basic - Enable field equal false, so field disabled', async () => {
@@ -104,8 +114,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         const oauthTextBox = getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('true');
+        isTextDisabled(oauthTextBox);
     });
 
     it('if oauth field not disabled with create after disableonEdit true', async () => {
@@ -123,8 +132,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('false');
+        isTextEnabled(oauthTextBox);
     });
 });
 
@@ -167,8 +175,7 @@ describe('Options - Enable field property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('true');
+        isTextDisabled(oauthTextBox);
     });
 
     it('Oauth Basic - Enable field equal false, so field disabled', async () => {
@@ -186,8 +193,7 @@ describe('Options - Enable field property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('true');
+        isTextDisabled(oauthTextBox);
     });
 
     it('Oauth Basic - Fully enabled field, enabled: true, disableonEdit: false', async () => {
@@ -205,8 +211,7 @@ describe('Options - Enable field property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('readonly');
-        expect(oauthTextBox?.getAttribute('aria-disabled')).toBe('false');
+        isTextEnabled(oauthTextBox);
     });
 });
 
