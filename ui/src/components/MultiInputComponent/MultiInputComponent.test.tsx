@@ -76,7 +76,7 @@ it('renders as disabled correctly', () => {
     renderFeature({ disabled: true });
     const inputComponent = screen.getByTestId('multiselect');
     expect(inputComponent).toBeInTheDocument();
-    expect(inputComponent.getAttribute('aria-disabled')).toEqual('true');
+    expect(inputComponent).toHaveAttribute('aria-disabled', 'true');
 });
 
 it.each(defaultInputProps.controlOptions.items)('handler called correctly', async (item) => {

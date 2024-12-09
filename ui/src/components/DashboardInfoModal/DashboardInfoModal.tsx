@@ -6,7 +6,7 @@ import Heading from '@splunk/react-ui/Heading';
 import P from '@splunk/react-ui/Paragraph';
 import QuestionCircle from '@splunk/react-icons/QuestionCircle';
 
-import { StyledButton } from '../../pages/EntryPageStyle';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 700px;
@@ -48,15 +48,14 @@ function DashboardInfoModal(props: DashboardInfoModalProps) {
             </Modal.Body>
             <Modal.Footer>
                 {props?.troubleshootingButton?.link ? ( // to do change it into troubleshooting link
-                    <StyledButton
+                    <UCCButton
                         icon={<QuestionCircle width={16} height={16} />}
                         to={props?.troubleshootingButton?.link}
                         label={props.troubleshootingButton?.label || 'Troubleshooting {add-on}'}
                         openInNewContext
                     />
                 ) : null}
-                <StyledButton
-                    appearance="primary"
+                <UCCButton
                     onClick={() => props.handleRequestClose()}
                     label={props.closeBtnLabel || 'Close'}
                 />

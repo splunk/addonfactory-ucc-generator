@@ -4511,7 +4511,16 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@^29.5.14":
+"@types/jest-image-snapshot@^6.4.0":
+  version "6.4.0"
+  resolved "https://registry.npmjs.org/@types/jest-image-snapshot/-/jest-image-snapshot-6.4.0.tgz#641054d2fa2ff130a49c844ee7a9a68f281b6017"
+  integrity sha512-8TQ/EgqFCX0UWSpH488zAc21fCkJNpZPnnp3xWFMqElxApoJV5QOoqajnVRV7AhfF0rbQWTVyc04KG7tXnzCPA==
+  dependencies:
+    "@types/jest" "*"
+    "@types/pixelmatch" "*"
+    ssim.js "^3.1.1"
+
+"@types/jest@*", "@types/jest@^29.5.14":
   version "29.5.14"
   resolved "https://registry.npmjs.org/@types/jest/-/jest-29.5.14.tgz#2b910912fa1d6856cadcd0c1f95af7df1d6049e5"
   integrity sha512-ZN+4sdnLUbo8EVvVc2ao0GFW6oVrQRPn4K2lglySj7APvSrgzxHiNNK99us4WDMi57xxA2yggblIAMNhXOotLQ==
@@ -4612,6 +4621,13 @@
   version "3.0.5"
   resolved "https://registry.npmjs.org/@types/pbf/-/pbf-3.0.5.tgz#a9495a58d8c75be4ffe9a0bd749a307715c07404"
   integrity sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==
+
+"@types/pixelmatch@*":
+  version "5.2.6"
+  resolved "https://registry.npmjs.org/@types/pixelmatch/-/pixelmatch-5.2.6.tgz#fba6de304ac958495f27d85989f5c6bb7499a686"
+  integrity sha512-wC83uexE5KGuUODn6zkm9gMzTwdY5L0chiK+VrKcDfEjzxh1uadlWTvOmAbCpnM9zx/Ww3f8uKlYQVnO/TrqVg==
+  dependencies:
+    "@types/node" "*"
 
 "@types/prop-types@*":
   version "15.7.13"
