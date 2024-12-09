@@ -533,7 +533,7 @@ class GlobalConfigValidator:
                             f"Service {service['name']} uses group field {group_field} which is not defined in entity"
                         )
 
-    def _is_circular(
+    def _is_circular_modification(
         self,
         mods: List[Any],
         visited: Dict[str, str],
@@ -554,61 +554,73 @@ class GlobalConfigValidator:
             # no more dependent modification fields
             visited[current_field] = DEAD_END
             return visited
-        else:
-            for influenced_field in current_field_mods["influenced_fields"]:
-                if influenced_field not in all_entity_fields:
-                    raise GlobalConfigValidatorException(
-                        f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
-                    )
-                if influenced_field == current_field:
-                    raise GlobalConfigValidatorException(
-                        f"""Field '{current_field}' tries to modify itself"""
-                    )
+
+        if current_field in current_field_mods["influenced_fields_value_change"]:
+            # field can modify itself except "value" property
+            raise GlobalConfigValidatorException(
+                f"""Field '{current_field}' tries to modify itself value"""
+            )
+
+        for influenced_field in current_field_mods["influenced_fields"]:
+            if influenced_field not in all_entity_fields:
+                raise GlobalConfigValidatorException(
+                    f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
+                )
+
+            if influenced_field in current_field_mods["influenced_fields_value_change"]:
                 if visited[influenced_field] == VISITING:
                     raise GlobalConfigValidatorException(
                         f"""Circular modifications for field '{influenced_field}' in field '{current_field}'"""
                     )
-                else:
-                    visited = self._is_circular(
-                        mods, visited, all_entity_fields, influenced_field
-                    )
+                # check next influenced by value change field
+                visited = self._is_circular_modification(
+                    mods, visited, all_entity_fields, influenced_field
+                )
+
         # All dependent modifications fields are dead_end
         visited[current_field] = DEAD_END
         return visited
 
-    def _check_if_circular(
+    def _check_if_circular_modification(
         self,
         all_entity_fields: List[Any],
         fields_with_mods: List[Any],
         modifications: List[Any],
     ) -> None:
         visited = {field: "not_visited" for field in all_entity_fields}
-
         for start_field in fields_with_mods:
             # DFS algorithm for all fields with modifications
-            visited = self._is_circular(
+            visited = self._is_circular_modification(
                 modifications, visited, all_entity_fields, start_field
             )
 
     @staticmethod
     def _get_mods_data_for_single_entity(
-        fields_with_mods: List[Any],
-        all_modifications: List[Any],
         entity: Dict[str, Any],
     ) -> List[Any]:
         """
-        Add modification entity data to lists and returns them
+        Get modification entity data as lists
         """
+        entity_modifications = []
         if "modifyFieldsOnValue" in entity:
+            influenced_fields_value_change = set()
             influenced_fields = set()
-            fields_with_mods.append(entity["field"])
             for mods in entity["modifyFieldsOnValue"]:
                 for mod in mods["fieldsToModify"]:
                     influenced_fields.add(mod["fieldId"])
-            all_modifications.append(
-                {"fieldId": entity["field"], "influenced_fields": influenced_fields}
+
+                    if (
+                        mod.get("value") is not None
+                    ):  # circular deps are not a problem if not about value
+                        influenced_fields_value_change.add(mod["fieldId"])
+            entity_modifications.append(
+                {
+                    "fieldId": entity["field"],
+                    "influenced_fields": influenced_fields,
+                    "influenced_fields_value_change": influenced_fields_value_change,
+                }
             )
-        return [fields_with_mods, all_modifications]
+        return entity_modifications
 
     @staticmethod
     def _get_all_entities(
@@ -641,10 +653,12 @@ class GlobalConfigValidator:
 
         entities = self._get_all_entities(collections)
         for entity in entities:
-            self._get_mods_data_for_single_entity(
-                fields_with_mods, all_modifications, entity
-            )
             all_fields.append(entity["field"])
+
+            if "modifyFieldsOnValue" in entity:
+                fields_with_mods.append(entity["field"])
+                entity_mods = self._get_mods_data_for_single_entity(entity)
+                all_modifications.extend(entity_mods)
 
         return [fields_with_mods, all_modifications, all_fields]
 
@@ -667,7 +681,7 @@ class GlobalConfigValidator:
                 all_fields_config,
             ) = self._get_all_modification_data(tabs)
 
-            self._check_if_circular(
+            self._check_if_circular_modification(
                 all_fields_config, fields_with_mods_config, all_modifications_config
             )
 
@@ -681,7 +695,7 @@ class GlobalConfigValidator:
                 all_fields_inputs,
             ) = self._get_all_modification_data(services)
 
-            self._check_if_circular(
+            self._check_if_circular_modification(
                 all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs
             )
 
