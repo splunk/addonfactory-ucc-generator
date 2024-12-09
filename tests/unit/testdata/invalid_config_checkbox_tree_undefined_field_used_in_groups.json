@@ -42,8 +42,7 @@
             {
               "type": "CheckboxTree",
               "label": "CheckboxTreeTitle",
-              "field": "api3",
-              "required": true,
+              "field": "test_checkbox_tree",
               "options": {
                 "groups": [
                   {
@@ -52,7 +51,7 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["rowUnderGroup1"]
+                    "fields": ["rowUnderGroup1", "undefinedRow"]
                   },
                   {
                     "label": "Group 3",
@@ -68,21 +67,21 @@
                     "field": "rowWithoutGroup",
                     "checkbox": {
                       "label": "Row without group",
-                      "defaultValue": false
+                      "defaultValue": true
                     }
                   },
                   {
                     "field": "rowUnderGroup1",
                     "checkbox": {
                       "label": "Row under Group 1",
-                      "defaultValue": false
+                      "defaultValue": true
                     }
                   },
                   {
                     "field": "firstRowUnderGroup3",
                     "checkbox": {
                       "label": "first row under group 3",
-                      "defaultValue": false
+                      "defaultValue": true
                     }
                   },
                   {

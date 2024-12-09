@@ -321,6 +321,73 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
+## `CheckboxTree`
+
+See the following example usage:
+
+```json
+ {
+    "type": "CheckboxTree",
+    "label": "CheckboxTreeTitle",
+    "field": "api3",
+    "options": {
+    "groups": [
+        {
+            "label": "Group 1",
+            "options": {
+                "isExpandable": true,
+                "expand": true
+            },
+            "fields": ["rowUnderGroup1"]
+        },
+        {
+            "label": "Group 3",
+            "options": {
+                "isExpandable": true,
+                "expand": true
+            },
+            "fields": ["firstRowUnderGroup3", "secondRowUnderGroup3"]
+        }
+    ],
+    "rows": [
+        {
+            "field": "rowWithoutGroup",
+            "checkbox": {
+                "label": "Row without group",
+                "defaultValue": true
+            }
+        },
+        {
+            "field": "rowUnderGroup1",
+            "checkbox": {
+                "label": "Row under Group 1",
+                "defaultValue": true
+            }
+        },
+        {
+            "field": "firstRowUnderGroup3",
+            "checkbox": {
+                "label": "first row under group 3",
+                "defaultValue": true
+            }
+        },
+        {
+            "field": "secondRowUnderGroup3",
+            "checkbox": {
+                "label": "second row under group 3"
+            }
+        }
+    ]
+    }
+}
+```
+
+This is how it looks in the UI:
+
+![image](../images/components/checkbox_tree_mixed_example.png)
+
+The component maps and unmaps values into a single field in the format `fieldName1,fieldName2,fieldName3`, but only for checked rows. For the given example, it emits the following value: `rowWithoutGroup,rowUnderGroup1,firstRowUnderGroup3`.
+
 ## `Multiple Select`
 
 See the underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).

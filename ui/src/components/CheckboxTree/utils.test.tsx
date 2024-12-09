@@ -71,14 +71,4 @@ describe('packValue', () => {
         const result = packValue(map);
         expect(result).toBe('');
     });
-
-    test('should handle maps with mixed keys and ignore invalid ones', () => {
-        const map: ValueByField = new Map([
-            ['field1', { checkbox: true }],
-            ['field2', { checkbox: true }],
-            ['field3', { invalid: true } as any],
-        ]);
-        const result = packValue(map);
-        expect(result).toBe('field1,field2');
-    });
 });

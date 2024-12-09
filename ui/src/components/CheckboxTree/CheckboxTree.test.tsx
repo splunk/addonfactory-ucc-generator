@@ -10,7 +10,7 @@ const handleChange = jest.fn();
 const defaultCheckboxProps: CheckboxTreeProps = {
     mode: MODE_CREATE,
     field: 'apis',
-    value: 'rowUnderGroup1,requiredField',
+    value: 'rowUnderGroup1,firstRowUnderGroup3',
     label: 'CheckboxTree',
     controlOptions: {
         groups: [
@@ -28,7 +28,7 @@ const defaultCheckboxProps: CheckboxTreeProps = {
                     isExpandable: true,
                     expand: true,
                 },
-                fields: ['requiredField', '160validation'],
+                fields: ['firstRowUnderGroup3', 'secondRowUnderGroup3'],
             },
         ],
         rows: [
@@ -47,16 +47,16 @@ const defaultCheckboxProps: CheckboxTreeProps = {
                 },
             },
             {
-                field: 'requiredField',
+                field: 'firstRowUnderGroup3',
                 checkbox: {
-                    label: 'Required field',
+                    label: 'first row under group 3',
                     defaultValue: false,
                 },
             },
             {
-                field: '160validation',
+                field: 'secondRowUnderGroup3',
                 checkbox: {
-                    label: 'from 1 to 60 validation',
+                    label: 'second row under group 3',
                 },
             },
         ],
@@ -84,8 +84,8 @@ describe('CheckboxTree Component', () => {
         // Verify rows
         expect(screen.getByLabelText('Row without group')).toBeInTheDocument();
         expect(screen.getByLabelText('Row under Group 1')).toBeInTheDocument();
-        expect(screen.getByLabelText('Required field')).toBeInTheDocument();
-        expect(screen.getByLabelText('from 1 to 60 validation')).toBeInTheDocument();
+        expect(screen.getByLabelText('first row under group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('second row under group 3')).toBeInTheDocument();
     });
 
     it('handles "Select All" and "Clear All" functionality', async () => {

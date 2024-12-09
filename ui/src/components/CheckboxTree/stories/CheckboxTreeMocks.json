@@ -59,7 +59,7 @@
                       "isExpandable": true,
                       "expand": true
                     },
-                    "fields": ["requiredField", "160validation"]
+                    "fields": ["firstRowUnderGroup3", "secondRowUnderGroup3"]
                   }
                 ],
                 "rows": [
@@ -78,16 +78,16 @@
                     }
                   },
                   {
-                    "field": "requiredField",
+                    "field": "firstRowUnderGroup3",
                     "checkbox": {
-                      "label": "Required field",
+                      "label": "first row under group 3",
                       "defaultValue": true
                     }
                   },
                   {
-                    "field": "160validation",
+                    "field": "secondRowUnderGroup3",
                     "checkbox": {
-                      "label": "from 1 to 60 validation"
+                      "label": "second row under group 3"
                     }
                   }
                 ]
