@@ -36,7 +36,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
-    ),
+    )
 
 ]
 model = RestModel(fields, name=None)

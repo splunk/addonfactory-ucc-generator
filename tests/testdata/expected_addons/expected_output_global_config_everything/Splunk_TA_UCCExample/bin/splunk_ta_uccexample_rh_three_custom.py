@@ -28,7 +28,7 @@ fields = [
         'disabled',
         required=False,
         validator=None
-    )
+    ),
 
     field.RestField(
         'apis',
@@ -36,7 +36,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
-    ),
+    )
 
 ]
 model = RestModel(fields, name=None)
