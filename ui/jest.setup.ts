@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/jest-globals';
-
 import { configure } from '@testing-library/react';
+
 import { server } from './src/mocks/server';
+import './src/tests/expectExtenders';
 
 /**
  * Configure test attributes

@@ -2,16 +2,16 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
-import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
-import { setUnifiedConfig } from '../../util/util';
-import BaseFormView from './BaseFormView';
-import { getBuildDirPath } from '../../util/script';
-import mockCustomControlMockForTest from '../CustomControl/CustomControlMockForTest';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
+import { getBuildDirPath } from '../../../util/script';
+import { setUnifiedConfig } from '../../../util/util';
 import {
     getGlobalConfigMockCustomControl,
-    getGlobalConfigMockGroupsFoInputPage,
+    getGlobalConfigMockGroupsForInputPage,
     getGlobalConfigMockGroupsForConfigPage,
-} from './BaseFormConfigMock';
+} from '../BaseFormConfigMock';
+import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
+import BaseFormView from '../BaseFormView';
 
 const handleFormSubmit = jest.fn();
 
@@ -97,7 +97,7 @@ it.each([
     },
     {
         page: 'inputs' as const,
-        config: getGlobalConfigMockGroupsFoInputPage(),
+        config: getGlobalConfigMockGroupsForInputPage(),
         service: 'demo_input',
     },
 ])('entities grouping for page works properly %s', async ({ config, page, service }) => {

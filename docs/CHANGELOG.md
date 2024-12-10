@@ -1,5 +1,23 @@
 # Changelog
 
+# [5.54.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.2...v5.54.0) (2024-11-27)
+
+
+### Bug Fixes
+
+* allow packaging from 23.0 ([#1484](https://github.com/splunk/addonfactory-ucc-generator/issues/1484)) ([29accc4](https://github.com/splunk/addonfactory-ucc-generator/commit/29accc40a6c560f0181473627d0552a53af878b4))
+* display newest information in row more info section ([#1445](https://github.com/splunk/addonfactory-ucc-generator/issues/1445)) ([2b34c6b](https://github.com/splunk/addonfactory-ucc-generator/commit/2b34c6b226619d0cfed6582a35181b7705de3983)), closes [#1410](https://github.com/splunk/addonfactory-ucc-generator/issues/1410)
+* required star visibility when using modify prop ([#1489](https://github.com/splunk/addonfactory-ucc-generator/issues/1489)) ([e1fe2b0](https://github.com/splunk/addonfactory-ucc-generator/commit/e1fe2b0b8322c5c49745ee3cc93cf538142325e0))
+* support Windows when checking library version ([#1482](https://github.com/splunk/addonfactory-ucc-generator/issues/1482)) ([db17b5c](https://github.com/splunk/addonfactory-ucc-generator/commit/db17b5c869b174639b0c24e5413bc9b517950940))
+
+
+### Features
+
+* add license during init command ([#1475](https://github.com/splunk/addonfactory-ucc-generator/issues/1475)) ([471294a](https://github.com/splunk/addonfactory-ucc-generator/commit/471294ae8e4c266a2f685aa4c01eb75fd1974db1))
+* confirmation modal when activate/deactivate single input ([#1421](https://github.com/splunk/addonfactory-ucc-generator/issues/1421)) ([34c8ec2](https://github.com/splunk/addonfactory-ucc-generator/commit/34c8ec250861eb06bd1cd4b22b430e5aa7e26a7c))
+* do not create `__pycache__` in lib dir ([#1469](https://github.com/splunk/addonfactory-ucc-generator/issues/1469)) ([ad58e50](https://github.com/splunk/addonfactory-ucc-generator/commit/ad58e50ca2b5588f6824a4da95a15e8c0857f032))
+* **inputs:** show input services status count ([#1430](https://github.com/splunk/addonfactory-ucc-generator/issues/1430)) ([2574451](https://github.com/splunk/addonfactory-ucc-generator/commit/257445159898a2207cdf7a397345c218678c8fcb))
+
 ## [5.53.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.1...v5.53.2) (2024-11-21)
 
 

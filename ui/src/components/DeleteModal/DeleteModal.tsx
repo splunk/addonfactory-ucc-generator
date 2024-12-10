@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
-import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import update from 'immutability-helper';
 import { _ } from '@splunk/ui-utils/i18n';
-import { generateToast } from '../../util/util';
-import { StyledButton } from '../../pages/EntryPageStyle';
 
+import { generateToast } from '../../util/util';
 import { deleteRequest, generateEndPointUrl } from '../../util/api';
 import TableContext from '../../context/TableContext';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
@@ -109,17 +108,16 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
                     <p>{deleteMsg}</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <StyledButton
+                    <UCCButton
                         appearance="secondary"
                         onClick={this.handleRequestClose}
                         label={_('Cancel')}
                         disabled={this.state.isDeleting}
                     />
-                    <StyledButton
-                        appearance="primary"
-                        label={this.state.isDeleting ? <WaitSpinner /> : _('Delete')}
+                    <UCCButton
+                        label={_('Delete')}
                         onClick={this.handleDelete}
-                        disabled={this.state.isDeleting}
+                        loading={this.state.isDeleting}
                     />
                 </Modal.Footer>
             </ModalWrapper>

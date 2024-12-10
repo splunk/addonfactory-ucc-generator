@@ -24,7 +24,7 @@
       "matchManagers": [
         "poetry"
       ],
-      "matchPackagePrefixes": [
+      "matchPackageNames": [
         "importlib-metadata",
         "pytest",
         "pytest-cov",
@@ -32,6 +32,23 @@
       ],
       "matchUpdateTypes": [
         "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Ignore Python version updates",
+      "matchManagers": ["poetry"],
+      "matchPackageNames": ["python"],
+      "enabled": false
+    },
+    {
+      "description": "Ignore mkdocs and its plugins that drop Python 3.7 support",
+      "matchPackageNames": [
+        "/^mkdocs"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
       ],
       "enabled": false
     },

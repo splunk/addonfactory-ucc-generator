@@ -3,7 +3,8 @@ from unittest import mock
 
 import dunamai
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+from os.path import join
 
 from splunk_add_on_ucc_framework import exceptions, utils
 
@@ -50,6 +51,39 @@ def test_get_icons_path():
     expected_path = "/mocked/path/templates/Icons/testIcon.png"
     actual_path = utils.get_icons_path(file_name)
     assert actual_path == expected_path
+
+
+@patch("splunk_add_on_ucc_framework.utils.isfile")
+@patch("splunk_add_on_ucc_framework.utils.conf_parser.TABConfigParser")
+@patch("splunk_add_on_ucc_framework.utils.logger")
+def test_check_author_names_conflict(mock_logger, mock_tab_config_parser, mock_isfile):
+    source = "/path/to/source"
+    app_manifest = MagicMock()
+    app_manifest.get_authors.return_value = [{"name": "Author in Manifest"}]
+
+    mock_isfile.return_value = True
+    app_conf_mock = MagicMock()
+    app_conf_mock.item_dict.return_value = {"launcher": {"author": "Author in Conf"}}
+    mock_tab_config_parser.return_value = app_conf_mock
+    utils.check_author_name(source, app_manifest)
+
+    check_path = join(source, "default", "app.conf")
+    mock_isfile.assert_called_once_with(check_path)
+    mock_logger.warning.assert_called_once_with(
+        "Conflicting author names are identified between app.manifest and app.conf in the source directory. "
+        "Please specify the author name in app.manifest."
+    )
+
+
+@patch("splunk_add_on_ucc_framework.utils.isfile")
+def test_check_author_names_no_conflict(mock_isfile):
+    source = "/path/to/source"
+    app_manifest = MagicMock()
+    app_manifest.get_authors.return_value = [{"name": "Author in Manifest"}]
+
+    mock_isfile.return_value = False
+    utils.check_author_name(source, app_manifest)
+    mock_isfile.assert_called_once_with(join(source, "default", "app.conf"))
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)
