@@ -3144,21 +3144,6 @@
         "options": {
           "$ref": "#/definitions/SaveValidatorHook"
         },
-        "restHandlerName": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. (Do NOT use with restHandlerModule) "
-        },
-        "restHandlerModule": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerClass) "
-        },
-        "restHandlerClass": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
-        },
         "hook": {
           "type": "object",
           "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
