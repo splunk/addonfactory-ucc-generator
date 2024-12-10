@@ -337,7 +337,7 @@ def test_config_validation_modifications_on_change():
     [
         (
             "invalid_config_with_modification_for_field_itself.json",
-            "Field 'text1' tries to modify itself",
+            "Field 'text1' tries to modify itself value",
         ),
         (
             "invalid_config_with_modification_for_unexisiting_fields.json",
