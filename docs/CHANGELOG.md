@@ -1,5 +1,18 @@
 # Changelog
 
+# [5.55.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.54.0...v5.55.0) (2024-12-10)
+
+
+### Bug Fixes
+
+* group elements use all functionalities ([#1500](https://github.com/splunk/addonfactory-ucc-generator/issues/1500)) ([01c88aa](https://github.com/splunk/addonfactory-ucc-generator/commit/01c88aabeb7e33963200c80a427aad7793c46f7a))
+
+
+### Features
+
+* add author during init ([#1483](https://github.com/splunk/addonfactory-ucc-generator/issues/1483)) ([a7c36ff](https://github.com/splunk/addonfactory-ucc-generator/commit/a7c36ffc599af03d67c04830ffa6e5bd65799fc8))
+* **modifyFieldsOnValue:** enable field to modify itself ([#1494](https://github.com/splunk/addonfactory-ucc-generator/issues/1494)) ([3fd0501](https://github.com/splunk/addonfactory-ucc-generator/commit/3fd0501b7a97cbdc4ce4880a2953676c5c6efcfd))
+
 # [5.54.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.53.2...v5.54.0) (2024-11-27)
 
 
