@@ -53,7 +53,7 @@
                                     "fieldsToModify": [
                                         {
                                             "fieldId": "text1",
-                                            "disabled": false
+                                            "value": "value modification"
                                         }
                                     ]
                                 }

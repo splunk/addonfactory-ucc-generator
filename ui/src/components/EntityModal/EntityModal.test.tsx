@@ -62,7 +62,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyEnabled();
     });
 
     it('Oauth Oauth - disableonEdit = true, oauth field disabled on edit', async () => {
@@ -82,7 +82,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyDisabled();
     });
 
     it('Oauth Basic - Enable field equal false, so field disabled', async () => {
@@ -102,7 +102,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         const oauthTextBox = getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyDisabled();
     });
 
     it('if oauth field not disabled with create after disableonEdit true', async () => {
@@ -120,7 +120,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyEnabled();
     });
 });
 
@@ -163,7 +163,7 @@ describe('Options - Enable field property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyDisabled();
     });
 
     it('Oauth Basic - Enable field equal false, so field disabled', async () => {
@@ -181,7 +181,7 @@ describe('Options - Enable field property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyDisabled();
     });
 
     it('Oauth Basic - Fully enabled field, enabled: true, disableonEdit: false', async () => {
@@ -199,7 +199,7 @@ describe('Options - Enable field property', () => {
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
-        expect(oauthTextBox).not.toHaveAttribute('disabled');
+        expect(oauthTextBox).toBeVisuallyEnabled();
     });
 });
 

@@ -8,13 +8,14 @@ import ChevronLeft from '@splunk/react-icons/ChevronLeft';
 import { _ as i18n } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
 import { variables } from '@splunk/themes';
+
 import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
 import CustomMenu from '../CustomMenu';
-import { StyledButton } from '../../pages/EntryPageStyle';
 import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
+import { UCCButton } from '../UCCButton/UCCButton';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
@@ -67,14 +68,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     }, [inputs.services, pageContext.platform]);
 
     const closeReasons = ['clickAway', 'escapeKey', 'offScreen', 'toggleClick'];
-    const toggle = (
-        <StyledButton
-            appearance="primary"
-            id="addInputBtn"
-            label={i18n('Create New Input')}
-            isMenu
-        />
-    );
+    const toggle = <UCCButton id="addInputBtn" label={i18n('Create New Input')} isMenu />;
 
     useEffect(() => {
         if (!isSubMenu) {
@@ -211,9 +205,8 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
 
     // Making a dropdown if we have one service
     const makeInputButton = () => (
-        <StyledButton
+        <UCCButton
             label={getFormattedMessage(100)}
-            appearance="primary"
             id="addInputBtn"
             onClick={() => {
                 handleRequestOpen({ serviceName: services[0].name });

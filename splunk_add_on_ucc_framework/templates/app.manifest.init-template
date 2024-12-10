@@ -9,7 +9,11 @@
         },
         "author": [
             {
+                {% if include_author -%}
+                "name": "{{include_author}}",
+                {%- else -%}
                 "name": "",
+                {%- endif %}
                 "email": null,
                 "company": null
             }
