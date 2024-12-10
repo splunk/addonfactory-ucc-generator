@@ -1,4 +1,4 @@
-from typing import Any, Iterator
+from typing import Any, Iterator, List
 
 import pytest
 
@@ -32,9 +32,7 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
 
     yield
 
-    IGNORED = {
-        "appLogo.png - Failed to load resource: the server responded with a status of 404 (Not Found)",
-    }
+    IGNORED: List[str] = []
 
     browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)
     severe_logs = [
