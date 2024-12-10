@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { getCheckedCheckboxesCount } from './CheckboxTree.utils';
 import {
@@ -26,7 +26,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
     disabled,
     handleParentCheckboxTree,
 }) => {
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [isExpanded, setIsExpanded] = useState(group.options?.expand);
 
     const isParentChecked = useMemo(
         () => group.rows.every((row) => values.get(row.field)?.checkbox),
@@ -34,7 +34,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
     );
 
     const isIndeterminate = useMemo(
-        () => group.rows.some((row) => values.get(row.field)?.checkbox) && !isParentChecked,
+        () => group.rows.some((row) => !isParentChecked && values.get(row.field)?.checkbox),
         [group.rows, values, isParentChecked]
     );
 
@@ -43,11 +43,16 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
         [group, values]
     );
 
+    useEffect(() => {
+        setIsExpanded(group.options?.expand);
+    }, [group.options?.expand, group.rows]);
+
     const toggleCollapse = () => setIsExpanded((prev) => !prev);
 
     const ParentCheckbox = (
         <CheckboxWrapper>
             <input
+                id={`checkbox-${group.label}`}
                 type="checkbox"
                 checked={isParentChecked}
                 ref={(el) => {
@@ -59,7 +64,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
                 onChange={() => handleParentCheckboxTree(group.label, !isParentChecked)}
                 disabled={disabled}
             />
-            <span>{group.label}</span>
+            <label htmlFor={`checkbox-${group.label}`}>{group.label}</label>
         </CheckboxWrapper>
     );
 
@@ -79,7 +84,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
 
     const description = (
         <Description>
-            {checkedCheckboxesCount} of {group.fields.length}
+            {checkedCheckboxesCount} of {group.rows.length}
         </Description>
     );
 

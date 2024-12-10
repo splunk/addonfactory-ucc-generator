@@ -27,16 +27,19 @@ function CheckboxTree(props: CheckboxTreeProps) {
 
     const [values, setValues] = useState(initialValues);
     const [searchForCheckBoxValue, setSearchForCheckBoxValue] = useState('');
-    if (required) {
-        checkValidationForRequired(props.field, props.label, controlOptions.rows);
-    }
+
+    useEffect(() => {
+        if (required) {
+            checkValidationForRequired(field, props.label, controlOptions.rows);
+        }
+    }, [required, field, controlOptions.rows, props.label]);
 
     // Propagate default values on mount if applicable
     useEffect(() => {
         if (shouldUseDefaultValue) {
             handleChange(field, packValue(initialValues), 'CheckboxTree');
         }
-    }, [field, handleChange, shouldUseDefaultValue, initialValues]);
+    }, [shouldUseDefaultValue, field, initialValues, handleChange]);
 
     const handleRowChange = useCallback(
         (newValue: { field: string; checkbox: boolean; text?: string }) => {
@@ -72,27 +75,6 @@ function CheckboxTree(props: CheckboxTreeProps) {
         [controlOptions, field, handleChange]
     );
 
-    const handleCheckboxToggleAll = useCallback(
-        (newCheckboxValue: boolean) => {
-            setValues((prevValues) => {
-                const updatedValues = new Map(prevValues);
-                controlOptions.rows.forEach((row) => {
-                    updatedValues.set(row.field, { checkbox: newCheckboxValue });
-                });
-                handleChange(field, packValue(updatedValues), 'CheckboxTree');
-                return updatedValues;
-            });
-        },
-        [controlOptions.rows, field, handleChange]
-    );
-
-    const handleSearchChange = useCallback(
-        (e: React.SyntheticEvent, { value: searchValue }: SearchChangeData) => {
-            setSearchForCheckBoxValue(searchValue);
-        },
-        []
-    );
-
     const filterRows = useCallback(() => {
         const searchValueLower = searchForCheckBoxValue.toLowerCase();
 
@@ -107,7 +89,17 @@ function CheckboxTree(props: CheckboxTreeProps) {
                           );
 
                     return groupMatches || filteredRows.length > 0
-                        ? { ...row, rows: filteredRows }
+                        ? {
+                              ...row,
+                              rows: filteredRows,
+                              options: {
+                                  ...row.options,
+                                  expand:
+                                      searchValueLower !== '' && row.options?.isExpandable
+                                          ? true
+                                          : row.options?.expand,
+                              },
+                          }
                         : [];
                 }
 
@@ -118,6 +110,35 @@ function CheckboxTree(props: CheckboxTreeProps) {
     }, [flattenedRowsWithGroups, searchForCheckBoxValue]);
 
     const filteredRows = filterRows();
+
+    const handleCheckboxToggleAll = useCallback(
+        (newCheckboxValue: boolean) => {
+            setValues((prevValues) => {
+                const updatedValues = new Map(prevValues);
+
+                filteredRows.forEach((row) => {
+                    if (row && isGroupWithRows(row)) {
+                        row.rows.forEach((childRow) => {
+                            updatedValues.set(childRow.field, { checkbox: newCheckboxValue });
+                        });
+                    } else if (row) {
+                        updatedValues.set(row.field, { checkbox: newCheckboxValue });
+                    }
+                });
+
+                handleChange(field, packValue(updatedValues), 'CheckboxTree');
+                return updatedValues;
+            });
+        },
+        [filteredRows, field, handleChange]
+    );
+
+    const handleSearchChange = useCallback(
+        (e: React.SyntheticEvent, { value: searchValue }: SearchChangeData) => {
+            setSearchForCheckBoxValue(searchValue);
+        },
+        []
+    );
 
     return (
         <>

@@ -26,6 +26,7 @@ export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
         }
         font-size: 14px;
         margin-bottom: ${variables.spacingXSmall};
+        background-color: ${variables.neutral300};
     }
 `;
 
