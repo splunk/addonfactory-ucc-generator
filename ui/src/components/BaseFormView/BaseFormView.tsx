@@ -1259,6 +1259,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         this.entities?.map((e) => {
                             if (e.field === fieldName) {
                                 const temState = this.state?.data?.[e.field];
+
                                 return (
                                     <ControlWrapper
                                         key={e.field}
@@ -1277,6 +1278,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                         markdownMessage={temState?.markdownMessage}
                                         dependencyValues={temState?.dependencyValues || null}
                                         page={this.props.page}
+                                        fileNameToDisplay={temState.fileNameToDisplay}
+                                        modifiedEntitiesData={temState.modifiedEntitiesData}
                                     />
                                 );
                             }

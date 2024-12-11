@@ -18,6 +18,7 @@ def test_ucc_init():
         "demo-addon-for-splunk",
         overwrite=True,
         add_license="MIT License",
+        include_author="test_author",
     )
     expected_folder = os.path.join(
         os.path.dirname(__file__),
@@ -66,4 +67,15 @@ def test_ucc_init_if_same_output_then_sys_exit():
             "Demo Add-on for Splunk",
             "demo_input",
             "1.0.0",
+        )
+
+
+def test_ucc_init_empty_string_passed_for_author():
+    with pytest.raises(SystemExit):
+        init.init(
+            "test_addon",
+            "Demo Add-on for Splunk",
+            "demo_input",
+            "1.0.0",
+            include_author="",
         )
