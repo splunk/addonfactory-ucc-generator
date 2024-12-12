@@ -45,6 +45,14 @@ def test_get_license_path():
     assert actual_path == expected_path
 
 
+@patch("splunk_add_on_ucc_framework.utils.__file__", "/mocked/path/utils")
+def test_get_icons_path():
+    file_name = "testIcon.png"
+    expected_path = "/mocked/path/templates/Icons/testIcon.png"
+    actual_path = utils.get_icons_path(file_name)
+    assert actual_path == expected_path
+
+
 @patch("splunk_add_on_ucc_framework.utils.isfile")
 @patch("splunk_add_on_ucc_framework.utils.conf_parser.TABConfigParser")
 @patch("splunk_add_on_ucc_framework.utils.logger")
