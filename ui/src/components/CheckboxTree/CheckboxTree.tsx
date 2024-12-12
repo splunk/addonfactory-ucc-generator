@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
-import Search from '@splunk/react-ui/Search';
 import { StyledColumnLayout } from './StyledComponent';
 import {
     getDefaultValues,
@@ -12,7 +11,7 @@ import {
 import CheckboxSubTree from './CheckboxSubTree';
 import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { MODE_CREATE } from '../../constants/modes';
-import { CheckboxTreeProps, SearchChangeData, ValueByField } from './types';
+import { CheckboxTreeProps, ValueByField } from './types';
 import { packValue, parseValue } from './utils';
 import { checkValidationForRequired } from './validation';
 
@@ -26,7 +25,6 @@ function CheckboxTree(props: CheckboxTreeProps) {
         : parseValue(props.value);
 
     const [values, setValues] = useState(initialValues);
-    const [searchForCheckBoxValue, setSearchForCheckBoxValue] = useState('');
 
     useEffect(() => {
         if (required) {
@@ -39,7 +37,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
         if (shouldUseDefaultValue) {
             handleChange(field, packValue(initialValues), 'CheckboxTree');
         }
-    }, [shouldUseDefaultValue, field, initialValues, handleChange]);
+    }, [field, handleChange, shouldUseDefaultValue, initialValues]);
 
     const handleRowChange = useCallback(
         (newValue: { field: string; checkbox: boolean; text?: string }) => {
@@ -75,81 +73,24 @@ function CheckboxTree(props: CheckboxTreeProps) {
         [controlOptions, field, handleChange]
     );
 
-    const filterRows = useCallback(() => {
-        const searchValueLower = searchForCheckBoxValue.toLowerCase();
-
-        return flattenedRowsWithGroups
-            .flatMap((row) => {
-                if (isGroupWithRows(row)) {
-                    const groupMatches = row.label.toLowerCase().includes(searchValueLower);
-                    const filteredRows = groupMatches
-                        ? row.rows
-                        : row.rows.filter((childRow) =>
-                              childRow.checkbox?.label?.toLowerCase().includes(searchValueLower)
-                          );
-
-                    return groupMatches || filteredRows.length > 0
-                        ? {
-                              ...row,
-                              rows: filteredRows,
-                              options: {
-                                  ...row.options,
-                                  expand:
-                                      searchValueLower !== '' && row.options?.isExpandable
-                                          ? true
-                                          : row.options?.expand,
-                              },
-                          }
-                        : [];
-                }
-
-                const rowMatches = row.checkbox?.label?.toLowerCase().includes(searchValueLower);
-                return rowMatches ? row : null;
-            })
-            .filter(Boolean);
-    }, [flattenedRowsWithGroups, searchForCheckBoxValue]);
-
-    const filteredRows = filterRows();
-
     const handleCheckboxToggleAll = useCallback(
         (newCheckboxValue: boolean) => {
             setValues((prevValues) => {
                 const updatedValues = new Map(prevValues);
-
-                filteredRows.forEach((row) => {
-                    if (row && isGroupWithRows(row)) {
-                        row.rows.forEach((childRow) => {
-                            updatedValues.set(childRow.field, { checkbox: newCheckboxValue });
-                        });
-                    } else if (row) {
-                        updatedValues.set(row.field, { checkbox: newCheckboxValue });
-                    }
+                controlOptions.rows.forEach((row) => {
+                    updatedValues.set(row.field, { checkbox: newCheckboxValue });
                 });
-
                 handleChange(field, packValue(updatedValues), 'CheckboxTree');
                 return updatedValues;
             });
         },
-        [filteredRows, field, handleChange]
-    );
-
-    const handleSearchChange = useCallback(
-        (e: React.SyntheticEvent, { value: searchValue }: SearchChangeData) => {
-            setSearchForCheckBoxValue(searchValue);
-        },
-        []
+        [controlOptions.rows, field, handleChange]
     );
 
     return (
         <>
-            <Search
-                style={{ width: '320px', marginBottom: '10px' }}
-                inline
-                onChange={handleSearchChange}
-                value={searchForCheckBoxValue}
-            />
             <StyledColumnLayout gutter={5}>
-                {filteredRows.map((row) =>
+                {flattenedRowsWithGroups.map((row) =>
                     row && isGroupWithRows(row) ? (
                         <ColumnLayout.Row key={`group_${row.label}`}>
                             <CheckboxSubTree

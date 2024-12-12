@@ -45,7 +45,3 @@ export interface CheckboxTreeProps {
     handleChange: (field: string, value: string, componentType?: 'CheckboxTree') => void;
     disabled?: boolean;
 }
-
-export type SearchChangeData = {
-    value: string;
-};
