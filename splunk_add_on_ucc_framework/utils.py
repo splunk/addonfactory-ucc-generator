@@ -43,6 +43,10 @@ def get_license_path(file_name: str) -> str:
     return join(dirname(__file__), "templates", "Licenses", f"{file_name}.txt")
 
 
+def get_icons_path(name: str) -> str:
+    return join(dirname(__file__), "templates", "Icons", f"{name}")
+
+
 def check_author_name(source: str, app_manifest: AppManifest) -> None:
     check_path = join(source, "default", "app.conf")
     if isfile(check_path):
