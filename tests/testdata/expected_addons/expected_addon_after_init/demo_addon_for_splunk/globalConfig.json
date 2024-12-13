@@ -44,7 +44,15 @@
                             "field": "api_key",
                             "help": "API key",
                             "required": true,
-                            "encrypted": true
+                            "encrypted": true,
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of API key should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                }
+                            ]
                         }
                     ],
                     "title": "Accounts"
@@ -108,7 +116,15 @@
                             },
                             "help": "Account to use for this input.",
                             "field": "account",
-                            "required": true
+                            "required": true,
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of account name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ]
                         }
                     ],
                     "inputHelperModule": "demo_input_helper",
