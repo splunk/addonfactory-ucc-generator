@@ -23,6 +23,7 @@ logger = log.Logs().get_logger('{{app_name|lower}}_rh_oauth2_token')
 # Map for available proxy type
 _PROXY_TYPE_MAP = {
     'http': socks.PROXY_TYPE_HTTP,
+    # comment the below line if your add-on is not compatible with 'http_no_tunnel' protocol
     'http_no_tunnel': socks.PROXY_TYPE_HTTP_NO_TUNNEL,
     'socks4': socks.PROXY_TYPE_SOCKS4,
     'socks5': socks.PROXY_TYPE_SOCKS5,
@@ -40,7 +41,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         session_key = self.getSessionKey()
         log_level = conf_manager.get_log_level(
             logger=logger,
@@ -50,7 +51,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
             log_stanza="{{log_stanza}}",
             log_level_field="{{log_level_field}}"
         )
-        logger.set_level(log_level)
+        log.Logs().set_level(log_level)
 
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
