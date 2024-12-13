@@ -4,6 +4,7 @@ import { getCheckedCheckboxesCount } from './CheckboxTree.utils';
 import {
     CheckboxContainer,
     CheckboxWrapper,
+    CustomCheckbox,
     Description,
     GroupLabel,
     RowContainer,
@@ -16,7 +17,7 @@ interface CheckboxSubTreeProps {
     values: ValueByField;
     handleRowChange: (newValue: { field: string; checkbox: boolean; text?: string }) => void;
     disabled?: boolean;
-    handleParentCheckboxTree: (groupLabel: string, newCheckboxValue: boolean) => void;
+    handleParentCheckboxForGroup: (groupLabel: string, newCheckboxValue: boolean) => void;
 }
 
 const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
@@ -24,7 +25,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
     values,
     handleRowChange,
     disabled,
-    handleParentCheckboxTree,
+    handleParentCheckboxForGroup,
 }) => {
     const [isExpanded, setIsExpanded] = useState(group.options?.expand);
 
@@ -34,7 +35,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
     );
 
     const isIndeterminate = useMemo(
-        () => group.rows.some((row) => !isParentChecked && values.get(row.field)?.checkbox),
+        () => !isParentChecked && group.rows.some((row) => values.get(row.field)?.checkbox),
         [group.rows, values, isParentChecked]
     );
 
@@ -51,20 +52,14 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
 
     const ParentCheckbox = (
         <CheckboxWrapper>
-            <input
-                id={`checkbox-${group.label}`}
+            <CustomCheckbox
                 type="checkbox"
                 checked={isParentChecked}
-                ref={(el) => {
-                    const inputElement = el as HTMLInputElement | null;
-                    if (inputElement) {
-                        inputElement.indeterminate = isIndeterminate;
-                    }
-                }}
-                onChange={() => handleParentCheckboxTree(group.label, !isParentChecked)}
+                data-indeterminate={isIndeterminate}
+                onChange={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
                 disabled={disabled}
             />
-            <label htmlFor={`checkbox-${group.label}`}>{group.label}</label>
+            {group.label}
         </CheckboxWrapper>
     );
 

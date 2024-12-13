@@ -42,6 +42,6 @@ export interface CheckboxTreeProps {
         field: string,
         validator: (submittedField: string, submittedValue: string) => void
     ) => void;
-    handleChange: (field: string, value: string, componentType?: 'CheckboxTree') => void;
+    handleChange: (field: string, value: string, componentType?: 'checkboxTree') => void;
     disabled?: boolean;
 }

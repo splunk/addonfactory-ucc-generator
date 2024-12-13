@@ -40,7 +40,7 @@
           "title": "Title example",
           "entity": [
             {
-              "type": "CheckboxTree",
+              "type": "checkboxTree",
               "label": "CheckboxTreeTitle",
               "field": "test_checkbox_tree",
               "options": {

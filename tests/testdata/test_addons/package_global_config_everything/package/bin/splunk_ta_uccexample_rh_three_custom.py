@@ -31,7 +31,7 @@ fields = [
     ),
 
     field.RestField(
-        'apis',
+        'checkbox_field',
         required=False,
         encrypted=False,
         default=None,

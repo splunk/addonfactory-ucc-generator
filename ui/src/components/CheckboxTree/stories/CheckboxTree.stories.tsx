@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { fn, userEvent, within } from '@storybook/test';
+import { fn } from '@storybook/test';
 import CheckboxTree from '../CheckboxTree';
 import { MODE_CREATE, MODE_EDIT } from '../../../constants/modes';
 
@@ -153,6 +153,53 @@ export const MixedWithGroups: Story = {
     },
 };
 
+export const MultilineWithGroups: Story = {
+    args: {
+        ...Base.args,
+        value: 'collect_collaboration',
+        controlOptions: {
+            groups: [
+                {
+                    label: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry dummy',
+                    fields: ['lorem_ipsum1'],
+                    options: { isExpandable: true },
+                },
+                {
+                    label: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
+                    fields: ['lorem_ipsum', 'lorem_ipsum2'],
+                    options: { isExpandable: false },
+                },
+            ],
+            rows: [
+                {
+                    field: 'lorem_ipsum1',
+                    checkbox: {
+                        label: 'Lorem ipsum dummy',
+                    },
+                },
+                {
+                    field: 'lorem_ipsum2',
+                    checkbox: {
+                        label: 'Lorem ipsum dummy text',
+                    },
+                },
+                {
+                    field: 'lorem_ipsum',
+                    checkbox: {
+                        label: 'Lorem ipsum',
+                    },
+                },
+                {
+                    field: 'collect_folder_metadata',
+                    checkbox: {
+                        label: 'Collect folder metadata',
+                    },
+                },
+            ],
+        },
+    },
+};
+
 export const CreateMode: Story = {
     args: {
         ...Base.args,
@@ -176,41 +223,5 @@ export const CreateMode: Story = {
                 },
             ],
         },
-    },
-};
-
-export const Search: Story = {
-    args: {
-        ...Base.args,
-        value: undefined,
-        controlOptions: {
-            groups: [
-                {
-                    label: 'Group 1',
-                    fields: ['collect_collaboration', 'collect_file'],
-                    options: { isExpandable: false },
-                },
-            ],
-            rows: [
-                {
-                    field: 'collect_collaboration',
-                    checkbox: {
-                        label: 'Collect folder collaboration',
-                    },
-                },
-                {
-                    field: 'collect_file',
-                    checkbox: {
-                        label: 'Collect file metadata',
-                    },
-                },
-            ],
-        },
-    },
-    play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-        const searchInput = canvas.getByRole('searchbox');
-        const searchText = 'file';
-        await userEvent.type(searchInput, searchText, { delay: 100 });
     },
 };

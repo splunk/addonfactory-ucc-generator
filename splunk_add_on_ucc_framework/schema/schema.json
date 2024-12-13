@@ -1461,9 +1461,9 @@
           "description": "Text displayed next to entity field"
         },
         "type": {
-          "const": "CheckboxTree",
+          "const": "checkboxTree",
           "type": "string",
-          "description": "Exactly: CheckboxTree"
+          "description": "Exactly: checkboxTree"
         },
         "options": {
           "type": "object",

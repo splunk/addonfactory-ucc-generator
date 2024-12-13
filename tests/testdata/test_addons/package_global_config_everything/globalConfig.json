@@ -1573,9 +1573,9 @@
                             "required": true
                         },
                         {
-                            "type": "CheckboxTree",
+                            "type": "checkboxTree",
                             "label": "Event Filters",
-                            "field": "apis",
+                            "field": "checkbox_field",
                             "required": true,
                             "options": {
                                 "groups": [

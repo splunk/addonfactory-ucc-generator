@@ -9,9 +9,9 @@ const handleChange = jest.fn();
 
 const defaultCheckboxProps: CheckboxTreeProps = {
     mode: MODE_CREATE,
-    field: 'apis',
+    field: 'checkbox_field',
     value: 'rowUnderGroup1,firstRowUnderGroup3',
-    label: 'CheckboxTree',
+    label: 'checkboxTree',
     controlOptions: {
         groups: [
             {
@@ -69,11 +69,7 @@ const renderCheckboxTree = (additionalProps?: Partial<CheckboxTreeProps>) => {
     render(<CheckboxTree {...props} />);
 };
 
-describe('CheckboxTree Component', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
+describe('checkboxTree Component', () => {
     it('renders all rows and groups correctly', () => {
         renderCheckboxTree();
 
@@ -100,6 +96,11 @@ describe('CheckboxTree Component', () => {
         allCheckboxes.forEach((checkbox) => expect(checkbox).toBeChecked());
 
         expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith(
+            'checkbox_field',
+            'rowUnderGroup1,firstRowUnderGroup3,rowWithoutGroup,secondRowUnderGroup3',
+            'checkboxTree'
+        );
 
         // "Clear All"
         const clearAllButton = screen.getByText('Clear All');
@@ -107,5 +108,6 @@ describe('CheckboxTree Component', () => {
 
         allCheckboxes.forEach((checkbox) => expect(checkbox).not.toBeChecked());
         expect(handleChange).toHaveBeenCalledTimes(2);
+        expect(handleChange).toHaveBeenLastCalledWith('checkbox_field', '', 'checkboxTree');
     });
 });

@@ -221,7 +221,7 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
 });
 
 export const CheckboxTreeEntity = CommonEditableEntityFields.extend({
-    type: z.literal('CheckboxTree'),
+    type: z.literal('checkboxTree'),
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
     options: CommonEditableEntityOptions.extend({

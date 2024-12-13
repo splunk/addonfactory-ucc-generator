@@ -476,7 +476,7 @@ class GlobalConfigValidator:
             for entity in service["entity"]:
                 if (
                     entity["type"] == "checkboxGroup"
-                    or entity["type"] == "CheckboxTree"
+                    or entity["type"] == "checkboxTree"
                 ):
                     row_field_names = []
                     for row in entity["options"]["rows"]:

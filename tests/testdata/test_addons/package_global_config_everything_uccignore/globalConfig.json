@@ -846,9 +846,9 @@
                             "help": "This is an example checkbox for the input two entity"
                         },
                         {
-                            "type": "CheckboxTree",
+                            "type": "checkboxTree",
                             "label": "Event Filters",
-                            "field": "apiss",
+                            "field": "checkboxtree_field",
                             "required": true,
                             "options": {
                                 "groups": [

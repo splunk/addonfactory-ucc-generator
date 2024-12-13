@@ -40,7 +40,7 @@
           "title": "Title example",
           "entity": [
             {
-              "type": "CheckboxTree",
+              "type": "checkboxTree",
               "label": "CheckboxTreeTitle",
               "field": "api3",
               "options": {

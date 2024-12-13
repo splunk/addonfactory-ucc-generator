@@ -321,13 +321,13 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
-## `CheckboxTree`
+## `checkboxTree`
 
 See the following example usage:
 
 ```json
  {
-    "type": "CheckboxTree",
+    "type": "checkboxTree",
     "label": "CheckboxTreeTitle",
     "field": "api3",
     "options": {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
 import { StyledColumnLayout } from './StyledComponent';
@@ -13,29 +13,32 @@ import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { MODE_CREATE } from '../../constants/modes';
 import { CheckboxTreeProps, ValueByField } from './types';
 import { packValue, parseValue } from './utils';
-import { checkValidationForRequired } from './validation';
 
 function CheckboxTree(props: CheckboxTreeProps) {
-    const { field, handleChange, controlOptions, disabled, required } = props;
-    const flattenedRowsWithGroups = getFlattenRowsWithGroups(controlOptions);
-    const shouldUseDefaultValue =
-        props.mode === MODE_CREATE && (props.value === null || props.value === undefined);
-    const initialValues = shouldUseDefaultValue
-        ? getDefaultValues(controlOptions.rows)
-        : parseValue(props.value);
+    const { field, handleChange, controlOptions, disabled } = props;
+
+    const flattenedRowsWithGroups = useMemo(
+        () => getFlattenRowsWithGroups(controlOptions),
+        [controlOptions]
+    );
+
+    const shouldUseDefaultValue = useMemo(
+        () => props.mode === MODE_CREATE && (props.value === null || props.value === undefined),
+        [props.mode, props.value]
+    );
+
+    const initialValues = useMemo(
+        () =>
+            shouldUseDefaultValue ? getDefaultValues(controlOptions.rows) : parseValue(props.value),
+        [shouldUseDefaultValue, controlOptions.rows, props.value]
+    );
 
     const [values, setValues] = useState(initialValues);
-
-    useEffect(() => {
-        if (required) {
-            checkValidationForRequired(field, props.label, controlOptions.rows);
-        }
-    }, [required, field, controlOptions.rows, props.label]);
 
     // Propagate default values on mount if applicable
     useEffect(() => {
         if (shouldUseDefaultValue) {
-            handleChange(field, packValue(initialValues), 'CheckboxTree');
+            handleChange(field, packValue(initialValues), 'checkboxTree');
         }
     }, [field, handleChange, shouldUseDefaultValue, initialValues]);
 
@@ -43,14 +46,14 @@ function CheckboxTree(props: CheckboxTreeProps) {
         (newValue: { field: string; checkbox: boolean; text?: string }) => {
             setValues((prevValues: ValueByField) => {
                 const updatedValues = getNewCheckboxValues(prevValues, newValue);
-                handleChange(field, packValue(updatedValues), 'CheckboxTree');
+                handleChange(field, packValue(updatedValues), 'checkboxTree');
                 return updatedValues;
             });
         },
         [field, handleChange]
     );
 
-    const handleParentCheckboxTree = useCallback(
+    const handleParentCheckboxForGroup = useCallback(
         (groupLabel: string, newCheckboxValue: boolean) => {
             if (!controlOptions?.groups) {
                 return;
@@ -66,7 +69,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                 group.fields.forEach((item) => {
                     updatedValues.set(item, { checkbox: newCheckboxValue });
                 });
-                handleChange(field, packValue(updatedValues), 'CheckboxTree');
+                handleChange(field, packValue(updatedValues), 'checkboxTree');
                 return updatedValues;
             });
         },
@@ -80,7 +83,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                 controlOptions.rows.forEach((row) => {
                     updatedValues.set(row.field, { checkbox: newCheckboxValue });
                 });
-                handleChange(field, packValue(updatedValues), 'CheckboxTree');
+                handleChange(field, packValue(updatedValues), 'checkboxTree');
                 return updatedValues;
             });
         },
@@ -98,7 +101,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                                 values={values}
                                 handleRowChange={handleRowChange}
                                 disabled={disabled}
-                                handleParentCheckboxTree={handleParentCheckboxTree}
+                                handleParentCheckboxForGroup={handleParentCheckboxForGroup}
                             />
                         </ColumnLayout.Row>
                     ) : (

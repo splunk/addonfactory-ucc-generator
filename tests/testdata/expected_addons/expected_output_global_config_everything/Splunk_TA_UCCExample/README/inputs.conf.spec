@@ -34,7 +34,7 @@ start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after whic
 use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data collection.  Default: yes
 
 [example_input_three://<name>]
-apis = 
+checkbox_field = 
 interval = Time interval of the data input, in seconds.
 
 [example_input_four://<name>]

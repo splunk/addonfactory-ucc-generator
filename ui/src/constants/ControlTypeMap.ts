@@ -13,7 +13,7 @@ import CheckboxGroup from '../components/CheckboxGroup/CheckboxGroup';
 const componentsMap = {
     checkbox: CheckBoxComponent,
     checkboxGroup: CheckboxGroup,
-    CheckboxTree,
+    checkboxTree: CheckboxTree,
     custom: CustomControl,
     file: FileInputComponent,
     helpLink: HelpLinkComponent,

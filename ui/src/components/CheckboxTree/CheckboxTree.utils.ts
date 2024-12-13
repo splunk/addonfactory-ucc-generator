@@ -59,14 +59,16 @@ export function getDefaultValues(rows: Row[]): ValueByField {
     const resultMap = new Map<Field, Value>();
 
     rows.forEach((row) => {
-        if (!isGroupWithRows(row)) {
-            const checkboxDefaultValue = row.checkbox?.defaultValue;
-            if (typeof checkboxDefaultValue === 'boolean') {
-                resultMap.set(row.field, {
-                    checkbox: checkboxDefaultValue,
-                });
-            }
+        if (isGroupWithRows(row)) {
+            return;
         }
+        const checkboxDefaultValue = row.checkbox?.defaultValue;
+        if (typeof checkboxDefaultValue !== 'boolean') {
+            return;
+        }
+        resultMap.set(row.field, {
+            checkbox: checkboxDefaultValue,
+        });
     });
 
     return resultMap;
