@@ -164,7 +164,7 @@ It is placed just like every other configuration tab.
 }
 ```
 
-TTo customize these entities, you can define them in JSON format by specifying certain keys unique to each entity (refer the [keys section](#keys) for details on the required keys for each entity). When creating the JSON, you only need to include the values you want to customize. For example, if you don’t need to modify fields like `lable` or `field`, you can skip including them in your globalConfig.  For better understanding, refer to the provided [Example](#example) which demonstrates how to apply customizations effectively.
+To customize these default configurations, you can define them in JSON format by specifying certain keys unique to each entity (refer the [keys section](#keys) for details on the required keys for each entity). When creating the JSON, you only need to include the values you want to customize. For example, if you don’t need to modify fields like `lable` or `field`, you can skip including them in your globalConfig.  For better understanding, refer to the provided [Example](#example) which demonstrates how to apply customizations effectively.
 
 > **_NOTE:_**
     There are 2 ways to exclude optional entities in your add-on, either omit them from the proxy tab, or set the entities to false.
@@ -173,6 +173,8 @@ TTo customize these entities, you can define them in JSON format by specifying c
 
 | Key Name     | Description                                                        |
 |----------------|--------------------------------------------------------------------|
+| name  | Name of the proxy                                  |
+| title  | Title of proxy tab                                  |
 | enable_proxy  | Whether proxy should be enabled                                   |
 | proxy_type     | Type of Proxy communication protocols supported. Default: `SOCKS4`, `SOCKS5`, `HTTP` |
 | host      | Hostname (FQDN, IPv6 or IPv4) of the Proxy server |
