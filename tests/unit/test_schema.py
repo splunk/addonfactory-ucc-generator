@@ -107,3 +107,46 @@ def test_interval_entity_options(schema_validate, config):
             }
         )
     )
+
+
+def test_rest_handler_without_ui(schema_validate, config):
+    crh = {
+        "endpoint": "some_endpoint",
+        "handlerType": "EAI",
+        "requestParameters": {
+            "create": {
+                "some_param": {"type": "string"},
+                "other_param": {"type": "number"},
+                "other_param_nullable": {
+                    "type": "number",
+                    "nullable": True,
+                },
+            },
+            "list": {
+                "array_param": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
+                "obj_param": {
+                    "type": "object",
+                    "properties": {
+                        "key": {"type": "string"},
+                    },
+                },
+            },
+        },
+        "responseParameters": {
+            "list": {
+                "some_param": {"type": "string"},
+            },
+        },
+    }
+    config.setdefault("options", {})["customRestHandlers"] = [crh]
+    schema_validate(config)
+
+    crh["registerHandler"] = {
+        "file": "my_handler.py",
+        "actions": ["list", "create", "edit", "remove"],
+    }
+
+    schema_validate(config)
