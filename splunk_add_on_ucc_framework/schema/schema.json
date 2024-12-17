@@ -2527,7 +2527,7 @@
       "type": "object",
       "description": "Additional options for the addon",
       "properties": {
-        "customRestHandlers": {
+        "restHandlers": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/RestHandler"

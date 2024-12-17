@@ -141,7 +141,7 @@ def test_rest_handler_without_ui(schema_validate, config):
             },
         },
     }
-    config.setdefault("options", {})["customRestHandlers"] = [crh]
+    config.setdefault("options", {})["restHandlers"] = [crh]
     schema_validate(config)
 
     crh["registerHandler"] = {
