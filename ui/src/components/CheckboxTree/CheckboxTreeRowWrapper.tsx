@@ -20,7 +20,7 @@ function CheckboxRowWrapper({
             label={row.checkbox?.label || row.field}
             checkbox={!!valueForField?.checkbox}
             handleChange={handleRowChange}
-            disabled={disabled}
+            disabled={disabled || row.checkbox?.disabled}
         />
     );
 }

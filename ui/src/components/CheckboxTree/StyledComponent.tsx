@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
-import { variables } from '@splunk/themes';
+import { pick, variables } from '@splunk/themes';
 import Switch from '@splunk/react-ui/Switch';
 
 export const FixedCheckboxRowWidth = css`
@@ -22,13 +22,24 @@ export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
     margin-top: ${variables.spacingXSmall};
     & > *:not(:last-child) {
         button {
-            background-color: ${variables.neutral300} !important;
+            background-color: ${pick({
+                enterprise: variables.neutral300,
+                prisma: variables.neutral200,
+            })} !important;
         }
         font-size: 14px;
         margin-bottom: ${variables.spacingXSmall};
-        background-color: ${variables.neutral300};
+        background-color: ${pick({
+            enterprise: variables.neutral300,
+            prisma: variables.neutral200,
+        })};
         display: flex;
         align-items: center;
+        align-content: center;
+        // for prisma styling
+        & > span {
+            align-content: center;
+        }
     }
 `;
 
@@ -43,7 +54,10 @@ export const GroupLabel = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 6px ${variables.spacingSmall};
-    background-color: ${variables.neutral300};
+    background-color: ${pick({
+        enterprise: variables.neutral300,
+        prisma: variables.neutral200,
+    })};
     font-size: 14px;
     margin: ${variables.spacingSmall} 0;
 `;
@@ -85,17 +99,26 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
     min-width: 20px;
     height: 20px;
     min-height: 20px;
-    border: 2px solid #6b7280;
-    border-radius: 4px;
-    background-color: #ffffff;
+    border-radius: 2px;
+    background-color: ${pick({
+        enterprise: variables.backgroundColor,
+        prisma: variables.backgroundColor,
+    })};
     cursor: pointer;
     display: inline-block;
-    margin-right: 8px;
     position: relative;
+    border: 1px solid
+        ${pick({
+            enterprise: variables.contentColorMuted,
+            prisma: variables.contentColorMuted,
+        })};
 
     &:checked {
-        background-color: #ffffff;
-        border: 2px solid #6b7280;
+        background-color: ${pick({
+            enterprise: variables.backgroundColor,
+            prisma: variables.focusColor,
+        })};
+        border: none;
     }
 
     &:checked::after {
@@ -103,7 +126,10 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
         position: absolute;
         width: 12px;
         height: 12px;
-        background-color: #6b7280;
+        background-color: ${pick({
+            enterprise: variables.textColor,
+            prisma: variables.white,
+        })};
         clip-path: polygon(
             35.75% 85.22%,
             100% 8.1%,
@@ -117,12 +143,22 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
         transform: translate(-50%, -50%);
     }
 
+    &[data-indeterminate='true'] {
+        background-color: ${pick({
+            enterprise: variables.backgroundColor,
+            prisma: variables.focusColor,
+        })};
+    }
+
     &[data-indeterminate='true']::after {
         content: '';
         position: absolute;
         width: 10px;
         height: 2px;
-        background-color: #6b7280;
+        background-color: ${pick({
+            enterprise: variables.textColor,
+            prisma: variables.white,
+        })};
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -130,8 +166,24 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
     }
 
     &:disabled {
-        border-color: #d1d5db;
-        background-color: #f9fafb;
+        border: 1px solid ${variables.borderColorWeak};
+        border: 1px solid
+            ${pick({
+                enterprise: variables.borderColorWeak,
+                prisma: variables.contentColorDisabled,
+            })};
+        background-color: ${pick({
+            enterprise: variables.backgroundColor,
+            prisma: variables.backgroundColorDialog,
+        })};
         cursor: not-allowed;
+    }
+
+    &:disabled[data-indeterminate='true']::after,
+    &:disabled[checked]::after {
+        background-color: ${pick({
+            enterprise: variables.borderColorWeak,
+            prisma: variables.contentColorMuted,
+        })};
     }
 `;

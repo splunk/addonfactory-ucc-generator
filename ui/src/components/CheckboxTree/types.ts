@@ -3,7 +3,6 @@ import { Mode } from '../../constants/modes';
 export type Field = string;
 export type Value = {
     checkbox: boolean;
-    inputValue?: number;
     error?: string;
 };
 
@@ -15,6 +14,7 @@ export interface Group {
     options?: {
         isExpandable?: boolean;
         expand?: boolean;
+        disabled?: boolean;
     };
 }
 
@@ -23,6 +23,7 @@ export interface Row {
     checkbox?: {
         label?: string;
         defaultValue?: boolean;
+        disabled?: boolean;
     };
 }
 

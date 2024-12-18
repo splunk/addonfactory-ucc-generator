@@ -225,3 +225,36 @@ export const CreateMode: Story = {
         },
     },
 };
+
+export const Disabled: Story = {
+    args: {
+        ...Base.args,
+        value: undefined,
+        mode: MODE_CREATE,
+        disabled: true,
+        controlOptions: {
+            groups: [
+                {
+                    label: 'Group 1',
+                    fields: ['collect_collaboration', 'collect_file'],
+                    options: { isExpandable: false },
+                },
+            ],
+            rows: [
+                {
+                    field: 'collect_collaboration',
+                    checkbox: {
+                        label: 'Collect folder collaboration',
+                        defaultValue: true,
+                    },
+                },
+                {
+                    field: 'collect_file',
+                    checkbox: {
+                        label: 'Collect file metadata',
+                    },
+                },
+            ],
+        },
+    },
+};

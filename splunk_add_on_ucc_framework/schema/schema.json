@@ -1465,6 +1465,10 @@
           "type": "string",
           "description": "Exactly: checkboxTree"
         },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
         "options": {
           "type": "object",
           "properties": {
@@ -1486,6 +1490,10 @@
                         "default": false
                       },
                       "expand": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "disabled": {
                         "type": "boolean",
                         "default": false
                       }
@@ -1524,6 +1532,10 @@
                       "defaultValue": {
                         "type": "boolean",
                         "description": "The initial input value."
+                      },
+                      "disabled": {
+                        "type": "boolean",
+                        "default": false
                       }
                     },
                     "additionalProperties": false

@@ -78,16 +78,28 @@ function CheckboxTree(props: CheckboxTreeProps) {
 
     const handleCheckboxToggleAll = useCallback(
         (newCheckboxValue: boolean) => {
+            if (disabled === true) {
+                return;
+            }
             setValues((prevValues) => {
                 const updatedValues = new Map(prevValues);
                 controlOptions.rows.forEach((row) => {
+                    // Find the group the row belongs to
+                    const group = controlOptions?.groups?.find((item) =>
+                        item.fields.includes(row.field)
+                    );
+
+                    // Skip updating if the group or the row is disabled
+                    if (group?.options?.disabled || row.checkbox?.disabled === true) {
+                        return;
+                    }
                     updatedValues.set(row.field, { checkbox: newCheckboxValue });
                 });
                 handleChange(field, packValue(updatedValues), 'checkboxTree');
                 return updatedValues;
             });
         },
-        [controlOptions.rows, field, handleChange]
+        [controlOptions?.groups, controlOptions.rows, disabled, field, handleChange]
     );
 
     return (
@@ -111,7 +123,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                                     row={row}
                                     values={values}
                                     handleRowChange={handleRowChange}
-                                    disabled={disabled}
+                                    disabled={disabled || row.checkbox?.disabled}
                                 />
                             </ColumnLayout.Row>
                         )

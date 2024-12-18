@@ -57,7 +57,8 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
                 checked={isParentChecked}
                 data-indeterminate={isIndeterminate}
                 onChange={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
-                disabled={disabled}
+                disabled={disabled || group.options?.disabled}
+                aria-label="custom checkbox for group"
             />
             {group.label}
         </CheckboxWrapper>
@@ -68,7 +69,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
             {group.rows.map((row) => (
                 <CheckboxRowWrapper
                     key={`row_${row.field}`}
-                    disabled={disabled}
+                    disabled={disabled || row.checkbox?.disabled || group.options?.disabled}
                     row={row}
                     values={values}
                     handleRowChange={handleRowChange}
