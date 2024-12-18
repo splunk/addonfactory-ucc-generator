@@ -35,7 +35,6 @@ export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
         })};
         display: flex;
         align-items: center;
-        align-content: center;
         // for prisma styling
         & > span {
             align-content: center;
@@ -118,7 +117,6 @@ export const CustomCheckbox = styled.input.attrs({ type: 'checkbox' })`
             enterprise: variables.backgroundColor,
             prisma: variables.focusColor,
         })};
-        border: none;
     }
 
     &:checked::after {

@@ -67,6 +67,12 @@ function CheckboxTree(props: CheckboxTreeProps) {
             setValues((prevValues) => {
                 const updatedValues = new Map(prevValues);
                 group.fields.forEach((item) => {
+                    const findFieldInRow = controlOptions?.rows?.find(
+                        (rowItem) => rowItem.field === item
+                    );
+                    if (findFieldInRow?.checkbox?.disabled === true) {
+                        return;
+                    }
                     updatedValues.set(item, { checkbox: newCheckboxValue });
                 });
                 handleChange(field, packValue(updatedValues), 'checkboxTree');
