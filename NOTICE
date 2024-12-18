@@ -7,9 +7,9 @@
 
 The following 3rd-party software packages may be used by or distributed with addonfactory-ucc-generator. Any information relevant to third-party vendors listed below are collected using common, reasonable means.
 
-Date generated: 2024-11-27
+Date generated: 2024-12-10
 
-Revision ID: 4f336c06c9bcec855df9035ba02fee26ad3296f7
+Revision ID: f656c701f3730f5453a3c67f3db5b6402c87b569
 
 ================================================================================
 ================================================================================
@@ -15375,9 +15375,9 @@ THE SOFTWARE.
 
 
 --------------------------------------------------------------------------------
-Package Title: Jinja2 (3.1.4)
+Package Title: jinja2 (3.1.4)
 
-Package Locator: pip+Jinja2$3.1.4
+Package Locator: pip+jinja2$3.1.4
 
 Package Depth: Direct
 --------------------------------------------------------------------------------
@@ -16454,9 +16454,9 @@ THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH REGARD TO
 
 
 --------------------------------------------------------------------------------
-Package Title: MarkupSafe (2.1.5)
+Package Title: markupsafe (2.1.5)
 
-Package Locator: pip+MarkupSafe$2.1.5
+Package Locator: pip+markupsafe$2.1.5
 
 Package Depth: Transitive
 --------------------------------------------------------------------------------
@@ -16985,69 +16985,12 @@ Package Depth: Direct
 --------------------------------------------------------------------------------
 
 * Declared Licenses *
-BSD-3-Clause, Apache-2.0, BSD-2-Clause
+Apache-2.0
 
-* BSD-3-Clause *
-
-Copyright (c) <year> <owner> . All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-   1. Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
-
-   2. Redistributions in binary form must reproduce the above copyright notice,
-      this list of conditions and the following disclaimer in the documentation
-      and/or other materials provided with the distribution.
-
-   3. Neither the name of the copyright holder nor the names of its
-      contributors may be used to endorse or promote products derived from
-      this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-* Apache-2.0 *
 
 This software is made available under the terms of *either* of the licenses
 found in LICENSE.APACHE or LICENSE.BSD. Contributions to this software is made
 under the terms of *both* these licenses.
-
-
-* BSD-2-Clause *
-
-Copyright (c) Donald Stufft and individual contributors.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-    1. Redistributions of source code must retain the above copyright notice,
-       this list of conditions and the following disclaimer.
-
-    2. Redistributions in binary form must reproduce the above copyright
-       notice, this list of conditions and the following disclaimer in the
-       documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 
@@ -17583,7 +17526,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 --------------------------------------------------------------------------------
 Package Title: PyYAML (6.0.1)
 
-Package Locator: pip+PyYAML$6.0.1
+Package Locator: pip+pyyaml$6.0.1
 
 Package Depth: Direct
 --------------------------------------------------------------------------------
@@ -23820,33 +23763,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 * BSD-2-Clause *
 
-Copyright (c) Donald Stufft and individual contributors.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-    1. Redistributions of source code must retain the above copyright notice,
-       this list of conditions and the following disclaimer.
-
-    2. Redistributions in binary form must reproduce the above copyright
-       notice, this list of conditions and the following disclaimer in the
-       documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-* BSD-2-Clause *
-
 Copyright (c) Felix Böhm
 All rights reserved.
 
@@ -27412,15 +27328,19 @@ Adobe Postscript AFM License
 
 Copyright (c) 2010-2021 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
 
+Copyright (c) 2012 Jason Siefken, https://github.com/siefkenj/
+
 Copyright (c) 2014 Steven Spungin (TwelveTone LLC)  steven@twelvetone.tv
 
 Copyright (c) 2017 Aras Abbasi
+
+Copyright (c) 2013 Youssef Beddad, youssef.beddad@gmail.com
 
 Copyright (c) 2014 Aras Abbasi
 
 Copyright (c) 2018 Aras Abbasi (aras.abbasi@gmail.com)
 
-Copyright (c) 2013 Youssef Beddad, youssef.beddad@gmail.com
+Copyright (c) 2018 Erik Koopmans
 
 Copyright (c) 2014 James Robb, https://github.com/jamesbrobb
 
@@ -27434,23 +27354,19 @@ Copyright (c) 2019 Aras Abbasi
 
 Copyright (c) 2021 Antti Palola, https://github.com/Pantura
 
+Copyright (c) 2012 Willow Systems Corporation, https://github.com/willowsystems
+
 Copyright (c) 1989, 1990, 1991, 1992, 1993, 1997 Adobe Systems Incorporated. All Rights Reserved.
 
 Copyright (c) 2013 Eduardo Menezes de Morais, eduardo.morais@usp.br
 
 Copyright (c) 2016 Jussi Utunen, u-jussi@suomi24.fi
 
-Copyright (c)  information, platformID, encodingID, and
-
-Copyright (c) 2012 Jason Siefken, https://github.com/siefkenj/
-
-Copyright (c) 2018 Erik Koopmans
-
-Copyright (c) 2012 Willow Systems Corporation, https://github.com/willowsystems
-
 Copyright (c)  informat
 
 Copyright (c)  information, platformID, encodingID, and languageID
+
+Copyright (c)  information, platformID, encodingID, and
 Copyright (c) 1985, 1987, 1989, 1990, 1991, 1992, 1993, 1997 Adobe Systems Incorporated. All Rights Reserved.
 This file and the 14 PostScript(R) AFM files it accompanies may be used, copied, and distributed for any purpose and without charge, with or without modification, provided that all copyright notices are retained; that the AFM files are not distributed without this file; that all modifications to this file or any of the AFM files are prominently noted in the modified file(s); and that this paragraph is not modified. Adobe Systems has no responsibility or obligation to support the use of the AFM files.
 
@@ -27533,13 +27449,15 @@ BSD 2-Clause "Simplified" License
 
 Copyright (c) 2014 John MacFarlane
 
+Copyright (c)  Mathias Bynens <http://mathiasbynens.be/>
+
+Copyright (c) 2014 Vitaly Puzrin, Alex Kocharin.
+
+Copyright (c) 2014 15 John MacFarlane
+
 Copyright (c) 2008 Apple Inc. All Rights Reserved.
 
 Copyright (c) 2016-2022 Mapbox, Inc.
-
-Copyright (c) Donald Stufft and individual contributors.
-
-Copyright (c)  Donald Stufft and individual contributors.
 
 Copyright (c) Felix Böhm
 
@@ -27586,11 +27504,11 @@ Copyright (c) 2010 Ajax.org B.V.
 
 Copyright (c) 2009 11 by RStudio, Inc.
 
-Copyright (c) 2010 
-
 Copyright (c) 2010-2011 The Dojo Foundation All Rights Reserved.
 
 Copyright (c) 2012 Ajax.org B.V.
+
+Copyright (c) 2010 
 
 Copyright (c) 2010-2015 Michael Bostock
 
@@ -28295,4 +28213,4 @@ either expressed or implied, of the FreeBSD Project.
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 
-Report Generated by FOSSA on 2024-11-27
+Report Generated by FOSSA on 2024-12-10
