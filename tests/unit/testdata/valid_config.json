@@ -1099,7 +1099,8 @@
                             }
                         }
                     ],
-                    "title": "Example Input Two"
+                    "title": "Example Input Two",
+                    "disabled": true
                 }
             ],
             "title": "Inputs",

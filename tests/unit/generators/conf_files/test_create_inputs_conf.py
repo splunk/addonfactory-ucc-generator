@@ -87,13 +87,15 @@ def test_set_attributes_without_conf_key_and_name_field(
     )
     inputs_conf._global_config = MagicMock()
     inputs_conf._global_config.inputs = [
-        {"name": "service1", "entity": [{"field": "name"}]}
+        {"name": "service1", "entity": [{"field": "name"}], "disabled": True}
     ]
 
     inputs_conf._set_attributes()
 
     expected_output: List[Dict[str, List[str]]] = [{"service1": []}]
     assert inputs_conf.input_names == expected_output
+    assert inputs_conf.disable is True
+    assert inputs_conf.service_name == "service1"
 
 
 def test_set_attributes_without_conf_key_and_other_fields(
