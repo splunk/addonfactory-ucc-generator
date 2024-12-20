@@ -1,10 +1,18 @@
 {
-  "name": "@splunk/ucc_ui_lib",
-  "version": "0.0.1",
+  "name": "@splunk/add-on-ucc-framework",
+  "description": "Splunk Add-on SDK formerly UCC is a build and code generation framework",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
+    "directory": "ui"
+  },
+  "version": "5.55.0",
   "license": "Apache-2.0",
-  "private": true,
+  "author": "Splunk Inc.",
+  "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --bail",
+    "build:lib": "cross-env NODE_ENV=production tsc --project tsconfig.lib.json",
     "build:watch": "webpack --watch",
     "format": "prettier \"src/**/*.(js|jsx|ts|tsx|css)\" --write",
     "format:verify": "prettier \"src/**/*.(js|jsx|ts|tsx|css)\" --list-different",
@@ -18,7 +26,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
-    "test-storybook:update-snapshots": "yarn run test-storybook -u"
+    "test-storybook:update-snapshots": "yarn run test-storybook -u",
+    "prepublishOnly": "yarn run build:lib"
   },
   "dependencies": {
     "@splunk/dashboard-action-buttons": "^27.5.0",
@@ -117,6 +126,10 @@
     "webpack-dev-server": "^5.1.0",
     "webpack-merge": "^6.0.1"
   },
+  "peerDependencies": {
+    "react": "^16.14.0",
+    "typescript": "^5.6.3"
+  },
   "resolutions": {
     "@npmcli/git": "^2.1.0",
     "@types/react": "^16.14.62",
@@ -137,5 +150,9 @@
     "workerDirectory": [
       "src/public"
     ]
-  }
+  },
+  "types": "./dist/lib/publicApi.d.ts",
+  "files": [
+    "dist/lib"
+  ]
 }
