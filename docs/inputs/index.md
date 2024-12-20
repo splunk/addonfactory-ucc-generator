@@ -43,6 +43,7 @@ provided, a dropdown field will appear on the Inputs page. In contrast, a button
 | [restHandlerModule](../advanced/custom_rest_handler.md)               | string | It specify name of the REST handler script that implements the custom actions to be performed on CRUD operations for the given input. (Use with restHandlerClass)                                                                                                                   |
 | [restHandlerClass](../advanced/custom_rest_handler.md)                | string | It specify name of the class present in the restHandlerModule, which implements methods like handleCreate, handleEdit, handleList, handleDelete and is child class of splunktaucclib.rest_handler.admin_external.AdminExternalHandler. (Use with restHandlerModule)                 |
 | hideForPlatform                                                       | string | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`.                                                                                                                                        |
+| disabled                                                       | boolean | Specifies whether a service should be disabled by default or not. If set to `True`, any new input created from the service will remain disabled until manually enabled by the user.                                                                                                                                        |
 
 ### Usage
 
