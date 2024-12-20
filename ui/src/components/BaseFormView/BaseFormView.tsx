@@ -37,12 +37,10 @@ import {
     UtilControlWrapper,
     ServiceGroup,
     OauthConfiguration,
-    CustomHook,
     AnyEntity,
     OAuthEntity,
     BasicEntity,
     ChangeRecord,
-    CustomHookClass,
     EntitiesAllowingModifications,
 } from '../../types/components/BaseFormTypes';
 import {
@@ -52,6 +50,7 @@ import {
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { PageContextProviderType } from '../../context/PageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
+import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -110,7 +109,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     datadict: Record<string, AcceptableFormValueOrNullish>;
 
-    hook?: CustomHook;
+    hook?: CustomHookInstance;
 
     // eslint-disable-next-line camelcase
     state_enabled?: boolean;
@@ -1083,7 +1082,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {
-                        const Hook = external.default;
+                        const Hook = external.default as CustomHookConstructor;
                         this.hook = new Hook(
                             globalConfig,
                             this.props.serviceName,
@@ -1099,13 +1098,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 // @ts-expect-error should be exported to other js module and imported here
                 __non_webpack_require__(
                     [`app/${this.appName}/js/build/custom/${module}`],
-                    (Hook: CustomHookClass) => {
+                    (Hook: CustomHookConstructor) => {
                         this.hook = new Hook(
                             globalConfig,
                             this.props.serviceName,
                             this.state,
                             this.props.mode,
-                            this.util
+                            this.util,
+                            this.props.groupName
                         );
                         resolve(Hook);
                     }

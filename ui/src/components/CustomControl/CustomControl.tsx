@@ -4,30 +4,12 @@ import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { UtilBaseForm } from '../../types/components/BaseFormTypes';
-import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { Mode } from '../../constants/modes';
+import { invariant } from '../../util/invariant';
+import { CustomControlConstructor } from './CustomControlBase';
+import { ControlData } from './CustomControl.types';
 
-interface IData {
-    value: AcceptableFormValueOrNullish;
-    mode: Mode;
-    serviceName: string;
-}
-
-interface ICustomCompClass {
-    new (
-        config: GlobalConfig,
-        el: HTMLElement | undefined,
-        data: IData,
-        setValue: (field: string, newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilBaseForm
-    ): {
-        render: () => void;
-        validation?: (submittedField: string, submittedValue: string) => void;
-    };
-}
-
-interface ICustomCompProps {
-    data: IData;
+interface Props {
+    data: ControlData;
     field: string;
     handleChange: (field: string, newValue: AcceptableFormValueOrNullish) => void;
     controlOptions: { src: string; type: string };
@@ -38,29 +20,32 @@ interface ICustomCompProps {
     utilCustomFunctions: UtilBaseForm;
 }
 
-interface ICustomCompState {
+interface State {
     loading: boolean;
 }
 
-class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> {
+class CustomControl extends React.Component<Props, State> {
     static loadCustomControl = (
         module: string,
         type: string,
         appName: string
-    ): Promise<ICustomCompClass> =>
+    ): Promise<CustomControlConstructor> =>
         new Promise((resolve) => {
             if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
-                    (external) => {
-                        const Control = external.default;
+                    async (external) => {
+                        const Control = external.default as CustomControlConstructor;
                         resolve(Control);
                     }
                 );
             } else {
                 // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
-                __non_webpack_require__([`app/${appName}/js/build/custom/${module}`], (Control) => {
-                    resolve(Control);
-                });
+                __non_webpack_require__(
+                    [`app/${appName}/js/build/custom/${module}`],
+                    (Control: CustomControlConstructor) => {
+                        resolve(Control);
+                    }
+                );
             }
         });
 
@@ -68,7 +53,7 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
 
     el?: HTMLElement;
 
-    constructor(props: ICustomCompProps) {
+    constructor(props: Props) {
         super(props);
         this.state = {
             loading: true,
@@ -85,6 +70,7 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
             this.props.controlOptions.type,
             appName
         ).then((Control) => {
+            invariant(this.el !== undefined, 'Element should be defined');
             const customControl = new Control(
                 globalConfig,
                 this.el,
@@ -92,7 +78,7 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
                 this.setValue,
                 this.props.utilCustomFunctions
             );
-            customControl?.render();
+            customControl.render();
 
             if (typeof customControl.validation === 'function') {
                 this.props.addCustomValidator(this.props.field, customControl.validation);
@@ -101,7 +87,7 @@ class CustomControl extends React.Component<ICustomCompProps, ICustomCompState> 
         });
     }
 
-    shouldComponentUpdate(_nextProps: ICustomCompProps, nextState: ICustomCompState) {
+    shouldComponentUpdate(_nextProps: Props, nextState: State) {
         if (!nextState.loading && this.shouldRender) {
             this.shouldRender = false;
             return true;

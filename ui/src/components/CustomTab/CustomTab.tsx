@@ -4,17 +4,12 @@ import { z } from 'zod';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { TabSchema } from '../../types/globalConfig/pages';
+import { CustomTabConstructor } from './CustomTabBase';
 
 type Tab = z.infer<typeof TabSchema>;
 
 interface CustomTabProps {
     tab: Tab;
-}
-
-interface ICustomTabClass {
-    new (tab: Tab, ref: HTMLDivElement): {
-        render: () => void;
-    };
 }
 
 const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
@@ -24,7 +19,7 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
     const globalConfig = getUnifiedConfigs();
     const appName = globalConfig.meta.name;
 
-    const loadCustomTab = (): Promise<ICustomTabClass> =>
+    const loadCustomTab = (): Promise<CustomTabConstructor> =>
         new Promise((resolve) => {
             if (tab.customTab?.type === 'external') {
                 import(
@@ -37,7 +32,7 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
                 // @ts-expect-error should be exported to other js module and imported here
                 __non_webpack_require__(
                     [`app/${appName}/js/build/custom/${tab.customTab?.src}`],
-                    (Control: ICustomTabClass) => resolve(Control)
+                    (Control: CustomTabConstructor) => resolve(Control)
                 );
             }
         });
