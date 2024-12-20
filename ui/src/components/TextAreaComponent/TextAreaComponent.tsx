@@ -6,7 +6,7 @@ const TextWrapper = styled(TextArea)`
     width: 320px !important;
 `;
 
-interface TextAreaComponentProps {
+export interface TextAreaComponentProps {
     id?: string;
     value: string | number;
     handleChange: (field: string, value: string) => void;
