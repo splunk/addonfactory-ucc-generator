@@ -3094,6 +3094,11 @@
               "warning": {
                 "$ref": "#/definitions/WarningMessage"
               },
+              "disabled": {
+                "type": "boolean",
+                "description": "Declares if service should be disabled by default",
+                "default": false
+              },
               "hideForPlatform": {
                 "$ref": "#/definitions/HideForPlatform"
               }
