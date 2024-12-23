@@ -23,6 +23,7 @@ from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
 from splunk_add_on_ucc_framework.commands import import_from_aob
 from splunk_add_on_ucc_framework.commands import package
+from splunk_add_on_ucc_framework.commands import dev_env
 
 logger = logging.getLogger("ucc_gen")
 
@@ -233,6 +234,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         required=True,
     )
 
+    dev_env_parser = subparsers.add_parser("dev-env", description="Spin up development environment.")
+    dev_env_parser.add_argument(
+        "--splunk-version",
+        type=str,
+        help="splunk version",
+        required=False,
+        default=None,
+    )
+
     args = parser.parse_args(argv)
     if args.command == "build":
         build.generate(
@@ -263,6 +273,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(
             addon_name=args.addon_name,
+        )
+    if args.command == "dev-env":
+        dev_env.set_up_env(
+            splunk_version=args.splunk_version
         )
     return 0
 
