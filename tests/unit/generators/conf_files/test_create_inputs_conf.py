@@ -87,7 +87,7 @@ def test_set_attributes_without_conf_key_and_name_field(
     )
     inputs_conf._global_config = MagicMock()
     inputs_conf._global_config.inputs = [
-        {"name": "service1", "entity": [{"field": "name"}], "disabled": True}
+        {"name": "service1", "entity": [{"field": "name"}], "disableNewInput": True}
     ]
 
     inputs_conf._set_attributes()

@@ -94,7 +94,7 @@ export const TableLessServiceSchema = z.object({
     restHandlerClass: z.string().optional(),
     warning: WarningSchema,
     inputHelperModule: z.string().optional(),
-    disabled: z.boolean().optional(),
+    disableNewInput: z.boolean().optional(),
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 

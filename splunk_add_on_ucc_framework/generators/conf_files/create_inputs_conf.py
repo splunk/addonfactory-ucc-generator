@@ -33,7 +33,7 @@ class InputsConf(ConfGenerator):
         if self._global_config:
             for service in self._global_config.inputs:
                 properties = []
-                if service.get("disabled") is True:
+                if service.get("disableNewInput"):
                     self.disable = True
                     self.service_name = service["name"]
                 if service.get("conf") is not None:
