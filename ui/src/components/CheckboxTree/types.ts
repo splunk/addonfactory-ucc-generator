@@ -14,7 +14,6 @@ export interface Group {
     options?: {
         isExpandable?: boolean;
         expand?: boolean;
-        disabled?: boolean;
     };
 }
 
@@ -23,7 +22,6 @@ export interface Row {
     checkbox?: {
         label?: string;
         defaultValue?: boolean;
-        disabled?: boolean;
     };
 }
 
@@ -43,6 +41,6 @@ export interface CheckboxTreeProps {
         field: string,
         validator: (submittedField: string, submittedValue: string) => void
     ) => void;
-    handleChange: (field: string, value: string, componentType?: 'checkboxTree') => void;
+    handleChange: (field: string, value: string, componentType: 'checkboxTree') => void;
     disabled?: boolean;
 }

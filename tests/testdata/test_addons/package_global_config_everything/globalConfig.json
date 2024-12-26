@@ -1577,7 +1577,6 @@
                             "label": "Event Filters",
                             "field": "checkbox_field",
                             "required": true,
-                            "disabled": false,
                             "options": {
                                 "groups": [
                                     {

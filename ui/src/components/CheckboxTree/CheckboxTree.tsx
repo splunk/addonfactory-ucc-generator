@@ -67,19 +67,13 @@ function CheckboxTree(props: CheckboxTreeProps) {
             setValues((prevValues) => {
                 const updatedValues = new Map(prevValues);
                 group.fields.forEach((item) => {
-                    const findFieldInRow = controlOptions?.rows?.find(
-                        (rowItem) => rowItem.field === item
-                    );
-                    if (findFieldInRow?.checkbox?.disabled === true) {
-                        return;
-                    }
                     updatedValues.set(item, { checkbox: newCheckboxValue });
                 });
                 handleChange(field, packValue(updatedValues), 'checkboxTree');
                 return updatedValues;
             });
         },
-        [controlOptions, field, handleChange]
+        [controlOptions.groups, field, handleChange]
     );
 
     const handleCheckboxToggleAll = useCallback(
@@ -90,22 +84,13 @@ function CheckboxTree(props: CheckboxTreeProps) {
             setValues((prevValues) => {
                 const updatedValues = new Map(prevValues);
                 controlOptions.rows.forEach((row) => {
-                    // Find the group the row belongs to
-                    const group = controlOptions?.groups?.find((item) =>
-                        item.fields.includes(row.field)
-                    );
-
-                    // Skip updating if the group or the row is disabled
-                    if (group?.options?.disabled || row.checkbox?.disabled === true) {
-                        return;
-                    }
                     updatedValues.set(row.field, { checkbox: newCheckboxValue });
                 });
                 handleChange(field, packValue(updatedValues), 'checkboxTree');
                 return updatedValues;
             });
         },
-        [controlOptions?.groups, controlOptions.rows, disabled, field, handleChange]
+        [controlOptions.rows, disabled, field, handleChange]
     );
 
     return (
@@ -129,7 +114,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                                     row={row}
                                     values={values}
                                     handleRowChange={handleRowChange}
-                                    disabled={disabled || row.checkbox?.disabled}
+                                    disabled={disabled}
                                 />
                             </ColumnLayout.Row>
                         )
