@@ -47,7 +47,7 @@ const getServiceToStyleMap = (page: StandardPages, unifiedConfigs: GlobalConfig)
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     } else {
-        unifiedConfigs.pages.configuration.tabs.forEach((x) => {
+        unifiedConfigs.pages.configuration?.tabs.forEach((x) => {
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     }
@@ -179,8 +179,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 const services = inputsPage?.services;
                 label = services?.find((x) => x.name === entityModal.serviceName)?.title;
             } else if (page === PAGE_CONF) {
-                const { tabs } = unifiedConfigs.pages.configuration;
-                label = tabs.find((x) => x.name === entityModal.serviceName)?.title;
+                const tabs  = unifiedConfigs.pages.configuration?.tabs;
+                label = tabs?.find((x) => x.name === entityModal.serviceName)?.title;
             }
             return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal

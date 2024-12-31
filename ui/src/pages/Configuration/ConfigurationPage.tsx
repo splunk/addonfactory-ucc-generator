@@ -50,7 +50,7 @@ function ConfigurationPage() {
 
     const platform = usePlatform(unifiedConfigs, 'configuration');
 
-    const filteredTabs = tabs.filter(
+    const filteredTabs = (tabs ?? []).filter(
         (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
     );
 
