@@ -54,10 +54,13 @@ class GlobalConfigValidator:
         self._config = global_config.content
 
     @property
-    def config_tabs(self) -> List[Tab]:
-        return [
-            resolve_tab(tab) for tab in self._config["pages"]["configuration"]["tabs"]
-        ]
+    def config_tabs(self) -> List[Any]:
+        if self._config["pages"].get("configuration"):
+            return [
+                resolve_tab(tab)
+                for tab in self._config["pages"]["configuration"]["tabs"]
+            ]
+        return []
 
     def _validate_config_against_schema(self) -> None:
         """
@@ -249,10 +252,11 @@ class GlobalConfigValidator:
         number and regex are supported.
         """
         pages = self._config["pages"]
-        for tab in self.config_tabs:
-            entities = tab["entity"]
-            for entity in entities:
-                self._validate_entity_validators(entity)
+        if pages.get("configuration"):
+            for tab in self.config_tabs:
+                entities = tab["entity"]
+                for entity in entities:
+                    self._validate_entity_validators(entity)
 
         inputs = pages.get("inputs")
         if inputs is None:
@@ -430,8 +434,8 @@ class GlobalConfigValidator:
         not required in schema, so this checks if globalConfig has inputs
         """
         pages = self._config["pages"]
-
-        self._validate_tabs_duplicates(self.config_tabs)
+        if self._config["pages"].get("configuration"):
+            self._validate_tabs_duplicates(self.config_tabs)
 
         inputs = pages.get("inputs")
         if inputs:
@@ -711,9 +715,11 @@ class GlobalConfigValidator:
 
     def validate(self) -> None:
         self._validate_config_against_schema()
-        self._validate_configuration_tab_table_has_name_field()
+        if self._config["pages"].get("configuration"):
+            print("\n HIIII")
+            self._validate_configuration_tab_table_has_name_field()
+            self._validate_file_type_entity()
         self._validate_custom_rest_handlers()
-        self._validate_file_type_entity()
         self._validate_validators()
         self._validate_multilevel_menu()
         self._validate_duplicates()

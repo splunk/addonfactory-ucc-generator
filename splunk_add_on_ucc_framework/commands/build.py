@@ -463,7 +463,8 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        global_config.expand()
+        if global_config.content["pages"].get("configuration"):
+            global_config.expand()
         if ta_name != global_config.product:
             logger.error(
                 "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"

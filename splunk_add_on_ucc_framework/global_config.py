@@ -117,7 +117,9 @@ class GlobalConfig:
 
     @property
     def tabs(self) -> List[Any]:
-        return self._content["pages"]["configuration"]["tabs"]
+        if "configuration" in self._content["pages"]:
+            return self._content["pages"]["configuration"]["tabs"]
+        return []
 
     @property
     def dashboard(self) -> Dict[str, Any]:
@@ -202,6 +204,9 @@ class GlobalConfig:
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
+
+    def has_configuration(self) -> bool:
+        return bool(self.tabs)
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
