@@ -62,7 +62,7 @@ def test_ucc_generate_with_config_param():
     """
 
     def check_ucc_versions(parent_folder):
-        global_config_path = path.join(
+        gc_appserver = path.join(
             parent_folder,
             "Splunk_TA_UCCExample",
             "appserver",
@@ -71,11 +71,17 @@ def test_ucc_generate_with_config_param():
             "build",
             "globalConfig.json",
         )
+        gc_root = config_path
 
-        with open(global_config_path) as _f:
+        with open(gc_appserver) as _f:
             global_config = json.load(_f)
 
         assert global_config["meta"]["_uccVersion"] == __version__
+
+        with open(gc_root) as _f:
+            global_config = json.load(_f)
+
+        assert "_uccVersion" not in global_config["meta"]
 
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
