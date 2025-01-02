@@ -88,11 +88,12 @@ class GlobalConfig:
         self.expand_entities()
 
     def expand_tabs(self) -> None:
-        for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
-            self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+        if self.has_configuration:
+            for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
+                self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     def expand_entities(self) -> None:
-        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
+        self._expand_entities(self._content["pages"].get("configuration", {})["tabs"])
         self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
         self._expand_entities(self._content.get("alerts"))
 

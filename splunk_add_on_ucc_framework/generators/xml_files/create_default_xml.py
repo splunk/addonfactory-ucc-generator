@@ -25,7 +25,7 @@ logger = logging.getLogger("ucc_gen")
 class DefaultXml(XMLGenerator):
     __description__ = (
         "Generates default.xml file based on configs present in globalConfig"
-        "in in `default/data/ui/nav` folder."
+        "in `default/data/ui/nav` folder."
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
@@ -45,6 +45,7 @@ class DefaultXml(XMLGenerator):
                 self.default_xml_content = data_ui_generator.generate_nav_default_xml(
                     include_inputs=self._global_config.has_inputs(),
                     include_dashboard=self._global_config.has_dashboard(),
+                    include_configuration=self._global_config.has_configuration(),
                     default_view=self._global_config.meta.get(
                         "default_view", data_ui_generator.DEFAULT_VIEW
                     ),

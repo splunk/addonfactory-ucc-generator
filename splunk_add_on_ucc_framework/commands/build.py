@@ -463,7 +463,7 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        if global_config.content["pages"].get("configuration"):
+        if global_config.has_configuration:
             global_config.expand()
         if ta_name != global_config.product:
             logger.error(

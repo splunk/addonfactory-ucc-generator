@@ -158,7 +158,8 @@ def __add_schemas_object(
 ) -> OpenAPIObject:
     if open_api_object.components is not None:
         open_api_object.components.schemas = {}
-        if hasattr(global_config, "configuration"):
+        pages = getattr(global_config, "pages", None)
+        if hasattr(pages, "configuration"):
             for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
                 schema_name, schema_object = __get_schema_object(
                     name=tab.name, entities=tab.entity
@@ -379,7 +380,8 @@ def __assign_ta_paths(
 def __add_paths(
     open_api_object: OpenAPIObject, global_config: DataClasses
 ) -> OpenAPIObject:
-    if hasattr(global_config, "configuration"):
+    pages = getattr(global_config, "pages", None)
+    if hasattr(pages, "configuration"):
         for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
             open_api_object = __assign_ta_paths(
                 open_api_object=open_api_object,
