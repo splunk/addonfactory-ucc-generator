@@ -9,6 +9,20 @@ def test_transform_config_all(global_config_all_json, app_manifest_correct):
     openapi_object = ucc_to_oas.transform(global_config_all_json, app_manifest_correct)
 
     expected_open_api_json = get_testdata_file("openapi.json.valid_config.generated")
+
+    assert json.loads(expected_open_api_json) == openapi_object.json
+
+
+def test_transform_no_configuration(
+    global_config_no_configuration, app_manifest_correct
+):
+    openapi_object = ucc_to_oas.transform(
+        global_config_no_configuration, app_manifest_correct
+    )
+
+    print("\n\n api object", openapi_object)
+
+    expected_open_api_json = get_testdata_file("openapi.json.no_config.generated")
     assert json.loads(expected_open_api_json) == openapi_object.json
 
 
