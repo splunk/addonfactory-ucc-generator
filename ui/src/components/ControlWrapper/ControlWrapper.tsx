@@ -51,6 +51,7 @@ export interface ControlWrapperProps {
         required?: boolean;
     };
     page?: string;
+    id?: number;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -109,6 +110,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                           ...this?.props?.entity,
                           ...this.props?.modifiedEntitiesData,
                           page: this.props.page,
+                          id: this.props.id,
                       }
                   )
                 : `No View Found for ${this?.props?.entity?.type} type`;
@@ -139,6 +141,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                 : isRequiredModified;
 
         const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
+        const labelFor = this.props.id !== undefined ? this.props.id.toString() : undefined;
         return (
             this.props.display && (
                 <ControlGroupWrapper
@@ -151,6 +154,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     labelWidth={240}
                     required={isFieldRequired}
                     label={label}
+                    labelFor={labelFor}
                 >
                     <CustomElement>{rowView}</CustomElement>
                 </ControlGroupWrapper>

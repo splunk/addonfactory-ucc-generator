@@ -7,6 +7,7 @@ interface CheckBoxComponentProps {
     handleChange: (field: string, value: 0 | 1) => void;
     field: string;
     disabled?: boolean;
+    id: string;
 }
 
 class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
@@ -27,6 +28,7 @@ class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
                 disabled={this.props.disabled}
                 selected={!(this.props.value ? isFalse(this.props.value) : true)}
                 appearance="checkbox"
+                id={this.props.id}
             />
         );
     }

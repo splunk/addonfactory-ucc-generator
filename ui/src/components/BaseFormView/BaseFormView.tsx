@@ -372,6 +372,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     disabled: false,
                     error: false,
                     display: true,
+                    id: `${e.field}-${e.label}`,
                 };
 
                 if (e.type !== 'helpLink' && e.type !== 'custom') {
@@ -1376,6 +1377,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 fileNameToDisplay={temState.fileNameToDisplay}
                                 modifiedEntitiesData={temState.modifiedEntitiesData}
                                 page={this.props.page}
+                                id={temState.id}
                             />
                         );
                     })}

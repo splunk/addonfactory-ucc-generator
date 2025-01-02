@@ -49,6 +49,7 @@ export type ModifyFieldsOnValue = Array<ModificationCriteria>;
 
 export interface BaseFormStateData {
     [x: string]: {
+        id: number | undefined;
         disabled: boolean;
         error: boolean;
         fileNameToDisplay?: string;
@@ -165,6 +166,7 @@ export interface BasicEntity {
     display: boolean;
     value?: AcceptableFormValueOrNullish;
     fileNameToDisplay?: string;
+    id?: string;
 }
 
 export interface ChangeRecord {

@@ -35,7 +35,6 @@ class RadioComponent extends Component<RadioComponentProps> {
     render() {
         return (
             <RadioBarWrapper
-                id={this.props.id}
                 inline
                 onChange={this.handleChange}
                 value={
@@ -47,6 +46,7 @@ class RadioComponent extends Component<RadioComponentProps> {
             >
                 {this.props.controlOptions.items.map((item) => (
                     <RadioBarOption
+                        id={this.props.id}
                         key={item.value}
                         value={getValueMapTruthyFalse(item.value, this.props.page)}
                         label={item.label}
