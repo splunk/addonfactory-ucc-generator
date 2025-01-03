@@ -38,3 +38,14 @@ export const Base: Story = {
         disabled: false,
     },
 };
+
+export const AllPropsTrue: Story = {
+    args: {
+        handleChange: fn(),
+        value: 'default value',
+        field: 'field',
+        error: true,
+        encrypted: true,
+        disabled: true,
+    },
+};

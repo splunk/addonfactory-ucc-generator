@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,6 +41,10 @@ def get_j2_env() -> jinja2.Environment:
 
 def get_license_path(file_name: str) -> str:
     return join(dirname(__file__), "templates", "Licenses", f"{file_name}.txt")
+
+
+def get_icons_path(name: str) -> str:
+    return join(dirname(__file__), "templates", "Icons", f"{name}")
 
 
 def check_author_name(source: str, app_manifest: AppManifest) -> None:

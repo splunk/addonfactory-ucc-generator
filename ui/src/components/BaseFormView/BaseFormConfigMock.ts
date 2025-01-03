@@ -176,6 +176,115 @@ export function getGlobalConfigMockCustomControl() {
     return GlobalConfigSchema.parse(globalConfigMockCustomControl);
 }
 
+const getGlobalConfigMockGroups = ({
+    entitiesConfig,
+    entityGroupsConfig,
+    entitiesInputs,
+    entityGroupsInputs,
+}: {
+    entitiesConfig?: z.input<typeof AnyOfEntity>[];
+    entityGroupsConfig?: typeof GROUPS_FOR_EXAMPLE_ENTITIES;
+    entitiesInputs?: z.input<typeof AnyOfEntity>[];
+    entityGroupsInputs?: typeof GROUPS_FOR_EXAMPLE_ENTITIES;
+}) =>
+    ({
+        pages: {
+            configuration: {
+                tabs: [
+                    {
+                        name: 'account',
+                        table: {
+                            actions: ['edit', 'delete', 'clone'],
+                            header: [
+                                {
+                                    label: 'Name',
+                                    field: 'name',
+                                },
+                            ],
+                        },
+                        entity: [
+                            {
+                                type: 'text',
+                                label: 'Name',
+                                validators: [
+                                    {
+                                        type: 'regex',
+                                        errorMsg:
+                                            'Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
+                                        pattern: '^[a-zA-Z]\\w*$',
+                                    },
+                                ],
+                                field: 'name',
+                                help: 'A unique name for the account.',
+                                required: true,
+                            },
+                            ...(entitiesConfig || []),
+                        ],
+                        groups: entityGroupsConfig,
+                        title: 'Accounts',
+                    },
+                ],
+                title: 'Configuration',
+                description: 'Set up your add-on',
+            },
+            inputs: {
+                services: [
+                    {
+                        name: 'demo_input',
+                        entity: [
+                            {
+                                type: 'text',
+                                label: 'Name',
+                                validators: [
+                                    {
+                                        type: 'regex',
+                                        errorMsg:
+                                            'Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
+                                        pattern: '^[a-zA-Z]\\w*$',
+                                    },
+                                    {
+                                        type: 'string',
+                                        errorMsg:
+                                            'Length of input name should be between 1 and 100',
+                                        minLength: 1,
+                                        maxLength: 100,
+                                    },
+                                ],
+                                field: 'name',
+                                help: 'A unique name for the data input.',
+                                required: true,
+                                encrypted: false,
+                            },
+                            ...(entitiesInputs || []),
+                        ],
+                        groups: entityGroupsInputs,
+                        title: 'demo_input',
+                    },
+                ],
+                title: 'Inputs',
+                description: 'Manage your data inputs',
+                table: {
+                    actions: ['edit', 'delete', 'clone'],
+                    header: [
+                        {
+                            label: 'Name',
+                            field: 'name',
+                        },
+                    ],
+                },
+            },
+        },
+        meta: {
+            name: 'demo_addon_for_splunk',
+            restRoot: 'demo_addon_for_splunk',
+            version: '5.31.1R85f0e18e',
+            displayName: 'Demo Add-on for Splunk',
+            schemaVersion: '0.0.3',
+            checkForUpdates: false,
+            searchViewDefault: false,
+        },
+    } satisfies z.input<typeof GlobalConfigSchema>);
+
 const EXAMPLE_GROUPS_ENTITIES = [
     {
         type: 'text',
@@ -238,171 +347,105 @@ const GROUPS_FOR_EXAMPLE_ENTITIES = [
     },
 ];
 
-const globalConfigMockGroupsForConfigPage = {
-    pages: {
-        configuration: {
-            tabs: [
-                {
-                    name: 'account',
-                    table: {
-                        actions: ['edit', 'delete', 'clone'],
-                        header: [
-                            {
-                                label: 'Name',
-                                field: 'name',
-                            },
-                        ],
-                    },
-                    entity: [
-                        {
-                            type: 'text',
-                            label: 'Name',
-                            validators: [
-                                {
-                                    type: 'regex',
-                                    errorMsg:
-                                        'Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
-                                    pattern: '^[a-zA-Z]\\w*$',
-                                },
-                            ],
-                            field: 'name',
-                            help: 'A unique name for the account.',
-                            required: true,
-                        },
-                        ...EXAMPLE_GROUPS_ENTITIES,
-                    ],
-                    groups: GROUPS_FOR_EXAMPLE_ENTITIES,
-                    title: 'Accounts',
-                },
-            ],
-            title: 'Configuration',
-            description: 'Set up your add-on',
-        },
-        inputs: {
-            services: [],
-            title: 'Inputs',
-            description: 'Manage your data inputs',
-            table: {
-                actions: ['edit', 'delete', 'clone'],
-                header: [
-                    {
-                        label: 'Name',
-                        field: 'name',
-                    },
-                ],
-            },
-        },
-    },
-    meta: {
-        name: 'demo_addon_for_splunk',
-        restRoot: 'demo_addon_for_splunk',
-        version: '5.31.1R85f0e18e',
-        displayName: 'Demo Add-on for Splunk',
-        schemaVersion: '0.0.3',
-        checkForUpdates: false,
-        searchViewDefault: false,
-    },
-} satisfies z.input<typeof GlobalConfigSchema>;
-
 export function getGlobalConfigMockGroupsForConfigPage(): GlobalConfig {
-    return GlobalConfigSchema.parse(globalConfigMockGroupsForConfigPage);
+    return GlobalConfigSchema.parse(
+        getGlobalConfigMockGroups({
+            entitiesConfig: EXAMPLE_GROUPS_ENTITIES,
+            entityGroupsConfig: GROUPS_FOR_EXAMPLE_ENTITIES,
+        })
+    );
 }
 
-const globalConfigMockGroupsForInputPage = {
-    pages: {
-        configuration: {
-            tabs: [
-                {
-                    name: 'account',
-                    table: {
-                        actions: ['edit', 'delete', 'clone'],
-                        header: [
-                            {
-                                label: 'Name',
-                                field: 'name',
-                            },
-                        ],
-                    },
-                    entity: [
-                        {
-                            type: 'text',
-                            label: 'Name',
-                            validators: [
-                                {
-                                    type: 'regex',
-                                    errorMsg:
-                                        'Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
-                                    pattern: '^[a-zA-Z]\\w*$',
-                                },
-                            ],
-                            field: 'name',
-                            help: 'A unique name for the account.',
-                            required: true,
-                        },
-                    ],
-                    title: 'Accounts',
-                },
-            ],
-            title: 'Configuration',
-            description: 'Set up your add-on',
-        },
-        inputs: {
-            services: [
-                {
-                    name: 'demo_input',
-                    entity: [
-                        {
-                            type: 'text',
-                            label: 'Name',
-                            validators: [
-                                {
-                                    type: 'regex',
-                                    errorMsg:
-                                        'Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
-                                    pattern: '^[a-zA-Z]\\w*$',
-                                },
-                                {
-                                    type: 'string',
-                                    errorMsg: 'Length of input name should be between 1 and 100',
-                                    minLength: 1,
-                                    maxLength: 100,
-                                },
-                            ],
-                            field: 'name',
-                            help: 'A unique name for the data input.',
-                            required: true,
-                            encrypted: false,
-                        },
-                        ...EXAMPLE_GROUPS_ENTITIES,
-                    ],
-                    groups: GROUPS_FOR_EXAMPLE_ENTITIES,
-                    title: 'demo_input',
-                },
-            ],
-            title: 'Inputs',
-            description: 'Manage your data inputs',
-            table: {
-                actions: ['edit', 'delete', 'clone'],
-                header: [
+export function getGlobalConfigMockGroupsForInputPage(): GlobalConfig {
+    return GlobalConfigSchema.parse(
+        getGlobalConfigMockGroups({
+            entitiesInputs: EXAMPLE_GROUPS_ENTITIES,
+            entityGroupsInputs: GROUPS_FOR_EXAMPLE_ENTITIES,
+        })
+    );
+}
+
+const GROUP_ENTITIES_MODIFICATIONS = [
+    {
+        type: 'text',
+        label: 'Text 1 Group 2',
+        field: 'text_field_1_group_2',
+        required: false,
+        modifyFieldsOnValue: [
+            {
+                fieldValue: '[[any_other_value]]',
+                fieldsToModify: [
                     {
-                        label: 'Name',
-                        field: 'name',
+                        fieldId: 'text_field_2_group_2',
+                        disabled: false,
+                        required: false,
+                        help: 'help after mods 2-2',
+                        label: 'label after mods 2-2',
+                        markdownMessage: {
+                            text: 'markdown message after mods 2-2',
+                        },
+                    },
+                    {
+                        fieldId: 'text_field_2_group_1',
+                        disabled: false,
+                        required: true,
+                        help: 'help after mods 2-1',
+                        label: 'label after mods 2-1',
+                        markdownMessage: {
+                            text: 'markdown message after mods 2-1',
+                        },
+                    },
+                    {
+                        fieldId: 'text_field_1_group_1',
+                        disabled: true,
                     },
                 ],
             },
+        ],
+    },
+    {
+        type: 'text',
+        label: 'Text 2 Group 2',
+        field: 'text_field_2_group_2',
+        required: false,
+    },
+    {
+        type: 'text',
+        label: 'Text 1 Group 1',
+        field: 'text_field_1_group_1',
+        required: false,
+    },
+    {
+        type: 'text',
+        label: 'Text 2 Group 1',
+        field: 'text_field_2_group_1',
+        required: false,
+        options: {
+            enable: false,
         },
     },
-    meta: {
-        name: 'demo_addon_for_splunk',
-        restRoot: 'demo_addon_for_splunk',
-        version: '5.31.1R85f0e18e',
-        displayName: 'Demo Add-on for Splunk',
-        schemaVersion: '0.0.3',
-        checkForUpdates: false,
-        searchViewDefault: false,
+    {
+        type: 'text',
+        label: 'Text 1 Group 3',
+        field: 'text_field_1_group_3',
+        required: false,
+        options: {
+            enable: false,
+        },
     },
-} satisfies z.input<typeof GlobalConfigSchema>;
+    {
+        type: 'text',
+        label: 'Text 2 Group 3',
+        field: 'text_field_2_group_3',
+        required: false,
+    },
+] satisfies z.input<typeof AnyOfEntity>[];
 
-export function getGlobalConfigMockGroupsFoInputPage(): GlobalConfig {
-    return GlobalConfigSchema.parse(globalConfigMockGroupsForInputPage);
+export function getGlobalConfigMockModificationToGroupsConfig(): GlobalConfig {
+    return GlobalConfigSchema.parse(
+        getGlobalConfigMockGroups({
+            entitiesConfig: GROUP_ENTITIES_MODIFICATIONS,
+            entityGroupsConfig: GROUPS_FOR_EXAMPLE_ENTITIES,
+        })
+    );
 }

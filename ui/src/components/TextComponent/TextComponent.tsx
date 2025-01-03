@@ -29,7 +29,7 @@ class TextComponent extends Component<TextComponentProps> {
                 inline
                 error={this.props.error}
                 className={this.props.field}
-                disabled={this.props.disabled}
+                disabled={this.props.disabled && 'dimmed'}
                 value={
                     this.props.value === null || typeof this.props.value === 'undefined'
                         ? ''

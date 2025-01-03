@@ -127,18 +127,22 @@ it('verify modification after text components change', async () => {
         expect(parentElement).toHaveTextContent(mods.label);
     };
 
-    expect(componentInput).toBeDisabled();
+    expect(componentInput).toBeVisuallyDisabled();
+
     verifyAllProps(componentParentElement, componentInput, mods1Field1);
 
-    expect(component2Input).toBeDisabled();
+    expect(component2Input).toBeVisuallyDisabled();
+
     verifyAllProps(component2ParentElement, component2Input, mods1Field2);
 
     await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
 
-    expect(componentInput).toBeEnabled();
+    expect(component2Input).toBeVisuallyEnabled();
+
     verifyAllProps(componentParentElement, componentInput, mods2Field1);
 
-    expect(component2Input).toBeEnabled();
+    expect(component2Input).toBeVisuallyEnabled();
+
     verifyAllProps(component2ParentElement, component2Input, mods2Field2);
 });
 
