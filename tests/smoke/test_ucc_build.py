@@ -100,6 +100,14 @@ def test_ucc_generate_with_config_param():
         "globalConfig.json",
     )
     with tempfile.TemporaryDirectory(prefix="ucc") as temp:
+        with open(config_path) as fp:
+            cfg = json.load(fp)
+
+        cfg["meta"]["_uccVersion"] = "0.0.1"
+
+        with open(config_path, "w") as fp:
+            json.dump(cfg, fp)
+
         build.generate(
             source=package_folder, config_path=config_path, output_directory=temp
         )
