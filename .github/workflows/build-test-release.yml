@@ -377,9 +377,10 @@ jobs:
             --addon-input-name demo_input \
             --add-license "Apache License 2.0" \
             --include-author Splunk
-          poetry run ucc-gen build --source demo_addon_for_splunk/package --ta-version 0.0.1
       - run: |
           echo "# Binary File Declaration\n\nIgnoring lib/charset_normalizer/md.cpython-37m-x86_64-linux-gnu.so" > demo_addon_for_splunk/package/README.txt
+      - run: |
+          poetry run ucc-gen build --source demo_addon_for_splunk/package --ta-version 0.0.1
       - run: |
           mkdir packaged
           poetry run ucc-gen package --path output/demo_addon_for_splunk -o packaged
