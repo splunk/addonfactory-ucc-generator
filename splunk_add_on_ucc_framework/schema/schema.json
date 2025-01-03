@@ -2083,7 +2083,7 @@
         },
         "_uccVersion": {
           "type": "string",
-          "description": "Version of UCC used during build process"
+          "description": "Version of UCC used during build process. Do not use."
         },
         "hideUCCVersion": {
           "type": "boolean",
