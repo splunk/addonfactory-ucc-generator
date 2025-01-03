@@ -384,10 +384,10 @@ jobs:
       - run: |
           mkdir packaged
           poetry run ucc-gen package --path output/demo_addon_for_splunk -o packaged
-      - uses: splunk/appinspect-cli-action@v2.8
-        with:
-          app_path: packaged
-          included_tags: "cloud"
+      - run: |
+          python3 -m pip install splunk-appinspect
+      - run: |
+          splunk-appinspect inspect packaged/demo_addon_for_splunk-0.0.1.tar.gz --mode test --included-tags cloud          
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
