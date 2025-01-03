@@ -807,7 +807,7 @@
         "encrypted": {
           "$ref": "#/definitions/encrypted"
         },
-        "validators":{
+        "validators": {
           "$ref": "#/definitions/AnyValidator"
         },
         "options": {
@@ -2299,7 +2299,7 @@
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
         },
-        "validators":{
+        "validators": {
           "$ref": "#/definitions/AnyValidator"
         }
       },
@@ -2739,7 +2739,7 @@
       ],
       "additionalProperties": false
     },
-    "AnyValidator":{
+    "AnyValidator": {
       "type": "array",
       "description": "It is used to validate the values of fields using various validators.",
       "items": {
@@ -3289,6 +3289,11 @@
               "warning": {
                 "$ref": "#/definitions/WarningMessage"
               },
+              "disableNewInput": {
+                "type": "boolean",
+                "description": "Defines whether a newly created input of a service should be disabled by default.",
+                "default": false
+              },
               "hideForPlatform": {
                 "$ref": "#/definitions/HideForPlatform"
               }
@@ -3411,7 +3416,7 @@
               "table",
               "entity"
             ]
-          },    
+          },
           "hideForPlatform": {
             "$ref": "#/definitions/HideForPlatform"
           }
@@ -3530,7 +3535,7 @@
       ],
       "additionalProperties": false
     },
-    "HideForPlatform":{
+    "HideForPlatform": {
       "description": "Defines for which platform element should be hidden from UI perspective.",
       "anyOf": [
         {

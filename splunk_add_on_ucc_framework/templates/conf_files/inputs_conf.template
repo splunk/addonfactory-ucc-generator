@@ -1,4 +1,7 @@
 {% for input_name in input_names %}
 {{ "[" ~ input_name ~ "]"}}
 python.version = python3
+{% if disabled and service_name == input_name%}
+disabled = true
+{% endif %}
 {% endfor %}
