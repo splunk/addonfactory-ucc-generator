@@ -446,6 +446,7 @@ def generate(
     if gc_path:
         logger.info(f"Using globalConfig file located @ {gc_path}")
         global_config = global_config_lib.GlobalConfig(gc_path)
+        global_config.cleanup_unwanted_params()
         # handle the update of globalConfig before validating
         global_config_update.handle_global_config_update(global_config)
         try:
@@ -458,11 +459,11 @@ def generate(
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
-        global_config.add_ucc_version(__version__)
         global_config.dump(global_config.original_path)
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
+        global_config.add_ucc_version(__version__)
         global_config.expand()
         if ta_name != global_config.product:
             logger.error(

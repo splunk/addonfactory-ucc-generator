@@ -197,6 +197,10 @@ class GlobalConfig:
     def update_addon_version(self, version: str) -> None:
         self._content.setdefault("meta", {})["version"] = version
 
+    def cleanup_unwanted_params(self) -> None:
+        if "_uccVersion" in self.content["meta"]:
+            del self.content["meta"]["_uccVersion"]
+
     def add_ucc_version(self, version: str) -> None:
         self.content.setdefault("meta", {})["_uccVersion"] = version
 
