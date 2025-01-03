@@ -39,13 +39,14 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/splunk/addonfactory-ucc-generator/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.7,<3.13"
+python = ">=3.7,<3.14"
 jinja2 = ">=2,<4"
 addonfactory-splunk-conf-parser-lib = "^0.4.3"
 dunamai = "^1.22.0"
