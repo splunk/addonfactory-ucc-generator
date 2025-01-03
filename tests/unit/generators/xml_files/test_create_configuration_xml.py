@@ -2,12 +2,17 @@ from pytest import fixture
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import ConfigurationXml
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
-import tests.unit.helpers as helpers
+from tests.unit.helpers import get_testdata_file_path
 
 
 @fixture
 def global_config():
-    return GlobalConfig(helpers.get_testdata_file_path("valid_config.json"))
+    return GlobalConfig(get_testdata_file_path("valid_config.json"))
+
+
+@fixture
+def global_config_without_configuration():
+    return GlobalConfig(get_testdata_file_path("valid_config_no_configuration.json"))
 
 
 @fixture
@@ -45,6 +50,51 @@ def test_set_attributes(
         addon_name=ta_name,
     )
     assert hasattr(config_xml, "configuration_xml_content")
+
+
+def test_set_attributes_without_inputs(
+    global_config_without_configuration,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    config_xml = ConfigurationXml(
+        global_config=global_config_without_configuration,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    assert not hasattr(config_xml, "configuration_xml_content")
+
+
+@patch(
+    "splunk_add_on_ucc_framework.generators.xml_files.ConfigurationXml._set_attributes",
+    return_value=MagicMock(),
+)
+def test_generate_xml_without_inputs(
+    mock_set_attributes,
+    global_config_without_configuration,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    configuration_xml = ConfigurationXml(
+        global_config=global_config_without_configuration,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    mock_writer = MagicMock()
+    with patch.object(configuration_xml, "writer", mock_writer):
+        file_paths = configuration_xml.generate_xml()
+
+        # Assert that no files are returned since no dashboard is configured
+        assert file_paths is None
 
 
 @patch(
