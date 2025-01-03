@@ -716,7 +716,6 @@ class GlobalConfigValidator:
     def validate(self) -> None:
         self._validate_config_against_schema()
         if self._config["pages"].get("configuration"):
-            print("\n HIIII")
             self._validate_configuration_tab_table_has_name_field()
             self._validate_file_type_entity()
         self._validate_custom_rest_handlers()

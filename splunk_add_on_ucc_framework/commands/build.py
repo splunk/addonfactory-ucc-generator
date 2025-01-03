@@ -463,7 +463,7 @@ def generate(
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
-        if global_config.has_configuration:
+        if global_config.has_configuration():
             global_config.expand()
         if ta_name != global_config.product:
             logger.error(
@@ -663,6 +663,7 @@ def generate(
     if global_config:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
+        # print("\n\n open_aopu",open_api_object)
 
         output_openapi_folder = os.path.abspath(
             os.path.join(output_directory, ta_name, "appserver", "static")

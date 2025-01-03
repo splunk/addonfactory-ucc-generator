@@ -42,13 +42,6 @@ def generate_nav_default_xml(
     The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
     nav = ET.Element("nav")
-    if include_configuration:
-        if default_view == "configuration":
-            ET.SubElement(
-                nav, "view", attrib={"name": "configuration", "default": "true"}
-            )
-    else:
-        ET.SubElement(nav, "view", attrib={"name": "configuration"})
     if include_inputs:
         if (
             not (include_configuration) and default_view == "configuration"
@@ -57,6 +50,13 @@ def generate_nav_default_xml(
         else:
             ET.SubElement(nav, "view", attrib={"name": "inputs"})
 
+    if include_configuration:
+        if default_view == "configuration":
+            ET.SubElement(
+                nav, "view", attrib={"name": "configuration", "default": "true"}
+            )
+        else:
+            ET.SubElement(nav, "view", attrib={"name": "configuration"})
     if include_dashboard:
         if default_view == "dashboard":
             ET.SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
