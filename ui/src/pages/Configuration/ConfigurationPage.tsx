@@ -46,9 +46,12 @@ type Tab = z.infer<typeof TabSchema>;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
-    const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
-
     const platform = usePlatform(unifiedConfigs, 'configuration');
+    const configPage = unifiedConfigs.pages?.configuration;
+    const tabs = useMemo(() => configPage?.tabs ?? [], [configPage]);
+    const title = configPage?.title ?? '';
+    const description = configPage?.description ?? '';
+    const subDescription = configPage?.subDescription ?? undefined;
 
     const filteredTabs = (tabs ?? []).filter(
         (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
@@ -90,6 +93,10 @@ function ConfigurationPage() {
             setIsPageOpen(false);
         }
     }, []);
+
+    if (!configPage) {
+        return null;
+    }
 
     const updateIsPageOpen = (data: boolean) => {
         if (isComponentMounted.current) {

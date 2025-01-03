@@ -94,6 +94,7 @@ export const getConfigBasicOauthDisableonEdit = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: entityBasicOauthDisableonEdit, ...defaultTableProps }],
             },
         },
@@ -109,6 +110,7 @@ export const getConfigOauthOauthDisableonEdit = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: entityOauthOauthDisableonEdit, ...defaultTableProps }],
             },
         },
@@ -168,6 +170,7 @@ export const getConfigAccessTokenMock = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: accessTokenMock, ...defaultTableProps }],
             },
         },
@@ -215,6 +218,7 @@ export const getConfigEnableFalseForOauth = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: entityEnableFalseForOauthField, ...defaultTableProps }],
             },
         },
@@ -244,6 +248,7 @@ export const getConfigWarningMessage = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [
                     { entity: accessTokenMock, ...defaultTableProps, warning: WARNING_MESSAGES },
                 ],
@@ -261,6 +266,7 @@ export const getConfigWarningMessageAlwaysDisplay = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [
                     {
                         entity: accessTokenMock,
@@ -314,6 +320,7 @@ export const getConfigFullyEnabledField = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: entityBasicOauthFullyEnabledField, ...defaultTableProps }],
             },
         },
@@ -364,6 +371,7 @@ export const getConfigWithOauthDefaultValue = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: entityBasicOauthDefaultValue, ...defaultTableProps }],
             },
         },
@@ -435,6 +443,7 @@ export const getConfigWithSeparatedEndpointsOAuth = () => {
             ...globalConfig.pages,
             configuration: {
                 ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: entityOauthOauthSeparatedEndpoints, ...defaultTableProps }],
             },
         },
