@@ -1521,7 +1521,8 @@
                             "required": true
                         }
                     ],
-                    "title": "Example Input Four"
+                    "title": "Example Input Four",
+                    "disableNewInput": true
                 },
                 {
                     "name": "service_hidden_for_cloud",
@@ -1821,10 +1822,9 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.54.0+705615633",
+        "version": "5.55.0+36810ea3",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
-        "_uccVersion": "5.54.0",
         "supportedThemes": [
             "light",
             "dark"
