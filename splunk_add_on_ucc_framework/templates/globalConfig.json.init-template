@@ -59,7 +59,11 @@
                 },
                 {
                     "type": "loggingTab"
+                }{%- if need_proxy %},
+                {
+                    "type": "proxyTab"
                 }
+                {%- endif %}
             ],
             "title": "Configuration",
             "description": "Set up your add-on"
