@@ -201,6 +201,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="overwrite already generated add-on folder",
     )
     init_parser.add_argument(
+        "--need-proxy",
+        action="store_true",
+        required=False,
+        help="Specifies if proxy is needed or not",
+    )
+    init_parser.add_argument(
         "--add-license",
         type=str,
         choices=[
@@ -257,6 +263,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_input_name=args.addon_input_name,
             addon_version=args.addon_version,
             overwrite=args.overwrite,
+            need_proxy=args.need_proxy,
             add_license=args.add_license,
             include_author=args.include_author,
         )

@@ -38,9 +38,8 @@ site/
 assets/
 Splunk_TA_Dynatrace/*
 Splunk_TA_Dynatrace_ucc/*
-demo_addon_for_splunk_already_exists/
-demo_addon_for_splunk_license/
-addon_name
+demo_addon_for_splunk*/
+addon_name/
 init_addon_for_ucc_package/
 demo_addon_for_splunk/
 
