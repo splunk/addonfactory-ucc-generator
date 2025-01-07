@@ -24,7 +24,7 @@ logger = logging.getLogger("ucc_gen")
 
 class DefaultXml(XMLGenerator):
     __description__ = (
-        "Generates default.xml file based on configs present in globalConfig"
+        "Generates default.xml file based on configs present in globalConfig, "
         "in `default/data/ui/nav` folder."
     )
 

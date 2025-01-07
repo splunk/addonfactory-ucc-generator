@@ -179,7 +179,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 const services = inputsPage?.services;
                 label = services?.find((x) => x.name === entityModal.serviceName)?.title;
             } else if (page === PAGE_CONF) {
-                const tabs  = unifiedConfigs.pages.configuration?.tabs;
+                const tabs = unifiedConfigs.pages.configuration?.tabs;
                 label = tabs?.find((x) => x.name === entityModal.serviceName)?.title;
             }
             return entityModal.serviceName && entityModal.mode ? (

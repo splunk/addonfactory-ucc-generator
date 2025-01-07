@@ -195,7 +195,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 }
             });
         } else {
-            (globalConfig.pages.configuration?.tabs ?? []).forEach((tab)  => {
+            (globalConfig.pages.configuration?.tabs ?? []).forEach((tab) => {
                 const flag = tab.table
                     ? tab.name === props.serviceName
                     : tab.name === props.stanzaName && props.serviceName === 'settings';

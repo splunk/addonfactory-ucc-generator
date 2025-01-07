@@ -664,7 +664,6 @@ def generate(
     if global_config:
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
-        # print("\n\n open_aopu",open_api_object)
 
         output_openapi_folder = os.path.abspath(
             os.path.join(output_directory, ta_name, "appserver", "static")
