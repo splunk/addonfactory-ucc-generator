@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Splunk_TA_UCCExample",
-        "version": "5.55.0+b0c1d456",
+        "version": "5.55.0+2b3a9e8d9",
         "description": "Splunk UCC test Add-on",
         "contact": {
             "name": "Splunk",

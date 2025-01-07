@@ -261,9 +261,10 @@ def _dump_with_migrated_entities(
     _collapse_entities(
         global_config.content["pages"].get("inputs", {}).get("services"), entity_type
     )
-    _collapse_entities(
-        global_config.content["pages"]["configuration"].get("tabs"), entity_type
-    )
+    if global_config.has_configuration():
+        _collapse_entities(
+            global_config.content["pages"]["configuration"].get("tabs"), entity_type
+        )
     _collapse_entities(global_config.content.get("alerts"), entity_type)
 
     _dump(global_config.content, path, global_config._is_global_config_yaml)
