@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ def _generate_addon(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    need_proxy: bool = False,
     add_license: str | None = None,
     include_author: str | None = None,
 ) -> str:
@@ -99,6 +100,7 @@ def _generate_addon(
             addon_version=addon_version,
             addon_display_name=addon_display_name,
             addon_input_name=addon_input_name,
+            need_proxy=need_proxy,
         )
     )
     with open(global_config_path, "w") as _f:
@@ -188,6 +190,7 @@ def init(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    need_proxy: bool = False,
     add_license: str | None = None,
     include_author: str | None = None,
 ) -> str:
@@ -234,6 +237,7 @@ def init(
         addon_version,
         addon_rest_root,
         overwrite,
+        need_proxy,
         add_license,
         include_author,
     )
