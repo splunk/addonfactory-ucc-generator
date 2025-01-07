@@ -55,7 +55,7 @@ class GlobalConfigValidator:
 
     @property
     def config_tabs(self) -> List[Any]:
-        if self._config["pages"].get("configuration"):
+        if self._global_config.has_configuration():
             return [
                 resolve_tab(tab)
                 for tab in self._config["pages"]["configuration"]["tabs"]

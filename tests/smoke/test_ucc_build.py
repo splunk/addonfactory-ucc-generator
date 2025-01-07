@@ -366,6 +366,15 @@ def test_ucc_generate_with_no_configuration():
             actual_file_path = path.join(actual_folder, *f)
             assert path.exists(actual_file_path)
 
+        files_should_be_absent = [
+            ("default", "data", "ui", "views", "configuration.xml"),
+            ("README", "splunk_ta_uccexample_account.conf.spec"),
+            ("README", "splunk_ta_uccexample_settings.conf.spec"),
+        ]
+        for af in files_should_be_absent:
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
+
 
 def test_ucc_generate_with_configuration_files_only():
     with tempfile.TemporaryDirectory() as temp_dir:
