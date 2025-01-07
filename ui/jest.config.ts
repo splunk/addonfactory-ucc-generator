@@ -5,7 +5,7 @@ export default {
     clearMocks: true,
     // env settings
     setupFiles: ['<rootDir>/jest.polyfills.ts'],
-    testEnvironment: 'jsdom',
+    testEnvironment: 'jest-fixed-jsdom',
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     modulePathIgnorePatterns: ['<rootDir>/src/main/resources'],
     restoreMocks: true,
