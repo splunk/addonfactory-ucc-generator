@@ -31,7 +31,7 @@ fields = [
     ),
 
     field.RestField(
-        'checkbox_field',
+        'event_filters',
         required=False,
         encrypted=False,
         default=None,
