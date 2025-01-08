@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ def _generate_addon(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    need_proxy: bool = False,
     add_license: str | None = None,
     include_author: str | None = None,
 ) -> str:
@@ -99,12 +100,25 @@ def _generate_addon(
             addon_version=addon_version,
             addon_display_name=addon_display_name,
             addon_input_name=addon_input_name,
+            need_proxy=need_proxy,
         )
     )
     with open(global_config_path, "w") as _f:
         _f.write(global_config_rendered_content)
     package_path = os.path.join(generated_addon_path, "package")
     os.makedirs(package_path)
+    icons_path = os.path.join(package_path, "static")
+    os.makedirs(icons_path)
+    for name in [
+        "appIcon_2x.png",
+        "appIcon.png",
+        "appIconAlt_2x.png",
+        "appIconAlt.png",
+        "appLogo.png",
+        "appLogo_2x.png",
+    ]:
+        icons = utils.get_icons_path(name)
+        shutil.copy(icons, icons_path)
     package_license_dir = os.path.join(package_path, "LICENSES")
     os.makedirs(package_license_dir)
 
@@ -176,6 +190,7 @@ def init(
     addon_version: str,
     addon_rest_root: str | None = None,
     overwrite: bool = False,
+    need_proxy: bool = False,
     add_license: str | None = None,
     include_author: str | None = None,
 ) -> str:
@@ -222,6 +237,7 @@ def init(
         addon_version,
         addon_rest_root,
         overwrite,
+        need_proxy,
         add_license,
         include_author,
     )

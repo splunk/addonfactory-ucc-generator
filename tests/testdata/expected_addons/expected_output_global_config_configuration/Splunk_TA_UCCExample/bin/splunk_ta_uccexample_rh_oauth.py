@@ -12,6 +12,7 @@ from httplib2 import Http, ProxyInfo, socks
 import splunk.admin as admin
 from solnlib import log
 from solnlib import conf_manager
+from solnlib.conf_manager import InvalidHostnameError, InvalidPortError
 from solnlib.utils import is_true
 import json
 
@@ -22,6 +23,7 @@ logger = log.Logs().get_logger('splunk_ta_uccexample_rh_oauth2_token')
 # Map for available proxy type
 _PROXY_TYPE_MAP = {
     'http': socks.PROXY_TYPE_HTTP,
+    # comment the below line if your add-on is not compatible with 'http_no_tunnel' protocol
     'http_no_tunnel': socks.PROXY_TYPE_HTTP_NO_TUNNEL,
     'socks4': socks.PROXY_TYPE_SOCKS4,
     'socks5': socks.PROXY_TYPE_SOCKS5,
@@ -39,7 +41,7 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         session_key = self.getSessionKey()
         log_level = conf_manager.get_log_level(
             logger=logger,
@@ -49,7 +51,7 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
             log_stanza="logging",
             log_level_field="loglevel"
         )
-        logger.set_level(log_level)
+        log.Logs().set_level(log_level)
 
     def setup(self):
         if self.requestedAction == admin.ACTION_EDIT:
@@ -112,27 +114,30 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
     """
 
     def getProxyDetails(self):
-        # Create confmanger object for the app with realm
-        cfm = conf_manager.ConfManager(self.getSessionKey(
-        ), "Splunk_TA_UCCExample", realm="__REST_CREDENTIAL__#Splunk_TA_UCCExample#configs/conf-splunk_ta_uccexample_settings")
-        # Get Conf object of apps settings
-        conf = cfm.get_conf('splunk_ta_uccexample_settings')
-        # Get proxy stanza from the settings
-        proxy_config = conf.get("proxy", True)
+        try: 
+            proxy_config = conf_manager.get_proxy_dict(logger=logger,
+            session_key=self.getSessionKey(),
+            app_name="Splunk_TA_UCCExample",
+            conf_name="splunk_ta_uccexample_settings",
+            proxy_port="proxy_port",  # Field name of port
+            proxy_host="proxy_url"  # Field name of hostname
+            )
+
+        # Handle invalid port case
+        except InvalidPortError as e:
+            logger.error(f"Proxy configuration error: {e}")
+
+        # Handle invalid hostname case
+        except InvalidHostnameError as e:
+            logger.error(f"Proxy configuration error: {e}")
+
+
         if not proxy_config or not is_true(proxy_config.get('proxy_enabled')):
             logger.info('Proxy is not enabled')
             return None
 
         url = proxy_config.get('proxy_url')
         port = proxy_config.get('proxy_port')
-
-        if url or port:
-            if not url:
-                raise ValueError('Proxy "url" must not be empty')
-            if not self.is_valid_port(port):
-                raise ValueError(
-                    'Proxy "port" must be in range [1,65535]: %s' % port
-                )
 
         user = proxy_config.get('proxy_username')
         password = proxy_config.get('proxy_password')
@@ -169,12 +174,6 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
     :param port: port number to be validated
     :type port: ``int``
     """
-
-    def is_valid_port(self, port):
-        try:
-            return 0 < int(port) <= 65535
-        except ValueError:
-            return False
 
 if __name__ == "__main__":
     admin.init(splunk_ta_uccexample_rh_oauth2_token, admin.CONTEXT_APP_AND_USER)

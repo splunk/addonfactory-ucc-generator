@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,9 +28,14 @@ class InputsConf(ConfGenerator):
         self.conf_file = "inputs.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
         self.input_names: List[Dict[str, List[str]]] = []
+        self.disable = False
+        self.service_name = ""
         if self._global_config:
             for service in self._global_config.inputs:
                 properties = []
+                if service.get("disableNewInput"):
+                    self.disable = True
+                    self.service_name = service["name"]
                 if service.get("conf") is not None:
                     # Add data input of self defined conf to inputs.conf.spec
                     self.input_names.append(
@@ -62,7 +67,9 @@ class InputsConf(ConfGenerator):
             template_file_path=["conf_files"], file_name="inputs_conf.template"
         )
 
-        rendered_content = self._template.render(input_names=stanzas)
+        rendered_content = self._template.render(
+            input_names=stanzas, disabled=self.disable, service_name=self.service_name
+        )
         self.writer(
             file_name=self.conf_file,
             file_path=file_path,
