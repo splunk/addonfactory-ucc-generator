@@ -3,12 +3,12 @@ import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { getCheckedCheckboxesCount } from './CheckboxTree.utils';
 import {
     CheckboxContainer,
-    CheckboxWrapper,
-    CustomCheckbox,
     Description,
     GroupLabel,
     RowContainer,
     StyledCollapsiblePanel,
+    StyledRow,
+    StyledSwitch,
 } from './StyledComponent';
 import { GroupWithRows, ValueByField } from './types';
 
@@ -34,11 +34,6 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
         [group.rows, values]
     );
 
-    const isIndeterminate = useMemo(
-        () => !isParentChecked && group.rows.some((row) => values.get(row.field)?.checkbox),
-        [group.rows, values, isParentChecked]
-    );
-
     const checkedCheckboxesCount = useMemo(
         () => getCheckedCheckboxesCount(group, values),
         [group, values]
@@ -51,17 +46,17 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
     const toggleCollapse = () => setIsExpanded((prev) => !prev);
 
     const ParentCheckbox = (
-        <CheckboxWrapper>
-            <CustomCheckbox
-                type="checkbox"
-                checked={isParentChecked}
-                data-indeterminate={isIndeterminate}
-                onChange={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
+        <StyledRow>
+            <StyledSwitch
+                aria-label={`${group.label} parent checkbox`}
+                selected={isParentChecked}
+                onClick={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
+                appearance="checkbox"
                 disabled={disabled}
-                aria-label="custom checkbox to manage select/deselect/indeterminate state"
-            />
-            {group.label}
-        </CheckboxWrapper>
+            >
+                {group.label}
+            </StyledSwitch>
+        </StyledRow>
     );
 
     const childRows = (
