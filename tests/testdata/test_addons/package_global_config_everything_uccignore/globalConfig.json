@@ -848,7 +848,7 @@
                         {
                             "type": "checkboxTree",
                             "label": "Event Filters",
-                            "field": "checkboxtree_field",
+                            "field": "event_filters",
                             "required": true,
                             "options": {
                                 "groups": [
