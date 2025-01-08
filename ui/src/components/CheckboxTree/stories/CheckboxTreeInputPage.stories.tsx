@@ -3,9 +3,9 @@ import React from 'react';
 import { within, userEvent, expect } from '@storybook/test';
 import BaseFormView from '../../BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../../../util/util';
-import { serverHandlers } from '../CheckboxTreeMocks';
-import CheckboxTreeConfig from './CheckboxTreeMocks.json';
-import CheckboxTreeRequiredConfig from './CheckboxTreeRequiredMocks.json';
+import { serverHandlers } from '../mocks/CheckboxTreeMocks';
+import CheckboxTreeConfig from '../mocks/CheckboxTreeMocks.json';
+import CheckboxTreeRequiredConfig from '../mocks/CheckboxTreeRequiredMocks.json';
 import InputPage from '../../../pages/Input/InputPage';
 
 const meta = {
