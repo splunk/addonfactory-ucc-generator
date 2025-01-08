@@ -20,6 +20,7 @@ import { TabSchema } from '../../types/globalConfig/pages';
 import { PageContextProvider } from '../../context/PageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { usePlatform } from '../../hooks/usePlatform';
+import { invariant } from '../../util/invariant';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
@@ -46,14 +47,12 @@ type Tab = z.infer<typeof TabSchema>;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
-    const platform = usePlatform(unifiedConfigs, 'configuration');
-    const configPage = unifiedConfigs.pages?.configuration;
-    const tabs = useMemo(() => configPage?.tabs ?? [], [configPage]);
-    const title = configPage?.title ?? '';
-    const description = configPage?.description ?? '';
-    const subDescription = configPage?.subDescription ?? undefined;
+    invariant(unifiedConfigs.pages.configuration, 'Configuration page not found in global config');
+    const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
 
-    const filteredTabs = (tabs ?? []).filter(
+    const platform = usePlatform(unifiedConfigs, 'configuration');
+
+    const filteredTabs = tabs.filter(
         (tab) => !shouldHideForPlatform(tab.hideForPlatform, platform)
     );
 
@@ -93,10 +92,6 @@ function ConfigurationPage() {
             setIsPageOpen(false);
         }
     }, []);
-
-    if (!configPage) {
-        return null;
-    }
 
     const updateIsPageOpen = (data: boolean) => {
         if (isComponentMounted.current) {
