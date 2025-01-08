@@ -24,7 +24,11 @@ export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
         button {
             background-color: ${pick({
                 enterprise: variables.neutral300,
-                prisma: variables.neutral200,
+            })} !important;
+        }
+        span > div > div > button {
+            background-color: ${pick({
+                enterprise: variables.neutral100,
             })} !important;
         }
         font-size: 14px;
@@ -57,6 +61,12 @@ export const GroupLabel = styled.div`
         enterprise: variables.neutral300,
         prisma: variables.neutral200,
     })};
+
+    button {
+        background-color: ${pick({
+            enterprise: variables.neutral100,
+        })} !important;
+    }
     font-size: 14px;
     margin: ${variables.spacingSmall} 0;
 `;
