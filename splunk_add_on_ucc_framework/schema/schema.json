@@ -453,6 +453,9 @@
               },
               {
                 "$ref": "#/definitions/PredefinedLoggingTab"
+              },
+              {
+                "$ref": "#/definitions/PredefinedProxyTab"
               }
             ]
           },
@@ -3148,6 +3151,197 @@
           "type": "string",
           "default": "INFO",
           "description": "Default log level at the beginning."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "PredefinedProxyTab": {
+      "type": "object",
+      "description": "Predefined Proxy tab configuration, can be used to reduce length of config",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "proxyTab",
+          "description": "Exactly: proxyTab"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[\\/\\w]+$",
+          "default": "Proxy",
+          "description": "Tab name.",
+          "maxLength": 250
+        },
+        "title": {
+          "type": "string",
+          "default": "Proxy",
+          "description": "Tab title.",
+          "maxLength": 50
+        },
+        "enable_proxy": {
+          "type": "object",
+          "default": {
+            "type": "checkbox",
+            "label": "Enable",
+            "field": "proxy_enabled"
+          },
+          "description": "Checkbox for enabling proxy"
+        },
+        "proxy_type": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "singleSelect",
+                "label": "Proxy Type",
+                "required": false,
+                "options": {
+                  "disableSearch": true,
+                  "autoCompleteFields": [
+                    {
+                      "value": "http",
+                      "label": "http"
+                    },
+                    {
+                      "value": "socks4",
+                      "label": "socks4"
+                    },
+                    {
+                      "value": "socks5",
+                      "label": "socks5"
+                    }
+                  ]
+                },
+                "defaultValue": "http",
+                "field": "proxy_type"
+              }
+            }
+          ],
+          "description": "Proxy type. Available values: http, socks4, socks5"
+        },
+        "host": {
+          "type": "object",
+          "default": {
+            "type": "text",
+            "label": "Host",
+            "validators": [
+              {
+                "type": "string",
+                "errorMsg": "Max host length is 4096",
+                "minLength": 0,
+                "maxLength": 4096
+              },
+              {
+                "type": "regex",
+                "errorMsg": "Proxy Host should not have special characters",
+                "pattern": "^[a-zA-Z]\\w*$"
+              }
+            ],
+            "field": "proxy_url"
+          },
+          "description": "Host of the proxy"
+        },
+        "port": {
+          "type": "object",
+          "default": {
+            "type": "text",
+            "label": "Port",
+            "validators": [
+              {
+                "type": "number",
+                "range": [
+                  1,
+                  65535
+                ],
+                "isInteger": true
+              }
+            ],
+            "field": "proxy_port"
+          },
+          "description": "Port of the proxy"
+        },
+        "username": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "text",
+                "label": "Username",
+                "validators": [
+                  {
+                    "type": "string",
+                    "errorMsg": "Max length of username is 50",
+                    "minLength": 0,
+                    "maxLength": 50
+                  }
+                ],
+                "field": "proxy_username"
+              }
+            }
+          ],
+          "description": "Username used to access the proxy server."
+        },
+        "password": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "text",
+                "label": "Password",
+                "validators": [
+                  {
+                    "type": "string",
+                    "errorMsg": "Max length of password is 8192",
+                    "minLength": 0,
+                    "maxLength": 8192
+                  }
+                ],
+                "encrypted": true,
+                "field": "proxy_password"
+              }
+            }
+          ],
+          "description": "Password assigned for the username"
+        },
+        "dns_resolution": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "checkbox",
+                "label": "DNS resolution",
+                "field": "proxy_rdns"
+              }
+            }
+          ],
+          "description": "Specifies whether DNS resolution should be used or not."
+        },
+        "options": {
+          "$ref": "#/definitions/SaveValidatorHook"
+        },
+        "hook": {
+          "type": "object",
+          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+        },
+        "warning": {
+          "$ref": "#/definitions/WarningMessage"
         },
         "help": {
           "$ref": "#/definitions/help"
