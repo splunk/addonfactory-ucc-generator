@@ -3,11 +3,10 @@ import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { getCheckedCheckboxesCount } from './CheckboxTree.utils';
 import {
     CheckboxContainer,
-    Description,
+    SelectionCounter,
     GroupLabel,
     RowContainer,
     StyledCollapsiblePanel,
-    StyledRow,
     StyledSwitch,
 } from './StyledComponent';
 import { GroupWithRows, ValueByField } from './types';
@@ -46,17 +45,15 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
     const toggleCollapse = () => setIsExpanded((prev) => !prev);
 
     const ParentCheckbox = (
-        <StyledRow>
-            <StyledSwitch
-                aria-label={`${group.label} parent checkbox`}
-                selected={isParentChecked}
-                onClick={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
-                appearance="checkbox"
-                disabled={disabled}
-            >
-                {group.label}
-            </StyledSwitch>
-        </StyledRow>
+        <StyledSwitch
+            aria-label={`${group.label} parent checkbox`}
+            selected={isParentChecked}
+            onClick={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
+            appearance="checkbox"
+            disabled={disabled}
+        >
+            {group.label}
+        </StyledSwitch>
     );
 
     const childRows = (
@@ -73,10 +70,10 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
         </RowContainer>
     );
 
-    const description = (
-        <Description>
+    const selectionCounter = (
+        <SelectionCounter>
             {checkedCheckboxesCount} of {group.rows.length}
-        </Description>
+        </SelectionCounter>
     );
 
     return (
@@ -86,7 +83,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
                     open={isExpanded}
                     onChange={toggleCollapse}
                     title={ParentCheckbox}
-                    actions={description}
+                    actions={selectionCounter}
                 >
                     {childRows}
                 </StyledCollapsiblePanel>
@@ -94,7 +91,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
                 <>
                     <GroupLabel>
                         {ParentCheckbox}
-                        {description}
+                        {selectionCounter}
                     </GroupLabel>
                     {childRows}
                 </>

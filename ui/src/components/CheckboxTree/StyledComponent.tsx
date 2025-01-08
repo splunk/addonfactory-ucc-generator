@@ -4,8 +4,15 @@ import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
 import { pick, variables } from '@splunk/themes';
 import Switch from '@splunk/react-ui/Switch';
 
-export const FixedCheckboxRowWidth = css`
+const FixedCheckboxRowWidth = css`
     width: 320px;
+`;
+
+const CheckboxInHeader = css`
+    align-self: center;
+    background-color: ${pick({
+        enterprise: variables.neutral100,
+    })};
 `;
 
 export const StyledColumnLayout = styled(ColumnLayout)`
@@ -19,19 +26,17 @@ export const CheckboxContainer = styled.div`
 `;
 
 export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
-    margin-top: ${variables.spacingXSmall};
     & > *:not(:last-child) {
-        button {
+        // expander
+        [data-test='toggle'] {
             background-color: ${pick({
                 enterprise: variables.neutral300,
-            })} !important;
+            })};
         }
-        span > div > div > button {
-            background-color: ${pick({
-                enterprise: variables.neutral100,
-            })} !important;
+        // checkbox
+        [data-test='button'] {
+            ${CheckboxInHeader}
         }
-        font-size: 14px;
         margin-bottom: ${variables.spacingXSmall};
         background-color: ${pick({
             enterprise: variables.neutral300,
@@ -47,10 +52,11 @@ export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
 `;
 
 export const RowContainer = styled.div`
-    & > *:not(:last-child) {
-        margin-bottom: ${variables.spacingSmall};
-    }
-    margin: 0 0 ${variables.spacingSmall} 28px;
+    margin: 0 0 ${variables.spacingSmall}
+        ${pick({
+            enterprise: '30px',
+            prisma: '53px',
+        })};
 `;
 
 export const GroupLabel = styled.div`
@@ -63,33 +69,24 @@ export const GroupLabel = styled.div`
     })};
 
     button {
-        background-color: ${pick({
-            enterprise: variables.neutral100,
-        })} !important;
+        ${CheckboxInHeader}
     }
-    font-size: 14px;
-    margin: ${variables.spacingSmall} 0;
 `;
 
-export const Description = styled.span`
-    padding-right: ${variables.spacingLarge};
-    margin-left: ${variables.spacingSmall};
-    font-size: 12px;
-    display: flex;
-    justify-content: end;
-    min-width: 35px;
-    align-items: center;
+const HeaderTextColor = pick({
+    enterprise: variables.textColor,
+    prisma: variables.contentColorActive,
+});
+
+export const SelectionCounter = styled.div`
+    font-size: ${variables.fontSizeSmall};
+    text-align: right;
+    align-content: center;
+    flex-shrink: 0;
+    color: ${HeaderTextColor};
 `;
 
 export const StyledSwitch = styled(Switch)`
-    padding: 0 3px;
-    flex: min-content;
-    align-items: center;
-`;
-
-export const StyledRow = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 2px;
+    color: ${HeaderTextColor};
+    flex-shrink: 1;
 `;

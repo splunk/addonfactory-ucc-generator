@@ -180,7 +180,7 @@ export const MultilineWithGroups: Story = {
                 {
                     field: 'lorem_ipsum2',
                     checkbox: {
-                        label: 'Lorem ipsum dummy text',
+                        label: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry',
                     },
                 },
                 {

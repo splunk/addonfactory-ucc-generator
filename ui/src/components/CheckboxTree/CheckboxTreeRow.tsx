@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyledRow, StyledSwitch } from './StyledComponent';
+import { StyledSwitch } from './StyledComponent';
 
 interface CheckboxRowProps {
     field: string;
@@ -19,18 +19,16 @@ function CheckboxRow(props: CheckboxRowProps) {
     };
 
     return (
-        <StyledRow>
-            <StyledSwitch
-                aria-label={`${label} checkbox`}
-                data-test-field={field}
-                selected={checkbox}
-                onClick={handleChangeCheckbox}
-                appearance="checkbox"
-                disabled={disabled}
-            >
-                {label}
-            </StyledSwitch>
-        </StyledRow>
+        <StyledSwitch
+            aria-label={`${label} checkbox`}
+            data-test-field={field}
+            selected={checkbox}
+            onClick={handleChangeCheckbox}
+            appearance="checkbox"
+            disabled={disabled}
+        >
+            {label}
+        </StyledSwitch>
     );
 }
 
