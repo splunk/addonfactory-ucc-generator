@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode, useState } from 'react';
+import React, { createContext, ReactNode, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { AcceptableFormRecord } from '../types/components/shareableTypes';
 
@@ -36,24 +36,22 @@ export function TableContextProvider({ children }: { children: ReactNode }) {
     const [pageSize, setPageSize] = useState<number>(10);
     const [currentPage, setCurrentPage] = useState<number>(0);
 
-    return (
-        <TableContext.Provider
-            value={{
-                rowData,
-                setRowData,
-                searchText,
-                setSearchText,
-                searchType,
-                setSearchType,
-                pageSize,
-                setPageSize,
-                currentPage,
-                setCurrentPage,
-            }}
-        >
-            {children}
-        </TableContext.Provider>
+    const contextValue = useMemo(
+        () => ({
+            rowData,
+            setRowData,
+            searchText,
+            setSearchText,
+            searchType,
+            setSearchType,
+            pageSize,
+            setPageSize,
+            currentPage,
+            setCurrentPage,
+        }),
+        [rowData, searchText, searchType, pageSize, currentPage]
     );
+    return <TableContext.Provider value={contextValue}>{children}</TableContext.Provider>;
 }
 
 TableContextProvider.propTypes = {
