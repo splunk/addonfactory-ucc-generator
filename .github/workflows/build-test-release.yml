@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@3.0
+        uses: splunk/addonfactory-test-matrix-action@v3.0
 
   fossa-scan:
     continue-on-error: true
