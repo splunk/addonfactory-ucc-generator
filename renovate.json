@@ -81,6 +81,7 @@
         "react",
         "react-dom",
         "react-is",
+        "react-router-dom",
         "string-width",
         "strip-ansi",
         "styled-components",

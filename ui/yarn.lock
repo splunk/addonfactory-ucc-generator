@@ -2558,10 +2558,10 @@
     query-string "^6.13.8"
     rxjs "^5.5.12"
 
-"@splunk/eslint-config@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@splunk/eslint-config/-/eslint-config-4.0.0.tgz#31390367a2ba449c6c8d4f5033abadc94be36175"
-  integrity sha512-u2ZbzoLVJUtcBwX5RcAzET9cGuKjFrDOHLcA0FswmhPkrfSWVl7Ajd6ewGWCyG3tJxXSPvuYutD7SPeSBurIMg==
+"@splunk/eslint-config@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.npmjs.org/@splunk/eslint-config/-/eslint-config-5.0.0.tgz#a4a45d8a570781ac0ba1623029e330d612773620"
+  integrity sha512-5//7NG52+gHtFBHZuVcqqt2F95HeHHlSBlkDjAqFl5gLPQiJX99cED62teAn7ktFrkISIvAGD9wrazMYxly+Bw==
 
 "@splunk/moment@^0.6.0", "@splunk/moment@^0.6.1":
   version "0.6.1"
@@ -2612,6 +2612,15 @@
   version "4.9.0"
   resolved "https://registry.npmjs.org/@splunk/react-icons/-/react-icons-4.9.0.tgz#732dc798cb7a71f43462b260d0820326790bcec1"
   integrity sha512-TWpNSTtkT2d3mlXrOHalLsxCXq1+z52w4JmG/ZnvxzVyr/qkPK9wdVOnoL3gO4dk5DsxXO7w9Vfd9OCHA9dTfw==
+  dependencies:
+    "@splunk/ui-utils" "^1.7.1"
+    lodash "^4.17.14"
+    prop-types "^15.6.2"
+
+"@splunk/react-icons@^4.10.0":
+  version "4.10.0"
+  resolved "https://registry.npmjs.org/@splunk/react-icons/-/react-icons-4.10.0.tgz#870e440e55b30550bf1090a9cfef72b79d362ed3"
+  integrity sha512-DJm1/t5zrSQqlyIiU8tQ5edP0CW1NsOBNw+nsmGQzrjlsMkmbTP5/EJsxkbxfP11c3UHc2SSQKbf3OXG13Gbcw==
   dependencies:
     "@splunk/ui-utils" "^1.7.1"
     lodash "^4.17.14"
@@ -2681,7 +2690,30 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^4.17.1", "@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.32.0", "@splunk/react-ui@^4.33.0", "@splunk/react-ui@^4.38.0", "@splunk/react-ui@^4.40.0":
+"@splunk/react-ui@^4.17.1", "@splunk/react-ui@^4.32.0", "@splunk/react-ui@^4.38.0":
+  version "4.41.0"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.41.0.tgz#c02199a059e0e8330d4ae43d13f13a2a1684fa9b"
+  integrity sha512-nhc2LIxbhD2pF06EupbjrOp7gfJS4n4b2hwR150pKw0QAIywrAOUNsIDoJ9mJ9NePoiJPNvOaXpSKtL7yT7mKA==
+  dependencies:
+    "@dnd-kit/core" "^6.1.0"
+    "@dnd-kit/modifiers" "^7.0.0"
+    "@dnd-kit/sortable" "^8.0.0"
+    "@dnd-kit/utilities" "^3.2.2"
+    "@splunk/react-icons" "^4.10.0"
+    "@splunk/themes" "^0.22.0"
+    "@splunk/ui-utils" "^1.7.1"
+    commonmark "^0.30.0"
+    commonmark-react-renderer "^4.3.2"
+    decimal.js-light "^2.2.3"
+    lodash "^4.17.14"
+    moment "^2.29.4"
+    prop-types "^15.6.2"
+    react-resize-detector "^3.2.1"
+    react-spring "9.2.4"
+    tinycolor2 "^1.4.1"
+    use-typed-event-listener "^3.0.0"
+
+"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.33.0", "@splunk/react-ui@^4.40.0":
   version "4.40.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.40.0.tgz#ee31e53f20eb2ebe33bfd2bf1e3b044ab74f49c5"
   integrity sha512-nao3a1XrskyA/WAiVOcVgjcTLLGsD9aSEFepVbGYqOge1U03g/5FnORAj9tzLdHM+mBp3ViRhYHzA5RHD9kEwA==
@@ -6512,23 +6544,24 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-airbnb-base@^14.2.1:
-  version "14.2.1"
-  resolved "https://registry.npmjs.org/eslint-config-airbnb-base/-/eslint-config-airbnb-base-14.2.1.tgz#8a2eb38455dc5a312550193b319cdaeef042cd1e"
-  integrity sha512-GOrQyDtVEc1Xy20U7vsB2yAoB4nBlfH5HZJeatRXHleO+OS5Ot+MWij4Dpltw4/DyIkqUfqz1epfhVR5XWWQPA==
+eslint-config-airbnb-base@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.npmjs.org/eslint-config-airbnb-base/-/eslint-config-airbnb-base-15.0.0.tgz#6b09add90ac79c2f8d723a2580e07f3925afd236"
+  integrity sha512-xaX3z4ZZIcFLvh2oUNvcX5oEofXda7giYmuplVxoOg5A7EXJMrUyqRgR+mhDhPK8LZ4PttFOBvCYDbX3sUoUig==
   dependencies:
     confusing-browser-globals "^1.0.10"
     object.assign "^4.1.2"
-    object.entries "^1.1.2"
+    object.entries "^1.1.5"
+    semver "^6.3.0"
 
-eslint-config-airbnb@^18.2.1:
-  version "18.2.1"
-  resolved "https://registry.npmjs.org/eslint-config-airbnb/-/eslint-config-airbnb-18.2.1.tgz#b7fe2b42f9f8173e825b73c8014b592e449c98d9"
-  integrity sha512-glZNDEZ36VdlZWoxn/bUR1r/sdFKPd1mHPbqUtkctgNG4yT2DLLtJ3D+yCV+jzZCc2V1nBVkmdknOJBZ5Hc0fg==
+eslint-config-airbnb@^19.0.4:
+  version "19.0.4"
+  resolved "https://registry.npmjs.org/eslint-config-airbnb/-/eslint-config-airbnb-19.0.4.tgz#84d4c3490ad70a0ffa571138ebcdea6ab085fdc3"
+  integrity sha512-T75QYQVQX57jiNgpF9r1KegMICE94VYwoFQyMGhrvc+lB8YF2E/M/PYDaQe1AJcWaEgqLE+ErXV1Og/+6Vyzew==
   dependencies:
-    eslint-config-airbnb-base "^14.2.1"
+    eslint-config-airbnb-base "^15.0.0"
     object.assign "^4.1.2"
-    object.entries "^1.1.2"
+    object.entries "^1.1.5"
 
 eslint-config-prettier@^7.2.0:
   version "7.2.0"
@@ -9822,7 +9855,7 @@ object.assign@^4.1.2, object.assign@^4.1.4, object.assign@^4.1.7:
     has-symbols "^1.1.0"
     object-keys "^1.1.1"
 
-object.entries@^1.1.2, object.entries@^1.1.8:
+object.entries@^1.1.5, object.entries@^1.1.8:
   version "1.1.8"
   resolved "https://registry.npmjs.org/object.entries/-/object.entries-1.1.8.tgz#bffe6f282e01f4d17807204a24f8edd823599c41"
   integrity sha512-cmopxi8VwRIAw/fkijJohSfpef5PdN0pMQJN6VC/ZKvn0LIknWD8KtgY6KlQdEc4tIjcQ3HxSMmnvtzIscdaYQ==

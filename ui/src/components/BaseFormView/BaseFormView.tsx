@@ -48,7 +48,6 @@ import {
     getModifiedState,
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { PageContextProviderType } from '../../context/PageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
 
@@ -63,8 +62,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
     context!: React.ContextType<typeof TableContext>;
-
-    pageContext?: PageContextProviderType;
 
     flag: boolean;
 
@@ -145,7 +142,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                       this.props.stanzaName
                   )}`
                 : `${encodeURIComponent(this.props.serviceName)}`;
-        this.pageContext = props.pageContext;
 
         this.util = {
             setState: (callback) => {
@@ -1013,13 +1009,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             });
             return { ...newFields, errorMsg: msg };
         });
-    };
-
-    // Set error in perticular field
-    setErrorField = (field: string) => {
-        this.setState((previousState) =>
-            update(previousState, { data: { [field]: { error: { $set: true } } } })
-        );
     };
 
     // Clear error message
