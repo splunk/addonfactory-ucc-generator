@@ -6,7 +6,7 @@
                 {
                     "name": "example_input_one",
                     "description": "This is a description for Input One",
-                    "title": "Example Input",
+                    "title": "Example Input One",
                     "entity": [
                         {
                             "type": "text",
@@ -29,9 +29,16 @@
                             "required": true
                         },
                         {
-                            "type": "interval",
+                            "type": "text",
                             "field": "interval",
                             "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
@@ -112,9 +119,16 @@
                             "required": true
                         },
                         {
-                            "type": "interval",
+                            "type": "text",
                             "field": "interval",
                             "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
@@ -152,11 +166,7 @@
                                 "label": "Status",
                                 "field": "disabled"
                             }
-                        ],
-                        "customRow": {
-                            "type": "external",
-                            "src": "custom_row"
-                        }
+                        ]
                     },
                     "useInputToggleConfirmation": true
                 }

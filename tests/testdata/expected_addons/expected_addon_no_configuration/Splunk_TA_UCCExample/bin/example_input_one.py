@@ -12,7 +12,7 @@ class EXAMPLE_INPUT_ONE(smi.Script):
 
     def get_scheme(self):
         scheme = smi.Scheme('example_input_one')
-        scheme.description = 'Example Input'
+        scheme.description = 'Example Input One'
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
         scheme.use_single_instance = False
