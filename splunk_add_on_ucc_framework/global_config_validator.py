@@ -434,7 +434,7 @@ class GlobalConfigValidator:
         not required in schema, so this checks if globalConfig has inputs
         """
         pages = self._config["pages"]
-        if self._config["pages"].get("configuration"):
+        if pages.get("configuration"):
             self._validate_tabs_duplicates(self.config_tabs)
 
         inputs = pages.get("inputs")
@@ -715,7 +715,7 @@ class GlobalConfigValidator:
 
     def validate(self) -> None:
         self._validate_config_against_schema()
-        if self._config["pages"].get("configuration"):
+        if self._global_config.has_configuration():
             self._validate_configuration_tab_table_has_name_field()
             self._validate_file_type_entity()
         self._validate_custom_rest_handlers()
