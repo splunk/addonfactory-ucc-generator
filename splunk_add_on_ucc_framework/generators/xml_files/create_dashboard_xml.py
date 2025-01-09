@@ -20,7 +20,7 @@ from splunk_add_on_ucc_framework import data_ui_generator
 
 class DashboardXml(XMLGenerator):
     __description__ = (
-        "Generates dashboard.xml file based on dashboard configuration present in globalConfig"
+        "Generates dashboard.xml file based on dashboard configuration present in globalConfig,"
         " in `default/data/ui/views` folder."
     )
 

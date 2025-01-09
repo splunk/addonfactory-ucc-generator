@@ -20,7 +20,7 @@ from splunk_add_on_ucc_framework import data_ui_generator
 
 class RedirectXml(XMLGenerator):
     __description__ = (
-        "Generates ta_name_redirect.xml file, if oauth is mentioned in globalConfig,"
+        "Generates ta_name_redirect.xml file, if oauth is mentioned in globalConfig, "
         "in `default/data/ui/views/` folder."
     )
 
