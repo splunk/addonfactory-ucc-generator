@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
-import { z } from 'zod';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
-import { TabSchema } from '../../types/globalConfig/pages';
 import { CustomTabConstructor } from './CustomTabBase';
-
-type Tab = z.infer<typeof TabSchema>;
+import { Tab } from './CustomTab.types';
 
 interface CustomTabProps {
     tab: Tab;
