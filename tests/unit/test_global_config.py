@@ -75,6 +75,14 @@ def test_global_config_only_configuration(global_config_only_configuration):
     assert global_config_only_configuration.has_dashboard() is False
 
 
+def test_global_config_no_configuration(global_config_no_configuration):
+    assert global_config_no_configuration.has_configuration() is False
+    assert global_config_no_configuration.has_inputs() is True
+    assert global_config_no_configuration.has_alerts() is False
+    assert global_config_no_configuration.has_oauth() is False
+    assert global_config_no_configuration.has_dashboard() is True
+
+
 def test_global_config_only_logging(global_config_only_logging):
     assert global_config_only_logging.has_alerts() is False
 

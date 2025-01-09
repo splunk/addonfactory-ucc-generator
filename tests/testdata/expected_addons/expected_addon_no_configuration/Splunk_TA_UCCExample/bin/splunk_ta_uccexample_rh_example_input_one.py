@@ -38,7 +38,9 @@ fields = [
         required=True,
         encrypted=False,
         default=None,
-        validator=None
+        validator=validator.Pattern(
+            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""", 
+        )
     ), 
 
     field.RestField(

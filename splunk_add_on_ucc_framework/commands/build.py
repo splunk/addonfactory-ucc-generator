@@ -464,8 +464,7 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config.add_ucc_version(__version__)
-        if global_config.has_configuration():
-            global_config.expand()
+        global_config.expand()
         if ta_name != global_config.product:
             logger.error(
                 "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
