@@ -1,6 +1,6 @@
 {
   "name": "@splunk/add-on-ucc-framework",
-  "description": "UCC is a build and code generation framework for building Splunk Add-ons (TAs)",
+  "description": "UCC framework is a build and code generation framework for building Splunk Add-ons (TAs)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
