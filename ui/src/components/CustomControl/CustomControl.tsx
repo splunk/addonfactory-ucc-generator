@@ -78,7 +78,7 @@ class CustomControl extends React.Component<Props, State> {
                 this.setValue,
                 this.props.utilCustomFunctions
             );
-            customControl.render();
+            customControl?.render();
 
             if (typeof customControl.validation === 'function') {
                 this.props.addCustomValidator(this.props.field, customControl.validation);
