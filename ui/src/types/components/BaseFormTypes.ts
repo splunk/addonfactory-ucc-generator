@@ -49,7 +49,7 @@ export type ModifyFieldsOnValue = Array<ModificationCriteria>;
 
 export interface BaseFormStateData {
     [x: string]: {
-        id: number | undefined;
+        id?: string;
         disabled: boolean;
         error: boolean;
         fileNameToDisplay?: string;

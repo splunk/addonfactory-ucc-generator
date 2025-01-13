@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Message from '@splunk/react-ui/Message';
 
+import { createDOMID } from '@splunk/ui-utils/id';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
@@ -240,6 +241,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         let temState: BaseFormStateData = {};
         const temEntities: AnyEntity[] = [];
         this.entities?.forEach((e) => {
+            const uniqueId = createDOMID(e.field);
             if (e.type === 'oauth') {
                 this.isOAuth = true;
                 if (props.page === PAGE_CONF && props.serviceName === 'account') {
@@ -372,7 +374,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     disabled: false,
                     error: false,
                     display: true,
-                    id: `${e.field}-${e.label}`,
+                    id: uniqueId,
                 };
 
                 if (e.type !== 'helpLink' && e.type !== 'custom') {

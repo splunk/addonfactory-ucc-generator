@@ -6,7 +6,7 @@ import CheckBoxComponent from './CheckBoxComponent';
 const handleChange = jest.fn();
 
 it('should render checkbox correctly with default value', async () => {
-    render(<CheckBoxComponent value handleChange={handleChange} field="fieldId" />);
+    render(<CheckBoxComponent id="1" value handleChange={handleChange} field="fieldId" />);
 
     const checkboxElement = screen.getByTestId('switch');
     expect(checkboxElement).toBeInTheDocument();
@@ -18,7 +18,7 @@ it('should render checkbox correctly with default value', async () => {
 });
 
 it('should correctly trigger callback with 0', async () => {
-    render(<CheckBoxComponent value handleChange={handleChange} field="fieldId" />);
+    render(<CheckBoxComponent id="1" value handleChange={handleChange} field="fieldId" />);
 
     const checkboxElementBtn = screen.getByTestId('button');
     expect(checkboxElementBtn).toBeInTheDocument();
@@ -31,7 +31,7 @@ it('should correctly trigger callback with 0', async () => {
 });
 
 it('should correctly trigger callback with 1', async () => {
-    render(<CheckBoxComponent value={false} handleChange={handleChange} field="fieldId" />);
+    render(<CheckBoxComponent id="1" value={false} handleChange={handleChange} field="fieldId" />);
 
     const checkboxElementBtn = screen.getByTestId('button');
     expect(checkboxElementBtn).toBeInTheDocument();

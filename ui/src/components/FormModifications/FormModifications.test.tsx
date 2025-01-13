@@ -36,11 +36,11 @@ const props = {
 } satisfies EntityModalProps;
 
 const findMods = (
-    modificationFiled: EntitiesAllowingModifications,
+    modificationField: EntitiesAllowingModifications,
     value: string | boolean | number,
     fieldId: string
 ) => {
-    const modification = modificationFiled.modifyFieldsOnValue
+    const modification = modificationField.modifyFieldsOnValue
         ?.find((mod) => mod.fieldValue === value)
         ?.fieldsToModify.find((field: { fieldId: string }) => field.fieldId === fieldId);
     invariant(modification);

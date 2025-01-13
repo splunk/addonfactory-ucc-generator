@@ -49,6 +49,7 @@ export interface SingleInputComponentProps {
     };
     required: boolean;
     page?: StandardPages;
+    label?: string;
 }
 
 function SingleInputComponent(props: SingleInputComponentProps) {
@@ -58,6 +59,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         error = false,
         controlOptions,
         dependencyValues,
+        label,
         ...restProps
     } = props;
     const {
@@ -73,7 +75,6 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         autoCompleteFields,
         hideClearBtn,
     } = controlOptions;
-
     const handleChange = (e: unknown, obj: { value: AcceptableFormValue }) => {
         restProps.handleChange(field, String(obj.value));
     };
@@ -188,6 +189,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                 disabled={effectiveDisabled}
                 onChange={handleChange}
                 inline
+                aria-label={label}
             >
                 {options && options.length > 0 && options}
             </ComboBox>

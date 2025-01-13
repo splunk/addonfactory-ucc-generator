@@ -51,7 +51,7 @@ export interface ControlWrapperProps {
         required?: boolean;
     };
     page?: string;
-    id?: number;
+    id?: string;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
