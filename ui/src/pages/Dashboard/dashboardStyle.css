@@ -333,8 +333,9 @@
 }
 
 #errors_tab_errors_list_viz svg[data-test='placeholder-icon'] {
-    max-height: 400px;
+    max-height: 100px;
 }
+
 
 [data-test-panel-id='dataIngestionTabPanel'] [data-test='grid-layout-canvas'] {
     grid-template-columns: repeat(8, 12%);
