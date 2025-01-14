@@ -336,7 +336,6 @@
     max-height: 100px;
 }
 
-
 [data-test-panel-id='dataIngestionTabPanel'] [data-test='grid-layout-canvas'] {
     grid-template-columns: repeat(8, 12%);
     overflow-x: hidden;
