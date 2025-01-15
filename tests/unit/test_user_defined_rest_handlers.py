@@ -89,6 +89,22 @@ def test_rest_handler_config_openapi_only_specified():
                 },
             ),
         ),
+        parameters=[
+            {
+                "name": "output_mode",
+                "in": "query",
+                "required": True,
+                "description": "Output mode",
+                "schema": {"type": "string", "enum": ["json"], "default": "json"},
+            },
+            {
+                "name": "name",
+                "in": "path",
+                "required": True,
+                "description": "The name of the item to operate on",
+                "schema": {"type": "string"},
+            },
+        ],
     )
 
 
@@ -130,6 +146,15 @@ def test_rest_handler_config_openapi_empty_params():
             },
             description="Create item in test_name",
         ),
+        parameters=[
+            {
+                "name": "output_mode",
+                "in": "query",
+                "required": True,
+                "description": "Output mode",
+                "schema": {"type": "string", "enum": ["json"], "default": "json"},
+            },
+        ],
     )
     assert cfg.oas_paths["/test_endpoint/{name}"] == oas.PathItemObject(
         get=oas.OperationObject(
@@ -156,6 +181,22 @@ def test_rest_handler_config_openapi_empty_params():
             },
             description="Delete test_name item",
         ),
+        parameters=[
+            {
+                "name": "output_mode",
+                "in": "query",
+                "required": True,
+                "description": "Output mode",
+                "schema": {"type": "string", "enum": ["json"], "default": "json"},
+            },
+            {
+                "name": "name",
+                "in": "path",
+                "required": True,
+                "description": "The name of the item to operate on",
+                "schema": {"type": "string"},
+            },
+        ],
     )
 
 
@@ -312,6 +353,15 @@ def test_rest_handler_config_openapi_full():
                 }
             ),
         ),
+        parameters=[
+            {
+                "name": "output_mode",
+                "in": "query",
+                "required": True,
+                "description": "Output mode",
+                "schema": {"type": "string", "enum": ["json"], "default": "json"},
+            },
+        ],
     )
 
     assert cfg.oas_paths["/test_endpoint/{name}"] == oas.PathItemObject(
@@ -428,6 +478,22 @@ def test_rest_handler_config_openapi_full():
             ],
             deprecated=False,
         ),
+        parameters=[
+            {
+                "name": "output_mode",
+                "in": "query",
+                "required": True,
+                "description": "Output mode",
+                "schema": {"type": "string", "enum": ["json"], "default": "json"},
+            },
+            {
+                "name": "name",
+                "in": "path",
+                "required": True,
+                "description": "The name of the item to operate on",
+                "schema": {"type": "string"},
+            },
+        ],
     )
 
 
