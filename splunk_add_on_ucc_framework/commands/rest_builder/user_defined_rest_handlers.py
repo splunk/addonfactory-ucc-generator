@@ -9,6 +9,7 @@ _EAI_OUTPUT_MODE = {
     "name": "output_mode",
     "in": "query",
     "required": True,
+    "description": "Output mode",
     "schema": {
         "type": "string",
         "enum": ["json"],
@@ -23,6 +24,7 @@ EAI_DEFAULT_PARAMETERS_SPECIFIED = [
         "in": "path",
         "required": True,
         "description": "The name of the item to operate on",
+        "schema": {"type": "string"},
     },
 ]
 
@@ -253,6 +255,7 @@ class RestHandlerConfig:
         obj_dict: Dict[str, Any] = {}
 
         if obj:
+            obj["parameters"] = EAI_DEFAULT_PARAMETERS
             obj_dict[f"/{endpoint}"] = oas.PathItemObject(**obj)
 
         obj_specified: Dict[str, Any] = {}
@@ -273,6 +276,7 @@ class RestHandlerConfig:
             obj_specified["delete"] = remove
 
         if obj_specified:
+            obj_specified["parameters"] = EAI_DEFAULT_PARAMETERS_SPECIFIED
             obj_dict[f"/{endpoint}/{{name}}"] = oas.PathItemObject(**obj_specified)
 
         return obj_dict
