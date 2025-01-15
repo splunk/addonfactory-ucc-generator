@@ -1819,10 +1819,76 @@
             "customScript": "myAlertLogic"
         }
     ],
+    "options": {
+        "restHandlers": [
+            {
+                "name": "rest_handler_minimal",
+                "endpoint": "Splunk_TA_Example_minimal",
+                "handlerType": "EAI"
+            },
+            {
+                "name": "rest_handler_full",
+                "endpoint": "Splunk_TA_Example_full",
+                "handlerType": "EAI",
+                "requestParameters": {
+                    "create": {
+                        "param1_req": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "required": true
+                        },
+                        "param1": {
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "edit": {
+                        "param2": {
+                            "schema": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "list": {
+                        "param3": {
+                            "schema": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                },
+                "responseParameters": {
+                    "create": {
+                        "param1": {
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "edit": {
+                        "param2": {
+                            "schema": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "list": {
+                        "param3": {
+                            "schema": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.55.0+36810ea3",
+        "version": "5.56.0+6b32b8ad",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
