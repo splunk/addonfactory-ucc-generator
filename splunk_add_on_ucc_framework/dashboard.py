@@ -42,6 +42,12 @@ SUPPORTED_PANEL_NAMES = frozenset(
 )
 SUPPORTED_PANEL_NAMES_READABLE = ", ".join(SUPPORTED_PANEL_NAMES)
 
+DEFAULT_SPARK_LINE = '\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
+
+FILL_DEFAULT_SPARKLINE_AND_VALUE = (
+    f"| fillnull value={DEFAULT_SPARK_LINE} sparkevent | fillnull value=0 events "
+)
+
 default_definition_json_filename = {
     "overview": "overview_definition.json",
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
@@ -103,8 +109,7 @@ table_sourcetype_query = (
     "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
     "sum(n_events) as events by sourcetype_ingested "
     "| rename sourcetype_ingested as st ] "
-    '| fillnull value=\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
-    " sparkevent | fillnull value=0 events "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
     '| makemv delim=\\",\\" sparkevent '
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table st, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
@@ -119,8 +124,7 @@ table_source_query = (
     "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
     "sum(n_events) as events by modular_input_name "
     "| rename modular_input_name as s ] "
-    '| fillnull value=\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
-    " sparkevent | fillnull value=0 events "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
     '| makemv delim=\\",\\" sparkevent '
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table s, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
@@ -141,8 +145,7 @@ table_index_query = (
     "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
     "sum(n_events) as events by event_index "
     "| rename event_index as idx ] "
-    '| fillnull value=\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
-    " sparkevent | fillnull value=0 events "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
     '| makemv delim=\\",\\" sparkevent '
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table idx, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
@@ -166,8 +169,7 @@ table_input_query = (
     "search index = _internal source=*{addon_name_lowercase}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] '
-    '| fillnull value=\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
-    " sparkevent | fillnull value=0 events "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
     '| makemv delim=\\",\\" sparkevent '
     '| table event_input, Active, events, sparkevent, \\"Last event\\" '
     '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
