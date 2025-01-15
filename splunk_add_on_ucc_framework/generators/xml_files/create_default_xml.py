@@ -47,7 +47,7 @@ class DefaultXml(XMLGenerator):
                     include_dashboard=self._global_config.has_dashboard(),
                     include_configuration=self._global_config.has_configuration(),
                     default_view=self._global_config.meta.get(
-                        "default_view", data_ui_generator.DEFAULT_VIEW
+                        "default_view", data_ui_generator.UCC_DEFAULT_VIEW
                     ),
                 )
 

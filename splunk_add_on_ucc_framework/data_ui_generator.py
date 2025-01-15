@@ -20,7 +20,7 @@
 from xml.etree import ElementTree as ET
 from defusedxml import minidom
 
-DEFAULT_VIEW = "configuration"
+UCC_DEFAULT_VIEW = "_default_configuration"
 
 
 def _pretty_print_xml(string: str) -> str:
@@ -42,10 +42,19 @@ def generate_nav_default_xml(
     The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
     nav = ET.Element("nav")
+    if default_view == UCC_DEFAULT_VIEW:
+        # we do this calculation as all the below properties are now optional
+        if include_configuration:
+            default_view = "configuration"
+        elif include_inputs:
+            default_view = "inputs"
+        elif include_dashboard:
+            default_view = "dashboard"
+        else:
+            default_view = "search"
+
     if include_inputs:
-        if (
-            not (include_configuration) and default_view == "configuration"
-        ) or default_view == "inputs":
+        if default_view == "inputs":
             ET.SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
         else:
             ET.SubElement(nav, "view", attrib={"name": "inputs"})
@@ -66,6 +75,7 @@ def generate_nav_default_xml(
         ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
     else:
         ET.SubElement(nav, "view", attrib={"name": "search"})
+
     nav_as_string = ET.tostring(nav, encoding="unicode")
     return _pretty_print_xml(nav_as_string)
 

@@ -52,7 +52,7 @@ def test_set_attributes(
     assert hasattr(config_xml, "configuration_xml_content")
 
 
-def test_set_attributes_without_inputs(
+def test_set_attributes_without_configuration(
     global_config_without_configuration,
     input_dir,
     output_dir,
@@ -73,7 +73,7 @@ def test_set_attributes_without_inputs(
     "splunk_add_on_ucc_framework.generators.xml_files.ConfigurationXml._set_attributes",
     return_value=MagicMock(),
 )
-def test_generate_xml_without_inputs(
+def test_generate_xml_without_configuration(
     mock_set_attributes,
     global_config_without_configuration,
     input_dir,

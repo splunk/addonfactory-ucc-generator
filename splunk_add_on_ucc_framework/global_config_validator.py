@@ -702,8 +702,12 @@ class GlobalConfigValidator:
 
     def _validate_meta_default_view(self) -> None:
         default_view = self._global_config.meta.get(
-            "defaultView", data_ui_generator.DEFAULT_VIEW
+            "defaultView", data_ui_generator.UCC_DEFAULT_VIEW
         )
+        if default_view == "configuration" and self._global_config.has_configuration():
+            raise GlobalConfigValidatorException(
+                'meta.defaultView == "configuration" but there is no configuration defined in globalConfig'
+            )
         if default_view == "inputs" and not self._global_config.has_inputs():
             raise GlobalConfigValidatorException(
                 'meta.defaultView == "inputs" but there is no inputs defined in globalConfig'
