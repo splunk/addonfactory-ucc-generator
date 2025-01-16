@@ -111,8 +111,10 @@ class RestHandlerConfig:
 
         return obj
 
-    def _oas_object_eai_list(self, description: str) -> Optional[oas.OperationObject]:
-        if "list" not in self.supported_actions:
+    def _oas_object_eai_list_or_remove(
+        self, description: str, action: str
+    ) -> Optional[oas.OperationObject]:
+        if action not in self.supported_actions:
             return None
 
         op_obj: Dict[str, Any] = {
@@ -122,7 +124,7 @@ class RestHandlerConfig:
             },
         }
 
-        if self.request_parameters.get("list"):
+        if self.request_parameters.get(action):
             op_obj["parameters"] = [
                 {
                     "name": key,
@@ -130,129 +132,73 @@ class RestHandlerConfig:
                     "required": item.get("required", False),
                     "schema": item["schema"],
                 }
-                for key, item in self.request_parameters["list"].items()
+                for key, item in self.request_parameters[action].items()
             ]
 
-        if self.response_parameters.get("list"):
+        if self.response_parameters.get(action):
             op_obj["responses"]["200"].content = {
                 "application/json": _eai_response_schema(
-                    self._eai_params_to_schema_object(self.response_parameters["list"])
+                    self._eai_params_to_schema_object(self.response_parameters[action])
+                )
+            }
+
+        return oas.OperationObject(**op_obj)
+
+    def _oas_object_eai_create_or_edit(
+        self, description: str, action: str
+    ) -> Optional[oas.OperationObject]:
+        if action not in self.supported_actions:
+            return None
+
+        op_obj: Dict[str, Any] = {
+            "description": description,
+            "responses": {
+                "200": oas.ResponseObject(description=description),
+            },
+        }
+
+        if self.request_parameters.get(action):
+            op_obj["requestBody"] = oas.RequestBodyObject(
+                content={
+                    "application/x-www-form-urlencoded": {
+                        "schema": self._eai_params_to_schema_object(
+                            self.request_parameters[action]
+                        ),
+                    },
+                }
+            )
+
+        if self.response_parameters.get(action):
+            op_obj["responses"]["200"].content = {
+                "application/json": _eai_response_schema(
+                    self._eai_params_to_schema_object(self.response_parameters[action])
                 )
             }
 
         return oas.OperationObject(**op_obj)
 
     def _oas_object_eai_list_all(self) -> Optional[oas.OperationObject]:
-        return self._oas_object_eai_list(f"Get list of items for {self.name}")
+        return self._oas_object_eai_list_or_remove(
+            f"Get list of items for {self.name}", "list"
+        )
 
     def _oas_object_eai_list_one(self) -> Optional[oas.OperationObject]:
-        return self._oas_object_eai_list(f"Get {self.name} item details")
+        return self._oas_object_eai_list_or_remove(
+            f"Get {self.name} item details", "list"
+        )
 
     def _oas_object_eai_create(self) -> Optional[oas.OperationObject]:
-        if "create" not in self.supported_actions:
-            return None
-
-        description = f"Create item in {self.name}"
-
-        op_obj: Dict[str, Any] = {
-            "description": description,
-            "responses": {
-                "200": oas.ResponseObject(description=description),
-            },
-        }
-
-        if self.request_parameters.get("create"):
-            op_obj["requestBody"] = oas.RequestBodyObject(
-                content={
-                    "application/x-www-form-urlencoded": {
-                        "schema": self._eai_params_to_schema_object(
-                            self.request_parameters["create"]
-                        ),
-                    },
-                }
-            )
-
-        if self.response_parameters.get("create"):
-            op_obj["responses"]["200"].content = {
-                "application/json": _eai_response_schema(
-                    self._eai_params_to_schema_object(
-                        self.response_parameters["create"]
-                    )
-                )
-            }
-
-        return oas.OperationObject(**op_obj)
+        return self._oas_object_eai_create_or_edit(
+            f"Create item in {self.name}", "create"
+        )
 
     def _oas_object_eai_edit(self) -> Optional[oas.OperationObject]:
-        if "edit" not in self.request_parameters:
-            return None
-
-        description = f"Update {self.name} item"
-        op_obj: Dict[str, Any] = {
-            "description": description,
-            "responses": {
-                "200": oas.ResponseObject(description=description),
-            },
-        }
-
-        if self.request_parameters.get("edit"):
-            op_obj["requestBody"] = oas.RequestBodyObject(
-                content={
-                    "application/x-www-form-urlencoded": {
-                        "schema": self._eai_params_to_schema_object(
-                            self.request_parameters.get("edit")
-                        ),
-                    },
-                }
-            )
-
-        if self.response_parameters.get("edit"):
-            op_obj["responses"]["200"].content = {
-                "application/json": _eai_response_schema(
-                    self._eai_params_to_schema_object(
-                        self.response_parameters.get("edit")
-                    )
-                )
-            }
-
-        return oas.OperationObject(**op_obj)
+        return self._oas_object_eai_create_or_edit(f"Update {self.name} item", "edit")
 
     def _oas_object_eai_remove(self) -> Optional[oas.OperationObject]:
-        if "remove" not in self.request_parameters:
-            return None
+        return self._oas_object_eai_list_or_remove(f"Delete {self.name} item", "remove")
 
-        description = f"Delete {self.name} item"
-
-        op_obj: Dict[str, Any] = {
-            "description": description,
-            "responses": {
-                "200": oas.ResponseObject(description=description),
-            },
-        }
-
-        if self.request_parameters.get("remove"):
-            op_obj["parameters"] = [
-                {
-                    "name": key,
-                    "in": "query",
-                    "required": item.get("required", False),
-                    "schema": item["schema"],
-                }
-                for key, item in self.request_parameters["remove"].items()
-            ]
-
-        if self.response_parameters.get("remove"):
-            op_obj["responses"]["200"].content = {
-                "application/json": _eai_response_schema(
-                    self._eai_params_to_schema_object(
-                        self.response_parameters["remove"]
-                    )
-                )
-            }
-
-        return oas.OperationObject(**op_obj)
-
-    def _oas_objects_eai(self) -> Dict[str, oas.PathItemObject]:
+    def _oas_objects_eai_normal(self) -> Dict[str, oas.PathItemObject]:
         endpoint = self.endpoint.strip("/")
 
         obj: Dict[str, Any] = {}
@@ -266,11 +212,14 @@ class RestHandlerConfig:
         if create:
             obj["post"] = create
 
-        obj_dict: Dict[str, Any] = {}
-
         if obj:
             obj["parameters"] = EAI_DEFAULT_PARAMETERS
-            obj_dict[f"/{endpoint}"] = oas.PathItemObject(**obj)
+            return {f"/{endpoint}": oas.PathItemObject(**obj)}
+
+        return {}
+
+    def _oas_objects_eai_specified(self) -> Dict[str, oas.PathItemObject]:
+        endpoint = self.endpoint.strip("/")
 
         obj_specified: Dict[str, Any] = {}
 
@@ -291,7 +240,15 @@ class RestHandlerConfig:
 
         if obj_specified:
             obj_specified["parameters"] = EAI_DEFAULT_PARAMETERS_SPECIFIED
-            obj_dict[f"/{endpoint}/{{name}}"] = oas.PathItemObject(**obj_specified)
+            return {f"/{endpoint}/{{name}}": oas.PathItemObject(**obj_specified)}
+
+        return {}
+
+    def _oas_objects_eai(self) -> Dict[str, oas.PathItemObject]:
+        obj_dict: Dict[str, oas.PathItemObject] = {}
+
+        obj_dict.update(self._oas_objects_eai_normal())
+        obj_dict.update(self._oas_objects_eai_specified())
 
         return obj_dict
 
