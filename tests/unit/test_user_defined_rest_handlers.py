@@ -23,6 +23,13 @@ def test_rest_handler_config_minimal(cfg_minimal):
     assert not cfg_minimal.oas_paths
 
 
+def test_rest_handler_config_unsupported_handler_type(cfg_minimal):
+    cfg_minimal.handlerType = "unsupported"
+
+    with pytest.raises(ValueError):
+        print(cfg_minimal.oas_paths)
+
+
 def test_rest_handler_config_openapi_only_specified():
     cfg = RestHandlerConfig(
         name="test_name",

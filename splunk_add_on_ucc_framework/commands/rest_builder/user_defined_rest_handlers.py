@@ -14,11 +14,10 @@
 # limitations under the License.
 #
 from dataclasses import dataclass
-from typing import Dict, Any, Union, Iterable, Optional, Set, List, Literal
+from typing import Dict, Any, Union, Iterable, Optional, Set, List
 
 from splunk_add_on_ucc_framework.commands.openapi_generator import oas
 
-HandlerType = Literal["EAI"]
 
 _EAI_OUTPUT_MODE = {
     "name": "output_mode",
@@ -68,7 +67,7 @@ def _eai_response_schema(schema: Any) -> oas.MediaTypeObject:
 class RestHandlerConfig:
     name: str
     endpoint: str
-    handlerType: HandlerType
+    handlerType: str
     registerHandler: Optional[Dict[str, Any]] = None
     requestParameters: Optional[Dict[str, Dict[str, Any]]] = None
     responseParameters: Optional[Dict[str, Dict[str, Any]]] = None
@@ -298,7 +297,10 @@ class RestHandlerConfig:
 
     @property
     def oas_paths(self) -> Dict[str, oas.PathItemObject]:
-        return self._oas_objects_eai()
+        if self.handlerType == "EAI":
+            return self._oas_objects_eai()
+        else:
+            raise ValueError(f"Unsupported handler type: {self.handlerType}")
 
 
 class UserDefinedRestHandlers:
