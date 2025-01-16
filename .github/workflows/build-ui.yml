@@ -17,6 +17,8 @@ jobs:
         run: yarn run lint
       - name: Unit test
         run: yarn run test
+      - name: Build UCC library
+        run: yarn run build:lib
       - name: Build UCC UI
         run: yarn run build
       - name: List deps into dependencies.txt

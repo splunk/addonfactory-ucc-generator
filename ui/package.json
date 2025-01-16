@@ -1,10 +1,18 @@
 {
-  "name": "@splunk/ucc_ui_lib",
-  "version": "0.0.1",
+  "name": "@splunk/add-on-ucc-framework",
+  "description": "UCC framework is a build and code generation framework for building Splunk Add-ons (TAs)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
+    "directory": "ui"
+  },
+  "version": "5.56.0",
   "license": "Apache-2.0",
-  "private": true,
+  "author": "Splunk Inc.",
+  "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --bail",
+    "build:lib": "cross-env NODE_ENV=production tsc --project tsconfig.lib.json",
     "build:watch": "webpack --watch",
     "format": "prettier \"src/**/*.(js|jsx|ts|tsx|css)\" --write",
     "format:verify": "prettier \"src/**/*.(js|jsx|ts|tsx|css)\" --list-different",
@@ -18,15 +26,16 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
-    "test-storybook:update-snapshots": "yarn run test-storybook -u"
+    "test-storybook:update-snapshots": "yarn run test-storybook -u",
+    "prepublishOnly": "yarn run build:lib"
   },
   "dependencies": {
-    "@splunk/dashboard-action-buttons": "^27.5.1",
-    "@splunk/dashboard-context": "^27.5.1",
-    "@splunk/dashboard-core": "^27.5.1",
-    "@splunk/dashboard-presets": "^27.5.1",
-    "@splunk/dashboard-state": "^27.5.1",
-    "@splunk/dashboard-types": "^27.5.1",
+    "@splunk/dashboard-action-buttons": "^28.0.0",
+    "@splunk/dashboard-context": "^28.0.0",
+    "@splunk/dashboard-core": "^28.0.0",
+    "@splunk/dashboard-presets": "^28.0.0",
+    "@splunk/dashboard-state": "^28.0.0",
+    "@splunk/dashboard-types": "^28.0.0",
     "@splunk/react-events-viewer": "^5.4.6",
     "@splunk/react-icons": "^4.9.0",
     "@splunk/react-page": "^7.1.0",
@@ -36,7 +45,7 @@
     "@splunk/splunk-utils": "^3.1.0",
     "@splunk/themes": "^0.22.0",
     "@splunk/ui-utils": "^1.7.1",
-    "@splunk/visualization-context": "^26.4.1",
+    "@splunk/visualization-context": "^27.0.0",
     "@storybook/test": "^8.4.7",
     "immutability-helper": "^3.1.1",
     "js-yaml": "^4.1.0",
@@ -115,9 +124,13 @@
     "undici": "^5.28.4",
     "url": "^0.11.4",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4",
+    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "webpack-merge": "^6.0.1"
+  },
+  "peerDependencies": {
+    "react": "^16.14.0",
+    "typescript": "^5.6.3"
   },
   "resolutions": {
     "@npmcli/git": "^2.1.0",
@@ -139,5 +152,9 @@
     "workerDirectory": [
       "src/public"
     ]
-  }
+  },
+  "types": "./dist/lib/publicApi.d.ts",
+  "files": [
+    "dist/lib"
+  ]
 }
