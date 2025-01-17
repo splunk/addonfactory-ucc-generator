@@ -6,7 +6,7 @@ const TextWrapper = styled(Text)`
     width: 320px !important;
 `;
 
-interface TextComponentProps {
+export interface TextComponentProps {
     // Number is expected if provided number in globalConfig.json instead of a string.
     value: string | number;
     handleChange: (field: string, value: string | number) => void;
