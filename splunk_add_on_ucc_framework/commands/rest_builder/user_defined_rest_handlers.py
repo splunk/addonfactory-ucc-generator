@@ -66,6 +66,10 @@ def _eai_response_schema(schema: Any) -> oas.MediaTypeObject:
 
 @dataclass
 class RestHandlerConfig:
+    """
+    Represents a REST handler configuration. See schema.json.
+    """
+
     name: str
     endpoint: str
     handlerType: str
@@ -268,6 +272,10 @@ class RestHandlerConfig:
 
 
 class UserDefinedRestHandlers:
+    """
+    Represents a logic for dealing with user-defined REST handlers
+    """
+
     def __init__(self) -> None:
         self._definitions: List[RestHandlerConfig] = []
         self._names: Set[str] = set()

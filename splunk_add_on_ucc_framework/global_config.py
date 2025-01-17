@@ -82,6 +82,7 @@ class GlobalConfig:
         self.user_defined_handlers = UserDefinedRestHandlers()
 
     def parse_user_defined_handlers(self) -> None:
+        """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
         rest_handlers = self._content.get("options", {}).get("restHandlers", [])
         self.user_defined_handlers.add_definitions(rest_handlers)
 

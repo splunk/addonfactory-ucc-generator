@@ -412,6 +412,9 @@ def __add_user_defined_paths(
     open_api_object: OpenAPIObject,
     global_config: global_config_lib.GlobalConfig,
 ) -> OpenAPIObject:
+    """
+    Adds user defined paths (globalConfig["options"]["restHandlers"]) to the OpenAPI object.
+    """
     if open_api_object.paths is None:
         open_api_object.paths = {}
 
