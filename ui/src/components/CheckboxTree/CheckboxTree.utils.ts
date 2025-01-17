@@ -5,29 +5,29 @@ export function isGroupWithRows(item: GroupWithRows | Row): item is GroupWithRow
 }
 
 export function getFlattenRowsWithGroups({ groups, rows }: CheckboxTreeProps['controlOptions']) {
-    const flattenRowsMixedWithGroups: Array<GroupWithRows | Row> = [];
+    const groupMap = new Map<string, GroupWithRows>();
 
-    rows.forEach((row) => {
+    return rows.reduce<Array<GroupWithRows | Row>>((flattenRowsMixedWithGroups, row) => {
         const groupForThisRow = groups?.find((group) => group.fields.includes(row.field));
-        if (groupForThisRow) {
-            const addedGroup = flattenRowsMixedWithGroups.find(
-                (item): item is GroupWithRows =>
-                    isGroupWithRows(item) && item.label === groupForThisRow.label
-            );
-            const groupToAdd = addedGroup || {
-                ...groupForThisRow,
-                rows: [],
-            };
-            groupToAdd.rows.push(row);
-            if (!addedGroup) {
-                flattenRowsMixedWithGroups.push(groupToAdd);
-            }
-            return;
+        if (!groupForThisRow) {
+            // no group needed for this row, simply push the row
+            flattenRowsMixedWithGroups.push(row);
+            return flattenRowsMixedWithGroups;
         }
-        flattenRowsMixedWithGroups.push(row);
-    });
 
-    return flattenRowsMixedWithGroups;
+        // Check if the group already exists in the map, otherwise create a new group
+        let existingGroup = groupMap.get(groupForThisRow.label);
+        if (!existingGroup) {
+            existingGroup = { ...groupForThisRow, rows: [row] };
+            groupMap.set(groupForThisRow.label, existingGroup);
+            flattenRowsMixedWithGroups.push(existingGroup);
+        } else {
+            // Add row to the existing group
+            existingGroup.rows.push(row);
+        }
+
+        return flattenRowsMixedWithGroups;
+    }, []);
 }
 
 export function getNewCheckboxValues(
@@ -59,9 +59,6 @@ export function getDefaultValues(rows: Row[]): ValueByField {
     const resultMap = new Map<Field, Value>();
 
     rows.forEach((row) => {
-        if (isGroupWithRows(row)) {
-            return;
-        }
         const checkboxDefaultValue = row.checkbox?.defaultValue;
         if (typeof checkboxDefaultValue !== 'boolean') {
             return;

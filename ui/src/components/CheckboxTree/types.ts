@@ -1,4 +1,4 @@
-import { Mode } from '../../constants/modes';
+import { BaseCheckboxProps } from '../CheckboxGroup/checkboxGroup.utils';
 
 export type Field = string;
 export type Value = {
@@ -27,20 +27,7 @@ export interface Row {
 
 export type GroupWithRows = Group & { rows: Row[] };
 
-export interface CheckboxTreeProps {
-    field: string;
-    value?: string;
-    required?: boolean;
+export interface CheckboxTreeProps extends Omit<BaseCheckboxProps, 'handleChange'> {
     label: string;
-    controlOptions: {
-        groups?: Group[];
-        rows: Row[];
-    };
-    mode: Mode;
-    addCustomValidator?: (
-        field: string,
-        validator: (submittedField: string, submittedValue: string) => void
-    ) => void;
     handleChange: (field: string, value: string, componentType: 'checkboxTree') => void;
-    disabled?: boolean;
 }

@@ -68,7 +68,7 @@ export interface Row {
 
 export type GroupWithRows = Group & { rows: Row[] };
 
-export interface CheckboxGroupProps {
+export interface BaseCheckboxProps {
     field: string;
     value?: string;
     controlOptions: {
@@ -80,8 +80,12 @@ export interface CheckboxGroupProps {
         field: string,
         validator: (submittedField: string, submittedValue: string) => void
     ) => void;
-    handleChange: (field: string, value: string, componentType?: 'checkboxGroup') => void;
+    handleChange: (field: string, value: string, componentType?: string) => void;
     disabled?: boolean;
+}
+
+export interface CheckboxGroupProps extends Omit<BaseCheckboxProps, 'handleChange'> {
+    handleChange: (field: string, value: string, componentType?: 'checkboxGroup') => void;
 }
 
 export function isGroupWithRows(item: GroupWithRows | Row): item is GroupWithRows {

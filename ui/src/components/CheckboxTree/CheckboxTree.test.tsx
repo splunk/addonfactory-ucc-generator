@@ -111,3 +111,61 @@ describe('checkboxTree Component', () => {
         expect(handleChange).toHaveBeenLastCalledWith('checkbox_field', '', 'checkboxTree');
     });
 });
+
+describe('checkboxTree Component - Collapsed Groups', () => {
+    it('renders groups in a collapsed state by default and toggles correctly', async () => {
+        const user = userEvent.setup();
+        renderCheckboxTree({
+            controlOptions: {
+                ...defaultCheckboxProps.controlOptions,
+                groups: [
+                    {
+                        label: 'Group 1',
+                        options: {
+                            isExpandable: true,
+                            expand: false, // Group starts collapsed
+                        },
+                        fields: ['rowUnderGroup1'],
+                    },
+                    {
+                        label: 'Group 3',
+                        options: {
+                            isExpandable: true,
+                            expand: false, // Group starts collapsed
+                        },
+                        fields: ['firstRowUnderGroup3', 'secondRowUnderGroup3'],
+                    },
+                ],
+            },
+        });
+
+        // Verify groups are rendered
+        expect(screen.getByText('Group 1')).toBeInTheDocument();
+        expect(screen.getByText('Group 3')).toBeInTheDocument();
+
+        // Verify rows under collapsed groups are not visible
+        expect(screen.queryByLabelText('Row under Group 1')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('first row under group 3')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('second row under group 3')).not.toBeInTheDocument();
+
+        // Get all buttons
+        const buttons = screen.getAllByRole('button');
+
+        // Select the first button (for Group 1)
+        const group1Button = buttons[0];
+        expect(group1Button).toHaveAttribute('data-test', 'toggle'); // Verify it's the toggle button
+        await user.click(group1Button); // Click Group 1 toggle button
+
+        // Verify rows under "Group 1" are visible
+        expect(screen.getByLabelText('Row under Group 1')).toBeInTheDocument();
+
+        // Select the second button (for Group 3)
+        const group3Button = buttons[1];
+        expect(group3Button).toHaveAttribute('data-test', 'toggle'); // Verify it's the toggle button
+        await user.click(group3Button); // Click Group 3 toggle button
+
+        // Verify rows under "Group 3" are visible
+        expect(screen.getByLabelText('first row under group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('second row under group 3')).toBeInTheDocument();
+    });
+});

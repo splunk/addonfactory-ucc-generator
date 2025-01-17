@@ -93,8 +93,7 @@
                     "field": "firstRowUnderGroup3",
                     "checkbox": {
                       "label": "first row checked under group 3",
-                      "defaultValue": true,
-                      "disabled": true
+                      "defaultValue": true
                     }
                   },
                   {

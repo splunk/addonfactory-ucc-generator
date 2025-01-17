@@ -88,8 +88,7 @@
                   {
                     "field": "secondRowUnderGroup3",
                     "checkbox": {
-                      "label": "second row under group 3",
-                      "disabled": true
+                      "label": "second row under group 3"
                     }
                   }
                 ]
