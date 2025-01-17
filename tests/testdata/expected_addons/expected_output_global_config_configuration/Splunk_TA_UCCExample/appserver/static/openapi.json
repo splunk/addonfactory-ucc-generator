@@ -878,10 +878,14 @@
                                     },
                                     "param1": {
                                         "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
                                     }
                                 },
                                 "required": [
-                                    "param1_req"
+                                    "param1_req",
+                                    "name"
                                 ]
                             }
                         }
