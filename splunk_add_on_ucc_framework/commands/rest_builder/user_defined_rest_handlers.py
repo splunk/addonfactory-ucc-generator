@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from copy import deepcopy
 from dataclasses import dataclass
 from typing import Dict, Any, Union, Iterable, Optional, Set, List
 
@@ -150,6 +151,14 @@ class RestHandlerConfig:
         if action not in self.supported_actions:
             return None
 
+        request_parameters = deepcopy(self.request_parameters[action])
+
+        if action == "create":
+            request_parameters["name"] = {
+                "schema": {"type": "string"},
+                "required": True,
+            }
+
         op_obj: Dict[str, Any] = {
             "description": description,
             "responses": {
@@ -157,13 +166,11 @@ class RestHandlerConfig:
             },
         }
 
-        if self.request_parameters.get(action):
+        if request_parameters:
             op_obj["requestBody"] = oas.RequestBodyObject(
                 content={
                     "application/x-www-form-urlencoded": {
-                        "schema": self._eai_params_to_schema_object(
-                            self.request_parameters[action]
-                        ),
+                        "schema": self._eai_params_to_schema_object(request_parameters),
                     },
                 }
             )

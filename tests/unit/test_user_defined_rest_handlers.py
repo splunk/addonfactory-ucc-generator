@@ -152,6 +152,19 @@ def test_rest_handler_config_openapi_empty_params():
                 )
             },
             description="Create item in test_name",
+            requestBody=oas.RequestBodyObject(
+                content={
+                    "application/x-www-form-urlencoded": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {"name": {"type": "string"}},
+                            "required": ["name"],
+                        }
+                    }
+                },
+                description=None,
+                required=False,
+            ),
         ),
         parameters=[
             {
@@ -345,6 +358,7 @@ def test_rest_handler_config_openapi_full():
                         "schema": {
                             "type": "object",
                             "properties": {
+                                "name": {"type": "string"},
                                 "create_param_obj": {
                                     "type": "object",
                                     "properties": {"key": {"type": "string"}},
@@ -354,7 +368,7 @@ def test_rest_handler_config_openapi_full():
                                     "items": {"type": "string"},
                                 },
                             },
-                            "required": ["create_param_obj"],
+                            "required": ["create_param_obj", "name"],
                         }
                     }
                 }
