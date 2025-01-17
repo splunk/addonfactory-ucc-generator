@@ -9,39 +9,7 @@
  * you don't want to deal with this.
  */
 
-const { performance } = require('node:perf_hooks');
-const { TextDecoder, TextEncoder } = require('node:util');
-const { TransformStream } = require('node:stream/web');
-const { BroadcastChannel } = require('node:worker_threads');
-const { clearImmediate } = require('node:timers');
-
-Object.defineProperties(globalThis, {
-    TextDecoder: { value: TextDecoder },
-    TextEncoder: { value: TextEncoder },
-    TransformStream: { value: TransformStream },
-    BroadcastChannel: { value: BroadcastChannel },
-    clearImmediate: { value: clearImmediate },
-    performance: { value: performance },
-});
-
-const { Blob } = require('node:buffer');
-const { fetch, Headers, FormData, Request, Response } = require('undici');
-
-Object.defineProperties(globalThis, {
-    fetch: { value: fetch, writable: true },
-    Blob: { value: Blob },
-    Headers: { value: Headers },
-    FormData: { value: FormData },
-    BroadcastChannel: { value: BroadcastChannel },
-    Request: { value: Request, configurable: true },
-    Response: { value: Response, configurable: true },
-});
-
-Object.defineProperty(URL, 'createObjectURL', {
-    // needed for package import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset'
-    writable: true,
-    value: jest.fn(),
-});
+// the most of the polyfills are applied with jest-fixed-jsdom package
 
 HTMLCanvasElement.prototype.getContext = jest.fn();
 

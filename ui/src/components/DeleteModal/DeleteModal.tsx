@@ -17,7 +17,7 @@ const ModalWrapper = styled(Modal)`
     width: 800px;
 `;
 
-interface DeleteModalProps {
+export interface DeleteModalProps {
     page: StandardPages;
     handleRequestClose: () => void;
     serviceName: string;
