@@ -1,0 +1,62 @@
+
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \
+    dispatch, ReportingCommand, Configuration, Option, validators
+from {{file_name}} import map, reduce
+
+@Configuration()
+class {{class_name}}Command(ReportingCommand):
+    """
+
+    ##Syntax
+    {%- if syntax %}
+    {{syntax}}
+    {%- endif %}
+
+    ##Description
+    {%- if description %}
+    {{description}}
+    {%- endif %}
+
+    """
+
+    {% for arg in arguments -%}
+    {{ arg.name }} = Option(name = "{{arg.name}}"
+    {%- if arg.require  -%}    
+    ,require = {{ arg.require }}
+    {%- else -%}
+    , require = False
+    {%- endif -%}
+    
+    {%- if arg.validate -%}
+        {%- if (arg.validate.type == "Integer" or arg.validate.type == "Float") -%}
+            , validate=validators.{{ arg.validate.type }}({{ arg.validate.minimum }},{{ arg.validate.maximum }})
+        {%- else -%}
+        , validate = validators.{{ arg.validate.type }}()
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- if arg.default -%}    
+    , default = {{ arg.default }}
+    {%- else -%}
+    , default = ""
+    {%- endif -%}
+
+    )
+    {% endfor %}
+
+    @Configuration()
+    def map(self, events):
+        # Put your streaming preop implementation here, or remove the map method,
+        # if you have no need for a streaming preop
+
+        return map(self,events)
+
+    def reduce(self, events):
+
+        # Put your reporting implementation
+        return reduce(self,events)
+
+dispatch({{class_name}}Command, sys.argv, sys.stdin, sys.stdout, __name__)

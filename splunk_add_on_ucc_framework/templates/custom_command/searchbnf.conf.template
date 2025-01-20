@@ -1,0 +1,6 @@
+{% for info in searchbnf_info -%}
+[{{info["command_name"]}}]
+syntax = {{info["syntax"]}}
+description = {{info["description"]}}
+usage = {{info["usage"]}}
+{% endfor -%}
