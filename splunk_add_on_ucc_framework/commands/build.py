@@ -19,7 +19,7 @@ import logging
 import os
 import shutil
 import sys
-from typing import Optional, List
+from typing import Optional, List, Dict
 import subprocess
 import colorama as c
 import fnmatch
@@ -157,6 +157,109 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
+
+
+def generate_commands_conf(
+    command_names: List[str], output_directory: str, ta_name: str
+) -> None:
+    content = (
+        utils.get_custom_command_j2_env()
+        .get_template("commands.conf.template")
+        .render(command_names=command_names)
+    )
+    file_path = os.path.join(output_directory, ta_name, "default", "commands.conf")
+    utils.write_file("commands.conf", file_path, content, merge_mode="item_overwrite")
+
+
+def generate_searchbnf_conf(
+    searchbnf_info: List[Dict[str, str]], output_directory: str, ta_name: str
+) -> None:
+    content = (
+        utils.get_custom_command_j2_env()
+        .get_template("searchbnf.conf.template")
+        .render(searchbnf_info=searchbnf_info)
+    )
+    file_path = os.path.join(output_directory, ta_name, "default", "searchbnf.conf")
+    utils.write_file("searchbnf.conf", file_path, content, merge_mode="item_overwrite")
+
+
+def generate_custom_search_command(
+    input_dir: str,
+    global_config: global_config_lib.GlobalConfig,
+    output_directory: str,
+    ta_name: str,
+) -> None:
+    command_names = []
+    searchbnf_info = []
+    for entry in global_config.custom_search_command:
+        file_path = os.path.join(input_dir, "bin", entry["fileName"])
+        if not os.path.isfile(file_path):
+            logger.error(
+                f"{entry['fileName']} is not present in `<Your_Addon_Name>/package/bin` directory."
+            )
+            sys.exit(1)
+
+        if (entry["requireSeachAssistant"] is False) and (
+            entry.get("description") or entry.get("usage") or entry.get("syntax")
+        ):
+            logger.warning(
+                "requireSeachAssistant is set to false "
+                "but atrributes required for 'searchbnf.conf' is defined which is not required."
+            )
+        command_names.append(entry["commandName"])
+        entry["fileName"] = entry["fileName"].replace(".py", "")
+        template = entry["commandType"] + ".template"
+        if entry["requireSeachAssistant"]:
+            searchbnf_dict = {
+                "command_name": entry["commandName"],
+                "description": entry["description"],
+                "syntax": entry["syntax"],
+                "usage": entry["usage"],
+            }
+            searchbnf_info.append(searchbnf_dict)
+
+        if entry["version"] == 1:
+            if entry["commandName"] != entry["fileName"]:
+                logger.error(
+                    f"Filename: {entry['fileName']} and CommandName: {entry['commandName']}"
+                    " should be same for version 1 of custom search command"
+                )
+                sys.exit(1)
+            else:
+                continue
+        arguments = []
+        for argument in entry["arguments"]:
+            arguments.append(
+                {
+                    "name": argument["name"],
+                    "require": argument.get("required"),
+                    "validate": argument.get("validate"),
+                    "default": argument.get("defaultValue"),
+                }
+            )
+        content = (
+            utils.get_custom_command_j2_env()
+            .get_template(template)
+            .render(
+                file_name=entry["fileName"],
+                class_name=entry["commandName"].title(),
+                description=entry.get("description"),
+                syntax=entry.get("syntax"),
+                arguments=arguments,
+            )
+        )
+        input_file_name = os.path.join(
+            output_directory,
+            ta_name,
+            "bin",
+            entry["commandName"] + ".py",
+        )
+        with open(input_file_name, "w") as input_file:
+            input_file.write(content)
+
+    generate_commands_conf(command_names, output_directory, ta_name)
+    if searchbnf_info:
+        generate_searchbnf_conf(searchbnf_info, output_directory, ta_name)
 
 
 def _get_ignore_list(
@@ -627,6 +730,8 @@ def generate(
         addon_version=addon_version,
         has_ui=ui_available,
     ).generate()
+    if global_config and global_config.has_custom_search_command():
+        generate_custom_search_command(source, global_config, output_directory, ta_name)
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")

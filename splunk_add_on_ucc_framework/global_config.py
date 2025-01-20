@@ -151,6 +151,10 @@ class GlobalConfig:
         return self._content.get("alerts", [])
 
     @property
+    def custom_search_command(self) -> List[Dict[str, Any]]:
+        return self._content.get("customSearchCommand", [])
+
+    @property
     def meta(self) -> Dict[str, Any]:
         return self._content["meta"]
 
@@ -205,6 +209,9 @@ class GlobalConfig:
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
+
+    def has_custom_search_command(self) -> bool:
+        return bool(self.custom_search_command)
 
     def has_dashboard(self) -> bool:
         return self.dashboard is not None

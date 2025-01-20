@@ -1906,14 +1906,101 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.53.2+ed749a5ec",
+        "version": "5.55.0+cdd3f31ed",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
-        "_uccVersion": "5.53.2",
+        "_uccVersion": "5.55.0",
         "supportedThemes": [
             "light",
             "dark"
         ],
         "isVisible": true
-    }
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "mycommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "filtercommand",
+            "fileName": "filter.py",
+            "commandType": "eventing",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
+            "syntax": "| filter contains='value1' replace='value to be replaced,value to replace with'",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "contains"
+                },
+                {
+                    "name": "replace_array"
+                }
+            ]
+        },
+        {
+            "commandName": "sumcommand",
+            "fileName": "sum.py",
+            "commandType": "reporting",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
+            "syntax": "| sum total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "countmatchescommand",
+            "fileName": "countmatches.py",
+            "commandType": "streaming",
+            "requireSeachAssistant": false,
+            "version": 2,
+            "arguments": [
+                {
+                    "name": "fieldname",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                },
+                {
+                    "name": "pattern",
+                    "validate": {
+                        "type": "RegularExpression"
+                    },
+                    "required": true
+                }
+            ]
+        }
+    ]
 }

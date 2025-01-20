@@ -427,6 +427,223 @@
       ],
       "additionalProperties": false
     },
+    "customSearchCommand": {
+      "type": "object",
+      "description": "Support for custom Seach Command",
+      "properties": {
+        "commandName": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+$",
+          "maxLength": 100,
+          "description": "Name of the cutom Search Command"
+        },
+        "fileName": {
+          "type": "string",
+          "pattern": "^\\w+\\.py$",
+          "description": "Name of the file which contains logic for custom search command. The file should be a python file only."
+        },
+        "commandType": {
+          "type": "string",
+          "description": "Type of the custom search command. There are 4 types of command i.e generating, streaming, reporting and eventing.",
+          "enum": [
+            "generating",
+            "streaming",
+            "reporting",
+            "eventing"
+          ]
+        },
+        "requireSeachAssistant": {
+          "type": "boolean",
+          "dafault": false,
+          "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
+        },
+        "version": {
+          "type": "number",
+          "description": "Defines which version protocol is been used for custom search command.",
+          "enum": [
+            1,
+            2
+          ],
+          "default": 2
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the custom search command.It is an required attribute for searchbnf.conf."
+        },
+        "syntax": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "syntax for the custom search command, It is an required attribute for searchbnf.conf."
+        },
+        "usage": {
+          "type": "string",
+          "description": "Specifies what will be the usage of custom search command. It is an required attribute for searchbnf.conf.",
+          "enum": [
+            "public",
+            "private",
+            "deprecated"
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/arguments"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "commandName",
+        "fileName",
+        "commandType",
+        "arguments"
+      ],
+      "additionalProperties": false
+    },
+    "arguments": {
+      "type": "object",
+      "description": "arguments used for custom search commands",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the argument"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies if the argument is required or not"
+        },
+        "validate": {
+          "$ref": "#/definitions/CustomSearchCommandValidator"
+        },
+        "defaultValue": {
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "description": "Provide default value to the arguments passed for custom search command"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "CustomSearchCommandValidator": {
+      "type": "object",
+      "description": "It is used to validate the values of arguments for custom search command",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/CustomIntegerValidator"
+          },
+          {
+            "$ref": "#/definitions/CustomFloatValidator"
+          },
+          {
+            "$ref": "#/definitions/CustomRegularExpressionValidator"
+          },
+          {
+            "$ref": "#/definitions/CustomFieldnameValidator"
+          },
+          {
+            "$ref": "#/definitions/CustomBooleanValidator"
+          }
+        ]
+      }
+    },
+    "CustomIntegerValidator": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "description": "Minimum value used for validation"
+        },
+        "maximum": {
+          "type": "number",
+          "description": "Maximum value used for validation"
+        },
+        "type": {
+          "const": "Integer",
+          "type": "string",
+          "description": "This is integer Validator for custom search command, provide atleast one of `minimumValue` or `maximumValue`"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomFloatValidator": {
+      "type": "object",
+      "properties": {
+        "minimumValue": {
+          "type": "number",
+          "description": "Minimum value used for validation"
+        },
+        "maximumValue": {
+          "type": "number",
+          "description": "Maximum value used for validation"
+        },
+        "type": {
+          "const": "Float",
+          "type": "string",
+          "description": "This is Float Validator for custom search command, provide atleast one of `minimumValue` or `maximumValue` for validation pusrpose."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomRegularExpressionValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "RegularExpression",
+          "type": "string",
+          "description": "This is RegularExpression Validator which validates if the input value is a valid regular expression pattern or not."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomFieldnameValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Fieldname",
+          "type": "string",
+          "description": "Validates field name option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomBooleanValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Boolean",
+          "type": "string",
+          "description": "Validates Boolean option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
     "ConfigurationPage": {
       "type": "object",
       "properties": {
@@ -807,7 +1024,7 @@
         "encrypted": {
           "$ref": "#/definitions/encrypted"
         },
-        "validators":{
+        "validators": {
           "$ref": "#/definitions/AnyValidator"
         },
         "options": {
@@ -2299,7 +2516,7 @@
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
         },
-        "validators":{
+        "validators": {
           "$ref": "#/definitions/AnyValidator"
         }
       },
@@ -2544,7 +2761,7 @@
       ],
       "additionalProperties": false
     },
-    "AnyValidator":{
+    "AnyValidator": {
       "type": "array",
       "description": "It is used to validate the values of fields using various validators.",
       "items": {
@@ -3216,7 +3433,7 @@
               "table",
               "entity"
             ]
-          },    
+          },
           "hideForPlatform": {
             "$ref": "#/definitions/HideForPlatform"
           }
@@ -3335,7 +3552,7 @@
       ],
       "additionalProperties": false
     },
-    "HideForPlatform":{
+    "HideForPlatform": {
       "description": "Defines for which platform element should be hidden from UI perspective.",
       "anyOf": [
         {
@@ -3405,6 +3622,13 @@
       "description": "Alerts configuration. The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.",
       "items": {
         "$ref": "#/definitions/Alerts"
+      },
+      "minItems": 1
+    },
+    "customSearchCommand": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/customSearchCommand"
       },
       "minItems": 1
     }
