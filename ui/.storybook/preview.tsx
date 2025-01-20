@@ -61,64 +61,67 @@ const preview: Preview = {
             sort: 'requiredFirst',
         },
     },
+    globalTypes: {
+        family: {
+            name: 'Family',
+            description: 'Family',
+            toolbar: {
+                icon: 'circlehollow',
+                type: 'return',
+                items: [
+                    { value: 'enterprise', icon: 'circlehollow', title: 'Enterprise' },
+                    { value: 'prisma', icon: 'circle', title: 'Prisma' },
+                ],
+                showName: true,
+                dynamicTitle: true,
+            },
+        },
+        colorScheme: {
+            name: 'Color Scheme',
+            description: 'Color Scheme',
+            toolbar: {
+                title: 'Color Scheme',
+                icon: 'circlehollow',
+                items: [
+                    { value: 'light', left: 'left', icon: 'sun', title: 'Light' },
+                    { value: 'dark', icon: 'moon', title: 'Dark' },
+                ],
+                showName: true,
+                dynamicTitle: true,
+            },
+        },
+        density: {
+            name: 'Density',
+            description: 'Density',
+            toolbar: {
+                items: [
+                    { value: 'comfortable', icon: 'grid', title: 'Comfortable' },
+                    { value: 'compact', icon: 'component', title: 'Compact' },
+                ],
+                dynamicTitle: true,
+            },
+        },
+        animation: {
+            name: 'Animation',
+            description: 'Animation',
+            toolbar: {
+                icon: 'circlehollow',
+                items: [
+                    { value: true, title: 'Animation on' },
+                    { value: false, title: 'Animation off' },
+                ],
+                dynamicTitle: true,
+            },
+        },
+    },
+    initialGlobals: {
+        family: 'enterprise',
+        colorScheme: 'light',
+        density: 'comfortable',
+        animation: true,
+    },
     loaders: [mswLoader],
     decorators: [withSplunkThemeToolbar],
-};
-
-export const globalTypes: Preview['globalTypes'] = {
-    family: {
-        name: 'Family',
-        description: 'Family',
-        defaultValue: 'enterprise',
-        toolbar: {
-            icon: 'circlehollow',
-            type: 'return',
-            items: [
-                { value: 'enterprise', icon: 'circlehollow', title: 'Enterprise' },
-                { value: 'prisma', icon: 'circle', title: 'Prisma' },
-            ],
-            showName: true,
-            dynamicTitle: true,
-        },
-    },
-    colorScheme: {
-        name: 'Color Scheme',
-        description: 'Color Scheme',
-        defaultValue: 'light',
-        toolbar: {
-            items: [
-                { value: 'light', left: 'left', icon: 'sun', title: 'Light' },
-                { value: 'dark', icon: 'moon', title: 'Dark' },
-            ],
-            showName: true,
-            dynamicTitle: true,
-        },
-    },
-    density: {
-        name: 'Density',
-        description: 'Density',
-        defaultValue: 'comfortable',
-        toolbar: {
-            items: [
-                { value: 'comfortable', icon: 'grid', title: 'Comfortable' },
-                { value: 'compact', icon: 'component', title: 'Compact' },
-            ],
-            dynamicTitle: true,
-        },
-    },
-    animation: {
-        name: 'Animation',
-        description: 'Animation',
-        defaultValue: true,
-        toolbar: {
-            icon: 'circlehollow',
-            items: [
-                { value: true, title: 'Animation on' },
-                { value: false, title: 'Animation off' },
-            ],
-            dynamicTitle: true,
-        },
-    },
 };
 
 export default preview;
