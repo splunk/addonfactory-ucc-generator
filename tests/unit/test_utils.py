@@ -33,6 +33,28 @@ def test_get_j2_env():
         "conf_files/settings_conf.template",
         "conf_files/tags_conf.template",
         "conf_files/web_conf.template",
+        "custom_command/commands.conf.template",
+        "custom_command/eventing.template",
+        "custom_command/generating.template",
+        "custom_command/reporting.template",
+        "custom_command/searchbnf.conf.template",
+        "custom_command/streaming.template",
+    ]
+    assert sorted(expected_list_of_templates) == sorted(list_of_templates)
+
+
+def test_get_custom_command_j2_env():
+    j2_env = utils.get_custom_command_j2_env()
+
+    list_of_templates = j2_env.list_templates(extensions="template")
+
+    expected_list_of_templates = [
+        "commands.conf.template",
+        "eventing.template",
+        "generating.template",
+        "reporting.template",
+        "streaming.template",
+        "searchbnf.conf.template",
     ]
     assert sorted(expected_list_of_templates) == sorted(list_of_templates)
 

@@ -57,6 +57,32 @@ def test_global_config_settings(global_config_only_configuration):
     assert expected_settings_names == settings_names
 
 
+def test_global_config_custom_search_command(global_config_all_json):
+    custom_search_command = global_config_all_json.custom_search_command
+    expected_result = [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requireSeachAssistant": True,
+            "version": 2,
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "mycommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": True,
+                    "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
+                },
+                {"name": "text", "required": True},
+            ],
+        }
+    ]
+    assert expected_result == custom_search_command
+    assert global_config_all_json.has_custom_search_command() is True
+
+
 def test_global_config_configs(global_config_only_configuration):
     configs = global_config_only_configuration.configs
     expected_configs_names = ["account"]
