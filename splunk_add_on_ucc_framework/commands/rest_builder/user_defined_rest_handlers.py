@@ -65,6 +65,23 @@ def _eai_response_schema(schema: Any) -> oas.MediaTypeObject:
 
 
 @dataclass
+class EndpointRegistrationEntry:
+    """
+    Represents an entry in the endpoint registration file.
+    """
+
+    name: str
+    rh_name: str
+    actions_list: List[str]
+
+    def actions(self) -> List[str]:
+        """
+        Method for consistency with RestEndpointBuilder.
+        """
+        return self.actions_list
+
+
+@dataclass
 class RestHandlerConfig:
     """
     Represents a REST handler configuration. See schema.json.
@@ -270,6 +287,27 @@ class RestHandlerConfig:
         else:
             raise ValueError(f"Unsupported handler type: {self.handlerType}")
 
+    @property
+    def endpoint_registration_entry(self) -> Optional[EndpointRegistrationEntry]:
+        if not self.registerHandler:
+            return None
+
+        if not self.registerHandler.get("actions") or not self.registerHandler.get(
+            "file"
+        ):
+            return None
+
+        file: str = self.registerHandler["file"]
+
+        if file.endswith(".py"):
+            file = file[:-3]
+
+        return EndpointRegistrationEntry(
+            name=self.endpoint,
+            rh_name=file,
+            actions_list=self.registerHandler["actions"],
+        )
+
 
 class UserDefinedRestHandlers:
     """
@@ -280,6 +318,7 @@ class UserDefinedRestHandlers:
         self._definitions: List[RestHandlerConfig] = []
         self._names: Set[str] = set()
         self._endpoints: Set[str] = set()
+        self._files: Set[str] = set()
 
     def add_definitions(
         self, definitions: Iterable[Union[Dict[str, Any], RestHandlerConfig]]
@@ -299,6 +338,20 @@ class UserDefinedRestHandlers:
         if definition.endpoint in self._endpoints:
             raise ValueError(f"Duplicate REST handler endpoint: {definition.endpoint}")
 
+        if (
+            definition.registerHandler is not None
+            and "file" in definition.registerHandler
+        ):
+            file = definition.registerHandler["file"]
+
+            if file.endswith(".py"):
+                file = file[:-3]
+
+            if file in self._files:
+                raise ValueError(f"Duplicate REST handler file: {file}")
+
+            self._files.add(file)
+
         self._names.add(definition.name)
         self._endpoints.add(definition.endpoint)
 
@@ -312,3 +365,22 @@ class UserDefinedRestHandlers:
             paths.update(definition.oas_paths)
 
         return paths
+
+    @property
+    def endpoint_registration_entries(self) -> List[EndpointRegistrationEntry]:
+        entries = []
+        files = set()
+
+        for definition in self._definitions:
+            entry = definition.endpoint_registration_entry
+
+            if entry is None:
+                continue
+
+            if entry.rh_name in files:
+                raise ValueError(f"Duplicate REST handler file: {entry.rh_name}")
+
+            entries.append(entry)
+            files.add(entry.rh_name)
+
+        return entries

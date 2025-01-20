@@ -13,8 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, List
 
+from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
+    RestEndpointBuilder,
+)
+from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
+    EndpointRegistrationEntry,
+)
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 
 
@@ -26,8 +32,16 @@ class WebConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "web.conf"
+
+        self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+
         if self._gc_schema:
-            self.endpoints = self._gc_schema.endpoints
+            self.endpoints.extend(self._gc_schema.endpoints)
+
+        if self._global_config:
+            self.endpoints.extend(
+                self._global_config.user_defined_handlers.endpoint_registration_entries
+            )
 
     def generate_conf(self) -> Union[Dict[str, str], None]:
         if not self._gc_schema:

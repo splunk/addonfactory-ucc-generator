@@ -393,6 +393,14 @@
                 "name": "rest_handler_full",
                 "endpoint": "Splunk_TA_Example_full",
                 "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "someFile",
+                    "actions": [
+                        "create",
+                        "edit",
+                        "list"
+                    ]
+                },
                 "requestParameters": {
                     "create": {
                         "param1_req": {

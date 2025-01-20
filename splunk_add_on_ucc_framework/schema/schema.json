@@ -2514,7 +2514,8 @@
           "properties": {
             "file": {
               "type": "string",
-              "description": "The file where the custom rest handler is located."
+              "description": "The file where the custom rest handler is located.",
+                "pattern": "^[a-zA-Z0-9_]+(\\.py)?$"
             },
             "actions": {
               "type": "array",
@@ -2522,7 +2523,9 @@
               "items": {
                 "type": "string",
                 "description": "The action that the custom rest handler supports.",
-                "enum": ["list", "edit", "create", "remove"]
+                "enum": ["list", "edit", "create", "remove"],
+                "minItems": 1,
+                "uniqueItems": true
               }
             }
           },

@@ -4,6 +4,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import oas
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     RestHandlerConfig,
     UserDefinedRestHandlers,
+    EndpointRegistrationEntry,
 )
 
 
@@ -21,6 +22,7 @@ def test_rest_handler_config_minimal(cfg_minimal):
     assert not cfg_minimal.request_parameters
     assert not cfg_minimal.response_parameters
     assert not cfg_minimal.oas_paths
+    assert not cfg_minimal.endpoint_registration_entry
 
 
 def test_rest_handler_config_unsupported_handler_type(cfg_minimal):
@@ -518,6 +520,25 @@ def test_rest_handler_config_openapi_full():
     )
 
 
+def test_rest_handler_config_registration():
+    for file in ("test_handler", "test_handler.py"):
+        cfg = RestHandlerConfig(
+            name="test_name",
+            endpoint="test_endpoint",
+            handlerType="EAI",
+            registerHandler={
+                "file": file,
+                "actions": ["create", "list", "edit", "remove"],
+            },
+        )
+
+        assert cfg.endpoint_registration_entry == EndpointRegistrationEntry(
+            name="test_endpoint",
+            rh_name="test_handler",
+            actions_list=["create", "list", "edit", "remove"],
+        )
+
+
 def test_user_defined_rest_handlers_paths():
     # 1 path
     cfg1 = RestHandlerConfig(
@@ -569,6 +590,55 @@ def test_user_defined_rest_handlers_paths():
     }
 
 
+def test_user_defined_rest_handlers_registration_entries():
+    cfg1 = RestHandlerConfig(
+        name="test_name_1",
+        endpoint="test_endpoint_1",
+        handlerType="EAI",
+        registerHandler={
+            "file": "test_handler_1",
+            "actions": ["create", "list"],
+        },
+    )
+    cfg2 = RestHandlerConfig(
+        name="test_name_2",
+        endpoint="test_endpoint_2",
+        handlerType="EAI",
+        registerHandler={
+            "file": "test_handler_2",
+            "actions": ["edit"],
+        },
+    )
+    cfg3 = RestHandlerConfig(
+        name="test_name_3",
+        endpoint="test_endpoint_3",
+        handlerType="EAI",
+        registerHandler={
+            "file": "test_handler_3",
+            "actions": ["remove"],
+        },
+    )
+
+    hnds = UserDefinedRestHandlers()
+    hnds.add_definitions([cfg1, cfg2, cfg3])
+
+    assert hnds.endpoint_registration_entries == [
+        EndpointRegistrationEntry(
+            name="test_endpoint_1",
+            rh_name="test_handler_1",
+            actions_list=["create", "list"],
+        ),
+        EndpointRegistrationEntry(
+            name="test_endpoint_2", rh_name="test_handler_2", actions_list=["edit"]
+        ),
+        EndpointRegistrationEntry(
+            name="test_endpoint_3",
+            rh_name="test_handler_3",
+            actions_list=["remove"],
+        ),
+    ]
+
+
 def test_user_defined_rest_handlers_duplicates():
     normal = RestHandlerConfig(
         name="test_name",
@@ -594,3 +664,41 @@ def test_user_defined_rest_handlers_duplicates():
 
     with pytest.raises(ValueError):
         hnds.add_definition(duplicated_endpoint)
+
+
+def test_user_defined_rest_handlers_register_duplicates():
+    cfg1 = RestHandlerConfig(
+        name="test_name_1",
+        endpoint="test_endpoint_1",
+        handlerType="EAI",
+        registerHandler={
+            "file": "test_handler_1",
+            "actions": ["create", "list"],
+        },
+    )
+    cfg2 = RestHandlerConfig(
+        name="test_name_2",
+        endpoint="test_endpoint_2",
+        handlerType="EAI",
+        registerHandler={
+            "file": "test_handler_2",
+            "actions": ["edit"],
+        },
+    )
+    cfg3 = RestHandlerConfig(
+        name="test_name_3",
+        endpoint="test_endpoint_3",
+        handlerType="EAI",
+        registerHandler={
+            "file": "test_handler_2.py",
+            "actions": ["remove"],
+        },
+    )
+
+    hnds = UserDefinedRestHandlers()
+    hnds.add_definitions([cfg1, cfg2])
+
+    assert hnds.endpoint_registration_entries
+
+    with pytest.raises(ValueError):
+        hnds.add_definition(cfg3)
