@@ -149,59 +149,57 @@ export const DataIngestionDashboard = ({
         [handleDashboardEvent]
     );
     return (
-        <>
-            <DashboardContextProvider
-                preset={EnterpriseViewOnlyPreset}
-                initialDefinition={dashboardDefinition}
-                dashboardPlugin={dashboardPlugin}
-            >
-                <>
-                    <DataIngestionModal
-                        open={!!selectValueForDropdownInModal}
-                        handleRequestClose={() => setSelectValueForDropdownInModal(null)}
-                        title={selectTitleForDropdownInModal || ''}
-                        acceptBtnLabel="Done"
-                        dataIngestionDropdownValues={dataIngestionDropdownValues}
-                        selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
-                        setSelectValueForDropdownInModal={setSelectValueForDropdownInModal}
+        <DashboardContextProvider
+            preset={EnterpriseViewOnlyPreset}
+            initialDefinition={dashboardDefinition}
+            dashboardPlugin={dashboardPlugin}
+        >
+            <>
+                <DataIngestionModal
+                    open={!!selectValueForDropdownInModal}
+                    handleRequestClose={() => setSelectValueForDropdownInModal(null)}
+                    title={selectTitleForDropdownInModal || ''}
+                    acceptBtnLabel="Done"
+                    dataIngestionDropdownValues={dataIngestionDropdownValues}
+                    selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
+                    setSelectValueForDropdownInModal={setSelectValueForDropdownInModal}
+                >
+                    <TabLayout.Panel
+                        label="data_ingestion_modal"
+                        panelId="dataIngestionModalDefTabPanel"
                     >
-                        <TabLayout.Panel
-                            label="data_ingestion_modal"
-                            panelId="dataIngestionModalDefTabPanel"
-                        >
-                            <DashboardModal
-                                selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
-                                selectTitleForDropdownInModal={selectTitleForDropdownInModal || ''}
-                                setDataIngestionDropdownValues={setDataIngestionDropdownValues}
-                            />
-                        </TabLayout.Panel>
-                    </DataIngestionModal>
-
-                    <DashboardCore
-                        width="100%"
-                        height="auto"
-                        dashboardCoreApiRef={setDashboardCoreApi}
-                        actionMenus={getActionButtons('data_ingestion')}
-                    />
-
-                    <div id="data_ingestion_search" className="invisible_before_moving">
-                        <p id="data_ingestion_search_label">Search</p>
-                        <Search
-                            id="data_ingestion_search_input"
-                            onChange={handleChangeSearch}
-                            value={searchInput}
-                            style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
+                        <DashboardModal
+                            selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
+                            selectTitleForDropdownInModal={selectTitleForDropdownInModal || ''}
+                            setDataIngestionDropdownValues={setDataIngestionDropdownValues}
                         />
-                    </div>
-                    <div id="info_message_for_data_ingestion" className="invisible_before_moving">
-                        {infoMessage && (
-                            <Message appearance="fill" type="info">
-                                {infoMessage}
-                            </Message>
-                        )}
-                    </div>
-                </>
-            </DashboardContextProvider>
-        </>
+                    </TabLayout.Panel>
+                </DataIngestionModal>
+
+                <DashboardCore
+                    width="100%"
+                    height="auto"
+                    dashboardCoreApiRef={setDashboardCoreApi}
+                    actionMenus={getActionButtons('data_ingestion')}
+                />
+
+                <div id="data_ingestion_search" className="invisible_before_moving">
+                    <p id="data_ingestion_search_label">Search</p>
+                    <Search
+                        id="data_ingestion_search_input"
+                        onChange={handleChangeSearch}
+                        value={searchInput}
+                        style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
+                    />
+                </div>
+                <div id="info_message_for_data_ingestion" className="invisible_before_moving">
+                    {infoMessage && (
+                        <Message appearance="fill" type="info">
+                            {infoMessage}
+                        </Message>
+                    )}
+                </div>
+            </>
+        </DashboardContextProvider>
     );
 };

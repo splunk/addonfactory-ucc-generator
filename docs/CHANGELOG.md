@@ -1,5 +1,23 @@
 # Changelog
 
+# [5.56.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.55.0...v5.56.0) (2025-01-08)
+
+
+### Bug Fixes
+
+* rest handler template code for oauth ([#1499](https://github.com/splunk/addonfactory-ucc-generator/issues/1499)) ([78e5d7a](https://github.com/splunk/addonfactory-ucc-generator/commit/78e5d7a3617299fc92db1ff0be9548324815a630))
+
+
+### Features
+
+* add basic icons ([#1498](https://github.com/splunk/addonfactory-ucc-generator/issues/1498)) ([b07657d](https://github.com/splunk/addonfactory-ucc-generator/commit/b07657d9fb6f42969cccc7dff733607a6d4b0c1b))
+* add default validators ([#1507](https://github.com/splunk/addonfactory-ucc-generator/issues/1507)) ([cdd3f31](https://github.com/splunk/addonfactory-ucc-generator/commit/cdd3f31eda049ce32e1636c4edb00eb38209f13d))
+* add option to disable inputs on creation ([#1510](https://github.com/splunk/addonfactory-ucc-generator/issues/1510)) ([df3c5a5](https://github.com/splunk/addonfactory-ucc-generator/commit/df3c5a59e077f15e3cf5387eb380af0b03a7abdf))
+* add proxy component ([#1444](https://github.com/splunk/addonfactory-ucc-generator/issues/1444)) ([2241363](https://github.com/splunk/addonfactory-ucc-generator/commit/22413632cbb5a51ca49f8dfa4d67b343513111d1))
+* do not add _uccVersion to the root globalConfig file ([#1519](https://github.com/splunk/addonfactory-ucc-generator/issues/1519)) ([0beab3b](https://github.com/splunk/addonfactory-ucc-generator/commit/0beab3b2e55e44a40d5d4863365b59a02c31d732))
+* **schema:** schema changes for custom REST endpoints ([#1509](https://github.com/splunk/addonfactory-ucc-generator/issues/1509)) ([451111a](https://github.com/splunk/addonfactory-ucc-generator/commit/451111ad1d3ad63a8e0c390065f6e7310d0e807f))
+* support for Python 3.13 ([#1517](https://github.com/splunk/addonfactory-ucc-generator/issues/1517)) ([3020cfd](https://github.com/splunk/addonfactory-ucc-generator/commit/3020cfdcce958955db4af607d9176aac0234108b))
+
 # [5.55.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.54.0...v5.55.0) (2024-12-10)
 
 

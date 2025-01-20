@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -200,6 +200,10 @@ class GlobalConfig:
 
     def update_addon_version(self, version: str) -> None:
         self._content.setdefault("meta", {})["version"] = version
+
+    def cleanup_unwanted_params(self) -> None:
+        if "_uccVersion" in self.content["meta"]:
+            del self.content["meta"]["_uccVersion"]
 
     def add_ucc_version(self, version: str) -> None:
         self.content.setdefault("meta", {})["_uccVersion"] = version

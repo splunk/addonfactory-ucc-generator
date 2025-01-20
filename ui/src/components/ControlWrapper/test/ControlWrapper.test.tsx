@@ -10,7 +10,7 @@ const renderControlWrapper = (props: Partial<ControlWrapperProps>) => {
                 utilCustomFunctions: {
                     setState: () => {},
                     setErrorFieldMsg: () => {},
-                    clearAllErrorMsg: () => {},
+                    clearAllErrorMsg: (state) => state,
                     setErrorMsg: () => {},
                 },
                 handleChange: () => {},

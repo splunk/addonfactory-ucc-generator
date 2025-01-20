@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1
+        uses: splunk/addonfactory-test-matrix-action@v3.0
 
   fossa-scan:
     continue-on-error: true
@@ -136,6 +136,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -170,6 +171,7 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -353,6 +355,81 @@ jobs:
           name: appinspect-api-html-report-${{ matrix.tags }}
           path: AppInspect_response.html
 
+  init-build-run-appinspect-cli:
+    runs-on: ubuntu-22.04
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+      - uses: actions/download-artifact@v4
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          poetry install --only main
+      - run: |
+          poetry run ucc-gen init \
+            --addon-name "demo_addon_for_splunk" \
+            --addon-display-name "Demo Add-on for Splunk" \
+            --addon-input-name demo_input \
+            --add-license "Apache License 2.0" \
+            --include-author Splunk
+      - run: |
+          echo "# Binary File Declaration\n\nIgnoring lib/charset_normalizer/md.cpython-37m-x86_64-linux-gnu.so" > demo_addon_for_splunk/package/README.txt
+      - run: |
+          poetry run ucc-gen build --source demo_addon_for_splunk/package --ta-version 0.0.1
+      - run: |
+          mkdir packaged
+          poetry run ucc-gen package --path output/demo_addon_for_splunk -o packaged
+      - run: |
+          python3 -m pip install splunk-appinspect==3.8.1
+      - run: |
+          splunk-appinspect inspect packaged/demo_addon_for_splunk-0.0.1.tar.gz --mode test --included-tags cloud          
+
+  build-test-addon-openapi-client:
+    name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
+    runs-on: ubuntu-22.04
+    needs:
+      - meta
+      - build-test-addon
+      - build
+      - test-unit
+      - test-smoke
+    strategy:
+      matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/download-artifact@v4
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          poetry install --only main
+      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package -o out_${{ matrix.splunk.version }}
+      - run: |
+          cp out_${{ matrix.splunk.version }}/Splunk_TA_UCCExample/appserver/static/openapi.json ./oa_${{ matrix.splunk.version }}.json
+          docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/oa_${{ matrix.splunk.version }}.json -g python -o /local/restapi_client_${{ matrix.splunk.version }}
+      - run: |
+          sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
+          python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
+      - run: mv out_${{ matrix.splunk.version }} output
+      - run: |
+          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
+          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
+        timeout-minutes: 5
+      - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
+
   all-checks:
     if: ${{ !cancelled() }}
     needs:
@@ -434,42 +511,3 @@ jobs:
         run: |
           poetry build
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
-
-  build-test-addon-openapi-client:
-    name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-22.04
-    needs:
-      - meta
-      - build-test-addon
-      - build
-      - test-unit
-      - test-smoke
-    strategy:
-      matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - uses: actions/download-artifact@v4
-        with:
-          name: UCC-UI-build
-          path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
-          poetry install --only main
-      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package -o out_${{ matrix.splunk.version }}
-      - run: |
-          cp out_${{ matrix.splunk.version }}/Splunk_TA_UCCExample/appserver/static/openapi.json ./oa_${{ matrix.splunk.version }}.json
-          docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/oa_${{ matrix.splunk.version }}.json -g python -o /local/restapi_client_${{ matrix.splunk.version }}
-      - run: |
-          sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
-          python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
-      - run: mv out_${{ matrix.splunk.version }} output
-      - run: |
-          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
-          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
-        timeout-minutes: 5
-      - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py

@@ -1,4 +1,6 @@
 import itertools
+import json
+import os.path
 from typing import Any, Iterator
 
 import pytest
@@ -123,6 +125,41 @@ def test_global_config_expand(tmp_path):
     assert count_tabs(global_config, name="logging") == 1
     assert count_entities(global_config, type="interval") == 0
     assert count_entities(global_config, type="text", field="interval") == 3
+
+
+def test_global_config_cleanup_unwanted_params(global_config_only_logging, tmp_path):
+    global_config_path = helpers.get_testdata_file_path("valid_config.json")
+
+    with open(global_config_path) as fp:
+        content = json.load(fp)
+
+    content["meta"]["_uccVersion"] = "1.0.0"
+
+    new_path = os.path.join(tmp_path, "config.json")
+
+    with open(new_path, "w") as fp:
+        json.dump(content, fp)
+
+    global_config = global_config_lib.GlobalConfig(new_path)
+
+    assert global_config.content["meta"].get("_uccVersion") == "1.0.0"
+
+    global_config.cleanup_unwanted_params()
+
+    assert "_uccVersion" not in global_config.content["meta"]
+
+
+def test_global_config_add_ucc_version(global_config_only_logging, tmp_path):
+    global_config_path = helpers.get_testdata_file_path("valid_config.json")
+    global_config = global_config_lib.GlobalConfig(global_config_path)
+
+    assert "_uccVersion" not in global_config.content["meta"]
+    global_config.add_ucc_version("1.0.0")
+    assert (
+        global_config.content["meta"].get("_uccVersion")
+        == global_config.ucc_version
+        == "1.0.0"
+    )
 
 
 def all_entities(gc: global_config_lib.GlobalConfig) -> Iterator[Any]:
