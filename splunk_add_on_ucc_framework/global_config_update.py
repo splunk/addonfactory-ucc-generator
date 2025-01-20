@@ -16,6 +16,7 @@
 import logging
 from typing import Any, Dict, Tuple, List, Optional
 
+from splunk_add_on_ucc_framework import __version__ as ucc_version
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
 from splunk_add_on_ucc_framework.entity import (
     collapse_entity,
@@ -30,12 +31,12 @@ logger = logging.getLogger("ucc_gen")
 
 def _version_tuple(version: str) -> Tuple[str, ...]:
     """
-    convert string into tuple to compare version
+    Convert string into tuple to compare versions.
 
     Args:
-        version_str : raw string
+        version: raw string
     Returns:
-        tuple : version into tupleformat
+        tuple: version into tuple format
     """
     filled = []
     for point in version.split("."):
@@ -127,10 +128,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     logger.info(f"Current globalConfig schema version is {current_schema_version}")
 
-    if _version_tuple(global_config.meta.get("_uccVersion", "0.0.0")) >= _version_tuple(
-        "5.52.0"
-    ):
-        # we hard-code the value of 5.52.0 as this feature would be shipped in that version
+    if _version_tuple(ucc_version) >= _version_tuple("5.52.0"):
         version = current_schema_version
     else:
         version = "0.0.0"
