@@ -42,8 +42,10 @@ SUPPORTED_PANEL_NAMES = frozenset(
 )
 SUPPORTED_PANEL_NAMES_READABLE = ", ".join(SUPPORTED_PANEL_NAMES)
 
+# default sparkline with 0 values as text
 DEFAULT_SPARK_LINE = '\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
 
+# query to fill table cell chart with zero line if no data is available
 FILL_DEFAULT_SPARKLINE_AND_VALUE = (
     f"| fillnull value={DEFAULT_SPARK_LINE} sparkevent | fillnull value=0 events "
 )
@@ -72,6 +74,9 @@ data_ingestion_and_events = (
 
 errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
 
+# query generate data if there is 0 data in basic query
+# | head (${basic_query_token}:job.resultCount$==0)]" is used to check if there is 0 data in basic query
+# requires smart sources enabled,
 zero_line_search_query = (
     "| append [ gentimes increment=5m [ makeresults "
     "| eval start=strftime( "
