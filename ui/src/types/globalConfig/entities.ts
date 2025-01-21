@@ -220,6 +220,39 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
     }),
 });
 
+export const CheckboxTreeEntity = CommonEditableEntityFields.extend({
+    type: z.literal('checkboxTree'),
+    validators: z.tuple([RegexValidator]).optional(),
+    defaultValue: z.union([z.number(), z.boolean()]).optional(),
+    options: CommonEditableEntityOptions.extend({
+        groups: z
+            .array(
+                z.object({
+                    label: z.string(),
+                    fields: z.array(z.string()),
+                    options: z
+                        .object({
+                            isExpandable: z.boolean().optional(),
+                            expand: z.boolean().optional(),
+                        })
+                        .optional(),
+                })
+            )
+            .optional(),
+        rows: z.array(
+            z.object({
+                field: z.string(),
+                checkbox: z
+                    .object({
+                        label: z.string().optional(),
+                        defaultValue: z.boolean().optional(),
+                    })
+                    .optional(),
+            })
+        ),
+    }),
+});
+
 export const RadioEntity = CommonEditableEntityFields.extend({
     type: z.literal('radio'),
     defaultValue: z.string().optional(),
@@ -308,6 +341,7 @@ export const AnyOfEntity = z.discriminatedUnion('type', [
     MultipleSelectEntity,
     CheckboxEntity,
     CheckboxGroupEntity,
+    CheckboxTreeEntity,
     RadioEntity,
     FileEntity,
     OAuthEntity,

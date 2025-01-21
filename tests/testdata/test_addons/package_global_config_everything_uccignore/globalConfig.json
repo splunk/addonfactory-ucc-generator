@@ -846,6 +846,81 @@
                             "help": "This is an example checkbox for the input two entity"
                         },
                         {
+                            "type": "checkboxTree",
+                            "label": "Event Filters",
+                            "field": "event_filters",
+                            "required": true,
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Transactions",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "slow_request",
+                                            "transaction_stall"
+                                        ]
+                                    },
+                                    {
+                                        "label": "others",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "custom_events",
+                                            "cluster_events",
+                                            "network_events"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "code_problems",
+                                        "checkbox": {
+                                            "label": "Code Problems",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "slow_request",
+                                        "checkbox": {
+                                            "label": "Slow Request",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "transaction_stall",
+                                        "checkbox": {
+                                            "label": "Transactions Stall",
+                                            "defaultValue": false
+                                        }
+                                    },
+                                    {
+                                        "field": "custom_events",
+                                        "checkbox": {
+                                            "label": "Custom Events",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "cluster_events",
+                                        "checkbox": {
+                                            "label": "Cluster Events"
+                                        }
+                                    },
+                                    {
+                                        "field": "network_events",
+                                        "checkbox": {
+                                            "label": "Network Events"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
