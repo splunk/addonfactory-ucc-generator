@@ -7,7 +7,8 @@ import { CheckboxTreeProps } from './types';
 
 const handleChange = jest.fn();
 
-const defaultCheckboxProps: CheckboxTreeProps = {
+// Default props for the CheckboxTree component
+const defaultCheckboxTreeProps: CheckboxTreeProps = {
     mode: MODE_CREATE,
     field: 'checkbox_field',
     value: 'rowUnderGroup1,firstRowUnderGroup3',
@@ -49,14 +50,14 @@ const defaultCheckboxProps: CheckboxTreeProps = {
             {
                 field: 'firstRowUnderGroup3',
                 checkbox: {
-                    label: 'first row under group 3',
+                    label: 'First row under Group 3',
                     defaultValue: false,
                 },
             },
             {
                 field: 'secondRowUnderGroup3',
                 checkbox: {
-                    label: 'second row under group 3',
+                    label: 'Second row under Group 3',
                 },
             },
         ],
@@ -64,32 +65,33 @@ const defaultCheckboxProps: CheckboxTreeProps = {
     handleChange,
 };
 
+// Utility function to render the CheckboxTree component with optional overrides
 const renderCheckboxTree = (additionalProps?: Partial<CheckboxTreeProps>) => {
-    const props = { ...defaultCheckboxProps, ...additionalProps };
+    const props = { ...defaultCheckboxTreeProps, ...additionalProps };
     render(<CheckboxTree {...props} />);
 };
 
-describe('checkboxTree Component', () => {
+describe('CheckboxTree Component', () => {
     it('renders all rows and groups correctly', () => {
         renderCheckboxTree();
 
-        // Verify groups
-        expect(screen.getByText('Group 1')).toBeInTheDocument();
-        expect(screen.getByText('Group 3')).toBeInTheDocument();
+        // Verify group headers are rendered
+        expect(screen.getByRole('checkbox', { name: 'Group 1' })).toBeInTheDocument();
+        expect(screen.getByRole('checkbox', { name: 'Group 3' })).toBeInTheDocument();
 
-        // Verify rows
+        // Verify rows are rendered with correct labels
         expect(screen.getByLabelText('Row without group')).toBeInTheDocument();
         expect(screen.getByLabelText('Row under Group 1')).toBeInTheDocument();
-        expect(screen.getByLabelText('first row under group 3')).toBeInTheDocument();
-        expect(screen.getByLabelText('second row under group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('Second row under Group 3')).toBeInTheDocument();
     });
 
     it('handles "Select All" and "Clear All" functionality', async () => {
         renderCheckboxTree();
         const user = userEvent.setup();
 
-        // "Select All"
-        const selectAllButton = screen.getByText('Select All');
+        // Verify "Select All" button functionality
+        const selectAllButton = screen.getByRole('button', { name: 'Select All' });
         await user.click(selectAllButton);
 
         const allCheckboxes = screen.getAllByRole('checkbox');
@@ -102,8 +104,8 @@ describe('checkboxTree Component', () => {
             'checkboxTree'
         );
 
-        // "Clear All"
-        const clearAllButton = screen.getByText('Clear All');
+        // Verify "Clear All" button functionality
+        const clearAllButton = screen.getByRole('button', { name: 'Clear All' });
         await user.click(clearAllButton);
 
         allCheckboxes.forEach((checkbox) => expect(checkbox).not.toBeChecked());
@@ -112,12 +114,12 @@ describe('checkboxTree Component', () => {
     });
 });
 
-describe('checkboxTree Component - Collapsed Groups', () => {
+describe('CheckboxTree Component - Collapsed Groups', () => {
     it('renders groups in a collapsed state by default and toggles correctly', async () => {
         const user = userEvent.setup();
         renderCheckboxTree({
             controlOptions: {
-                ...defaultCheckboxProps.controlOptions,
+                ...defaultCheckboxTreeProps.controlOptions,
                 groups: [
                     {
                         label: 'Group 1',
@@ -139,33 +141,28 @@ describe('checkboxTree Component - Collapsed Groups', () => {
             },
         });
 
-        // Verify groups are rendered
-        expect(screen.getByText('Group 1')).toBeInTheDocument();
-        expect(screen.getByText('Group 3')).toBeInTheDocument();
+        // Verify group headers are rendered
+        expect(screen.getByRole('checkbox', { name: 'Group 1' })).toBeInTheDocument();
+        expect(screen.getByRole('checkbox', { name: 'Group 3' })).toBeInTheDocument();
 
-        // Verify rows under collapsed groups are not visible
+        // Verify rows under collapsed groups are not visible initially
         expect(screen.queryByLabelText('Row under Group 1')).not.toBeInTheDocument();
-        expect(screen.queryByLabelText('first row under group 3')).not.toBeInTheDocument();
-        expect(screen.queryByLabelText('second row under group 3')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('First row under Group 3')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Second row under Group 3')).not.toBeInTheDocument();
 
-        // Get all buttons
-        const buttons = screen.getAllByRole('button');
-
-        // Select the first button (for Group 1)
-        const group1Button = buttons[0];
-        expect(group1Button).toHaveAttribute('data-test', 'toggle'); // Verify it's the toggle button
-        await user.click(group1Button); // Click Group 1 toggle button
-
-        // Verify rows under "Group 1" are visible
+        // Expand Group 1 and verify rows are displayed
+        const toggleGroup1Button = screen.getByRole('button', {
+            name: 'Toggle for Group 1',
+        });
+        await user.click(toggleGroup1Button);
         expect(screen.getByLabelText('Row under Group 1')).toBeInTheDocument();
 
-        // Select the second button (for Group 3)
-        const group3Button = buttons[1];
-        expect(group3Button).toHaveAttribute('data-test', 'toggle'); // Verify it's the toggle button
-        await user.click(group3Button); // Click Group 3 toggle button
-
-        // Verify rows under "Group 3" are visible
-        expect(screen.getByLabelText('first row under group 3')).toBeInTheDocument();
-        expect(screen.getByLabelText('second row under group 3')).toBeInTheDocument();
+        // Expand Group 3 and verify rows are displayed
+        const toggleGroup3Button = screen.getByRole('button', {
+            name: 'Toggle for Group 3',
+        });
+        await user.click(toggleGroup3Button);
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('Second row under Group 3')).toBeInTheDocument();
     });
 });

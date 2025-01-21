@@ -80,7 +80,6 @@ export interface BaseCheckboxProps {
         field: string,
         validator: (submittedField: string, submittedValue: string) => void
     ) => void;
-    handleChange: (field: string, value: string, componentType?: string) => void;
     disabled?: boolean;
 }
 

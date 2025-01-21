@@ -46,7 +46,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
 
     const ParentCheckbox = (
         <StyledSwitch
-            aria-label={`${group.label} parent checkbox`}
+            aria-label={`Toggle for ${group.label}`}
             selected={isParentChecked}
             onClick={() => handleParentCheckboxForGroup(group.label, !isParentChecked)}
             appearance="checkbox"
