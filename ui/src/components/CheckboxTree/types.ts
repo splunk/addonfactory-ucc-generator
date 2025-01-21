@@ -27,7 +27,7 @@ export interface Row {
 
 export type GroupWithRows = Group & { rows: Row[] };
 
-export interface CheckboxTreeProps extends Omit<BaseCheckboxProps, 'handleChange'> {
+export interface CheckboxTreeProps extends BaseCheckboxProps {
     label: string;
     handleChange: (field: string, value: string, componentType: 'checkboxTree') => void;
 }

@@ -83,7 +83,7 @@ export interface BaseCheckboxProps {
     disabled?: boolean;
 }
 
-export interface CheckboxGroupProps extends Omit<BaseCheckboxProps, 'handleChange'> {
+export interface CheckboxGroupProps extends BaseCheckboxProps {
     handleChange: (field: string, value: string, componentType?: 'checkboxGroup') => void;
 }
 
