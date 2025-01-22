@@ -5,13 +5,13 @@ import userEvent from '@testing-library/user-event';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
-import {
-    getGlobalConfigMockCustomControl,
-    getGlobalConfigMockGroupsForInputPage,
-    getGlobalConfigMockGroupsForConfigPage,
-} from '../BaseFormConfigMock';
 import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
 import BaseFormView from '../BaseFormView';
+import {
+    getGlobalConfigMockCustomControl,
+    getGlobalConfigMockGroupsForConfigPage,
+    getGlobalConfigMockGroupsForInputPage,
+} from './configMocks';
 
 const handleFormSubmit = jest.fn();
 

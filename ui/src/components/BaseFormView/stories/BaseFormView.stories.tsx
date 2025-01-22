@@ -13,13 +13,13 @@ import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { Mode } from '../../../constants/modes';
 import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 import { Platforms } from '../../../types/globalConfig/pages';
-import {
-    getGlobalConfigMockGroupsForInputPage,
-    getGlobalConfigMockGroupsForConfigPage,
-    getGlobalConfigMockModificationToGroupsConfig,
-} from '../BaseFormConfigMock';
 import { getGlobalConfigMockModificationToFieldItself } from '../tests/configMocks';
 import { invariant } from '../../../util/invariant';
+import {
+    getGlobalConfigMockGroupsForConfigPage,
+    getGlobalConfigMockGroupsForInputPage,
+    getGlobalConfigMockModificationToGroupsConfig,
+} from '../tests/BaseFormConfigMock';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
