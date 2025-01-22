@@ -28,6 +28,14 @@ fields = [
         'disabled',
         required=False,
         validator=None
+    ),
+
+    field.RestField(
+        'event_filters',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
     )
 
 ]
