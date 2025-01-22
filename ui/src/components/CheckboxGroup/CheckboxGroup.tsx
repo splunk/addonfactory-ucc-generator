@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
-import { StyledColumnLayout } from './StyledComponent';
 import {
     CheckboxGroupProps,
     getDefaultValues,
@@ -60,8 +59,8 @@ function CheckboxGroup(props: CheckboxGroupProps) {
     };
 
     return (
-        <>
-            <StyledColumnLayout gutter={5}>
+        <div>
+            <ColumnLayout gutter={5}>
                 {flattenedRowsWithGroups.map((row) => {
                     if (isGroupWithRows(row)) {
                         // labels are unique across groups
@@ -88,7 +87,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
                     );
                 })}
                 <ColumnLayout.Row />
-            </StyledColumnLayout>
+            </ColumnLayout>
             <div>
                 <Button
                     label="Select All"
@@ -101,7 +100,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>
-        </>
+        </div>
     );
 }
 

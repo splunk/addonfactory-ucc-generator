@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
-import { StyledColumnLayout } from './StyledComponent';
 import {
     getDefaultValues,
     getFlattenRowsWithGroups,
@@ -94,8 +93,8 @@ function CheckboxTree(props: CheckboxTreeProps) {
     );
 
     return (
-        <>
-            <StyledColumnLayout gutter={5}>
+        <div>
+            <ColumnLayout gutter={5}>
                 {flattenedRowsWithGroups.map((row) =>
                     row && isGroupWithRows(row) ? (
                         <ColumnLayout.Row key={`group_${row.label}`}>
@@ -121,7 +120,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                     )
                 )}
                 <ColumnLayout.Row />
-            </StyledColumnLayout>
+            </ColumnLayout>
             <div>
                 <Button
                     label="Select All"
@@ -134,7 +133,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>
-        </>
+        </div>
     );
 }
 

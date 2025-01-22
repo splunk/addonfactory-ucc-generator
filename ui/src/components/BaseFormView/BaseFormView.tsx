@@ -1333,6 +1333,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         return (
             <div>
                 <form
+                    // prevents built-in browser validation
+                    noValidate
                     onSubmit={this.handleSubmit}
                     style={this.props.mode === MODE_CONFIG ? { marginTop: '25px' } : {}}
                 >

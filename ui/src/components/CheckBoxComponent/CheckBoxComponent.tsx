@@ -19,13 +19,13 @@ class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
     };
 
     render() {
+        const { field, value, ...restSuiProps } = this.props;
         return (
             <Switch
-                key={this.props.field}
-                value={this.props.field}
+                {...restSuiProps}
+                value={field}
                 onClick={this.handleChange}
-                disabled={this.props.disabled}
-                selected={!(this.props.value ? isFalse(this.props.value) : true)}
+                selected={!(value ? isFalse(value) : true)}
                 appearance="checkbox"
             />
         );

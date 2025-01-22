@@ -28,7 +28,6 @@ const defaultInputProps = {
     },
     disabled: false,
     value: 'defaultValue',
-    error: false,
     dependencyValues: {},
     handleChange,
 } satisfies MultiInputComponentProps;
@@ -81,11 +80,10 @@ it('renders as disabled correctly', () => {
 
 it.each(defaultInputProps.controlOptions.items)('handler called correctly', async (item) => {
     renderFeature();
-    const inputComponent = screen.getByTestId('multiselect');
-
+    const inputComponent = screen.getByRole('combobox');
     await userEvent.click(inputComponent);
 
-    const option = document.querySelector(`[data-test-value="${item.value}"]`);
+    const option = screen.getByRole('option', { name: item.label });
 
     expect(option).toBeInTheDocument();
     if (option) {
@@ -111,14 +109,15 @@ it.each(mockedEntries)('handler endpoint data loading', async (mockedEntry) => {
         value: undefined,
     });
 
-    const inputComponent = screen.getByTestId('multiselect');
+    const inputComponent = screen.getByRole('listbox');
+
     expect(inputComponent).toBeInTheDocument();
 
     await userEvent.click(inputComponent);
 
     const apiEntry = mockedEntry;
 
-    const option = document.querySelector(`[data-test-value="${apiEntry.name}"]`);
+    const option = screen.getByRole('option', { name: apiEntry.name });
     expect(option).toBeInTheDocument();
     if (option) {
         await userEvent.click(option);
@@ -143,13 +142,14 @@ describe.each(mockedEntries)('handler endpoint data loading', (mockedEntry) => {
             value: undefined,
         });
 
-        const inputComponent = screen.getByTestId('multiselect');
+        const inputComponent = screen.getByRole('listbox');
+
         expect(inputComponent).toBeInTheDocument();
 
         await userEvent.click(inputComponent);
 
         const apiEntry = mockedEntry;
-        const option = document.querySelector(`[data-test-value="${apiEntry.content.testValue}"]`);
+        const option = screen.getByRole('option', { name: apiEntry.content.testLabel });
         expect(option).toBeInTheDocument();
         if (option) {
             await userEvent.click(option);
@@ -181,11 +181,15 @@ it('should render label (boolean-like)', () => {
             ],
         },
     });
-    const inputComponent = screen.getByTestId('multiselect');
+    const inputComponent = screen.getByRole('listbox');
 
-    expect(within(inputComponent).getByText('truevalue')).toBeInTheDocument();
-    expect(within(inputComponent).queryByText('falsevalue')).not.toBeInTheDocument();
-    expect(within(inputComponent).queryByText('optionone')).not.toBeInTheDocument();
+    expect(within(inputComponent).getByRole('option', { name: /truevalue/ })).toBeInTheDocument();
+    expect(
+        within(inputComponent).queryByRole('option', { name: /falsevalue/ })
+    ).not.toBeInTheDocument();
+    expect(
+        within(inputComponent).queryByRole('option', { name: /optionone/ })
+    ).not.toBeInTheDocument();
 });
 
 it('should render singe value (numeric)', () => {
@@ -204,10 +208,12 @@ it('should render singe value (numeric)', () => {
             ],
         },
     });
-    const inputComponent = screen.getByTestId('multiselect');
+    const inputComponent = screen.getByRole('listbox');
 
-    expect(within(inputComponent).getByText('label1')).toBeInTheDocument();
-    expect(within(inputComponent).queryByText('label2')).not.toBeInTheDocument();
+    expect(within(inputComponent).getByRole('option', { name: /label1/ })).toBeInTheDocument();
+    expect(
+        within(inputComponent).queryByRole('option', { name: /label2/ })
+    ).not.toBeInTheDocument();
 });
 
 it('should render two values (number + boolean)', () => {
@@ -231,9 +237,12 @@ it('should render two values (number + boolean)', () => {
             ],
         },
     });
-    const inputComponent = screen.getByTestId('multiselect');
 
-    expect(within(inputComponent).getByText('label1')).toBeInTheDocument();
-    expect(within(inputComponent).getByText('label2')).toBeInTheDocument();
-    expect(within(inputComponent).queryByText('label3')).not.toBeInTheDocument();
+    const inputComponent = screen.getByRole('listbox');
+
+    expect(within(inputComponent).getByRole('option', { name: 'label1' })).toBeInTheDocument();
+    expect(within(inputComponent).getByRole('option', { name: 'label2' })).toBeInTheDocument();
+    expect(
+        within(inputComponent).queryByRole('option', { name: 'label3' })
+    ).not.toBeInTheDocument();
 });

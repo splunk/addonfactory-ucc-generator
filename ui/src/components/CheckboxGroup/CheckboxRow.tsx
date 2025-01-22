@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import NumberComponent, { NumberChangeHandler } from '@splunk/react-ui/Number';
 import styled from 'styled-components';
 import Switch from '@splunk/react-ui/Switch';
-import { FixedCheckboxRowWidth } from './StyledComponent';
 
 const StyledSwitch = styled(Switch)`
     padding: 0 3px;
@@ -16,7 +15,7 @@ const StyledRow = styled.div`
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    ${FixedCheckboxRowWidth}
+    width: 100%;
 `;
 
 interface CheckboxRowProps {

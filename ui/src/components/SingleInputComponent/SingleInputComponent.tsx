@@ -7,24 +7,19 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
+import { variables } from '@splunk/themes';
 import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse, FilterResponseParams } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { AcceptableFormValue, StandardPages } from '../../types/components/shareableTypes';
 
-const SelectWrapper = styled(Select)`
-    width: 320px !important;
-`;
-
 const WaitSpinnerWrapper = styled(WaitSpinner)`
-    margin-left: 5px;
+    margin-left: ${variables.spacingSmall};
 `;
 
-const StyledDiv = styled.div`
-    div:first-child {
-        width: 320px !important;
-    }
+const StyledClearButton = styled(Button)`
+    margin-left: ${variables.spacingSmall};
 `;
 
 type BasicFormItem = { value: AcceptableFormValue; label: string };
@@ -40,7 +35,6 @@ export interface SingleInputComponentProps {
     id?: string;
     disabled?: boolean;
     value: AcceptableFormValue;
-    error?: boolean;
     handleChange: (field: string, value: string) => void;
     field: string;
     dependencyValues?: Record<string, unknown>;
@@ -52,14 +46,7 @@ export interface SingleInputComponentProps {
 }
 
 function SingleInputComponent(props: SingleInputComponentProps) {
-    const {
-        field,
-        disabled = false,
-        error = false,
-        controlOptions,
-        dependencyValues,
-        ...restProps
-    } = props;
+    const { id, field, disabled = false, controlOptions, dependencyValues, ...restProps } = props;
     const {
         endpointUrl,
         denyList,
@@ -175,8 +162,11 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
     const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
     return createSearchChoice ? (
-        <StyledDiv className="dropdownBox">
+        <>
             <ComboBox
+                {...restProps}
+                // @ts-expect-error SUI does not declare inputId, but it is there
+                inputId={id}
                 value={
                     // if value is empty use empty string as ComboBox accepts only string
                     props.value === null || typeof props.value === 'undefined'
@@ -184,20 +174,19 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                         : String(props.value)
                 }
                 name={field}
-                error={error}
                 disabled={effectiveDisabled}
                 onChange={handleChange}
-                inline
             >
                 {options && options.length > 0 && options}
             </ComboBox>
             {loadingIndicator}
-        </StyledDiv>
+        </>
     ) : (
         <>
-            <SelectWrapper
+            <Select
+                {...restProps}
+                menuStyle={{ width: '100%' }}
                 inputId={props.id}
-                className="dropdownBox"
                 data-test-loading={loading}
                 value={
                     // if value is empty use empty string as Select accepts only string
@@ -206,17 +195,16 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                         : String(props.value)
                 }
                 name={field}
-                error={error}
                 disabled={effectiveDisabled}
                 onChange={handleChange}
                 filter={!disableSearch}
-                inline
+                inline={false}
             >
                 {options && options.length > 0 && options}
-            </SelectWrapper>{' '}
+            </Select>{' '}
             {loadingIndicator}
             {effectiveIsClearable ? (
-                <Button
+                <StyledClearButton
                     data-test="clear"
                     appearance="secondary"
                     icon={<Clear />}

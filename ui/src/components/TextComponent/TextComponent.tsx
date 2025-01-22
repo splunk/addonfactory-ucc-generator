@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
 import Text from '@splunk/react-ui/Text';
-import styled from 'styled-components';
-
-const TextWrapper = styled(Text)`
-    width: 320px !important;
-`;
 
 export interface TextComponentProps {
     // Number is expected if provided number in globalConfig.json instead of a string.
@@ -23,20 +18,16 @@ class TextComponent extends Component<TextComponentProps> {
     };
 
     render() {
+        const { id, field, disabled, value, encrypted, ...restSuiProps } = this.props;
         return (
-            <TextWrapper
-                inputId={this.props.id}
-                inline
-                error={this.props.error}
-                className={this.props.field}
-                disabled={this.props.disabled && 'dimmed'}
-                value={
-                    this.props.value === null || typeof this.props.value === 'undefined'
-                        ? ''
-                        : this.props.value.toString()
-                }
+            <Text
+                {...restSuiProps}
+                inputId={id}
+                className={field}
+                disabled={disabled && 'dimmed'}
+                value={value === null || typeof value === 'undefined' ? '' : value.toString()}
                 onChange={this.handleChange}
-                type={this.props.encrypted ? 'password' : 'text'}
+                type={encrypted ? 'password' : 'text'}
             />
         );
     }
