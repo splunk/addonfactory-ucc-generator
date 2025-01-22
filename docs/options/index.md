@@ -15,4 +15,4 @@ The options object in `globalConfig` is used to configure additional parameters 
 
 ## Available Options
 
-- [restHandlers](./restHandlers.md)
+- [restHandlers](./rest_handlers.md)
