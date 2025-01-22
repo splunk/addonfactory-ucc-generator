@@ -232,8 +232,6 @@ describe('Verify if submiting BaseFormView works', () => {
                                 {
                                     name,
                                     content: {
-                                        disabled: true,
-                                        index: 'default',
                                         interval,
                                     },
                                 },
@@ -273,5 +271,51 @@ describe('Verify if submiting BaseFormView works', () => {
 
         const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
         expect(errorMessage).toBeInTheDocument();
+    });
+
+    it('Correctly allow same name for different service', async () => {
+        const formRef = renderAndGetFormRef(
+            getGlobalConfigMockFourInputServices(),
+            MOCK_CONTEXT_STATE_THREE_INPUTS,
+            'example_input_two'
+        );
+
+        const NAME_INPUT = 'test'; // already existing as data in service example_input_one and example_input_four
+        const INTERVAL_INPUT = '123123123';
+
+        const nameInput = getEntityTextBox('name');
+        await userEvent.type(nameInput, NAME_INPUT);
+
+        const intervalInput = getEntityTextBox('interval');
+        await userEvent.type(intervalInput, INTERVAL_INPUT);
+
+        server.use(
+            http.post(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_two',
+                async ({ request }) => {
+                    const formData = await request.formData();
+                    const name = formData.get('name');
+                    const interval = formData.get('interval');
+                    return HttpResponse.json(
+                        {
+                            entry: [
+                                {
+                                    name,
+                                    content: {
+                                        interval,
+                                    },
+                                },
+                            ],
+                        },
+                        { status: 201 }
+                    );
+                }
+            )
+        );
+
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+
+        // response was success(mocked) and handled
+        await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
     });
 });
