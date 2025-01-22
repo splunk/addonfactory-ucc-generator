@@ -240,9 +240,9 @@ it('should render two values (number + boolean)', () => {
 
     const inputComponent = screen.getByRole('listbox');
 
-    expect(within(inputComponent).getByRole('option', { name: 'label1' })).toBeInTheDocument();
-    expect(within(inputComponent).getByRole('option', { name: 'label2' })).toBeInTheDocument();
+    expect(within(inputComponent).getByRole('option', { name: /label1/ })).toBeInTheDocument();
+    expect(within(inputComponent).getByRole('option', { name: /label2/ })).toBeInTheDocument();
     expect(
-        within(inputComponent).queryByRole('option', { name: 'label3' })
+        within(inputComponent).queryByRole('option', { name: /label3/ })
     ).not.toBeInTheDocument();
 });
