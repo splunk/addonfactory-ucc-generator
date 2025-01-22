@@ -1,17 +1,25 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
+import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
 import BaseFormView from '../BaseFormView';
 import {
     getGlobalConfigMockCustomControl,
+    getGlobalConfigMockFourInputServices,
     getGlobalConfigMockGroupsForConfigPage,
     getGlobalConfigMockGroupsForInputPage,
 } from './configMocks';
+import { MOCK_CONTEXT_STATE_THREE_INPUTS } from './contextMocks';
+import { PAGE_INPUT } from '../../../constants/pages';
+import { invariant } from '../../../util/invariant';
+import TableContext, { TableContextDataTypes } from '../../../context/TableContext';
+import { server } from '../../../mocks/server';
 
 const handleFormSubmit = jest.fn();
 
@@ -144,4 +152,126 @@ it.each([
     verifyDisplayedGroup('1');
     verifyDisplayedGroup('2');
     verifyDisplayedGroup('3'); // after modifications all groups should be displayed
+});
+
+describe('Verify if submiting BaseFormView works', () => {
+    const renderAndGetFormRef = (
+        mockConfig: GlobalConfig,
+        mockContext?: TableContextDataTypes,
+        serviceName = 'example_input_four'
+    ) => {
+        setUnifiedConfig(mockConfig);
+
+        const formRef = React.createRef<BaseFormView>();
+
+        render(
+            <TableContext.Provider
+                value={{
+                    ...{
+                        rowData: {},
+                        setRowData: () => {},
+                        setSearchText: () => {},
+                        setSearchType: () => {},
+                        pageSize: 10,
+                        setPageSize: () => {},
+                        setCurrentPage: () => {},
+                        currentPage: 0,
+                        searchText: '',
+                        searchType: 'all',
+                    },
+                    ...mockContext,
+                }}
+            >
+                <BaseFormView
+                    ref={formRef}
+                    page={PAGE_INPUT}
+                    stanzaName={STANZA_NAME}
+                    serviceName={serviceName}
+                    mode="create"
+                    handleFormSubmit={handleFormSubmit}
+                />
+            </TableContext.Provider>
+        );
+        return formRef;
+    };
+
+    const getEntityTextBox = (entityField: string) => {
+        const entityWrapper = document.querySelector(`[data-name="${entityField}"]`);
+        invariant(entityWrapper);
+        return within(entityWrapper as HTMLElement).getByRole('textbox');
+    };
+
+    it('Correctly pass form data via post', async () => {
+        const formRef = renderAndGetFormRef(
+            getGlobalConfigMockFourInputServices(),
+            MOCK_CONTEXT_STATE_THREE_INPUTS
+        );
+
+        const NAME_INPUT = 'new_unique_test_name';
+        const INTERVAL_INPUT = '123123123';
+
+        const nameInput = getEntityTextBox('name');
+        await userEvent.type(nameInput, NAME_INPUT);
+
+        const intervalInput = getEntityTextBox('interval');
+        await userEvent.type(intervalInput, INTERVAL_INPUT);
+
+        const submitHandler = jest.fn();
+
+        server.use(
+            http.post(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_four',
+                async ({ request }) => {
+                    const formData = await request.formData();
+                    const name = formData.get('name');
+                    const interval = formData.get('interval');
+                    submitHandler(name, interval);
+                    return HttpResponse.json(
+                        {
+                            entry: [
+                                {
+                                    name,
+                                    content: {
+                                        disabled: true,
+                                        index: 'default',
+                                        interval,
+                                    },
+                                },
+                            ],
+                        },
+                        { status: 201 }
+                    );
+                }
+            )
+        );
+
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+
+        // response was success(mocked) and handled
+        await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
+
+        // request params(name and interval) had correct values
+        await waitFor(() => expect(submitHandler).toHaveBeenCalledWith(NAME_INPUT, INTERVAL_INPUT));
+    });
+
+    it('should throw error as name already used', async () => {
+        const formRef = renderAndGetFormRef(
+            getGlobalConfigMockFourInputServices(),
+            MOCK_CONTEXT_STATE_THREE_INPUTS
+        );
+
+        const NAME_INPUT = 'test';
+        const INTERVAL_INPUT = '123123123';
+
+        const nameInput = getEntityTextBox('name');
+        await userEvent.type(nameInput, NAME_INPUT);
+
+        const intervalInput = getEntityTextBox('interval');
+        await userEvent.type(intervalInput, INTERVAL_INPUT);
+
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+
+        const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
+        expect(errorMessage).toBeInTheDocument();
+    });
 });

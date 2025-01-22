@@ -1,0 +1,55 @@
+import { TableContextDataTypes } from '../../../context/TableContext';
+
+export const MOCK_CONTEXT_STATE_THREE_INPUTS = {
+    rowData: {
+        example_input_one: {
+            test: {
+                name: 'test',
+                interval: '123123',
+                hide_in_ui: null,
+                hard_disabled: null,
+                disabled: false,
+                'eai:acl': null,
+                host: '$decideOnStartup',
+                host_resolved: '1586f56f522a',
+                'python.version': null,
+                id: 'https://localhost:8080/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_example_input_one/test',
+                serviceName: 'example_input_one',
+            },
+        },
+        example_input_two: {},
+        example_input_three: {},
+        example_input_four: {
+            test: {
+                name: 'test',
+                interval: '123123123',
+                disabled: true,
+                'eai:acl': null,
+                host: '$decideOnStartup',
+                host_resolved: '1586f56f522a',
+                index: 'default',
+                'python.version': null,
+                id: 'https://localhost:8080/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_example_input_four/test',
+                serviceName: 'example_input_four',
+            },
+            other_input: {
+                name: 'other_input',
+                interval: '123123',
+                disabled: true,
+                'eai:acl': null,
+                host: '$decideOnStartup',
+                host_resolved: '1586f56f522a',
+                index: 'default',
+                'python.version': null,
+                id: 'https://localhost:8080/servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_example_input_four/other_input',
+                serviceName: 'example_input_four',
+            },
+        },
+        service_hidden_for_cloud: {},
+        service_hidden_for_enterprise: {},
+    },
+    searchText: '',
+    searchType: 'all',
+    pageSize: 10,
+    currentPage: 0,
+} satisfies TableContextDataTypes;
