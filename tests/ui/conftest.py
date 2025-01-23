@@ -32,7 +32,8 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
 
     yield
 
-    IGNORED: List[str] = []
+    # sometimes RUM is down and we get a lot of severe logs
+    IGNORED: List[str] = ["https://rum-ingest.us1.signalfx.com"]
 
     browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)
     severe_logs = [
