@@ -2553,9 +2553,6 @@
           "$ref": "#/definitions/DashboardPage"
         }
       },
-      "required": [
-        "configuration"
-      ],
       "additionalProperties": false
     },
     "RegexValidator": {
@@ -3807,8 +3804,7 @@
     }
   },
   "required": [
-    "meta",
-    "pages"
+    "meta"
   ],
   "additionalProperties": false
 }

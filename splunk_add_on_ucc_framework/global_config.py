@@ -88,12 +88,18 @@ class GlobalConfig:
         self.expand_entities()
 
     def expand_tabs(self) -> None:
-        for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
-            self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+        if self.has_pages() and self.has_configuration():
+            for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
+                self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     def expand_entities(self) -> None:
-        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
-        self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
+        if self.has_pages():
+            self._expand_entities(
+                self._content["pages"].get("configuration", {}).get("tabs")
+            )
+            self._expand_entities(
+                self._content["pages"].get("inputs", {}).get("services")
+            )
         self._expand_entities(self._content.get("alerts"))
 
     @staticmethod
@@ -116,8 +122,16 @@ class GlobalConfig:
         return []
 
     @property
+    def pages(self) -> List[Any]:
+        if "pages" in self._content:
+            return self._content["pages"]
+        return []
+
+    @property
     def tabs(self) -> List[Any]:
-        return self._content["pages"]["configuration"]["tabs"]
+        if "configuration" in self._content["pages"]:
+            return self._content["pages"]["configuration"]["tabs"]
+        return []
 
     @property
     def dashboard(self) -> Dict[str, Any]:
@@ -204,19 +218,32 @@ class GlobalConfig:
     def add_ucc_version(self, version: str) -> None:
         self.content.setdefault("meta", {})["_uccVersion"] = version
 
+    def has_pages(self) -> bool:
+        return bool(self.pages)
+
     def has_inputs(self) -> bool:
-        return bool(self.inputs)
+        if self.has_pages():
+            return bool(self.inputs)
+        return False
+
+    def has_configuration(self) -> bool:
+        if self.has_pages():
+            return bool(self.tabs)
+        return False
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
 
     def has_dashboard(self) -> bool:
-        return self.dashboard is not None
+        if self.has_pages():
+            return self.dashboard is not None
+        return False
 
     def has_oauth(self) -> bool:
-        for tab in self.tabs:
-            if tab["name"] == "account":
-                for entity in tab["entity"]:
-                    if entity["type"] == "oauth":
-                        return True
+        if self.has_pages():
+            for tab in self.tabs:
+                if tab["name"] == "account":
+                    for entity in tab["entity"]:
+                        if entity["type"] == "oauth":
+                            return True
         return False

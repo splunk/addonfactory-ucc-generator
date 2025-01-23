@@ -76,36 +76,40 @@ def _modify_and_replace_token_for_oauth_templates(
     redirect_html_src = os.path.join(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
+    if global_config.has_pages():
+        if global_config.has_oauth():
+            html_template_path = os.path.join(
+                outputdir, ta_name, "appserver", "templates"
+            )
+            with open(os.path.join(html_template_path, "redirect.html")) as f:
+                s = f.read()
 
-    if global_config.has_oauth():
-        html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
-        with open(os.path.join(html_template_path, "redirect.html")) as f:
-            s = f.read()
+            with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
+                s = s.replace("${ta.name}", ta_name.lower())
+                s = s.replace("${ta.version}", global_config.version)
+                f.write(s)
 
-        with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-            s = s.replace("${ta.name}", ta_name.lower())
-            s = s.replace("${ta.version}", global_config.version)
-            f.write(s)
-
-        redirect_js_dest = (
-            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
-            + ta_name.lower()
-            + "_redirect_page."
-            + global_config.version
-            + ".js"
-        )
-        redirect_html_dest = os.path.join(
-            outputdir,
-            ta_name,
-            "appserver",
-            "templates",
-            ta_name.lower() + "_redirect.html",
-        )
-        os.rename(redirect_js_src, redirect_js_dest)
-        os.rename(redirect_html_src, redirect_html_dest)
-    else:
-        os.remove(redirect_html_src)
-        os.remove(redirect_js_src)
+            redirect_js_dest = (
+                os.path.join(
+                    outputdir, ta_name, "appserver", "static", "js", "build", ""
+                )
+                + ta_name.lower()
+                + "_redirect_page."
+                + global_config.version
+                + ".js"
+            )
+            redirect_html_dest = os.path.join(
+                outputdir,
+                ta_name,
+                "appserver",
+                "templates",
+                ta_name.lower() + "_redirect.html",
+            )
+            os.rename(redirect_js_src, redirect_js_dest)
+            os.rename(redirect_html_src, redirect_html_dest)
+        else:
+            os.remove(redirect_html_src)
+            os.remove(redirect_js_src)
 
 
 def _add_modular_input(
@@ -464,7 +468,8 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config.add_ucc_version(__version__)
-        global_config.expand()
+        if global_config.has_pages():
+            global_config.expand()
         if ta_name != global_config.product:
             logger.error(
                 "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
@@ -472,24 +477,22 @@ def generate(
             )
             sys.exit(1)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
-        utils.recursive_overwrite(
-            os.path.join(internal_root_dir, "package"),
-            os.path.join(output_directory, ta_name),
-            ui_source_map,
-        )
+        if global_config.has_pages():
+            utils.recursive_overwrite(
+                os.path.join(internal_root_dir, "package"),
+                os.path.join(output_directory, ta_name),
+                ui_source_map,
+            )
         global_config_file = (
             "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
         )
-        output_global_config_path = os.path.join(
-            output_directory,
-            ta_name,
-            "appserver",
-            "static",
-            "js",
-            "build",
-            global_config_file,
+        output_build_path = os.path.join(
+            output_directory, ta_name, "appserver", "static", "js", "build"
         )
-        global_config.dump(output_global_config_path)
+        if not os.path.isdir(output_build_path):
+            # this path may not exist for the .conf-only add-ons
+            os.makedirs(output_build_path)
+        global_config.dump(os.path.join(output_build_path, global_config_file))
         logger.info("Copied globalConfig to output")
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
@@ -502,7 +505,6 @@ def generate(
                 pip_version=pip_version,
                 pip_legacy_resolver=pip_legacy_resolver,
                 pip_custom_flag=pip_custom_flag,
-                includes_oauth=global_config.has_oauth(),
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -523,8 +525,9 @@ def generate(
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
-        builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
-        builder_obj.build()
+        if global_config.has_pages():
+            builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
+            builder_obj.build()
         _modify_and_replace_token_for_oauth_templates(
             ta_name,
             global_config,

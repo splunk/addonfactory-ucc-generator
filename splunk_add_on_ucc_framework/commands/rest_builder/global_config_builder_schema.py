@@ -85,9 +85,10 @@ class GlobalConfigBuilderSchema:
         return list(self._endpoints.values())
 
     def _parse_builder_schema(self) -> None:
-        self._builder_configs()
-        self._builder_settings()
-        self._builder_inputs()
+        if self.global_config.has_pages():
+            self._builder_configs()
+            self._builder_settings()
+            self._builder_inputs()
 
     def _builder_configs(self) -> None:
         for config in self.global_config.configs:

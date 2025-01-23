@@ -1,0 +1,141 @@
+{
+    "pages":{
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "default"
+                }
+            ]
+        }
+    },
+    "alerts": [
+        {
+            "name": "test_alert",
+            "label": "Test Alert",
+            "description": "Description for test Alert Action",
+            "iconFileName": "test icon.png",
+            "adaptiveResponse": {
+                "task": [
+                    "Create",
+                    "Update"
+                ],
+                "supportsAdhoc": true,
+                "supportsCloud": true,
+                "subject": [
+                    "endpoint"
+                ],
+                "category": [
+                    "Information Conveyance",
+                    "Information Portrayal"
+                ],
+                "technology": [
+                    {
+                        "version": [
+                            "1.0.0"
+                        ],
+                        "product": "Test Incident Update",
+                        "vendor": "Splunk"
+                    }
+                ],
+                "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
+                "sourcetype": "test:incident"
+            },
+            "entity": [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "field": "name",
+                    "defaultValue": "xyz",
+                    "required": true,
+                    "help": "Please enter your name"
+                },
+                {
+                    "type": "textarea",
+                    "label": "Description",
+                    "field": "description",
+                    "defaultValue": "some sample description",
+                    "required": true,
+                    "help": "Please enter the description for the alert"
+                },
+                {
+                    "type": "checkbox",
+                    "label": "All Incidents",
+                    "field": "all_incidents",
+                    "defaultValue": 0,
+                    "required": false,
+                    "help": "Tick if you want to update all incidents/problems"
+                },
+                {
+                    "type": "singleSelect",
+                    "label": "Table List",
+                    "field": "table_list",
+                    "options": {
+                        "items": [
+                            {
+                                "value": "incident",
+                                "label": "Incident"
+                            },
+                            {
+                                "value": "problem",
+                                "label": "Problem"
+                            }
+                        ]
+                    },
+                    "help": "Please select the table",
+                    "required": false,
+                    "defaultValue": "problem"
+                },
+                {
+                    "type": "radio",
+                    "label": "Action:",
+                    "field": "action",
+                    "options": {
+                        "items": [
+                            {
+                                "value": "update",
+                                "label": "Update"
+                            },
+                            {
+                                "value": "delete",
+                                "label": "Delete"
+                            }
+                        ]
+                    },
+                    "help": "Select the action you want to perform",
+                    "required": true,
+                    "defaultValue": "update"
+                },
+                {
+                    "type": "singleSelectSplunkSearch",
+                    "label": "Select Account",
+                    "field": "account",
+                    "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",
+                    "options": {
+                        "items": [
+                            {
+                                "label": "earliest",
+                                "value": "-4@h"
+                            },
+                            {
+                                "label": "latest",
+                                "value": "now"
+                            }
+                        ]
+                    },
+                    "valueField": "title",
+                    "labelField": "title",
+                    "help": "Select the account from the dropdown",
+                    "required": true
+                }
+            ],
+            "customScript": "myAlertLogic"
+        }
+    ],
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "5.56.0+615cb07a8",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.9"
+    }
+}

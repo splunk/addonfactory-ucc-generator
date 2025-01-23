@@ -56,16 +56,17 @@ def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, 
 
 
 def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig) -> None:
-    for tab in global_config.tabs:
-        conf_entities = tab.get("entity")
+    if global_config.has_pages():
+        for tab in global_config.tabs:
+            conf_entities = tab.get("entity")
 
-        if conf_entities is None:
-            continue
+            if conf_entities is None:
+                continue
 
-        tab["entity"] = _handle_biased_terms(conf_entities)
-    for service in global_config.inputs:
-        conf_entities = service.get("entity")
-        service["entity"] = _handle_biased_terms(conf_entities)
+            tab["entity"] = _handle_biased_terms(conf_entities)
+        for service in global_config.inputs:
+            conf_entities = service.get("entity")
+            service["entity"] = _handle_biased_terms(conf_entities)
     global_config.update_schema_version("0.0.1")
 
 
@@ -141,49 +142,50 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         logger.info("Updated globalConfig schema to version 0.0.1")
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
-        for tab in global_config.tabs:
-            if tab.get("type") in ["loggingTab", "proxyTab"]:
-                continue
-            if tab["name"] == "account":
-                conf_entities = tab.get("entity")
-
-                if conf_entities is None:
+        if global_config.has_pages():
+            for tab in global_config.tabs:
+                if tab.get("type") in ["loggingTab", "proxyTab"]:
                     continue
+                if tab["name"] == "account":
+                    conf_entities = tab.get("entity")
 
-                oauth_state_enabled_entity = {}
-                for entity in conf_entities:
-                    if entity.get("field") == "oauth_state_enabled":
-                        logger.warning(
-                            "oauth_state_enabled field is no longer a separate "
-                            "entity since UCC version 5.0.0. It is now an "
-                            "option in the oauth field. Please update the "
-                            "globalConfig file accordingly."
-                        )
-                        oauth_state_enabled_entity = entity
+                    if conf_entities is None:
+                        continue
 
-                    if entity.get("field") == "oauth" and not entity.get(
-                        "options", {}
-                    ).get("oauth_state_enabled"):
-                        entity["options"]["oauth_state_enabled"] = False
+                    oauth_state_enabled_entity = {}
+                    for entity in conf_entities:
+                        if entity.get("field") == "oauth_state_enabled":
+                            logger.warning(
+                                "oauth_state_enabled field is no longer a separate "
+                                "entity since UCC version 5.0.0. It is now an "
+                                "option in the oauth field. Please update the "
+                                "globalConfig file accordingly."
+                            )
+                            oauth_state_enabled_entity = entity
 
-                if oauth_state_enabled_entity:
-                    conf_entities.remove(oauth_state_enabled_entity)
+                        if entity.get("field") == "oauth" and not entity.get(
+                            "options", {}
+                        ).get("oauth_state_enabled"):
+                            entity["options"]["oauth_state_enabled"] = False
 
-            tab_options = tab.get("options", {})
-            if tab_options.get("onChange"):
-                logger.error(
-                    "The onChange option is no longer supported since UCC "
-                    "version 5.0.0. You can use custom hooks to implement "
-                    "these actions."
-                )
-                del tab_options["onChange"]
-            if tab_options.get("onLoad"):
-                logger.error(
-                    "The onLoad option is no longer supported since UCC "
-                    "version 5.0.0. You can use custom hooks to implement "
-                    "these actions."
-                )
-                del tab_options["onLoad"]
+                    if oauth_state_enabled_entity:
+                        conf_entities.remove(oauth_state_enabled_entity)
+
+                tab_options = tab.get("options", {})
+                if tab_options.get("onChange"):
+                    logger.error(
+                        "The onChange option is no longer supported since UCC "
+                        "version 5.0.0. You can use custom hooks to implement "
+                        "these actions."
+                    )
+                    del tab_options["onChange"]
+                if tab_options.get("onLoad"):
+                    logger.error(
+                        "The onLoad option is no longer supported since UCC "
+                        "version 5.0.0. You can use custom hooks to implement "
+                        "these actions."
+                    )
+                    del tab_options["onLoad"]
 
         if global_config.has_inputs():
             for service in global_config.inputs:
@@ -262,12 +264,16 @@ def _dump_with_migrated_entities(
     path: str,
     entity_type: List[Any],
 ) -> None:
-    _collapse_entities(
-        global_config.content["pages"].get("inputs", {}).get("services"), entity_type
-    )
-    _collapse_entities(
-        global_config.content["pages"]["configuration"].get("tabs"), entity_type
-    )
+    if global_config.has_pages():
+        _collapse_entities(
+            global_config.content["pages"].get("inputs", {}).get("services"),
+            entity_type,
+        )
+        if global_config.has_configuration():
+            _collapse_entities(
+                global_config.content["pages"].get("configuration").get("tabs"),
+                entity_type,
+            )
     _collapse_entities(global_config.content.get("alerts"), entity_type)
 
     _dump(global_config.content, path, global_config._is_global_config_yaml)
@@ -313,27 +319,28 @@ def _stop_build_on_placeholder_usage(
         "`placeholder` option found for %s '%s'. It has been removed from UCC. "
         "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
     )
-    for tab in global_config.tabs:
-        for entity in tab.get("entity", []):
-            if "placeholder" in entity.get("options", {}):
-                logger.error(
-                    log_msg % ("configuration tab", tab["name"], entity["field"])
-                )
-                raise GlobalConfigValidatorException(
-                    exc_msg % ("configuration tab", tab["name"])
-                )
-    services = global_config.inputs
-    if not services:
-        return
-    for service in services:
-        for entity in service.get("entity", {}):
-            if "placeholder" in entity.get("options", {}):
-                logger.error(
-                    log_msg % ("input service", service["name"], entity["field"])
-                )
-                raise GlobalConfigValidatorException(
-                    exc_msg % ("input service", service["name"])
-                )
+    if global_config.has_pages():
+        for tab in global_config.tabs:
+            for entity in tab.get("entity", []):
+                if "placeholder" in entity.get("options", {}):
+                    logger.error(
+                        log_msg % ("configuration tab", tab["name"], entity["field"])
+                    )
+                    raise GlobalConfigValidatorException(
+                        exc_msg % ("configuration tab", tab["name"])
+                    )
+        services = global_config.inputs
+        if not services:
+            return
+        for service in services:
+            for entity in service.get("entity", {}):
+                if "placeholder" in entity.get("options", {}):
+                    logger.error(
+                        log_msg % ("input service", service["name"], entity["field"])
+                    )
+                    raise GlobalConfigValidatorException(
+                        exc_msg % ("input service", service["name"])
+                    )
     global_config.update_schema_version("0.0.8")
 
 
