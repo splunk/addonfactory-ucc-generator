@@ -517,6 +517,6 @@ jobs:
         name: Publish NPM (dry-run)
         run: |
           cd ui          
-          npm publish --provenance --access public --dry-run || true
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
