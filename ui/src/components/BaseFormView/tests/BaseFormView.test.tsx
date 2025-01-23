@@ -167,18 +167,16 @@ describe('Verify if submiting BaseFormView works', () => {
         render(
             <TableContext.Provider
                 value={{
-                    ...{
-                        rowData: {},
-                        setRowData: () => {},
-                        setSearchText: () => {},
-                        setSearchType: () => {},
-                        pageSize: 10,
-                        setPageSize: () => {},
-                        setCurrentPage: () => {},
-                        currentPage: 0,
-                        searchText: '',
-                        searchType: 'all',
-                    },
+                    rowData: {},
+                    setRowData: () => {},
+                    setSearchText: () => {},
+                    setSearchType: () => {},
+                    pageSize: 10,
+                    setPageSize: () => {},
+                    setCurrentPage: () => {},
+                    currentPage: 0,
+                    searchText: '',
+                    searchType: 'all',
                     ...mockContext,
                 }}
             >
@@ -216,8 +214,6 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, INTERVAL_INPUT);
 
-        const submitHandler = jest.fn();
-
         server.use(
             http.post(
                 '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_four',
@@ -225,7 +221,8 @@ describe('Verify if submiting BaseFormView works', () => {
                     const formData = await request.formData();
                     const name = formData.get('name');
                     const interval = formData.get('interval');
-                    submitHandler(name, interval);
+                    expect(name).toEqual(NAME_INPUT);
+                    expect(interval).toEqual(INTERVAL_INPUT);
                     return HttpResponse.json(
                         {
                             entry: [
@@ -247,9 +244,6 @@ describe('Verify if submiting BaseFormView works', () => {
 
         // response was success(mocked) and handled
         await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
-
-        // request params(name and interval) had correct values
-        await waitFor(() => expect(submitHandler).toHaveBeenCalledWith(NAME_INPUT, INTERVAL_INPUT));
     });
 
     it('should throw error as name already used', async () => {
