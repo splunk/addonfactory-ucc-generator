@@ -301,6 +301,12 @@ def test_autocompletefields_children_support_integer_values():
             ),
         ),
         (
+            "invalid_config_meta_default_configuration_page_but_no_configuration_defined.json",
+            (
+                'meta.defaultView == "configuration" but there is no configuration defined in globalConfig'
+            ),
+        ),
+        (
             "invalid_config_meta_default_dashboard_page_but_no_dashboard_defined.json",
             (
                 'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'

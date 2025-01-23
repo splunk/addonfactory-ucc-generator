@@ -146,9 +146,10 @@ class GlobalConfig:
     @property
     def configs(self) -> List[Any]:
         configs = []
-        for tab in self.tabs:
-            if "table" in tab:
-                configs.append(tab)
+        if self.has_configuration():
+            for tab in self.tabs:
+                if "table" in tab:
+                    configs.append(tab)
         return configs
 
     @property
