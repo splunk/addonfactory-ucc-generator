@@ -90,8 +90,6 @@ class GlobalConfigBuilderSchema:
         self._builder_inputs()
 
     def _builder_configs(self) -> None:
-        if not self.global_config.has_configuration():
-            return
         for config in self.global_config.configs:
             name = config["name"]
             endpoint = SingleModelEndpointBuilder(

@@ -19,8 +19,7 @@
 # nosemgrep: splunk.use-defused-xml
 from xml.etree import ElementTree as ET
 from defusedxml import minidom
-
-UCC_DEFAULT_VIEW = "_default_configuration"
+from typing import Union
 
 
 def _pretty_print_xml(string: str) -> str:
@@ -34,7 +33,7 @@ def generate_nav_default_xml(
     include_inputs: bool,
     include_dashboard: bool,
     include_configuration: bool,
-    default_view: str,
+    default_view: Union[str, None],
 ) -> str:
     """
     Generates `default/data/ui/nav/default.xml` file.
@@ -42,7 +41,7 @@ def generate_nav_default_xml(
     The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
     nav = ET.Element("nav")
-    if default_view == UCC_DEFAULT_VIEW:
+    if default_view is None:
         # we do this calculation as all the below properties are now optional
         if include_configuration:
             default_view = "configuration"

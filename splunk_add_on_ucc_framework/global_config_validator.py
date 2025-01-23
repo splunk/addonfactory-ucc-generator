@@ -25,7 +25,6 @@ import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
@@ -701,10 +700,11 @@ class GlobalConfigValidator:
             )
 
     def _validate_meta_default_view(self) -> None:
-        default_view = self._global_config.meta.get(
-            "defaultView", data_ui_generator.UCC_DEFAULT_VIEW
-        )
-        if default_view == "configuration" and self._global_config.has_configuration():
+        default_view = self._global_config.meta.get("defaultView")
+        if (
+            default_view == "configuration"
+            and not self._global_config.has_configuration()
+        ):
             raise GlobalConfigValidatorException(
                 'meta.defaultView == "configuration" but there is no configuration defined in globalConfig'
             )
