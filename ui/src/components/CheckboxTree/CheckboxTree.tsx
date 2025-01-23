@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
+import styled from 'styled-components';
 import {
     getDefaultValues,
     getFlattenRowsWithGroups,
@@ -12,6 +13,10 @@ import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { MODE_CREATE } from '../../constants/modes';
 import { CheckboxTreeProps, ValueByField } from './types';
 import { packValue, parseValue } from './utils';
+
+const FullWidth = styled.div`
+    width: 100%;
+`;
 
 function CheckboxTree(props: CheckboxTreeProps) {
     const { field, handleChange, controlOptions, disabled } = props;
@@ -93,7 +98,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
     );
 
     return (
-        <div>
+        <FullWidth>
             <ColumnLayout gutter={5}>
                 {flattenedRowsWithGroups.map((row) =>
                     row && isGroupWithRows(row) ? (
@@ -133,7 +138,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>
-        </div>
+        </FullWidth>
     );
 }
 

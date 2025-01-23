@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Text from '@splunk/react-ui/Text';
 
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
+
 export interface TextComponentProps {
     // Number is expected if provided number in globalConfig.json instead of a string.
     value: string | number;
@@ -18,7 +20,8 @@ class TextComponent extends Component<TextComponentProps> {
     };
 
     render() {
-        const { id, field, disabled, value, encrypted, ...restSuiProps } = this.props;
+        const { id, field, disabled, value, encrypted, ...restProps } = this.props;
+        const restSuiProps = excludeControlWrapperProps(restProps);
         return (
             <Text
                 {...restSuiProps}

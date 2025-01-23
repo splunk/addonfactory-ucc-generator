@@ -13,6 +13,7 @@ import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse, FilterResponseParams } from '../../util/util';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { AcceptableFormValue, StandardPages } from '../../types/components/shareableTypes';
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
 
 const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: ${variables.spacingSmall};
@@ -62,7 +63,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     } = controlOptions;
 
     const handleChange = (e: unknown, obj: { value: AcceptableFormValue }) => {
-        restProps.handleChange(field, String(obj.value));
+        props.handleChange(field, String(obj.value));
     };
     const Option = createSearchChoice ? ComboBox.Option : Select.Option;
     const Heading = createSearchChoice ? ComboBox.Heading : Select.Heading;
@@ -160,11 +161,14 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
     // hideClearBtn=true only passed for OAuth else its undefined
     // effectiveIsClearable button will be visible only for the required=false and createSearchChoice=false single-select fields.
-    const effectiveIsClearable = !(effectiveDisabled || restProps.required || hideClearBtn);
+    const effectiveIsClearable = !(effectiveDisabled || props.required || hideClearBtn);
+
+    // ControlWrapper passes a lot of extra props that conflict with SUI components
+    const restSuiProps = excludeControlWrapperProps(restProps);
     return createSearchChoice ? (
         <>
             <ComboBox
-                {...restProps}
+                {...restSuiProps}
                 // @ts-expect-error SUI does not declare inputId, but it is there
                 inputId={id}
                 value={
@@ -184,7 +188,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
     ) : (
         <>
             <Select
-                {...restProps}
+                {...restSuiProps}
                 menuStyle={{ width: '100%' }}
                 inputId={props.id}
                 data-test-loading={loading}
@@ -208,7 +212,7 @@ function SingleInputComponent(props: SingleInputComponentProps) {
                     data-test="clear"
                     appearance="secondary"
                     icon={<Clear />}
-                    onClick={() => restProps.handleChange(field, '')}
+                    onClick={() => props.handleChange(field, '')}
                 />
             ) : null}
         </>

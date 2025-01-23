@@ -10,6 +10,7 @@ import { filterResponse, FilterResponseParams } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 import { invariant } from '../../util/invariant';
 import { AcceptableFormValue } from '../../types/components/shareableTypes';
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
 
 const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: 5px;
@@ -34,7 +35,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         controlOptions,
         dependencyValues,
         handleChange,
-        ...restSuiProps
+        ...restProps
     } = props;
     const {
         endpointUrl,
@@ -130,6 +131,7 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
     const valueList = value ? String(value).split(delimiter) : [];
+    const restSuiProps = excludeControlWrapperProps(restProps);
 
     return (
         <>

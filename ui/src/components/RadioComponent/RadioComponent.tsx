@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { StandardPages } from '../../types/components/shareableTypes';
 
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
+
 const RadioBarOption = styled(RadioBar.Option)`
     margin-left: 0px !important;
 `;
@@ -29,7 +31,9 @@ class RadioComponent extends Component<RadioComponentProps> {
     };
 
     render() {
-        const { value, controlOptions, disabled, page, ...restSuiProps } = this.props;
+        const { value, controlOptions, disabled, page, ...restProps } = this.props;
+
+        const restSuiProps = excludeControlWrapperProps(restProps);
         return (
             <RadioBar
                 {...restSuiProps}

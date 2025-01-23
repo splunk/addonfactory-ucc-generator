@@ -2,6 +2,8 @@ import React from 'react';
 import Switch from '@splunk/react-ui/Switch';
 import { isFalse } from '../../util/considerFalseAndTruthy';
 
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
+
 export interface CheckBoxComponentProps {
     value: 0 | 1 | boolean;
     handleChange: (field: string, value: 0 | 1) => void;
@@ -19,7 +21,8 @@ class CheckBoxComponent extends React.Component<CheckBoxComponentProps> {
     };
 
     render() {
-        const { field, value, ...restSuiProps } = this.props;
+        const { field, value, ...restProps } = this.props;
+        const restSuiProps = excludeControlWrapperProps(restProps);
         return (
             <Switch
                 {...restSuiProps}

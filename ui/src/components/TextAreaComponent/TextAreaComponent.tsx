@@ -1,6 +1,8 @@
 import React from 'react';
 import TextArea, { TextAreaChangeHandler, TextAreaPropsBase } from '@splunk/react-ui/TextArea';
 
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
+
 export interface TextAreaComponentProps extends Omit<Partial<TextAreaPropsBase>, 'defaultValue'> {
     id?: string;
     value?: string;
@@ -15,12 +17,13 @@ function TextAreaComponent({
     handleChange,
     field,
     controlOptions,
-    ...restSuiProps
+    ...restProps
 }: TextAreaComponentProps) {
     const onChange: TextAreaChangeHandler = (_e, data) => {
         handleChange(field, data.value);
     };
 
+    const restSuiProps = excludeControlWrapperProps(restProps);
     return (
         <TextArea
             {...restSuiProps}
