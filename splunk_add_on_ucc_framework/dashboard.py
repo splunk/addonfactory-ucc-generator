@@ -42,6 +42,14 @@ SUPPORTED_PANEL_NAMES = frozenset(
 )
 SUPPORTED_PANEL_NAMES_READABLE = ", ".join(SUPPORTED_PANEL_NAMES)
 
+# default sparkline with 0 values as text
+DEFAULT_SPARK_LINE = '\\"##__SPARKLINE__##,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\"'
+
+# query to fill table cell chart with zero line if no data is available
+FILL_DEFAULT_SPARKLINE_AND_VALUE = (
+    f"| fillnull value={DEFAULT_SPARK_LINE} sparkevent | fillnull value=0 events "
+)
+
 default_definition_json_filename = {
     "overview": "overview_definition.json",
     "data_ingestion_tab": "data_ingestion_tab_definition.json",
@@ -63,7 +71,37 @@ data_ingestion_and_events = (
     "| join _time [search index=_internal source=*{addon_name}* action=events_ingested "
     '| timechart sum(n_events) as \\"Number of events\\" ]'
 )
-errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l"
+
+errors_count = "index=_internal source=*{addon_name}* log_level IN ({log_lvl}) | timechart count as Errors by exc_l "
+
+# query generate data if there is 0 data in basic query
+# | head (${basic_query_token}:job.resultCount$==0)]" is used to check if there is 0 data in basic query
+# requires smart sources enabled,
+zero_line_search_query = (
+    "| append [ gentimes increment=5m [ makeresults "
+    "| eval start=strftime( "
+    'if(\\"${time_token}.earliest$\\"=\\"now\\"'
+    ",now(),"
+    'if(match(\\"${time_token}.earliest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
+    'strptime(\\"${time_token}.earliest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\")'
+    ',relative_time(now(), \\"${time_token}.earliest$\\")'
+    ")"
+    "), "
+    '\\"%m/%d/%Y:%T\\")'
+    "| eval end=strftime("
+    'if(\\"${time_token}.latest$\\"=\\"now\\",'
+    "now(),"
+    'if(match(\\"${time_token}.latest$\\",\\"^\\\\d+-\\\\d+-\\\\d+(T?\\\\d+:\\\\d+:\\\\d+(\\\\.\\\\d{{3}}Z)?)$\\"),'
+    'strptime(\\"${time_token}.latest$\\", \\"%Y-%m-%dT%H:%M:%S.%N\\") '
+    ',relative_time(now(), \\"${time_token}.latest$\\")'
+    ")"
+    "), "
+    '\\"%m/%d/%Y:%T\\")'
+    "| return start end] "
+    "| eval {value_label} = 0 | fields - endhuman starthuman starttime "
+    "| rename endtime as _time | head (${basic_query_token}:job.resultCount$==0)]"
+)
+
 events_count = (
     "index=_internal source=*{addon_name}* action=events_ingested | "
     'timechart sum(n_events) as \\"Number of events\\"'
@@ -71,23 +109,28 @@ events_count = (
 
 table_sourcetype_query = (
     "index=_internal source=*license_usage.log type=Usage ({determine_by} IN ({lic_usg_condition})) "
-    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st "
+    "| fillnull value=0 b | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by st "
     "| join type=left st [search index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
     "sum(n_events) as events by sourcetype_ingested "
-    '| rename sourcetype_ingested as st ] | makemv delim=\\",\\" sparkevent '
+    "| rename sourcetype_ingested as st ] "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
+    '| makemv delim=\\",\\" sparkevent '
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table st, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
     '| rename st as \\"Source type\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
     'sparkvolume as \\"Volume trendline (Bytes)\\", sparkevent as \\"Event trendline\\"'
 )
+
 table_source_query = (
     "index=_internal source=*license_usage.log type=Usage ({determine_by} IN ({lic_usg_condition})) "
-    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by s "
+    "| fillnull value=0 b | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by s "
     "| join type=left s [search index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
     "sum(n_events) as events by modular_input_name "
-    '| rename modular_input_name as s ] | makemv delim=\\",\\" sparkevent '
+    "| rename modular_input_name as s ] "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
+    '| makemv delim=\\",\\" sparkevent '
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table s, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
     '| rename s as \\"Source\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
@@ -96,17 +139,19 @@ table_source_query = (
 table_host_query = (
     "index=_internal source=*license_usage.log type=Usage "
     "({determine_by} IN ({lic_usg_condition})) "
-    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by h "
+    "| fillnull value=0 b | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by h "
     "| table h, Bytes, sparkvolume "
     '| rename h as \\"Host\\", Bytes as \\"Data volume\\", sparkvolume as \\"Volume trendline (Bytes)\\"'
 )
 table_index_query = (
     "index=_internal source=*license_usage.log type=Usage ({determine_by} IN ({lic_usg_condition})) "
-    "| stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by idx "
+    "| fillnull value=0 b | stats sparkline(sum(b)) as sparkvolume, sum(b) as Bytes by idx "
     "| join type=left idx [search index = _internal source=*{addon_name}* action=events_ingested "
     "| stats latest(_time) AS le, sparkline(sum(n_events)) as sparkevent, "
     "sum(n_events) as events by event_index "
-    '| rename event_index as idx ] | makemv delim=\\",\\" sparkevent '
+    "| rename event_index as idx ] "
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
+    '| makemv delim=\\",\\" sparkevent '
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table idx, Bytes, sparkvolume, events, sparkevent, \\"Last event\\" '
     '| rename idx as \\"Index\\", Bytes as \\"Data volume\\", events as \\"Number of events\\", '
@@ -114,6 +159,7 @@ table_index_query = (
 )
 table_account_query = (
     "index = _internal source=*{addon_name}* action=events_ingested "
+    "| fillnull value=0 n_events "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_account "
     '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") '
     '| table event_account, events, sparkevent, \\"Last event\\" '
@@ -127,7 +173,9 @@ table_input_query = (
     '| table title, Active | rename title as \\"event_input\\" | join type=left event_input [ '
     "search index = _internal source=*{addon_name_lowercase}* action=events_ingested "
     "| stats latest(_time) as le, sparkline(sum(n_events)) as sparkevent, sum(n_events) as events by event_input "
-    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] | makemv delim=\\",\\" sparkevent '
+    '| eval \\"Last event\\" = strftime(le, \\"%e %b %Y %I:%M%p\\") ] '
+    f"{FILL_DEFAULT_SPARKLINE_AND_VALUE}"
+    '| makemv delim=\\",\\" sparkevent '
     '| table event_input, Active, events, sparkevent, \\"Last event\\" '
     '| rename event_input as \\"Input\\", events as \\"Number of events\\", sparkevent as \\"Event trendline\\"'
 )
@@ -174,6 +222,16 @@ def generate_dashboard_content(
                 errors_count=errors_count.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
                 ),
+                errors_count_zero_line=zero_line_search_query.format(
+                    value_label="Errors",
+                    basic_query_token="error_count",
+                    time_token="overview_time",
+                ),
+                data_ingestion_and_events_zero_line=zero_line_search_query.format(
+                    value_label="Number of events",
+                    basic_query_token="data_volume",
+                    time_token="overview_time",
+                ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
             )
         )
@@ -186,10 +244,17 @@ def generate_dashboard_content(
                 data_ingestion=data_ingestion.format(
                     lic_usg_condition=lic_usg_condition, determine_by=determine_by
                 ),
-                errors_count=errors_count.format(
-                    addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                data_ingestion_volume_zero_line=zero_line_search_query.format(
+                    value_label="Data volume",
+                    basic_query_token="data_volume",
+                    time_token="data_ingestion_time",
                 ),
                 events_count=events_count.format(addon_name=addon_name.lower()),
+                data_ingestion_event_count_zero_line=zero_line_search_query.format(
+                    value_label="Number of events",
+                    basic_query_token="data_ingestion_events_count",
+                    time_token="data_ingestion_time",
+                ),
                 table_sourcetype=table_sourcetype_query.format(
                     lic_usg_condition=lic_usg_condition,
                     addon_name=addon_name.lower(),
@@ -224,6 +289,11 @@ def generate_dashboard_content(
             .render(
                 errors_count=errors_count.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl
+                ),
+                errors_count_tab_zero_line=zero_line_search_query.format(
+                    value_label="Errors",
+                    basic_query_token="error_count_tab",
+                    time_token="errors_tab_time",
                 ),
                 errors_list=errors_list_query.format(
                     addon_name=addon_name.lower(), log_lvl=error_panel_log_lvl

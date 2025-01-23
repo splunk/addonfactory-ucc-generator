@@ -14,78 +14,109 @@
 # limitations under the License.
 #
 {
-  branches:
+  "branches": [
+    "+([0-9])?(.{+([0-9]),x}).x",
+    "main",
+    {
+      "name": "release/beta",
+      "prerelease": "beta",
+      "channel": "beta"
+    }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
     [
-      "+([0-9])?(.{+([0-9]),x}).x",
-      "main",
-      { name: "release/beta", prerelease: "beta", channel: "beta" },
+      "semantic-release-replace-plugin",
+      {
+        "replacements": [
+          {
+            "files": [
+              "splunk_add_on_ucc_framework/__init__.py"
+            ],
+            "from": "__version__ ?=.*",
+            "to": "__version__ = \"${nextRelease.version}\"",
+            "results": [
+              {
+                "file": "splunk_add_on_ucc_framework/__init__.py",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          },
+          {
+            "files": [
+              "pyproject.toml"
+            ],
+            "from": "version = \"[0-9]+.[0-9]+.[0-9]+\"",
+            "to": "version = \"${nextRelease.version}\"",
+            "results": [
+              {
+                "file": "pyproject.toml",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          },
+          {
+            "files": [
+              "ui/package.json"
+            ],
+            "from": "\"version\": \"[0-9]+.[0-9]+.[0-9]+\"",
+            "to": "\"version\": \"${nextRelease.version}\"",
+            "results": [
+              {
+                "file": "ui/package.json",
+                "hasChanged": true,
+                "numMatches": 1,
+                "numReplacements": 1
+              }
+            ],
+            "countMatches": true
+          }
+        ]
+      }
     ],
-  plugins:
+    "@semantic-release/release-notes-generator",
     [
-      "@semantic-release/commit-analyzer",
-      [
-        "semantic-release-replace-plugin",
-        {
-          "replacements": [
-            {
-              "files": ["splunk_add_on_ucc_framework/__init__.py"],
-              "from": "__version__ ?=.*",
-              "to": "__version__ = \"${nextRelease.version}\"",
-              "results": [
-                {
-                  "file": "splunk_add_on_ucc_framework/__init__.py",
-                  "hasChanged": true,
-                  "numMatches": 1,
-                  "numReplacements": 1
-                }
-              ],
-              "countMatches": true
-            },
-            {
-              "files": ["pyproject.toml"],
-              "from": "version = \"[0-9]+.[0-9]+.[0-9]+\"",
-              "to": "version = \"${nextRelease.version}\"",
-              "results": [
-                {
-                  "file": "pyproject.toml",
-                  "hasChanged": true,
-                  "numMatches": 1,
-                  "numReplacements": 1
-                }
-              ],
-              "countMatches": true
-            }
-          ]
-        }
-      ],
-      "@semantic-release/release-notes-generator",
-      [
-        "@semantic-release/exec",
-        {
-          "verifyReleaseCmd": "echo \"version=${nextRelease.version}\" >> $GITHUB_OUTPUT",
-          "successCmd": "echo \"new_release_published=${'true'}\" >> $GITHUB_OUTPUT"
-        },
-      ],
-      [
-        "@semantic-release/changelog",
-        {
-          "changelogFile": "docs/CHANGELOG.md",
-          "changelogTitle": "# Changelog"
-        }
-      ],
-      [
-        "@semantic-release/git",
-        {
-          "assets": ["NOTICE", "docs/CHANGELOG.md", "pyproject.toml", "splunk_add_on_ucc_framework/__init__.py"],
-          "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}",
-        },
-      ],
-      [
-        "@semantic-release/github",
-        {
-          "assets": ["NOTICE", "pyproject.toml"],
-          "successComment": false
-        }
-      ],
+      "@semantic-release/exec",
+      {
+        "verifyReleaseCmd": "echo \"version=${nextRelease.version}\" >> $GITHUB_OUTPUT",
+        "successCmd": "echo \"new_release_published=${'true'}\" >> $GITHUB_OUTPUT"
+      }
     ],
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "docs/CHANGELOG.md",
+        "changelogTitle": "# Changelog"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "NOTICE",
+          "docs/CHANGELOG.md",
+          "pyproject.toml",
+          "ui/package.json",
+          "splunk_add_on_ucc_framework/__init__.py"
+        ],
+        "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          "NOTICE",
+          "pyproject.toml"
+        ],
+        "successComment": false
+      }
+    ]
+  ]
 }
