@@ -514,7 +514,7 @@ jobs:
           poetry build
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
-        name: Publish NPM (dry-run)
+        name: Publish NPM
         run: |
           cd ui          
           npm publish --provenance --access public
