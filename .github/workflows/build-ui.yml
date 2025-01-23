@@ -18,7 +18,14 @@ jobs:
       - name: Unit test
         run: yarn run test
       - name: Build lib and publish dry run
-        run: npm publish --dry-run
+        run: npm publish --provenance --access public --dry-run
+      - name: Pack tarball
+        run: npm pack
+      - name: Upload tarball as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UCC-UI-lib-tarball
+          path: "ui/*.tgz"
 
   build-ui:
     runs-on: ubuntu-22.04
