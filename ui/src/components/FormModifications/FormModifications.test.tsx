@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, within } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -55,14 +55,6 @@ const getTextElementForField = (field: string) => {
     return [componentParentElement, componentInput];
 };
 
-const getCheckBoxElementForField = (field: string) => {
-    const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
-    expect(componentParentElement).toBeInTheDocument();
-    const componentInput = within(componentParentElement).getByRole('checkbox');
-
-    return [componentParentElement, componentInput];
-};
-
 beforeEach(() => {
     setUpConfigWithDefaultValue();
     renderModalWithProps(props);
@@ -70,11 +62,11 @@ beforeEach(() => {
 
 it('render fields with modifications correctly', async () => {
     expect(() => {
-        getTextElementForField(firstStandardTextField.field);
-        getTextElementForField(secondStandardTextField.field);
-        getTextElementForField(firstModificationField.field);
-        getTextElementForField(secondModificationField.field);
-        getCheckBoxElementForField(thirdModificationField.field);
+        screen.getByRole('textbox', { name: firstStandardTextField.label });
+        screen.getByRole('textbox', { name: secondStandardTextField.label });
+        screen.getByRole('textbox', { name: firstModificationField.label });
+        screen.getByRole('textbox', { name: secondModificationField.label });
+        screen.getByRole('checkbox', { name: thirdModificationField.label });
     }).not.toThrow();
 });
 
@@ -82,14 +74,12 @@ it('verify modification after text components change', async () => {
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
-    const [componentParentElement, componentInput] = getTextElementForField(
-        firstStandardTextField.field
-    );
-    const [component2ParentElement, component2Input] = getTextElementForField(
-        secondStandardTextField.field
-    );
+    const componentInput = screen.getByRole('textbox', { name: firstStandardTextField.label });
+    const component2Input = screen.getByRole('textbox', { name: secondStandardTextField.label });
 
-    const componentMakingModsTextBox1 = getTextElementForField(firstModificationField.field)[1];
+    const componentMakingModsTextBox1 = screen.getByRole('textbox', {
+        name: firstModificationField.label,
+    });
 
     const mods1Field1 = findMods(
         firstModificationField,
@@ -116,34 +106,31 @@ it('verify modification after text components change', async () => {
     await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
 
     const verifyAllProps = (
-        parentElement: Element,
-        input: Element,
+        input: HTMLElement,
         mods: { value?: string | number | boolean; help?: string; label?: string }
     ) => {
         expect(input).toHaveAttribute('value', mods.value);
-        invariant(typeof mods.help === 'string');
-        expect(parentElement).toHaveTextContent(mods.help);
-        invariant(typeof mods.label === 'string');
-        expect(parentElement).toHaveTextContent(mods.label);
+        expect(screen.getByText(mods.help!)).toBeInTheDocument();
+        expect(screen.getByText(mods.label!)).toBeInTheDocument();
     };
 
     expect(componentInput).toBeVisuallyDisabled();
 
-    verifyAllProps(componentParentElement, componentInput, mods1Field1);
+    verifyAllProps(componentInput, mods1Field1);
 
     expect(component2Input).toBeVisuallyDisabled();
 
-    verifyAllProps(component2ParentElement, component2Input, mods1Field2);
+    verifyAllProps(component2Input, mods1Field2);
 
     await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
 
     expect(component2Input).toBeVisuallyEnabled();
 
-    verifyAllProps(componentParentElement, componentInput, mods2Field1);
+    verifyAllProps(componentInput, mods2Field1);
 
     expect(component2Input).toBeVisuallyEnabled();
 
-    verifyAllProps(component2ParentElement, component2Input, mods2Field2);
+    verifyAllProps(component2Input, mods2Field2);
 });
 
 it('verify markdown modifications', async () => {
