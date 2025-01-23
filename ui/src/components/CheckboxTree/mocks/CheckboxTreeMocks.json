@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "name": "Splunk_TA_aws",
+    "displayName": "Splunk Add-on for AWS",
+    "version": "7.1.0",
+    "restRoot": "restRoot",
+    "schemaVersion": "0.0.3"
+  },
+  "pages": {
+    "configuration": {
+      "title": "",
+      "tabs": [
+        {
+          "name": "a",
+          "title": "",
+          "entity": []
+        }
+      ]
+    },
+    "inputs": {
+      "title": "Inputs",
+      "table": {
+        "header": [
+          {
+            "field": "name",
+            "label": "Input Name"
+          }
+        ],
+        "moreInfo": [
+          {
+            "field": "name",
+            "label": "Name"
+          }
+        ],
+        "actions": ["edit", "delete", "search", "clone"]
+      },
+      "services": [
+        {
+          "name": "example_input_four",
+          "title": "Title example",
+          "entity": [
+            {
+              "type": "checkboxTree",
+              "label": "CheckboxTreeTitle",
+              "field": "api3",
+              "options": {
+                "groups": [
+                  {
+                    "label": "Group 1",
+                    "options": {
+                      "isExpandable": true,
+                      "expand": true
+                    },
+                    "fields": ["firstRowUnderGroup1", "secondRowUnderGroup1"]
+                  },
+                  {
+                    "label": "Group 3",
+                    "options": {
+                      "isExpandable": true,
+                      "expand": true
+                    },
+                    "fields": [
+                      "firstRowUnderGroup3",
+                      "secondRowUnderGroup3",
+                      "thirdRowUnderGroup3",
+                      "fourthRowUnderGroup3"
+                    ]
+                  }
+                ],
+                "rows": [
+                  {
+                    "field": "rowWithoutGroup",
+                    "checkbox": {
+                      "label": "Row without group",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "firstRowUnderGroup1",
+                    "checkbox": {
+                      "label": "first row checked under group 1",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "secondRowUnderGroup1",
+                    "checkbox": {
+                      "label": "second row checked under group 1",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "firstRowUnderGroup3",
+                    "checkbox": {
+                      "label": "first row checked under group 3",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "secondRowUnderGroup3",
+                    "checkbox": {
+                      "label": "second row under group 3"
+                    }
+                  },
+                  {
+                    "field": "thirdRowUnderGroup3",
+                    "checkbox": {
+                      "label": "third row checked under group 3",
+                      "defaultValue": true
+                    }
+                  },
+                  {
+                    "field": "fourthRowUnderGroup3",
+                    "checkbox": {
+                      "label": "fourth row under group 3"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

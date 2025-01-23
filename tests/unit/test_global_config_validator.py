@@ -282,6 +282,24 @@ def test_autocompletefields_children_support_integer_values():
             ),
         ),
         (
+            "invalid_config_checkbox_tree_duplicate_field_in_options_rows.json",
+            (
+                "Entity test_checkbox_tree has duplicate field (rowUnderGroup1) in options.rows"
+            ),
+        ),
+        (
+            "invalid_config_checkbox_tree_undefined_field_used_in_groups.json",
+            (
+                "Entity test_checkbox_tree uses field (undefinedRow) which is not defined in options.rows"
+            ),
+        ),
+        (
+            "invalid_config_checkbox_tree_duplicate_field_in_options_groups.json",
+            (
+                "Entity test_checkbox_tree has duplicate field (firstRowUnderGroup3) in options.groups"
+            ),
+        ),
+        (
             "invalid_config_group_has_duplicate_labels.json",
             (
                 "Service input_with_duplicate_group_labels has duplicate labels in groups"

@@ -30,12 +30,12 @@ logger = logging.getLogger("ucc_gen")
 
 def _version_tuple(version: str) -> Tuple[str, ...]:
     """
-    convert string into tuple to compare version
+    Convert string into tuple to compare versions.
 
     Args:
-        version_str : raw string
+        version: raw string
     Returns:
-        tuple : version into tupleformat
+        tuple: version into tuple format
     """
     filled = []
     for point in version.split("."):
@@ -123,16 +123,26 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
-    current_schema_version = global_config.schema_version or "0.0.0"
+    version = global_config.schema_version or "0.0.0"
+    logger.info(f"Current globalConfig schema version is {version}")
 
-    logger.info(f"Current globalConfig schema version is {current_schema_version}")
+    allowed_versions_of_schema_version = {
+        "0.0.0",
+        "0.0.1",
+        "0.0.2",
+        "0.0.3",
+        "0.0.4",
+        "0.0.5",
+        "0.0.6",
+        "0.0.7",
+        "0.0.8",
+        "0.0.9",
+    }
 
-    if _version_tuple(global_config.meta.get("_uccVersion", "0.0.0")) >= _version_tuple(
-        "5.52.0"
-    ):
-        # we hard-code the value of 5.52.0 as this feature would be shipped in that version
-        version = current_schema_version
-    else:
+    if version not in allowed_versions_of_schema_version:
+        logger.warning(
+            "Schema version is not in the allowed versions, setting it to 0.0.0"
+        )
         version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
