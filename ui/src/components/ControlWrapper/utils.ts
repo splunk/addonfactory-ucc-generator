@@ -22,6 +22,5 @@ export const excludeControlWrapperProps = <T extends object>(obj: T) =>
         'mode',
         'options',
         'page',
-        'style',
         'type',
     ]);
