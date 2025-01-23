@@ -40,7 +40,7 @@ const mapTextToElements = (props: SubDescriptionProps) => {
 
 function SubDescription(props: SubDescriptionProps) {
     if (!props?.text) {
-        return <></>;
+        return null;
     }
 
     const mappedTextWithLinks = mapTextToElements(props);

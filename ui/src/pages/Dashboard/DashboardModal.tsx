@@ -15,6 +15,7 @@ import {
     queryMap,
 } from './utils';
 import { FieldValue, SearchResponse } from './DataIngestion.types';
+import { FEATURE_FLAGS } from './consts';
 
 /**
  * @param {object} props
@@ -196,7 +197,7 @@ export const DashboardModal = ({
     }, []);
 
     return dataIngestionModalDef ? (
-        <DashboardContextProvider preset={EnterpriseViewOnlyPreset}>
+        <DashboardContextProvider preset={EnterpriseViewOnlyPreset} featureFlags={FEATURE_FLAGS}>
             <DashboardCore
                 width="100%"
                 height="auto"

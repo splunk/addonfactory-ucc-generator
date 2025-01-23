@@ -11,6 +11,7 @@ import type { DashboardCoreApi } from '@splunk/dashboard-types';
 import { getActionButtons, waitForElementToDisplayAndMoveThemToCanvas } from './utils';
 import { OPEN_SEARCH_LABEL } from './ErrorPageConfig';
 import { getUnifiedConfigs } from '../../util/util';
+import { FEATURE_FLAGS } from './consts';
 
 const OpenSearchStyledBtn = styled(Button)`
     max-width: fit-content;
@@ -123,6 +124,7 @@ export const ErrorDashboard = ({
         <DashboardContextProvider
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
+            featureFlags={FEATURE_FLAGS}
         >
             <>
                 <OpenSearchStyledBtn

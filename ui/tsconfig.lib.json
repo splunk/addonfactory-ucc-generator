@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "./dist/lib"
+  },
+  "include": [
+    "src/publicApi.ts"
+  ]
+}
