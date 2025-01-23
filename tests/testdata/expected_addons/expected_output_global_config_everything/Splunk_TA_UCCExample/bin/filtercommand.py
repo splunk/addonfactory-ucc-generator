@@ -1,4 +1,3 @@
-
 import sys
 import import_declare_test
 

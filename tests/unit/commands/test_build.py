@@ -8,7 +8,7 @@ from splunk_add_on_ucc_framework.commands.build import (
     _get_python_version_from_executable,
     _get_and_check_global_config_path,
     generate,
-    generate_custom_search_command,
+    generate_custom_search_commands,
     generate_commands_conf,
     generate_searchbnf_conf,
 )
@@ -150,13 +150,13 @@ def test_generate_searchbnf_conf(mock_get_env, mock_write_file):
 
 
 @patch("splunk_add_on_ucc_framework.commands.build.os.path.isfile")
-def test_generate_custom_search_command_missing_file(mock_isfile, caplog):
+def test_generate_custom_search_commands_missing_file(mock_isfile, caplog):
     input_dir = "/mock/input"
     output_directory = "/mock/output"
     ta_name = "mock_ta"
 
     mock_global_config = MagicMock()
-    mock_global_config.custom_search_command = [
+    mock_global_config.custom_search_commands = [
         {
             "fileName": "missing_file.py",
             "commandName": "command1",
@@ -169,7 +169,7 @@ def test_generate_custom_search_command_missing_file(mock_isfile, caplog):
         "missing_file.py is not present in `<Your_Addon_Name>/package/bin` directory."
     )
     with pytest.raises(SystemExit) as excinfo:
-        generate_custom_search_command(
+        generate_custom_search_commands(
             input_dir, mock_global_config, output_directory, ta_name
         )
 
@@ -178,13 +178,13 @@ def test_generate_custom_search_command_missing_file(mock_isfile, caplog):
 
 
 @patch("splunk_add_on_ucc_framework.commands.build.os")
-def test_generate_custom_search_command_version_error(mock_os, caplog):
+def test_generate_custom_search_commands_version_error(mock_os, caplog):
     input_dir = "/mock/input"
     output_directory = "/mock/output"
     ta_name = "mock_ta"
 
     mock_global_config = MagicMock()
-    mock_global_config.custom_search_command = [
+    mock_global_config.custom_search_commands = [
         {
             "fileName": "command1.py",
             "commandName": "different_command",
@@ -200,7 +200,7 @@ def test_generate_custom_search_command_version_error(mock_os, caplog):
         " should be same for version 1 of custom search command"
     )
     with pytest.raises(SystemExit) as excinfo:
-        generate_custom_search_command(
+        generate_custom_search_commands(
             input_dir, mock_global_config, output_directory, ta_name
         )
     assert excinfo.value.code == 1
@@ -212,7 +212,7 @@ def test_generate_custom_search_command_version_error(mock_os, caplog):
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
 @patch("splunk_add_on_ucc_framework.utils.get_custom_command_j2_env")
 @patch("splunk_add_on_ucc_framework.utils.write_file")
-def test_generate_custom_search_command(
+def test_generate_custom_search_commands(
     mock_write_file,
     mock_get_env,
     GlobalConfig,
@@ -226,7 +226,7 @@ def test_generate_custom_search_command(
     (tmp_path / ta_name / "default").mkdir(parents=True)
 
     gc = GlobalConfig("", False)
-    gc.custom_search_command = [
+    gc.custom_search_commands = [
         {
             "commandName": "testcommand",
             "fileName": "test.py",
@@ -257,7 +257,7 @@ def test_generate_custom_search_command(
 
     mock_write_file.side_effect = mock_write_file_logic
 
-    generate_custom_search_command(input_dir, gc, str(tmp_path), ta_name)
+    generate_custom_search_commands(input_dir, gc, str(tmp_path), ta_name)
 
     generated_file_path = tmp_path / ta_name / "bin" / "testcommand.py"
     commands_conf_file_path = tmp_path / ta_name / "default" / "commands.conf"

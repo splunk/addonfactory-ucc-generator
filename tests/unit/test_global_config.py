@@ -59,8 +59,8 @@ def test_global_config_settings(global_config_only_configuration):
     assert expected_settings_names == settings_names
 
 
-def test_global_config_custom_search_command(global_config_all_json):
-    custom_search_command = global_config_all_json.custom_search_command
+def test_global_config_custom_search_commands(global_config_all_json):
+    custom_search_commands = global_config_all_json.custom_search_commands
     expected_result = [
         {
             "commandName": "generatetextcommand",
@@ -81,8 +81,8 @@ def test_global_config_custom_search_command(global_config_all_json):
             ],
         }
     ]
-    assert expected_result == custom_search_command
-    assert global_config_all_json.has_custom_search_command() is True
+    assert expected_result == custom_search_commands
+    assert global_config_all_json.has_custom_search_commands() is True
 
 
 def test_global_config_configs(global_config_only_configuration):
