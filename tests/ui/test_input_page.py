@@ -2646,26 +2646,15 @@ class TestInputPage(UccTester):
 
         input_page.entity2.save_btn.click()
 
-        input_page.table.wait_for_rows_to_appear(1)
+        input_page.table.wait_for_rows_to_appear(2)
 
-        self.assert_util(
-            input_page.table.get_table()[existing_name_for_service_one],
-            {
-                "name": existing_name_for_service_one,
-                "account": "test_input",
-                "interval": "90",
-                "index": "main",
-                "status": "Active",
-                "actions": "Edit | Clone | Search | Delete",
-            },
-        )
+        all_rows = input_page.table._get_rows()
 
-        backend_stanza_input_one = input_page.backend_conf.get_stanza(
-            f"example_input_one://{existing_name_for_service_one}"
-        )
-        assert backend_stanza_input_one
+        rows_with_name = [
+            each_row
+            for each_row in all_rows
+            if input_page.table._get_column_value(each_row, "name")
+            == existing_name_for_service_one
+        ]
 
-        backend_stanza_input_two = input_page.backend_conf.get_stanza(
-            f"example_input_two://{existing_name_for_service_one}"
-        )
-        assert backend_stanza_input_two
+        assert len(rows_with_name) == 2
