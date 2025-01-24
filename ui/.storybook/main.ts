@@ -25,9 +25,6 @@ const config: StorybookConfig = {
         name: '@storybook/react-webpack5',
         options: {},
     },
-    docs: {
-        autodocs: 'tag',
-    },
     staticDirs: ['../src/public', './assets'],
     webpackFinal: async (config) => {
         const alias = config.resolve?.alias || {};
