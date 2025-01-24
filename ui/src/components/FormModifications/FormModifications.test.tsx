@@ -61,13 +61,17 @@ beforeEach(() => {
 });
 
 it('render fields with modifications correctly', async () => {
-    expect(() => {
-        screen.getByRole('textbox', { name: firstStandardTextField.label });
-        screen.getByRole('textbox', { name: secondStandardTextField.label });
-        screen.getByRole('textbox', { name: firstModificationField.label });
-        screen.getByRole('textbox', { name: secondModificationField.label });
-        screen.getByRole('checkbox', { name: thirdModificationField.label });
-    }).not.toThrow();
+    expect(screen.getByRole('textbox', { name: firstStandardTextField.label })).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', { name: secondStandardTextField.label })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: firstModificationField.label })).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', { name: secondModificationField.label })
+    ).toBeInTheDocument();
+    expect(
+        screen.getByRole('checkbox', { name: thirdModificationField.label })
+    ).toBeInTheDocument();
 });
 
 it('verify modification after text components change', async () => {
