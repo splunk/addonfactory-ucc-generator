@@ -19,7 +19,7 @@
 # nosemgrep: splunk.use-defused-xml
 from xml.etree import ElementTree as ET
 from defusedxml import minidom
-from typing import Union
+from typing import Optional
 
 
 def _pretty_print_xml(string: str) -> str:
@@ -33,7 +33,7 @@ def generate_nav_default_xml(
     include_inputs: bool,
     include_dashboard: bool,
     include_configuration: bool,
-    default_view: Union[str, None],
+    default_view: Optional[str],
 ) -> str:
     """
     Generates `default/data/ui/nav/default.xml` file.
