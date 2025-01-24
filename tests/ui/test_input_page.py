@@ -2616,3 +2616,57 @@ class TestInputPage(UccTester):
             "Interval must be either a non-negative number, CRON interval or -1.",
             left_args={"expect_error": True},
         )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_inputs_same_name_different_service(
+        self,
+        ucc_smartx_selenium_helper,
+        ucc_smartx_rest_helper,
+        _add_input_one,
+    ):
+        """
+        Verifies that same name can be used for 2 services
+        """
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        existing_name_for_service_one = "dummy_input_one"
+
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Example Input Two")
+        input_page.entity2.example_account.wait_for_values()
+
+        input_page.entity2.name.set_value(existing_name_for_service_one)
+        input_page.entity2.example_checkbox.check()
+        input_page.entity2.example_radio.select("No")
+        input_page.entity2.example_multiple_select.select("Option One")
+        input_page.entity2.index.select("main")
+        input_page.entity2.interval.set_value("90")
+        input_page.entity2.example_account.select("test_input")
+        input_page.entity2.query_start_date.set_value("2020-12-11T20:00:32.000z")
+
+        input_page.entity2.save_btn.click()
+
+        input_page.table.wait_for_rows_to_appear(1)
+
+        self.assert_util(
+            input_page.table.get_table()[existing_name_for_service_one],
+            {
+                "name": existing_name_for_service_one,
+                "account": "test_input",
+                "interval": "90",
+                "index": "main",
+                "status": "Active",
+                "actions": "Edit | Clone | Search | Delete",
+            },
+        )
+
+        backend_stanza_input_one = input_page.backend_conf.get_stanza(
+            f"example_input_one://{existing_name_for_service_one}"
+        )
+        assert backend_stanza_input_one
+
+        backend_stanza_input_two = input_page.backend_conf.get_stanza(
+            f"example_input_two://{existing_name_for_service_one}"
+        )
+        assert backend_stanza_input_two
