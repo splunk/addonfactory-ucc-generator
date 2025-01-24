@@ -2629,7 +2629,6 @@ class TestInputPage(UccTester):
         """
         Verifies that same name can be used for 2 services
         """
-        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         existing_name_for_service_one = "dummy_input_one"
 
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
