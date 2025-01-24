@@ -154,11 +154,12 @@ def test_generate_custom_search_commands_missing_file(mock_isfile, caplog):
     input_dir = "/mock/input"
     output_directory = "/mock/output"
     ta_name = "mock_ta"
+    invalid_file = "missing_file.py"
 
     mock_global_config = MagicMock()
     mock_global_config.custom_search_commands = [
         {
-            "fileName": "missing_file.py",
+            "fileName": invalid_file,
             "commandName": "command1",
             "commandType": "generating",
             "arguments": [{"name": "test_argument"}],
@@ -166,7 +167,8 @@ def test_generate_custom_search_commands_missing_file(mock_isfile, caplog):
     ]
     mock_isfile.return_value = False
     expected_msg = (
-        "missing_file.py is not present in `<Your_Addon_Name>/package/bin` directory."
+        f"{invalid_file} is not present in `{os.path.sep.join([input_dir, 'bin'])}` directory. "
+        "Please ensure the file exists."
     )
     with pytest.raises(SystemExit) as excinfo:
         generate_custom_search_commands(
@@ -174,6 +176,7 @@ def test_generate_custom_search_commands_missing_file(mock_isfile, caplog):
         )
 
     assert excinfo.value.code == 1
+    print(expected_msg, "\n", caplog.text)
     assert expected_msg in caplog.text
 
 

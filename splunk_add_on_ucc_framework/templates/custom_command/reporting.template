@@ -3,7 +3,12 @@ import import_declare_test
 
 from splunklib.searchcommands import \
     dispatch, ReportingCommand, Configuration, Option, validators
-from {{file_name}} import map, reduce
+
+{%- if import_map %}
+from {{ file_name }} import reduce, map
+{%- else %}
+from {{ file_name }} import reduce
+{%- endif %}
 
 @Configuration()
 class {{class_name}}Command(ReportingCommand):
@@ -22,40 +27,44 @@ class {{class_name}}Command(ReportingCommand):
     """
 
     {% for arg in arguments -%}
-    {{ arg.name }} = Option(name = "{{arg.name}}"
+    {{ arg.name }} = Option(name="{{arg.name}}"
     {%- if arg.require  -%}    
-    ,require = {{ arg.require }}
+    , require={{ arg.require }}
     {%- else -%}
-    , require = False
+    , require=False
     {%- endif -%}
     
     {%- if arg.validate -%}
         {%- if (arg.validate.type == "Integer" or arg.validate.type == "Float") -%}
-            , validate=validators.{{ arg.validate.type }}({{ arg.validate.minimum }},{{ arg.validate.maximum }})
+            {%- if (arg.validate.minimum and arg.validate.maximum) -%}
+            , validate=validators.{{ arg.validate.type }}(minimum={{ arg.validate.minimum }}, maximum={{ arg.validate.maximum }})
+            {%- elif (arg.validate.minimum and not arg.validate.maximum) -%}
+            , validate=validators.{{ arg.validate.type }}(minimum={{ arg.validate.minimum }})
+            {%- elif (not arg.validate.minimum and arg.validate.maximum) -%}
+            , validate=validators.{{ arg.validate.type }}(maximum={{ arg.validate.maximum }})
+            {%- else -%}
+            , validate=validators.{{ arg.validate.type }}()
+            {%- endif -%}
         {%- else -%}
-        , validate = validators.{{ arg.validate.type }}()
+        , validate=validators.{{ arg.validate.type }}()
         {%- endif -%}
     {%- endif -%}
 
     {%- if arg.default -%}    
-    , default = {{ arg.default }}
+    , default={{ arg.default }}
     {%- else -%}
-    , default = ""
+    , default=""
     {%- endif -%}
-
     )
     {% endfor %}
 
+    {%- if import_map %}
     @Configuration()
     def map(self, events):
-        # Put your streaming preop implementation here, or remove the map method,
-        # if you have no need for a streaming preop
-
-        return map(self,events)
+        return map(self, events)
+    {%- endif %}
 
     def reduce(self, events):
-
-        # Put your reporting implementation
-        return reduce(self,events)
+        return reduce(self, events)
 
 dispatch({{class_name}}Command, sys.argv, sys.stdin, sys.stdout, __name__)

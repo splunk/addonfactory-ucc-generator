@@ -17,12 +17,10 @@ class FiltercommandCommand(EventingCommand):
 
     """
 
-    contains = Option(name = "contains", require = False, default = "")
-    replace_array = Option(name = "replace_array", require = False, default = "")
+    contains = Option(name="contains", require=False, default="")
+    replace_array = Option(name="replace_array", require=False, default="")
     
     def transform(self, events):
-       # Put your event transformation code here
-
-       return transform(self,events)
+       return transform(self, events)
 
 dispatch(FiltercommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)

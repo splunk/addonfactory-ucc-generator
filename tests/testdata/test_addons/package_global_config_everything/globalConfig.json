@@ -1822,7 +1822,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.55.0+36810ea3",
+        "version": "5.56.0+85be57eb8",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
@@ -1883,6 +1883,25 @@
             "version": 2,
             "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
             "syntax": "| sum total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "sumtwocommand",
+            "fileName": "sum_without_map.py",
+            "commandType": "reporting",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
+            "syntax": "| sumtwo total=lines linecount",
             "usage": "public",
             "arguments": [
                 {

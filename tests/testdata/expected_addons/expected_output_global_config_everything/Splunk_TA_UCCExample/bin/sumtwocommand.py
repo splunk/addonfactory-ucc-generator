@@ -3,14 +3,14 @@ import import_declare_test
 
 from splunklib.searchcommands import \
     dispatch, ReportingCommand, Configuration, Option, validators
-from sum import reduce, map
+from sum_without_map import reduce
 
 @Configuration()
-class SumcommandCommand(ReportingCommand):
+class SumtwocommandCommand(ReportingCommand):
     """
 
     ##Syntax
-    | sum total=lines linecount
+    | sumtwo total=lines linecount
 
     ##Description
     The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.
@@ -19,11 +19,8 @@ class SumcommandCommand(ReportingCommand):
 
     total = Option(name="total", require=True, validate=validators.Fieldname(), default="")
 
-    @Configuration()
-    def map(self, events):
-        return map(self, events)
 
     def reduce(self, events):
         return reduce(self, events)
 
-dispatch(SumcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
+dispatch(SumtwocommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)

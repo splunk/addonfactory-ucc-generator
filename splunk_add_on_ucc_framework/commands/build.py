@@ -24,7 +24,7 @@ import subprocess
 import colorama as c
 import fnmatch
 import filecmp
-
+from importlib import import_module
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -192,10 +192,12 @@ def generate_custom_search_commands(
     command_names = []
     searchbnf_info = []
     for command in global_config.custom_search_commands:
+        import_map = False
         file_path = os.path.join(input_dir, "bin", command["fileName"])
         if not os.path.isfile(file_path):
             logger.error(
-                f"{command['fileName']} is not present in `<Your_Addon_Name>/package/bin` directory."
+                f"{command['fileName']} is not present in `{os.path.join(input_dir, 'bin')}` directory. "
+                "Please ensure the file exists."
             )
             sys.exit(1)
 
@@ -219,6 +221,13 @@ def generate_custom_search_commands(
         command_names.append(command["commandName"])
         command["fileName"] = command["fileName"].replace(".py", "")
         template = command["commandType"] + ".template"
+        if command["commandType"] == "reporting":
+            src_pkg_bin = os.path.realpath(os.path.join(input_dir, "bin"))
+            sys.path.insert(0, src_pkg_bin)
+            if hasattr(import_module(command["fileName"]), "map"):
+                import_map = True
+            sys.path.pop(0)
+
         if command["requireSeachAssistant"]:
             searchbnf_dict = {
                 "command_name": command["commandName"],
@@ -232,7 +241,7 @@ def generate_custom_search_commands(
             if command["commandName"] != command["fileName"]:
                 logger.error(
                     f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
-                    " should be same for version 1 of custom search command"
+                    " should be same for version 1 of custom search command."
                 )
                 sys.exit(1)
             else:
@@ -256,6 +265,7 @@ def generate_custom_search_commands(
                 description=command.get("description"),
                 syntax=command.get("syntax"),
                 arguments=arguments,
+                import_map=import_map,
             )
         )
         input_file_name = os.path.join(

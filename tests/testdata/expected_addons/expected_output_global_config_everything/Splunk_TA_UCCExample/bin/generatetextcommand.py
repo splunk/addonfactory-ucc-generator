@@ -16,12 +16,11 @@ class GeneratetextcommandCommand(GeneratingCommand):
      This command generates COUNT occurrences of a TEXT string.
 
     """
-    count = Option(name = "count",require = True, validate=validators.Integer(5,10), default = "")
-    text = Option(name = "text",require = True, default = "")
+    count = Option(name="count", require=True, validate=validators.Integer(minimum=5, maximum=10), default="")
+    text = Option(name="text", require=True, default="")
     
 
     def generate(self):
-       # Put your event code here
        return generate(self)
 
 dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
