@@ -123,7 +123,7 @@ special_fields = [
 
 
 class RestEndpointBuilder:
-    def __init__(self, name: Optional[str], namespace: str, **kwargs: str):
+    def __init__(self, name: Optional[str], namespace: str, **kwargs: Any):
         self._name = name
         self._namespace = namespace
         self._entities: List[RestEntityBuilder] = []
@@ -144,6 +144,7 @@ class RestEndpointBuilder:
             self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
         self._rest_handler_module = kwargs.get("rest_handler_module")
         self._rest_handler_class = kwargs.get("rest_handler_class")
+        self._need_reload = kwargs.get("need_reload", True)
 
     @property
     def name(self) -> str:
@@ -172,6 +173,10 @@ class RestEndpointBuilder:
     @property
     def entities(self) -> List[RestEntityBuilder]:
         return self._entities
+
+    @property
+    def need_reload(self) -> bool:
+        return self._need_reload
 
     def add_entity(self, entity: RestEntityBuilder) -> None:
         self._entities.append(entity)

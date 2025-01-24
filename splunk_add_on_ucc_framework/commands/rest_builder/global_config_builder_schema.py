@@ -102,6 +102,7 @@ class GlobalConfigBuilderSchema:
                 rest_handler_class=config.get(
                     "restHandlerClass", REST_HANDLER_DEFAULT_CLASS
                 ),
+                need_reload=False,
             )
             self._endpoints[name] = endpoint
             content = self._get_oauth_enitities(config["entity"])
@@ -140,6 +141,7 @@ class GlobalConfigBuilderSchema:
             namespace=self.global_config.namespace,
             rest_handler_module=REST_HANDLER_DEFAULT_MODULE,
             rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
+            need_reload=False,
         )
         self._endpoints["settings"] = endpoint
         for setting in self.global_config.settings:
@@ -173,6 +175,7 @@ class GlobalConfigBuilderSchema:
                     rest_handler_name=rest_handler_name,
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
+                    need_reload=False,
                 )
                 self._endpoints[name] = single_model_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
