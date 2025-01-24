@@ -1486,6 +1486,81 @@
                             "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
+                        },
+                        {
+                            "type": "checkboxTree",
+                            "label": "Event Filters",
+                            "field": "event_filters",
+                            "required": true,
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Transactions",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "slow_request",
+                                            "transaction_stall"
+                                        ]
+                                    },
+                                    {
+                                        "label": "others",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "custom_events",
+                                            "cluster_events",
+                                            "network_events"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "code_problems",
+                                        "checkbox": {
+                                            "label": "Code Problems",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "slow_request",
+                                        "checkbox": {
+                                            "label": "Slow Request",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "transaction_stall",
+                                        "checkbox": {
+                                            "label": "Transactions Stall",
+                                            "defaultValue": false
+                                        }
+                                    },
+                                    {
+                                        "field": "custom_events",
+                                        "checkbox": {
+                                            "label": "Custom Events",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "cluster_events",
+                                        "checkbox": {
+                                            "label": "Cluster Events"
+                                        }
+                                    },
+                                    {
+                                        "field": "network_events",
+                                        "checkbox": {
+                                            "label": "Network Events"
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     ],
                     "title": "Example Input Three"
@@ -1822,7 +1897,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.55.0+36810ea3",
+        "version": "5.56.0+12f4cd8cd",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [

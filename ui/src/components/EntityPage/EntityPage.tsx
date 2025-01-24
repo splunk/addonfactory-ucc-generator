@@ -17,7 +17,7 @@ import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
 
-interface EntityPageProps {
+export interface EntityPageProps {
     handleRequestClose: () => void;
     serviceName: string;
     mode: Mode;

@@ -45,7 +45,7 @@
       },
       "title": "Errors count",
       "dataSources": {
-        "primary": "errors_tab_errors_count_ds"
+        "primary": "errors_tab_errors_count_ds_chain"
       }
     },
     "errors_tab_errors_list_viz": {
@@ -81,6 +81,19 @@
       "type": "ds.search",
       "options": {
         "query": "{{errors_count}}",
+        "queryParameters": {
+          "earliest": "$errors_tab_time.earliest$",
+          "latest": "$errors_tab_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "error_count_tab"
+    },
+    "errors_tab_errors_count_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "errors_tab_errors_count_ds",
+        "query": "{{errors_count_tab_zero_line}}",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"

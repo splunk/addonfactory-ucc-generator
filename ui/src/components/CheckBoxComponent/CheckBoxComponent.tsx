@@ -2,7 +2,7 @@ import React from 'react';
 import Switch from '@splunk/react-ui/Switch';
 import { isFalse } from '../../util/considerFalseAndTruthy';
 
-interface CheckBoxComponentProps {
+export interface CheckBoxComponentProps {
     value: 0 | 1 | boolean;
     handleChange: (field: string, value: 0 | 1) => void;
     field: string;

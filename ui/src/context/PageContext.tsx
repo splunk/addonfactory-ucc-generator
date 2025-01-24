@@ -1,4 +1,4 @@
-import React, { createContext, ReactNode } from 'react';
+import React, { createContext, ReactNode, useMemo } from 'react';
 
 import { Platforms } from '../types/globalConfig/pages';
 
@@ -15,15 +15,9 @@ export function PageContextProvider({
     children: ReactNode;
     platform: Platforms;
 }) {
-    return (
-        <PageContext.Provider
-            value={{
-                platform,
-            }}
-        >
-            {children}
-        </PageContext.Provider>
-    );
+    const value = useMemo(() => ({ platform }), [platform]);
+
+    return <PageContext.Provider value={value}>{children}</PageContext.Provider>;
 }
 
 export default PageContext;

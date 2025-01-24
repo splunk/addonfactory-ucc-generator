@@ -20,7 +20,7 @@ export const Base: Story = {
             utilCustomFunctions: {
                 setState: () => {},
                 setErrorFieldMsg: () => {},
-                clearAllErrorMsg: () => {},
+                clearAllErrorMsg: (state) => state,
                 setErrorMsg: () => {},
             },
             handleChange: () => {},

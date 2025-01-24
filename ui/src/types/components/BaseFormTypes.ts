@@ -17,7 +17,6 @@ import {
     TextAreaEntity,
     TextEntity,
 } from '../globalConfig/entities';
-import { GlobalConfig } from '../globalConfig/globalConfig';
 import { PageContextProviderType } from '../../context/PageContext';
 
 export type CurrentBaseFormInput =
@@ -102,9 +101,9 @@ export interface SingleSelectEntityType {
 }
 
 export interface UtilBaseForm {
-    setState: (callback: (prevState: BaseFormState) => void) => void;
+    setState: (callback: (prevState: BaseFormState) => BaseFormState) => void;
     setErrorFieldMsg: (field: string, msg: string) => void;
-    clearAllErrorMsg: (State: BaseFormState) => unknown;
+    clearAllErrorMsg: (state: BaseFormState) => BaseFormState;
     setErrorMsg: (msg: string) => void;
 }
 
@@ -130,20 +129,6 @@ export interface OauthConfiguration {
     authCodeEndpoint: string | null;
     accessTokenEndpoint: string | null;
     authEndpointAccessTokenType: string | null;
-}
-
-export interface CustomHook {
-    onCreate?: () => void;
-    onRender?: () => void;
-    onEditLoad?: () => void;
-    onSaveSuccess?: () => void;
-    onSaveFail?: () => void;
-    onChange?: (
-        field: string,
-        targetValue: AcceptableFormValueOrNullish,
-        tempState: BaseFormState
-    ) => void;
-    onSave?: (datadict?: Record<string, AcceptableFormValueOrNullish>) => boolean;
 }
 
 export type AnyEntity = z.TypeOf<typeof AnyOfEntity> | z.TypeOf<typeof OAuthFields>;
@@ -173,31 +158,4 @@ export interface ChangeRecord {
     display?: { $set: boolean };
     value?: { $set: AcceptableFormValueOrNullish };
     dependencyValues?: { $set: Record<string, AcceptableFormValueOrNullish> };
-}
-
-export interface CustomHookClass {
-    new (
-        config: GlobalConfig,
-        serviceName: string,
-        state: BaseFormState,
-        mode: string,
-        util: {
-            setState: (callback: (prevState: BaseFormState) => void) => void;
-            setErrorFieldMsg: (field: string, msg: string) => void;
-            clearAllErrorMsg: (State: BaseFormState) => unknown;
-            setErrorMsg: (msg: string) => void;
-        }
-    ): {
-        onCreate?: () => void;
-        onRender?: () => void;
-        onEditLoad?: () => void;
-        onSaveSuccess?: () => void;
-        onSaveFail?: () => void;
-        onChange?: (
-            field: string,
-            targetValue: AcceptableFormValueOrNullish,
-            tempState: BaseFormState
-        ) => void;
-        onSave?: (datadict?: Record<string, AcceptableFormValueOrNullish>) => boolean;
-    };
 }
