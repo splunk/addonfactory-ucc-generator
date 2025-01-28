@@ -491,11 +491,11 @@ describe('Oauth - separated endpoint authorization', () => {
 
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
-        window.getMessage({ code, state: stateCodeFromUrl, error: undefined });
-
-        await waitFor(async () => {
-            expect(requestHandler).toHaveBeenCalledTimes(1);
+        await act(async () => {
+            window.getMessage({ code, state: stateCodeFromUrl, error: undefined });
         });
+
+        expect(requestHandler).toHaveBeenCalledTimes(1);
 
         const receivedRequest: Request = requestHandler.mock.calls[0][0];
         const receivedBody = await receivedRequest.text();
@@ -534,7 +534,7 @@ describe('Oauth - separated endpoint authorization', () => {
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
         const passedState = `tests${stateCodeFromUrl}`;
-        act(() => {
+        await act(async () => {
             window.getMessage({ code, state: passedState, error: undefined });
         });
 
