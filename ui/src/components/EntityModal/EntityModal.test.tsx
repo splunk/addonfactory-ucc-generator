@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import EntityModal, { EntityModalProps } from './EntityModal';
@@ -491,7 +491,7 @@ describe('Oauth - separated endpoint authorization', () => {
 
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
-        await act(() => {
+        await act(async () => {
             window.getMessage({ code, state: stateCodeFromUrl, error: undefined });
         });
 
@@ -534,7 +534,7 @@ describe('Oauth - separated endpoint authorization', () => {
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
         const passedState = `tests${stateCodeFromUrl}`;
-        await act(() => {
+        await act(async () => {
             window.getMessage({ code, state: passedState, error: undefined });
         });
 
