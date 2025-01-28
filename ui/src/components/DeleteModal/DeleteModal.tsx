@@ -25,7 +25,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     handleRequestClose,
     serviceName,
     stanzaName,
-    open,
+    open = false,
 }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -76,12 +76,10 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
         return null;
     };
 
-    let deleteMsg;
-    if (page === PAGE_INPUT) {
-        deleteMsg = getFormattedMessage(103, [stanzaName]);
-    } else {
-        deleteMsg = getFormattedMessage(102, [stanzaName]);
-    }
+    const deleteMsg =
+        page === PAGE_INPUT
+            ? getFormattedMessage(103, [stanzaName])
+            : getFormattedMessage(102, [stanzaName]);
 
     return (
         <Modal open={open} style={{ width: '800px' }}>
