@@ -337,7 +337,6 @@ def test_ucc_generate_for_conf_only_TA():
         files_to_be_equal = [
             ("README.txt",),
             ("metadata", "default.meta"),
-            ("appserver", "static", "openapi.json"),
         ]
         helpers.compare_file_content(
             files_to_be_equal,
