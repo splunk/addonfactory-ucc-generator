@@ -5,7 +5,6 @@ const config: TestRunnerConfig = {
     setup() {
         expect.extend({ toMatchImageSnapshot });
     },
-    logLevel: 'verbose',
     async preVisit(page, context) {
         const storyContext = await getStoryContext(page, context);
         const parameters = storyContext.parameters;
@@ -39,28 +38,14 @@ const config: TestRunnerConfig = {
         const customReceivedDir = `${process.cwd()}/test-reports/visual/image_snapshot_received/`;
 
         // can't use waitForPageReady because networkidle never fires due to HMR for locally running Storybook
-        console.log('Starting to wait for .woff requests');
-        console.time('Waiting for .woff requests');
-        await page.waitForResponse((request) => {
-            return request.url().includes('.woff');
-        });
-        console.log('Stopped waiting for .woff requests');
-        console.timeEnd('Waiting for .woff requests');
-
         if (process.env.CI) {
-            console.log('Waiting for page ready');
-            console.time('Waiting for page ready');
             await waitForPageReady(page);
-            console.timeEnd('Waiting for page ready');
         } else {
             await page.waitForLoadState('domcontentloaded');
             await page.waitForLoadState('load');
         }
 
-        console.log('Waiting for fonts to be ready');
-        console.time('Waiting for fonts to be ready');
         await page.evaluate(() => document.fonts.ready);
-        console.timeEnd('Waiting for fonts to be ready');
 
         const image = await page.screenshot({ animations: 'disabled', scale: 'css' });
         expect(image).toMatchImageSnapshot({
