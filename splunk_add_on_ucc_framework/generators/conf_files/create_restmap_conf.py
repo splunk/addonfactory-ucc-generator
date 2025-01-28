@@ -32,8 +32,8 @@ class RestMapConf(ConfGenerator):
             self.namespace = self._gc_schema.namespace
 
     def generate_conf(self) -> Union[Dict[str, str], None]:
-        if (self._global_config and not self._global_config.has_pages()) or not (
-            self._gc_schema
+        if not (
+            self._global_config and self._global_config.has_pages() and self._gc_schema
         ):
             return None
 

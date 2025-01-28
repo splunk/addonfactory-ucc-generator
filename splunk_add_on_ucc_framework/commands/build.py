@@ -468,8 +468,7 @@ def generate(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
         global_config.add_ucc_version(__version__)
-        if global_config.has_pages():
-            global_config.expand()
+        global_config.expand()
         if ta_name != global_config.product:
             logger.error(
                 "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
@@ -505,6 +504,7 @@ def generate(
                 pip_version=pip_version,
                 pip_legacy_resolver=pip_legacy_resolver,
                 pip_custom_flag=pip_custom_flag,
+                includes_oauth=global_config.has_oauth(),
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -619,7 +619,7 @@ def generate(
         )
 
     ui_available = False
-    if global_config:
+    if global_config and global_config.has_pages():
         ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(

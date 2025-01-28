@@ -117,7 +117,7 @@ class GlobalConfig:
 
     @property
     def inputs(self) -> List[Any]:
-        if "inputs" in self._content["pages"]:
+        if self.has_pages() and "inputs" in self._content["pages"]:
             return self._content["pages"]["inputs"]["services"]
         return []
 
@@ -129,7 +129,7 @@ class GlobalConfig:
 
     @property
     def tabs(self) -> List[Any]:
-        if "configuration" in self._content["pages"]:
+        if self.has_pages() and "configuration" in self._content["pages"]:
             return self._content["pages"]["configuration"]["tabs"]
         return []
 
