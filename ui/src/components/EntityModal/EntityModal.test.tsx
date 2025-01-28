@@ -491,7 +491,7 @@ describe('Oauth - separated endpoint authorization', () => {
 
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
-        await act(async () => {
+        await act(() => {
             window.getMessage({ code, state: stateCodeFromUrl, error: undefined });
         });
 
@@ -534,7 +534,7 @@ describe('Oauth - separated endpoint authorization', () => {
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
         const passedState = `tests${stateCodeFromUrl}`;
-        await act(async () => {
+        await act(() => {
             window.getMessage({ code, state: passedState, error: undefined });
         });
 
