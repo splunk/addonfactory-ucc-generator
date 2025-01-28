@@ -2262,29 +2262,19 @@
                 "description": "Platform for downloading the specified library."
               },
               "python_version": {
-                "type": "string",
-                "description": "Python version compatible with the library.",
-                "anyOf": [
-                  {
-                    "const": "3.7",
-                    "type": "string",
-                    "description": "Exactly: 3.7"
-                  },
-                  {
-                    "const": "37",
-                    "type": "string",
-                    "description": "Alternative syntax for 3.7"
-                  },
-                  {
-                    "const": "3.9",
-                    "type": "string",
-                    "description": "Exactly: 3.9"
-                  },
-                  {
-                    "const": "39",
-                    "type": "string",
-                    "description": "Alternative syntax for 3.9"
-                  }
+                "enum": [
+                  "3.7",
+                  "37",
+                  "3.9",
+                  "39",
+                  "3.10",
+                  "310",
+                  "3.11",
+                  "311",
+                  "3.12",
+                  "312",
+                  "3.13",
+                  "313"
                 ]
               },
               "target": {
