@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import EntityModal, { EntityModalProps } from './EntityModal';
@@ -534,7 +534,9 @@ describe('Oauth - separated endpoint authorization', () => {
         // triggering manually external oauth window behaviour after success authorization
         const code = '200';
         const passedState = `tests${stateCodeFromUrl}`;
-        window.getMessage({ code, state: passedState, error: undefined });
+        act(() => {
+            window.getMessage({ code, state: passedState, error: undefined });
+        });
 
         expect(screen.getByText(ERROR_STATE_MISSING_TRY_AGAIN)).toBeInTheDocument();
     });
