@@ -483,9 +483,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
-      - uses: actions/setup-node@v4
-        with:
-          registry-url: "https://registry.npmjs.org"
+      - name: install UI deps
+        uses: ./.github/actions/cached-ui-deps
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - uses: actions/download-artifact@v4
         with:
@@ -515,9 +514,9 @@ jobs:
           poetry build
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
-        name: Publish NPM (dry-run)
+        name: Publish NPM
         run: |
           cd ui          
-          npm publish --provenance --access public --dry-run || true
+          npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
