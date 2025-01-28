@@ -251,11 +251,10 @@ class GlobalConfigValidator:
         number and regex are supported.
         """
         pages = self._config["pages"]
-        if pages.get("configuration"):
-            for tab in self.config_tabs:
-                entities = tab["entity"]
-                for entity in entities:
-                    self._validate_entity_validators(entity)
+        for tab in self.config_tabs:
+            entities = tab["entity"]
+            for entity in entities:
+                self._validate_entity_validators(entity)
 
         inputs = pages.get("inputs")
         if inputs is None:
@@ -433,8 +432,7 @@ class GlobalConfigValidator:
         not required in schema, so this checks if globalConfig has inputs
         """
         pages = self._config["pages"]
-        if pages.get("configuration"):
-            self._validate_tabs_duplicates(self.config_tabs)
+        self._validate_tabs_duplicates(self.config_tabs)
 
         inputs = pages.get("inputs")
         if inputs:
@@ -722,9 +720,8 @@ class GlobalConfigValidator:
 
     def validate(self) -> None:
         self._validate_config_against_schema()
-        if self._global_config.has_configuration():
-            self._validate_configuration_tab_table_has_name_field()
-            self._validate_file_type_entity()
+        self._validate_configuration_tab_table_has_name_field()
+        self._validate_file_type_entity()
         self._validate_custom_rest_handlers()
         self._validate_validators()
         self._validate_multilevel_menu()
