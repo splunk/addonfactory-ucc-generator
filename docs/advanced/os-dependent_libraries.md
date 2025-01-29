@@ -32,7 +32,7 @@ and your pip command should look like this:<br>
 A dot in the platform part indicates that a given distribution supports several platforms.
 In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
 
-Currently supported python versions are >=3.7,<3.14. Syntax without dots ("37" or "39") is also supported.
+Currently supported python versions are "3.7", "3.9" and "3.13". Syntax without dots (like "39") is also supported.
 
 If there are libraries specified for different python versions, they must have **different target** paths.
 
