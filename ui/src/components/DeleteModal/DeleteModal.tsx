@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
@@ -7,7 +7,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { generateToast } from '../../util/util';
 import { deleteRequest, generateEndPointUrl } from '../../util/api';
 import TableContext from '../../context/TableContext';
-import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
+import { getFormattedMessage, parseErrorMsg } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { UCCButton } from '../UCCButton/UCCButton';
@@ -63,19 +63,6 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             });
     };
 
-    const generateErrorMessage = () => {
-        if (errorMsg) {
-            return (
-                <div>
-                    <Message appearance="fill" type="error">
-                        {errorMsg}
-                    </Message>
-                </div>
-            );
-        }
-        return null;
-    };
-
     const deleteMsg =
         page === PAGE_INPUT
             ? getFormattedMessage(103, [stanzaName])
@@ -88,7 +75,13 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
                 onRequestClose={handleRequestCloseInternal}
             />
             <Modal.Body className="deletePrompt">
-                {generateErrorMessage()}
+                {errorMsg && (
+                    <div>
+                        <Message appearance="fill" type="error">
+                            {errorMsg}
+                        </Message>
+                    </div>
+                )}
                 <p>{deleteMsg}</p>
             </Modal.Body>
             <Modal.Footer>
