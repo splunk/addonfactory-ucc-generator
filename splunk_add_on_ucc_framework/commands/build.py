@@ -76,40 +76,35 @@ def _modify_and_replace_token_for_oauth_templates(
     redirect_html_src = os.path.join(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
-    if global_config.has_pages():
-        if global_config.has_oauth():
-            html_template_path = os.path.join(
-                outputdir, ta_name, "appserver", "templates"
-            )
-            with open(os.path.join(html_template_path, "redirect.html")) as f:
-                s = f.read()
+    if global_config.has_oauth():
+        html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
+        with open(os.path.join(html_template_path, "redirect.html")) as f:
+            s = f.read()
 
-            with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-                s = s.replace("${ta.name}", ta_name.lower())
-                s = s.replace("${ta.version}", global_config.version)
-                f.write(s)
+        with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
+            s = s.replace("${ta.name}", ta_name.lower())
+            s = s.replace("${ta.version}", global_config.version)
+            f.write(s)
 
-            redirect_js_dest = (
-                os.path.join(
-                    outputdir, ta_name, "appserver", "static", "js", "build", ""
-                )
-                + ta_name.lower()
-                + "_redirect_page."
-                + global_config.version
-                + ".js"
-            )
-            redirect_html_dest = os.path.join(
-                outputdir,
-                ta_name,
-                "appserver",
-                "templates",
-                ta_name.lower() + "_redirect.html",
-            )
-            os.rename(redirect_js_src, redirect_js_dest)
-            os.rename(redirect_html_src, redirect_html_dest)
-        else:
-            os.remove(redirect_html_src)
-            os.remove(redirect_js_src)
+        redirect_js_dest = (
+            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
+            + ta_name.lower()
+            + "_redirect_page."
+            + global_config.version
+            + ".js"
+        )
+        redirect_html_dest = os.path.join(
+            outputdir,
+            ta_name,
+            "appserver",
+            "templates",
+            ta_name.lower() + "_redirect.html",
+        )
+        os.rename(redirect_js_src, redirect_js_dest)
+        os.rename(redirect_html_src, redirect_html_dest)
+    else:
+        os.remove(redirect_html_src)
+        os.remove(redirect_js_src)
 
 
 def _add_modular_input(
@@ -528,11 +523,11 @@ def generate(
         if global_config.has_pages():
             builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
             builder_obj.build()
-        _modify_and_replace_token_for_oauth_templates(
-            ta_name,
-            global_config,
-            output_directory,
-        )
+            _modify_and_replace_token_for_oauth_templates(
+                ta_name,
+                global_config,
+                output_directory,
+            )
         if global_config.has_inputs():
             logger.info("Generating inputs code")
             _add_modular_input(ta_name, global_config, output_directory)

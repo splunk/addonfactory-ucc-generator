@@ -93,13 +93,12 @@ class GlobalConfig:
                 self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     def expand_entities(self) -> None:
-        if self.has_pages():
-            self._expand_entities(
-                self._content["pages"].get("configuration", {}).get("tabs")
-            )
-            self._expand_entities(
-                self._content["pages"].get("inputs", {}).get("services")
-            )
+        self._expand_entities(
+            self._content.get("pages", {}).get("configuration", {}).get("tabs")
+        )
+        self._expand_entities(
+            self._content.get("pages", {}).get("inputs", {}).get("services")
+        )
         self._expand_entities(self._content.get("alerts"))
 
     @staticmethod
@@ -135,7 +134,7 @@ class GlobalConfig:
 
     @property
     def dashboard(self) -> Dict[str, Any]:
-        return self._content["pages"].get("dashboard")
+        return self._content.get("pages", {}).get("dashboard")
 
     @property
     def settings(self) -> List[Any]:
@@ -227,23 +226,18 @@ class GlobalConfig:
         return False
 
     def has_configuration(self) -> bool:
-        if self.has_pages():
-            return bool(self.tabs)
-        return False
+        return bool(self.tabs)
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
 
     def has_dashboard(self) -> bool:
-        if self.has_pages():
-            return self.dashboard is not None
-        return False
+        return self.dashboard is not None
 
     def has_oauth(self) -> bool:
-        if self.has_pages():
-            for tab in self.tabs:
-                if tab["name"] == "account":
-                    for entity in tab["entity"]:
-                        if entity["type"] == "oauth":
-                            return True
+        for tab in self.tabs:
+            if tab["name"] == "account":
+                for entity in tab["entity"]:
+                    if entity["type"] == "oauth":
+                        return True
         return False
