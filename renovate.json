@@ -85,6 +85,7 @@
         "string-width",
         "strip-ansi",
         "styled-components",
+        "@types/styled-components",
         "stylelint",
         "undici"
       ],
