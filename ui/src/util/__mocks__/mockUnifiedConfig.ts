@@ -35,7 +35,24 @@ export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
                     src: 'CustomInputRow',
                     type: 'external',
                 },
-                actions: ['edit', 'delete', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                ],
             },
             groupsMenu: [
                 {
@@ -238,7 +255,24 @@ export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',

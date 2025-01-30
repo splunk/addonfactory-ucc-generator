@@ -8,6 +8,7 @@ import EntityPage from './EntityPage/EntityPage';
 import { MODE_CREATE, MODE_CLONE } from '../constants/modes';
 import { PAGE_CONF } from '../constants/pages';
 import { STYLE_PAGE } from '../constants/dialogStyles';
+import { isActionsContainsField } from './table/CustomTableRow';
 
 function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
     const [entity, setEntity] = useState({ open: false });
@@ -25,7 +26,9 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
             ...entity,
             open: true,
             mode: MODE_CREATE,
-            formLabel: `Add ${selectedTab.title}`,
+            formLabel:
+                isActionsContainsField(selectedTab.table.actions, 'add') ||
+                `Add ${selectedTab.title}`,
         });
     };
 
@@ -53,7 +56,11 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
             open: true,
             stanzaName: row.name,
             formLabel:
-                mode === MODE_CLONE ? `Clone ${selectedTab.title}` : `Update ${selectedTab.title}`,
+                mode === MODE_CLONE
+                    ? isActionsContainsField(selectedTab.table.actions, 'clone') ||
+                      `Clone ${selectedTab.title}`
+                    : isActionsContainsField(selectedTab.table.actions, 'edit') ||
+                      `Update ${selectedTab.title}`,
             mode,
         });
     };

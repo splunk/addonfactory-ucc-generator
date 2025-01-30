@@ -8,7 +8,24 @@ const CONFIG_MOCK_MODIFICATION_ON_VALUE_CHANGE_CONFIG = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -137,7 +154,25 @@ const CONFIG_MOCK_MODIFICATION_ON_VALUE_CHANGE_CONFIG = {
             title: 'Inputs',
             description: 'Manage your data inputs',
             table: {
-                actions: ['edit', 'delete', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',

@@ -67,7 +67,12 @@ function setup() {
                     },
                 ],
                 table: {
-                    actions: ['edit'],
+                    actions: [
+                        {
+                            action: 'edit',
+                            title: 'this is edit header',
+                        },
+                    ],
                     header: headers,
                     moreInfo: headers,
                     customRow: {

@@ -18,9 +18,22 @@
                     },
                     "table": {
                         "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
+                            {
+                                "action": "add",
+                                "title": "this is add header for configuration page"
+                            },
+                            {
+                                "action": "edit",
+                                "title": "this is edit header for configuration page"
+                            },
+                            {
+                                "action": "delete",
+                                "title": "this is delete header for configuration page"
+                            },
+                            {
+                                "action": "clone",
+                                "title": "this is clone header for configuration page"
+                            }
                         ],
                         "header": [
                             {
@@ -606,9 +619,22 @@
                     "name": "custom_row_tab",
                     "table": {
                         "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
+                            {
+                                "action": "add",
+                                "title": "this is add header for custom row tab"
+                            },
+                            {
+                                "action": "edit",
+                                "title": "this is edit header for custom row tab"
+                            },
+                            {
+                                "action": "delete",
+                                "title": "this is delete header for custom row tab"
+                            },
+                            {
+                                "action": "clone",
+                                "title": "this is clone header for custom row tab"
+                            }
                         ],
                         "header": [
                             {
@@ -677,9 +703,22 @@
                     "name": "tab_hidden_for_cloud",
                     "table": {
                         "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
+                            {
+                                "action": "add",
+                                "title": "this is add header for hidden tab for cloud"
+                            },
+                            {
+                                "action": "edit",
+                                "title": "this is edit header for hidden tab for cloud"
+                            },
+                            {
+                                "action": "delete",
+                                "title": "this is delete header for hidden tab for cloud"
+                            },
+                            {
+                                "action": "clone",
+                                "title": "this is clone header for hidden tab for cloud"
+                            }
                         ],
                         "header": [
                             {
@@ -745,9 +784,22 @@
                     "name": "tab_hidden_for_enterprise",
                     "table": {
                         "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
+                            {
+                                "action": "add",
+                                "title": "this is add header for hidden tab for interprise"
+                            },
+                            {
+                                "action": "edit",
+                                "title": "this is edit header for hidden tab for interprise"
+                            },
+                            {
+                                "action": "delete",
+                                "title": "this is delete header for hidden tab for interprise"
+                            },
+                            {
+                                "action": "clone",
+                                "title": "this is clone header for hidden tab for interprise"
+                            }
                         ],
                         "header": [
                             {
@@ -1682,9 +1734,22 @@
             },
             "table": {
                 "actions": [
-                    "edit",
-                    "delete",
-                    "clone",
+                    {
+                        "action": "add",
+                        "title": "this is add header for inputs page"
+                    },
+                    {
+                        "action": "edit",
+                        "title": "this is edit header for inputs page"
+                    },
+                    {
+                        "action": "delete",
+                        "title": "this is delete header for inputs page"
+                    },
+                    {
+                        "action": "clone",
+                        "title": "this is clone header for inputs page"
+                    },
                     "search"
                 ],
                 "header": [

@@ -8,7 +8,7 @@ import { RowDataFields } from '../../context/TableContext';
 import { getUnifiedConfigs } from '../../util/util';
 import { getExpansionRow } from './TableExpansionRow';
 import { STYLE_MODAL, STYLE_PAGE } from '../../constants/dialogStyles';
-import CustomTableRow from './CustomTableRow';
+import CustomTableRow, { isActionsContainsField } from './CustomTableRow';
 import EntityModal from '../EntityModal/EntityModal';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import { NoRecordsDiv } from './CustomTableStyle';
@@ -191,7 +191,9 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     stanzaName={entityModal.stanzaName}
                     mode={entityModal.mode}
                     formLabel={
-                        entityModal.mode === MODE_CLONE ? _(`Clone `) + label : _(`Update `) + label
+                        entityModal.mode === MODE_CLONE
+                            ? isActionsContainsField(actions, 'clone') || _(`Clone `) + label
+                            : isActionsContainsField(actions, 'edit') || _(`Update `) + label
                     }
                 />
             ) : null;
@@ -203,6 +205,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         deleteModal.serviceName && deleteModal.stanzaName ? (
             <DeleteModal
                 page={page}
+                actions={actions}
                 open={deleteModal.open}
                 handleRequestClose={handleDeleteClose}
                 serviceName={deleteModal.serviceName}

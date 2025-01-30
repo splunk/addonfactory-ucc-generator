@@ -1,6 +1,19 @@
 import { z } from 'zod';
 import { AnyOfEntity } from './entities';
 
+// Extract common action button logic
+const ActionButtonSchema = z.object({
+    action: z.enum(['add', 'edit', 'delete', 'clone']),
+    title: z.string(),
+});
+
+const ActionsSchema = z
+    .array(z.union([z.enum(['search']), ActionButtonSchema]))
+    .min(0) // Ensures actions is always an array, even if empty
+    .refine((arr) => arr !== undefined, {
+        message: 'Actions must be an array and cannot be undefined.',
+    });
+
 export const TableSchema = z.object({
     moreInfo: z
         .array(
@@ -20,10 +33,9 @@ export const TableSchema = z.object({
         })
     ),
     customRow: z.record(z.any()).optional(),
-    actions: z.array(z.enum(['edit', 'delete', 'clone', 'search'])),
+    actions: ActionsSchema,
 });
 
-// TODO add "required": ["entity", "name", "title"] or required": ["customTab", "name", "title"]
 const HooksSchema = z
     .object({
         saveValidator: z.string().optional(),
@@ -65,7 +77,12 @@ export const TabSchema = z.object({
     title: z.string(),
     options: HooksSchema,
     table: TableSchema.extend({
-        actions: z.array(z.enum(['edit', 'delete', 'clone'])),
+        actions: z
+            .array(ActionButtonSchema)
+            .min(0)
+            .refine((arr) => arr !== undefined, {
+                message: 'Actions must be an array and cannot be undefined.',
+            }),
     }).optional(),
     style: z.enum(['page', 'dialog']).optional(),
     hook: z.record(z.any()).optional(),

@@ -20,6 +20,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Base: Story = {
     args: {
+        actions: [],
         handleRequestClose: fn(),
         serviceName: 'serviceName',
         stanzaName: 'stanzaName',
@@ -30,6 +31,7 @@ export const Base: Story = {
 
 export const Inputs: Story = {
     args: {
+        actions: [],
         handleRequestClose: fn(),
         serviceName: 'demo_input',
         stanzaName: 'stanzaName',

@@ -538,12 +538,18 @@
           "type": "array",
           "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
           "items": {
-            "type": "string",
-            "enum": [
-              "edit",
-              "delete",
-              "clone"
-            ]
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": ["add", "edit", "delete", "clone"]
+              },
+              "title": {
+                "type": "string",
+                "description": "Title for the action."
+              }
+            },
+            "required": ["action", "title"]
           }
         }
       },
@@ -2141,14 +2147,27 @@
         },
         "actions": {
           "type": "array",
-          "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
+          "description": "Specifies the actions that can be performed on the stanza. Each action can be a string or an object with additional properties.",
           "items": {
-            "type": "string",
-            "enum": [
-              "edit",
-              "delete",
-              "clone",
-              "search"
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["search"]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": ["add", "edit", "delete", "clone"]
+                  },
+                  "title": {
+                    "type": "string",
+                    "description": "Title for the action."
+                  }
+                },
+                "required": ["action", "title"]
+              }
             ]
           }
         }

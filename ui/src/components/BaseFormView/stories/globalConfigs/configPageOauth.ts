@@ -5,7 +5,24 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -196,7 +213,25 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
                 ],
             },
             table: {
-                actions: ['edit', 'delete', 'search', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',

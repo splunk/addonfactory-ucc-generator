@@ -25,6 +25,7 @@ beforeEach(() => {
                 stanzaName="stanzaName"
                 page="inputs"
                 open
+                actions={[]}
             />
         </TableContext.Provider>
     );

@@ -7,6 +7,7 @@ import ToastMessages from '@splunk/react-toast-notifications/ToastMessages';
 import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import { _ } from '@splunk/ui-utils/i18n';
 import { z } from 'zod';
+import { isActionsContainsField } from '../../components/table/CustomTableRow';
 import {
     InputsPage,
     InputsPageTable,
@@ -177,7 +178,7 @@ function InputPage(): ReactElement {
             open: true,
             serviceName,
             mode: MODE_CREATE,
-            formLabel: `Add ${serviceTitle}`,
+            formLabel: isActionsContainsField(table?.actions || [], 'add') || `Add ${serviceTitle}`,
             isInputPageStyle,
             groupName,
         });

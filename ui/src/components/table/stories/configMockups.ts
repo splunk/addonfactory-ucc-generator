@@ -7,7 +7,24 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -86,7 +103,25 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
             title: 'Inputs',
             description: 'Manage your data inputs',
             table: {
-                actions: ['edit', 'delete', 'search', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',
@@ -123,7 +158,24 @@ export const TABLE_CONFIG_WITH_MAPPING = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -226,7 +278,25 @@ export const TABLE_CONFIG_WITH_MAPPING = {
             title: 'Inputs',
             description: 'Manage your data inputs',
             table: {
-                actions: ['edit', 'delete', 'search', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',
@@ -263,7 +333,24 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -343,7 +430,25 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
             title: 'Inputs',
             description: 'Manage your data inputs',
             table: {
-                actions: ['edit', 'delete', 'search', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',
@@ -384,7 +489,24 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA_WITH_STATUS_TOGGLE_CONFIRMATION = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -464,7 +586,25 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA_WITH_STATUS_TOGGLE_CONFIRMATION = {
             description: 'Manage your data inputs',
             useInputToggleConfirmation: true,
             table: {
-                actions: ['edit', 'delete', 'search', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',

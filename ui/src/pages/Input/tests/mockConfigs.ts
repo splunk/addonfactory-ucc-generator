@@ -8,7 +8,24 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -102,7 +119,24 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         },
                     ],
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [],
                         moreInfo: [],
                     },
@@ -113,7 +147,24 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                     title: 'Example Input Two',
                     entity: [],
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [],
                         moreInfo: [],
                         customRow: {
@@ -128,7 +179,24 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                     title: 'Example Input Three Hidden Cloud',
                     entity: [],
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [],
                         moreInfo: [],
                         customRow: {
@@ -144,7 +212,24 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                     title: 'Example Input Four Hidden Enterprise',
                     entity: [],
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [],
                         moreInfo: [],
                         customRow: {

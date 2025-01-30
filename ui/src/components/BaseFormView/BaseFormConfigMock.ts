@@ -9,7 +9,24 @@ const globalConfigMockCustomControl = {
                 {
                     name: 'account',
                     table: {
-                        actions: ['edit', 'delete', 'clone'],
+                        actions: [
+                            {
+                                action: 'add',
+                                title: 'this is add header',
+                            },
+                            {
+                                action: 'edit',
+                                title: 'this is edit header',
+                            },
+                            {
+                                action: 'delete',
+                                title: 'this is delete header',
+                            },
+                            {
+                                action: 'clone',
+                                title: 'this is clone header',
+                            },
+                        ],
                         header: [
                             {
                                 label: 'Name',
@@ -117,7 +134,25 @@ const globalConfigMockCustomControl = {
                 ],
             },
             table: {
-                actions: ['edit', 'delete', 'clone'],
+                actions: [
+                    {
+                        action: 'add',
+                        title: 'this is add header',
+                    },
+                    {
+                        action: 'edit',
+                        title: 'this is edit header',
+                    },
+                    {
+                        action: 'delete',
+                        title: 'this is delete header',
+                    },
+                    {
+                        action: 'clone',
+                        title: 'this is clone header',
+                    },
+                    'search',
+                ],
                 header: [
                     {
                         label: 'Name',
@@ -194,7 +229,24 @@ const getGlobalConfigMockGroups = ({
                     {
                         name: 'account',
                         table: {
-                            actions: ['edit', 'delete', 'clone'],
+                            actions: [
+                                {
+                                    action: 'add',
+                                    title: 'this is add header',
+                                },
+                                {
+                                    action: 'edit',
+                                    title: 'this is edit header',
+                                },
+                                {
+                                    action: 'delete',
+                                    title: 'this is delete header',
+                                },
+                                {
+                                    action: 'clone',
+                                    title: 'this is clone header',
+                                },
+                            ],
                             header: [
                                 {
                                     label: 'Name',
@@ -264,7 +316,25 @@ const getGlobalConfigMockGroups = ({
                 title: 'Inputs',
                 description: 'Manage your data inputs',
                 table: {
-                    actions: ['edit', 'delete', 'clone'],
+                    actions: [
+                        {
+                            action: 'add',
+                            title: 'this is add header',
+                        },
+                        {
+                            action: 'edit',
+                            title: 'this is edit header',
+                        },
+                        {
+                            action: 'delete',
+                            title: 'this is delete header',
+                        },
+                        {
+                            action: 'clone',
+                            title: 'this is clone header',
+                        },
+                        'search',
+                    ],
                     header: [
                         {
                             label: 'Name',

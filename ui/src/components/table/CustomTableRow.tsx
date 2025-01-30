@@ -31,11 +31,36 @@ const SwitchWrapper = styled.div`
     }
 `;
 
+export type Action =
+    | 'search'
+    | {
+          action: 'add' | 'edit' | 'delete' | 'clone';
+          title: string;
+      };
+
+// Updated function with type annotations
+export const isActionsContainsField = (actions: Action[], actionName: string): string | null => {
+    const foundAction = actions.find(
+        (action) =>
+            (typeof action === 'string' && action === actionName) ||
+            (typeof action === 'object' && action.action === actionName)
+    );
+
+    if (foundAction && typeof foundAction === 'object') {
+        return foundAction.title; // Return the custom header for object actions
+    }
+    if (foundAction) {
+        return actionName;
+    }
+
+    return null; // Return null if no match
+};
+
 interface CustomTableRowProps {
     row: RowDataFields;
     readonly?: boolean;
     columns: Array<{ customCell?: { src?: string; type?: string }; field: string }>;
-    rowActions: string[];
+    rowActions: Action[];
     headerMapping: Record<string, Record<string, string> | undefined>;
     handleToggleActionClick: (row: RowDataFields) => void;
     handleEditActionClick: (row: RowDataFields) => void;
@@ -79,7 +104,7 @@ function CustomTableRow(props: CustomTableRowProps) {
         (selectedRow: RowDataFields, header: CellHeader) => (
             <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
-                    {!props.readonly && rowActions.includes('edit') && (
+                    {!props.readonly && isActionsContainsField(rowActions, 'edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -90,7 +115,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             />
                         </Tooltip>
                     )}
-                    {rowActions.includes('clone') && (
+                    {isActionsContainsField(rowActions, 'clone') && (
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -101,7 +126,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             />
                         </Tooltip>
                     )}
-                    {rowActions.includes('search') && (
+                    {isActionsContainsField(rowActions, 'search') && (
                         <Tooltip
                             content={_(
                                 `Go to search for events associated with ${selectedRow.name}`
@@ -120,7 +145,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             />
                         </Tooltip>
                     )}
-                    {!props.readonly && rowActions.includes('delete') && (
+                    {!props.readonly && isActionsContainsField(rowActions, 'delete') && (
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
                                 appearance="flat"

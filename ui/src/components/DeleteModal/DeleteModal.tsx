@@ -12,6 +12,7 @@ import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { UCCButton } from '../UCCButton/UCCButton';
+import { Action, isActionsContainsField } from '../table/CustomTableRow';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
@@ -23,6 +24,7 @@ export interface DeleteModalProps {
     serviceName: string;
     stanzaName: string;
     open?: boolean;
+    actions: Action[];
 }
 
 interface DeleteModalState {
@@ -100,7 +102,10 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
         return (
             <ModalWrapper open={this.props.open}>
                 <Modal.Header
-                    title={getFormattedMessage(101)}
+                    title={
+                        isActionsContainsField(this.props.actions, 'delete') ||
+                        getFormattedMessage(101)
+                    }
                     onRequestClose={this.handleRequestClose}
                 />
                 <Modal.Body className="deletePrompt">
