@@ -144,7 +144,7 @@ class RestEndpointBuilder:
             self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
         self._rest_handler_module = kwargs.get("rest_handler_module")
         self._rest_handler_class = kwargs.get("rest_handler_class")
-        self._need_reload = kwargs.get("need_reload", True)
+        self._need_reload = kwargs.get("need_reload", False)
 
     @property
     def name(self) -> str:
