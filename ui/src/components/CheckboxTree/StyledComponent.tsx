@@ -1,22 +1,13 @@
 import styled, { css } from 'styled-components';
-import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
 import { pick, variables } from '@splunk/themes';
 import Switch from '@splunk/react-ui/Switch';
-
-const FixedCheckboxRowWidth = css`
-    width: 320px;
-`;
 
 const CheckboxInHeader = css`
     align-self: center;
     background-color: ${pick({
         enterprise: variables.neutral100,
     })};
-`;
-
-export const StyledColumnLayout = styled(ColumnLayout)`
-    ${FixedCheckboxRowWidth}
 `;
 
 export const CheckboxContainer = styled.div`
