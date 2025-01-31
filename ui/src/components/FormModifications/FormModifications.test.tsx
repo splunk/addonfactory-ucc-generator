@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, within } from '@testing-library/react';
+import { screen, render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -55,27 +55,23 @@ const getTextElementForField = (field: string) => {
     return [componentParentElement, componentInput];
 };
 
-const getCheckBoxElementForField = (field: string) => {
-    const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
-    expect(componentParentElement).toBeInTheDocument();
-    const componentInput = within(componentParentElement).getByRole('checkbox');
-
-    return [componentParentElement, componentInput];
-};
-
 beforeEach(() => {
     setUpConfigWithDefaultValue();
     renderModalWithProps(props);
 });
 
 it('render fields with modifications correctly', async () => {
-    expect(() => {
-        getTextElementForField(firstStandardTextField.field);
-        getTextElementForField(secondStandardTextField.field);
-        getTextElementForField(firstModificationField.field);
-        getTextElementForField(secondModificationField.field);
-        getCheckBoxElementForField(thirdModificationField.field);
-    }).not.toThrow();
+    expect(screen.getByRole('textbox', { name: firstStandardTextField.label })).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', { name: secondStandardTextField.label })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: firstModificationField.label })).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', { name: secondModificationField.label })
+    ).toBeInTheDocument();
+    expect(
+        screen.getByRole('checkbox', { name: thirdModificationField.label })
+    ).toBeInTheDocument();
 });
 
 it('verify modification after text components change', async () => {
