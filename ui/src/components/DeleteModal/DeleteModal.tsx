@@ -14,6 +14,7 @@ import { UCCButton } from '../UCCButton/UCCButton';
 import { isActionsContainsField } from '../table/CustomTableRow';
 import { IActionSchema } from '../../types/globalConfig/pages';
 
+
 export interface DeleteModalProps {
     page: StandardPages;
     handleRequestClose: () => void;
