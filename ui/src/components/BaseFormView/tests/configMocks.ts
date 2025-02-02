@@ -11,19 +11,15 @@ const CONFIG_MOCK_MODIFICATION_ON_VALUE_CHANGE_CONFIG = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [
@@ -157,19 +153,15 @@ const CONFIG_MOCK_MODIFICATION_ON_VALUE_CHANGE_CONFIG = {
                 actions: [
                     {
                         action: 'add',
-                        title: 'this is add header',
                     },
                     {
                         action: 'edit',
-                        title: 'this is edit header',
                     },
                     {
                         action: 'delete',
-                        title: 'this is delete header',
                     },
                     {
                         action: 'clone',
-                        title: 'this is clone header',
                     },
                     'search',
                 ],

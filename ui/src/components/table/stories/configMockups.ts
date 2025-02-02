@@ -10,19 +10,15 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [
@@ -106,19 +102,15 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
                 actions: [
                     {
                         action: 'add',
-                        title: 'this is add header',
                     },
                     {
                         action: 'edit',
-                        title: 'this is edit header',
                     },
                     {
                         action: 'delete',
-                        title: 'this is delete header',
                     },
                     {
                         action: 'clone',
-                        title: 'this is clone header',
                     },
                     'search',
                 ],
@@ -161,19 +153,15 @@ export const TABLE_CONFIG_WITH_MAPPING = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [
@@ -281,19 +269,15 @@ export const TABLE_CONFIG_WITH_MAPPING = {
                 actions: [
                     {
                         action: 'add',
-                        title: 'this is add header',
                     },
                     {
                         action: 'edit',
-                        title: 'this is edit header',
                     },
                     {
                         action: 'delete',
-                        title: 'this is delete header',
                     },
                     {
                         action: 'clone',
-                        title: 'this is clone header',
                     },
                     'search',
                 ],
@@ -336,19 +320,15 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [
@@ -433,19 +413,15 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                 actions: [
                     {
                         action: 'add',
-                        title: 'this is add header',
                     },
                     {
                         action: 'edit',
-                        title: 'this is edit header',
                     },
                     {
                         action: 'delete',
-                        title: 'this is delete header',
                     },
                     {
                         action: 'clone',
-                        title: 'this is clone header',
                     },
                     'search',
                 ],
@@ -492,19 +468,15 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA_WITH_STATUS_TOGGLE_CONFIRMATION = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [
@@ -589,19 +561,15 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA_WITH_STATUS_TOGGLE_CONFIRMATION = {
                 actions: [
                     {
                         action: 'add',
-                        title: 'this is add header',
                     },
                     {
                         action: 'edit',
-                        title: 'this is edit header',
                     },
                     {
                         action: 'delete',
-                        title: 'this is delete header',
                     },
                     {
                         action: 'clone',
-                        title: 'this is clone header',
                     },
                     'search',
                 ],

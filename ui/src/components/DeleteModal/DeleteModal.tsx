@@ -12,7 +12,8 @@ import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { UCCButton } from '../UCCButton/UCCButton';
-import { Action, isActionsContainsField } from '../table/CustomTableRow';
+import { isActionsContainsField } from '../table/CustomTableRow';
+import { IActionSchema } from '../../types/globalConfig/pages';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
@@ -24,7 +25,7 @@ export interface DeleteModalProps {
     serviceName: string;
     stanzaName: string;
     open?: boolean;
-    actions: Action[];
+    actions: IActionSchema;
 }
 
 interface DeleteModalState {
@@ -99,15 +100,14 @@ class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
         } else {
             deleteMsg = getFormattedMessage(102, [this.props.stanzaName]);
         }
+        const deleteAction = isActionsContainsField(this.props.actions, 'delete');
+        const title = deleteAction.isTitleExist
+            ? deleteAction.titleValue
+            : getFormattedMessage(101);
+
         return (
             <ModalWrapper open={this.props.open}>
-                <Modal.Header
-                    title={
-                        isActionsContainsField(this.props.actions, 'delete') ||
-                        getFormattedMessage(101)
-                    }
-                    onRequestClose={this.handleRequestClose}
-                />
+                <Modal.Header title={title} onRequestClose={this.handleRequestClose} />
                 <Modal.Body className="deletePrompt">
                     {this.generateErrorMessage()}
                     <p>{deleteMsg}</p>

@@ -190,11 +190,13 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     serviceName={entityModal.serviceName}
                     stanzaName={entityModal.stanzaName}
                     mode={entityModal.mode}
-                    formLabel={
-                        entityModal.mode === MODE_CLONE
-                            ? isActionsContainsField(actions, 'clone') || _(`Clone `) + label
-                            : isActionsContainsField(actions, 'edit') || _(`Update `) + label
-                    }
+                    formLabel={(() => {
+                        const actionType = entityModal.mode === MODE_CLONE ? 'clone' : 'edit';
+                        const actionField = isActionsContainsField(actions, actionType);
+                        return actionField?.isTitleExist
+                            ? actionField.titleValue
+                            : _(`${entityModal.mode === MODE_CLONE ? 'Clone' : 'Update'} `) + label;
+                    })()}
                 />
             ) : null;
         }

@@ -61,15 +61,12 @@ const table = {
     actions: [
         {
             action: 'edit',
-            title: 'this is edit header',
         },
         {
             action: 'delete',
-            title: 'this is delete header',
         },
         {
             action: 'clone',
-            title: 'this is clone header',
         },
     ],
 } satisfies z.infer<typeof TableSchema>;

@@ -139,9 +139,18 @@
             "description": "Manage your data inputs",
             "table": {
                 "actions": [
-                    "edit",
-                    "delete",
-                    "clone"
+                    {
+                        "action": "add"
+                    },
+                    {
+                        "action": "edit"
+                    },
+                    {
+                        "action": "delete"
+                    },
+                    {
+                        "action": "clone"
+                    }
                 ],
                 "header": [
                     {

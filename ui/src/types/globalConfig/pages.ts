@@ -4,7 +4,7 @@ import { AnyOfEntity } from './entities';
 // Extract common action button logic
 const ActionButtonSchema = z.object({
     action: z.enum(['add', 'edit', 'delete', 'clone']),
-    title: z.string(),
+    title: z.string().optional(),
 });
 
 const ActionsSchema = z
@@ -202,3 +202,4 @@ export type InputsPageTable = z.infer<typeof InputsPageTableSchema>;
 export type ServiceTable = z.infer<typeof ServiceTableSchema>;
 export type SubDescriptionType = z.infer<typeof SubDescriptionSchema>;
 export type ITableConfig = z.infer<typeof TableSchema>;
+export type IActionSchema = z.infer<typeof ActionsSchema>;

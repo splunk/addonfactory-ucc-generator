@@ -17,6 +17,7 @@ import { ActionButtonComponent } from './CustomTableStyle';
 import { getTableCellValue } from './table.utils';
 import AcceptModal from '../AcceptModal/AcceptModal';
 import { RowDataFields } from '../../context/TableContext';
+import { IActionSchema } from '../../types/globalConfig/pages';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -31,36 +32,36 @@ const SwitchWrapper = styled.div`
     }
 `;
 
-export type Action =
-    | 'search'
-    | {
-          action: 'add' | 'edit' | 'delete' | 'clone';
-          title: string;
-      };
-
 // Updated function with type annotations
-export const isActionsContainsField = (actions: Action[], actionName: string): string | null => {
+export const isActionsContainsField = (
+    actions: IActionSchema,
+    actionName: string
+): { isActionPresent: boolean; isTitleExist: boolean; titleValue: string } => {
     const foundAction = actions.find(
         (action) =>
-            (typeof action === 'string' && action === actionName) ||
-            (typeof action === 'object' && action.action === actionName)
+            action === actionName || (typeof action === 'object' && action.action === actionName)
     );
 
-    if (foundAction && typeof foundAction === 'object') {
-        return foundAction.title; // Return the custom header for object actions
-    }
-    if (foundAction) {
-        return actionName;
+    if (!foundAction) {
+        return { isActionPresent: false, isTitleExist: false, titleValue: '' };
     }
 
-    return null; // Return null if no match
+    if (typeof foundAction === 'object') {
+        return {
+            isActionPresent: true,
+            isTitleExist: Boolean(foundAction.title),
+            titleValue: foundAction.title || '',
+        };
+    }
+
+    return { isActionPresent: true, isTitleExist: false, titleValue: foundAction };
 };
 
 interface CustomTableRowProps {
     row: RowDataFields;
     readonly?: boolean;
     columns: Array<{ customCell?: { src?: string; type?: string }; field: string }>;
-    rowActions: Action[];
+    rowActions: IActionSchema;
     headerMapping: Record<string, Record<string, string> | undefined>;
     handleToggleActionClick: (row: RowDataFields) => void;
     handleEditActionClick: (row: RowDataFields) => void;
@@ -104,18 +105,19 @@ function CustomTableRow(props: CustomTableRowProps) {
         (selectedRow: RowDataFields, header: CellHeader) => (
             <TableCellWrapper data-column="actions" key={header.field}>
                 <ButtonGroup>
-                    {!props.readonly && isActionsContainsField(rowActions, 'edit') && (
-                        <Tooltip content={_('Edit')}>
-                            <ActionButtonComponent
-                                appearance="flat"
-                                aria-label={_('Edit')}
-                                icon={<Pencil />}
-                                onClick={() => handleEditActionClick(selectedRow)}
-                                className="editBtn"
-                            />
-                        </Tooltip>
-                    )}
-                    {isActionsContainsField(rowActions, 'clone') && (
+                    {!props.readonly &&
+                        isActionsContainsField(rowActions, 'edit').isActionPresent && (
+                            <Tooltip content={_('Edit')}>
+                                <ActionButtonComponent
+                                    appearance="flat"
+                                    aria-label={_('Edit')}
+                                    icon={<Pencil />}
+                                    onClick={() => handleEditActionClick(selectedRow)}
+                                    className="editBtn"
+                                />
+                            </Tooltip>
+                        )}
+                    {isActionsContainsField(rowActions, 'clone').isActionPresent && (
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
                                 appearance="flat"
@@ -126,7 +128,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             />
                         </Tooltip>
                     )}
-                    {isActionsContainsField(rowActions, 'search') && (
+                    {isActionsContainsField(rowActions, 'search').isActionPresent && (
                         <Tooltip
                             content={_(
                                 `Go to search for events associated with ${selectedRow.name}`
@@ -145,17 +147,18 @@ function CustomTableRow(props: CustomTableRowProps) {
                             />
                         </Tooltip>
                     )}
-                    {!props.readonly && isActionsContainsField(rowActions, 'delete') && (
-                        <Tooltip content={_('Delete')}>
-                            <ActionButtonComponent
-                                appearance="flat"
-                                aria-label={_('Delete')}
-                                icon={<Trash size={1} />}
-                                onClick={() => handleDeleteActionClick(selectedRow)}
-                                className="deleteBtn"
-                            />
-                        </Tooltip>
-                    )}
+                    {!props.readonly &&
+                        isActionsContainsField(rowActions, 'delete').isActionPresent && (
+                            <Tooltip content={_('Delete')}>
+                                <ActionButtonComponent
+                                    appearance="flat"
+                                    aria-label={_('Delete')}
+                                    icon={<Trash size={1} />}
+                                    onClick={() => handleDeleteActionClick(selectedRow)}
+                                    className="deleteBtn"
+                                />
+                            </Tooltip>
+                        )}
                 </ButtonGroup>
             </TableCellWrapper>
         ),

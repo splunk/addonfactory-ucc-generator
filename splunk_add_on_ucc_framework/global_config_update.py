@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import logging
-from typing import Any, Dict, Tuple, List, Optional
+from typing import Any, Dict, Tuple, List, Optional, Union
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
 from splunk_add_on_ucc_framework.entity import (
@@ -137,6 +137,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         "0.0.7",
         "0.0.8",
         "0.0.9",
+        "0.0.10",
     }
 
     if version not in allowed_versions_of_schema_version:
@@ -252,6 +253,11 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         _dump_enable_from_global_config(global_config)
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.9")
+
+    if _version_tuple(version) < _version_tuple("0.0.10"):
+        update_actions(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.10")
 
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
@@ -384,3 +390,56 @@ def _dump_enable_from_global_config(
                     ] = actions  # Update the actions in the service's table
 
     global_config.update_schema_version("0.0.9")
+
+
+def update_actions(global_config: global_config_lib.GlobalConfig) -> None:
+    def transform_actions(
+        actions: List[Union[str, Dict[str, str]]]
+    ) -> List[Union[Dict[str, str], str]]:
+        transformed_actions: List[Union[Dict[str, str], str]] = []
+        has_add = False  # Track if "add" is present
+
+        for action in actions:
+            if isinstance(action, str):
+                if action == "search":
+                    transformed_actions.append("search")
+                else:
+                    transformed_actions.append({"action": action})
+            elif isinstance(action, dict):
+                transformed_actions.append(action)
+                if action.get("action") == "add":
+                    has_add = True
+
+        if not has_add:
+            transformed_actions.append({"action": "add"})
+
+        return transformed_actions
+
+    if global_config.has_inputs():
+        # Fetch the table object from global_config
+        table = global_config.content.get("pages", {}).get("inputs", {}).get("table")
+        if table:
+            actions = table.get("actions", [])
+            table["actions"] = transform_actions(actions)
+        else:
+            # Loop through services in inputs
+            services = (
+                global_config.content.get("pages", {})
+                .get("inputs", {})
+                .get("services", [])
+            )
+            for service in services:
+                service_table = service.get("table", {})
+                actions = service_table.get("actions", [])
+                service_table["actions"] = transform_actions(actions)
+
+    # Update configuration page actions for each tab
+    configuration_tabs = (
+        global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
+    )
+    for tab in configuration_tabs:
+        table = tab.get("table", {})
+        if "actions" in table:
+            table["actions"] = transform_actions(table["actions"])
+
+    global_config.update_schema_version("0.0.10")

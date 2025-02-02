@@ -11,19 +11,15 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [
@@ -122,19 +118,15 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [],
@@ -150,19 +142,15 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [],
@@ -182,19 +170,15 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [],
@@ -215,19 +199,15 @@ export const INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM = {
                         actions: [
                             {
                                 action: 'add',
-                                title: 'this is add header',
                             },
                             {
                                 action: 'edit',
-                                title: 'this is edit header',
                             },
                             {
                                 action: 'delete',
-                                title: 'this is delete header',
                             },
                             {
                                 action: 'clone',
-                                title: 'this is clone header',
                             },
                         ],
                         header: [],

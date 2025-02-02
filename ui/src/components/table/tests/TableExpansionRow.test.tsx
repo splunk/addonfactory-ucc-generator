@@ -70,7 +70,6 @@ function setup() {
                     actions: [
                         {
                             action: 'edit',
-                            title: 'this is edit header',
                         },
                     ],
                     header: headers,

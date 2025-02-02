@@ -549,7 +549,7 @@
                 "description": "Title for the action."
               }
             },
-            "required": ["action", "title"]
+            "required": ["action"]
           }
         }
       },
@@ -2166,7 +2166,7 @@
                     "description": "Title for the action."
                   }
                 },
-                "required": ["action", "title"]
+                "required": ["action"]
               }
             ]
           }

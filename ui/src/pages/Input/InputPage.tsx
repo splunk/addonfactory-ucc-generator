@@ -172,13 +172,17 @@ function InputPage(): ReactElement {
         const service = services.find((x) => x.name === serviceName);
         const serviceTitle = service?.title;
         const isInputPageStyle = service?.style === STYLE_PAGE;
+        const addActions = isActionsContainsField(table?.actions || [], 'add');
+        const updatedFormLabel = addActions.isTitleExist
+            ? addActions.titleValue
+            : `Add ${serviceTitle}`;
 
         setEntity({
             ...entity,
             open: true,
             serviceName,
             mode: MODE_CREATE,
-            formLabel: isActionsContainsField(table?.actions || [], 'add') || `Add ${serviceTitle}`,
+            formLabel: updatedFormLabel,
             isInputPageStyle,
             groupName,
         });
