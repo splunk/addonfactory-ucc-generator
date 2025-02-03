@@ -155,10 +155,6 @@ class GlobalConfig:
         return self._content["meta"]
 
     @property
-    def options(self) -> Dict[str, Any]:
-        return self._content.get("options", {})
-
-    @property
     def namespace(self) -> str:
         return self.meta["restRoot"]
 

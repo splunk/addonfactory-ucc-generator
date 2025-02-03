@@ -2659,11 +2659,6 @@
           "items": {
             "$ref": "#/definitions/RestHandler"
           }
-        },
-        "reloadHandlerConfigFiles": {
-          "type": "boolean",
-          "description": "If true, the handler configuration files will be reloaded after every HTTP request, increasing the IO load on the system. Default is false.",
-          "default": false
         }
       },
       "additionalProperties": false

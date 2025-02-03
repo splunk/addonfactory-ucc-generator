@@ -86,7 +86,7 @@ class GlobalConfigBuilderSchema:
 
     @property
     def need_reload(self) -> bool:
-        return self.global_config.options.get("reloadHandlerConfigFiles", False)
+        return False
 
     def _parse_builder_schema(self) -> None:
         self._builder_configs()
