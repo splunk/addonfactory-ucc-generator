@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import HelpLinkComponent from '../HelpLinkComponent';
+import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: HelpLinkComponent,
     title: 'HelpLinkComponent',
+    decorators: [withControlGroup],
 } satisfies Meta<typeof HelpLinkComponent>;
 
 export default meta;
