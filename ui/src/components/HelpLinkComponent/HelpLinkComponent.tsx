@@ -1,21 +1,23 @@
 import React from 'react';
-import Link from '@splunk/react-ui/Link';
+
+import { mapTextToElements } from '../../util/textUtils';
 
 interface Props {
     controlOptions: {
         text: string;
-        link: string;
+        link?: string;
+        links?: {
+            slug: string;
+            link: string;
+            linkText: string;
+        }[];
     };
 }
 
 function HelpLinkComponent(props: Props) {
-    const { text, link } = props.controlOptions;
+    const elements = mapTextToElements(props.controlOptions);
 
-    return (
-        <Link to={link} openInNewContext>
-            {text}
-        </Link>
-    );
+    return <span>{elements}</span>;
 }
 
 export default HelpLinkComponent;
