@@ -3770,8 +3770,29 @@
       "maxLength": 400
     },
     "help": {
-      "type": "string",
-      "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."        },
+        {
+          "$ref": "#/definitions/helpWithLinks"
+        }
+      ]
+    },
+    "helpWithLinks": {
+      "type": "object",
+      "description": "Place to provide broader description of page",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text used for the description, you can put \n to add a breakline.",
+          "maxLength": 1500
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": ["text"]
     },
     "tooltip": {
       "type": "string",

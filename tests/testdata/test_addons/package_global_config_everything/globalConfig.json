@@ -58,14 +58,25 @@
                             "type": "text",
                             "label": "Field no validators",
                             "field": "field_no_validators",
-                            "help": "Some field",
+                            "help": {
+                                "text": "Some field with description\nin separated line"
+                            },
                             "required": false
                         },
                         {
                             "type": "text",
                             "label": "Field no validators (suppressed)",
                             "field": "field_no_validators_suppressed",
-                            "help": "Some field",
+                            "help": {
+                                "text": "Description with link as individual word [[link]]",
+                                "links": [
+                                    {
+                                        "slug": "link",
+                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            },
                             "required": false,
                             "validators": []
                         },
@@ -148,7 +159,16 @@
                             "label": "Example Radio",
                             "field": "account_radio",
                             "defaultValue": "yes",
-                            "help": "This is an example radio button for the account entity",
+                            "help": {
+                                "text": "This is an example radio button for the accountentity. \nRead more about it [[radio_docs]]",
+                                "links": [
+                                    {
+                                        "slug": "radio_docs",
+                                        "link": "http://localhost:8001/addonfactory-ucc-generator/entity/components/#radio-bar",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            },
                             "required": true,
                             "options": {
                                 "items": [

@@ -34,6 +34,8 @@ export const TextElementWithLinksSchema = z.object({
     link: z.string().optional(),
 });
 
+export const StringOrTextWithLinks = z.union([z.string(), TextElementWithLinksSchema]);
+
 export const MarkdownMessageText = z.object({
     markdownType: z.literal('text'),
     text: z.string(),
@@ -63,7 +65,7 @@ const CommonEntityFields = z.object({
     type: z.string(),
     field: z.string(),
     label: z.string(),
-    help: z.string().optional(),
+    help: StringOrTextWithLinks.optional(),
     tooltip: z.string().optional(),
 });
 
@@ -97,7 +99,7 @@ const FieldToModify = z.object({
             value: z.union([z.number(), z.string(), z.boolean()]).optional(),
             disabled: z.boolean().optional(),
             required: z.boolean().optional(),
-            help: z.string().optional(),
+            help: StringOrTextWithLinks.optional(),
             label: z.string().optional(),
             markdownMessage: MarkdownMessageType.optional(),
         })

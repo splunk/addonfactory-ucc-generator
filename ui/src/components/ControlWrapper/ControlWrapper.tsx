@@ -1,12 +1,14 @@
 import React from 'react';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
+
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
 import { AnyEntity, UtilControlWrapper } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
+import { mapTextToElements } from '../../util/textUtils';
 
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
@@ -106,6 +108,16 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                 : `No View Found for ${this?.props?.entity?.type} type`;
         }
 
+        const help = this.props?.modifiedEntitiesData?.help || this?.props?.entity?.help || '';
+
+        const helpElements = mapTextToElements(
+            typeof help === 'object'
+                ? help
+                : {
+                      text: help,
+                  }
+        );
+
         const helpText = (
             <>
                 <MarkdownMessage
@@ -116,7 +128,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     token={token || ''}
                     linkText={linkText || ''}
                 />
-                {this.props?.modifiedEntitiesData?.help || this?.props?.entity?.help || ''}
+                {helpElements}
             </>
         );
 
