@@ -36,7 +36,7 @@ export const HelpAsTextWithLinks: Story = {
 export const HelpNoLinksInManyLines: Story = {
     args: {
         controlOptions: {
-            text: 'Help text \n displayted \n in many lines',
+            text: 'Help text \n displayed \n in many lines',
             links: [
                 {
                     slug: 'here',
