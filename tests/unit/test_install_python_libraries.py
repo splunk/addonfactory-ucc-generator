@@ -160,7 +160,7 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
 
     expected_msg = (
         f"This add-on has an UI, so the splunktaucclib is required but not found in {tmp_lib_reqs_file}. "
-        f"Please add it there and make sure it is at least version 6.4.0."
+        f"Please add it there and make sure it is at least version 6.6.0."
     )
 
     with pytest.raises(SplunktaucclibNotFound) as exc:
@@ -180,7 +180,7 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
 
-    expected_msg = "splunktaucclib found but has the wrong version. Please make sure it is at least version 6.4.0."
+    expected_msg = "splunktaucclib found but has the wrong version. Please make sure it is at least version 6.6.0."
 
     with pytest.raises(WrongSplunktaucclibVersion) as exc:
         install_python_libraries(
