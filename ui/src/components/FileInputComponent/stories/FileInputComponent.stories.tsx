@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import FileInputComponent from '../FileInputComponent';
+import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: FileInputComponent,
@@ -10,6 +11,7 @@ const meta = {
             height: 300,
         },
     },
+    decorators: [withControlGroup],
 } satisfies Meta<typeof FileInputComponent>;
 
 export default meta;
