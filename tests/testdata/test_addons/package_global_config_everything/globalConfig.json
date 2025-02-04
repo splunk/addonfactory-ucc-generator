@@ -160,7 +160,7 @@
                             "field": "account_radio",
                             "defaultValue": "yes",
                             "help": {
-                                "text": "This is an example radio button for the accountentity. \nRead more about it [[radio_docs]]",
+                                "text": "This is an example radio button for the account entity. \nRead more about it [[radio_docs]]",
                                 "links": [
                                     {
                                         "slug": "radio_docs",
