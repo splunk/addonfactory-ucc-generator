@@ -15,7 +15,7 @@
             "intendedAudience": null
         },
         "commonInformationModels": null,
-        "description": "Splunk Add-on for UCC Example",
+        "description": "Some description of Splunk Add-on for UCC Example",
         "id": {
             "group": null,
             "name": "Splunk_TA_UCCExample",
@@ -23,7 +23,7 @@
         },
         "license": {
             "name": null,
-            "text": "LICENSES/Apache-2.0.txt",
+            "text": "LICENSES/Apache License 2.0.txt",
             "uri": null
         },
         "privacyPolicy": {
@@ -37,7 +37,7 @@
             "text": "./README.txt",
             "uri": null
         },
-        "title": "Splunk Add-on for UCC Example"
+        "title": "Title of Splunk Add-on for UCC Example"
     },
     "inputGroups": null,
     "platformRequirements": null,
@@ -46,6 +46,9 @@
         "_standalone",
         "_distributed"
     ],
-    "targetWorkloads": null,
+    "targetWorkloads": [
+        "_search_heads",
+        "_indexers"
+    ],
     "tasks": null
 }
