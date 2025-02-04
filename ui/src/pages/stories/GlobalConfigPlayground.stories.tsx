@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SplunkThemeProvider } from '@splunk/themes';
-import TabBar from '@splunk/react-ui/TabBar';
+import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import React, { useCallback, useState } from 'react';
 import { http, HttpResponse } from 'msw';
 
@@ -27,8 +27,10 @@ const meta = {
         const pageKeys = Object.keys(config.pages);
         const [activeTabId, setActiveTabId] = useState(pageKeys[0]);
 
-        const handleChange = useCallback((e, { selectedTabId }) => {
-            setActiveTabId(selectedTabId);
+        const handleChange: TabBarChangeHandler = useCallback((e, { selectedTabId }) => {
+            if (selectedTabId !== undefined) {
+                setActiveTabId(selectedTabId);
+            }
         }, []);
 
         const page = pageMap[activeTabId];

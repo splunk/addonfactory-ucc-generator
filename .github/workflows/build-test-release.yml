@@ -240,7 +240,6 @@ jobs:
       - build-test-addon
       - build
       - test-unit
-      - test-smoke
     strategy:
       fail-fast: false
       matrix:
