@@ -51,7 +51,8 @@ it('should render base form correctly with name and File fields', async () => {
         />
     );
 
-    screen.getByRole('textbox', { name: 'Name' });
+    const nameField = document.querySelector('[data-name="name"]');
+    expect(nameField).toBeInTheDocument();
 
     const fileField = document.querySelector('[data-name="name"]');
     expect(fileField).toBeInTheDocument();

@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import RadioComponent from '../RadioComponent';
-import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: RadioComponent,
     title: 'RadioComponent',
-    decorators: [withControlGroup],
 } satisfies Meta<typeof RadioComponent>;
 
 export default meta;

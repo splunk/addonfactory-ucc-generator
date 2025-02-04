@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
-import styled from 'styled-components';
+import { StyledColumnLayout } from './StyledComponent';
 import {
     getDefaultValues,
     getFlattenRowsWithGroups,
@@ -13,10 +13,6 @@ import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { MODE_CREATE } from '../../constants/modes';
 import { CheckboxTreeProps, ValueByField } from './types';
 import { packValue, parseValue } from './utils';
-
-const FullWidth = styled.div`
-    width: 100%;
-`;
 
 function CheckboxTree(props: CheckboxTreeProps) {
     const { field, handleChange, controlOptions, disabled } = props;
@@ -98,8 +94,8 @@ function CheckboxTree(props: CheckboxTreeProps) {
     );
 
     return (
-        <FullWidth>
-            <ColumnLayout gutter={5}>
+        <>
+            <StyledColumnLayout gutter={5}>
                 {flattenedRowsWithGroups.map((row) =>
                     row && isGroupWithRows(row) ? (
                         <ColumnLayout.Row key={`group_${row.label}`}>
@@ -125,7 +121,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                     )
                 )}
                 <ColumnLayout.Row />
-            </ColumnLayout>
+            </StyledColumnLayout>
             <div>
                 <Button
                     label="Select All"
@@ -138,7 +134,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>
-        </FullWidth>
+        </>
     );
 }
 

@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import { fn } from '@storybook/test';
 import TextAreaComponent from '../TextAreaComponent';
-import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: TextAreaComponent,
@@ -23,7 +22,6 @@ const meta = {
             />
         );
     },
-    decorators: [withControlGroup],
 } satisfies Meta<typeof TextAreaComponent>;
 
 export default meta;

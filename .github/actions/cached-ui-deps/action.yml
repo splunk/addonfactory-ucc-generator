@@ -9,8 +9,6 @@ runs:
         cache: 'yarn'
         cache-dependency-path: 'ui/yarn.lock'
         node-version-file: 'ui/package.json'
-        # required for publishing
-        registry-url: 'https://registry.npmjs.org'
     - name: Install Dependencies
       working-directory: ui
       run: yarn install --frozen-lockfile

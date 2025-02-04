@@ -2,12 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import { fn } from '@storybook/test';
 import CheckBoxComponent from '../CheckBoxComponent';
-import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: CheckBoxComponent,
     title: 'CheckBoxComponent',
-    decorators: [withControlGroup],
     render: (props) => {
         // due to stories incompatibility, eslint rule is off
         // React Hook "useState" is called in function "render" that is neither a React function component

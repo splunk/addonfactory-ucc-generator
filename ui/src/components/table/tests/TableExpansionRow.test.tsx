@@ -103,11 +103,12 @@ function setup() {
 }
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
-    if (expandable && expandable.getAttribute('aria-expanded') === 'false') {
-        await userEvent.click(expandable);
-        await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
+    const arrow = within(inputRow).getByRole('cell', { name: /expandable/i });
+    const isExpanded = arrow.getAttribute('aria-expanded');
+    if (isExpanded === 'false') {
+        await userEvent.click(arrow);
     }
+    await waitFor(() => expect(arrow.getAttribute('aria-expanded')).not.toBe('false'));
     const loading = screen.queryByText('Loading...');
     if (loading) {
         await waitForElementToBeRemoved(loading);

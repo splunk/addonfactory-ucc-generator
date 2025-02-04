@@ -2,12 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import CheckboxTree from '../CheckboxTree';
 import { MODE_CREATE, MODE_EDIT } from '../../../constants/modes';
-import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: CheckboxTree,
     title: 'CheckboxTree/Component',
-    decorators: [withControlGroup],
 } satisfies Meta<typeof CheckboxTree>;
 
 export default meta;

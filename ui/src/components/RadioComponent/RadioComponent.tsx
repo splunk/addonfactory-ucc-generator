@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import { getValueMapTruthyFalse } from '../../util/considerFalseAndTruthy';
 import { StandardPages } from '../../types/components/shareableTypes';
 
-import { excludeControlWrapperProps } from '../ControlWrapper/utils';
+const RadioBarWrapper = styled(RadioBar)`
+    width: 320px;
+`;
 
 const RadioBarOption = styled(RadioBar.Option)`
     margin-left: 0px !important;
@@ -31,24 +33,27 @@ class RadioComponent extends Component<RadioComponentProps> {
     };
 
     render() {
-        const { value, controlOptions, disabled, page, ...restProps } = this.props;
-
-        const restSuiProps = excludeControlWrapperProps(restProps);
         return (
-            <RadioBar
-                {...restSuiProps}
+            <RadioBarWrapper
+                id={this.props.id}
+                inline
                 onChange={this.handleChange}
-                value={value ? getValueMapTruthyFalse(value, page) : value}
+                value={
+                    this.props.value
+                        ? getValueMapTruthyFalse(this.props.value, this.props.page)
+                        : this.props.value
+                }
+                key={this.props.field}
             >
-                {controlOptions.items.map((item) => (
+                {this.props.controlOptions.items.map((item) => (
                     <RadioBarOption
                         key={item.value}
-                        value={getValueMapTruthyFalse(item.value, page)}
+                        value={getValueMapTruthyFalse(item.value, this.props.page)}
                         label={item.label}
-                        disabled={disabled}
+                        disabled={this.props.disabled}
                     />
                 ))}
-            </RadioBar>
+            </RadioBarWrapper>
         );
     }
 }

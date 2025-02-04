@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import Button from '@splunk/react-ui/Button';
-import styled from 'styled-components';
+import { StyledColumnLayout } from './StyledComponent';
 import {
     CheckboxGroupProps,
     getDefaultValues,
@@ -15,10 +15,6 @@ import CheckboxSubGroup from './CheckboxSubGroup';
 import CheckboxRowWrapper from './CheckboxRowWrapper';
 import { useValidation } from './checkboxGroupValidation';
 import { MODE_CREATE } from '../../constants/modes';
-
-const FullWidth = styled.div`
-    width: 100%;
-`;
 
 function CheckboxGroup(props: CheckboxGroupProps) {
     const { field, handleChange, controlOptions, addCustomValidator, disabled } = props;
@@ -64,8 +60,8 @@ function CheckboxGroup(props: CheckboxGroupProps) {
     };
 
     return (
-        <FullWidth>
-            <ColumnLayout gutter={5}>
+        <>
+            <StyledColumnLayout gutter={5}>
                 {flattenedRowsWithGroups.map((row) => {
                     if (isGroupWithRows(row)) {
                         // labels are unique across groups
@@ -92,7 +88,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
                     );
                 })}
                 <ColumnLayout.Row />
-            </ColumnLayout>
+            </StyledColumnLayout>
             <div>
                 <Button
                     label="Select All"
@@ -105,7 +101,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>
-        </FullWidth>
+        </>
     );
 }
 

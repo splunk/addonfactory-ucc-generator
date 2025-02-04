@@ -24,7 +24,7 @@ it('should modify correctly all properties of field in groups', async () => {
             handleFormSubmit={handleFormSubmit}
         />
     );
-    await screen.findByRole('textbox', { name: 'Text 1 Group 2' });
+    await screen.findByText('Text 1 Group 2');
 
     const getAndValidateGroupFieldLabels = (
         fieldId: string,
@@ -46,13 +46,14 @@ it('should modify correctly all properties of field in groups', async () => {
         return modifiedFieldSameGroup;
     };
 
-    const modifiedFieldSameGroup = screen.getByRole('textbox', {
-        name: 'label after mods 2-1',
-        description: 'markdown message after mods 2-1 help after mods 2-1',
-    });
+    const modifiedFieldSameGroup = getAndValidateGroupFieldLabels(
+        'text_field_2_group_1',
+        'help after mods 2-1',
+        'label after mods 2-1',
+        'markdown message after mods 2-1'
+    );
 
-    expect(modifiedFieldSameGroup).toBeInTheDocument();
-    expect(modifiedFieldSameGroup).toHaveAttribute('required');
+    expect(within(modifiedFieldSameGroup).queryByText('*')).toBeInTheDocument();
 
     const modifiedFieldDiffGroup = getAndValidateGroupFieldLabels(
         'text_field_2_group_2',

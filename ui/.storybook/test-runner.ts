@@ -1,4 +1,4 @@
-import { getStoryContext, TestRunnerConfig, waitForPageReady } from '@storybook/test-runner';
+import { getStoryContext, TestRunnerConfig } from '@storybook/test-runner';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 const config: TestRunnerConfig = {
@@ -38,13 +38,8 @@ const config: TestRunnerConfig = {
         const customReceivedDir = `${process.cwd()}/test-reports/visual/image_snapshot_received/`;
 
         // can't use waitForPageReady because networkidle never fires due to HMR for locally running Storybook
-        if (process.env.CI) {
-            await waitForPageReady(page);
-        } else {
-            await page.waitForLoadState('domcontentloaded');
-            await page.waitForLoadState('load');
-        }
-
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('load');
         await page.evaluate(() => document.fonts.ready);
 
         const image = await page.screenshot({ animations: 'disabled', scale: 'css' });

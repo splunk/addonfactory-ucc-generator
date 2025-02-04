@@ -11,12 +11,14 @@ import InputPage from '../../../pages/Input/InputPage';
 const meta = {
     component: InputPage,
     title: 'CheckboxTree/Page',
-    render: (_args, { parameters }) => {
-        setUnifiedConfig(parameters.globalConfig);
+    render: (args) => {
+        setUnifiedConfig(args.globalConfig);
         return <InputPage />;
     },
-    parameters: {
+    args: {
         globalConfig: CheckboxTreeConfig,
+    },
+    parameters: {
         msw: {
             handlers: serverHandlers,
         },
@@ -38,7 +40,7 @@ type Story = StoryObj<typeof BaseFormView>;
 export const InputPageView: Story = {};
 
 export const RequiredView: Story = {
-    parameters: {
+    args: {
         globalConfig: CheckboxTreeRequiredConfig,
     },
     play: async ({ canvasElement }) => {

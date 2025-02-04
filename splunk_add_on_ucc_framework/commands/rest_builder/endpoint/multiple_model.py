@@ -57,7 +57,6 @@ endpoint = MultipleModel(
     models=[
 {models}
     ],
-    need_reload={need_reload},
 )
 
 
@@ -82,5 +81,4 @@ if __name__ == '__main__':
             entities="\n".join(entities),
             models=indent(models_lines, 2),
             conf_name=self.conf_name,
-            need_reload=self.need_reload,
         )

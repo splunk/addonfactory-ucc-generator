@@ -7,7 +7,6 @@ import MultiInputComponent from '../MultiInputComponent';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
-import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: MultiInputComponent,
@@ -24,14 +23,13 @@ const meta = {
             <MultiInputComponent
                 {...props}
                 value={state}
-                handleChange={(field, data) => {
+                handleChange={(field: string, data: string) => {
                     setState(data);
                     props.handleChange(field, data);
                 }}
             />
         );
     },
-    decorators: [withControlGroup],
 } satisfies Meta<typeof MultiInputComponent>;
 
 export default meta;
@@ -72,6 +70,7 @@ export const AllProps: Story = {
         },
         disabled: false,
         value: undefined,
+        error: false,
         dependencyValues: {},
     },
 };
@@ -92,6 +91,7 @@ export const EndpointApi: Story = {
         },
         disabled: false,
         value: undefined,
+        error: false,
         dependencyValues: {},
     },
     parameters: {

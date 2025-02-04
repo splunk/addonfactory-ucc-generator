@@ -1,5 +1,4 @@
 import { render, screen, within } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
 import React from 'react';
 
 import { BrowserRouter } from 'react-router-dom';
@@ -53,8 +52,7 @@ it('Render action icons correctly', async () => {
 });
 
 it('Correctly call action handlers for page dialog', async () => {
-    const user = userEvent.setup();
-    await user.click((await screen.findAllByRole('button', { name: /edit/i }))[0]);
+    (await screen.findAllByRole('button', { name: /edit/i }))[0].click();
 
     expect(handleOpenPageStyleDialog).toHaveBeenCalledWith(expect.objectContaining({}), 'edit');
 
@@ -68,9 +66,8 @@ it('Correctly call action handlers for page dialog', async () => {
 });
 
 it('Correctly render modal for delete action click', async () => {
-    const user = userEvent.setup();
     // Clicking delete renders modal
-    await user.click((await screen.findAllByRole('button', { name: /delete/i }))[0]);
+    (await screen.findAllByRole('button', { name: /delete/i }))[0].click();
 
     expect(await screen.findByRole('dialog')).toHaveTextContent('Delete Confirmation');
 });

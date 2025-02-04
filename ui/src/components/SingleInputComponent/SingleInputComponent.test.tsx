@@ -27,6 +27,7 @@ const defaultInputProps = {
     },
     disabled: false,
     value: 'defaultValue',
+    error: false,
     dependencyValues: {},
     required: false,
     handleChange,
@@ -64,9 +65,9 @@ const mockAPI = () => {
 
 it('renders correctly', () => {
     renderFeature();
-    const inputComponent = screen.getByRole('combobox');
+    const inputComponent = screen.getByTestId('combo-box');
     expect(inputComponent).toBeInTheDocument();
-    expect(inputComponent).toHaveValue(defaultInputProps.value);
+    expect(inputComponent.getAttribute('data-test-value')).toEqual(defaultInputProps.value);
 });
 
 it('renders as disabled correctly', () => {
@@ -80,11 +81,11 @@ it.each(defaultInputProps.controlOptions.autoCompleteFields)(
     'handler called correctly',
     async (item) => {
         renderFeature({ value: undefined });
-        const inputComponent = screen.getByRole('combobox');
+        const inputComponent = screen.getByTestId('combo-box');
 
         await userEvent.click(inputComponent);
 
-        const option = screen.getByRole('option', { name: item.label });
+        const option = document.querySelector(`[data-test-value="${item.value}"]`);
         expect(option).toBeInTheDocument();
         if (option) {
             await userEvent.click(option);
@@ -95,9 +96,9 @@ it.each(defaultInputProps.controlOptions.autoCompleteFields)(
 
 it('clear calls handler with empty data', async () => {
     renderFeature();
-    const inputComponent = screen.getByRole('combobox');
+    const inputComponent = screen.getByTestId('combo-box');
     await userEvent.click(inputComponent);
-    const clearBtn = screen.getByLabelText(/clear/i);
+    const clearBtn = screen.getByTestId('clear');
     await userEvent.click(clearBtn);
     expect(handleChange).toHaveBeenCalledWith(defaultInputProps.field, ``);
 });
@@ -115,11 +116,10 @@ describe.each(mockedEntries)('handler endpoint data loading', (entry) => {
                 valueField: 'testValue',
             },
         });
-        const inputComponent = screen.getByRole('combobox');
-
+        const inputComponent = screen.getByTestId('combo-box');
         await userEvent.click(inputComponent);
 
-        const option = screen.getByRole('option', { name: entry.content.testLabel });
+        const option = document.querySelector(`[data-test-value="${entry.content.testValue}"]`);
         expect(option).toBeInTheDocument();
 
         if (option) {

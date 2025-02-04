@@ -1,39 +1,38 @@
 import React from 'react';
-import TextArea, { TextAreaChangeHandler, TextAreaPropsBase } from '@splunk/react-ui/TextArea';
+import TextArea from '@splunk/react-ui/TextArea';
+import styled from 'styled-components';
 
-import { excludeControlWrapperProps } from '../ControlWrapper/utils';
+const TextWrapper = styled(TextArea)`
+    width: 320px !important;
+`;
 
-export interface TextAreaComponentProps extends Omit<Partial<TextAreaPropsBase>, 'defaultValue'> {
+export interface TextAreaComponentProps {
     id?: string;
-    value?: string;
+    value: string | number;
     handleChange: (field: string, value: string) => void;
     field: string;
+    error?: boolean;
     controlOptions?: { rowsMax?: number; rowsMin?: number };
+    disabled?: boolean;
 }
 
-function TextAreaComponent({
-    id,
-    value,
-    handleChange,
-    field,
-    controlOptions,
-    ...restProps
-}: TextAreaComponentProps) {
-    const onChange: TextAreaChangeHandler = (_e, data) => {
-        handleChange(field, data.value);
+function TextAreaComponent(props: TextAreaComponentProps) {
+    const handleChange = (e: unknown, { value }: { value: string }) => {
+        props.handleChange(props.field, value);
     };
 
-    const restSuiProps = excludeControlWrapperProps(restProps);
     return (
-        <TextArea
-            {...restSuiProps}
-            inputId={id}
+        <TextWrapper
+            inputId={props.id}
+            inline
             canClear
-            className={field}
-            value={value?.toString() || ''}
-            onChange={onChange}
-            rowsMax={controlOptions?.rowsMax ? controlOptions?.rowsMax : 12}
-            rowsMin={controlOptions?.rowsMin ? controlOptions?.rowsMin : 8}
+            error={props.error}
+            className={props.field}
+            disabled={props.disabled}
+            value={props.value?.toString() || ''}
+            onChange={handleChange}
+            rowsMax={props?.controlOptions?.rowsMax ? props?.controlOptions?.rowsMax : 12}
+            rowsMin={props?.controlOptions?.rowsMin ? props?.controlOptions?.rowsMin : 8}
         />
     );
 }
