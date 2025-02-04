@@ -228,12 +228,26 @@ describe('multiple services', () => {
         it('should render group as menu item if no underlying services', async () => {
             setup({
                 ...getGroupedServices(),
-                groupsMenu: [{ groupName: 'test-group-name1', groupTitle: 'test-group-title1' }],
+                groupsMenu: [
+                    { groupName: 'test-service-name1', groupTitle: 'test-service-title1' },
+                ],
             });
+
             await userEvent.click(getCreateDropdown());
-            // await userEvent.click(screen.getByText('test-group-title1'));
-            expect(screen.getByText('test-group-title1')).toBeInTheDocument();
-            expect(screen.getByText('test-group-title1')).not.toHaveAttribute('aria-haspopup');
+
+            expect(screen.getByText('test-service-title1')).toBeInTheDocument();
+            expect(screen.getByText('test-service-title1')).not.toHaveAttribute('aria-haspopup');
+        });
+
+        it('should not render group as menu item if no services exists for groupName', async () => {
+            setup({
+                ...getGroupedServices(),
+                groupsMenu: [{ groupName: 'unexisting-name', groupTitle: 'unexisting-title1' }],
+            });
+
+            await userEvent.click(getCreateDropdown());
+
+            expect(screen.queryByText('unexisting-name')).not.toBeInTheDocument();
         });
 
         it('should call handleRequestOpen callback on click', async () => {
