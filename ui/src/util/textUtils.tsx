@@ -7,8 +7,7 @@ import { TextElementWithLinksSchema } from '../types/globalConfig/entities';
 export type TextWithLinks = z.TypeOf<typeof TextElementWithLinksSchema>;
 
 const linkTextIntoElement = (text: string, props: TextWithLinks) => {
-    const linkToReplace =
-        props && 'links' in props && props.links?.find((link) => link.slug === text);
+    const linkToReplace = props.links?.find((link) => link.slug === text);
 
     if (linkToReplace) {
         return (
@@ -24,7 +23,7 @@ const linkTextIntoElement = (text: string, props: TextWithLinks) => {
 const changeSlugIntoLink = (text: string, props: TextWithLinks) =>
     text
         ?.split(/\]\]|\[\[/)
-        ?.map((splitedText) => linkTextIntoElement(splitedText, props))
+        ?.map((splitText) => linkTextIntoElement(splitText, props))
         .flat();
 
 const changeManyLinesIntoSpans = (arrayOfText: string[], props: TextWithLinks) =>
@@ -42,7 +41,7 @@ const changeManyLinesIntoSpans = (arrayOfText: string[], props: TextWithLinks) =
             );
         });
 
-export const mapTextToElements = (props: TextWithLinks | { text: string; link: string }) => {
+export const mapTextToElements = (props: TextWithLinks) => {
     const currentText = props?.text;
 
     if (!currentText) {
@@ -56,7 +55,7 @@ export const mapTextToElements = (props: TextWithLinks | { text: string; link: s
             ? changeManyLinesIntoSpans(textSplitByLines, props) // new lines
             : changeSlugIntoLink(currentText, props); // no new lines (\n) take old text
 
-    if (props && 'link' in props) {
+    if ('link' in props) {
         return (
             <Link to={props.link} openInNewContext key="HelpLink">
                 {textWithNewLines}
