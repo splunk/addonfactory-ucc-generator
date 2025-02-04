@@ -57,9 +57,7 @@ class InputsConf(ConfGenerator):
                     if entity.get("defaultValue"):
                         if type(entity["defaultValue"]) is bool:
                             self.default_value_info[service["name"]].update(
-                                {
-                                    f"{entity['field']}": f"{str(entity['defaultValue']).lower()}"
-                                }
+                                {entity["field"]: str(entity["defaultValue"]).lower()}
                             )
                         else:
                             self.default_value_info[service["name"]].update(

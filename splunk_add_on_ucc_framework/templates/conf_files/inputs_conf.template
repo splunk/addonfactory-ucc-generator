@@ -4,11 +4,7 @@ python.version = python3
 {% if disabled and service_name == input_name%}
 disabled = true
 {% endif %}
-{% for key, values in default_values.items() %}
-{% if key == input_name %}
-{% for item, value in values.items() %}
+{% for item, value in default_values[input_name].items() %}
 {{item}} = {{value}}
-{% endfor %}
-{% endif %}
 {% endfor %}
 {% endfor %}
