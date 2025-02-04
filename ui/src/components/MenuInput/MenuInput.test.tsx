@@ -36,7 +36,7 @@ function setup(inputs: z.infer<typeof pages.shape.inputs>) {
         },
     }));
     render(
-        <PageContextProvider platform={undefined}>
+        <PageContextProvider platform="cloud">
             <AnimationToggleProvider enabled={false}>
                 <MenuInput handleRequestOpen={mockHandleRequestOpen} />
             </AnimationToggleProvider>
@@ -246,6 +246,103 @@ describe('multiple services', () => {
             expect(mockHandleRequestOpen).toHaveBeenCalledWith({
                 groupName: 'test-group-name1',
                 serviceName: 'test-subservice1-name1',
+            });
+        });
+
+        it('should not render hideForPlatform services', async () => {
+            setup({
+                services: [
+                    {
+                        name: 'test-subservice1-name1',
+                        title: 'test-subservice1-title1',
+                        subTitle: 'test-subservice1-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'enterprise',
+                    },
+                    {
+                        name: 'test-subservice2-name1',
+                        title: 'test-subservice2-title1',
+                        subTitle: 'test-subservice2-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'cloud',
+                    },
+                    {
+                        name: 'test-subservice1-name2',
+                        title: 'test-subservice1-title2',
+                        subTitle: 'test-subservice1-subTitle2',
+                        entity: [],
+                        hideForPlatform: 'cloud',
+                    },
+                    {
+                        name: 'test-subservice2-name2',
+                        title: 'test-subservice2-title2',
+                        subTitle: 'test-subservice2-subTitle2',
+                        entity: [],
+                        hideForPlatform: 'enterprise',
+                    },
+                ],
+                groupsMenu: [
+                    {
+                        groupName: 'test-group-name1',
+                        groupTitle: 'test-group-title1',
+                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+                    },
+                    {
+                        groupName: 'test-group-name2',
+                        groupTitle: 'test-group-title2',
+                        groupServices: ['test-subservice2-name1', 'test-subservice2-name2'],
+                    },
+                ],
+                title: '',
+                table: {
+                    actions: [],
+                    header: [
+                        {
+                            field: '',
+                            label: '',
+                        },
+                    ],
+                    customRow: {},
+                },
+            });
+            // the loading indicator from CustomMenu component
+
+            await userEvent.click(getCreateDropdown());
+
+            const openAndVerifyGroup = async ({
+                groupTitle,
+                existsTitles,
+                doesNotExistsTitles,
+            }: {
+                groupTitle: string;
+                existsTitles: string[];
+                doesNotExistsTitles: string[];
+            }) => {
+                await userEvent.click(screen.getByText(groupTitle));
+
+                // is displayed as element
+                existsTitles.forEach((title) => {
+                    expect(screen.queryByText(title)).toBeInTheDocument();
+                });
+
+                // elements are HIDDEN via hideForPlatform "cloud"
+                doesNotExistsTitles.forEach((title) => {
+                    expect(screen.queryByText(title)).not.toBeInTheDocument();
+                });
+
+                await userEvent.click(screen.getByText('Back'));
+            };
+
+            await openAndVerifyGroup({
+                groupTitle: 'test-group-title1',
+                existsTitles: ['test-subservice1-title1'],
+                doesNotExistsTitles: ['test-subservice1-title2'],
+            });
+
+            await openAndVerifyGroup({
+                groupTitle: 'test-group-title2',
+                existsTitles: ['test-subservice2-title2'],
+                doesNotExistsTitles: ['test-subservice2-title1'],
             });
         });
     });
