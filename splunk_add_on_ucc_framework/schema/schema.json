@@ -501,8 +501,8 @@
       "additionalProperties": false
     },
     "arguments": {
-      "type": "object",
-      "description": "arguments used for custom search commands",
+      "type":"object",
+      "description": "Arguments used for custom search command",
       "properties": {
         "name": {
           "type": "string",
@@ -538,8 +538,7 @@
     "CustomSearchCommandValidator": {
       "type": "object",
       "description": "It is used to validate the values of arguments for custom search command",
-      "items": {
-        "anyOf": [
+        "oneOf": [
           {
             "$ref": "#/definitions/CustomIntegerValidator"
           },
@@ -556,7 +555,6 @@
             "$ref": "#/definitions/CustomBooleanValidator"
           }
         ]
-      }
     },
     "CustomIntegerValidator": {
       "type": "object",
