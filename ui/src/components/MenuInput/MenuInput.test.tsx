@@ -250,6 +250,27 @@ describe('multiple services', () => {
             expect(screen.queryByText('unexisting-name')).not.toBeInTheDocument();
         });
 
+        it('should render group as menu item only for existing services', async () => {
+            setup({
+                ...getGroupedServices(),
+                groupsMenu: [
+                    { groupName: 'unexisting-name', groupTitle: 'unexisting-title1' },
+                    { groupName: 'test-service-name1', groupTitle: 'test-service-title1' },
+                    {
+                        groupName: 'test-group-name1',
+                        groupTitle: 'test-group-title1',
+                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+                    },
+                ],
+            });
+
+            await userEvent.click(getCreateDropdown());
+
+            expect(screen.queryByText('unexisting-name')).not.toBeInTheDocument();
+            expect(screen.queryByText('test-group-title1')).toBeInTheDocument();
+            expect(screen.queryByText('test-service-title1')).toBeInTheDocument();
+        });
+
         it('should call handleRequestOpen callback on click', async () => {
             const { mockHandleRequestOpen } = setup(getGroupedServices());
             await userEvent.click(getCreateDropdown());
