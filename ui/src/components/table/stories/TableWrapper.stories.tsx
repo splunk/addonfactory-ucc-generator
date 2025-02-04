@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 
@@ -23,7 +23,7 @@ const meta = {
         setUnifiedConfig(props.config);
         return (
             <TableContextProvider>
-                {(<TableWrapper {...props} />) as unknown as Node}
+                {(<TableWrapper {...props} />) as unknown as ReactNode}
             </TableContextProvider>
         );
     },

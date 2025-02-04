@@ -6,6 +6,7 @@ import SingleInputComponent from '../SingleInputComponent';
 import { setUnifiedConfig } from '../../../util/util';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { mockServerResponse } from '../../../mocks/server-response';
+import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: SingleInputComponent,
@@ -37,6 +38,7 @@ const meta = {
             />
         );
     },
+    decorators: [withControlGroup],
 } satisfies Meta<typeof SingleInputComponent>;
 
 export default meta;
