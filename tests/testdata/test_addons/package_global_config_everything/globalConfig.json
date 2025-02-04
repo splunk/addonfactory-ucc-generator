@@ -1729,6 +1729,7 @@
                             "type": "interval",
                             "field": "interval",
                             "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
                     ],
@@ -1747,6 +1748,7 @@
                             "type": "interval",
                             "field": "interval",
                             "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
                     ],
@@ -1765,6 +1767,7 @@
                             "type": "interval",
                             "field": "interval",
                             "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
                     ],
@@ -1784,6 +1787,7 @@
                             "type": "interval",
                             "field": "interval",
                             "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
                             "required": true
                         }
                     ],

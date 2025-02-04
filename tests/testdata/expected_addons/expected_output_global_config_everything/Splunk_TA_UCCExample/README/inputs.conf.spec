@@ -50,13 +50,13 @@ interval = Time interval of the data input, in seconds.
 placeholder = placeholder
 
 [service_inside_menu_one://<name>]
-interval = 
+interval = Time interval of the data input, in seconds.
 
 [service_inside_menu_two://<name>]
-interval = 
+interval = Time interval of the data input, in seconds.
 
 [service_inside_menu_three://<name>]
-interval = 
+interval = Time interval of the data input, in seconds.
 
 [service_inside_menu_four://<name>]
-interval = 
+interval = Time interval of the data input, in seconds.
