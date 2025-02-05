@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { UserEvent } from '@testing-library/user-event';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { z } from 'zod';
 import MenuInput from './MenuInput';
@@ -138,8 +138,9 @@ describe('multiple services', () => {
 
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
         const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
-        await userEvent.click(getCreateDropdown());
-        await userEvent.click(screen.getByText('test-service-title2'));
+        const user = userEvent.setup();
+        await user.click(getCreateDropdown());
+        await user.click(screen.getByText('test-service-title2'));
         expect(mockHandleRequestOpen).toHaveBeenCalledWith({
             groupName: 'main_panel',
             serviceName: 'test-service-name2',
@@ -205,20 +206,21 @@ describe('multiple services', () => {
 
         it('should render group items', async () => {
             setup(getGroupedServices());
+            const userEventSetup = userEvent.setup();
             // open dropdown
-            await userEvent.click(getCreateDropdown());
+            await userEventSetup.click(getCreateDropdown());
             // check sub menu is not rendered
             expect(screen.queryByText('test-subservice1-title1')).not.toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).not.toBeInTheDocument();
             // click on group title
-            await userEvent.click(screen.getByText('test-group-title1'));
+            await userEventSetup.click(screen.getByText('test-group-title1'));
             // check sub menu is rendered
             expect(screen.queryByText('test-subservice1-title1')).toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).toBeInTheDocument();
             await waitFor(() => screen.queryByText('test-group-title1'), { timeout: 1000 });
             expect(screen.queryByText('test-group-title1')).not.toBeInTheDocument();
 
-            await userEvent.click(screen.getByRole('menuitem', { name: 'Back' }));
+            await userEventSetup.click(screen.getByRole('menuitem', { name: 'Back' }));
             await waitFor(() =>
                 expect(screen.queryByText('test-subservice-subTitle1')).not.toBeInTheDocument()
             );
@@ -281,10 +283,12 @@ describe('multiple services', () => {
 
         it('should call handleRequestOpen callback on click', async () => {
             const { mockHandleRequestOpen } = setup(getGroupedServices());
-            await userEvent.click(getCreateDropdown());
+            const user = userEvent.setup();
 
-            await userEvent.click(screen.getByText('test-group-title1'));
-            await userEvent.click(screen.getByText('test-subservice1-title1'));
+            await user.click(getCreateDropdown());
+
+            await user.click(screen.getByText('test-group-title1'));
+            await user.click(screen.getByText('test-subservice1-title1'));
 
             expect(mockHandleRequestOpen).toHaveBeenCalledWith({
                 groupName: 'test-group-name1',
@@ -382,18 +386,22 @@ describe('multiple services', () => {
             });
             // the loading indicator from CustomMenu component
 
-            await userEvent.click(getCreateDropdown());
+            const user = userEvent.setup();
+
+            await user.click(getCreateDropdown());
 
             const openAndVerifyGroup = async ({
                 groupTitle,
                 existsTitles,
                 doesNotExistsTitles,
+                userEventSetup,
             }: {
                 groupTitle: string;
                 existsTitles: string[];
                 doesNotExistsTitles: string[];
+                userEventSetup: UserEvent;
             }) => {
-                await userEvent.click(screen.getByText(groupTitle));
+                await userEventSetup.click(screen.getByText(groupTitle));
 
                 // is displayed as element
                 existsTitles.forEach((title) => {
@@ -415,7 +423,10 @@ describe('multiple services', () => {
                     expect(screen.queryByText(title)).not.toBeInTheDocument();
                 });
 
-                await userEvent.click(screen.getByText('Back'));
+                await userEventSetup.click(screen.getByText('Back'));
+                await waitFor(() => expect(screen.queryByText('Back')).not.toBeInTheDocument(), {
+                    timeout: 500,
+                });
             };
 
             // 2+1+1 two groups, one standard service, one service not hidden for cloud
@@ -425,12 +436,14 @@ describe('multiple services', () => {
                 groupTitle: 'test-group-title1',
                 existsTitles: ['test-subservice1-title1'],
                 doesNotExistsTitles: ['test-subservice1-title2'],
+                userEventSetup: user,
             });
 
             await openAndVerifyGroup({
                 groupTitle: 'test-group-title2',
                 existsTitles: ['test-subservice2-title2'],
                 doesNotExistsTitles: ['test-subservice2-title1'],
+                userEventSetup: user,
             });
         });
     });
