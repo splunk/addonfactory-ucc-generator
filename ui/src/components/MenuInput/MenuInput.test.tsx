@@ -137,8 +137,8 @@ describe('multiple services', () => {
     });
 
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
-        const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
         const user = userEvent.setup();
+        const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
         await user.click(getCreateDropdown());
         await user.click(screen.getByText('test-service-title2'));
         expect(mockHandleRequestOpen).toHaveBeenCalledWith({
@@ -205,8 +205,8 @@ describe('multiple services', () => {
         });
 
         it('should render group items', async () => {
-            setup(getGroupedServices());
             const userEventSetup = userEvent.setup();
+            setup(getGroupedServices());
             // open dropdown
             await userEventSetup.click(getCreateDropdown());
             // check sub menu is not rendered
@@ -282,8 +282,8 @@ describe('multiple services', () => {
         });
 
         it('should call handleRequestOpen callback on click', async () => {
-            const { mockHandleRequestOpen } = setup(getGroupedServices());
             const user = userEvent.setup();
+            const { mockHandleRequestOpen } = setup(getGroupedServices());
 
             await user.click(getCreateDropdown());
 
@@ -297,6 +297,7 @@ describe('multiple services', () => {
         });
 
         it('should not render hideForPlatform services', async () => {
+            const user = userEvent.setup();
             setup({
                 services: [
                     {
@@ -385,8 +386,6 @@ describe('multiple services', () => {
                 },
             });
             // the loading indicator from CustomMenu component
-
-            const user = userEvent.setup();
 
             await user.click(getCreateDropdown());
 
