@@ -315,8 +315,30 @@ describe('multiple services', () => {
                         entity: [],
                         hideForPlatform: 'enterprise',
                     },
+                    {
+                        name: 'test-service-enterprise-hidden-name1',
+                        title: 'test-service-enterprise-hidden-title1',
+                        subTitle: 'test-service-enterprise-hidden-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'enterprise',
+                    },
+                    {
+                        name: 'test-service-cloud-hidden-name1',
+                        title: 'test-service-cloud-hidden-title1',
+                        subTitle: 'test-service-cloud-hidden-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'cloud',
+                    },
                 ],
                 groupsMenu: [
+                    {
+                        groupName: 'test-service-enterprise-hidden-name1',
+                        groupTitle: 'test-service-enterprise-hidden-title1',
+                    },
+                    {
+                        groupName: 'test-service-cloud-hidden-name1',
+                        groupTitle: 'test-service-cloud-hidden-title1',
+                    },
                     {
                         groupName: 'test-group-name1',
                         groupTitle: 'test-group-title1',
@@ -359,6 +381,9 @@ describe('multiple services', () => {
                 existsTitles.forEach((title) => {
                     expect(screen.queryByText(title)).toBeInTheDocument();
                 });
+
+                // length should be number of existsTitles + 1 (Back button)
+                expect(screen.queryAllByRole('menuitem')).toHaveLength(existsTitles.length + 1);
 
                 // elements are HIDDEN via hideForPlatform "cloud"
                 doesNotExistsTitles.forEach((title) => {
