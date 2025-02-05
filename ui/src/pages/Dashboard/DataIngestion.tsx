@@ -16,6 +16,7 @@ import {
 } from './utils';
 import { DataIngestionModal } from './DataIngestionModal';
 import { DashboardModal } from './DashboardModal';
+import { FEATURE_FLAGS } from './consts';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -153,6 +154,7 @@ export const DataIngestionDashboard = ({
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
             dashboardPlugin={dashboardPlugin}
+            featureFlags={FEATURE_FLAGS}
         >
             <>
                 <DataIngestionModal

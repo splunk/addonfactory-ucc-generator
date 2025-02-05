@@ -239,7 +239,8 @@ model = RestModel(fields, name=None, special_fields=special_fields)
 endpoint = SingleModel(
     'splunk_ta_uccexample_account',
     model,
-    config_name='account'
+    config_name='account',
+    need_reload=False,
 )
 
 

@@ -28,7 +28,7 @@ from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 logger = logging.getLogger("ucc_gen")
 
 
-LIBS_REQUIRED_FOR_UI = {"splunktaucclib": "6.4.0"}
+LIBS_REQUIRED_FOR_UI = {"splunktaucclib": "6.6.0"}
 LIBS_REQUIRED_FOR_OAUTH = {"solnlib": "5.5.0"}
 
 

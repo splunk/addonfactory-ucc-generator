@@ -4,6 +4,7 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import { getActionButtons, waitForElementToDisplayAndMoveThemToCanvas } from './utils';
+import { FEATURE_FLAGS } from './consts';
 
 export const OverviewDashboard = ({
     dashboardDefinition,
@@ -22,6 +23,7 @@ export const OverviewDashboard = ({
         <DashboardContextProvider
             preset={EnterpriseViewOnlyPreset}
             initialDefinition={dashboardDefinition}
+            featureFlags={FEATURE_FLAGS}
         >
             <DashboardCore width="99%" height="auto" actionMenus={getActionButtons('overview')} />
         </DashboardContextProvider>

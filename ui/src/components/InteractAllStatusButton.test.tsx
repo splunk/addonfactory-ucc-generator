@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 import { InputRowData, InteractAllStatusButtons } from './InteractAllStatusButton';
 
 describe('InteractAllStatusButtons', () => {
@@ -95,15 +96,16 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Deactivate All enabled rows correctly', async () => {
+        const user = userEvent.setup();
         const disableBtn = await screen.findByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
-        disableBtn.click();
+        await user.click(disableBtn);
 
         const yesPopUpBtn = await screen.findByText('Yes');
         expect(yesPopUpBtn).toBeInTheDocument();
 
-        yesPopUpBtn.click();
+        await user.click(yesPopUpBtn);
 
         expect(handleToggleStatusChange).toHaveBeenCalledWith(
             allDataRowsMockUp.find((x) => x.name === 'aaaaa')
@@ -118,15 +120,16 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Activate All disabled rows correctly', async () => {
+        const user = userEvent.setup();
         const enableBtn = await screen.findByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
-        enableBtn.click();
+        await user.click(enableBtn);
 
         const yesPopUpBtn = await screen.findByText('Yes');
         expect(yesPopUpBtn).toBeInTheDocument();
 
-        yesPopUpBtn.click();
+        await user.click(yesPopUpBtn);
 
         expect(handleToggleStatusChange).toHaveBeenCalledWith(
             allDataRowsMockUp.find((x) => x.name === 'cccccc')
@@ -141,57 +144,61 @@ describe('InteractAllStatusButtons', () => {
     });
 
     it('Do not disable status if rejected', async () => {
+        const user = userEvent.setup();
         const disableBtn = await screen.findByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
-        disableBtn.click();
+        await user.click(disableBtn);
 
         const noPopUpBtn = await screen.findByText('No');
         expect(noPopUpBtn).toBeInTheDocument();
 
-        noPopUpBtn.click();
+        await user.click(noPopUpBtn);
 
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(0);
     });
 
     it('Do not enable status if rejected', async () => {
+        const user = userEvent.setup();
         const enableBtn = await screen.findByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
-        enableBtn.click();
+        await user.click(enableBtn);
 
         const noPopUpBtn = await screen.findByText('No');
         expect(noPopUpBtn).toBeInTheDocument();
 
-        noPopUpBtn.click();
+        await user.click(noPopUpBtn);
 
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(0);
     });
 
     it('Do not enable status if popup modal closed by X', async () => {
+        const user = userEvent.setup();
         const enableBtn = await screen.findByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
-        enableBtn.click();
+        await user.click(enableBtn);
 
         const closeXBtn = screen.getByTestId('close');
         expect(closeXBtn).toBeInTheDocument();
 
-        closeXBtn.click();
+        await user.click(closeXBtn);
 
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(0);
     });
 
     it('Do not disable status if popup modal closed by X', async () => {
+        const user = userEvent.setup();
         const disableBtn = await screen.findByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
-        disableBtn.click();
+        await user.click(disableBtn);
 
         const closeXBtn = screen.getByTestId('close');
         expect(closeXBtn).toBeInTheDocument();
 
-        closeXBtn.click();
+        await user.click(closeXBtn);
 
         expect(handleToggleStatusChange).toHaveBeenCalledTimes(0);
     });
