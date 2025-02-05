@@ -62,7 +62,7 @@
       },
       "title": "Data ingestion",
       "dataSources": {
-        "primary": "overview_data_volume_ds"
+        "primary": "overview_data_volume_ds_chain"
       }
     },
     "overview_errors_viz": {
@@ -74,7 +74,7 @@
       },
       "title": "Errors",
       "dataSources": {
-        "primary": "overview_errors_count_ds"
+        "primary": "overview_errors_count_ds_chain"
       }
     }
   },
@@ -106,6 +106,19 @@
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "data_volume"
+    },
+    "overview_data_volume_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "overview_data_volume_ds",
+        "query": "{{data_ingestion_and_events_zero_line}}",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
         }
       }
     },
@@ -113,6 +126,19 @@
       "type": "ds.search",
       "options": {
         "query": "{{errors_count}}",
+        "queryParameters": {
+          "earliest": "$overview_time.earliest$",
+          "latest": "$overview_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "error_count"
+    },
+    "overview_errors_count_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "overview_errors_count_ds",
+        "query": "{{errors_count_zero_line}}",
         "queryParameters": {
           "earliest": "$overview_time.earliest$",
           "latest": "$overview_time.latest$"
