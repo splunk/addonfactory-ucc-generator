@@ -3636,6 +3636,9 @@
         },
         "useInputToggleConfirmation": {
           "$ref": "#/definitions/useInputToggleConfirmation"
+        },
+        "inputsUniqueAcrossSingleService": {
+          "$ref": "#/definitions/inputsUniqueAcrossSingleService"
         }
       },
       "required": [
@@ -3744,6 +3747,9 @@
         },
         "readonlyFieldId": {
           "type": "string"
+        },
+        "inputsUniqueAcrossSingleService": {
+          "$ref": "#/definitions/inputsUniqueAcrossSingleService"
         }
       },
       "required": [
@@ -3863,6 +3869,11 @@
           "const": "enterprise"
         }
       ]
+    },
+    "inputsUniqueAcrossSingleService":{
+      "description": "Defines if inputs in different services can share same name.",
+      "type": "boolean",
+      "default": false
     },
     "IntervalValue": {
       "anyOf": [

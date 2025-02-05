@@ -126,6 +126,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     fieldsWithModifications: EntitiesAllowingModifications[];
 
+    inputsUniqueAcrossSingleService?: boolean;
+
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
@@ -165,6 +167,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.customWarningMessage = { message: '' };
 
         if (props.page === PAGE_INPUT) {
+            this.inputsUniqueAcrossSingleService =
+                globalConfig.pages?.inputs?.inputsUniqueAcrossSingleService;
+
             globalConfig.pages?.inputs?.services.forEach((service) => {
                 if (service.name === props.serviceName) {
                     this.groups = service.groups;
@@ -608,10 +613,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
             // validation for unique name
             if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
-                const isExistingName = Boolean(
+                const findNameInSameService = () =>
                     Object.keys(this.context?.rowData[this.props.serviceName] || {}).find(
                         (name) => name === this.datadict.name
-                    )
+                    );
+
+                const findNameInAllServices = () =>
+                    Object.values(this.context?.rowData || {}).find((val) =>
+                        Object.keys(val).find((name) => name === this.datadict.name)
+                    );
+
+                const isExistingName = Boolean(
+                    this.inputsUniqueAcrossSingleService
+                        ? findNameInSameService()
+                        : findNameInAllServices()
                 );
 
                 if (isExistingName && this.entities) {

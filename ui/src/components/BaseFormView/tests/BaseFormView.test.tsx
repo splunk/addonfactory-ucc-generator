@@ -267,21 +267,30 @@ describe('Verify if submiting BaseFormView works', () => {
         expect(errorMessage).toBeInTheDocument();
     });
 
-    it('Correctly allow same name for different service', async () => {
+    const renderAndSubmitForm = async (
+        inputsUniqueAcrossSingleService: boolean,
+        nameInputValue: string,
+        intervalInputValue: string
+    ) => {
+        const globalConfigMock = getGlobalConfigMockFourInputServices();
+
+        if (globalConfigMock.pages.inputs) {
+            // not ideal way to write property but seems easiest and more clean the others
+            globalConfigMock.pages.inputs.inputsUniqueAcrossSingleService =
+                inputsUniqueAcrossSingleService;
+        }
+
         const formRef = renderAndGetFormRef(
-            getGlobalConfigMockFourInputServices(),
+            globalConfigMock,
             MOCK_CONTEXT_STATE_THREE_INPUTS,
             'example_input_two'
         );
 
-        const NAME_INPUT = 'test'; // already existing as data in service example_input_one and example_input_four
-        const INTERVAL_INPUT = '123123123';
-
         const nameInput = getEntityTextBox('name');
-        await userEvent.type(nameInput, NAME_INPUT);
+        await userEvent.type(nameInput, nameInputValue);
 
         const intervalInput = getEntityTextBox('interval');
-        await userEvent.type(intervalInput, INTERVAL_INPUT);
+        await userEvent.type(intervalInput, intervalInputValue);
 
         server.use(
             http.post(
@@ -308,8 +317,25 @@ describe('Verify if submiting BaseFormView works', () => {
         );
 
         await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    };
 
+    it('Add already existing name for different service - inputsUniqueAcrossSingleService true', async () => {
+        const NAME_INPUT = 'test'; // already existing as data in service example_input_one and example_input_four
+        const INTERVAL_INPUT = '123123123';
+
+        await renderAndSubmitForm(true, NAME_INPUT, INTERVAL_INPUT);
         // response was success(mocked) and handled
+        // if response is sucess it is called twice with (true, false) and (false, true)
         await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
+    });
+
+    it('Error name already exists for different service - inputsUniqueAcrossSingleService false', async () => {
+        const NAME_INPUT = 'test'; // already existing as data in service example_input_one and example_input_four
+        const INTERVAL_INPUT = '123123123';
+
+        await renderAndSubmitForm(false, NAME_INPUT, INTERVAL_INPUT);
+
+        const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
+        expect(errorMessage).toBeInTheDocument();
     });
 });

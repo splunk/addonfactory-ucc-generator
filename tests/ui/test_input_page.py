@@ -2627,7 +2627,7 @@ class TestInputPage(UccTester):
         _add_input_one,
     ):
         """
-        Verifies that same name can be used for 2 services
+        Verifies that same name can not be used for different services
         """
         existing_name_for_service_one = "dummy_input_one"
 
@@ -2645,16 +2645,8 @@ class TestInputPage(UccTester):
         input_page.entity2.query_start_date.set_value("2020-12-11T20:00:32.000z")
 
         input_page.entity2.save_btn.click()
-
-        input_page.table.wait_for_rows_to_appear(2)
-
-        all_rows = input_page.table._get_rows()
-
-        rows_with_name = [
-            each_row
-            for each_row in all_rows
-            if input_page.table._get_column_value(each_row, "name")
-            == existing_name_for_service_one
-        ]
-
-        assert len(rows_with_name) == 2
+        self.assert_util(
+            input_page.entity1.save,
+            f"Name {existing_name_for_service_one} is already in use",
+            left_args={"expect_error": True},
+        )
