@@ -2269,7 +2269,8 @@
                   "39",
                   "3.13",
                   "313"
-                ]
+                ],
+                "description": "Python version compatible with the library."
               },
               "target": {
                 "type": "string",
