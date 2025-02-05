@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import { fn } from '@storybook/test';
 import TextComponent from '../TextComponent';
+import { withControlGroup } from '../../../../.storybook/withControlGroup';
 
 const meta = {
     component: TextComponent,
@@ -23,6 +24,7 @@ const meta = {
             />
         );
     },
+    decorators: [withControlGroup],
 } satisfies Meta<typeof TextComponent>;
 
 export default meta;
@@ -36,5 +38,16 @@ export const Base: Story = {
         error: false,
         encrypted: false,
         disabled: false,
+    },
+};
+
+export const AllPropsTrue: Story = {
+    args: {
+        handleChange: fn(),
+        value: 'default value',
+        field: 'field',
+        error: true,
+        encrypted: true,
+        disabled: true,
     },
 };

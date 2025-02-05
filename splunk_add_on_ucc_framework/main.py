@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -131,6 +131,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "to pip install command.",
     )
     build_parser.add_argument(
+        "--pip-custom-flag",
+        help="Custom flag that will be add to pip install command",
+        type=str,
+        default=False,
+        required=False,
+    )
+    build_parser.add_argument(
         "--ui-source-map",
         help="Adds front-end source-map files .js.map",
         default=False,
@@ -193,6 +200,34 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         default=False,
         help="overwrite already generated add-on folder",
     )
+    init_parser.add_argument(
+        "--need-proxy",
+        action="store_true",
+        required=False,
+        help="Specifies if proxy is needed or not",
+    )
+    init_parser.add_argument(
+        "--add-license",
+        type=str,
+        choices=[
+            "Apache License 2.0",
+            "MIT License",
+            "SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT",
+        ],
+        help=(
+            "adds any one of license agreement such as 'Apache License 2.0', 'MIT License', or "
+            "'SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT' to the `<your_add-on_name>/package/LICENSES` directory."
+        ),
+        required=False,
+        default=None,
+    )
+    init_parser.add_argument(
+        "--include-author",
+        type=str,
+        help="adds author in app.mainifest under `info -> author -> name` field",
+        required=False,
+        default=None,
+    )
 
     import_from_aob_parser = subparsers.add_parser(
         "import-from-aob", description="[Experimental] Import from AoB"
@@ -216,6 +251,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             pip_version=args.pip_version,
             pip_legacy_resolver=args.pip_legacy_resolver,
             ui_source_map=args.ui_source_map,
+            pip_custom_flag=args.pip_custom_flag,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)
@@ -227,6 +263,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             addon_input_name=args.addon_input_name,
             addon_version=args.addon_version,
             overwrite=args.overwrite,
+            need_proxy=args.need_proxy,
+            add_license=args.add_license,
+            include_author=args.include_author,
         )
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(

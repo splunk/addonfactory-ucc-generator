@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class AccountConf(ConfGenerator):
                 if account["name"] == "oauth":
                     continue
                 content = self._gc_schema._get_oauth_enitities(account["entity"])
-                fields = self._gc_schema._parse_fields(content)
+                fields, special_fields = self._gc_schema._parse_fields(content)
                 self.account_fields.append(
                     ("<name>", [f"{f._name} = " for f in fields])
                 )

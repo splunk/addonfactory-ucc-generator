@@ -1,5 +1,29 @@
 import { RefreshButton, ExportButton, OpenSearchButton } from '@splunk/dashboard-action-buttons';
 import React from 'react';
+import SearchJob from '@splunk/search-job';
+import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { getBuildDirPath } from '../../util/script';
+import { SearchResponse } from './DataIngestion.types';
+
+/**
+ *
+ * @param {string} fileName name of json file in custom dir
+ * @param {string} setData callback, called with data as params
+ */
+export function loadDashboardJsonDefinition(
+    fileName: string,
+    dataHandler: (data: Record<string, unknown>) => void
+) {
+    fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
+        .then((res) => res.json())
+        .then((external) => {
+            dataHandler(external);
+        })
+        .catch((e) => {
+            // eslint-disable-next-line no-console
+            console.error('Loading file failed: ', e);
+        });
+}
 
 export const waitForElementToDisplay = (
     selector: string,
@@ -53,7 +77,16 @@ export const waitForElementToDisplayAndMoveThemToCanvas = (
     );
 };
 
-const queryMap: Record<string, string> = {
+export const queryMapForEvents: Record<string, string> = {
+    'Source type': 'sourcetype_ingested',
+    Source: 'modular_input_name',
+    Host: 'event_host',
+    Index: 'event_index',
+    Account: 'event_account',
+    Input: 'event_input',
+};
+
+export const queryMap: Record<string, string> = {
     'Source type': 'st',
     Source: 's',
     Host: 'h',
@@ -131,6 +164,12 @@ export const getActionButtons = (serviceName: string) => {
     return actionMenus;
 };
 
+export const makeVisualAdjustmentsOnDataIngestionModal = () => {
+    waitForElementToDisplayAndMoveThemToCanvas(
+        '#data_ingestion_modal_dropdown',
+        '[data-input-id="data_ingestion_modal_time_window"]'
+    );
+};
 export const makeVisualAdjustmentsOnDataIngestionPage = () => {
     waitForElementToDisplayAndMoveThemToCanvas(
         '[data-input-id="data_ingestion_input"]',
@@ -203,3 +242,126 @@ export const addDescriptionToExpandedViewByOptions = (target: Element) => {
         }
     });
 };
+
+export const createNewQueryForDataVolumeInModal = (
+    selectedInput: string,
+    selectedValue: string,
+    query: string
+) => {
+    const selectedLabel = queryMap[selectedInput];
+    const updatedQuery = query.replace('|', `${selectedLabel} = "${selectedValue}" |`);
+
+    return updatedQuery;
+};
+
+export const createNewQueryForNumberOfEventsInModal = (
+    selectedInput: string,
+    selectedValue: string,
+    query: string
+) => {
+    const selectedLabel = queryMapForEvents[selectedInput];
+    const updatedQuery = query.replace('|', `${selectedLabel} = "${selectedValue}" |`);
+
+    return updatedQuery;
+};
+
+function getLicenseUsageSearchParams(globalConfig: GlobalConfig) {
+    const dashboard = globalConfig?.pages.dashboard as {
+        settings: {
+            custom_license_usage?: {
+                determine_by?: string;
+                search_condition?: string[];
+            };
+        };
+    };
+    const inputNames = globalConfig?.pages.inputs?.services;
+    let licUsgCondition = inputNames?.map((item) => `${item.name}*`).join(',');
+
+    try {
+        const licUsgType = dashboard?.settings?.custom_license_usage?.determine_by || 'Source';
+        const licUsgSearchItems = dashboard?.settings?.custom_license_usage?.search_condition;
+        const determineBy = queryMap[licUsgType] || 's';
+
+        const combinedItems = [
+            licUsgCondition || [],
+            ...(licUsgSearchItems?.map((el) => `"${el}"`) || []),
+        ];
+
+        licUsgCondition = combinedItems.join(',');
+        return [determineBy, licUsgCondition];
+    } catch (error) {
+        // eslint-disable-next-line no-console
+        console.info(
+            'No custom license usage search condition found. Proceeding with default parameters.'
+        );
+        return null;
+    }
+}
+export async function fetchDropdownValuesFromQuery(
+    globalConfig: GlobalConfig
+): Promise<SearchResponse[]> {
+    const licenseUsageParams = getLicenseUsageSearchParams(globalConfig);
+
+    const timeForDataIngestionTableStart = document
+        ?.querySelector('[data-input-id="data_ingestion_input"] button')
+        ?.getAttribute('data-test-earliest');
+    const timeForDataIngestionTableEnd = document
+        ?.querySelector('[data-input-id="data_ingestion_input"] button')
+        ?.getAttribute('data-test-latest');
+    // Construct the three queries
+    const eventInputQuery = `| rest splunk_server=local /services/data/inputs/all | where $eai:acl.app$ = "${globalConfig.meta.name}" | eval Active=if(lower(disabled) IN ("1", "true", "t"), "no", "yes") | table title, Active | stats values(title) as event_input by Active`;
+    const eventAccountQuery = `index=_internal source=*${globalConfig.meta.name}* action=events_ingested earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} | fieldsummary | fields field values | where field IN ("event_account")`;
+
+    let eventQuery = '';
+    if (licenseUsageParams) {
+        const [determineBy, licUsgCondition] = licenseUsageParams;
+        if (determineBy && licUsgCondition) {
+            eventQuery = `index=_internal source=*license_usage.log type=Usage earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} ${determineBy} IN (${licUsgCondition}) | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`;
+        }
+    }
+
+    if (!eventQuery) {
+        eventQuery = `index=_internal source=*license_usage.log type=Usage earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`;
+    }
+
+    // Function to run a search job for a given query
+    const runSearchJob = (searchQuery: string): Promise<SearchResponse> =>
+        new Promise((resolve, reject) => {
+            const searchJob = SearchJob.create({ search: searchQuery });
+
+            const resultsSubscription = searchJob.getResults({ count: 0 }).subscribe({
+                next: (response: SearchResponse) => {
+                    try {
+                        resolve(response);
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                error: (error: unknown) => {
+                    reject(error);
+                },
+                complete: () => {
+                    resultsSubscription.unsubscribe();
+                },
+            });
+        });
+
+    // Execute all queries concurrently
+    const queryPromises = [
+        runSearchJob(eventInputQuery),
+        runSearchJob(eventAccountQuery),
+        runSearchJob(eventQuery),
+    ];
+
+    // Return the combined results from all queries
+    return Promise.all(queryPromises)
+        .then(
+            (results) => results // Combined response of all queries
+        )
+        .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Error in fetching queries data:', error);
+            return [];
+        });
+}

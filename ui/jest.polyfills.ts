@@ -9,30 +9,7 @@
  * you don't want to deal with this.
  */
 
-const { TextDecoder, TextEncoder } = require('node:util');
-
-Object.defineProperties(globalThis, {
-    TextDecoder: { value: TextDecoder },
-    TextEncoder: { value: TextEncoder },
-});
-
-const { Blob } = require('node:buffer');
-const { fetch, Headers, FormData, Request, Response } = require('undici');
-
-Object.defineProperties(globalThis, {
-    fetch: { value: fetch, writable: true },
-    Blob: { value: Blob },
-    Headers: { value: Headers },
-    FormData: { value: FormData },
-    Request: { value: Request },
-    Response: { value: Response },
-});
-
-Object.defineProperty(URL, 'createObjectURL', {
-    // needed for package import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset'
-    writable: true,
-    value: jest.fn(),
-});
+// the most of the polyfills are applied with jest-fixed-jsdom package
 
 HTMLCanvasElement.prototype.getContext = jest.fn();
 

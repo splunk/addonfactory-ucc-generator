@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,7 +52,15 @@ class OSDependentLibraryConfig:
         }
         deps_flag = "" if result.get("dependencies") else "--no-deps"
         result.update({"deps_flag": deps_flag})
+        result.update(
+            {"python_version": cls._format_python_version(result["python_version"])}
+        )
         return cls(**result)
+
+    @staticmethod
+    def _format_python_version(python_version: str) -> str:
+        """Remove all non-numeric characters from the python version string to simplify processing"""
+        return "".join(x for x in python_version if x.isnumeric())
 
 
 class GlobalConfig:
@@ -188,6 +196,10 @@ class GlobalConfig:
 
     def update_addon_version(self, version: str) -> None:
         self._content.setdefault("meta", {})["version"] = version
+
+    def cleanup_unwanted_params(self) -> None:
+        if "_uccVersion" in self.content["meta"]:
+            del self.content["meta"]["_uccVersion"]
 
     def add_ucc_version(self, version: str) -> None:
         self.content.setdefault("meta", {})["_uccVersion"] = version

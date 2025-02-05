@@ -316,7 +316,7 @@
                         },
                         {
                             "type": "checkbox",
-                            "label": "Reverse DNS resolution",
+                            "label": "DNS resolution",
                             "field": "proxy_rdns"
                         }
                     ],
@@ -890,7 +890,9 @@
                                         "options": {
                                             "isExpandable": true
                                         },
-                                        "fields": ["collectFolderMetadata"]
+                                        "fields": [
+                                            "collectFolderMetadata"
+                                        ]
                                     }
                                 ],
                                 "rows": [
@@ -902,7 +904,10 @@
                                             "validators": [
                                                 {
                                                     "type": "number",
-                                                    "range": [1, 1200]
+                                                    "range": [
+                                                        1,
+                                                        1200
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -968,7 +973,10 @@
                                             "validators": [
                                                 {
                                                     "type": "number",
-                                                    "range": [1, 1200]
+                                                    "range": [
+                                                        1,
+                                                        1200
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -1009,7 +1017,9 @@
                                             "isExpandable": true,
                                             "expand": true
                                         },
-                                        "fields": ["collectFolderCollaboration"]
+                                        "fields": [
+                                            "collectFolderCollaboration"
+                                        ]
                                     },
                                     {
                                         "label": "Group 3",
@@ -1017,7 +1027,9 @@
                                             "isExpandable": true,
                                             "expand": true
                                         },
-                                        "fields": ["collectFolderMetadata"]
+                                        "fields": [
+                                            "collectFolderMetadata"
+                                        ]
                                     }
                                 ],
                                 "rows": [
@@ -1090,7 +1102,10 @@
                                             "validators": [
                                                 {
                                                     "type": "number",
-                                                    "range": [1, 60]
+                                                    "range": [
+                                                        1,
+                                                        60
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -1099,7 +1114,8 @@
                             }
                         }
                     ],
-                    "title": "Example Input Two"
+                    "title": "Example Input Two",
+                    "disableNewInput": true
                 }
             ],
             "title": "Inputs",
@@ -1107,7 +1123,6 @@
             "table": {
                 "actions": [
                     "edit",
-                    "enable",
                     "delete",
                     "clone"
                 ],
@@ -1186,7 +1201,13 @@
                 {
                     "name": "default"
                 }
-            ]
+            ],
+            "settings": {
+                "error_panel_log_lvl": [
+                    "ERROR",
+                    "CRITICAL"
+                ]
+            }
         }
     },
     "alerts": [
@@ -1310,29 +1331,29 @@
         "schemaVersion": "0.0.3",
         "os-dependentLibraries": [
             {
-              "name": "cryptography",
-              "version": "41.0.5",
-              "platform": "win_amd64",
-              "python_version": "37",
-              "os": "windows",
-              "target": "3rdparty/windows"
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "win_amd64",
+                "python_version": "37",
+                "os": "windows",
+                "target": "3rdparty/windows"
             },
             {
-              "name": "cryptography",
-              "version": "41.0.5",
-              "platform": "macosx_10_12_universal2",
-              "python_version": "37",
-              "os": "darwin",
-              "target": "3rdparty/darwin"
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "macosx_10_12_universal2",
+                "python_version": "37",
+                "os": "darwin",
+                "target": "3rdparty/darwin"
             },
             {
-              "name": "cryptography",
-              "version": "41.0.5",
-              "dependencies": true,
-              "platform": "manylinux2014_x86_64",
-              "python_version": "37",
-              "os": "linux",
-              "target": "3rdparty/linux"
+                "name": "cryptography",
+                "version": "41.0.5",
+                "dependencies": true,
+                "platform": "manylinux2014_x86_64",
+                "python_version": "37",
+                "os": "linux",
+                "target": "3rdparty/linux"
             }
         ]
     }

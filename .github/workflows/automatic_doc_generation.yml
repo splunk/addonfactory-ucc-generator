@@ -8,7 +8,7 @@ on:
 
 jobs:
   generate-docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' }}
     steps:
@@ -44,4 +44,4 @@ jobs:
         if: ${{ env.isPR }}
         run: |
           git add \*.md
-          git diff --staged --exit-code || (git commit -S -m "doc: updated docs regarding generated conf, xml and html files" && git push)
+          git diff --staged --exit-code || (git commit -S -m "docs: updated docs regarding generated conf, xml and html files" && git push)

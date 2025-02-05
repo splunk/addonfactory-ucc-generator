@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, within } from '@testing-library/react';
+import { screen, render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -11,7 +11,7 @@ import {
     thirdModificationField,
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
-import { EntitiesAllowingModifications } from '../BaseFormView/BaseFormTypes';
+import { EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 
 const handleRequestClose = jest.fn();
@@ -55,27 +55,23 @@ const getTextElementForField = (field: string) => {
     return [componentParentElement, componentInput];
 };
 
-const getCheckBoxElementForField = (field: string) => {
-    const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
-    expect(componentParentElement).toBeInTheDocument();
-    const componentInput = within(componentParentElement).getByRole('checkbox');
-
-    return [componentParentElement, componentInput];
-};
-
 beforeEach(() => {
     setUpConfigWithDefaultValue();
     renderModalWithProps(props);
 });
 
 it('render fields with modifications correctly', async () => {
-    expect(() => {
-        getTextElementForField(firstStandardTextField.field);
-        getTextElementForField(secondStandardTextField.field);
-        getTextElementForField(firstModificationField.field);
-        getTextElementForField(secondModificationField.field);
-        getCheckBoxElementForField(thirdModificationField.field);
-    }).not.toThrow();
+    expect(screen.getByRole('textbox', { name: firstStandardTextField.label })).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', { name: secondStandardTextField.label })
+    ).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: firstModificationField.label })).toBeInTheDocument();
+    expect(
+        screen.getByRole('textbox', { name: secondModificationField.label })
+    ).toBeInTheDocument();
+    expect(
+        screen.getByRole('checkbox', { name: thirdModificationField.label })
+    ).toBeInTheDocument();
 });
 
 it('verify modification after text components change', async () => {
@@ -127,18 +123,22 @@ it('verify modification after text components change', async () => {
         expect(parentElement).toHaveTextContent(mods.label);
     };
 
-    expect(componentInput).toBeDisabled();
+    expect(componentInput).toBeVisuallyDisabled();
+
     verifyAllProps(componentParentElement, componentInput, mods1Field1);
 
-    expect(component2Input).toBeDisabled();
+    expect(component2Input).toBeVisuallyDisabled();
+
     verifyAllProps(component2ParentElement, component2Input, mods1Field2);
 
     await userEvent.type(componentMakingModsTextBox1, secondValueToInput);
 
-    expect(componentInput).toBeEnabled();
+    expect(component2Input).toBeVisuallyEnabled();
+
     verifyAllProps(componentParentElement, componentInput, mods2Field1);
 
-    expect(component2Input).toBeEnabled();
+    expect(component2Input).toBeVisuallyEnabled();
+
     verifyAllProps(component2ParentElement, component2Input, mods2Field2);
 });
 

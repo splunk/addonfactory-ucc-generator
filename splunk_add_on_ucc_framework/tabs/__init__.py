@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Any
 
+from typing import Dict, Any, List, Type
+
+from splunk_add_on_ucc_framework.tabs.proxy_tab import ProxyTab
 from splunk_add_on_ucc_framework.tabs.logging_tab import LoggingTab
 from splunk_add_on_ucc_framework.tabs.tab import Tab
 
 
-TAB_TYPES = [
-    LoggingTab,
-]
+TAB_TYPES: List[Type[Tab]] = [LoggingTab, ProxyTab]
 
 
 def resolve_tab(tab_definition: Dict[Any, Any]) -> Tab:

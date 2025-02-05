@@ -20,6 +20,39 @@
       "groupName": "{{manager}}"
     },
     {
+      "description": "Ignore python packages that cannot be updated thanks to 3.7 support",
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchPackageNames": [
+        "importlib-metadata",
+        "pytest",
+        "pytest-cov",
+        "pytest-rerunfailures"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Ignore Python version updates",
+      "matchManagers": ["poetry"],
+      "matchPackageNames": ["python"],
+      "enabled": false
+    },
+    {
+      "description": "Ignore mkdocs and its plugins that drop Python 3.7 support",
+      "matchPackageNames": [
+        "/^mkdocs"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "enabled": false
+    },
+    {
       "matchPackageNames": ["urllib3"],
       "allowedVersions": "<2.0.0"
     },
@@ -30,8 +63,8 @@
       ],
       "matchPackageNames": [
         "@npmcli/git",
-        "@testing-library/react",
         "@testing-library/dom",
+        "@testing-library/react",
         "@types/react",
         "@typescript-eslint/eslint-plugin",
         "@typescript-eslint/parser",
@@ -42,14 +75,17 @@
         "eslint-config-airbnb",
         "eslint-config-prettier",
         "eslint-plugin-prettier",
+        "eslint-plugin-react-hooks",
         "glob-parent",
+        "prettier",
         "react",
         "react-dom",
         "react-is",
-        "prettier",
+        "react-router-dom",
         "string-width",
         "strip-ansi",
         "styled-components",
+        "@types/styled-components",
         "stylelint",
         "undici"
       ],
@@ -68,9 +104,22 @@
     },
     {
       "description": "Ignore NodeJS",
-      "matchPackageNames": ["node"],
+      "matchPackageNames": ["node", "@types/node"],
       "matchManagers": ["npm"],
-      "matchDepTypes": [ "engines" ],
+      "matchDepTypes": [ "engines", "devDependencies" ],
+      "enabled": false
+    },
+    {
+      "description": "Ignore updates for ubuntu in GitHub (ref #1374)",
+      "matchPackageNames": ["ubuntu"],
+      "matchManagers": ["github-actions"],
+      "enabled": false
+    },
+    {
+      "description": "react-router-dom throws not-dismissible warnings",
+      "matchPackageNames": ["react-router-dom"],
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor"],
       "enabled": false
     }
   ]

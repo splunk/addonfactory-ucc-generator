@@ -1,24 +1,9 @@
 import functools
-import json
 from typing import Any, Dict
-from pathlib import Path
 
 import jsonschema
 import pytest
 from jsonschema.exceptions import ValidationError
-
-from splunk_add_on_ucc_framework import __file__ as module_init_path
-
-
-@pytest.fixture
-def schema_path():
-    return Path(module_init_path).parent / "schema" / "schema.json"
-
-
-@pytest.fixture
-def schema_json(schema_path):
-    with schema_path.open() as fp:
-        return json.load(fp)
 
 
 @pytest.fixture
@@ -122,3 +107,46 @@ def test_interval_entity_options(schema_validate, config):
             }
         )
     )
+
+
+def test_rest_handler_without_ui(schema_validate, config):
+    crh = {
+        "endpoint": "some_endpoint",
+        "handlerType": "EAI",
+        "requestParameters": {
+            "create": {
+                "some_param": {"type": "string"},
+                "other_param": {"type": "number"},
+                "other_param_nullable": {
+                    "type": "number",
+                    "nullable": True,
+                },
+            },
+            "list": {
+                "array_param": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
+                "obj_param": {
+                    "type": "object",
+                    "properties": {
+                        "key": {"type": "string"},
+                    },
+                },
+            },
+        },
+        "responseParameters": {
+            "list": {
+                "some_param": {"type": "string"},
+            },
+        },
+    }
+    config.setdefault("options", {})["restHandlers"] = [crh]
+    schema_validate(config)
+
+    crh["registerHandler"] = {
+        "file": "my_handler.py",
+        "actions": ["list", "create", "edit", "remove"],
+    }
+
+    schema_validate(config)

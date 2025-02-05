@@ -20,7 +20,7 @@ export const Base: Story = {
             utilCustomFunctions: {
                 setState: () => {},
                 setErrorFieldMsg: () => {},
-                clearAllErrorMsg: () => {},
+                clearAllErrorMsg: (state) => state,
                 setErrorMsg: () => {},
             },
             handleChange: () => {},
@@ -47,5 +47,39 @@ export const Base: Story = {
         disabled: false,
         dependencyValues: null,
         fileNameToDisplay: 'Previous File',
+    },
+};
+
+export const WithModifications: Story = {
+    args: {
+        ...Base.args,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: 'Enter the URL, for example',
+            required: true,
+            encrypted: false,
+        },
+        modifiedEntitiesData: { required: false, label: 'Modified URL', help: 'Modified help' },
+    },
+};
+
+export const WithModificationsMakeRequired: Story = {
+    args: {
+        ...Base.args,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: 'Enter the URL, for example',
+            required: false,
+            encrypted: false,
+        },
+        modifiedEntitiesData: {
+            required: true,
+            label: 'Modified URL',
+            help: 'Modified help required',
+        },
     },
 };

@@ -92,7 +92,9 @@ fields_logging = [
         required=True,
         encrypted=False,
         default='INFO',
-        validator=None
+        validator=validator.Pattern(
+            regex=r"""^DEBUG|INFO|WARNING|ERROR|CRITICAL$""",
+        )
     )
 ]
 model_logging = RestModel(fields_logging, name='logging')
@@ -175,6 +177,7 @@ endpoint = MultipleModel(
         model_logging, 
         model_custom_abc
     ],
+    need_reload=False,
 )
 
 

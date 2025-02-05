@@ -7,6 +7,7 @@ import React, { Suspense } from 'react';
 import { GlobalBodyStyle, StyledContainer } from '../src/pages/EntryPageStyle';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
 import fontDefinitions from './fontDefinitions';
+import { PageContextProvider } from '../src/context/PageContext';
 
 const TestStylesForConsistentScreenshots = createGlobalStyle`
     ${fontDefinitions}
@@ -33,14 +34,16 @@ export const withSplunkThemeToolbar = <TRenderer extends Renderer>(
         <AnimationToggleProvider enabled={animation}>
             <TestStylesForConsistentScreenshots />
             <SplunkThemeProvider family={family} density={density} colorScheme={colorScheme}>
-                <GlobalBodyStyle />
-                <StyledContainer>
-                    <Router>
-                        <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
-                            {StoryFn()}
-                        </Suspense>
-                    </Router>
-                </StyledContainer>
+                <PageContextProvider platform={undefined}>
+                    <GlobalBodyStyle />
+                    <StyledContainer>
+                        <Router>
+                            <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
+                                {StoryFn()}
+                            </Suspense>
+                        </Router>
+                    </StyledContainer>
+                </PageContextProvider>
             </SplunkThemeProvider>
         </AnimationToggleProvider>
     );

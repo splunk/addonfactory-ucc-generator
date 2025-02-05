@@ -20,13 +20,21 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^(?:-1|\d+(?:\.\d+)?)$""",
+            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""",
         )
     ),
 
     field.RestField(
         'disabled',
         required=False,
+        validator=None
+    ),
+
+    field.RestField(
+        'event_filters',
+        required=False,
+        encrypted=False,
+        default=None,
         validator=None
     )
 

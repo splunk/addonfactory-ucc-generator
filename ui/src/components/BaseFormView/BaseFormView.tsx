@@ -9,7 +9,7 @@ import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { generateEndPointUrl, postRequest } from '../../util/api';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { getBuildDirPath } from '../../util/script';
 
@@ -37,19 +37,19 @@ import {
     UtilControlWrapper,
     ServiceGroup,
     OauthConfiguration,
-    CustomHook,
     AnyEntity,
     OAuthEntity,
     BasicEntity,
     ChangeRecord,
-    CustomHookClass,
     EntitiesAllowingModifications,
-} from './BaseFormTypes';
+} from '../../types/components/BaseFormTypes';
 import {
     getAllFieldsWithModifications,
     getModifiedState,
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
+import { shouldHideForPlatform } from '../../util/pageContext';
+import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -106,7 +106,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     datadict: Record<string, AcceptableFormValueOrNullish>;
 
-    hook?: CustomHook;
+    hook?: CustomHookInstance;
 
     // eslint-disable-next-line camelcase
     state_enabled?: boolean;
@@ -138,8 +138,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
-                ? `${this.props.serviceName}/${encodeURIComponent(this.props.stanzaName)}`
-                : `${this.props.serviceName}`;
+                ? `${encodeURIComponent(this.props.serviceName)}/${encodeURIComponent(
+                      this.props.stanzaName
+                  )}`
+                : `${encodeURIComponent(this.props.serviceName)}`;
 
         this.util = {
             setState: (callback) => {
@@ -194,6 +196,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     : tab.name === props.stanzaName && props.serviceName === 'settings';
 
                 if (flag) {
+                    this.groups = tab.groups;
+                    this.updateGroupEntities();
                     this.entities = tab.entity;
                     this.options = tab.options;
                     if (props.mode !== 'delete') {
@@ -382,6 +386,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
@@ -393,6 +404,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         if (e.field === 'name') {
@@ -404,8 +423,17 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     } else if (props.mode === MODE_CLONE) {
                         tempEntity.value =
                             e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
+
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         temState[e.field] = tempEntity;
@@ -419,6 +447,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         tempEntity.value = e.encrypted ? '' : tempEntity.value;
                         tempEntity.display =
                             typeof e?.options?.display !== 'undefined' ? e.options.display : true;
+
+                        tempEntity.display = shouldHideForPlatform(
+                            e.options?.hideForPlatform,
+                            props.pageContext?.platform
+                        )
+                            ? false
+                            : tempEntity.display;
+
                         tempEntity.error = false;
                         tempEntity.disabled = e?.options?.enable === false;
                         if (e.field === 'name') {
@@ -509,7 +545,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         const stateWithModifications = getModifiedState(
             { data: temState },
             this.props.mode,
-            this.fieldsWithModifications
+            this.fieldsWithModifications,
+            this.props.page
         );
         if (stateWithModifications.shouldUpdateState) {
             temState = { ...stateWithModifications.newState.data };
@@ -823,15 +860,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             body.delete('name');
         }
 
-        axiosCallWrapper({
-            serviceName: this.endpoint,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        postRequest<{ entry: [any] }>({
+            endpointUrl: generateEndPointUrl(this.endpoint),
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: false,
         })
-            .then((response) => {
-                const val = response?.data?.entry[0];
+            .then((data) => {
+                const val = data?.entry[0];
                 if (this.props.mode !== MODE_CONFIG) {
                     const tmpObj: Record<string, Record<string, AcceptableFormValueOrNull>> = {};
 
@@ -936,7 +972,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             const { newState } = getModifiedState(
                 tempState,
                 this.props.mode,
-                this.fieldsWithModifications.filter((entity) => entity.field === field)
+                this.fieldsWithModifications.filter((entity) => entity.field === field),
+                this.props.page
             );
 
             if (this.hookDeferred) {
@@ -972,13 +1009,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             });
             return { ...newFields, errorMsg: msg };
         });
-    };
-
-    // Set error in perticular field
-    setErrorField = (field: string) => {
-        this.setState((previousState) =>
-            update(previousState, { data: { [field]: { error: { $set: true } } } })
-        );
     };
 
     // Clear error message
@@ -1041,7 +1071,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {
-                        const Hook = external.default;
+                        const Hook = external.default as CustomHookConstructor;
                         this.hook = new Hook(
                             globalConfig,
                             this.props.serviceName,
@@ -1057,13 +1087,14 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 // @ts-expect-error should be exported to other js module and imported here
                 __non_webpack_require__(
                     [`app/${this.appName}/js/build/custom/${module}`],
-                    (Hook: CustomHookClass) => {
+                    (Hook: CustomHookConstructor) => {
                         this.hook = new Hook(
                             globalConfig,
                             this.props.serviceName,
                             this.state,
                             this.props.mode,
-                            this.util
+                            this.util,
+                            this.props.groupName
                         );
                         resolve(Hook);
                     }
@@ -1078,7 +1109,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
      * using rest call once oauth code received from child window
      */
     // eslint-disable-next-line consistent-return
-    handleOauthToken = (message: { code: string; error: unknown; state: unknown }) => {
+    handleOauthToken = (message: { code: string; error: unknown; state?: string }) => {
         // Check message for error. If error show error message.
         if (!message || (message && message.error) || message.code === undefined) {
             this.setErrorMsg(ERROR_OCCURRED_TRY_AGAIN);
@@ -1095,12 +1126,16 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             return false;
         }
 
+        const baseUrl = new URL(
+            `https://${this.datadict.endpoint || this.datadict.endpoint_token}`
+        );
+        baseUrl.pathname = this.oauthConf?.accessTokenEndpoint || '';
+        const url = baseUrl.toString();
+
         const code = decodeURIComponent(message.code);
         const data: Record<string, AcceptableFormValueOrNullish> = {
             method: 'POST',
-            url: `https://${this.datadict.endpoint || this.datadict.endpoint_token}${
-                this.oauthConf?.accessTokenEndpoint
-            }`,
+            url,
             grant_type: 'authorization_code',
             client_id: this.datadict.client_id,
             client_secret: this.datadict.client_secret,
@@ -1120,20 +1155,19 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
 
-        const OAuthEndpoint = `${this.appName}_oauth/oauth`;
+        const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
-        axiosCallWrapper({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        postRequest<{ entry: [{ content: any }] }>({
             endpointUrl: OAuthEndpoint,
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: false,
         })
-            .then((response) => {
-                if (response.data.entry[0].content.error === undefined) {
-                    const accessToken = response.data.entry[0].content.access_token;
-                    const instanceUrl = response.data.entry[0].content.instance_url;
-                    const refreshToken = response.data.entry[0].content.refresh_token;
+            .then((responseData) => {
+                if (responseData.entry[0].content.error === undefined) {
+                    const accessToken = responseData.entry[0].content.access_token;
+                    const instanceUrl = responseData.entry[0].content.instance_url;
+                    const refreshToken = responseData.entry[0].content.refresh_token;
                     // TODO refactor those variables
                     this.datadict.instance_url = instanceUrl;
                     this.datadict.refresh_token = refreshToken;
@@ -1141,7 +1175,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     this.isResponse = true;
                     return true;
                 }
-                this.setErrorMsg(response.data.entry[0].content.error);
+                this.setErrorMsg(responseData.entry[0].content.error);
                 this.isError = true;
                 this.isResponse = true;
                 return false;
@@ -1214,6 +1248,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         this.entities?.map((e) => {
                             if (e.field === fieldName) {
                                 const temState = this.state?.data?.[e.field];
+
                                 return (
                                     <ControlWrapper
                                         key={e.field}
@@ -1231,6 +1266,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                         disabled={temState?.disabled || false}
                                         markdownMessage={temState?.markdownMessage}
                                         dependencyValues={temState?.dependencyValues || null}
+                                        page={this.props.page}
+                                        fileNameToDisplay={temState.fileNameToDisplay}
+                                        modifiedEntitiesData={temState.modifiedEntitiesData}
                                     />
                                 );
                             }
@@ -1326,6 +1364,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 dependencyValues={temState.dependencyValues || null}
                                 fileNameToDisplay={temState.fileNameToDisplay}
                                 modifiedEntitiesData={temState.modifiedEntitiesData}
+                                page={this.props.page}
                             />
                         );
                     })}

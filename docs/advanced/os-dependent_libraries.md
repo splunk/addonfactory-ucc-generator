@@ -1,3 +1,5 @@
+# OS-dependent libraries
+
 This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
 To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries** field. This field takes the following attributes:
 
@@ -29,6 +31,31 @@ and your pip command should look like this:<br>
 
 A dot in the platform part indicates that a given distribution supports several platforms.
 In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
+
+Currently supported python versions are "3.7" and "3.9". Syntax without dots ("37" or "39") is also supported.
+
+If there are libraries specified for different python versions, they must have **different target** paths.
+
+```
+            "os-dependentLibraries": [
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "manylinux2014_x86_64",
+                "python_version": "37",
+                "os": "linux",
+                "target": "3rdparty/linux_libs"
+            },
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "dependencies": true,
+                "platform": "manylinux2014_x86_64",
+                "python_version": "3.9",
+                "os": "linux",
+                "target": "3rdparty/linux_lib_py39"
+            },
+```
 
 For more informations, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
 

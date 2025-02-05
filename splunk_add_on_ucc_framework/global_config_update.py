@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ logger = logging.getLogger("ucc_gen")
 
 def _version_tuple(version: str) -> Tuple[str, ...]:
     """
-    convert string into tuple to compare version
+    Convert string into tuple to compare versions.
 
     Args:
-        version_str : raw string
+        version: raw string
     Returns:
-        tuple : version into tupleformat
+        tuple: version into tuple format
     """
     filled = []
     for point in version.split("."):
@@ -123,9 +123,27 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
 
 def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
     """Handle changes in globalConfig file."""
-    current_schema_version = global_config.schema_version
-    version = current_schema_version if current_schema_version else "0.0.0"
-    logger.info(f"Current globalConfig schema version is {current_schema_version}")
+    version = global_config.schema_version or "0.0.0"
+    logger.info(f"Current globalConfig schema version is {version}")
+
+    allowed_versions_of_schema_version = {
+        "0.0.0",
+        "0.0.1",
+        "0.0.2",
+        "0.0.3",
+        "0.0.4",
+        "0.0.5",
+        "0.0.6",
+        "0.0.7",
+        "0.0.8",
+        "0.0.9",
+    }
+
+    if version not in allowed_versions_of_schema_version:
+        logger.warning(
+            "Schema version is not in the allowed versions, setting it to 0.0.0"
+        )
+        version = "0.0.0"
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
@@ -134,6 +152,8 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
         for tab in global_config.tabs:
+            if tab.get("type") in ["loggingTab", "proxyTab"]:
+                continue
             if tab["name"] == "account":
                 conf_entities = tab.get("entity")
 
@@ -228,11 +248,20 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         global_config.dump(global_config.original_path)
         logger.info("Updated globalConfig schema to version 0.0.8")
 
+    if _version_tuple(version) < _version_tuple("0.0.9"):
+        _dump_enable_from_global_config(global_config)
+        global_config.dump(global_config.original_path)
+        logger.info("Updated globalConfig schema to version 0.0.9")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
         global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
     ):
+        if tab.get("type") == "proxyTab":
+            # Collapsing the tab is not required for ProxyTab because we can't be certain
+            # that a particular tab is a Proxy tab, as we can with a Logging tab.
+            continue
         global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
 
     _dump(global_config.content, path, global_config._is_global_config_yaml)
@@ -316,3 +345,42 @@ def _stop_build_on_placeholder_usage(
                     exc_msg % ("input service", service["name"])
                 )
     global_config.update_schema_version("0.0.8")
+
+
+def _dump_enable_from_global_config(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    if global_config.has_inputs():
+        # Fetch the table object from global_config
+        table = global_config.content.get("pages", {}).get("inputs", {}).get("table")
+
+        if table:  # If the table exists
+            actions = table.get("actions", [])
+            if "enable" in actions:
+                logger.warning(
+                    "`enable` attribute found in input's page table action."
+                    + f" Removing 'enable' from actions: {actions}"
+                )
+                actions.remove("enable")
+                table["actions"] = actions  # Update the actions in the global_config
+
+        else:  # If no table present, loop through services in inputs
+            services = (
+                global_config.content.get("pages", {})
+                .get("inputs", {})
+                .get("services", [])
+            )
+            for service in services:
+                service_table = service.get("table", {})
+                actions = service_table.get("actions", [])
+                if "enable" in actions:
+                    logger.warning(
+                        f"`enable` attribute found in service {service.get('name')}'s table action."
+                        + f" Removing 'enable' from actions in service: {actions}"
+                    )
+                    actions.remove("enable")
+                    service_table[
+                        "actions"
+                    ] = actions  # Update the actions in the service's table
+
+    global_config.update_schema_version("0.0.9")

@@ -24,13 +24,6 @@ export function getMetaInfo() {
     };
 }
 
-export function generateEndPointUrl(name: string) {
-    if (!unifiedConfigs) {
-        throw new Error('No GlobalConfig set');
-    }
-    return `${unifiedConfigs.meta.restRoot}_${name}`;
-}
-
 export function setUnifiedConfig(unifiedConfig: GlobalConfig) {
     const result = GlobalConfigSchema.safeParse(unifiedConfig);
     if (!result.success) {
@@ -95,8 +88,10 @@ export function filterByDenyList(fields: { value: string; label: string }[], den
     return fields.filter((item) => !denyRegex.test(item.value));
 }
 
+export type FilterResponseParams = { content?: Record<string, string>; name: string }[];
+
 export function filterResponse(
-    items: { content?: Record<string, string>; name: string }[],
+    items: FilterResponseParams,
     labelField?: string,
     valueField?: string,
     allowList?: string,

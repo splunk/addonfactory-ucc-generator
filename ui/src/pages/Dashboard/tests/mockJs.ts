@@ -5,6 +5,7 @@ import {
     MOCK_ERROR_TAB_DEFINITION,
     CURRENT_CONTEXT_RESPONSE,
     SEARCH_JOB_RESULT,
+    MOCK_DS_MODAL_DEFINITION,
 } from './mockData';
 
 export const DASHBOARD_JSON_MOCKS = [
@@ -22,6 +23,9 @@ export const DASHBOARD_JSON_MOCKS = [
     ),
     http.get('/custom/resources_tab_definition.json', () =>
         HttpResponse.json(MOCK_ERROR_TAB_DEFINITION)
+    ),
+    http.get('/custom/data_ingestion_modal_definition.json', () =>
+        HttpResponse.json(MOCK_DS_MODAL_DEFINITION)
     ),
     http.post('/services/search/jobs', () =>
         HttpResponse.json(

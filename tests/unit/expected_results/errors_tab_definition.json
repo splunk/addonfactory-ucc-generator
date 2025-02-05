@@ -45,7 +45,7 @@
       },
       "title": "Errors count",
       "dataSources": {
-        "primary": "errors_tab_errors_count_ds"
+        "primary": "errors_tab_errors_count_ds_chain"
       }
     },
     "errors_tab_errors_list_viz": {
@@ -80,7 +80,20 @@
     "errors_tab_errors_count_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* log_level=ERROR | timechart count as Errors by exc_l",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR, CRITICAL) | timechart count as Errors by exc_l ",
+        "queryParameters": {
+          "earliest": "$errors_tab_time.earliest$",
+          "latest": "$errors_tab_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "error_count_tab"
+    },
+    "errors_tab_errors_count_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "errors_tab_errors_count_ds",
+        "query": "| append [ gentimes increment=5m [ makeresults | eval start=strftime( if(\"$errors_tab_time.earliest$\"=\"now\",now(),if(match(\"$errors_tab_time.earliest$\",\"^\\d+-\\d+-\\d+(T?\\d+:\\d+:\\d+(\\.\\d{3}Z)?)$\"),strptime(\"$errors_tab_time.earliest$\", \"%Y-%m-%dT%H:%M:%S.%N\"),relative_time(now(), \"$errors_tab_time.earliest$\"))), \"%m/%d/%Y:%T\")| eval end=strftime(if(\"$errors_tab_time.latest$\"=\"now\",now(),if(match(\"$errors_tab_time.latest$\",\"^\\d+-\\d+-\\d+(T?\\d+:\\d+:\\d+(\\.\\d{3}Z)?)$\"),strptime(\"$errors_tab_time.latest$\", \"%Y-%m-%dT%H:%M:%S.%N\") ,relative_time(now(), \"$errors_tab_time.latest$\"))), \"%m/%d/%Y:%T\")| return start end] | eval Errors = 0 | fields - endhuman starthuman starttime | rename endtime as _time | head ($error_count_tab:job.resultCount$==0)]",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"
@@ -90,7 +103,7 @@
     "errors_tab_errors_list_ds": {
       "type": "ds.search",
       "options": {
-        "query": "index=_internal source=*splunk_ta_uccexample* log_level=ERROR exc_l IN ($error_types$)",
+        "query": "index=_internal source=*splunk_ta_uccexample* log_level IN (ERROR, CRITICAL) exc_l IN ($error_types$)",
         "queryParameters": {
           "earliest": "$errors_tab_time.earliest$",
           "latest": "$errors_tab_time.latest$"

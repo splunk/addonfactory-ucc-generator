@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,6 +30,16 @@ from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
+
+# The entity types that do not allow to add validators (so the warning will not appear)
+ENTITY_TYPES_WITHOUT_VALIDATORS = {
+    "radio",
+    "index",
+    "helpLink",
+    "checkbox",
+    "interval",
+    "custom",
+}
 
 
 class GlobalConfigValidator:
@@ -214,6 +224,14 @@ class GlobalConfigValidator:
         Validates entity validators.
         """
         validators = entity.get("validators", [])
+
+        if should_warn_on_empty_validators(entity):
+            logger.warning(
+                f"The field '{entity.get('field')}' does not have a validator specified. It's recommended "
+                "to add a validator to ensure the security and integrity of the input data. For more "
+                "information, please refer to the documentation."
+            )
+
         for validator in validators:
             if validator["type"] == "string":
                 self._validate_string_validator(entity["field"], validator)
@@ -434,39 +452,6 @@ class GlobalConfigValidator:
                     )
                 else:
                     fields.append(entity.get("field"))
-                entity_type = entity.get("type")
-                if entity_type in ("radio", "singleSelect"):
-                    if not entity.get("options"):
-                        raise GlobalConfigValidatorException(
-                            f"{entity_type} type must have options parameter"
-                        )
-                elif (
-                    entity.get("options") and entity_type != "singleSelectSplunkSearch"
-                ):
-                    raise GlobalConfigValidatorException(
-                        f"{entity_type} type must not contain options parameter"
-                    )
-                if entity_type in ("singleSelectSplunkSearch",):
-                    if not all(
-                        [
-                            entity.get("search"),
-                            entity.get("valueField"),
-                            entity.get("labelField"),
-                        ]
-                    ):
-                        raise GlobalConfigValidatorException(
-                            f"{entity_type} type must have search, valueLabel and valueField parameters"
-                        )
-                elif any(
-                    [
-                        entity.get("search"),
-                        entity.get("valueField"),
-                        entity.get("labelField"),
-                    ]
-                ):
-                    raise GlobalConfigValidatorException(
-                        f"{entity_type} type must not contain search, valueField or labelField parameter"
-                    )
 
     def _validate_panels(self) -> None:
         """
@@ -489,7 +474,10 @@ class GlobalConfigValidator:
         services = inputs["services"]
         for service in services:
             for entity in service["entity"]:
-                if entity["type"] == "checkboxGroup":
+                if (
+                    entity["type"] == "checkboxGroup"
+                    or entity["type"] == "checkboxTree"
+                ):
                     row_field_names = []
                     for row in entity["options"]["rows"]:
                         if row["field"] in row_field_names:
@@ -545,7 +533,7 @@ class GlobalConfigValidator:
                             f"Service {service['name']} uses group field {group_field} which is not defined in entity"
                         )
 
-    def _is_circular(
+    def _is_circular_modification(
         self,
         mods: List[Any],
         visited: Dict[str, str],
@@ -566,61 +554,73 @@ class GlobalConfigValidator:
             # no more dependent modification fields
             visited[current_field] = DEAD_END
             return visited
-        else:
-            for influenced_field in current_field_mods["influenced_fields"]:
-                if influenced_field not in all_entity_fields:
-                    raise GlobalConfigValidatorException(
-                        f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
-                    )
-                if influenced_field == current_field:
-                    raise GlobalConfigValidatorException(
-                        f"""Field '{current_field}' tries to modify itself"""
-                    )
+
+        if current_field in current_field_mods["influenced_fields_value_change"]:
+            # field can modify itself except "value" property
+            raise GlobalConfigValidatorException(
+                f"""Field '{current_field}' tries to modify itself value"""
+            )
+
+        for influenced_field in current_field_mods["influenced_fields"]:
+            if influenced_field not in all_entity_fields:
+                raise GlobalConfigValidatorException(
+                    f"""Modification in field '{current_field}' for not existing field '{influenced_field}'"""
+                )
+
+            if influenced_field in current_field_mods["influenced_fields_value_change"]:
                 if visited[influenced_field] == VISITING:
                     raise GlobalConfigValidatorException(
                         f"""Circular modifications for field '{influenced_field}' in field '{current_field}'"""
                     )
-                else:
-                    visited = self._is_circular(
-                        mods, visited, all_entity_fields, influenced_field
-                    )
+                # check next influenced by value change field
+                visited = self._is_circular_modification(
+                    mods, visited, all_entity_fields, influenced_field
+                )
+
         # All dependent modifications fields are dead_end
         visited[current_field] = DEAD_END
         return visited
 
-    def _check_if_circular(
+    def _check_if_circular_modification(
         self,
         all_entity_fields: List[Any],
         fields_with_mods: List[Any],
         modifications: List[Any],
     ) -> None:
         visited = {field: "not_visited" for field in all_entity_fields}
-
         for start_field in fields_with_mods:
             # DFS algorithm for all fields with modifications
-            visited = self._is_circular(
+            visited = self._is_circular_modification(
                 modifications, visited, all_entity_fields, start_field
             )
 
     @staticmethod
     def _get_mods_data_for_single_entity(
-        fields_with_mods: List[Any],
-        all_modifications: List[Any],
         entity: Dict[str, Any],
     ) -> List[Any]:
         """
-        Add modification entity data to lists and returns them
+        Get modification entity data as lists
         """
+        entity_modifications = []
         if "modifyFieldsOnValue" in entity:
+            influenced_fields_value_change = set()
             influenced_fields = set()
-            fields_with_mods.append(entity["field"])
             for mods in entity["modifyFieldsOnValue"]:
                 for mod in mods["fieldsToModify"]:
                     influenced_fields.add(mod["fieldId"])
-            all_modifications.append(
-                {"fieldId": entity["field"], "influenced_fields": influenced_fields}
+
+                    if (
+                        mod.get("value") is not None
+                    ):  # circular deps are not a problem if not about value
+                        influenced_fields_value_change.add(mod["fieldId"])
+            entity_modifications.append(
+                {
+                    "fieldId": entity["field"],
+                    "influenced_fields": influenced_fields,
+                    "influenced_fields_value_change": influenced_fields_value_change,
+                }
             )
-        return [fields_with_mods, all_modifications]
+        return entity_modifications
 
     @staticmethod
     def _get_all_entities(
@@ -653,10 +653,12 @@ class GlobalConfigValidator:
 
         entities = self._get_all_entities(collections)
         for entity in entities:
-            self._get_mods_data_for_single_entity(
-                fields_with_mods, all_modifications, entity
-            )
             all_fields.append(entity["field"])
+
+            if "modifyFieldsOnValue" in entity:
+                fields_with_mods.append(entity["field"])
+                entity_mods = self._get_mods_data_for_single_entity(entity)
+                all_modifications.extend(entity_mods)
 
         return [fields_with_mods, all_modifications, all_fields]
 
@@ -679,7 +681,7 @@ class GlobalConfigValidator:
                 all_fields_config,
             ) = self._get_all_modification_data(tabs)
 
-            self._check_if_circular(
+            self._check_if_circular_modification(
                 all_fields_config, fields_with_mods_config, all_modifications_config
             )
 
@@ -693,7 +695,7 @@ class GlobalConfigValidator:
                 all_fields_inputs,
             ) = self._get_all_modification_data(services)
 
-            self._check_if_circular(
+            self._check_if_circular_modification(
                 all_fields_inputs, fields_with_mods_inputs, all_modifications_inputs
             )
 
@@ -724,3 +726,40 @@ class GlobalConfigValidator:
         self._validate_groups()
         self._validate_field_modifications()
         self._validate_meta_default_view()
+
+
+def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
+    entity_type = entity.get("type")
+
+    if entity_type in ENTITY_TYPES_WITHOUT_VALIDATORS:
+        return False
+
+    # special cases
+    if entity_type == "oauth":
+        return _should_warn_on_empty_validators_oauth(entity)
+
+    elif entity_type == "checkboxGroup":
+        return _should_warn_on_empty_validators_checkbox_group(entity)
+
+    return "validators" not in entity
+
+
+def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> bool:
+    for row in entity.get("options", {}).get("rows", []):
+        row_validators = row.get("input", {}).get("validators")
+
+        if not row_validators:
+            return True
+
+    return "validators" not in entity
+
+
+def _should_warn_on_empty_validators_oauth(entity: Dict[str, Any]) -> bool:
+    options = entity.get("options", {})
+
+    for auth_type in ("basic", "oauth"):
+        for oauth_field in options.get(auth_type, []):
+            if "validators" not in oauth_field:
+                return True
+
+    return False

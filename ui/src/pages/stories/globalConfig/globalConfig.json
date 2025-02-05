@@ -548,7 +548,7 @@
             },
             {
               "type": "checkbox",
-              "label": "Reverse DNS resolution",
+              "label": "DNS resolution",
               "field": "proxy_rdns"
             }
           ],
@@ -1348,7 +1348,7 @@
         ]
       },
       "table": {
-        "actions": ["edit", "enable", "delete","search", "clone"],
+        "actions": ["edit", "delete","search", "clone"],
         "header": [
           {
             "label": "Name",

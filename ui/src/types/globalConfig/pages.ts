@@ -20,7 +20,7 @@ export const TableSchema = z.object({
         })
     ),
     customRow: z.record(z.any()).optional(),
-    actions: z.array(z.enum(['edit', 'delete', 'clone', 'enable', 'search'])),
+    actions: z.array(z.enum(['edit', 'delete', 'clone', 'search'])),
 });
 
 // TODO add "required": ["entity", "name", "title"] or required": ["customTab", "name", "title"]
@@ -44,6 +44,21 @@ const WarningSchema = z
     })
     .optional();
 
+const GroupsSchema = z
+    .array(
+        z.object({
+            options: z
+                .object({
+                    isExpandable: z.boolean().optional(),
+                    expand: z.boolean().optional(),
+                })
+                .optional(),
+            label: z.string(),
+            fields: z.array(z.string()),
+        })
+    )
+    .optional();
+
 export const TabSchema = z.object({
     entity: z.array(AnyOfEntity).optional(),
     name: z.string(),
@@ -60,22 +75,9 @@ export const TabSchema = z.object({
     restHandlerClass: z.string().optional(),
     customTab: z.record(z.any()).optional(),
     warning: WarningSchema,
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    groups: GroupsSchema,
 });
-
-const GroupsSchema = z
-    .array(
-        z.object({
-            options: z
-                .object({
-                    isExpandable: z.boolean().optional(),
-                    expand: z.boolean().optional(),
-                })
-                .optional(),
-            label: z.string(),
-            fields: z.array(z.string()),
-        })
-    )
-    .optional();
 
 export const TableLessServiceSchema = z.object({
     name: z.string(),
@@ -92,11 +94,16 @@ export const TableLessServiceSchema = z.object({
     restHandlerClass: z.string().optional(),
     warning: WarningSchema,
     inputHelperModule: z.string().optional(),
+    disableNewInput: z.boolean().optional(),
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
+
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
     description: z.string().optional(),
     table: TableSchema,
+    useInputToggleConfirmation: z.boolean().optional(),
 });
+
 export const InputsPageRegular = z
     .object({
         title: z.string(),
@@ -146,6 +153,7 @@ export const InputsPageTableSchema = z
         services: z.array(TableLessServiceSchema.strict()),
         hideFieldId: z.string().optional(),
         readonlyFieldId: z.string().optional(),
+        useInputToggleConfirmation: z.boolean().optional(),
     })
     .strict();
 
@@ -168,6 +176,8 @@ export const pages = z.object({
         })
         .optional(),
 });
+
+export type Platforms = 'enterprise' | 'cloud' | undefined;
 
 // Define the types based on the Zod schemas
 export type InputsPage = z.infer<typeof InputsPageSchema>;

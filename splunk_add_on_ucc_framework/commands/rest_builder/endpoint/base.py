@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ class RestEntityBuilder:
 fields{name_rh} = [
 {fields}
 ]
-model{name_rh} = RestModel(fields{name_rh}, name={name})
+model{name_rh} = RestModel(fields{name_rh}, name={name}{special_fields_arg})
 """
     _disabled_field_template = """
 field.RestField(
@@ -45,12 +45,25 @@ field.RestField(
     validator=None
 )
 """
+    _rh_special_fields_template = """
+special_fields = [
+{special_fields}
+]
+"""
 
     def __init__(
-        self, name: Optional[str], fields: List["RestFieldBuilder"], **kwargs: Any
+        self,
+        name: Optional[str],
+        fields: List["RestFieldBuilder"],
+        special_fields: Optional[List["RestFieldBuilder"]] = None,
+        **kwargs: Any,
     ) -> None:
         self._name = name
         self._fields = fields
+        self._special_fields = special_fields if special_fields else []
+        self._special_fields_arg = (
+            ", special_fields=special_fields" if special_fields else ""
+        )
         self._conf_name = kwargs.get("conf_name")
 
     @property
@@ -78,10 +91,10 @@ field.RestField(
         return "\n".join(lines)
 
     def generate_rh(self) -> str:
-        fields = []
-        for field in self._fields:
-            field_line = field.generate_rh()
-            fields.append(field_line)
+        fields = [field.generate_rh() for field in self._fields]
+        special_fields = [
+            special_field.generate_rh() for special_field in self._special_fields
+        ]
         # add disabled field for data input
         entity_builder = self.__class__.__name__
         if (
@@ -91,15 +104,26 @@ field.RestField(
         ):
             fields.append(self._disabled_field_template)
         fields_lines = ", \n".join(fields)
+        if special_fields:
+            special_fields_lines = ", \n".join(special_fields)
+            template = self._rh_special_fields_template + self._rh_template
+            return template.format(
+                special_fields=indent(special_fields_lines),
+                fields=indent(fields_lines),
+                name_rh=self.name_rh,
+                name=quote_string(self._name),
+                special_fields_arg=self._special_fields_arg,
+            )
         return self._rh_template.format(
             fields=indent(fields_lines),
             name_rh=self.name_rh,
             name=quote_string(self._name),
+            special_fields_arg=self._special_fields_arg,
         )
 
 
 class RestEndpointBuilder:
-    def __init__(self, name: Optional[str], namespace: str, **kwargs: str):
+    def __init__(self, name: Optional[str], namespace: str, **kwargs: Any):
         self._name = name
         self._namespace = namespace
         self._entities: List[RestEntityBuilder] = []
@@ -120,6 +144,7 @@ class RestEndpointBuilder:
             self._rest_handler_name = f"{self._namespace}_rh_{self._name}"
         self._rest_handler_module = kwargs.get("rest_handler_module")
         self._rest_handler_class = kwargs.get("rest_handler_class")
+        self._need_reload = kwargs.get("need_reload", False)
 
     @property
     def name(self) -> str:
@@ -148,6 +173,10 @@ class RestEndpointBuilder:
     @property
     def entities(self) -> List[RestEntityBuilder]:
         return self._entities
+
+    @property
+    def need_reload(self) -> bool:
+        return self._need_reload
 
     def add_entity(self, entity: RestEntityBuilder) -> None:
         self._entities.append(entity)

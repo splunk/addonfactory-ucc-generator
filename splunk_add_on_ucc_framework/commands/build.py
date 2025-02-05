@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -176,6 +176,11 @@ def _get_ignore_list(
     if not os.path.exists(ucc_ignore_path):
         return []
     else:
+        logger.warning(
+            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
+            "To achieve the similar functionality use additional_packaging.py."
+            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+        )
         with open(ucc_ignore_path) as ignore_file:
             ignore_list = ignore_file.readlines()
         ignore_list = [
@@ -410,6 +415,7 @@ def generate(
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     ui_source_map: bool = False,
+    pip_custom_flag: Optional[str] = None,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -435,13 +441,12 @@ def generate(
     app_manifest = _get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
-    ui_available = False
 
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
-        ui_available = True
         logger.info(f"Using globalConfig file located @ {gc_path}")
         global_config = global_config_lib.GlobalConfig(gc_path)
+        global_config.cleanup_unwanted_params()
         # handle the update of globalConfig before validating
         global_config_update.handle_global_config_update(global_config)
         try:
@@ -454,12 +459,18 @@ def generate(
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
-        global_config.add_ucc_version(__version__)
         global_config.dump(global_config.original_path)
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
+        global_config.add_ucc_version(__version__)
         global_config.expand()
+        if ta_name != global_config.product:
+            logger.error(
+                "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
+                "please unify them to build the add-on."
+            )
+            sys.exit(1)
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
@@ -490,6 +501,8 @@ def generate(
                 os_libraries=global_config.os_libraries,
                 pip_version=pip_version,
                 pip_legacy_resolver=pip_legacy_resolver,
+                pip_custom_flag=pip_custom_flag,
+                includes_oauth=global_config.has_oauth(),
             )
         except SplunktaucclibNotFound as e:
             logger.error(str(e))
@@ -506,7 +519,7 @@ def generate(
                 addon_name=ta_name,
                 app_manifest=app_manifest,
                 addon_version=addon_version,
-                has_ui=ui_available,
+                has_ui=global_config.meta.get("isVisible", True),
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -557,6 +570,7 @@ def generate(
             python_binary_name,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
+            pip_custom_flag=pip_custom_flag,
         )
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
@@ -570,6 +584,7 @@ def generate(
     removed_list = _remove_listed_files(ignore_list)
     if removed_list:
         logger.info("Removed:\n{}".format("\n".join(removed_list)))
+    utils.check_author_name(source, app_manifest)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
@@ -600,6 +615,9 @@ def generate(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
 
+    ui_available = False
+    if global_config:
+        ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(
         global_config=global_config,
@@ -623,14 +641,25 @@ def generate(
     ):
         sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
         try:
+            from additional_packaging import cleanup_output_files
+
+            cleanup_output_files(output_directory, ta_name)
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `cleanup_output_files`. Skipping clean-up."
+            )
+
+        try:
             from additional_packaging import additional_packaging
 
             additional_packaging(ta_name)
-        except ImportError as e:
-            logger.exception(
-                "additional_packaging.py is present but not importable.", e
+        except ImportError:
+            logger.info(
+                "additional_packaging.py is present but does not have `additional_packaging`. "
+                "Skipping additional packaging."
             )
-            raise e
+        # clean-up sys.path manipulation
+        sys.path.pop(0)
 
     if global_config:
         logger.info("Generating OpenAPI file")

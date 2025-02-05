@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,14 @@ from typing import Optional, Dict, Any
 
 from splunk_add_on_ucc_framework.entity.entity import Entity
 
+CRON_REGEX = (
+    r"^("
+    r"(?:-1|\d+(?:\.\d+)?)"  # Non-negative number or -1
+    r"|"
+    r"(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+)"  # CRON interval
+    r")$"
+)
+
 
 class IntervalEntity(Entity):
     def short_form(self) -> Dict[str, Any]:
@@ -30,8 +38,8 @@ class IntervalEntity(Entity):
             "validators": [
                 {
                     "type": "regex",
-                    "errorMsg": f"{self['label']} must be either a non-negative number or -1.",
-                    "pattern": r"^(?:-1|\d+(?:\.\d+)?)$",
+                    "errorMsg": f"{self['label']} must be either a non-negative number, CRON interval or -1.",
+                    "pattern": CRON_REGEX,
                 }
             ],
         }

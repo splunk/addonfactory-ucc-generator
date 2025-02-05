@@ -280,7 +280,7 @@
                         },
                         {
                             "type": "checkbox",
-                            "label": "Reverse DNS resolution",
+                            "label": "DNS resolution",
                             "field": "proxy_rdns"
                         }
                     ],
@@ -387,43 +387,381 @@
                     "name": "example_input_one",
                     "description": "This is a description for Input One",
                     "title": "Example Input",
-                    "entity": [],
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
-                        "header": [],
-                        "moreInfo": []
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ]
                     },
                     "warning": {
-                        "create": "Warning text for create mode",
-                        "edit": "Warning text for edit mode",
-                        "clone": "Warning text for clone mode",
-                        "config": "Warning text for config mode"
+                        "create": {
+                            "message": "Warning text for create mode"
+                        },
+                        "edit": {
+                            "message": "Warning text for edit mode"
+                        },
+                        "clone": {
+                            "message": "Warning text for clone mode"
+                        },
+                        "config": {
+                            "message": "Warning text for config mode"
+                        }
                     }
                 },
                 {
                     "name": "example_input_two",
                     "description": "This is a description for Input Two",
                     "title": "Example Input Two",
-                    "entity": [],
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        },
+                        {
+                            "type": "checkboxTree",
+                            "label": "Event Filters",
+                            "field": "event_filters",
+                            "required": true,
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "Transactions",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "slow_request",
+                                            "transaction_stall"
+                                        ]
+                                    },
+                                    {
+                                        "label": "others",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "custom_events",
+                                            "cluster_events",
+                                            "network_events"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "code_problems",
+                                        "checkbox": {
+                                            "label": "Code Problems",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "slow_request",
+                                        "checkbox": {
+                                            "label": "Slow Request",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "transaction_stall",
+                                        "checkbox": {
+                                            "label": "Transactions Stall",
+                                            "defaultValue": false
+                                        }
+                                    },
+                                    {
+                                        "field": "custom_events",
+                                        "checkbox": {
+                                            "label": "Custom Events",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "cluster_events",
+                                        "checkbox": {
+                                            "label": "Cluster Events"
+                                        }
+                                    },
+                                    {
+                                        "field": "network_events",
+                                        "checkbox": {
+                                            "label": "Network Events"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
                     "table": {
                         "actions": [
                             "edit",
-                            "enable",
                             "delete",
                             "clone"
                         ],
-                        "header": [],
-                        "moreInfo": [],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
                         "customRow": {
                             "type": "external",
                             "src": "custom_row"
                         }
-                    }
+                    },
+                    "useInputToggleConfirmation": true
+                },
+                {
+                    "name": "example_input_three",
+                    "description": "Input hidden for cloud",
+                    "title": "Example Input Three Hidden Cloud",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "customRow": {
+                            "type": "external",
+                            "src": "custom_row"
+                        }
+                    },
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "example_input_four",
+                    "description": "Input hidden for enterprise",
+                    "title": "Example Input Four Hidden Enterprise",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "customRow": {
+                            "type": "external",
+                            "src": "custom_row"
+                        }
+                    },
+                    "hideForPlatform": "enterprise"
                 }
             ]
         }
@@ -431,9 +769,8 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.47.0Ra2b585f01",
+        "version": "5.57.0+f11804ebf",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.7",
-        "_uccVersion": "5.47.0"
+        "schemaVersion": "0.0.9"
     }
 }

@@ -14,7 +14,7 @@ pip-wheel-metadata/UNKNOWN.dist-info/top_level.txt
 pip-wheel-metadata/UNKNOWN.dist-info/METADATA
 .vscode/settings.json
 .DS_Store
-.venv
+.venv*
 output
 # The following files should never be checked into git but can not be in the
 # ignore file due to poetry issues
@@ -38,9 +38,10 @@ site/
 assets/
 Splunk_TA_Dynatrace/*
 Splunk_TA_Dynatrace_ucc/*
-demo_addon_for_splunk/
-demo_addon_for_splunk_already_exists/
+demo_addon_for_splunk*/
+addon_name/
 init_addon_for_ucc_package/
+demo_addon_for_splunk/
 
 # UI build
 # ignore everything except redirect_page.js

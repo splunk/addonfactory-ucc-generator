@@ -292,7 +292,7 @@
                         },
                         {
                             "type": "checkbox",
-                            "label": "Reverse DNS resolution",
+                            "label": "DNS resolution",
                             "field": "proxy_rdns"
                         }
                     ],
@@ -853,7 +853,6 @@
             "table": {
                 "actions": [
                     "edit",
-                    "enable",
                     "delete",
                     "clone"
                 ],
@@ -1032,7 +1031,7 @@
         "apiVersion": "3.2.0",
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.5.8R5fd76615",
+        "version": "5.5.8+5fd76615",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.2"
     }

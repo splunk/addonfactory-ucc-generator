@@ -113,6 +113,27 @@ except Exception as e:
     log.log_exception(logger, e, "Other")
 ```
 
+By default, the error section displays events logged with the ERROR level, but since version **5.50** UCC allows the user to define what level of logs should be displayed in this section. There are two levels to choose from:
+
+* ERROR
+* CRITICAL
+
+```json
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "default"
+                }
+            ],
+            "settings": {
+                "error_panel_log_lvl": [
+                    "ERROR",
+                    "CRITICAL"
+                ]
+            }
+        }
+```
+
 ## Configuration
 
 To be able to add a monitoring dashboard page to an existing add-on, you need to adjust your
@@ -414,3 +435,7 @@ e.g. of globalConfig.json:
 
 the above configuration will create the following filter query:
 `...source=*license_usage.log type=Usage (st IN ("*addon123*","my_custom_condition*"))...`
+
+> Note:
+
+> * In the Data Ingestion table, the first column displays the `View by` options list. When you click on any row in this column, a modal opens, showing detailed information such as `Data volume` and the `Number of events` over time, visualized in charts. The modal allows you to adjust the options via a dropdown to view data for different View by options. This enables dynamic exploration of data trends for various selected inputs.

@@ -3,30 +3,22 @@ import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
-import { AnyEntity, UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
+import { AnyEntity, UtilControlWrapper } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
 
-const CustomElement = styled.div``;
-
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
-    max-width: 100%;
-
+    // label width + control width
+    width: calc(260px + 320px);
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
     }
-
-    > * {
-        &:nth-child(3) {
-            width: 320px;
-        }
-    }
 `;
 
-interface ControlWrapperProps {
+export interface ControlWrapperProps {
     mode: Mode;
     utilityFuncts: UtilControlWrapper;
     value: AcceptableFormValueOrNullish;
@@ -50,6 +42,7 @@ interface ControlWrapperProps {
         label?: string;
         required?: boolean;
     };
+    page?: string;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -71,7 +64,6 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         const { text, link, color, markdownType, token, linkText } =
             this.props.markdownMessage || {};
         let rowView;
-        // console.log('render custom component', this.props);
 
         if (this.props?.entity?.type === 'custom') {
             const data = {
@@ -108,6 +100,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                           mode: this.props.mode,
                           ...this?.props?.entity,
                           ...this.props?.modifiedEntitiesData,
+                          page: this.props.page,
                       }
                   )
                 : `No View Found for ${this?.props?.entity?.type} type`;
@@ -127,12 +120,17 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             </>
         );
 
-        const isFieldRequired = // modifiedEntitiesData takes precedence over entity
-            this.props?.modifiedEntitiesData?.required || this.props.entity?.required === undefined
-                ? 'oauth_field' in (this.props.entity || {}) // if required is undefined use true for oauth fields and false for others
-                : this.props.entity?.required; // if required present use required
-        const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
+        const isRequiredModified =
+            typeof this.props?.modifiedEntitiesData?.required === 'boolean'
+                ? this.props?.modifiedEntitiesData?.required
+                : this.props.entity?.required;
 
+        const isFieldRequired =
+            isRequiredModified === undefined // // if oauth_field exists field required by default
+                ? 'oauth_field' in (this.props.entity || {}) // if oauth_field does not exists not required by default
+                : isRequiredModified;
+
+        const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
         return (
             this.props.display && (
                 <ControlGroupWrapper
@@ -146,7 +144,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     required={isFieldRequired}
                     label={label}
                 >
-                    <CustomElement>{rowView}</CustomElement>
+                    {rowView}
                 </ControlGroupWrapper>
             )
         );

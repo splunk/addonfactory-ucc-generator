@@ -26,6 +26,21 @@ module.exports = {
         // https://typescript-eslint.io/rules/no-use-before-define/#how-to-use
         'no-use-before-define': 'off',
         '@typescript-eslint/no-use-before-define': ['error', { variables: false }],
+        'jest/expect-expect': 'error',
+        'import/no-extraneous-dependencies': [
+            'error',
+            {
+                devDependencies: [
+                    '**/stories/**', // storybook stories
+                    '**/tests/**',
+                    '**/mocks/**',
+                    '**/*{.,_}{test,spec}.{ts,tsx}', // tests where the extension or filename suffix denotes that it is a test
+                ],
+                optionalDependencies: false,
+            },
+        ],
+        'react/jsx-one-expression-per-line': 'off', // This rule is not compatible with prettier
+        'react/jsx-curly-newline': 'off', // This rule is not compatible with prettier
     },
     root: true,
 };

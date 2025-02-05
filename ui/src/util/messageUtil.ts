@@ -2,6 +2,8 @@ import * as __ from 'lodash';
 import { _ } from '@splunk/ui-utils/i18n';
 import messageDict from '../constants/messageDict';
 
+import { ResponseError } from './ResponseError';
+
 /**
  * @param code  a int value.
  * @param msg arguments to format the message.
@@ -49,15 +51,26 @@ export const tryTrimErrorMessage = (msg: string) => {
     return msg;
 };
 
-export const parseErrorMsg = (err?: {
-    response?: { data?: { messages?: { text?: string }[] } };
-}) => {
+export const parseErrorMsg = (data?: unknown) => {
+    if (data instanceof ResponseError) {
+        return data.message;
+    }
     try {
-        const msg = err?.response?.data?.messages?.[0]?.text;
-        if (!msg) {
-            return messageDict.unknown;
+        if (
+            data &&
+            typeof data === 'object' &&
+            'messages' in data &&
+            Array.isArray(data.messages) &&
+            data.messages.length > 0 &&
+            'text' in data.messages[0]
+        ) {
+            const msg = data.messages[0].text;
+            if (!msg) {
+                return messageDict.unknown;
+            }
+            return tryTrimErrorMessage(msg);
         }
-        return tryTrimErrorMessage(msg);
+        return messageDict.unknown;
     } catch (e) {
         return _('Error in processing the request');
     }

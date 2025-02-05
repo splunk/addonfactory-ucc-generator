@@ -1,7 +1,8 @@
-# splunk-add-on-ucc-framework
+# UCC
 
 ![PyPI](https://img.shields.io/pypi/v/splunk-add-on-ucc-framework)
 ![Python](https://img.shields.io/pypi/pyversions/splunk-add-on-ucc-framework.svg)
+![PyPI monthly downloads](https://img.shields.io/pypi/dm/splunk-add-on-ucc-framework)
 
 ## What is UCC?
 

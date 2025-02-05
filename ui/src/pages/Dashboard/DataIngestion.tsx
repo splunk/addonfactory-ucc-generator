@@ -1,18 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
 import Message from '@splunk/react-ui/Message';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';
-
 import { debounce } from 'lodash';
+import TabLayout from '@splunk/react-ui/TabLayout';
+
 import {
     createNewQueryBasedOnSearchAndHideTraffic,
     getActionButtons,
     makeVisualAdjustmentsOnDataIngestionPage,
     addDescriptionToExpandedViewByOptions,
 } from './utils';
+import { DataIngestionModal } from './DataIngestionModal';
+import { DashboardModal } from './DashboardModal';
+import { FEATURE_FLAGS } from './consts';
 
 const VIEW_BY_INFO_MAP: Record<string, string> = {
     Input: 'Volume metrics are not available when the Input view is selected.',
@@ -25,15 +29,21 @@ export const DataIngestionDashboard = ({
 }: {
     dashboardDefinition: Record<string, unknown>;
 }) => {
-    const dashboardCoreApi = React.useRef<DashboardCoreApi | null>();
-
+    const dashboardCoreApi = useRef<DashboardCoreApi | null>(null);
     const [searchInput, setSearchInput] = useState('');
     const [viewByInput, setViewByInput] = useState<string>('');
     const [toggleNoTraffic, setToggleNoTraffic] = useState(false);
-
+    const [selectValueForDropdownInModal, setSelectValueForDropdownInModal] = useState<
+        string | null
+    >(null);
+    const [selectTitleForDropdownInModal, setSelectTitleForDropdownInModal] = useState<
+        string | null
+    >(null);
+    const [dataIngestionDropdownValues, setDataIngestionDropdownValues] = useState([{}]);
     useEffect(() => {
         makeVisualAdjustmentsOnDataIngestionPage();
 
+        // Select the target node for observing mutations
         const targetNode = document.querySelector(
             '[data-input-id="data_ingestion_table_input"] button'
         );
@@ -41,9 +51,12 @@ export const DataIngestionDashboard = ({
         const callback = (mutationsList: MutationRecord[]) => {
             mutationsList.forEach((mutation: MutationRecord) => {
                 if (mutation.attributeName === 'data-test-value') {
+                    // Update the dashboard definition
                     dashboardCoreApi.current?.updateDefinition(dashboardDefinition);
                     setSearchInput('');
                     setToggleNoTraffic(false);
+
+                    // Get the view-by option from the mutated element
                     const viewByOption = (mutation.target as HTMLElement)?.getAttribute('label');
                     setViewByInput(viewByOption || '');
                 }
@@ -52,25 +65,29 @@ export const DataIngestionDashboard = ({
                 }
             });
         };
-        // mutation is used to detect if dropdown value is changed
-        // todo: do a better solution
+
+        // Create a MutationObserver instance and start observing
         const observer = new MutationObserver(callback);
         if (targetNode) {
             observer.observe(targetNode, config);
         }
 
+        // Set the current "view by" option when the component mounts
         const currentViewBy = document
             .querySelector('[data-input-id="data_ingestion_table_input"] button')
             ?.getAttribute('label');
 
         setViewByInput(currentViewBy || '');
 
+        // Clean-up function to disconnect the observer when the component unmounts
         return () => {
-            observer.disconnect();
+            if (observer && targetNode) {
+                observer.disconnect();
+            }
         };
     }, [dashboardDefinition]);
 
-    const setDashboardCoreApi = React.useCallback((api: DashboardCoreApi | null) => {
+    const setDashboardCoreApi = useCallback((api: DashboardCoreApi | null) => {
         dashboardCoreApi.current = api;
     }, []);
 
@@ -109,49 +126,82 @@ export const DataIngestionDashboard = ({
 
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
-    return (
-        <>
-            <DashboardContextProvider
-                preset={EnterpriseViewOnlyPreset}
-                initialDefinition={dashboardDefinition}
-            >
-                <>
-                    <DashboardCore
-                        width="100%"
-                        height="auto"
-                        dashboardCoreApiRef={setDashboardCoreApi}
-                        actionMenus={getActionButtons('data_ingestion')}
-                    />
+    const handleDashboardEvent = useCallback(async (event) => {
+        if (
+            event.type === 'datasource.done' &&
+            event.targetId === 'data_ingestion_table_ds' &&
+            event.payload.data
+        ) {
+            const modalInputSelectorName = event.payload.data?.fields[0]?.name;
+            setSelectTitleForDropdownInModal(modalInputSelectorName);
+        }
+        if (
+            event.type === 'cell.click' &&
+            event.targetId === 'data_ingestion_table_viz' &&
+            event.payload.cellIndex === 0 &&
+            event.payload.value
+        ) {
+            setSelectValueForDropdownInModal(event.payload.value);
+        }
+    }, []);
 
-                    <div id="data_ingestion_search" className="invisible_before_moving">
-                        <p id="data_ingestion_search_label">Search</p>
-                        <Search
-                            id="data_ingestion_search_input"
-                            onChange={handleChangeSearch}
-                            value={searchInput}
-                            style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
+    const dashboardPlugin = useMemo(
+        () => ({ onEventTrigger: handleDashboardEvent }),
+        [handleDashboardEvent]
+    );
+    return (
+        <DashboardContextProvider
+            preset={EnterpriseViewOnlyPreset}
+            initialDefinition={dashboardDefinition}
+            dashboardPlugin={dashboardPlugin}
+            featureFlags={FEATURE_FLAGS}
+        >
+            <>
+                <DataIngestionModal
+                    open={!!selectValueForDropdownInModal}
+                    handleRequestClose={() => setSelectValueForDropdownInModal(null)}
+                    title={selectTitleForDropdownInModal || ''}
+                    acceptBtnLabel="Done"
+                    dataIngestionDropdownValues={dataIngestionDropdownValues}
+                    selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
+                    setSelectValueForDropdownInModal={setSelectValueForDropdownInModal}
+                >
+                    <TabLayout.Panel
+                        label="data_ingestion_modal"
+                        panelId="dataIngestionModalDefTabPanel"
+                    >
+                        <DashboardModal
+                            selectValueForDropdownInModal={selectValueForDropdownInModal || ''}
+                            selectTitleForDropdownInModal={selectTitleForDropdownInModal || ''}
+                            setDataIngestionDropdownValues={setDataIngestionDropdownValues}
                         />
-                    </div>
-                    {/* <div id="switch_hide_no_traffic_wrapper" className="invisible_before_moving">
-                        <Switch
-                            id="switch_hide_no_traffic"
-                            value={toggleNoTraffic}
-                            onClick={handleChangeSwitch}
-                            selected={!!toggleNoTraffic}
-                            appearance="toggle"
-                        >
-                            Hide items with no traffic
-                        </Switch>
-                    </div> */}
-                    <div id="info_message_for_data_ingestion" className="invisible_before_moving">
-                        {infoMessage ? (
-                            <Message appearance="fill" type="info">
-                                {infoMessage}
-                            </Message>
-                        ) : null}
-                    </div>
-                </>
-            </DashboardContextProvider>
-        </>
+                    </TabLayout.Panel>
+                </DataIngestionModal>
+
+                <DashboardCore
+                    width="100%"
+                    height="auto"
+                    dashboardCoreApiRef={setDashboardCoreApi}
+                    actionMenus={getActionButtons('data_ingestion')}
+                />
+
+                <div id="data_ingestion_search" className="invisible_before_moving">
+                    <p id="data_ingestion_search_label">Search</p>
+                    <Search
+                        id="data_ingestion_search_input"
+                        onChange={handleChangeSearch}
+                        value={searchInput}
+                        style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
+                    />
+                </div>
+                <div id="info_message_for_data_ingestion" className="invisible_before_moving">
+                    {infoMessage && (
+                        <Message appearance="fill" type="info">
+                            {infoMessage}
+                        </Message>
+                    )}
+                </div>
+            </>
+        </DashboardContextProvider>
     );
 };

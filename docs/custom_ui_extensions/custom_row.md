@@ -1,4 +1,6 @@
-When a row is expanded on the Inputs table, Custom Row is utilized to incorporate a customized element. By clicking on the icon provided on the left side of each row, the input-specific details are displayed.
+# Custom Row
+
+When a row is expanded on the Inputs table or Configuration Table, Custom Row is utilized to incorporate a customized element. By clicking on the icon provided on the left side of each row, the input-specific details are displayed.
 
 ### Properties
 
@@ -29,7 +31,7 @@ When a row is expanded on the Inputs table, Custom Row is utilized to incorporat
     "description": "Manage your data inputs",
     "services": [],
     "table": {
-        "actions": ["edit", "enable", "delete", "clone"],
+        "actions": ["edit", "delete", "clone"],
         "header": [],
         "customRow": {
             "src": "custom_input_row",

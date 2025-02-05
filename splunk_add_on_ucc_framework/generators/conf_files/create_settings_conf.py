@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class SettingsConf(ConfGenerator):
             self.conf_spec_file = f"{self.conf_file}.spec"
             for setting in self._global_config.settings:
                 content = self._gc_schema._get_oauth_enitities(setting["entity"])
-                fields = self._gc_schema._parse_fields(content)
+                fields, special_fields = self._gc_schema._parse_fields(content)
                 self.settings_stanzas.append(
                     (setting["name"], [f"{f._name} = " for f in fields])
                 )

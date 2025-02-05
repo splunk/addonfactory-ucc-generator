@@ -1033,8 +1033,11 @@ class TestAccount(UccTester):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         go_to_link = "https://docs.splunk.com/Documentation"
         account.entity.open()
-        with account.entity.help_link.open_link():
-            self.assert_util(account.entity.help_link.get_current_url, go_to_link)
+
+        assert (
+            account.entity.help_link.internal_container.get_attribute("href")
+            == go_to_link
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1188,4 +1191,85 @@ class TestAccount(UccTester):
         self.assert_util(
             account.entity.save(expect_error=True),
             "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",  # noqa: E501
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_validation_of_oauth_fields_too_short(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies required field client id"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value(_ACCOUNT_CONFIG["name"])
+        account.entity.environment.select("Value2")
+        account.entity.account_radio.select("No")
+        account.entity.multiple_select.select("Option Two")
+        account.entity.username.set_value("TestClientId")
+        account.entity.password.set_value("ClientSecretTest")
+        account.entity.security_token.set_value("SecurityTokenTest")
+        account.entity.basic_oauth_text.set_value("Invalid")
+
+        self.assert_util(
+            account.entity.save,
+            "Length should be between 10 and 4096",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_validation_of_oauth_fields_wrong_characters(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies required field client id"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value(_ACCOUNT_CONFIG["name"])
+        account.entity.environment.select("Value2")
+        account.entity.account_radio.select("No")
+        account.entity.multiple_select.select("Option Two")
+        account.entity.username.set_value("TestClientId")
+        account.entity.password.set_value("ClientSecretTest")
+        account.entity.security_token.set_value("SecurityTokenTest")
+        account.entity.basic_oauth_text.set_value(
+            "Invalid due to special characters: !@#$%^&*()"
+        )
+
+        self.assert_util(
+            account.entity.save,
+            "Do not use special characters",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_validation_of_oauth_valid(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies required field client id"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value(_ACCOUNT_CONFIG["name"])
+        account.entity.environment.select("Value2")
+        account.entity.account_radio.select("No")
+        account.entity.multiple_select.select("Option Two")
+        account.entity.username.set_value("TestClientId")
+        account.entity.password.set_value("ClientSecretTest")
+        account.entity.security_token.set_value("SecurityTokenTest")
+        account.entity.basic_oauth_text.set_value("Valid_text_for_oauth")
+
+        self.assert_util(account.entity.save, True)
+
+        account.table.wait_for_rows_to_appear(1)
+
+        self.assert_util(
+            account.table.get_table()[_ACCOUNT_CONFIG["name"]],
+            {
+                "name": _ACCOUNT_CONFIG["name"],
+                "auth type": "basic",
+                "actions": "Edit | Clone | Delete",
+            },
         )

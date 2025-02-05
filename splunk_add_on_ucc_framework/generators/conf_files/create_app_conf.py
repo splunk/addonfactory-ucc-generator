@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ class AppConf(ConfGenerator):
         self.addon_version = kwargs["addon_version"]
         self.is_visible = str(kwargs["has_ui"]).lower()
         self.description = kwargs["app_manifest"].get_description()
+        self.title = kwargs["app_manifest"].get_title()
         self.author = kwargs["app_manifest"].get_authors()[0]["name"]
         self.build = str(int(time()))
 
@@ -65,7 +66,7 @@ class AppConf(ConfGenerator):
             name=self.name,
             build=self.build,
             id=self.id,
-            label=self.description,
+            label=self.title,
             is_visible=self.is_visible,
         )
         self.writer(

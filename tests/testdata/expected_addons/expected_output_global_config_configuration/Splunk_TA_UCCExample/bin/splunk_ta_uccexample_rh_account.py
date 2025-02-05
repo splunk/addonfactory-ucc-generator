@@ -14,6 +14,24 @@ import logging
 util.remove_http_proxy_env_vars()
 
 
+special_fields = [
+    field.RestField(
+        'name',
+        required=True,
+        encrypted=False,
+        default=None,
+        validator=validator.AllOf(
+            validator.String(
+                max_len=50,
+                min_len=1,
+            ),
+            validator.Pattern(
+                regex=r"""^[a-zA-Z]\w*$""",
+            )
+        )
+    )
+]
+
 fields = [
     field.RestField(
         'custom_endpoint',
@@ -128,13 +146,14 @@ fields = [
         validator=None
     )
 ]
-model = RestModel(fields, name=None)
+model = RestModel(fields, name=None, special_fields=special_fields)
 
 
 endpoint = SingleModel(
     'splunk_ta_uccexample_account',
     model,
-    config_name='account'
+    config_name='account',
+    need_reload=False,
 )
 
 

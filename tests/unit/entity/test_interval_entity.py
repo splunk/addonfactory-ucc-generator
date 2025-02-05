@@ -1,5 +1,7 @@
 from splunk_add_on_ucc_framework.entity import IntervalEntity
 
+from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
+
 
 def test_interval_minimal_definition():
     definition = {"type": "interval", "field": "interval", "label": "Interval"}
@@ -13,8 +15,8 @@ def test_interval_minimal_definition():
         "type": "text",
         "validators": [
             {
-                "errorMsg": "Interval must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                "pattern": CRON_REGEX,
                 "type": "regex",
             }
         ],
@@ -46,8 +48,8 @@ def test_interval_full_definition():
         "required": True,
         "validators": [
             {
-                "errorMsg": "Interval input must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                "errorMsg": "Interval input must be either a non-negative number, CRON interval or -1.",
+                "pattern": CRON_REGEX,
                 "type": "regex",
             },
             {
@@ -70,8 +72,8 @@ def test_interval_migration():
         "required": True,
         "validators": [
             {
-                "errorMsg": "Interval must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                "pattern": CRON_REGEX,
                 "type": "regex",
             },
         ],
@@ -104,8 +106,8 @@ def test_interval_migration_with_range():
         "required": True,
         "validators": [
             {
-                "errorMsg": "Interval must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                "pattern": CRON_REGEX,
                 "type": "regex",
             },
             {
@@ -152,8 +154,8 @@ def test_interval_migration_wrong_field():
         "label": "Other field",
         "validators": [
             {
-                "errorMsg": "Other field must be either a non-negative number or -1.",
-                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                "errorMsg": "Other field must be either a non-negative number, CRON interval or -1.",
+                "pattern": CRON_REGEX,
                 "type": "regex",
             },
         ],

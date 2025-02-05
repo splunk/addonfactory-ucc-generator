@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "AlertEntity": {
+    "AlertSingleSelectSplunkSearchEntity": {
       "type": "object",
       "description": "Alerts configuration. The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.",
       "properties": {
@@ -16,16 +16,9 @@
           "description": "The text that would be shown in the alert action UI."
         },
         "type": {
+          "const": "singleSelectSplunkSearch",
           "type": "string",
-          "enum": [
-            "text",
-            "textarea",
-            "checkbox",
-            "singleSelect",
-            "radio",
-            "singleSelectSplunkSearch"
-          ],
-          "description": "The type of the user input in the alert. Available choices: “text”, “checkbox”, “singleSelect”, “radio”, “singleSelectSplunkSearch”."
+          "description": "Exactly: singleSelectSplunkSearch"
         },
         "help": {
           "type": "string",
@@ -81,7 +74,230 @@
           }
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "search",
+        "valueField",
+        "labelField"
+      ],
+      "additionalProperties": false
+    },
+    "AlertTextEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "text",
+          "type": "string",
+          "description": "Exactly: text"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertTextareaEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "textarea",
+          "type": "string",
+          "description": "Exactly: textarea"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertCheckboxEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "checkbox",
+          "type": "string",
+          "description": "Exactly: checkbox"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "AlertSingleSelectEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "singleSelect",
+          "type": "string",
+          "description": "Exactly: singleSelect"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "options": {
+          "type": "object",
+          "description": "Static choices that a user can select in the alert action UI.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "An array of options with a label and a value.",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "AlertRadioEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "radio",
+          "type": "string",
+          "description": "Exactly: radio"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "description": "The initial input value.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "options": {
+          "type": "object",
+          "description": "Static choices that a user can select in the alert action UI.",
+          "properties": {
+            "items": {
+              "type": "array",
+              "description": "An array of options with a label and a value.",
+              "items": {
+                "$ref": "#/definitions/ValueLabelPair"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "Alerts": {
@@ -166,29 +382,34 @@
               "description": "The sourcetype in which the result of the AR alert action would be written to. The value is updated in the alert action script. If you don’t specify any value you can update your alert action script manually once it is generated."
             }
           },
-          "required": ["task", "subject", "category", "technology"]
+          "required": [
+            "task",
+            "subject",
+            "category",
+            "technology"
+          ]
         },
         "entity": {
           "type": "array",
           "items": {
             "anyOf": [
               {
-                "$ref": "#/definitions/TextEntity"
+                "$ref": "#/definitions/AlertTextEntity"
               },
               {
-                "$ref": "#/definitions/TextareaEntity"
+                "$ref": "#/definitions/AlertTextareaEntity"
               },
               {
-                "$ref": "#/definitions/SingleSelectEntity"
+                "$ref": "#/definitions/AlertCheckboxEntity"
               },
               {
-                "$ref": "#/definitions/CheckboxEntity"
+                "$ref": "#/definitions/AlertSingleSelectEntity"
               },
               {
-                "$ref": "#/definitions/RadioEntity"
+                "$ref": "#/definitions/AlertRadioEntity"
               },
               {
-                "$ref": "#/definitions/AlertEntity"
+                "$ref": "#/definitions/AlertSingleSelectSplunkSearchEntity"
               }
             ]
           }
@@ -199,7 +420,11 @@
           "description": "A Python script that would have validation and logic for alert action execution. The script should be present at <YOUR_ADD-ON_NAME>/bin/. Refer documentation for more information."
         }
       },
-      "required": ["name", "label", "description"],
+      "required": [
+        "name",
+        "label",
+        "description"
+      ],
       "additionalProperties": false
     },
     "ConfigurationPage": {
@@ -228,13 +453,19 @@
               },
               {
                 "$ref": "#/definitions/PredefinedLoggingTab"
+              },
+              {
+                "$ref": "#/definitions/PredefinedProxyTab"
               }
             ]
           },
           "minItems": 1
         }
       },
-      "required": ["title", "tabs"],
+      "required": [
+        "title",
+        "tabs"
+      ],
       "description": "Page for account configuration, proxy configuration, and logging level configuration.",
       "additionalProperties": false
     },
@@ -261,7 +492,10 @@
                 "description": "Used to map field values to more meaningful values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           },
           "description": "Specifies the list of fields that will be displayed in row form when the user clicks the Row Expand button."
         },
@@ -290,7 +524,10 @@
                 "description": "Used to modify the default cell values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "customRow": {
@@ -302,11 +539,18 @@
           "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone"]
+            "enum": [
+              "edit",
+              "delete",
+              "clone"
+            ]
           }
         }
       },
-      "required": ["header", "actions"],
+      "required": [
+        "header",
+        "actions"
+      ],
       "description": "Configuration of single tab",
       "additionalProperties": false
     },
@@ -361,12 +605,30 @@
                 "search_condition"
               ],
               "additionalProperties": false
+            },
+            "error_panel_log_lvl": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "ERROR",
+                      "CRITICAL"
+                    ]
+                  }
+                ]
+              },
+              "uniqueItems": true
             }
           },
           "additionalProperties": false
         }
       },
-      "required": ["panels"],
+      "required": [
+        "panels"
+      ],
       "description": "The dashboard page provides some additional information about the add-on operations to increase the visibility into what the add-on is actually doing under the hood.",
       "additionalProperties": false
     },
@@ -383,7 +645,9 @@
           "const": "date"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "EmailValidator": {
@@ -398,7 +662,9 @@
           "description": "Exactly: email"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "SaveValidatorHook": {
@@ -448,7 +714,10 @@
             }
           }
         },
-        "required": ["label", "fields"],
+        "required": [
+          "label",
+          "fields"
+        ],
         "additionalProperties": false
       }
     },
@@ -479,9 +748,15 @@
             "link": {
               "type": "string",
               "description": "It is a link where the user will be redirected."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
-          "required": ["text", "link"],
+          "required": [
+            "text",
+            "link"
+          ],
           "additionalProperties": false
         },
         "help": {
@@ -491,7 +766,11 @@
           "$ref": "#/definitions/tooltip"
         }
       },
-      "required": ["field", "type", "options"],
+      "required": [
+        "field",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "TextEntity": {
@@ -532,34 +811,7 @@
           "$ref": "#/definitions/encrypted"
         },
         "validators": {
-          "type": "array",
-          "description": "It is used to validate the values of fields using various validators.",
-          "minItems": 1,
-          "items": {
-            "anyOf": [
-              {
-                "$ref": "#/definitions/NumberValidator"
-              },
-              {
-                "$ref": "#/definitions/StringValidator"
-              },
-              {
-                "$ref": "#/definitions/RegexValidator"
-              },
-              {
-                "$ref": "#/definitions/EmailValidator"
-              },
-              {
-                "$ref": "#/definitions/Ipv4Validator"
-              },
-              {
-                "$ref": "#/definitions/UrlValidator"
-              },
-              {
-                "$ref": "#/definitions/DateValidator"
-              }
-            ]
-          }
+          "$ref": "#/definitions/AnyValidator"
         },
         "options": {
           "type": "object",
@@ -576,6 +828,9 @@
             },
             "requiredWhenVisible": {
               "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -584,7 +839,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "TextareaEntity": {
@@ -667,6 +926,9 @@
               "type": "number",
               "default": 8,
               "description": "Minimum number of rows to display."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -675,7 +937,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "SingleSelectEntity": {
@@ -807,6 +1073,9 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -815,7 +1084,12 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "MultipleSelectEntity": {
@@ -945,6 +1219,9 @@
               "type": "string",
               "maxLength": 1,
               "description": "It delimits each value of the field with a predefined character."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -953,7 +1230,12 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "CheckboxEntity": {
@@ -1007,6 +1289,9 @@
             },
             "requiredWhenVisible": {
               "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1015,7 +1300,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "CheckboxGroupEntity": {
@@ -1070,7 +1359,10 @@
                     "uniqueItems": true
                   }
                 },
-                "required": ["label", "fields"],
+                "required": [
+                  "label",
+                  "fields"
+                ],
                 "additionalProperties": false
               }
             },
@@ -1117,6 +1409,136 @@
                             }
                           ]
                         }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "field"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "disableonEdit": {
+              "$ref": "#/definitions/disableonEdit"
+            }
+          },
+          "required": [
+            "rows"
+          ],
+          "additionalProperties": false
+        },
+        "validators": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/RegexValidator"
+              }
+            ]
+          }
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "CheckboxTreeEntity": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "Text displayed next to entity field"
+        },
+        "type": {
+          "const": "checkboxTree",
+          "type": "string",
+          "description": "Exactly: checkboxTree"
+        },
+        "disabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "options": {
+          "type": "object",
+          "properties": {
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "Text displayed next to entity field"
+                  },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "isExpandable": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "expand": {
+                        "type": "boolean",
+                        "default": false
+                      },
+                      "disabled": {
+                        "type": "boolean",
+                        "default": false
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "fields": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    },
+                    "uniqueItems": true
+                  }
+                },
+                "required": ["label", "fields"],
+                "additionalProperties": false
+              }
+            },
+            "rows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "checkbox": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string",
+                        "maxLength": 30,
+                        "description": "Text displayed next to entity field"
+                      },
+                      "defaultValue": {
+                        "type": "boolean",
+                        "description": "The initial input value."
+                      },
+                      "disabled": {
+                        "type": "boolean",
+                        "default": false
                       }
                     },
                     "additionalProperties": false
@@ -1202,16 +1624,26 @@
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
-          "required": ["items"],
+          "required": [
+            "items"
+          ],
           "additionalProperties": false
         },
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "FileEntity": {
@@ -1293,6 +1725,9 @@
               "type": "boolean",
               "default": false,
               "description": "It defines used encoding for files. If true base64 will be used, if false utf-8 is applied."
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "additionalProperties": false
@@ -1301,7 +1736,11 @@
           "$ref": "#/definitions/modifyFieldsOnValue"
         }
       },
-      "required": ["field", "label", "type"],
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
       "additionalProperties": false
     },
     "OAuthEntity": {
@@ -1419,6 +1858,9 @@
               "type": "boolean",
               "default": false,
               "description": "Used to include the state for oauth authentication"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
             }
           },
           "allOf": [
@@ -1436,7 +1878,9 @@
                 }
               },
               "then": {
-                "required": ["basic"]
+                "required": [
+                  "basic"
+                ]
               }
             },
             {
@@ -1453,15 +1897,24 @@
                 }
               },
               "then": {
-                "required": ["oauth"]
+                "required": [
+                  "oauth"
+                ]
               }
             }
           ],
           "additionalProperties": false,
-          "required": ["auth_type"]
+          "required": [
+            "auth_type"
+          ]
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "CustomEntity": {
@@ -1519,7 +1972,12 @@
           "additionalProperties": false
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "AnyOfEntity": {
@@ -1529,6 +1987,9 @@
         "anyOf": [
           {
             "$ref": "#/definitions/CheckboxGroupEntity"
+          },
+          {
+            "$ref": "#/definitions/CheckboxTreeEntity"
           },
           {
             "$ref": "#/definitions/TextEntity"
@@ -1587,7 +2048,10 @@
                 }
               }
             },
-            "required": ["label", "children"]
+            "required": [
+              "label",
+              "children"
+            ]
           }
         },
         {
@@ -1634,7 +2098,10 @@
                 "description": "Used to map field values to more meaningful values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "header": {
@@ -1662,7 +2129,10 @@
                 "description": "Used to modify the default cell values."
               }
             },
-            "required": ["field", "label"]
+            "required": [
+              "field",
+              "label"
+            ]
           }
         },
         "customRow": {
@@ -1674,11 +2144,19 @@
           "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
           "items": {
             "type": "string",
-            "enum": ["edit", "delete", "clone", "enable", "search"]
+            "enum": [
+              "edit",
+              "delete",
+              "clone",
+              "search"
+            ]
           }
         }
       },
-      "required": ["header", "actions"],
+      "required": [
+        "header",
+        "actions"
+      ],
       "description": "Displays input stanzas in a tabular format.",
       "additionalProperties": false
     },
@@ -1694,7 +2172,9 @@
           "description": "Exactly: ipv4"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "Meta": {
@@ -1707,12 +2187,12 @@
         },
         "name": {
           "type": "string",
-          "pattern": "^[^<>:\"\\/\\\\|\\?\\*]+$",
+          "pattern": "^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)(?!.*\\.(tar(\\.gz)?|tgz|spl)$)[A-Za-z_.-][A-Za-z0-9_.-]*[A-Za-z0-9_-]$",
           "description": "Name used for API endpoints and all code references separating separating endpoints from any other app."
         },
         "restRoot": {
           "type": "string",
-          "pattern": "^\\w+$",
+          "pattern": "^[\\w-]+$",
           "description": "String used to create API endpoints."
         },
         "apiVersion": {
@@ -1730,7 +2210,7 @@
         },
         "_uccVersion": {
           "type": "string",
-          "description": "Version of UCC used during build process"
+          "description": "Version of UCC used during build process. Do not use."
         },
         "hideUCCVersion": {
           "type": "boolean",
@@ -1783,7 +2263,29 @@
               },
               "python_version": {
                 "type": "string",
-                "description": "Python version compatible with the library."
+                "description": "Python version compatible with the library.",
+                "anyOf": [
+                  {
+                    "const": "3.7",
+                    "type": "string",
+                    "description": "Exactly: 3.7"
+                  },
+                  {
+                    "const": "37",
+                    "type": "string",
+                    "description": "Alternative syntax for 3.7"
+                  },
+                  {
+                    "const": "3.9",
+                    "type": "string",
+                    "description": "Exactly: 3.9"
+                  },
+                  {
+                    "const": "39",
+                    "type": "string",
+                    "description": "Alternative syntax for 3.9"
+                  }
+                ]
               },
               "target": {
                 "type": "string",
@@ -1825,11 +2327,24 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["light", "dark"]
+            "enum": [
+              "light",
+              "dark"
+            ]
           }
+        },
+        "isVisible": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
         }
       },
-      "required": ["displayName", "name", "restRoot", "version"],
+      "required": [
+        "displayName",
+        "name",
+        "restRoot",
+        "version"
+      ],
       "description": "Metadata regarding build",
       "additionalProperties": false
     },
@@ -1852,7 +2367,10 @@
           "description": "Specifies if the number should be an integer (true) or can be a float (false). Default value is false"
         }
       },
-      "required": ["type", "range"],
+      "required": [
+        "type",
+        "range"
+      ],
       "additionalProperties": false
     },
     "RangeValue": {
@@ -1907,6 +2425,9 @@
         },
         "modifyFieldsOnValue": {
           "$ref": "#/definitions/modifyFieldsOnValue"
+        },
+        "validators": {
+          "$ref": "#/definitions/AnyValidator"
         }
       },
       "additionalProperties": false
@@ -1924,7 +2445,9 @@
         }
       },
       "then": {
-        "required": ["basic"]
+        "required": [
+          "basic"
+        ]
       }
     },
     "OauthRequirement": {
@@ -1940,8 +2463,205 @@
         }
       },
       "then": {
-        "required": ["oauth"]
+        "required": [
+          "oauth"
+        ]
       }
+    },
+    "OpenApiType": {
+      "type": "object",
+      "description": "OpenAPI request or response param type.",
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["string", "number", "integer", "boolean"]
+            },
+            "nullable": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "array"
+            },
+            "items": {
+              "$ref": "#/definitions/OpenApiType"
+            },
+            "nullable": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "items"
+          ]
+        },
+        {
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "object"
+            },
+            "properties": {
+              "type": "object",
+              "patternProperties": {
+                "^.+$": {
+                  "$ref": "#/definitions/OpenApiType"
+                }
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "properties"
+          ]
+        },
+        {
+          "properties": {
+            "anyOf": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/definitions/OpenApiType"
+              }
+            },
+            "nullable": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "anyOf"
+          ]
+        },
+        {
+          "properties": {
+            "oneOf": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/definitions/OpenApiType"
+              }
+            },
+            "nullable": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "oneOf"
+          ]
+        }
+      ]
+    },
+    "RestHandlerActionParams": {
+      "type": "object",
+      "description": "Request or response parameters for a particular action.",
+      "additionalProperties": false,
+      "patternProperties": {
+        "^.+$": {
+          "$ref": "#/definitions/OpenApiType"
+        }
+      }
+    },
+    "RestHandlerParams": {
+      "type": "object",
+      "description": "Request or response parameters.",
+      "additionalProperties": false,
+      "properties": {
+        "list": {
+          "$ref": "#/definitions/RestHandlerActionParams"
+        },
+        "edit": {
+          "$ref": "#/definitions/RestHandlerActionParams"
+        },
+        "create": {
+          "$ref": "#/definitions/RestHandlerActionParams"
+        },
+        "remove": {
+          "$ref": "#/definitions/RestHandlerActionParams"
+        }
+      }
+    },
+    "RestHandler": {
+      "type": "object",
+      "description": "Rest handlers not automatically generated by UCC.",
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "description": "The endpoint for the custom rest handler."
+        },
+        "handlerType": {
+          "type": "string",
+          "description": "The type of the handler.",
+          "enum": ["EAI"]
+        },
+        "registerHandler": {
+          "type": "object",
+          "description": "Parameters needed to register the endpoint in web.conf and restmap.conf",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The file where the custom rest handler is located."
+            },
+            "actions": {
+              "type": "array",
+              "description": "The actions that the custom rest handler supports.",
+              "items": {
+                "type": "string",
+                "description": "The action that the custom rest handler supports.",
+                "enum": ["list", "edit", "create", "remove"]
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "actions"
+          ]
+        },
+        "requestParameters": {
+          "type": "object",
+          "description": "The parameters that the custom rest handler supports.",
+          "$ref": "#/definitions/RestHandlerParams"
+        },
+        "responseParameters": {
+          "type": "object",
+          "description": "The parameters that the custom rest handler returns.",
+          "$ref": "#/definitions/RestHandlerParams"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "endpoint",
+        "handlerType"
+      ]
+    },
+    "Options": {
+      "type": "object",
+      "description": "Additional options for the addon",
+      "properties": {
+        "restHandlers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RestHandler"
+          }
+        }
+      },
+      "additionalProperties": false
     },
     "Pages": {
       "type": "object",
@@ -1957,7 +2677,9 @@
           "$ref": "#/definitions/DashboardPage"
         }
       },
-      "required": ["configuration"],
+      "required": [
+        "configuration"
+      ],
       "additionalProperties": false
     },
     "RegexValidator": {
@@ -1976,7 +2698,10 @@
           "description": "Regex pattern."
         }
       },
-      "required": ["type", "pattern"],
+      "required": [
+        "type",
+        "pattern"
+      ],
       "additionalProperties": false
     },
     "StringValidator": {
@@ -2001,7 +2726,11 @@
           "description": "Specifies the maximum number of characters allowed."
         }
       },
-      "required": ["type", "minLength", "maxLength"],
+      "required": [
+        "type",
+        "minLength",
+        "maxLength"
+      ],
       "additionalProperties": false
     },
     "TabContent": {
@@ -2031,7 +2760,10 @@
         "style": {
           "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
           "type": "string",
-          "enum": ["page", "dialog"]
+          "enum": [
+            "page",
+            "dialog"
+          ]
         },
         "conf": {
           "type": "string",
@@ -2063,14 +2795,28 @@
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
+        },
+        "groups": {
+          "$ref": "#/definitions/Groups"
         }
       },
       "anyOf": [
         {
-          "required": ["entity", "name", "title"]
+          "required": [
+            "entity",
+            "name",
+            "title"
+          ]
         },
         {
-          "required": ["customTab", "name", "title"]
+          "required": [
+            "customTab",
+            "name",
+            "title"
+          ]
         }
       ],
       "additionalProperties": false
@@ -2096,7 +2842,11 @@
           "maxLength": 100
         }
       },
-      "required": ["version", "product", "vendor"],
+      "required": [
+        "version",
+        "product",
+        "vendor"
+      ],
       "additionalProperties": false
     },
     "UrlValidator": {
@@ -2111,8 +2861,39 @@
           "description": "Exactly: url"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
+    },
+    "AnyValidator": {
+      "type": "array",
+      "description": "It is used to validate the values of fields using various validators.",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/NumberValidator"
+          },
+          {
+            "$ref": "#/definitions/StringValidator"
+          },
+          {
+            "$ref": "#/definitions/RegexValidator"
+          },
+          {
+            "$ref": "#/definitions/EmailValidator"
+          },
+          {
+            "$ref": "#/definitions/Ipv4Validator"
+          },
+          {
+            "$ref": "#/definitions/UrlValidator"
+          },
+          {
+            "$ref": "#/definitions/DateValidator"
+          }
+        ]
+      }
     },
     "ValueLabelPair": {
       "type": "object",
@@ -2138,7 +2919,9 @@
           "description": "Text displayed next to entity field"
         }
       },
-      "required": ["label"],
+      "required": [
+        "label"
+      ],
       "additionalProperties": false
     },
     "DashboardPanel": {
@@ -2150,7 +2933,9 @@
           "maxLength": 100
         }
       },
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false
     },
     "WarningMessage": {
@@ -2186,7 +2971,9 @@
           "description": "Defines if message should disappear after any input changes."
         }
       },
-      "required": ["message"]
+      "required": [
+        "message"
+      ]
     },
     "Field": {
       "type": "string",
@@ -2224,9 +3011,15 @@
                 "type": "string"
               }
             },
-            "required": ["slug", "linkText", "link"]
+            "required": [
+              "slug",
+              "linkText",
+              "link"
+            ]
           },
-          "required": ["text"]
+          "required": [
+            "text"
+          ]
         }
       }
     },
@@ -2274,9 +3067,14 @@
         },
         "markdownMessage": {
           "$ref": "#/definitions/markdownMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
         }
       },
-      "required": ["fieldId"]
+      "required": [
+        "fieldId"
+      ]
     },
     "fieldToModify": {
       "type": "object",
@@ -2298,7 +3096,12 @@
         "mode": {
           "type": "string",
           "description": "Defines under which Mode modifications should occure. If not present modifications occure for all Mods",
-          "enum": ["create", "edit", "config", "clone"]
+          "enum": [
+            "create",
+            "edit",
+            "config",
+            "clone"
+          ]
         },
         "fieldsToModify": {
           "type": "array",
@@ -2309,7 +3112,10 @@
           "minItems": 1
         }
       },
-      "required": ["fieldValue", "fieldsToModify"]
+      "required": [
+        "fieldValue",
+        "fieldsToModify"
+      ]
     },
     "modifyFieldsOnValue": {
       "type": "array",
@@ -2335,7 +3141,10 @@
           "description": "Specify color of displayied text. Accepts all CSS colors"
         }
       },
-      "required": ["markdownType", "text"]
+      "required": [
+        "markdownType",
+        "text"
+      ]
     },
     "markdownMessageHybrid": {
       "type": "object",
@@ -2362,7 +3171,13 @@
           "description": "Declare url that will use for redirection"
         }
       },
-      "required": ["markdownType", "text", "token", "link", "linkText"]
+      "required": [
+        "markdownType",
+        "text",
+        "token",
+        "link",
+        "linkText"
+      ]
     },
     "markdownMessageLink": {
       "type": "object",
@@ -2381,7 +3196,11 @@
           "description": "Declare url that will use for redirection"
         }
       },
-      "required": ["markdownType", "text", "link"]
+      "required": [
+        "markdownType",
+        "text",
+        "link"
+      ]
     },
     "markdownMessagePlainText": {
       "type": "object",
@@ -2391,7 +3210,9 @@
           "description": "Declare message content"
         }
       },
-      "required": ["text"]
+      "required": [
+        "text"
+      ]
     },
     "markdownMessage": {
       "description": "Message that will be displayed as additional information",
@@ -2441,7 +3262,13 @@
         },
         "levels": {
           "type": "array",
-          "default": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+          "default": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR",
+            "CRITICAL"
+          ],
           "description": "List of all possible log levels.",
           "items": {
             "type": "string"
@@ -2456,7 +3283,200 @@
           "$ref": "#/definitions/help"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "PredefinedProxyTab": {
+      "type": "object",
+      "description": "Predefined Proxy tab configuration, can be used to reduce length of config",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "proxyTab",
+          "description": "Exactly: proxyTab"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[\\/\\w]+$",
+          "default": "Proxy",
+          "description": "Tab name.",
+          "maxLength": 250
+        },
+        "title": {
+          "type": "string",
+          "default": "Proxy",
+          "description": "Tab title.",
+          "maxLength": 50
+        },
+        "enable_proxy": {
+          "type": "object",
+          "default": {
+            "type": "checkbox",
+            "label": "Enable",
+            "field": "proxy_enabled"
+          },
+          "description": "Checkbox for enabling proxy"
+        },
+        "proxy_type": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "singleSelect",
+                "label": "Proxy Type",
+                "required": false,
+                "options": {
+                  "disableSearch": true,
+                  "autoCompleteFields": [
+                    {
+                      "value": "http",
+                      "label": "http"
+                    },
+                    {
+                      "value": "socks4",
+                      "label": "socks4"
+                    },
+                    {
+                      "value": "socks5",
+                      "label": "socks5"
+                    }
+                  ]
+                },
+                "defaultValue": "http",
+                "field": "proxy_type"
+              }
+            }
+          ],
+          "description": "Proxy type. Available values: http, socks4, socks5"
+        },
+        "host": {
+          "type": "object",
+          "default": {
+            "type": "text",
+            "label": "Host",
+            "validators": [
+              {
+                "type": "string",
+                "errorMsg": "Max host length is 4096",
+                "minLength": 0,
+                "maxLength": 4096
+              },
+              {
+                "type": "regex",
+                "errorMsg": "Proxy Host should not have special characters",
+                "pattern": "^[a-zA-Z]\\w*$"
+              }
+            ],
+            "field": "proxy_url"
+          },
+          "description": "Host of the proxy"
+        },
+        "port": {
+          "type": "object",
+          "default": {
+            "type": "text",
+            "label": "Port",
+            "validators": [
+              {
+                "type": "number",
+                "range": [
+                  1,
+                  65535
+                ],
+                "isInteger": true
+              }
+            ],
+            "field": "proxy_port"
+          },
+          "description": "Port of the proxy"
+        },
+        "username": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "text",
+                "label": "Username",
+                "validators": [
+                  {
+                    "type": "string",
+                    "errorMsg": "Max length of username is 50",
+                    "minLength": 0,
+                    "maxLength": 50
+                  }
+                ],
+                "field": "proxy_username"
+              }
+            }
+          ],
+          "description": "Username used to access the proxy server."
+        },
+        "password": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "text",
+                "label": "Password",
+                "validators": [
+                  {
+                    "type": "string",
+                    "errorMsg": "Max length of password is 8192",
+                    "minLength": 0,
+                    "maxLength": 8192
+                  }
+                ],
+                "encrypted": true,
+                "field": "proxy_password"
+              }
+            }
+          ],
+          "description": "Password assigned for the username"
+        },
+        "dns_resolution": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "default": {
+                "type": "checkbox",
+                "label": "DNS resolution",
+                "field": "proxy_rdns"
+              }
+            }
+          ],
+          "description": "Specifies whether DNS resolution should be used or not."
+        },
+        "options": {
+          "$ref": "#/definitions/SaveValidatorHook"
+        },
+        "hook": {
+          "type": "object",
+          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+        },
+        "warning": {
+          "$ref": "#/definitions/WarningMessage"
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        }
+      },
+      "required": [
+        "type"
+      ],
       "additionalProperties": false
     },
     "InputPageSingleTable": {
@@ -2510,7 +3530,10 @@
                 }
               }
             },
-            "required": ["groupTitle", "groupName"]
+            "required": [
+              "groupTitle",
+              "groupName"
+            ]
           }
         },
         "services": {
@@ -2547,7 +3570,10 @@
               "style": {
                 "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
                 "type": "string",
-                "enum": ["page", "dialog"]
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
               },
               "hook": {
                 "description": "It is used to add custom behaviour to forms.",
@@ -2580,12 +3606,26 @@
               },
               "warning": {
                 "$ref": "#/definitions/WarningMessage"
+              },
+              "disableNewInput": {
+                "type": "boolean",
+                "description": "Defines whether a newly created input of a service should be disabled by default.",
+                "default": false
+              },
+              "hideForPlatform": {
+                "$ref": "#/definitions/HideForPlatform"
               }
             },
             "not": {
-              "required": ["table"]
+              "required": [
+                "table"
+              ]
             },
-            "required": ["name", "title", "entity"]
+            "required": [
+              "name",
+              "title",
+              "entity"
+            ]
           }
         },
         "hideFieldId": {
@@ -2593,9 +3633,16 @@
         },
         "readonlyFieldId": {
           "type": "string"
+        },
+        "useInputToggleConfirmation": {
+          "$ref": "#/definitions/useInputToggleConfirmation"
         }
       },
-      "required": ["title", "table", "services"],
+      "required": [
+        "title",
+        "table",
+        "services"
+      ],
       "description": "Input Page definition where there is only one single tabel listing all services.",
       "additionalProperties": false
     },
@@ -2636,6 +3683,9 @@
               "table": {
                 "$ref": "#/definitions/InputsTable"
               },
+              "useInputToggleConfirmation": {
+                "$ref": "#/definitions/useInputToggleConfirmation"
+              },
               "entity": {
                 "$ref": "#/definitions/AnyOfEntity"
               },
@@ -2648,7 +3698,10 @@
               "style": {
                 "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
                 "type": "string",
-                "enum": ["page", "dialog"]
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
               },
               "hook": {
                 "description": "It is used to add custom behaviour to forms.",
@@ -2675,7 +3728,15 @@
                 "maxLength": 100
               }
             },
-            "required": ["name", "title", "table", "entity"]
+            "required": [
+              "name",
+              "title",
+              "table",
+              "entity"
+            ]
+          },
+          "hideForPlatform": {
+            "$ref": "#/definitions/HideForPlatform"
           }
         },
         "hideFieldId": {
@@ -2685,7 +3746,10 @@
           "type": "string"
         }
       },
-      "required": ["title", "services"],
+      "required": [
+        "title",
+        "services"
+      ],
       "description": "Input Page definition where there are tabs for each service with separate table listing input service entries.",
       "additionalProperties": false
     },
@@ -2717,6 +3781,9 @@
       "description": "It chooses whether or not to display the field.",
       "default": true
     },
+    "hideForPlatform": {
+      "$ref": "#/definitions/HideForPlatform"
+    },
     "disableonEdit": {
       "type": "boolean",
       "description": "When the form is in edit mode, the field becomes unable to be edited.",
@@ -2735,6 +3802,11 @@
     "entityLabel": {
       "type": "string",
       "description": "Text displayed next to entity field"
+    },
+    "useInputToggleConfirmation": {
+      "type": "boolean",
+      "description": "When true displays additional confirmation modal when toggling single input status.",
+      "default": false
     },
     "IntervalEntity": {
       "type": "object",
@@ -2760,7 +3832,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["range"]
+          "required": [
+            "range"
+          ]
         },
         "help": {
           "$ref": "#/definitions/help"
@@ -2772,8 +3846,23 @@
           "$ref": "#/definitions/required"
         }
       },
-      "required": ["type", "field", "label"],
+      "required": [
+        "type",
+        "field",
+        "label"
+      ],
       "additionalProperties": false
+    },
+    "HideForPlatform": {
+      "description": "Defines for which platform element should be hidden from UI perspective.",
+      "anyOf": [
+        {
+          "const": "cloud"
+        },
+        {
+          "const": "enterprise"
+        }
+      ]
     },
     "IntervalValue": {
       "anyOf": [
@@ -2787,7 +3876,7 @@
         },
         {
           "type": "string",
-          "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$"
+          "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
         }
       ]
     },
@@ -2813,7 +3902,11 @@
           "$ref": "#/definitions/required"
         }
       },
-      "required": ["type", "field", "label"],
+      "required": [
+        "type",
+        "field",
+        "label"
+      ],
       "additionalProperties": false
     }
   },
@@ -2832,8 +3925,14 @@
         "$ref": "#/definitions/Alerts"
       },
       "minItems": 1
+    },
+    "options": {
+      "$ref": "#/definitions/Options"
     }
   },
-  "required": ["meta", "pages"],
+  "required": [
+    "meta",
+    "pages"
+  ],
   "additionalProperties": false
 }

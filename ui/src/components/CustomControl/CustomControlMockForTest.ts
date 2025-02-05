@@ -1,7 +1,7 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { UtilControlWrapper } from '../BaseFormView/BaseFormTypes';
+import { UtilControlWrapper } from '../../types/components/BaseFormTypes';
 
 export class CustomControlMockForTest {
     globalConfig: GlobalConfig;
@@ -25,10 +25,10 @@ export class CustomControlMockForTest {
      */
     constructor(
         globalConfig: GlobalConfig,
+        el: Element | undefined,
         data: { mode: Mode; serviceName: string; value: AcceptableFormValueOrNullish },
         setValue: (newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilControlWrapper,
-        el?: Element
+        util: UtilControlWrapper
     ) {
         this.globalConfig = globalConfig;
         this.el = el;

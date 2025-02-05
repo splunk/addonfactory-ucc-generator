@@ -16,17 +16,17 @@ concurrency:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
       - uses: actions/checkout@v4
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v2.1
+        uses: splunk/addonfactory-test-matrix-action@v3.0
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -54,7 +54,7 @@ jobs:
       failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -68,20 +68,14 @@ jobs:
       SEMGREP_KEY: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
 
   compliance-copyrights:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: apache/skywalking-eyes@v0.6.0
 
   build-ui:
     name: Build UCC UI
-    strategy:
-      matrix:
-        node-version:
-          - "20"
     uses: ./.github/workflows/build-ui.yml
-    with:
-      node-version: ${{ matrix.node-version }}
 
   storybook-screenshots:
     name: Update storybook screenshots
@@ -89,8 +83,6 @@ jobs:
       contents: write
     secrets: inherit
     uses: ./.github/workflows/storybook-visual.yml
-    with:
-      node-version: "20"
   bot-updates:
     name: Generates Documentation
     permissions:
@@ -104,7 +96,7 @@ jobs:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -133,7 +125,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -143,6 +135,8 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
+          - "3.13"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -166,7 +160,7 @@ jobs:
     name: test-smoke ${{ matrix.python-version }}
     needs:
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -176,6 +170,8 @@ jobs:
           - "3.9"
           - "3.10"
           - "3.11"
+          - "3.12"
+          - "3.13"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -202,7 +198,7 @@ jobs:
       failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - build-ui
     steps:
@@ -233,8 +229,8 @@ jobs:
           path: Splunk_TA_UCCExample*.tar.gz
 
   test-ui:
-    name: test-ui Splunk ${{ matrix.splunk.version }} -m ${{ matrix.test-mark }}
-    runs-on: ubuntu-latest
+    name: test-ui Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       contents: read
@@ -244,19 +240,21 @@ jobs:
       - build-test-addon
       - build
       - test-unit
-      - test-smoke
     strategy:
       fail-fast: false
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-        test-mark:
-          - "logging"
-          - "proxy"
-          - "account"
-          - "custom"
-          - "alert"
-          - "input"
-          - "configuration"
+        test-group:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8"
+          - "9"
+          - "10"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -278,22 +276,22 @@ jobs:
           ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
-      - run: poetry run pytest tests/ui -m "${{ matrix.test-mark }}" --headless --junitxml=test-results/junit.xml
+      - run: poetry run pytest tests/ui --test-group-count 10 --test-group ${{ matrix.test-group }} --test-group-random-seed 123456 --headless --junitxml=test-results/junit.xml
       - uses: actions/upload-artifact@v4
         if: success() || failure()
         with:
-          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
+          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
           path: test-results/*
       - uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-mark }}
+          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
           path: "test-results/*.xml"
           reporter: java-junit
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     continue-on-error: true
     strategy:
       matrix:
@@ -323,91 +321,78 @@ jobs:
           appinspect_manual_checks: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.manualcheck.yaml
           appinspect_expected_failures: tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect.expect.yaml
 
-  all-checks:
-    if: ${{ !cancelled() }}
-    needs:
-      - test-unit
-      - test-smoke
-      - test-ui
-      - build-test-addon-openapi-client
-      - storybook-screenshots
-      - bot-updates
+  appinspect-api:
+    name: appinspect api ${{ matrix.tags }}
+    needs: build-test-addon
+    if: |
+      !cancelled() &&
+      needs.build-test-addon.result == 'success'
     runs-on: ubuntu-latest
-    env:
-      NEEDS: ${{ toJson(needs) }}
-    steps:
-      - name: check if tests have passed
-        id: check
-        shell: bash
-        run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" and (.outputs.failed // "false") != "true")')
-          if [[ "$ALL_JOBS_PASSED" == "true" ]]
-          then
-              echo "all-checks=true" >> "$GITHUB_OUTPUT"
-          else
-              echo "all-checks=false" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Fail job if something failed
-        if: ${{ steps.check.outputs.all-checks == 'false' }}
-        run: |
-          echo "Some check failed"
-          exit 1
-
-  release:
-    needs:
-      - build
-      - compliance-copyrights
-      - fossa-scan
-      - test-unit
-      - test-smoke
-      - test-ui
-      - appinspect-for-expected-outputs
-      - semgrep
-      - pre-commit
-      - all-checks
-    runs-on: ubuntu-latest
-    if: "! github.event.pull_request.head.repo.fork "
+    strategy:
+      fail-fast: false
+      matrix:
+        tags:
+          - "cloud"
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          # Very important: semantic-release won't trigger a tagged
-          # build if this is not set false
-          persist-credentials: false
+          name: Splunk_TA_UCCExample-packaged
+          path: build/package
+      - name: Copy .appinspect_api.expect.yaml to Working Directory
+        run: |
+            cp tests/testdata/expected_addons/expected_output_global_config_everything/.appinspect_api.expect.yaml ./.appinspect_api.expect.yaml
+      - uses: splunk/appinspect-api-action@v3.0
+        with:
+          username: ${{secrets.SPL_COM_USER}}
+          password: ${{secrets.SPL_COM_PASSWORD}}
+          app_path: build/package
+          included_tags: ${{ matrix.tags }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: appinspect-api-html-report-${{ matrix.tags }}
+          path: AppInspect_response.html
+
+  init-build-run-appinspect-cli:
+    runs-on: ubuntu-22.04
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.7"
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
           path: built-ui/
-      - uses: actions/download-artifact@v4
-        with:
-          name: THIRDPARTY
-      - run: cp -f THIRDPARTY NOTICE
-      - run: poetry install
-      - name: Copy built UCC UI into UCC generator folder
-        run: |
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
-      - id: semantic
-        uses: splunk/semantic-release-action@v1.3
-        with:
-          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
-          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
-          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
-          extra_plugins: |
-            semantic-release-replace-plugin
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
-      - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
-        run: |
-          poetry build
-          poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
+          poetry install --only main
+      - run: |
+          poetry run ucc-gen init \
+            --addon-name "demo_addon_for_splunk" \
+            --addon-display-name "Demo Add-on for Splunk" \
+            --addon-input-name demo_input \
+            --add-license "Apache License 2.0" \
+            --include-author Splunk
+      - run: |
+          echo "# Binary File Declaration\n\nIgnoring lib/charset_normalizer/md.cpython-37m-x86_64-linux-gnu.so" > demo_addon_for_splunk/package/README.txt
+      - run: |
+          poetry run ucc-gen build --source demo_addon_for_splunk/package --ta-version 0.0.1
+      - run: |
+          mkdir packaged
+          poetry run ucc-gen package --path output/demo_addon_for_splunk -o packaged
+      - run: |
+          python3 -m pip install splunk-appinspect
+      - run: |
+          splunk-appinspect inspect packaged/demo_addon_for_splunk-0.0.1.tar.gz --mode test --included-tags cloud          
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs:
       - meta
       - build-test-addon
@@ -443,3 +428,94 @@ jobs:
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
       - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
+
+  all-checks:
+    if: ${{ !cancelled() }}
+    needs:
+      - test-unit
+      - test-smoke
+      - test-ui
+      - build-test-addon-openapi-client
+      - storybook-screenshots
+      - bot-updates
+    runs-on: ubuntu-22.04
+    env:
+      NEEDS: ${{ toJson(needs) }}
+    steps:
+      - name: check if tests have passed
+        id: check
+        shell: bash
+        run: |
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" and (.outputs.failed // "false") != "true")')
+          if [[ "$ALL_JOBS_PASSED" == "true" ]]
+          then
+              echo "all-checks=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "all-checks=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Fail job if something failed
+        if: ${{ steps.check.outputs.all-checks == 'false' }}
+        run: |
+          echo "Some check failed"
+          exit 1
+
+  release:
+    needs:
+      - build
+      - compliance-copyrights
+      - fossa-scan
+      - test-unit
+      - test-smoke
+      - test-ui
+      - appinspect-for-expected-outputs
+      - semgrep
+      - pre-commit
+      - all-checks
+    runs-on: ubuntu-22.04
+    if: "! github.event.pull_request.head.repo.fork "
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Very important: semantic-release won't trigger a tagged
+          # build if this is not set false
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+      - name: install UI deps
+        uses: ./.github/actions/cached-ui-deps
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - uses: actions/download-artifact@v4
+        with:
+          name: UCC-UI-build
+          path: built-ui/
+      - uses: actions/download-artifact@v4
+        with:
+          name: THIRDPARTY
+      - run: cp -f THIRDPARTY NOTICE
+      - run: poetry install
+      - name: Copy built UCC UI into UCC generator folder
+        run: |
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+      - id: semantic
+        uses: splunk/semantic-release-action@v1.3
+        with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
+          extra_plugins: |
+            semantic-release-replace-plugin
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+      - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        run: |
+          poetry build
+          poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
+      - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        name: Publish NPM
+        run: |
+          cd ui          
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

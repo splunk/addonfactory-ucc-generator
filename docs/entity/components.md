@@ -94,7 +94,7 @@ A clear button is visible to the right of the dropdown when this field is marked
 | valueField                                        | string  | If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as value for each item.```item.content?.[valueField]``` | -             |
 | [dependencies](../advanced/dependent_dropdown.md) | array   | It is used to update the options via an API call when the value of any field in the dependencies list is updated.                                                                             | -             |
 
-> When using [Boolean](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes) values consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
+> When using [Boolean](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes) values on any form inside configuration page, consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
 >
 > Consider using values '0' and '1' as false and true values.
 
@@ -321,6 +321,80 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
+## `CheckboxTree`
+
+See the following example usage:
+
+```json
+ {
+    "type": "checkboxTree",
+    "label": "CheckboxTreeTitle",
+    "field": "api3",
+    "options": {
+    "groups": [
+        {
+            "label": "Group 1",
+            "options": {
+                "isExpandable": true,
+                "expand": true
+            },
+            "fields": ["rowUnderGroup1"]
+        },
+        {
+            "label": "Group 3",
+            "options": {
+                "isExpandable": true,
+                "expand": true,
+            },
+            "fields": ["firstRowUnderGroup3", "secondRowUnderGroup3", "thirdRowUnderGroup3"]
+        }
+    ],
+    "rows": [
+        {
+            "field": "rowWithoutGroup",
+            "checkbox": {
+                "label": "Row without group",
+                "defaultValue": true
+            }
+        },
+        {
+            "field": "rowUnderGroup1",
+            "checkbox": {
+                "label": "Row under Group 1",
+                "defaultValue": true
+            }
+        },
+        {
+            "field": "firstRowUnderGroup3",
+            "checkbox": {
+                "label": "first row under group 3",
+                "defaultValue": true
+            }
+        },
+        {
+            "field": "secondRowUnderGroup3",
+            "checkbox": {
+                "label": "second row under group 3"
+            }
+        },
+        {
+            "field": "thirdRowUnderGroup3",
+            "checkbox": {
+                "label": "third row checked under group 3",
+                "defaultValue": true,
+            }
+        }
+    ]
+    }
+}
+```
+
+This is how it looks in the UI:
+
+![image](../images/components/checkbox_tree_mixed_example.png)
+
+The component maps and unmaps values into a single field in the format `fieldName1,fieldName2,fieldName3`, but only for checked rows. For the given example, it emits the following value: `rowWithoutGroup,rowUnderGroup1,firstRowUnderGroup3`.
+
 ## `Multiple Select`
 
 See the underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).
@@ -411,7 +485,7 @@ This is how it looks in the UI:
 
 ![image](../images/components/radio_component_example.png)
 
-> When using [Boolean](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes) values consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
+> When using [Boolean](https://docs.splunk.com/Documentation/Splunk/latest/SearchReference/ListOfDataTypes) values on any form inside configuration page, consider that inside splunk values like 'TRUE', 'T', 'Y', 'YES', true will be converted into '1' and values like 'FALSE', 'F', 'N', 'NO', 'NONE', false will be converted into '0'.
 >
 > Consider using values '0' and '1' as false and true values.
 
@@ -505,13 +579,24 @@ The Oauth type entity enables us to use Oauth2.0 for user authentication. Visit 
 ## `Interval`
 
 A [Text](#text) field used to specify [interval](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Inputsconf#Scripted_Input:)
-value, i.e. a number greater than or equal to 0, or -1.
+value, i.e. a number greater than or equal to 0, CRON interval or -1.
 
 <h3> Options </h3>
 
 | Property | Type                         | Description             |
 | -------- | ---------------------------- | ----------------------- |
 | range    | list of numbers (2 elements) | Range of allowed values |
+
+
+Supported CRON schedule:
+
+* "<minute> <hour> <day of month> <month> <day of week>"
+* Cron special characters are acceptable.  ("*", ",", "/", "-" )
+
+Names of months or days are not supported.
+
+Note: Range option is not supposed to be used with CRON interval.
+
 
 See the following example:
 
@@ -525,6 +610,7 @@ See the following example:
     }
 }
 ```
+
 
 ## `Index`
 
@@ -570,7 +656,7 @@ All attributes provided:
 Index field has two internal validators:
 
 1. REGEX that forces index names to start with a letter or digit and can only contain letters, numbers, underscores or hyphens.
-2. LENGTH which allows for an index name to have of 1 to 80 characters.
+1. LENGTH which allows for an index name to have of 1 to 80 characters.
 
 `endpointUrl` for that entity is `data/indexes?search=isInternal=0+disabled=0`
 

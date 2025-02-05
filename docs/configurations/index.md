@@ -1,3 +1,5 @@
+# Configuration
+
 The `Configuration` tab can have multiple subtabs, for example, a tab for
 account configuration (to configure the account by adding account credentials),
 proxy configuration, and logging level configuration.
@@ -18,6 +20,7 @@ proxy configuration, and logging level configuration.
 | name<span class="required-asterisk">\*</span>                         | string | To define the particular tab name.                                                                                                                                                                                                                                                  |
 | title<span class="required-asterisk">\*</span>                        | string | To show the title of the tab.                                                                                                                                                                                                                                                       |
 | [entity](../entity/index.md)<span class="required-asterisk">\*</span> | array  | A list of fields and their properties.                                                                                                                                                                                                                                              |
+| [groups](../advanced/groups_feature.md)                               | array  | It is used to divide forms into distinct sections, each comprising relevant fields.                                                                                                                                                                                                 |
 | [table](../table.md)                                                  | object | To display accounts stanza in table                                                                                                                                                                                                                                                 |
 | style                                                                 | string | By specifying this property in the global config file, the forms can either be opened as a new page or in a dialog. <br>Supported values are "page" or "dialog". <br> Default value is **dialog**.                                                                                  |
 | options                                                               | object | This property allows you to enable the [saveValidator](../advanced/save_validator.md) feature.                                                                                                                                                                                      |
@@ -28,6 +31,7 @@ proxy configuration, and logging level configuration.
 | [restHandlerModule](../advanced/custom_rest_handler.md)               | string | It specify name of the REST handler script that implements the custom actions to be performed on CRUD operations for the given input. (Use with restHandlerClass)                                                                                                                   |
 | [restHandlerClass](../advanced/custom_rest_handler.md)                | string | It specify name of the class present in the restHandlerModule, which implements methods like handleCreate, handleEdit, handleList, handleDelete and is child class of splunktaucclib.rest_handler.admin_external.AdminExternalHandler. (Use with restHandlerModule)                 |
 | customTab                                                             | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab.md) feature.                                                                                                                                                                                 |
+| hideForPlatform                                                       | string | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`.                                                                                                                                        |
 
 ### Tab components
 
@@ -37,6 +41,7 @@ tab.
 Currently available tab components:
 
 - [Logging tab](./logging.md)
+- [Proxy tab](./proxy.md)
 
 ### Usage
 
@@ -52,12 +57,16 @@ Currently available tab components:
             "entity": []
         },
         {
-            "name": "proxy",
-            "title": "Proxy",
-            "entity": [],
-            "options": {
-                "saveValidator": ""
-            }
+            "type": "proxyTab",
+             "warning": {
+                "config": {
+                    "message": "Some warning message"
+                }
+            },
+            "proxy_type": true,
+            "username": true,
+            "password": true,
+            "dns_resolution": true
         },
         {
             "type": "loggingTab"
@@ -66,7 +75,7 @@ Currently available tab components:
 }
 ```
 
-Note: The example above creates a Configuration page with two **empty** tabs: Account and Proxy.
+Note: The example above creates a Configuration page with an **empty** Account tab.
 Specify your properties in `"table"` and `"entity"`.
 
 ### Output
@@ -75,8 +84,8 @@ This is how table looks in the UI:
 
 ![image](../images/configuration/configuration_with_table_output.png)
 
-This is how form looks in the UI:
+This is how Proxy tab looks in the UI:
 
-![image](../images/configuration/configuration_without_table_output.png)
+![image](../images/configuration/proxy_tab_with_warning.png)
 
 More information about how to set Proxy tab, can be found [here](./proxy.md).

@@ -5,14 +5,35 @@ export default {
     clearMocks: true,
     // env settings
     setupFiles: ['<rootDir>/jest.polyfills.ts'],
-    testEnvironment: 'jsdom',
+    testEnvironment: 'jest-fixed-jsdom',
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     modulePathIgnorePatterns: ['<rootDir>/src/main/resources'],
     restoreMocks: true,
     // Coverage
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+    coveragePathIgnorePatterns: [
+        '/node_modules/',
+        '/stories/',
+        'mockServiceWorker.js',
+        'styleMock.js',
+        /*
+         TYPES
+         */
+        // *.d.ts files
+        '\\.d\\.ts$',
+        '/types/',
+        '\\.types\\.ts$',
+    ],
     coverageDirectory: 'coverage',
+    coverageThreshold: {
+        global: {
+            statements: 66,
+            branches: 57,
+            functions: 65,
+            lines: 66,
+        },
+    },
     testEnvironmentOptions: {
         /**
          * @note Opt-out from JSDOM using browser-style resolution
@@ -25,6 +46,7 @@ export default {
          */
         customExportConditions: [''],
     },
+    errorOnDeprecated: true,
     moduleNameMapper: {
         // Force module uuid to resolve with the CJS entry point, because Jest does not support package.json.exports. See https://github.com/uuidjs/uuid/issues/451
         uuid: require.resolve('uuid'),

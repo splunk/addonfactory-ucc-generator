@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,9 +23,7 @@ from jinja2 import Environment, FileSystemLoader
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
 )
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
-    write_file,
-)
+from splunk_add_on_ucc_framework.utils import write_file
 
 logger = logging.getLogger("ucc_gen")
 

@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Union, NoReturn
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from splunk_add_on_ucc_framework.commands.modular_alert_builder.alert_actions_helper import (
+from splunk_add_on_ucc_framework.utils import (
     write_file,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (

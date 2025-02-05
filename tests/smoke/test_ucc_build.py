@@ -1,4 +1,6 @@
+import sys
 import os
+import re
 import tempfile
 import logging
 import json
@@ -6,6 +8,7 @@ from os import path
 from pathlib import Path
 from typing import Dict, Any
 
+from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
 from tests.smoke import helpers
 from tests.unit import helpers as unit_helpers
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -58,12 +61,9 @@ def test_ucc_generate_with_config_param():
     Check if globalConfig and app.manifest contains current ucc version
     """
 
-    def check_ucc_versions():
-        global_config_path = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "..",
-            "output",
+    def check_ucc_versions(parent_folder):
+        gc_appserver = path.join(
+            parent_folder,
             "Splunk_TA_UCCExample",
             "appserver",
             "static",
@@ -71,11 +71,17 @@ def test_ucc_generate_with_config_param():
             "build",
             "globalConfig.json",
         )
+        gc_root = config_path
 
-        with open(global_config_path) as _f:
+        with open(gc_appserver) as _f:
             global_config = json.load(_f)
 
         assert global_config["meta"]["_uccVersion"] == __version__
+
+        with open(gc_root) as _f:
+            global_config = json.load(_f)
+
+        assert "_uccVersion" not in global_config["meta"]
 
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
@@ -93,13 +99,23 @@ def test_ucc_generate_with_config_param():
         "package_global_config_everything",
         "globalConfig.json",
     )
+    with tempfile.TemporaryDirectory(prefix="ucc") as temp:
+        with open(config_path) as fp:
+            cfg = json.load(fp)
 
-    build.generate(source=package_folder, config_path=config_path)
+        cfg["meta"]["_uccVersion"] = "0.0.1"
 
-    check_ucc_versions()
+        with open(config_path, "w") as fp:
+            json.dump(cfg, fp)
+
+        build.generate(
+            source=package_folder, config_path=config_path, output_directory=temp
+        )
+
+        check_ucc_versions(temp)
 
 
-def test_ucc_generate_with_everything():
+def test_ucc_generate_with_everything(caplog):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -188,12 +204,32 @@ def test_ucc_generate_with_everything():
             ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("appserver", "static", "js", "build", "entry_page.js.map"),
+            ("lib", "__pycache__"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
             assert not path.exists(actual_file_path)
 
         _compare_expandable_tabs_and_entities(package_folder, actual_folder)
+
+        # check missing validators warnings
+        pattern = re.compile(
+            r"^The field '([^']+)' does not have a validator specified."
+        )
+        entities = set()
+        for record in caplog.records:
+            if record.funcName != "_validate_entity_validators":
+                continue
+
+            match = pattern.search(record.msg)
+            assert match, record.msg
+
+            entities.add(match.group(1))
+
+        assert "example_help_link" not in entities
+        assert "loglevel" not in entities
+        assert "field_no_validators" in entities
+        assert "field_no_validators_suppressed" not in entities
 
 
 def test_ucc_generate_with_multiple_inputs_tabs():
@@ -355,7 +391,7 @@ def test_ucc_build_verbose_mode(caplog):
             if copy_logs:
                 return_logs.append(record)
 
-            if record.message[:22] == message_to_end:
+            if record.message.startswith(message_to_end):
                 copy_logs = False
 
         return return_logs
@@ -444,9 +480,11 @@ def test_ucc_build_verbose_mode(caplog):
 
 def test_ucc_generate_with_everything_uccignore(caplog):
     """
-    Checks the functioning of .uccignore present in a repo.
-    Compare only the files that shouldn't be present in the output directory.
+    Checks the deprecation warning of .uccignore present in a repo with
+    its functionality still working.
     """
+    # clean-up cached `additional_packaging` module when running all tests
+    sys.modules.pop("additional_packaging", "")
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -456,6 +494,16 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             "package_global_config_everything_uccignore",
             "package",
         )
+        # create `.uccignore` temporarily
+        ucc_file = path.join(path.dirname(package_folder), ".uccignore")
+        f = open(ucc_file, "w+")
+        f.write(
+            """**/**one.py
+bin/splunk_ta_uccexample_rh_example_input_two.py
+bin/wrong_pattern
+"""
+        )
+        f.close()
         build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_warning_msg = (
@@ -472,9 +520,22 @@ def test_ucc_generate_with_everything_uccignore(caplog):
         removed = set(
             caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
         )
+        exp_msg = (
+            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
+            "To achieve the similar functionality use additional_packaging.py."
+            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+        )
+        exp_info_msg = (
+            "additional_packaging.py is present but does not have `additional_packaging`."
+            " Skipping additional packaging."
+        )
 
+        assert exp_msg in caplog.text
+        assert exp_info_msg in caplog.text
         assert expected_warning_msg in caplog.text
         assert edm_paths == removed
+        # on successful assertion, we delete the file
+        os.remove(ucc_file)
 
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
         # when custom files are provided, default files shouldn't be shipped
@@ -482,6 +543,36 @@ def test_ucc_generate_with_everything_uccignore(caplog):
             ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
             ("bin", "example_input_one.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
+        ]
+        for af in files_should_be_absent:
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
+
+
+def test_ucc_generate_with_everything_cleanup_output_files():
+    """
+    Checks the functioning of addtional_packaging.py's `cleanup_output_files`  present in a repo.
+    Compares only the files that shouldn't be present in the output directory.
+    """
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_everything_uccignore",
+            "package",
+        )
+        build.generate(source=package_folder, output_directory=temp_dir)
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+        # when custom files are provided, default files shouldn't be shipped
+        files_should_be_absent = [
+            ("bin", "example_input_one.py"),
+            ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
+            ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
+            ("default", "redundant.conf"),
+            ("default", "nav", "views", "file_copied_from_source_code.xml"),
         ]
         for af in files_should_be_absent:
             actual_file_path = path.join(actual_folder, *af)
@@ -598,6 +689,14 @@ def _compare_logging_tab(
                 },
                 "type": "singleSelect",
                 "required": True,
+                "validators": [
+                    {
+                        "errorMsg": "Log level must be one of: DEBUG, "
+                        "INFO, WARNING, ERROR, CRITICAL",
+                        "pattern": "^DEBUG|INFO|WARNING|ERROR|CRITICAL$",
+                        "type": "regex",
+                    }
+                ],
             }
         ],
         "name": "logging",
@@ -631,8 +730,8 @@ def _compare_interval_entities(
                         "type": "text",
                         "validators": [
                             {
-                                "errorMsg": "Interval must be either a non-negative number or -1.",
-                                "pattern": "^(?:-1|\\d+(?:\\.\\d+)?)$",
+                                "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                "pattern": CRON_REGEX,
                                 "type": "regex",
                             }
                         ],

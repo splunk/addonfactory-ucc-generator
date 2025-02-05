@@ -57,6 +57,7 @@ const CommonEditableEntityOptions = z.object({
     disableonEdit: z.boolean().default(false).optional(),
     enable: z.boolean().default(true).optional(),
     requiredWhenVisible: z.boolean().default(false).optional(),
+    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
 });
 
 export const MarkdownMessageType = z.union([
@@ -85,24 +86,26 @@ const FieldToModify = z.object({
 
 const ModifyFieldsOnValue = z.array(FieldToModify).optional();
 
-const AllValidators = z
-    .array(
-        z.union([
-            NumberValidator,
-            StringValidator,
-            RegexValidator,
-            EmailValidator,
-            Ipv4Validator,
-            UrlValidator,
-            DateValidator,
-        ])
-    )
-    .nonempty();
+const AllValidators = z.array(
+    z.union([
+        NumberValidator,
+        StringValidator,
+        RegexValidator,
+        EmailValidator,
+        Ipv4Validator,
+        UrlValidator,
+        DateValidator,
+    ])
+);
 
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
     label: z.string().optional(),
-    options: z.object({ text: z.string(), link: z.string() }),
+    options: z.object({
+        text: z.string(),
+        link: z.string(),
+        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    }),
     required: z.literal(false).default(false).optional(),
 });
 
@@ -217,6 +220,39 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
     }),
 });
 
+export const CheckboxTreeEntity = CommonEditableEntityFields.extend({
+    type: z.literal('checkboxTree'),
+    validators: z.tuple([RegexValidator]).optional(),
+    defaultValue: z.union([z.number(), z.boolean()]).optional(),
+    options: CommonEditableEntityOptions.extend({
+        groups: z
+            .array(
+                z.object({
+                    label: z.string(),
+                    fields: z.array(z.string()),
+                    options: z
+                        .object({
+                            isExpandable: z.boolean().optional(),
+                            expand: z.boolean().optional(),
+                        })
+                        .optional(),
+                })
+            )
+            .optional(),
+        rows: z.array(
+            z.object({
+                field: z.string(),
+                checkbox: z
+                    .object({
+                        label: z.string().optional(),
+                        defaultValue: z.boolean().optional(),
+                    })
+                    .optional(),
+            })
+        ),
+    }),
+});
+
 export const RadioEntity = CommonEditableEntityFields.extend({
     type: z.literal('radio'),
     defaultValue: z.string().optional(),
@@ -248,15 +284,9 @@ export const OAuthFields = z.object({
     encrypted: z.boolean().default(false).optional(),
     required: z.boolean().default(false).optional(),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
-    options: z
-        .object({
-            disableonEdit: z.boolean().optional(),
-            enable: z.boolean().default(true).optional(),
-            display: z.literal(true).default(true).optional(),
-            requiredWhenVisible: z.boolean().default(false).optional(),
-        })
-        .optional(),
+    options: CommonEditableEntityOptions.optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
+    validators: AllValidators.optional(),
 });
 
 export const OAuthEntity = CommonEditableEntityFields.extend({
@@ -285,6 +315,7 @@ export const CustomEntity = CommonEditableEntityFields.extend({
     options: z.object({
         type: z.literal('external'),
         src: z.string(),
+        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     }),
 });
 
@@ -310,6 +341,7 @@ export const AnyOfEntity = z.discriminatedUnion('type', [
     MultipleSelectEntity,
     CheckboxEntity,
     CheckboxGroupEntity,
+    CheckboxTreeEntity,
     RadioEntity,
     FileEntity,
     OAuthEntity,

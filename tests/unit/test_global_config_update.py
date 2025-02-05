@@ -4,6 +4,7 @@ import pytest
 
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config_update import (
+    _version_tuple,
     _handle_biased_terms_update,
     _handle_dropping_api_version_update,
     _handle_xml_dashboard_update,
@@ -11,10 +12,23 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _dump_with_migrated_tabs,
     _dump_with_migrated_entities,
     _stop_build_on_placeholder_usage,
+    _dump_enable_from_global_config,
+    handle_global_config_update,
 )
 from splunk_add_on_ucc_framework.entity import IntervalEntity
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
+
+
+@pytest.mark.parametrize(
+    "version, expected",
+    [
+        ("5.52.0", ("00000005", "00000052", "00000000")),
+        ("0.0.9", ("00000000", "00000000", "00000009")),
+    ],
+)
+def test_version_tuple(version, expected):
+    assert _version_tuple(version) == expected
 
 
 @pytest.mark.parametrize(
@@ -207,3 +221,43 @@ def test_config_validation_when_placeholder_is_present(tmp_path, caplog):
     expected_schema_version = "0.0.7"
     assert expected_schema_version == global_config.schema_version
     assert error_log in caplog.text
+
+
+def test_dump_enable_from_global_config_enable_present(tmp_path, caplog):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_input_with_enable_action.json"
+    )
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    expected_schema_version = "0.0.9"
+
+    _dump_enable_from_global_config(global_config)
+
+    assert expected_schema_version == global_config.schema_version
+    assert "`enable` attribute found in input's page table action." in caplog.text
+
+
+def test_dump_enable_from_global_config_enable_absent(tmp_path, caplog):
+    tmp_file_gc = tmp_path / "globalConfig.yaml"
+
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.yaml")
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    expected_schema_version = "0.0.9"
+
+    _dump_enable_from_global_config(global_config)
+
+    assert expected_schema_version == global_config.schema_version
+    assert caplog.text == ""
+
+
+def test_handle_global_config_update_when_valid_config(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
+    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    expected_schema_version = "0.0.9"
+
+    handle_global_config_update(global_config)
+
+    assert global_config.schema_version == expected_schema_version

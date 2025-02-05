@@ -3,25 +3,23 @@ import React from 'react';
 import { within, userEvent, expect } from '@storybook/test';
 import BaseFormView from '../../BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../../../util/util';
-import { serverHandlers } from '../checkboxGroupMocks';
-import checkboxGroupConfig from '../checkboxGroupMocks.json';
-import checkboxGroupRequiredConfig from '../checkboxGroupRequiredMocks.json';
+import { serverHandlers } from '../mocks/checkboxGroupMocks';
+import checkboxGroupConfig from '../mocks/checkboxGroupMocks.json';
+import checkboxGroupRequiredConfig from '../mocks/checkboxGroupRequiredMocks.json';
 import InputPage from '../../../pages/Input/InputPage';
 
 const meta = {
     component: InputPage,
     title: 'CheckboxGroup/Page',
-    render: (args) => {
-        setUnifiedConfig(args.globalConfig);
+    render: (_args, { parameters }) => {
+        setUnifiedConfig(parameters.globalConfig);
         return <InputPage />;
-    },
-    args: {
-        globalConfig: checkboxGroupConfig,
     },
     parameters: {
         msw: {
             handlers: serverHandlers,
         },
+        globalConfig: checkboxGroupConfig,
     },
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
@@ -40,7 +38,7 @@ type Story = StoryObj<typeof BaseFormView>;
 export const InputPageView: Story = {};
 
 export const RequiredView: Story = {
-    args: {
+    parameters: {
         globalConfig: checkboxGroupRequiredConfig,
     },
     play: async ({ canvasElement }) => {

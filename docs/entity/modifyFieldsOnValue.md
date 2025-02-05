@@ -1,12 +1,14 @@
+# Modify Fields On Change
+
 This feature allows to specify conditions to modify other fields based on current field value change.
 
 ### Modification Object Properties
 
-| Property                                            | Type   | Description                                                                                                         |
-| --------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| fieldValue<span class="required-asterisk">\*</span> | string | Value that will trigger the update, put `[[any_other_value]]` to trigger update for any other values than specified |
-| mode                                                | string | Mode that adds possibility to use modification only on certain mode                                                 |
-| fieldsToModify                                      | array  | List of fields modifications that will be applied after com ponent value will match                                 |
+| Property                                            | Type   | Description                                                                                                                       |
+| --------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| fieldValue<span class="required-asterisk">\*</span> | string | Value of current field that will trigger the update. Put `[[any_other_value]]` to make update for any other value than specified. |
+| mode                                                | string | Mode that adds possibility to use modification only on certain mode. One of ( `create` / `edit` / `clone` / `config` )            |
+| fieldsToModify                                      | array  | List of fields modifications that will be applied after com ponent value will match.                                              |
 
 ### fieldsToModify Properties
 

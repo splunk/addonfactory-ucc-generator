@@ -201,7 +201,7 @@ pages:
         encrypted: true
         field: proxy_password
       - type: checkbox
-        label: Reverse DNS resolution
+        label: DNS resolution
         field: proxy_rdns
       options:
         saveValidator: function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled
@@ -561,7 +561,6 @@ pages:
     table:
       actions:
       - edit
-      - enable
       - delete
       - clone
       header:

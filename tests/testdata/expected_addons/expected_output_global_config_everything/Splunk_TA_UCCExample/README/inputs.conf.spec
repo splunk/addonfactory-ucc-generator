@@ -27,12 +27,21 @@ index = Default: default
 input_two_checkbox = This is an example checkbox for the input two entity
 input_two_multiple_select = This is an example multipleSelect for input two entity
 input_two_radio = This is an example radio button for the input two entity
+input_two_text_hidden_for_cloud = Should be hidden for cloud
+input_two_text_hidden_for_enterprise = Should be hidden for enterprise
 interval = Time interval of the data input, in seconds.
 start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after which to query and index records.  The default is 90 days before today.
 use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data collection.  Default: yes
 
 [example_input_three://<name>]
+event_filters =
 interval = Time interval of the data input, in seconds.
 
 [example_input_four://<name>]
+interval = Time interval of the data input, in seconds.
+
+[service_hidden_for_cloud://<name>]
+interval = Time interval of the data input, in seconds.
+
+[service_hidden_for_enterprise://<name>]
 interval = Time interval of the data input, in seconds.

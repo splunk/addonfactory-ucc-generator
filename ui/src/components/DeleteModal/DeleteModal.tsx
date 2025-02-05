@@ -1,130 +1,100 @@
-import React, { Component } from 'react';
+import React, { useContext, useState } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
-import styled from 'styled-components';
-import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import update from 'immutability-helper';
 import { _ } from '@splunk/ui-utils/i18n';
+
 import { generateToast } from '../../util/util';
-import { StyledButton } from '../../pages/EntryPageStyle';
-
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { deleteRequest, generateEndPointUrl } from '../../util/api';
 import TableContext from '../../context/TableContext';
-import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
+import { getFormattedMessage, parseErrorMsg } from '../../util/messageUtil';
 import { PAGE_INPUT } from '../../constants/pages';
+import { StandardPages } from '../../types/components/shareableTypes';
+import { UCCButton } from '../UCCButton/UCCButton';
 
-const ModalWrapper = styled(Modal)`
-    width: 800px;
-`;
-
-interface DeleteModalProps {
-    page: string;
+export interface DeleteModalProps {
+    page: StandardPages;
     handleRequestClose: () => void;
     serviceName: string;
     stanzaName: string;
     open?: boolean;
 }
 
-interface DeleteModalState {
-    isDeleting: boolean;
-    ErrorMsg: string;
-}
+const DeleteModal: React.FC<DeleteModalProps> = ({
+    page,
+    handleRequestClose,
+    serviceName,
+    stanzaName,
+    open = false,
+}) => {
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const context = useContext(TableContext);
 
-class DeleteModal extends Component<DeleteModalProps, DeleteModalState> {
-    static contextType = TableContext;
-
-    constructor(props: DeleteModalProps) {
-        super(props);
-        this.state = { isDeleting: false, ErrorMsg: '' };
-    }
-
-    handleRequestClose = () => {
-        // set ErrorMsg to empty string on close or cancel
-        // so that on again open of modal it does not show the same ErrorMsg
-        this.setState((prevState) => ({ ...prevState, ErrorMsg: '' }));
-
-        this.props.handleRequestClose();
+    const handleRequestCloseInternal = () => {
+        setErrorMsg(null);
+        handleRequestClose();
     };
 
-    handleDelete = () => {
-        this.setState(
-            (prevState) => ({ ...prevState, isDeleting: true, ErrorMsg: '' }),
-            () => {
-                axiosCallWrapper({
-                    serviceName: `${this.props.serviceName}/${encodeURIComponent(
-                        this.props.stanzaName
-                    )}`,
-                    customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    method: 'delete',
-                    handleError: false,
-                })
-                    .catch((err) => {
-                        const errorSubmitMsg = parseErrorMsg(err);
-                        this.setState({ ErrorMsg: errorSubmitMsg, isDeleting: false });
-                        return Promise.reject(err);
+    const handleDelete = () => {
+        setIsDeleting(true);
+        setErrorMsg(null);
+
+        deleteRequest({
+            endpointUrl: generateEndPointUrl(
+                `${encodeURIComponent(serviceName)}/${encodeURIComponent(stanzaName)}`
+            ),
+            handleError: false,
+        })
+            .then(() => {
+                context?.setRowData(
+                    update(context.rowData, {
+                        [serviceName]: { $unset: [stanzaName] },
                     })
-                    .then(() => {
-                        this.context?.setRowData(
-                            update(this.context.rowData, {
-                                [this.props.serviceName]: { $unset: [this.props.stanzaName] },
-                            })
-                        );
-                        this.setState({ isDeleting: false });
-                        this.handleRequestClose();
-                        generateToast(`Deleted "${this.props.stanzaName}"`, 'success');
-                    });
-            }
-        );
+                );
+                setIsDeleting(false);
+                handleRequestCloseInternal();
+                generateToast(`Deleted "${stanzaName}"`, 'success');
+            })
+            .catch((err) => {
+                const errorSubmitMsg = parseErrorMsg(err);
+                setErrorMsg(errorSubmitMsg);
+                setIsDeleting(false);
+            });
     };
 
-    // Display error message
-    generateErrorMessage = () => {
-        if (this.state.ErrorMsg) {
-            return (
-                <div>
-                    <Message appearance="fill" type="error">
-                        {this.state.ErrorMsg}
-                    </Message>
-                </div>
-            );
-        }
-        return null;
-    };
+    const deleteMsg =
+        page === PAGE_INPUT
+            ? getFormattedMessage(103, [stanzaName])
+            : getFormattedMessage(102, [stanzaName]);
 
-    render() {
-        let deleteMsg;
-        if (this.props.page === PAGE_INPUT) {
-            deleteMsg = getFormattedMessage(103, [this.props.stanzaName]);
-        } else {
-            deleteMsg = getFormattedMessage(102, [this.props.stanzaName]);
-        }
-        return (
-            <ModalWrapper open={this.props.open}>
-                <Modal.Header
-                    title={getFormattedMessage(101)}
-                    onRequestClose={this.handleRequestClose}
+    return (
+        <Modal open={open} style={{ width: '800px' }}>
+            <Modal.Header
+                title={getFormattedMessage(101)}
+                onRequestClose={handleRequestCloseInternal}
+            />
+            <Modal.Body className="deletePrompt">
+                {errorMsg && (
+                    <div>
+                        <Message appearance="fill" type="error">
+                            {errorMsg}
+                        </Message>
+                    </div>
+                )}
+                <p>{deleteMsg}</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <UCCButton
+                    appearance="secondary"
+                    onClick={handleRequestCloseInternal}
+                    label={_('Cancel')}
+                    disabled={isDeleting}
                 />
-                <Modal.Body className="deletePrompt">
-                    {this.generateErrorMessage()}
-                    <p>{deleteMsg}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <StyledButton
-                        appearance="secondary"
-                        onClick={this.handleRequestClose}
-                        label={_('Cancel')}
-                        disabled={this.state.isDeleting}
-                    />
-                    <StyledButton
-                        appearance="primary"
-                        label={this.state.isDeleting ? <WaitSpinner /> : _('Delete')}
-                        onClick={this.handleDelete}
-                        disabled={this.state.isDeleting}
-                    />
-                </Modal.Footer>
-            </ModalWrapper>
-        );
-    }
-}
+                <UCCButton label={_('Delete')} onClick={handleDelete} loading={isDeleting} />
+            </Modal.Footer>
+        </Modal>
+    );
+};
 
 export default DeleteModal;

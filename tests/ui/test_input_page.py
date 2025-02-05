@@ -253,6 +253,7 @@ class TestInputPage(UccTester):
             "Example Input Two",
             "Example Input Three",
             "Example Input Four",
+            "Service hidden for cloud",
         ]
         self.assert_util(
             input_page.create_new_input.get_inputs_list, create_new_input_list
@@ -276,6 +277,8 @@ class TestInputPage(UccTester):
             "Example Input Two",
             "Example Input Three",
             "Example Input Four",
+            "Service hidden for cloud",
+            "Service hidden for enterprise",
         ]
         self.assert_util(input_page.type_filter.get_input_type_list, type_filter_list)
         input_page.type_filter.select_input_type(
@@ -688,7 +691,7 @@ class TestInputPage(UccTester):
         input_page.entity1.interval.set_value("abc")
         self.assert_util(
             input_page.entity1.save,
-            r"Interval must be either a non-negative number or -1.",
+            r"Interval must be either a non-negative number, CRON interval or -1.",
             left_args={"expect_error": True},
         )
 
@@ -1034,8 +1037,11 @@ class TestInputPage(UccTester):
         go_to_link = "https://docs.splunk.com/Documentation"
         input_page.create_new_input.select("Example Input One")
         input_page.entity1.example_account.wait_for_values()
-        with input_page.entity1.help_link.open_link():
-            self.assert_util(input_page.entity1.help_link.get_current_url, go_to_link)
+
+        assert (
+            input_page.entity1.help_link.internal_container.get_attribute("href")
+            == go_to_link
+        )
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
@@ -1596,7 +1602,7 @@ class TestInputPage(UccTester):
         input_page.entity2.interval.set_value("abc")
         self.assert_util(
             input_page.entity2.save,
-            r"Interval must be either a non-negative number or -1.",
+            r"Interval must be either a non-negative number, CRON interval or -1.",
             left_args={"expect_error": True},
         )
 
@@ -2530,3 +2536,83 @@ class TestInputPage(UccTester):
         input_page.entity1.text_area.scroll("UP", 40)
         screenshot_after = input_page.entity1.text_area.screenshot()
         self.assert_util(screnshot_before, screenshot_after, operator="!=")
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    @pytest.mark.parametrize(
+        "interval",
+        [
+            "-1",
+            "1",
+            "0 0,11 2 */2 *",
+            "* * * * *",
+        ],
+    )
+    def test_example_inputs_with_valid_interval(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, interval
+    ):
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        # for input_pos, interval in enumerate(intervals, 1):
+        name = "dummy_input"
+        input_page.create_new_input.select("Example Input One")
+        input_page.entity1.example_account.wait_for_values()
+        input_page.entity1.example_account.select("test_input")
+        input_page.entity1.object.set_value("test_object")
+        input_page.entity1.name.set_value(name)
+        input_page.entity1.object_fields.set_value("test_field")
+        input_page.entity1.text_area.set_value("line1\nline2\nline3\nline4\nline5")
+
+        input_page.entity1.interval.set_value(interval)
+
+        input_page.entity1.save_btn.click()
+        input_page.table.wait_for_rows_to_appear(1)
+
+        self.assert_util(
+            input_page.table.get_table()[name],
+            {
+                "name": name,
+                "account": "test_input",
+                "interval": interval,
+                "index": "default",
+                "status": "Active",
+                "actions": "Edit | Clone | Search | Delete",
+            },
+        )
+
+        backend_stanza = input_page.backend_conf.get_stanza(
+            f"example_input_one://{name}"
+        )
+        assert backend_stanza.get("interval") == interval
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    @pytest.mark.parametrize(
+        "interval",
+        [
+            "-2",
+            "0a 0,11 2 */2 *",
+            "a b * * *",
+        ],
+    )
+    def test_example_inputs_with_not_valid_interval(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, interval
+    ):
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        name = "dummy_input"
+        input_page.create_new_input.select("Example Input One")
+        input_page.entity1.example_account.wait_for_values()
+        input_page.entity1.example_account.select("test_input")
+        input_page.entity1.object.set_value("test_object")
+        input_page.entity1.name.set_value(name)
+        input_page.entity1.object_fields.set_value("test_field")
+        input_page.entity1.text_area.set_value("line1\nline2\nline3\nline4\nline5")
+
+        input_page.entity1.interval.set_value(interval)
+
+        self.assert_util(
+            input_page.entity2.save,
+            "Interval must be either a non-negative number, CRON interval or -1.",
+            left_args={"expect_error": True},
+        )

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, memo, useCallback, useMemo, useRef } from 'react';
 import update from 'immutability-helper';
-import axios from 'axios';
 
 import { WaitSpinnerWrapper } from './CustomTableStyle';
-import { axiosCallWrapper } from '../../util/axiosCallWrapper';
+import { generateEndPointUrl, getRequest, postRequest } from '../../util/api';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import CustomTable from './CustomTable';
 import TableHeader from './TableHeader';
@@ -17,6 +16,7 @@ import { useTableContext } from '../../context/useTableContext';
 import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
 import { isReadonlyRow } from './table.utils';
 import { ITableConfig } from '../../types/globalConfig/pages';
+import { StandardPages } from '../../types/components/shareableTypes';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
@@ -34,7 +34,7 @@ const defaultTableConfig: ITableConfig = {
 };
 
 const getTableConfigAndServices = (
-    page: string,
+    page: StandardPages,
     unifiedConfigs: GlobalConfig,
     serviceName?: string
 ) => {
@@ -49,9 +49,9 @@ const getTableConfigAndServices = (
                 tableConfig: unifiedConfigs.pages.inputs.table,
                 readonlyFieldId: unifiedConfigs.pages.inputs.readonlyFieldId,
                 hideFieldId: unifiedConfigs.pages.inputs.hideFieldId,
+                useInputToggleConfirmation: unifiedConfigs.pages.inputs.useInputToggleConfirmation,
             };
         }
-
         const serviceWithTable = services?.find((x) => x.name === serviceName);
         const tableData = serviceWithTable && 'table' in serviceWithTable && serviceWithTable.table;
 
@@ -62,6 +62,10 @@ const getTableConfigAndServices = (
             },
             readonlyFieldId: undefined,
             hideFieldId: undefined,
+            useInputToggleConfirmation:
+                serviceWithTable &&
+                'useInputToggleConfirmation' in serviceWithTable &&
+                Boolean(serviceWithTable.useInputToggleConfirmation),
         };
     }
 
@@ -120,10 +124,11 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         useTableContext()!;
 
     const unifiedConfigs = getUnifiedConfigs();
-    const { services, tableConfig, readonlyFieldId, hideFieldId } = useMemo(
-        () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
-        [page, unifiedConfigs, serviceName]
-    );
+    const { services, tableConfig, readonlyFieldId, hideFieldId, useInputToggleConfirmation } =
+        useMemo(
+            () => getTableConfigAndServices(page, unifiedConfigs, serviceName),
+            [page, unifiedConfigs, serviceName]
+        );
 
     const moreInfo = tableConfig && 'moreInfo' in tableConfig ? tableConfig?.moreInfo : null;
     const headers = tableConfig && 'header' in tableConfig ? tableConfig?.header : null;
@@ -135,23 +140,25 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             isComponentMounted.current = false;
         };
     }, []);
+
     useEffect(() => {
         const abortController = new AbortController();
 
         function fetchInputs() {
             const requests =
                 services?.map((service) =>
-                    axiosCallWrapper({
-                        serviceName: service.name,
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    getRequest<{ entry: [any] }>({
+                        endpointUrl: generateEndPointUrl(encodeURIComponent(service.name)),
                         params: { count: -1 },
                         signal: abortController.signal,
+                        handleError: false,
                     })
                 ) || [];
 
-            axios
-                .all(requests)
+            Promise.all(requests)
                 .catch((caughtError) => {
-                    if (axios.isCancel(caughtError)) {
+                    if (abortController.signal.aborted) {
                         return;
                     }
                     const message = parseErrorMsg(caughtError);
@@ -159,13 +166,13 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                     generateToast(message, 'error');
                     setError(caughtError);
                 })
-                .then((response) => {
-                    if (!response) {
+                .then((responsesData) => {
+                    if (!responsesData) {
                         return;
                     }
                     const data = getRowDataFromApiResponse(
                         services,
-                        response.map((res) => res.data.entry)
+                        responsesData.map((responseData) => responseData.entry)
                     );
                     setRowData(data);
                 })
@@ -202,11 +209,12 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         );
         const body = new URLSearchParams();
         body.append('disabled', String(!row.disabled));
-        axiosCallWrapper({
-            serviceName: `${row.serviceName}/${row.name}`,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        postRequest<{ entry: [any] }>({
+            endpointUrl: generateEndPointUrl(
+                `${encodeURIComponent(row.serviceName)}/${encodeURIComponent(row.name)}`
+            ),
             body,
-            customHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            method: 'post',
             handleError: true,
             callbackOnError: () => {
                 setRowData((currentRowData: RowDataType) =>
@@ -219,13 +227,13 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                     })
                 );
             },
-        }).then((response) => {
+        }).then((data) => {
             setRowData((currentRowData: RowDataType) =>
                 update(currentRowData, {
                     [row.serviceName]: {
                         [row.name]: {
                             // ADDON-39125: isTrue required if splunktaucclib resthandlers' super() is not invoked
-                            disabled: { $set: isTrue(response.data.entry[0].content.disabled) },
+                            disabled: { $set: isTrue(data.entry[0].content.disabled) },
                             __toggleShowSpinner: { $set: false },
                         },
                     },
@@ -363,6 +371,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
                 sortKey={sortKey}
                 handleOpenPageStyleDialog={handleOpenPageStyleDialog}
                 tableConfig={tableConfig}
+                useInputToggleConfirmation={useInputToggleConfirmation}
             />
         </>
     );

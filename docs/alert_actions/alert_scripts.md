@@ -1,3 +1,5 @@
+# Alert Action Scripts
+
 The following files would be created/ updated in the output folder once you executed the `ucc-gen` command:
 
 | File Location | Content Description | Action |
@@ -9,16 +11,16 @@ The following files would be created/ updated in the output folder once you exec
 In the python file that is created, below are the methods that you can use or override for varying use cases:
 
 - `process_event()`
-  - This is the start point of where you require to write the logic of sending data from Splunk to any other
+    + This is the start point of where you require to write the logic of sending data from Splunk to any other
 service via its APIs. Additionally, you can validate the parameters that are provided in the alert action
 as client side validation (via JavaScript) isn't allowed in Splunk's alert action's HTML page for
 security reasons. <br> Note: This method must be overwritten.
 - `get_events()` -> List[dict]
-  - Used to get the events that triggered the alert. It returns a list of dictionary. A dictionary points to an event that triggered the alert, and each dictionary has the fields extracted by Splunk.
+    + Used to get the events that triggered the alert. It returns a list of dictionary. A dictionary points to an event that triggered the alert, and each dictionary has the fields extracted by Splunk.
 - `addevent(raw: str, sourcetype: str)`
-  - If you are bringing additional information from an outer service, you can write that information using this method. You write a single record using the method. This method will append all the records and will dump it to Splunk when `writeevents()` method is called.
+    + If you are bringing additional information from an outer service, you can write that information using this method. You write a single record using the method. This method will append all the records and will dump it to Splunk when `writeevents()` method is called.
 - `writeevents(index: str, host: str, source: str)`
-  - All the events added to the queue using `addevent()` method are written to Splunk with the details passed in the arguments.
+    + All the events added to the queue using `addevent()` method are written to Splunk with the details passed in the arguments.
 
 An example of a script with validations:
 

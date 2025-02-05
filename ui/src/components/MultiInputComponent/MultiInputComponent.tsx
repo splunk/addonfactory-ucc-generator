@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { AxiosCallType, axiosCallWrapper } from '../../util/axiosCallWrapper';
-import { filterResponse } from '../../util/util';
+import { MultiselectChangeHandler } from '@splunk/react-ui/types/src/Multiselect/Multiselect';
+import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
+import { filterResponse, FilterResponseParams } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
-
-const MultiSelectWrapper = styled(Multiselect)`
-    width: 320px !important;
-`;
+import { invariant } from '../../util/invariant';
+import { AcceptableFormValue } from '../../types/components/shareableTypes';
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
 
 const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: 5px;
@@ -22,8 +22,7 @@ export interface MultiInputComponentProps {
     field: string;
     controlOptions: z.TypeOf<typeof MultipleSelectCommonOptions>;
     disabled?: boolean;
-    value?: string;
-    error?: boolean;
+    value?: AcceptableFormValue;
     dependencyValues?: Record<string, unknown>;
 }
 
@@ -32,10 +31,10 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         id,
         field,
         disabled = false,
-        error = false,
         value,
         controlOptions,
         dependencyValues,
+        handleChange,
         ...restProps
     } = props;
     const {
@@ -51,17 +50,17 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         delimiter = ',',
     } = controlOptions;
 
-    function handleChange(e: unknown, { values }: { values: (string | number | boolean)[] }) {
+    const onChange: MultiselectChangeHandler = (_e, { values }) => {
         if (typeof values[0] === 'string' || values.length === 0) {
-            restProps.handleChange(field, values.join(delimiter));
+            handleChange(field, values.join(delimiter));
         }
-    }
+    };
 
     function generateOptions(itemList: { label: string; value: string | number | boolean }[]) {
         return itemList.map((item) => (
             <Multiselect.Option
                 label={item.label}
-                value={item.value}
+                value={String(item.value)}
                 key={typeof item.value === 'boolean' ? String(item.value) : item.value}
             />
         ));
@@ -76,34 +75,35 @@ function MultiInputComponent(props: MultiInputComponentProps) {
             return;
         }
 
-        let current = true;
+        let mounted = true;
         const abortController = new AbortController();
+
+        const url = referenceName
+            ? generateEndPointUrl(encodeURIComponent(referenceName))
+            : endpointUrl;
+        invariant(
+            url,
+            '[MultiInputComponent] referenceName or endpointUrl or items must be provided'
+        );
 
         const apiCallOptions = {
             signal: abortController.signal,
             handleError: true,
             params: { count: -1 },
-            serviceName: '',
-            endpointUrl: '',
-        } satisfies AxiosCallType;
-        if (referenceName) {
-            apiCallOptions.serviceName = referenceName;
-        } else if (endpointUrl) {
-            apiCallOptions.endpointUrl = endpointUrl;
-        }
-
+            endpointUrl: url,
+        } satisfies RequestParams;
         if (dependencyValues) {
             apiCallOptions.params = { ...apiCallOptions.params, ...dependencyValues };
         }
         if (!dependencies || dependencyValues) {
             setLoading(true);
-            axiosCallWrapper(apiCallOptions)
-                .then((response) => {
-                    if (current) {
+            getRequest<{ entry: FilterResponseParams }>(apiCallOptions)
+                .then((data) => {
+                    if (mounted) {
                         setOptions(
                             generateOptions(
                                 filterResponse(
-                                    response.data.entry,
+                                    data.entry,
                                     labelField,
                                     valueField,
                                     allowList,
@@ -111,19 +111,18 @@ function MultiInputComponent(props: MultiInputComponentProps) {
                                 )
                             )
                         );
-                        setLoading(false);
                     }
                 })
-                .catch(() => {
-                    if (current) {
+                .finally(() => {
+                    if (mounted) {
                         setLoading(false);
                     }
                 });
         }
         // eslint-disable-next-line consistent-return
         return () => {
-            abortController.abort('Operation canceled.');
-            current = false;
+            mounted = false;
+            abortController.abort();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dependencyValues]);
@@ -131,22 +130,23 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     const effectiveDisabled = loading ? true : disabled;
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
-    const valueList = value ? value.split(delimiter) : [];
+    const valueList = value ? String(value).split(delimiter) : [];
+    const restSuiProps = excludeControlWrapperProps(restProps);
 
     return (
         <>
-            <MultiSelectWrapper
+            <Multiselect
+                {...restSuiProps}
                 inputId={id}
+                style={{ width: '100%' }}
                 values={valueList}
-                error={error}
                 name={field}
                 disabled={effectiveDisabled}
                 allowNewValues={createSearchChoice}
-                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
-                inline
+                onChange={onChange} // eslint-disable-line react/jsx-no-bind
             >
                 {options && options.length > 0 && options}
-            </MultiSelectWrapper>
+            </Multiselect>
             {loadingIndicator}
         </>
     );

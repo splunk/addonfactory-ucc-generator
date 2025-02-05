@@ -1,5 +1,5 @@
 #
-# Copyright 2024 Splunk Inc.
+# Copyright 2025 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ endpoint = MultipleModel(
     models=[
 {models}
     ],
+    need_reload={need_reload},
 )
 
 
@@ -81,4 +82,5 @@ if __name__ == '__main__':
             entities="\n".join(entities),
             models=indent(models_lines, 2),
             conf_name=self.conf_name,
+            need_reload=self.need_reload,
         )

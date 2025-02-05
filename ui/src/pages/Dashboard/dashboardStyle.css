@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Splunk Inc.
+ * Copyright 2025 Splunk Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@
 /* data ingestion */
 
 [data-input-id='data_ingestion_input'] {
-    grid-column: 7 / 8;
+    grid-column: 8 / 9;
     grid-row: 2;
 }
 
@@ -75,7 +75,7 @@
 }
 
 #data_ingestion_table_viz {
-    grid-column: 1 / 8;
+    grid-column: 1 / 9;
     height: 100%;
     max-height: 500px;
     grid-row: 6;
@@ -89,11 +89,13 @@
 #data_ingestion_data_volume_viz {
     grid-row: 3 / 6;
     margin-top: 20px;
+    grid-column: 1 / 5;
 }
 
 #data_ingestion_events_count_viz {
     grid-row: 3 / 6;
     margin-top: 20px;
+    grid-column: 5 / 9;
 }
 
 #data_ingestion_search {
@@ -233,6 +235,32 @@
     height: 300px;
 }
 
+/* data ingestion table modal */
+
+#data_ingestion_modal_dropdown {
+    grid-row: 1;
+    grid-column: 1;
+    align-content: center;
+    margin-left: 2px;
+    width: 160px;
+}
+
+[data-input-id='data_ingestion_modal_time_window'] {
+    grid-row: 1;
+    grid-column: 1;
+    margin-left: 170px;
+}
+
+#data_ingestion_dropdown_label {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+#data_ingestion_modal_timerange_label_end_viz {
+    margin-left: 145px;
+    display: flex;
+}
+
 /* shared styles for time labels */
 #overview_timerange_label_start_viz,
 #overview_timerange_label_end_viz,
@@ -241,7 +269,9 @@
 #errors_tab_timerange_label_start_viz,
 #errors_tab_timerange_label_end_viz,
 #resource_tab_timerange_label_start_viz,
-#resource_tab_timerange_label_end_viz {
+#resource_tab_timerange_label_end_viz,
+#data_ingestion_modal_timerange_label_start_viz,
+#data_ingestion_modal_timerange_label_end_viz {
     inline-size: fit-content;
     grid-column: 1;
     width: 145px;
@@ -283,10 +313,9 @@
         display: inline-flex;
         padding: 0;
     }
-    [data-test='input-title-remove-container'] {
-        margin: 5px;
-    }
+    /* Time selector */
     [data-test='input-title'] {
+        margin: 5px;
         font-size: 14px;
     }
 }
@@ -296,14 +325,27 @@
 #overview_timerange_label_end_viz::before,
 #data_ingestion_timerange_label_end_viz::before,
 #errors_tab_timerange_label_end_viz::before,
-#resource_tab_timerange_label_end_viz::before {
+#resource_tab_timerange_label_end_viz::before,
+#data_ingestion_modal_timerange_label_end_viz::before {
     content: '- ';
     margin: auto;
     color: var(--muted-text-color);
 }
 
 #errors_tab_errors_list_viz svg[data-test='placeholder-icon'] {
-    max-height: 400px;
+    max-height: 100px;
+}
+
+[data-test-panel-id='dataIngestionTabPanel'] [data-test='grid-layout-canvas'] {
+    grid-template-columns: repeat(8, 12%);
+    overflow-x: hidden;
+}
+
+[data-test-panel-id='dataIngestionModalDefTabPanel'] [data-test='input-layout-container'],
+[data-test-panel-id='dataIngestionModalDefTabPanel'] [data-test='grid-layout-canvas'] {
+    background-color: var(--muted-text-color);
+    padding: 0px;
+    display: grid;
 }
 
 /* muted color */
@@ -311,4 +353,18 @@
 #data_ingestion_description_viz p,
 #errors_tab_description_viz p {
     color: var(--muted-text-color);
+}
+
+#data_ingestion_table_viz [data-test='table-container'] td:first-child {
+    cursor: pointer;
+    color: #006eaa !important;
+}
+
+#data_ingestion_table_viz [data-test='table-container'] td:first-child:hover {
+    text-decoration: underline;
+}
+
+.dropdown_menu_item {
+    padding: 6px 16px;
+    min-width: 200px;
 }
