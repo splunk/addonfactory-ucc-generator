@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { mapTextToElements } from '../../util/textUtils';
+import { mapTextToElements } from '../../util/textutils/textUtils';
 
 interface Props {
     controlOptions: {

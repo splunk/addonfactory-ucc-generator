@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { z } from 'zod';
 import { variables } from '@splunk/themes';
 import { SubDescriptionSchema } from '../../types/globalConfig/pages';
-import { mapTextToElements } from '../../util/textUtils';
+import { mapTextToElements } from '../../util/textutils/textUtils';
 
 export const SubTitleComponent = styled.p`
     & {
