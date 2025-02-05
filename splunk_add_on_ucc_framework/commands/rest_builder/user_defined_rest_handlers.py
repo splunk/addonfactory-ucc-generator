@@ -172,7 +172,7 @@ class RestHandlerConfig:
         if action not in self.supported_actions:
             return None
 
-        request_parameters = deepcopy(self.request_parameters[action])
+        request_parameters = deepcopy(self.request_parameters.get(action, {}))
 
         if action == "create":
             request_parameters["name"] = {

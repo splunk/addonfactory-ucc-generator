@@ -117,24 +117,40 @@ def test_rest_handler_config_openapi_only_specified():
     )
 
 
-def test_rest_handler_config_openapi_empty_params():
-    cfg = RestHandlerConfig(
-        name="test_name",
-        endpoint="test_endpoint",
-        handlerType="EAI",
-        requestParameters={
-            "create": {},
-            "list": {},
-            "edit": {},
-            "remove": {},
-        },
-        responseParameters={
-            "create": {},
-            "list": {},
-            "edit": {},
-            "remove": {},
-        },
-    )
+@pytest.mark.parametrize("missing_parameters", [True, False])
+def test_rest_handler_config_openapi_empty_params(missing_parameters):
+    if missing_parameters:
+        cfg = RestHandlerConfig(
+            name="test_name",
+            endpoint="test_endpoint",
+            handlerType="EAI",
+            registerHandler={
+                "file": "test_handler",
+                "actions": ["create", "list", "edit", "remove"],
+            },
+        )
+    else:
+        cfg = RestHandlerConfig(
+            name="test_name",
+            endpoint="test_endpoint",
+            handlerType="EAI",
+            registerHandler={
+                "file": "test_handler",
+                "actions": ["create", "list", "edit", "remove"],
+            },
+            requestParameters={
+                "create": {},
+                "list": {},
+                "edit": {},
+                "remove": {},
+            },
+            responseParameters={
+                "create": {},
+                "list": {},
+                "edit": {},
+                "remove": {},
+            },
+        )
 
     assert cfg.supported_actions == {"create", "list", "remove", "edit"}
     assert cfg.oas_paths.keys() == {"/test_endpoint", "/test_endpoint/{name}"}
