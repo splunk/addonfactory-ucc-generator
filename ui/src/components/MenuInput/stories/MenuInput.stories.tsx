@@ -261,7 +261,7 @@ export const WithOpenedMenu: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        const menuDropdown = canvas.getByRole('button', { name: 'Create New Input' });
+        const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
 
         invariant(menuDropdown, 'Menu Dropdown must exist');
 
@@ -290,7 +290,7 @@ export const WithOpenedSubMenu: Story = {
 
         const user = userEvent.setup();
 
-        const menuDropdown = canvas.getByRole('button', { name: 'Create New Input' });
+        const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
 
         invariant(menuDropdown, 'Menu Dropdown must exist');
         await user.click(menuDropdown);
