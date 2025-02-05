@@ -240,35 +240,43 @@ describe('multiple services', () => {
         });
 
         it('should not render group as menu item if no services exists for groupName', async () => {
+            const groupName = 'unexisting-name';
+            const groupTitle = 'unexisting-title1';
             setup({
                 ...getGroupedServices(),
-                groupsMenu: [{ groupName: 'unexisting-name', groupTitle: 'unexisting-title1' }],
+                groupsMenu: [{ groupName, groupTitle }],
             });
 
             await userEvent.click(getCreateDropdown());
 
-            expect(screen.queryByText('unexisting-name')).not.toBeInTheDocument();
+            expect(screen.queryByText(groupTitle)).not.toBeInTheDocument();
         });
 
         it('should render group as menu item only for existing services', async () => {
+            const unexistingElement = {
+                groupName: 'unexisting-name',
+                groupTitle: 'unexisting-title1',
+            };
+            const elem1 = {
+                groupName: 'test-service-name1',
+                groupTitle: 'test-service-title1',
+            };
+
+            const elem2 = {
+                groupName: 'test-group-name1',
+                groupTitle: 'test-group-title1',
+                groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+            };
             setup({
                 ...getGroupedServices(),
-                groupsMenu: [
-                    { groupName: 'unexisting-name', groupTitle: 'unexisting-title1' },
-                    { groupName: 'test-service-name1', groupTitle: 'test-service-title1' },
-                    {
-                        groupName: 'test-group-name1',
-                        groupTitle: 'test-group-title1',
-                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
-                    },
-                ],
+                groupsMenu: [unexistingElement, elem1, elem2],
             });
 
             await userEvent.click(getCreateDropdown());
 
-            expect(screen.queryByText('unexisting-name')).not.toBeInTheDocument();
-            expect(screen.queryByText('test-group-title1')).toBeInTheDocument();
-            expect(screen.queryByText('test-service-title1')).toBeInTheDocument();
+            expect(screen.queryByText(unexistingElement.groupTitle)).not.toBeInTheDocument();
+            expect(screen.queryByText(elem1.groupTitle)).toBeInTheDocument();
+            expect(screen.queryByText(elem2.groupTitle)).toBeInTheDocument();
         });
 
         it('should call handleRequestOpen callback on click', async () => {
@@ -329,11 +337,21 @@ describe('multiple services', () => {
                         entity: [],
                         hideForPlatform: 'cloud',
                     },
+                    {
+                        name: 'test-service-standard-name1',
+                        title: 'test-service-standard-title1',
+                        subTitle: 'test-service-standard-subTitle1',
+                        entity: [],
+                    },
                 ],
                 groupsMenu: [
                     {
                         groupName: 'test-service-enterprise-hidden-name1',
                         groupTitle: 'test-service-enterprise-hidden-title1',
+                    },
+                    {
+                        groupName: 'test-service-standard-name1',
+                        groupTitle: 'test-service-standard-title1',
                     },
                     {
                         groupName: 'test-service-cloud-hidden-name1',
@@ -382,8 +400,15 @@ describe('multiple services', () => {
                     expect(screen.queryByText(title)).toBeInTheDocument();
                 });
 
-                // length should be number of existsTitles + 1 (Back button)
-                expect(screen.queryAllByRole('menuitem')).toHaveLength(existsTitles.length + 1);
+                // animation needs to finish, during animation elements are still visible
+                await waitFor(
+                    () =>
+                        expect(screen.queryAllByRole('menuitem')).toHaveLength(
+                            // length should be number of existsTitles + 1 (Back button)
+                            existsTitles.length + 1
+                        ),
+                    { timeout: 1000 }
+                );
 
                 // elements are HIDDEN via hideForPlatform "cloud"
                 doesNotExistsTitles.forEach((title) => {
@@ -392,6 +417,9 @@ describe('multiple services', () => {
 
                 await userEvent.click(screen.getByText('Back'));
             };
+
+            // 2+1+1 two groups, one standard service, one service not hidden for cloud
+            expect(screen.queryAllByRole('menuitem')).toHaveLength(4);
 
             await openAndVerifyGroup({
                 groupTitle: 'test-group-title1',
