@@ -21,14 +21,11 @@ const linkTextIntoElement = (text: string, props: TextWithLinks) => {
 };
 
 const changeSlugIntoLink = (text: string, props: TextWithLinks) =>
-    text
-        ?.split(/\]\]|\[\[/)
-        ?.map((splitText) => linkTextIntoElement(splitText, props))
-        .flat();
+    text.split(/\]\]|\[\[/).map((splitText) => linkTextIntoElement(splitText, props));
 
 const changeManyLinesIntoSpans = (arrayOfText: string[], props: TextWithLinks) =>
     arrayOfText // make span for each new line (\n)
-        .filter((t) => t !== '')
+        .filter(Boolean)
         .map((t: string, i: number) => {
             const textWithLinksIncluded = changeSlugIntoLink(t, props);
 
@@ -42,22 +39,16 @@ const changeManyLinesIntoSpans = (arrayOfText: string[], props: TextWithLinks) =
         });
 
 export const mapTextToElements = (props: TextWithLinks) => {
-    const currentText = props?.text;
-
-    if (!currentText) {
-        return null;
-    }
-
-    const textSplitByLines = currentText.split('\n');
+    const textSplitByLines = props.text.split('\n');
 
     const textWithNewLines =
         textSplitByLines.length > 1
             ? changeManyLinesIntoSpans(textSplitByLines, props) // new lines
-            : changeSlugIntoLink(currentText, props); // no new lines (\n) take old text
+            : changeSlugIntoLink(props.text, props); // no new lines (\n) take old text
 
-    if ('link' in props) {
+    if (props?.link) {
         return (
-            <Link to={props.link} openInNewContext key="HelpLink">
+            <Link to={props.link} openInNewContext>
                 {textWithNewLines}
             </Link>
         );
