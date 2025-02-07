@@ -1,4 +1,4 @@
-import { EventType } from '@splunk/react-events-viewer/common-types';
+import type { EventType } from '@splunk/react-events-viewer/common-types';
 
 export interface FieldValue {
     value: string;

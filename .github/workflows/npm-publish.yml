@@ -12,6 +12,10 @@ on:
         default: true
         type: boolean
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
