@@ -62,7 +62,8 @@ util.remove_http_proxy_env_vars()
 endpoint = SingleModel(
     '{conf_name}',
     model,
-    config_name='{config_name}'
+    config_name='{config_name}',
+    need_reload={need_reload},
 )
 
 
@@ -85,4 +86,5 @@ if __name__ == '__main__':
             entity=entity.generate_rh(),
             conf_name=self.conf_name,
             config_name=self._name,
+            need_reload=self.need_reload,
         )
