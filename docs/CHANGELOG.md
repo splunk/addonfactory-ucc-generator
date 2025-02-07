@@ -1,5 +1,31 @@
 # Changelog
 
+## [5.57.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.0...v5.57.1) (2025-02-04)
+
+
+### Bug Fixes
+
+* **a11y:** connect labels to inputs ([#1542](https://github.com/splunk/addonfactory-ucc-generator/issues/1542)) ([5335782](https://github.com/splunk/addonfactory-ucc-generator/commit/533578248d5346f078fe8842b0afe9d3884fbb5b))
+* do not require calls of _reload endpoint ([#1547](https://github.com/splunk/addonfactory-ucc-generator/issues/1547)) ([a39c8c0](https://github.com/splunk/addonfactory-ucc-generator/commit/a39c8c02eb5f716ec29a122931a1ba0626524c3b))
+
+# [5.57.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.56.0...v5.57.0) (2025-01-22)
+
+
+### Bug Fixes
+
+* prevent unnecessary updates to the globalConfig file ([#1535](https://github.com/splunk/addonfactory-ucc-generator/issues/1535)) ([b541693](https://github.com/splunk/addonfactory-ucc-generator/commit/b5416931f263e15fc46849844856e8eb93d34b86)), closes [#1519](https://github.com/splunk/addonfactory-ucc-generator/issues/1519)
+
+
+### Features
+
+* add CheckboxTree component ([#1495](https://github.com/splunk/addonfactory-ucc-generator/issues/1495)) ([1d55507](https://github.com/splunk/addonfactory-ucc-generator/commit/1d55507519c258eeebd8d79896f7699828dc52b7))
+* **dashboard:** zero line when no data found ([#1480](https://github.com/splunk/addonfactory-ucc-generator/issues/1480)) ([d1cad41](https://github.com/splunk/addonfactory-ucc-generator/commit/d1cad414ca4fbf88a410571277ad49a87c14cecc))
+
+
+### Reverts
+
+* "ci: rollback splunk-appinspect to 3.8.1" ([#1536](https://github.com/splunk/addonfactory-ucc-generator/issues/1536)) ([0e97dfd](https://github.com/splunk/addonfactory-ucc-generator/commit/0e97dfdb34a2d09281567789d4603863e4dc6ef9)), closes [splunk/addonfactory-ucc-generator#1527](https://github.com/splunk/addonfactory-ucc-generator/issues/1527)
+
 # [5.56.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.55.0...v5.56.0) (2025-01-08)
 
 
