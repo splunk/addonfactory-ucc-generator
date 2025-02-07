@@ -2801,6 +2801,11 @@
         },
         "groups": {
           "$ref": "#/definitions/Groups"
+        },
+        "formTitle": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Specify custom header title for modals"
         }
       },
       "anyOf": [
@@ -3614,6 +3619,11 @@
               },
               "hideForPlatform": {
                 "$ref": "#/definitions/HideForPlatform"
+              },
+              "formTitle": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Specify custom header title for modals"
               }
             },
             "not": {

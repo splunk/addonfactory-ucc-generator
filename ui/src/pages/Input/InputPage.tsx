@@ -170,6 +170,7 @@ function InputPage(): ReactElement {
     }): void => {
         const service = services.find((x) => x.name === serviceName);
         const serviceTitle = service?.title;
+        const formTitle = service?.formTitle;
         const isInputPageStyle = service?.style === STYLE_PAGE;
 
         setEntity({
@@ -177,7 +178,7 @@ function InputPage(): ReactElement {
             open: true,
             serviceName,
             mode: MODE_CREATE,
-            formLabel: `Add ${serviceTitle}`,
+            formLabel: formTitle ? `Add ${formTitle}` : `Add  ${serviceTitle}`,
             isInputPageStyle,
             groupName,
         });
@@ -217,7 +218,8 @@ function InputPage(): ReactElement {
 
     // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row: RowDataFields, mode: Mode): void => {
-        const label = services.find((x) => x.name === row.serviceName)?.title;
+        const serviceName = services.find((x) => x.name === row.serviceName);
+        const label = serviceName?.formTitle ? serviceName?.formTitle : serviceName?.title;
         setEntity({
             ...entity,
             open: true,

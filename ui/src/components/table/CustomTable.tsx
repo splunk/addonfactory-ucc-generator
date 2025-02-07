@@ -37,6 +37,7 @@ interface IEntityModal {
     open: boolean;
     stanzaName?: string;
     mode?: Mode;
+    formTitle?: string;
 }
 
 const getServiceToStyleMap = (page: StandardPages, unifiedConfigs: GlobalConfig) => {
@@ -160,6 +161,30 @@ const CustomTable: React.FC<CustomTableProps> = ({
         [entityModal, handleOpenPageStyleDialog, serviceToStyleMap]
     );
 
+    const getFormTitle = useCallback(
+        (needDefaultTitle: boolean, serviceNameForTitle?: string) => {
+            if (!serviceNameForTitle || !unifiedConfigs) {
+                return undefined;
+            }
+
+            if (page === PAGE_INPUT) {
+                const findService = unifiedConfigs.pages.inputs?.services.find(
+                    (x) => x.name === serviceNameForTitle
+                );
+                return findService?.formTitle || (needDefaultTitle ? findService?.title : '');
+            }
+            if (page === PAGE_CONF) {
+                const findService = unifiedConfigs.pages.configuration.tabs.find(
+                    (x) => x.name === serviceNameForTitle
+                );
+                return findService?.formTitle || (needDefaultTitle ? findService?.title : '');
+            }
+
+            return undefined;
+        },
+        [unifiedConfigs, page]
+    );
+
     const handleDeleteActionClick = useCallback(
         (selectedRow: RowDataFields) => {
             setDeleteModal({
@@ -167,21 +192,16 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 open: true,
                 stanzaName: selectedRow.name,
                 serviceName: selectedRow.serviceName,
+                formTitle: getFormTitle(false, selectedRow.serviceName),
             });
         },
-        [deleteModal]
+        [deleteModal, getFormTitle]
     );
 
     const generateModalDialog = () => {
         if (entityModal.open) {
-            let label: string | undefined;
-            if (page === PAGE_INPUT) {
-                const services = inputsPage?.services;
-                label = services?.find((x) => x.name === entityModal.serviceName)?.title;
-            } else if (page === PAGE_CONF) {
-                const { tabs } = unifiedConfigs.pages.configuration;
-                label = tabs.find((x) => x.name === entityModal.serviceName)?.title;
-            }
+            const label: string | undefined = getFormTitle(true, entityModal.serviceName);
+
             return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal
                     page={page}
@@ -207,6 +227,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 handleRequestClose={handleDeleteClose}
                 serviceName={deleteModal.serviceName}
                 stanzaName={deleteModal.stanzaName}
+                formTitle={deleteModal.formTitle}
             />
         ) : null;
 

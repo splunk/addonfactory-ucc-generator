@@ -9,6 +9,7 @@ import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
 import {
+    getCustomModalHeaderData,
     getSimpleConfigStylePage,
     getSimpleConfigWithMapping,
     SIMPLE_NAME_TABLE_MOCK_DATA,
@@ -210,4 +211,47 @@ it('Check inputs count is visible', async () => {
     );
     const statusCount = await screen.findByText('11 Inputs (7 of 11 enabled)');
     expect(statusCount).toBeInTheDocument();
+});
+
+it('Check modal correctly render custom header', async () => {
+    const props = {
+        page: 'configuration',
+        serviceName: 'account',
+        handleRequestModalOpen,
+        handleOpenPageStyleDialog,
+        displayActionBtnAllRows: false,
+    } satisfies ITableWrapperProps;
+    server.use(
+        http.get('/servicesNS/nobody/-/splunk_ta_uccexample_account', () =>
+            HttpResponse.json(MockRowData)
+        )
+    );
+
+    setUnifiedConfig(getCustomModalHeaderData());
+
+    render(
+        <TableContextProvider>
+            <TableWrapper {...props} />
+        </TableContextProvider>,
+        { wrapper: BrowserRouter }
+    );
+    // check for custom header in edit modal
+    const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
+    await userEvent.click(allEditButtons[0]);
+    const getEditTitle = screen.getByTestId('title');
+    expect(getEditTitle).toHaveTextContent('Update this is custom header');
+
+    // check for custom header in clone modal
+    const allCloneButtons = await screen.findAllByRole('button', { name: /clone/i });
+    await userEvent.click(allCloneButtons[0]);
+    const getCloneTitle = screen.getByTestId('title');
+    expect(getCloneTitle).toHaveTextContent('Clone this is custom header');
+    const cancelButton = screen.getByRole('button', { name: /cancel/i });
+    await userEvent.click(cancelButton);
+
+    // check for custom header in delete modal
+    const allDeleteButtons = await screen.findAllByRole('button', { name: /delete/i });
+    await userEvent.click(allDeleteButtons[0]);
+    const getDeleteTitle = screen.getByTestId('title');
+    expect(getDeleteTitle).toHaveTextContent('Delete this is custom header');
 });
