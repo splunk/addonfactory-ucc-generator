@@ -200,7 +200,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
 
     const generateModalDialog = () => {
         if (entityModal.open) {
-            const label: string | undefined = getFormTitle(true, entityModal.serviceName);
+            const label = getFormTitle(true, entityModal.serviceName);
 
             return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal

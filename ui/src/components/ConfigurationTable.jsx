@@ -50,7 +50,7 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
 
     // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row, mode) => {
-        const formlabel = selectedTab?.formTitle ? selectedTab?.formTitle : selectedTab.title;
+        const formlabel = selectedTab?.formTitle || selectedTab.title;
         setEntity({
             ...entity,
             open: true,

@@ -92,8 +92,12 @@ describe('Tests with a custom DeleteModal render', () => {
                 />
             </TableContext.Provider>
         );
-        const getHeaderText = screen.getByText('Delete this is custom header for delete');
-        expect(getHeaderText).toBeInTheDocument();
+
+        expect(
+            screen.getByRole('heading', {
+                name: 'Delete this is custom header for delete',
+            })
+        ).toBeInTheDocument();
     });
 
     it('should render the header correctly when title is empty', async () => {
@@ -111,7 +115,6 @@ describe('Tests with a custom DeleteModal render', () => {
                 />
             </TableContext.Provider>
         );
-        const getHeaderText = screen.getByTestId('title');
-        expect(getHeaderText).toHaveTextContent('Delete Confirmation');
+        expect(screen.getByRole('heading', { name: 'Delete Confirmation' })).toBeInTheDocument();
     });
 });
