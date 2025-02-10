@@ -22,6 +22,10 @@ def config(global_config_all_json_content):
             self["pages"]["configuration"]["tabs"][tabnum]["entity"].append(entity)
             return self
 
+        def with_meta_os_dependent_entity(self, entity):
+            self["meta"]["os-dependentLibraries"].append(entity)
+            return self
+
     return BetterDict(global_config_all_json_content)
 
 
@@ -150,3 +154,18 @@ def test_rest_handler_without_ui(schema_validate, config):
     }
 
     schema_validate(config)
+
+
+def test_os_dependent_entity_options(schema_validate, config):
+    entity = {
+        "name": "cffi",
+        "version": "1.5.1",
+        "platform": "win_amd64",
+        "python_version": "313",
+        "os": "windows",
+        "target": "3rdparty/windows",
+    }
+    python_versions = ["37", "3.7", "39", "3.9", "313", "3.13"]
+    for p_ver in python_versions:
+        entity["python_version"] = p_ver
+        schema_validate(config.with_meta_os_dependent_entity(entity))
