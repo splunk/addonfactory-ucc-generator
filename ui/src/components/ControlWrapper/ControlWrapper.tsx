@@ -8,21 +8,13 @@ import { AcceptableFormValueOrNullish } from '../../types/components/shareableTy
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
 
-const CustomElement = styled.div``;
-
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
-    max-width: 100%;
-
+    // label width + control width
+    width: calc(260px + 320px);
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
-    }
-
-    > * {
-        &:nth-child(3) {
-            width: 320px;
-        }
     }
 `;
 
@@ -152,7 +144,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     required={isFieldRequired}
                     label={label}
                 >
-                    <CustomElement>{rowView}</CustomElement>
+                    {rowView}
                 </ControlGroupWrapper>
             )
         );

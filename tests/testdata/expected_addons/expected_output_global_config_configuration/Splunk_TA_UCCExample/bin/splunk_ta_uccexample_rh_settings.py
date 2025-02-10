@@ -172,6 +172,7 @@ endpoint = MultipleModel(
         model_logging, 
         model_custom_abc
     ],
+    need_reload=False,
 )
 
 
