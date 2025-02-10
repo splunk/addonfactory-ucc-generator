@@ -15,13 +15,13 @@ const mockProps = {
 } satisfies PropType;
 
 const setup = (props: PropType = mockProps) => {
-    render(<>{mapTextToElements(props)}</>);
+    return render(<>{mapTextToElements(props)}</>);
 };
 
 describe('mapTextToElements', () => {
     it('should return null if no text is provided', () => {
-        setup({ ...mockProps, text: '' });
-        expect(document.body.innerHTML).toEqual('<div></div>');
+        const { container } = setup({ ...mockProps, text: '' });
+        expect(container.innerHTML).toBe('<span></span>');
     });
 
     it('should render text without links correctly', () => {

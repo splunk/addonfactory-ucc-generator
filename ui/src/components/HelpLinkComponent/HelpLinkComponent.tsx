@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { mapTextToElements } from '../../util/textutils/textUtils';
 
 interface Props {
@@ -17,7 +15,7 @@ interface Props {
 function HelpLinkComponent(props: Props) {
     const elements = mapTextToElements(props.controlOptions);
 
-    return <span>{elements}</span>;
+    return elements;
 }
 
 export default HelpLinkComponent;
