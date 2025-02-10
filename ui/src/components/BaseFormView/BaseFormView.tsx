@@ -613,21 +613,19 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
             // validation for unique name
             if ([MODE_CREATE, MODE_CLONE].includes(this.props.mode)) {
-                const findNameInSameService = () =>
-                    Object.keys(this.context?.rowData[this.props.serviceName] || {}).find(
+                const isNameUsedInSameService = () =>
+                    Object.keys(this.context?.rowData[this.props.serviceName] || {}).some(
                         (name) => name === this.datadict.name
                     );
 
-                const findNameInAllServices = () =>
-                    Object.values(this.context?.rowData || {}).find((val) =>
-                        Object.keys(val).find((name) => name === this.datadict.name)
+                const isNameUsedInAnyOfServices = () =>
+                    Object.values(this.context?.rowData || {}).some((val) =>
+                        Object.keys(val).some((name) => name === this.datadict.name)
                     );
 
-                const isExistingName = Boolean(
-                    this.inputsUniqueAcrossSingleService
-                        ? findNameInSameService()
-                        : findNameInAllServices()
-                );
+                const isExistingName: boolean = this.inputsUniqueAcrossSingleService
+                    ? isNameUsedInSameService()
+                    : isNameUsedInAnyOfServices();
 
                 if (isExistingName && this.entities) {
                     const index = this.entities.findIndex((e) => e.field === 'name');
