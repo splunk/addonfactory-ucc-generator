@@ -313,6 +313,6 @@ export const WithOpenedSubMenu: Story = {
 
         await user.click(groupMenuItem);
 
-        await waitForElementToBeRemoved(groupMenuItem);
+        await waitForElementToBeRemoved(groupMenuItem, { timeout: 1000 });
     },
 };
