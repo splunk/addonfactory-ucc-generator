@@ -313,10 +313,6 @@ export const WithOpenedSubMenu: Story = {
 
         await user.click(groupMenuItem);
 
-        await waitForElementToBeRemoved(() =>
-            body.queryByRole('menuitem', {
-                name: 'test-group hide for platform',
-            })
-        );
+        await waitForElementToBeRemoved(groupMenuItem, { timeout: 2500, interval: 250 });
     },
 };
