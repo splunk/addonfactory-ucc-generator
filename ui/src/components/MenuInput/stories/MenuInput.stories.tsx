@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
 import { z } from 'zod';
-import { fn, userEvent, waitForElementToBeRemoved, within } from '@storybook/test';
+import { fn, userEvent, waitFor, within } from '@storybook/test';
 import MenuInput from '../MenuInput';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
@@ -307,16 +307,17 @@ export const WithOpenedSubMenu: Story = {
         invariant(menuDropdown, 'Menu Dropdown must exist');
         await user.click(menuDropdown);
 
-        const groupMenuItem = body.getByRole('menuitem', {
+        const groupMenuItem = await body.getByRole('menuitem', {
             name: 'test-group hide for platform',
         });
 
         await user.click(groupMenuItem);
 
-        await waitForElementToBeRemoved(() =>
-            body.queryByRole('menuitem', {
-                name: 'test-group hide for platform',
-            })
+        await waitFor(
+            () =>
+                !body.queryByRole('menuitem', {
+                    name: 'test-group hide for platform',
+                })
         );
     },
 };
