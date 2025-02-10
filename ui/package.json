@@ -11,8 +11,10 @@
   "author": "Splunk Inc.",
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack --bail",
-    "build:lib": "cross-env NODE_ENV=production tsc --project tsconfig.lib.json",
+    "build": "cross-env NODE_ENV=production webpack",
+    "build:lib": "cross-env NODE_ENV=production webpack --config webpack.config.lib.js",
+    "build:lib:types": "tsc --project tsconfig.lib.json",
+    "build:lib:full": "yarn run build:lib && yarn run build:lib:types",
     "build:watch": "webpack --watch",
     "format": "prettier \"src/**/*.(js|jsx|ts|tsx|css)\" --write",
     "format:verify": "prettier \"src/**/*.(js|jsx|ts|tsx|css)\" --list-different",
@@ -27,7 +29,7 @@
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
     "test-storybook:update-snapshots": "yarn run test-storybook -u",
-    "prepublishOnly": "yarn run build:lib"
+    "prepublishOnly": "yarn run build:lib:full"
   },
   "dependencies": {
     "@splunk/dashboard-action-buttons": "^28.1.0",
@@ -158,5 +160,6 @@
   "types": "./dist/lib/publicApi.d.ts",
   "files": [
     "dist/lib"
-  ]
+  ],
+  "main": "./dist/lib/main.js"
 }
