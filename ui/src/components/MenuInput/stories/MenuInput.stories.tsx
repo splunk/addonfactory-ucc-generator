@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState, useEffect } from 'react';
 import { z } from 'zod';
-import { fn, userEvent, within } from '@storybook/test';
+import { fn, userEvent, waitForElementToBeRemoved, within } from '@storybook/test';
 import MenuInput from '../MenuInput';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
@@ -38,6 +38,16 @@ function MenuInputWrapper(props: MenuInputProps) {
     ) : (
         <span>loading</span>
     );
+}
+
+function setup(canvasElement: HTMLElement) {
+    const canvas = within(canvasElement);
+    // menu is rendered in body which is out of canvas
+    const bodyElement = canvasElement.parentElement;
+    invariant(bodyElement);
+    const body = within(bodyElement);
+    const user = userEvent.setup();
+    return { canvas, body, user };
 }
 
 const meta = {
@@ -216,7 +226,7 @@ const servicesWithHideForPlatform = [
     },
 ] satisfies z.infer<typeof TableLessServiceSchema>[];
 
-const groupMenuHideForPlatofmr = [
+const groupMenuHideForPlatform = [
     {
         groupName: 'test-service-hide-cloud-name1',
         groupTitle: 'test-service-hide-cloud-title1',
@@ -252,20 +262,24 @@ export const WithOpenedMenu: Story = {
                 inputs: {
                     title: 'WithOpenedSubMenu',
                     services: servicesWithHideForPlatform,
-                    groupsMenu: groupMenuHideForPlatofmr,
+                    groupsMenu: groupMenuHideForPlatform,
                     table,
                 },
             },
         },
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
+        const { canvas, body, user } = setup(canvasElement);
 
         const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
 
         invariant(menuDropdown, 'Menu Dropdown must exist');
 
-        await userEvent.click(menuDropdown);
+        await user.click(menuDropdown);
+
+        await body.findByRole('menuitem', {
+            name: 'test-group-title1',
+        });
     },
 };
 
@@ -279,33 +293,26 @@ export const WithOpenedSubMenu: Story = {
                 inputs: {
                     title: 'WithOpenedSubMenu',
                     services: servicesWithHideForPlatform,
-                    groupsMenu: groupMenuHideForPlatofmr,
+                    groupsMenu: groupMenuHideForPlatform,
                     table,
                 },
             },
         },
     },
     play: async ({ canvasElement }) => {
-        const canvas = within(canvasElement);
-
-        const user = userEvent.setup();
+        const { canvas, body, user } = setup(canvasElement);
 
         const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
 
         invariant(menuDropdown, 'Menu Dropdown must exist');
         await user.click(menuDropdown);
 
-        const popoverId = menuDropdown.getAttribute('data-test-popover-id');
-
-        // this popover is rendered outside(next to, on the same level) of canvasElement
-        const popoverElem = document.querySelector(`#${popoverId}`);
-        invariant(popoverElem, 'Popover must exist');
-
-        const popoverCanvas = within(popoverElem as HTMLElement);
-
-        const groupMenuItem = popoverCanvas.getByRole('menuitem', {
+        const groupMenuItem = body.getByRole('menuitem', {
             name: 'test-group hide for platform',
         });
+
         await user.click(groupMenuItem);
+
+        await waitForElementToBeRemoved(groupMenuItem);
     },
 };
