@@ -32,6 +32,7 @@ proxy configuration, and logging level configuration.
 | [restHandlerClass](../advanced/custom_rest_handler.md)                | string | It specify name of the class present in the restHandlerModule, which implements methods like handleCreate, handleEdit, handleList, handleDelete and is child class of splunktaucclib.rest_handler.admin_external.AdminExternalHandler. (Use with restHandlerModule)                 |
 | customTab                                                             | Object | This property allows you to enable the [custom tab](../custom_ui_extensions/custom_tab.md) feature.                                                                                                                                                                                 |
 | hideForPlatform                                                       | string | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`.                                                                                                                                        |
+| formTitle                                                             | string | When provided, the `formTitle` parameter will override the default modal title format of `"Add selectedTab"`. The modal will display `Add` followed by the value of formTitle, allowing for a custom, context-specific title. This customization also applies to modals for `Clone`, `Edit`, and `Delete` actions.                                                                                                                                     |
 
 ### Tab components
 
@@ -89,3 +90,7 @@ This is how Proxy tab looks in the UI:
 ![image](../images/configuration/proxy_tab_with_warning.png)
 
 More information about how to set Proxy tab, can be found [here](./proxy.md).
+
+This is how custom header look in the UI:
+
+![image](../images/configuration/custom_header.png)

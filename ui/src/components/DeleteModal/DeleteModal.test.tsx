@@ -15,7 +15,7 @@ const TableContext = createContext({
 });
 
 describe('Tests that require DeleteModal in beforeEach', () => {
-    beforeEach(() => {
+    const setup = () =>
         render(
             <TableContext.Provider
                 value={{ rowData: { serviceName: { stanzaName: 1 } }, setRowData: () => {} }}
@@ -29,20 +29,22 @@ describe('Tests that require DeleteModal in beforeEach', () => {
                 />
             </TableContext.Provider>
         );
-    });
 
     it('should render delete modal correctly', () => {
+        setup();
         const deleteModal = screen.getByTestId('modal');
         expect(deleteModal).toBeInTheDocument();
     });
 
     it('close modal and callback after cancel click', async () => {
+        setup();
         const cancelButton = screen.getByRole('button', { name: /cancel/i });
         await userEvent.click(cancelButton);
         expect(handleClose).toHaveBeenCalled();
     });
 
     it('correct delete request', async () => {
+        setup();
         server.use(
             http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
                 HttpResponse.json({}, { status: 201 })
@@ -54,6 +56,7 @@ describe('Tests that require DeleteModal in beforeEach', () => {
     });
 
     it('failed delete request', async () => {
+        setup();
         const errorMessage = 'Oopsy doopsy';
         server.use(
             http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>

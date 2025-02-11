@@ -234,7 +234,8 @@
               }
             }
           ],
-          "title": "demo_input"
+          "title": "demo_input",
+          "formTitle": "custom header"
         },
         {
           "name": "demo_input_page",
