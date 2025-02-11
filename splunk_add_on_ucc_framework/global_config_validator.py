@@ -25,7 +25,6 @@ import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework import data_ui_generator
 from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
@@ -54,7 +53,7 @@ class GlobalConfigValidator:
         self._config = global_config.content
 
     @property
-    def config_tabs(self) -> List[Tab]:
+    def config_tabs(self) -> List[Any]:
         if self._global_config.has_configuration():
             return [
                 resolve_tab(tab)
@@ -433,7 +432,6 @@ class GlobalConfigValidator:
         not required in schema, so this checks if globalConfig has inputs
         """
         pages = self._config["pages"]
-
         self._validate_tabs_duplicates(self.config_tabs)
 
         inputs = pages.get("inputs")
@@ -477,7 +475,10 @@ class GlobalConfigValidator:
         services = inputs["services"]
         for service in services:
             for entity in service["entity"]:
-                if entity["type"] == "checkboxGroup":
+                if (
+                    entity["type"] == "checkboxGroup"
+                    or entity["type"] == "checkboxTree"
+                ):
                     row_field_names = []
                     for row in entity["options"]["rows"]:
                         if row["field"] in row_field_names:
@@ -700,9 +701,14 @@ class GlobalConfigValidator:
             )
 
     def _validate_meta_default_view(self) -> None:
-        default_view = self._global_config.meta.get(
-            "defaultView", data_ui_generator.DEFAULT_VIEW
-        )
+        default_view = self._global_config.meta.get("defaultView")
+        if (
+            default_view == "configuration"
+            and not self._global_config.has_configuration()
+        ):
+            raise GlobalConfigValidatorException(
+                'meta.defaultView == "configuration" but there is no configuration defined in globalConfig'
+            )
         if default_view == "inputs" and not self._global_config.has_inputs():
             raise GlobalConfigValidatorException(
                 'meta.defaultView == "inputs" but there is no inputs defined in globalConfig'

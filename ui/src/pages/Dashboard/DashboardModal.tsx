@@ -3,7 +3,7 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';
-import { EventType } from '@splunk/react-events-viewer/common-types';
+import type { EventType } from '@splunk/react-events-viewer/common-types';
 import { getUnifiedConfigs } from '../../util/util';
 
 import {
@@ -15,6 +15,7 @@ import {
     queryMap,
 } from './utils';
 import { FieldValue, SearchResponse } from './DataIngestion.types';
+import { FEATURE_FLAGS } from './consts';
 
 /**
  * @param {object} props
@@ -196,7 +197,7 @@ export const DashboardModal = ({
     }, []);
 
     return dataIngestionModalDef ? (
-        <DashboardContextProvider preset={EnterpriseViewOnlyPreset}>
+        <DashboardContextProvider preset={EnterpriseViewOnlyPreset} featureFlags={FEATURE_FLAGS}>
             <DashboardCore
                 width="100%"
                 height="auto"

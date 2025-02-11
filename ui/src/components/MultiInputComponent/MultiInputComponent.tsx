@@ -4,15 +4,13 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
+import { MultiselectChangeHandler } from '@splunk/react-ui/types/src/Multiselect/Multiselect';
 import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
 import { filterResponse, FilterResponseParams } from '../../util/util';
 import { MultipleSelectCommonOptions } from '../../types/globalConfig/entities';
 import { invariant } from '../../util/invariant';
 import { AcceptableFormValue } from '../../types/components/shareableTypes';
-
-const MultiSelectWrapper = styled(Multiselect)`
-    width: 320px !important;
-`;
+import { excludeControlWrapperProps } from '../ControlWrapper/utils';
 
 const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: 5px;
@@ -25,7 +23,6 @@ export interface MultiInputComponentProps {
     controlOptions: z.TypeOf<typeof MultipleSelectCommonOptions>;
     disabled?: boolean;
     value?: AcceptableFormValue;
-    error?: boolean;
     dependencyValues?: Record<string, unknown>;
 }
 
@@ -34,10 +31,10 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         id,
         field,
         disabled = false,
-        error = false,
         value,
         controlOptions,
         dependencyValues,
+        handleChange,
         ...restProps
     } = props;
     const {
@@ -53,11 +50,11 @@ function MultiInputComponent(props: MultiInputComponentProps) {
         delimiter = ',',
     } = controlOptions;
 
-    function handleChange(e: unknown, { values }: { values: (string | number | boolean)[] }) {
+    const onChange: MultiselectChangeHandler = (_e, { values }) => {
         if (typeof values[0] === 'string' || values.length === 0) {
-            restProps.handleChange(field, values.join(delimiter));
+            handleChange(field, values.join(delimiter));
         }
-    }
+    };
 
     function generateOptions(itemList: { label: string; value: string | number | boolean }[]) {
         return itemList.map((item) => (
@@ -134,21 +131,22 @@ function MultiInputComponent(props: MultiInputComponentProps) {
     const loadingIndicator = loading ? <WaitSpinnerWrapper /> : null;
 
     const valueList = value ? String(value).split(delimiter) : [];
+    const restSuiProps = excludeControlWrapperProps(restProps);
 
     return (
         <>
-            <MultiSelectWrapper
+            <Multiselect
+                {...restSuiProps}
                 inputId={id}
+                style={{ width: '100%' }}
                 values={valueList}
-                error={error}
                 name={field}
                 disabled={effectiveDisabled}
                 allowNewValues={createSearchChoice}
-                onChange={handleChange} // eslint-disable-line react/jsx-no-bind
-                inline
+                onChange={onChange} // eslint-disable-line react/jsx-no-bind
             >
                 {options && options.length > 0 && options}
-            </MultiSelectWrapper>
+            </Multiselect>
             {loadingIndicator}
         </>
     );

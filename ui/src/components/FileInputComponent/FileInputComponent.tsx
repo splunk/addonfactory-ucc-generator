@@ -6,7 +6,7 @@ import FileConstants from '../../constants/fileInputConstant';
 import { getFormattedMessage } from '../../util/messageUtil';
 
 const FileWrapper = styled(File)`
-    width: 320px !important;
+    width: 100%;
     > div[class*='FileStyles__StyledHelp-'] {
         margin-bottom: 0px;
     }
@@ -65,7 +65,7 @@ function FileInputComponent(props: FileInputComponentProps) {
     */
     const [fileName, setFileName] = useState<string | null>(fileNameToDisplay || '');
 
-    /* 
+    /*
       if the file data is encrypted and we display its name
       then we display error message "file needs to be reuploaded"
       as there is no access to data inside due to encription

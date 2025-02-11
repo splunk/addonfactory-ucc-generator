@@ -33,7 +33,7 @@ it('render with all default dashboards', async () => {
     expect(timeLabels[0]).toBeInTheDocument();
     expect(timeLabels.length).toEqual(2);
 
-    const dataIngestionHeader = screen.getByText('Data ingestion');
+    const dataIngestionHeader = screen.getByRole('heading', { name: /data ingestion/i });
     expect(dataIngestionHeader).toBeInTheDocument();
 
     const idsToBeInDocument = [

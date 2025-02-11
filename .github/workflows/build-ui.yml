@@ -3,7 +3,7 @@ on:
   workflow_call:
 
 jobs:
-  build-ui:
+  ui-code-check:
     runs-on: ubuntu-22.04
     defaults:
       run:
@@ -17,6 +17,28 @@ jobs:
         run: yarn run lint
       - name: Unit test
         run: yarn run test
+      - name: Build lib and publish dry run
+        run: npm publish --provenance --access public --dry-run
+      - name: Pack tarball
+        run: npm pack
+      - name: Upload tarball as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UCC-UI-lib-tarball
+          path: "ui/*.tgz"
+
+  build-ui:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ui
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: install deps
+        uses: ./.github/actions/cached-ui-deps
+      - name: Build UCC library
+        run: yarn run build:lib
       - name: Build UCC UI
         run: yarn run build
       - name: List deps into dependencies.txt

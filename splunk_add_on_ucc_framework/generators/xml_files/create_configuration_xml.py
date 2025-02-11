@@ -19,7 +19,10 @@ from splunk_add_on_ucc_framework import data_ui_generator
 
 
 class ConfigurationXml(XMLGenerator):
-    __description__ = "Generates configuration.xml file in `default/data/ui/views/` folder if globalConfig is present."
+    __description__ = (
+        "Generates configuration.xml file in `default/data/ui/views/` folder if "
+        "configuration is defined in globalConfig."
+    )
 
     def _set_attributes(self, **kwargs: Any) -> None:
         if self._global_config and self._global_config.has_configuration():

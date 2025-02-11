@@ -46,7 +46,7 @@
       },
       "title": "Data volume",
       "dataSources": {
-        "primary": "data_ingestion_data_volume_ds"
+        "primary": "data_ingestion_data_volume_ds_chain"
       }
     },
     "data_ingestion_events_count_viz": {
@@ -61,7 +61,7 @@
       },
       "title": "Number of events",
       "dataSources": {
-        "primary": "data_ingestion_events_count_ds"
+        "primary": "data_ingestion_events_count_ds_chain"
       }
     },
     "data_ingestion_table_viz": {
@@ -139,6 +139,19 @@
         "queryParameters": {
           "earliest": "$data_ingestion_time.earliest$",
           "latest": "$data_ingestion_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "data_volume"
+    },
+    "data_ingestion_data_volume_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "data_ingestion_data_volume_ds",
+        "query": "{{data_ingestion_volume_zero_line}}",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
         }
       }
     },
@@ -146,6 +159,19 @@
       "type": "ds.search",
       "options": {
         "query": "{{events_count}}",
+        "queryParameters": {
+          "earliest": "$data_ingestion_time.earliest$",
+          "latest": "$data_ingestion_time.latest$"
+        },
+        "enableSmartSources": true
+      },
+      "name": "data_ingestion_events_count"
+    },
+    "data_ingestion_events_count_ds_chain": {
+      "type": "ds.chain",
+      "options": {
+        "extend": "data_ingestion_events_count_ds",
+        "query": "{{data_ingestion_event_count_zero_line}}",
         "queryParameters": {
           "earliest": "$data_ingestion_time.earliest$",
           "latest": "$data_ingestion_time.latest$"
