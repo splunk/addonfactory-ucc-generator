@@ -221,9 +221,7 @@ class GlobalConfig:
         return bool(self.pages)
 
     def has_inputs(self) -> bool:
-        if self.has_pages():
-            return bool(self.inputs)
-        return False
+        return bool(self.inputs)
 
     def has_configuration(self) -> bool:
         return bool(self.tabs)
