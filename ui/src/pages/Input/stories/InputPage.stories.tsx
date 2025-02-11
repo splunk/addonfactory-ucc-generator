@@ -118,7 +118,7 @@ export const InputPageViewUpdateInput: Story = {
         await userEvent.click(editButtons[0]);
 
         await expect(
-            await body.findByRole('dialog', { name: 'Update demo_input' })
+            await body.findByRole('dialog', { name: 'Update custom header' })
         ).toBeInTheDocument();
     },
 };
