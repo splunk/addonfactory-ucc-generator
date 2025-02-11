@@ -318,7 +318,6 @@ class UserDefinedRestHandlers:
         self._definitions: List[RestHandlerConfig] = []
         self._names: Set[str] = set()
         self._endpoints: Set[str] = set()
-        self._files: Set[str] = set()
 
     def add_definitions(
         self, definitions: Iterable[Union[Dict[str, Any], RestHandlerConfig]]
@@ -337,20 +336,6 @@ class UserDefinedRestHandlers:
 
         if definition.endpoint in self._endpoints:
             raise ValueError(f"Duplicate REST handler endpoint: {definition.endpoint}")
-
-        if (
-            definition.registerHandler is not None
-            and "file" in definition.registerHandler
-        ):
-            file = definition.registerHandler["file"]
-
-            if file.endswith(".py"):
-                file = file[:-3]
-
-            if file in self._files:
-                raise ValueError(f"Duplicate REST handler file: {file}")
-
-            self._files.add(file)
 
         self._names.add(definition.name)
         self._endpoints.add(definition.endpoint)

@@ -2639,7 +2639,7 @@
             "file": {
               "type": "string",
               "description": "The file where the custom rest handler is located.",
-                "pattern": "^[a-zA-Z0-9_]+(\\.py)?$"
+                "pattern": "^[a-zA-Z0-9_]+\\.py$"
             },
             "actions": {
               "type": "array",

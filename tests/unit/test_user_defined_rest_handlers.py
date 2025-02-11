@@ -125,7 +125,7 @@ def test_rest_handler_config_openapi_empty_params(missing_parameters):
             endpoint="test_endpoint",
             handlerType="EAI",
             registerHandler={
-                "file": "test_handler",
+                "file": "test_handler.py",
                 "actions": ["create", "list", "edit", "remove"],
             },
         )
@@ -135,7 +135,7 @@ def test_rest_handler_config_openapi_empty_params(missing_parameters):
             endpoint="test_endpoint",
             handlerType="EAI",
             registerHandler={
-                "file": "test_handler",
+                "file": "test_handler.py",
                 "actions": ["create", "list", "edit", "remove"],
             },
             requestParameters={
@@ -680,41 +680,3 @@ def test_user_defined_rest_handlers_duplicates():
 
     with pytest.raises(ValueError):
         hnds.add_definition(duplicated_endpoint)
-
-
-def test_user_defined_rest_handlers_register_duplicates():
-    cfg1 = RestHandlerConfig(
-        name="test_name_1",
-        endpoint="test_endpoint_1",
-        handlerType="EAI",
-        registerHandler={
-            "file": "test_handler_1",
-            "actions": ["create", "list"],
-        },
-    )
-    cfg2 = RestHandlerConfig(
-        name="test_name_2",
-        endpoint="test_endpoint_2",
-        handlerType="EAI",
-        registerHandler={
-            "file": "test_handler_2",
-            "actions": ["edit"],
-        },
-    )
-    cfg3 = RestHandlerConfig(
-        name="test_name_3",
-        endpoint="test_endpoint_3",
-        handlerType="EAI",
-        registerHandler={
-            "file": "test_handler_2.py",
-            "actions": ["remove"],
-        },
-    )
-
-    hnds = UserDefinedRestHandlers()
-    hnds.add_definitions([cfg1, cfg2])
-
-    assert hnds.endpoint_registration_entries
-
-    with pytest.raises(ValueError):
-        hnds.add_definition(cfg3)
