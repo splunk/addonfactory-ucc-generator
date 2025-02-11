@@ -30,6 +30,7 @@ class InputsConf(ConfGenerator):
         self.input_names: List[Dict[str, List[str]]] = []
         self.disable = False
         self.service_name = ""
+        self.default_value_info: Dict[str, Dict[str, str]] = {}
         if self._global_config:
             for service in self._global_config.inputs:
                 properties = []
@@ -42,6 +43,7 @@ class InputsConf(ConfGenerator):
                         {service["name"]: ["placeholder = placeholder"]}
                     )
                     continue
+                self.default_value_info[service["name"]] = {}
                 for entity in service.get("entity", {"field": "name"}):
                     # TODO: add the details and updates on what to skip and process
                     if entity["field"] == "name":
@@ -52,6 +54,15 @@ class InputsConf(ConfGenerator):
                         f"{entity['field']} = {entity.get('help', '').replace(nl, ' ')} "
                         f"{'' if entity.get('defaultValue') is None else ' Default: ' + str(entity['defaultValue'])}"
                     )
+                    if entity.get("defaultValue"):
+                        if type(entity["defaultValue"]) is bool:
+                            self.default_value_info[service["name"]].update(
+                                {entity["field"]: str(entity["defaultValue"]).lower()}
+                            )
+                        else:
+                            self.default_value_info[service["name"]].update(
+                                {f"{entity['field']}": f"{str(entity['defaultValue'])}"}
+                            )
 
                 self.input_names.append({service["name"]: properties})
 
@@ -68,7 +79,10 @@ class InputsConf(ConfGenerator):
         )
 
         rendered_content = self._template.render(
-            input_names=stanzas, disabled=self.disable, service_name=self.service_name
+            input_names=stanzas,
+            disabled=self.disable,
+            service_name=self.service_name,
+            default_values=self.default_value_info,
         )
         self.writer(
             file_name=self.conf_file,
