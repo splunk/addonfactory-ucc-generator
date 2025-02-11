@@ -97,11 +97,14 @@ class GlobalConfig:
         self.expand_entities()
 
     def expand_tabs(self) -> None:
-        for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
-            self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+        if self.has_configuration():
+            for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
+                self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     def expand_entities(self) -> None:
-        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
+        self._expand_entities(
+            self._content["pages"].get("configuration", {}).get("tabs")
+        )
         self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
         self._expand_entities(self._content.get("alerts"))
 
@@ -126,7 +129,9 @@ class GlobalConfig:
 
     @property
     def tabs(self) -> List[Any]:
-        return self._content["pages"]["configuration"]["tabs"]
+        if "configuration" in self._content["pages"]:
+            return self._content["pages"]["configuration"]["tabs"]
+        return []
 
     @property
     def dashboard(self) -> Dict[str, Any]:
@@ -215,6 +220,9 @@ class GlobalConfig:
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
+
+    def has_configuration(self) -> bool:
+        return bool(self.tabs)
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
