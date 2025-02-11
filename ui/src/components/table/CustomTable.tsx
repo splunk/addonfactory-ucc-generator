@@ -175,6 +175,10 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 return findService?.formTitle || (needDefaultTitle ? findService?.title : '');
             }
             if (page === PAGE_CONF) {
+                invariant(
+                    unifiedConfigs.pages.configuration,
+                    'Configuration page not found in global config'
+                );
                 const findService = unifiedConfigs.pages.configuration.tabs.find(
                     (x) => x.name === serviceNameForTitle
                 );
