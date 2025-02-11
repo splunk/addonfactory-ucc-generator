@@ -28,6 +28,7 @@ def test_global_config_parse(filename):
     assert global_config.original_path == global_config_path
     assert global_config.schema_version == "0.0.3"
     assert global_config.version == "1.0.0"
+    assert global_config.has_configuration() is True
     assert global_config.has_inputs() is True
     assert global_config.has_alerts() is True
     assert global_config.has_oauth() is True
@@ -67,10 +68,19 @@ def test_global_config_configs(global_config_only_configuration):
 
 
 def test_global_config_only_configuration(global_config_only_configuration):
+    assert global_config_only_configuration.has_configuration() is True
     assert global_config_only_configuration.has_inputs() is False
     assert global_config_only_configuration.has_alerts() is False
     assert global_config_only_configuration.has_oauth() is False
     assert global_config_only_configuration.has_dashboard() is False
+
+
+def test_global_config_no_configuration(global_config_no_configuration):
+    assert global_config_no_configuration.has_configuration() is False
+    assert global_config_no_configuration.has_inputs() is True
+    assert global_config_no_configuration.has_alerts() is False
+    assert global_config_no_configuration.has_oauth() is False
+    assert global_config_no_configuration.has_dashboard() is True
 
 
 def test_global_config_only_logging(global_config_only_logging):
