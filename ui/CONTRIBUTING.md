@@ -1,131 +1,131 @@
-# Contributing to UCC UI Library
+# Contributing to the UCC UI Library
 
 ## Overview
 
-This project includes a UI framework that dynamically renders UI components based on the provided `globalConfig.json`.
+This project features a UI framework that dynamically renders UI components based on a provided `globalConfig.json`.
 
-For a quickstart, please check [quick_start_ui.sh](../scripts/quick_start_ui.sh)
+For a quick start, refer to the [quick_start_ui.sh](../scripts/quick_start_ui.sh) script.
 
 ## Getting Started
 
-1. Clone the repo.
-1. Install yarn (>= 1.2) if you haven't already: `npm install --global yarn`.
-1. Run the setup task: `yarn run setup`.
+1. Clone the repository.
+1. Install Yarn Classic (version >=1.2) if you haven't already: `npm install --global yarn`.
+1. Execute the setup task: `yarn run setup`.
 
-After completing these steps, the following tasks will be available:
+Once these steps are complete, the following tasks become available:
 
-* `yarn start` – Starts a server that serves JS bundles from memory and proxies other requests to the target, which is `localhost:8000` by default.
-* `yarn build` – Creates a production bundle.
-* `yarn build:watch` – Creates a dev bundle and writes to output folder
-* `yarn run storybook` - Starts Storybook and opens <http://localhost:6006>.
-* `yarn run test-storybook` - Checks if screenshots match for every story.
-* `yarn run test-storybook:update-snapshots` - Updates screenshots. Must be run after every visual change.
-* `yarn run eslint` – Runs linters.
-* `yarn run eslint:fix` – Fixes linter issues and runs prettier.
-* `yarn run format` – Runs prettier to auto-format `*.js`, `*.jsx`, and `*.css` files. This command overwrites files without confirmation. Use `format:verify` for a non-destructive check.
+* `yarn start` – Initiates a server that serves JavaScript bundles from memory and proxies other requests to the target (default: `localhost:8000`).
+* `yarn build` – Generates a production bundle.
+* `yarn build:watch` – Creates a development bundle and writes it to the output folder.
+* `yarn run storybook` – Launches Storybook and opens <http://localhost:6006>.
+* `yarn run test-storybook` – Verifies if screenshots match for each story.
+* `yarn run test-storybook:update-snapshots` – Updates screenshots.  Run this after any visual modifications.
+* `yarn run eslint` – Executes linters.
+* `yarn run eslint:fix` – Addresses linter issues and applies Prettier formatting.
+* `yarn run format` – Uses Prettier to automatically format source code files.  This command overwrites files without prompting. Use `format:verify` for a non-destructive check.
 
-Running `yarn run setup` is required to enable all other tasks. This command might take a few minutes to complete.
+Running `yarn run setup` is a prerequisite for all other tasks.  This command may require a few minutes to finish.
 
-We have published Storybook at: <https://splunk.github.io/addonfactory-ucc-generator/storybook>
+A published version of Storybook is available at: <https://splunk.github.io/addonfactory-ucc-generator/storybook>
 
 ## Development Server
 
-This project integrates [webpack-dev-server](https://webpack.js.org/configuration/dev-server/) to enhance the development workflow, facilitating live reloading and in-memory serving of UI builds and static JavaScript files
+This project incorporates [webpack-dev-server](https://webpack.js.org/configuration/dev-server/) to streamline development, providing live reloading and in-memory serving of UI builds and static JavaScript files.
 
 ```bash
 yarn start
 ```
 
-This initiates the server at <http://localhost:8080> (or a custom port, if configured) and automatically refreshes the browser upon detecting file changes. It intersects static assets for all TAs. You may want to change target for the proxy in the file [webpack.config.js](webpack.config.js)
+This starts the server at <http://localhost:8080> (or a custom port, if specified) and automatically refreshes the browser when file changes are detected. It intersects static assets for all TAs. You might want to modify the proxy target in the [webpack.config.js](webpack.config.js) file.
 
 ## Code Formatting
 
-UCC UI Lib uses [prettier](https://github.com/prettier/prettier) for consistent code formatting. It's recommended to [add a prettier plugin to your editor/IDE](https://github.com/prettier/prettier#editor-integration).
+The UCC UI Library utilizes [Prettier](https://github.com/prettier/prettier) to ensure consistent code formatting.  It's highly recommended to [integrate a Prettier plugin into your editor/IDE](https://github.com/prettier/prettier#editor-integration).
 
 ## Screenshot Testing Guide
 
-This section outlines how to work with screenshot testing in our project, utilizing [Git Large File Storage (Git LFS)](https://git-lfs.com/) and a continuous integration (CI) setup to ensure visual consistency across our Storybook stories.
+This section details how to use screenshot testing, leveraging [Git Large File Storage (Git LFS)](https://git-lfs.com/) and a continuous integration (CI) setup to maintain visual consistency across Storybook stories.
 
 ### Prerequisites
 
-* Git LFS: Our screenshots are stored with Git LFS. Ensure it's installed on your system by following [the installation guide](https://github.com/git-lfs/git-lfs#installing). For MacOS it is:
+* **Git LFS:** Screenshots are stored using Git LFS.  Ensure it's installed on your system by following the [installation guide](https://github.com/git-lfs/git-lfs#installing).  For macOS:
 
-```bash
-brew install git-lfs
-```
+    ```bash
+    brew install git-lfs
+    ```
 
-After installing Git LFS, set it up with the following command:
+    After installing Git LFS, initialize it with:
 
-```bash
-git lfs install
-git lfs pull
-```
+    ```bash
+    git lfs install
+    git lfs pull
+    ```
 
 ### Automated Screenshot Testing
 
-Our CI pipeline includes a job defined in [storybook-visual.yml](../.github/workflows/storybook-visual.yml). This job automates the following process:
+Our CI pipeline includes a job defined in [storybook-visual.yml](../.github/workflows/storybook-visual.yml). This job automates the following:
 
-* Build and serve Storybook.
+* Builds and serves Storybook.
 * Captures screenshots of all stories.
 * Compares these screenshots against those stored in the repository.
-* If discrepancies are found, the job updates the screenshots and pushes the updates to the current branch.
+* If differences are detected, the job updates the screenshots and pushes the changes to the current branch.
 
 ### Updating Screenshots Locally
 
-Due to differences in application appearance between MacOS and Linux (especially in text rendering), we recommend using Docker to update screenshots for consistency. Here's how you can update screenshots locally:
+Due to differences in application rendering between macOS and Linux (particularly text rendering), we recommend using Docker to update screenshots for consistency.  Follow these steps:
 
-1. Start Storybook:
+1. **Start Storybook:**
 
-    Run Storybook locally using Yarn:
+    Launch Storybook locally using Yarn:
 
     ```bash
     yarn run storybook
     ```
 
-1. Capture and Update Screenshots:
+1. **Capture and Update Screenshots:**
 
-    Once Storybook is running, use Docker Compose to update the screenshots:
+    With Storybook running, use Docker Compose to update the screenshots:
 
-```bash
-docker compose up --build
-```
+    ```bash
+    docker compose up --build
+    ```
 
-This approach ensures that screenshots are consistent and reflective of how the application is intended to look across different environments.
+This ensures that screenshots are consistent and accurately represent the application's appearance across different environments.
 
-### Publishing UI as an NPM Package
+## Publishing the UI as an NPM Package
 
-The publish is done automatically by the CI pipeline. The version is determined by the version in the package.json file, which is updated by the release job. The publish commands are described in the file [npm-publish.yml](../.github/workflows/npm-publish.yml).
+Publishing is handled automatically by the CI pipeline. The version is determined by the `version` field in the `package.json` file, which is updated by the release job. The publishing commands are described in [npm-publish.yml](../.github/workflows/npm-publish.yml).
 
-It is always a good thing to check if changes from this package are working for users of the package. In order to check changes locally, you can use [Verdaccio](https://github.com/verdaccio/verdaccio). Here is an outline
+It's good practice to verify that changes in this package function correctly for users. To test changes locally, you can use [Verdaccio](https://github.com/verdaccio/verdaccio). Here's a brief overview:
 
-* Run Verdaccio server
-* Publish the package to Verdaccio
-* Switch to the TA repo and install the package from the localhost registry
+* Run a Verdaccio server.
+* Publish the package to Verdaccio.
+* Switch to the TA repository and install the package from the local registry.
 
-First, you need to run Verdaccio server. You can do it by running the following command in the terminal:
+First, start the Verdaccio server. Execute this command in your terminal:
 
 ```bash
 npx verdaccio
 ```
 
-Create a user if you haven't done it before. Actual credentials are not important since it is a local server.
+Create a user if you haven't already. The actual credentials aren't critical since it's a local server.
 
 ```bash
 npm adduser --scope=@splunk --registry http://localhost:4873/
 ```
 
-It should be running all time in order you to publish or install packages. Then you can publish the package to Verdaccio using the following command:
+Keep the server running while publishing or installing packages.  Publish the package to Verdaccio using:
 
 ```bash
-# updates the version in package.json to make sure you don't publish the same version
+# Updates the version in package.json to prevent publishing the same version.
 npm version prerelease
 
 npm publish --registry http://localhost:4873
 ```
 
-You can inspect the published version by navigating to the page from the browser: <http://localhost:4873>.
+You can inspect the published version by visiting <http://localhost:4873> in your browser.
 
-In order to install the package from Verdaccio in TA repo, you can use the following command:
+To install the package from Verdaccio in your TA repository, use:
 
 ```bash
 npm install @splunk/add-on-ucc-framework@latest --registry http://localhost:4873
@@ -133,4 +133,4 @@ npm install @splunk/add-on-ucc-framework@latest --registry http://localhost:4873
 yarn add @splunk/add-on-ucc-framework@latest --registry http://localhost:4873
 ```
 
-After you are done with testing, make sure you discard changes in the lock file of TA repository since it would contain localhost registry URL, as well as the version bump in the package.json file of UCC UI.
+After testing, discard changes in the TA repository's lock file (which will contain the localhost registry URL) and the version bump in the UCC UI's `package.json` file.

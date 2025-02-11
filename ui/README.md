@@ -1,6 +1,6 @@
 # UCC-UI
 
-This is a UI library that extends UCC with custom UI components. It provides TypeScript-based components and hooks to build custom user interfaces.
+This is a UI library that extends UCC with custom UI components.  It provides TypeScript-based components and hooks for building custom user interfaces.
 
 ## Getting Started
 
@@ -12,7 +12,7 @@ yarn add @splunk/add-on-ucc-framework
 
 ## Usage
 
-Import a base class to extend your custom UI components. If you are using TypeScript, you will have static type support in lifecycle methods.
+Import a base class to extend for your custom UI components. If you're using TypeScript, you'll have static type support in lifecycle methods.
 
 ```tsx
 import React from "react";
@@ -26,9 +26,7 @@ export default class MyCustomControl extends CustomControlBase {
       this.el,
     );
   }
-
-
 }
 ```
 
-Refer to [splunk-example-ta](https://github.com/splunk/splunk-example-ta) repository for more examples.
+Refer to the [splunk-example-ta](https://github.com/splunk/splunk-example-ta) repository for more examples.
