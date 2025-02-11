@@ -70,7 +70,7 @@ class EncodingObject(Init):
 class MediaTypeObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#media-type-object
-    schema: Optional[Union[SchemaObject, Dict[str, str]]] = None
+    schema: Optional[Union[SchemaObject, Dict[str, Any]]] = None
     example: Optional[Any] = None
     examples: Optional[Dict[str, ExampleObject]] = None
     encoding: Optional[Dict[str, EncodingObject]] = None
@@ -139,7 +139,7 @@ class OperationObject(
     description: Optional[str] = None
     externalDocs: Optional[ExternalDocumentationObject] = None
     operationId: Optional[str] = None
-    parameters: Optional[ParameterObject] = None
+    parameters: Optional[List[Union[ParameterObject, Dict[str, Any]]]] = None
     requestBody: Optional[RequestBodyObject] = None
     callbacks: Optional[CallbackObjects] = None
     deprecated: Optional[bool] = False
