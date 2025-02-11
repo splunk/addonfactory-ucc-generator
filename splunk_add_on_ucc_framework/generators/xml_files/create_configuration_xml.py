@@ -14,21 +14,27 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
-from typing import Any, Dict
+from typing import Any, Dict, Union
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
 class ConfigurationXml(XMLGenerator):
-    __description__ = "Generates configuration.xml file in `default/data/ui/views/` folder if globalConfig is present."
+    __description__ = (
+        "Generates configuration.xml file in `default/data/ui/views/` folder if "
+        "configuration is defined in globalConfig."
+    )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        self.configuration_xml_content = (
-            data_ui_generator.generate_views_configuration_xml(
-                self._addon_name,
+        if self._global_config and self._global_config.has_configuration():
+            self.configuration_xml_content = (
+                data_ui_generator.generate_views_configuration_xml(
+                    self._addon_name,
+                )
             )
-        )
 
-    def generate_xml(self) -> Dict[str, str]:
+    def generate_xml(self) -> Union[Dict[str, str], None]:
+        if self._global_config and not self._global_config.has_configuration():
+            return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "configuration.xml"]
         )

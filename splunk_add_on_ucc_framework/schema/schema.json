@@ -2677,9 +2677,6 @@
           "$ref": "#/definitions/DashboardPage"
         }
       },
-      "required": [
-        "configuration"
-      ],
       "additionalProperties": false
     },
     "RegexValidator": {

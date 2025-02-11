@@ -18,6 +18,7 @@ import { SortDirection } from './useTableSort';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { ITableConfig } from '../../types/globalConfig/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
+import { invariant } from '../../util/invariant';
 
 interface CustomTableProps {
     page: StandardPages;
@@ -48,7 +49,7 @@ const getServiceToStyleMap = (page: StandardPages, unifiedConfigs: GlobalConfig)
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     } else {
-        unifiedConfigs.pages.configuration.tabs.forEach((x) => {
+        unifiedConfigs.pages.configuration?.tabs.forEach((x) => {
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     }

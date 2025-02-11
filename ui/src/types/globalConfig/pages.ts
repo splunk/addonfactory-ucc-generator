@@ -163,12 +163,14 @@ const InputsPageSchema = z.union([InputsPageRegular, InputsPageTableSchema]).opt
 const ServiceTableSchema = z.union([TableFullServiceSchema, TableLessServiceSchema]);
 
 export const pages = z.object({
-    configuration: z.object({
-        title: z.string(),
-        description: z.string().optional(),
-        subDescription: SubDescriptionSchema,
-        tabs: z.array(TabSchema).min(1),
-    }),
+    configuration: z
+        .object({
+            title: z.string(),
+            description: z.string().optional(),
+            subDescription: SubDescriptionSchema,
+            tabs: z.array(TabSchema).min(1),
+        })
+        .optional(),
     inputs: InputsPageSchema,
     dashboard: z
         .object({
