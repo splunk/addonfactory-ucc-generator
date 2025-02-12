@@ -26,7 +26,7 @@ it('returns an empty array when moreInfo is undefined or empty', () => {
 });
 
 it('correctly processes non-empty moreInfo and returns expected React elements', async () => {
-    const row = { name: 'John Doe', age: 30, country: 'USA' };
+    const row = { name: 'John Doe', age: 30, country: 'USA', disabled: false };
     render(<div>{getExpansionRowData(row, moreInfo)}</div>);
 
     expect(screen.getAllByRole('definition')).toHaveLength(moreInfo.length);
