@@ -16,11 +16,12 @@ export function getExpansionRowData(row, moreInfo) {
         moreInfo?.reduce((definitionLists, val) => {
             const label = _(val.label);
             const cellValue = getTableCellValue(row, val.field, val.mapping);
+
             // Remove extra rows which are empty in moreInfo and default value is not provided
-            if (cellValue) {
+            if (cellValue !== undefined && cellValue !== null && cellValue !== '') {
                 definitionLists.push(<DL.Term key={val.field}>{label}</DL.Term>);
                 definitionLists.push(
-                    <DL.Description key={`${val.field}_decr`}>{cellValue}</DL.Description>
+                    <DL.Description key={`${val.field}_decr`}>{String(cellValue)}</DL.Description>
                 );
             }
             return definitionLists;
