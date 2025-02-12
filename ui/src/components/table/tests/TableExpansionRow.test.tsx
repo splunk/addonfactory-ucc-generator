@@ -103,7 +103,7 @@ function setup() {
 }
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
+    const expandable = within(inputRow).queryByRole('button', { name: /expand/i });
     if (expandable && expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));

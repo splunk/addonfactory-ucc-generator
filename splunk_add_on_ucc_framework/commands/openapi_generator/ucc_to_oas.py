@@ -414,6 +414,20 @@ def __add_paths(
     return open_api_object
 
 
+def __add_user_defined_paths(
+    open_api_object: OpenAPIObject,
+    global_config: global_config_lib.GlobalConfig,
+) -> OpenAPIObject:
+    """
+    Adds user defined paths (globalConfig["options"]["restHandlers"]) to the OpenAPI object.
+    """
+    if open_api_object.paths is None:
+        open_api_object.paths = {}
+
+    open_api_object.paths.update(global_config.user_defined_handlers.oas_paths)
+    return open_api_object
+
+
 def transform(
     global_config: global_config_lib.GlobalConfig,
     app_manifest: app_manifest_lib.AppManifest,
@@ -433,4 +447,5 @@ def transform(
     open_api_object.security = [{"BasicAuth": []}]
     open_api_object = __add_schemas_object(open_api_object, global_config_dot_notation)
     open_api_object = __add_paths(open_api_object, global_config_dot_notation)
+    open_api_object = __add_user_defined_paths(open_api_object, global_config)
     return open_api_object
