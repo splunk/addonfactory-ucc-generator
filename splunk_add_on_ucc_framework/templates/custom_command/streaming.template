@@ -3,7 +3,7 @@ import import_declare_test
 
 from splunklib.searchcommands import \
     dispatch, StreamingCommand, Configuration, Option, validators
-from {{file_name}} import stream
+from {{imported_file_name}} import stream
 
 @Configuration()
 class {{class_name}}Command(StreamingCommand):

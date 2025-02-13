@@ -177,7 +177,7 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "sumcommand.py"),
             ("bin", "sum.py"),
             ("bin", "sum_without_map.py"),
-            ("bin", "sum_without_mapcommand.py"),
+            ("bin", "sumtwocommand.py"),
             ("bin", "splunk_ta_uccexample_rh_account.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),

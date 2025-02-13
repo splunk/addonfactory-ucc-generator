@@ -5,9 +5,9 @@ from splunklib.searchcommands import \
     dispatch, ReportingCommand, Configuration, Option, validators
 
 {% if import_map %}
-from {{ file_name }} import reduce, map
+from {{ imported_file_name }} import reduce, map
 {% else %}
-from {{ file_name }} import reduce
+from {{ imported_file_name }} import reduce
 {% endif %}
 
 @Configuration()

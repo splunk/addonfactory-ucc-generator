@@ -3,7 +3,7 @@ import import_declare_test
 
 from splunklib.searchcommands import \
     dispatch, EventingCommand, Configuration, Option, validators
-from {{file_name}} import transform
+from {{imported_file_name}} import transform
 
 @Configuration()
 class {{class_name}}Command(EventingCommand):

@@ -3,7 +3,7 @@ import import_declare_test
 
 from splunklib.searchcommands import \
     dispatch, GeneratingCommand, Configuration, Option, validators
-from {{file_name}} import generate
+from {{imported_file_name}} import generate
 
 @Configuration()
 class {{class_name}}Command(GeneratingCommand):

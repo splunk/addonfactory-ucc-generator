@@ -54,7 +54,8 @@ class CustomCommandPy(PyGenerator):
 
                 self.commands_info.append(
                     {
-                        "file_name": command["fileName"],
+                        "imported_file_name": command["fileName"],
+                        "file_name": command["commandName"],
                         "class_name": command["commandName"].title(),
                         "description": command.get("description"),
                         "syntax": command.get("syntax"),
@@ -71,14 +72,14 @@ class CustomCommandPy(PyGenerator):
             return None
 
         for command_info in self.commands_info:
-            file_name = command_info["file_name"] + "command.py"
+            file_name = command_info["file_name"] + ".py"
             file_path = self.get_file_output_path(["bin", file_name])
             self.set_template_and_render(
                 template_file_path=["custom_command"],
                 file_name=command_info["template"],
             )
             rendered_content = self._template.render(
-                file_name=command_info["file_name"],
+                imported_file_name=command_info["imported_file_name"],
                 class_name=command_info["class_name"],
                 description=command_info["description"],
                 syntax=command_info["syntax"],

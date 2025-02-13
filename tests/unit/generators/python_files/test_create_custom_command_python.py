@@ -69,13 +69,7 @@ def test_set_attributes_without_custom_command(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    assert not hasattr(custom_command, "arguments")
-    assert not hasattr(custom_command, "import_map")
-    assert not hasattr(custom_command, "file_name")
-    assert not hasattr(custom_command, "class_name")
-    assert not hasattr(custom_command, "description")
-    assert not hasattr(custom_command, "syntax")
-    assert not hasattr(custom_command, "template")
+    assert custom_command.commands_info == []
 
 
 def test_set_attributes(
@@ -92,7 +86,8 @@ def test_set_attributes(
     custom_command_py._set_attributes(custom_search_commands=custom_search_commands)
     assert custom_command_py.commands_info == [
         {
-            "file_name": "test",
+            "imported_file_name": "test",
+            "file_name": "testcommand",
             "class_name": "Testcommand",
             "description": "This is test command",
             "syntax": "testcommand count=<event_count> text=<string>",
