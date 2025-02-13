@@ -454,7 +454,7 @@
         },
         "requireSeachAssistant": {
           "type": "boolean",
-          "dafault": false,
+          "default": false,
           "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
         },
         "version": {

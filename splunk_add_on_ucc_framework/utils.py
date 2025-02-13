@@ -39,15 +39,6 @@ def get_j2_env() -> jinja2.Environment:
     )
 
 
-def get_custom_command_j2_env() -> jinja2.Environment:
-    # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
-    return jinja2.Environment(
-        loader=jinja2.FileSystemLoader(
-            join(dirname(__file__), "templates", "custom_command")
-        )
-    )
-
-
 def get_license_path(file_name: str) -> str:
     return join(dirname(__file__), "templates", "Licenses", f"{file_name}.txt")
 

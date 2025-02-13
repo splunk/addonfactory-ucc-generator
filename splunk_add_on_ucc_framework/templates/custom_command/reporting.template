@@ -4,31 +4,33 @@ import import_declare_test
 from splunklib.searchcommands import \
     dispatch, ReportingCommand, Configuration, Option, validators
 
-{%- if import_map %}
+{% if import_map %}
 from {{ file_name }} import reduce, map
-{%- else %}
+{% else %}
 from {{ file_name }} import reduce
-{%- endif %}
+{% endif %}
 
 @Configuration()
 class {{class_name}}Command(ReportingCommand):
+    {% if syntax or description%}
     """
 
+    {% if syntax %}
     ##Syntax
-    {%- if syntax %}
     {{syntax}}
-    {%- endif %}
+    {% endif %}
 
+    {% if description %}
     ##Description
-    {%- if description %}
     {{description}}
-    {%- endif %}
+    {% endif %}
 
     """
+    {% endif %}
 
-    {% for arg in arguments -%}
+    {% for arg in arguments %}
     {{ arg.name }} = Option(name="{{arg.name}}"
-    {%- if arg.require  -%}    
+    {%- if arg.require  -%}
     , require={{ arg.require }}
     {%- else -%}
     , require=False
@@ -58,11 +60,11 @@ class {{class_name}}Command(ReportingCommand):
     )
     {% endfor %}
 
-    {%- if import_map %}
+    {% if import_map %}
     @Configuration()
     def map(self, events):
         return map(self, events)
-    {%- endif %}
+    {% endif %}
 
     def reduce(self, events):
         return reduce(self, events)

@@ -7,22 +7,24 @@ from {{file_name}} import generate
 
 @Configuration()
 class {{class_name}}Command(GeneratingCommand):
+    {% if syntax or description%}
     """
 
+    {% if syntax %}
     ##Syntax
-    {%- if syntax %}
     {{syntax}}
-    {%- endif %}
+    {% endif %}
 
+    {% if description %}
     ##Description
-    {%- if description %}
     {{description}}
-    {%- endif %}
+    {% endif %}
 
     """
-    {% for arg in arguments -%}
+    {% endif %}
+    {% for arg in arguments %}
     {{ arg.name }} = Option(name="{{arg.name}}"
-    {%- if arg.require  -%}    
+    {%- if arg.require  -%}
     , require={{ arg.require }}
     {%- else -%}
     , require=False

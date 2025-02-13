@@ -19,12 +19,11 @@ import logging
 import os
 import shutil
 import sys
-from typing import Optional, List, Dict
+from typing import Optional, List
 import subprocess
 import colorama as c
 import fnmatch
 import filecmp
-from importlib import import_module
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -157,129 +156,6 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
-
-
-def generate_commands_conf(
-    command_names: List[str], output_directory: str, ta_name: str
-) -> None:
-    content = (
-        utils.get_custom_command_j2_env()
-        .get_template("commands.conf.template")
-        .render(command_names=command_names)
-    )
-    file_path = os.path.join(output_directory, ta_name, "default", "commands.conf")
-    utils.write_file("commands.conf", file_path, content, merge_mode="item_overwrite")
-
-
-def generate_searchbnf_conf(
-    searchbnf_info: List[Dict[str, str]], output_directory: str, ta_name: str
-) -> None:
-    content = (
-        utils.get_custom_command_j2_env()
-        .get_template("searchbnf.conf.template")
-        .render(searchbnf_info=searchbnf_info)
-    )
-    file_path = os.path.join(output_directory, ta_name, "default", "searchbnf.conf")
-    utils.write_file("searchbnf.conf", file_path, content, merge_mode="item_overwrite")
-
-
-def generate_custom_search_commands(
-    input_dir: str,
-    global_config: global_config_lib.GlobalConfig,
-    output_directory: str,
-    ta_name: str,
-) -> None:
-    command_names = []
-    searchbnf_info = []
-    for command in global_config.custom_search_commands:
-        import_map = False
-        file_path = os.path.join(input_dir, "bin", command["fileName"])
-        if not os.path.isfile(file_path):
-            logger.error(
-                f"{command['fileName']} is not present in `{os.path.join(input_dir, 'bin')}` directory. "
-                "Please ensure the file exists."
-            )
-            sys.exit(1)
-
-        if (command["requireSeachAssistant"] is False) and (
-            command.get("description") or command.get("usage") or command.get("syntax")
-        ):
-            logger.warning(
-                "requireSeachAssistant is set to false "
-                "but atrributes required for 'searchbnf.conf' is defined which is not required."
-            )
-        if (command["requireSeachAssistant"] is True) and not (
-            command.get("description")
-            and command.get("usage")
-            and command.get("syntax")
-        ):
-            logger.error(
-                "One of the attributes among `description`, `usage`, `syntax` "
-                " is not been defined in globalConfig. Defined them as requireSeachAssistant is set to True. "
-            )
-            sys.exit(1)
-        command_names.append(command["commandName"])
-        command["fileName"] = command["fileName"].replace(".py", "")
-        template = command["commandType"] + ".template"
-        if command["commandType"] == "reporting":
-            src_pkg_bin = os.path.realpath(os.path.join(input_dir, "bin"))
-            sys.path.insert(0, src_pkg_bin)
-            if hasattr(import_module(command["fileName"]), "map"):
-                import_map = True
-            sys.path.pop(0)
-
-        if command["requireSeachAssistant"]:
-            searchbnf_dict = {
-                "command_name": command["commandName"],
-                "description": command["description"],
-                "syntax": command["syntax"],
-                "usage": command["usage"],
-            }
-            searchbnf_info.append(searchbnf_dict)
-
-        if command["version"] == 1:
-            if command["commandName"] != command["fileName"]:
-                logger.error(
-                    f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
-                    " should be same for version 1 of custom search command."
-                )
-                sys.exit(1)
-            else:
-                continue
-        arguments = []
-        for argument in command["arguments"]:
-            arguments.append(
-                {
-                    "name": argument["name"],
-                    "require": argument.get("required"),
-                    "validate": argument.get("validate"),
-                    "default": argument.get("defaultValue"),
-                }
-            )
-        content = (
-            utils.get_custom_command_j2_env()
-            .get_template(template)
-            .render(
-                file_name=command["fileName"],
-                class_name=command["commandName"].title(),
-                description=command.get("description"),
-                syntax=command.get("syntax"),
-                arguments=arguments,
-                import_map=import_map,
-            )
-        )
-        input_file_name = os.path.join(
-            output_directory,
-            ta_name,
-            "bin",
-            command["commandName"] + ".py",
-        )
-        with open(input_file_name, "w") as input_file:
-            input_file.write(content)
-
-    generate_commands_conf(command_names, output_directory, ta_name)
-    if searchbnf_info:
-        generate_searchbnf_conf(searchbnf_info, output_directory, ta_name)
 
 
 def _get_ignore_list(
@@ -633,6 +509,44 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
+        if global_config.has_custom_search_commands():
+            for command in global_config.custom_search_commands:
+                file_path = os.path.join(source, "bin", command["fileName"])
+                if not os.path.isfile(file_path):
+                    logger.error(
+                        f"{command['fileName']} is not present in `{os.path.join(source, 'bin')}` directory. "
+                        "Please ensure the file exists."
+                    )
+                    sys.exit(1)
+
+                if (command["requireSeachAssistant"] is False) and (
+                    command.get("description")
+                    or command.get("usage")
+                    or command.get("syntax")
+                ):
+                    logger.warning(
+                        "requireSeachAssistant is set to false "
+                        "but atrributes required for 'searchbnf.conf' is defined which is not required."
+                    )
+                if (command["requireSeachAssistant"] is True) and not (
+                    command.get("description")
+                    and command.get("usage")
+                    and command.get("syntax")
+                ):
+                    logger.error(
+                        "One of the attributes among `description`, `usage`, `syntax` "
+                        " is not been defined in globalConfig. Defined them as requireSeachAssistant is set to True. "
+                    )
+                    sys.exit(1)
+                if command["version"] == 1:
+                    command["fileName"] = command["fileName"].replace(".py", "")
+                    if command["commandName"] != command["fileName"]:
+                        logger.error(
+                            f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
+                            " should be same for version 1 of custom search command."
+                        )
+                        sys.exit(1)
+
         generated_files.extend(
             begin(
                 global_config=global_config,
@@ -643,6 +557,7 @@ def generate(
                 app_manifest=app_manifest,
                 addon_version=addon_version,
                 has_ui=global_config.meta.get("isVisible", True),
+                custom_search_commands=global_config.custom_search_commands,
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -752,10 +667,6 @@ def generate(
         addon_version=addon_version,
         has_ui=ui_available,
     ).generate()
-    if global_config and global_config.has_custom_search_commands():
-        generate_custom_search_commands(
-            source, global_config, output_directory, ta_name
-        )
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
