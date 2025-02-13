@@ -273,8 +273,6 @@ export const WithOpenedMenu: Story = {
 
         const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
 
-        invariant(menuDropdown, 'Menu Dropdown must exist');
-
         await user.click(menuDropdown);
 
         await body.findByRole('menuitem', {
@@ -304,10 +302,9 @@ export const WithOpenedSubMenu: Story = {
 
         const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
 
-        invariant(menuDropdown, 'Menu Dropdown must exist');
         await user.click(menuDropdown);
 
-        const groupMenuItem = await body.getByRole('menuitem', {
+        const groupMenuItem = await body.findByRole('menuitem', {
             name: 'test-group hide for platform',
         });
 
