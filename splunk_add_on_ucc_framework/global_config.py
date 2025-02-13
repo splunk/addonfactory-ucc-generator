@@ -21,6 +21,9 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
+    UserDefinedRestHandlers,
+)
 from splunk_add_on_ucc_framework.entity import expand_entity
 from splunk_add_on_ucc_framework.tabs import resolve_tab, LoggingTab
 
@@ -76,6 +79,12 @@ class GlobalConfig:
             else json.loads(config_raw)
         )
         self._original_path = global_config_path
+        self.user_defined_handlers = UserDefinedRestHandlers()
+
+    def parse_user_defined_handlers(self) -> None:
+        """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
+        rest_handlers = self._content.get("options", {}).get("restHandlers", [])
+        self.user_defined_handlers.add_definitions(rest_handlers)
 
     def dump(self, path: str) -> None:
         if self._is_global_config_yaml:
@@ -88,11 +97,14 @@ class GlobalConfig:
         self.expand_entities()
 
     def expand_tabs(self) -> None:
-        for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
-            self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
+        if self.has_configuration():
+            for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
+                self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     def expand_entities(self) -> None:
-        self._expand_entities(self._content["pages"]["configuration"]["tabs"])
+        self._expand_entities(
+            self._content["pages"].get("configuration", {}).get("tabs")
+        )
         self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
         self._expand_entities(self._content.get("alerts"))
 
@@ -117,7 +129,9 @@ class GlobalConfig:
 
     @property
     def tabs(self) -> List[Any]:
-        return self._content["pages"]["configuration"]["tabs"]
+        if "configuration" in self._content["pages"]:
+            return self._content["pages"]["configuration"]["tabs"]
+        return []
 
     @property
     def dashboard(self) -> Dict[str, Any]:
@@ -206,6 +220,9 @@ class GlobalConfig:
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
+
+    def has_configuration(self) -> bool:
+        return bool(self.tabs)
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)

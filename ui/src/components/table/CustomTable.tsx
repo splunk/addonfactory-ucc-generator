@@ -18,6 +18,7 @@ import { SortDirection } from './useTableSort';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { ITableConfig } from '../../types/globalConfig/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
+import { invariant } from '../../util/invariant';
 
 interface CustomTableProps {
     page: StandardPages;
@@ -47,7 +48,7 @@ const getServiceToStyleMap = (page: StandardPages, unifiedConfigs: GlobalConfig)
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     } else {
-        unifiedConfigs.pages.configuration.tabs.forEach((x) => {
+        unifiedConfigs.pages.configuration?.tabs.forEach((x) => {
             serviceToStyleMap[x.name] = x.style === STYLE_PAGE ? STYLE_PAGE : STYLE_MODAL;
         });
     }
@@ -179,6 +180,10 @@ const CustomTable: React.FC<CustomTableProps> = ({
                 const services = inputsPage?.services;
                 label = services?.find((x) => x.name === entityModal.serviceName)?.title;
             } else if (page === PAGE_CONF) {
+                invariant(
+                    unifiedConfigs.pages.configuration,
+                    'Configuration page not found in global config'
+                );
                 const { tabs } = unifiedConfigs.pages.configuration;
                 label = tabs.find((x) => x.name === entityModal.serviceName)?.title;
             }

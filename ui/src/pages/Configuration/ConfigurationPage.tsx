@@ -20,6 +20,7 @@ import { TabSchema } from '../../types/globalConfig/pages';
 import { PageContextProvider } from '../../context/PageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { usePlatform } from '../../hooks/usePlatform';
+import { invariant } from '../../util/invariant';
 
 const StyledHeaderControls = styled.div`
     display: inline-flex;
@@ -46,6 +47,7 @@ type Tab = z.infer<typeof TabSchema>;
 
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
+    invariant(unifiedConfigs.pages.configuration, 'Configuration page not found in global config');
     const { title, description, subDescription, tabs } = unifiedConfigs.pages.configuration;
 
     const platform = usePlatform(unifiedConfigs, 'configuration');
