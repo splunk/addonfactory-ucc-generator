@@ -25,7 +25,7 @@ from re import search
 
 class AlertActionsHtml(HTMLGenerator):
     __description__ = (
-        "Generates `alert_name.html` file based on alerts configuration present in globalConfig"
+        "Generates `alert_name.html` file based on alerts configuration present in globalConfig,"
         " in `default/data/ui/alerts` folder."
     )
 

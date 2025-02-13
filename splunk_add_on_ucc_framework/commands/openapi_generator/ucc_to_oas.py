@@ -158,15 +158,17 @@ def __add_schemas_object(
 ) -> OpenAPIObject:
     if open_api_object.components is not None:
         open_api_object.components.schemas = {}
-        for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
-            schema_name, schema_object = __get_schema_object(
-                name=tab.name, entities=tab.entity
-            )
-            open_api_object.components.schemas[schema_name] = schema_object
-            schema_name, schema_object = __get_schema_object(
-                name=tab.name, entities=tab.entity, without=["name"]
-            )
-            open_api_object.components.schemas[schema_name] = schema_object
+        pages = getattr(global_config, "pages", None)
+        if hasattr(pages, "configuration"):
+            for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
+                schema_name, schema_object = __get_schema_object(
+                    name=tab.name, entities=tab.entity
+                )
+                open_api_object.components.schemas[schema_name] = schema_object
+                schema_name, schema_object = __get_schema_object(
+                    name=tab.name, entities=tab.entity, without=["name"]
+                )
+                open_api_object.components.schemas[schema_name] = schema_object
         if hasattr(global_config.pages, "inputs") and hasattr(  # type: ignore[attr-defined]
             global_config.pages.inputs, "services"  # type: ignore[attr-defined]
         ):
@@ -378,18 +380,20 @@ def __assign_ta_paths(
 def __add_paths(
     open_api_object: OpenAPIObject, global_config: DataClasses
 ) -> OpenAPIObject:
-    for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
-        open_api_object = __assign_ta_paths(
-            open_api_object=open_api_object,
-            path=f"/{global_config.meta.restRoot}_{tab.name}"  # type: ignore[attr-defined]
-            if hasattr(tab, "table")
-            else f"/{global_config.meta.restRoot}_settings/{tab.name}",  # type: ignore[attr-defined]
-            path_name=tab.name,
-            actions=tab.table.actions
-            if hasattr(tab, "table") and hasattr(tab.table, "actions")
-            else None,
-            page=GloblaConfigPages.CONFIGURATION,
-        )
+    pages = getattr(global_config, "pages", None)
+    if hasattr(pages, "configuration"):
+        for tab in global_config.pages.configuration.tabs:  # type: ignore[attr-defined]
+            open_api_object = __assign_ta_paths(
+                open_api_object=open_api_object,
+                path=f"/{global_config.meta.restRoot}_{tab.name}"  # type: ignore[attr-defined]
+                if hasattr(tab, "table")
+                else f"/{global_config.meta.restRoot}_settings/{tab.name}",  # type: ignore[attr-defined]
+                path_name=tab.name,
+                actions=tab.table.actions
+                if hasattr(tab, "table") and hasattr(tab.table, "actions")
+                else None,
+                page=GloblaConfigPages.CONFIGURATION,
+            )
     if hasattr(global_config.pages, "inputs") and hasattr(  # type: ignore[attr-defined]
         global_config.pages.inputs, "services"  # type: ignore[attr-defined]
     ):
@@ -405,6 +409,20 @@ def __add_paths(
                 actions=actions,
                 page=GloblaConfigPages.INPUTS,
             )
+    return open_api_object
+
+
+def __add_user_defined_paths(
+    open_api_object: OpenAPIObject,
+    global_config: global_config_lib.GlobalConfig,
+) -> OpenAPIObject:
+    """
+    Adds user defined paths (globalConfig["options"]["restHandlers"]) to the OpenAPI object.
+    """
+    if open_api_object.paths is None:
+        open_api_object.paths = {}
+
+    open_api_object.paths.update(global_config.user_defined_handlers.oas_paths)
     return open_api_object
 
 
@@ -427,4 +445,5 @@ def transform(
     open_api_object.security = [{"BasicAuth": []}]
     open_api_object = __add_schemas_object(open_api_object, global_config_dot_notation)
     open_api_object = __add_paths(open_api_object, global_config_dot_notation)
+    open_api_object = __add_user_defined_paths(open_api_object, global_config)
     return open_api_object

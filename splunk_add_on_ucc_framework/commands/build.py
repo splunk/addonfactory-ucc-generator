@@ -470,6 +470,7 @@ def generate(
                 "please unify them to build the add-on."
             )
             sys.exit(1)
+        global_config.parse_user_defined_handlers()
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
