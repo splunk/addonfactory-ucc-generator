@@ -3,6 +3,7 @@ import import_declare_test
 
 from splunklib.searchcommands import \
     dispatch, ReportingCommand, Configuration, Option, validators
+
 from sum import reduce, map
 
 @Configuration()
