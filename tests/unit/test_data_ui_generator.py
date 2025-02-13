@@ -7,6 +7,7 @@ def test_generate_nav_default_xml():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
         include_dashboard=True,
+        include_configuration=True,
         default_view="configuration",
     )
 
@@ -27,6 +28,7 @@ def test_generate_nav_default_xml_only_configuration():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=False,
         include_dashboard=False,
+        include_configuration=True,
         default_view="configuration",
     )
 
@@ -45,6 +47,7 @@ def test_generate_nav_default_xml_with_default_inputs_page():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
         include_dashboard=False,
+        include_configuration=True,
         default_view="inputs",
     )
 
@@ -64,6 +67,7 @@ def test_generate_nav_default_xml_with_default_dashboard_page():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=True,
         include_dashboard=True,
+        include_configuration=True,
         default_view="dashboard",
     )
 
@@ -84,12 +88,32 @@ def test_generate_nav_default_xml_with_search_view_default():
     result = data_ui_generator.generate_nav_default_xml(
         include_inputs=False,
         include_dashboard=False,
+        include_configuration=True,
         default_view="search",
     )
 
     expected_result = """<?xml version="1.0" ?>
 <nav>
     <view name="configuration"/>
+    <view default="true" name="search"/>
+</nav>
+"""
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    assert " ".join([str(item) for item in diff]) == ""
+
+
+def test_generate_nav_default_xml_with_no_configuration():
+    result = data_ui_generator.generate_nav_default_xml(
+        include_inputs=True,
+        include_dashboard=False,
+        include_configuration=False,
+        default_view="search",
+    )
+
+    expected_result = """<?xml version="1.0" ?>
+<nav>
+    <view name="inputs"/>
     <view default="true" name="search"/>
 </nav>
 """

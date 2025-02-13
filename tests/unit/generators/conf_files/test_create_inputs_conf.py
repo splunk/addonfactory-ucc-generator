@@ -123,6 +123,9 @@ def test_set_attributes_without_conf_key_and_other_fields(
 
     expected_output = [{"service1": ["other_field = help text  Default: default_val"]}]
     assert inputs_conf.input_names == expected_output
+    assert inputs_conf.default_value_info == {
+        "service1": {"other_field": "default_val"}
+    }
 
 
 @patch(

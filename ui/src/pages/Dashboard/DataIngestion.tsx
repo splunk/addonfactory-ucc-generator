@@ -4,10 +4,11 @@ import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Search from '@splunk/react-ui/Search';
 import Message from '@splunk/react-ui/Message';
-import type { DashboardCoreApi } from '@splunk/dashboard-types';
+import type { DashboardCoreApi, PluginEventHandler } from '@splunk/dashboard-types';
 import { debounce } from 'lodash';
 import TabLayout from '@splunk/react-ui/TabLayout';
 
+import { z } from 'zod';
 import {
     createNewQueryBasedOnSearchAndHideTraffic,
     getActionButtons,
@@ -23,6 +24,24 @@ const VIEW_BY_INFO_MAP: Record<string, string> = {
     Account: 'Volume metrics are not available when the Account view is selected.',
     Host: 'Event metrics are not available when the Host view is selected.',
 };
+
+const EventPayloadSchema = z.object({
+    payload: z
+        .object({
+            data: z
+                .object({
+                    fields: z.array(
+                        z.object({
+                            name: z.string(),
+                        })
+                    ),
+                })
+                .optional(),
+            cellIndex: z.number().optional(),
+            value: z.string().optional(),
+        })
+        .optional(),
+});
 
 export const DataIngestionDashboard = ({
     dashboardDefinition,
@@ -126,22 +145,27 @@ export const DataIngestionDashboard = ({
 
     const infoMessage = VIEW_BY_INFO_MAP[viewByInput];
 
-    const handleDashboardEvent = useCallback(async (event) => {
+    const handleDashboardEvent: PluginEventHandler = useCallback(async (event) => {
+        const result = EventPayloadSchema.safeParse(event);
+        if (!result.success) {
+            return;
+        }
+        const { payload } = result.data;
         if (
             event.type === 'datasource.done' &&
             event.targetId === 'data_ingestion_table_ds' &&
-            event.payload.data
+            payload?.data
         ) {
-            const modalInputSelectorName = event.payload.data?.fields[0]?.name;
+            const modalInputSelectorName = payload.data?.fields[0]?.name;
             setSelectTitleForDropdownInModal(modalInputSelectorName);
         }
         if (
             event.type === 'cell.click' &&
             event.targetId === 'data_ingestion_table_viz' &&
-            event.payload.cellIndex === 0 &&
-            event.payload.value
+            payload?.cellIndex === 0 &&
+            payload.value
         ) {
-            setSelectValueForDropdownInModal(event.payload.value);
+            setSelectValueForDropdownInModal(payload.value);
         }
     }, []);
 

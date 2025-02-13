@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.57.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.0...v5.57.1) (2025-02-04)
+
+
+### Bug Fixes
+
+* **a11y:** connect labels to inputs ([#1542](https://github.com/splunk/addonfactory-ucc-generator/issues/1542)) ([5335782](https://github.com/splunk/addonfactory-ucc-generator/commit/533578248d5346f078fe8842b0afe9d3884fbb5b))
+* do not require calls of _reload endpoint ([#1547](https://github.com/splunk/addonfactory-ucc-generator/issues/1547)) ([a39c8c0](https://github.com/splunk/addonfactory-ucc-generator/commit/a39c8c02eb5f716ec29a122931a1ba0626524c3b))
+
 # [5.57.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.56.0...v5.57.0) (2025-01-22)
 
 

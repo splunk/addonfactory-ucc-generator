@@ -41,7 +41,7 @@ const getTableConfigAndServices = (
     const services =
         page === PAGE_INPUT
             ? unifiedConfigs.pages.inputs?.services
-            : unifiedConfigs.pages.configuration.tabs.filter((x) => x.name === serviceName);
+            : unifiedConfigs.pages.configuration?.tabs.filter((x) => x.name === serviceName);
     if (page === PAGE_INPUT) {
         if (unifiedConfigs.pages.inputs && 'table' in unifiedConfigs.pages.inputs) {
             return {
@@ -69,7 +69,7 @@ const getTableConfigAndServices = (
         };
     }
 
-    const tableConfig = unifiedConfigs.pages.configuration.tabs.find(
+    const tableConfig = unifiedConfigs.pages.configuration?.tabs.find(
         (x) => x.name === serviceName
     )?.table;
 

@@ -18,7 +18,7 @@ const checkIfHideInAnyEntity = (entities: AnyEntity[]): boolean => {
 
 const checkIfHideForPlatformUsed = (globalConfig: GlobalConfig, page?: StandardPages): boolean => {
     if (!page || page === 'configuration') {
-        const isHideUsedInConfig = globalConfig.pages.configuration.tabs.find(
+        const isHideUsedInConfig = globalConfig.pages.configuration?.tabs.find(
             (tab) => tab.hideForPlatform || checkIfHideInAnyEntity(tab.entity || []) || false
         );
         if (isHideUsedInConfig) {

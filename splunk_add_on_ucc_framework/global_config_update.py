@@ -276,7 +276,7 @@ def _dump_with_migrated_entities(
         global_config.content["pages"].get("inputs", {}).get("services"), entity_type
     )
     _collapse_entities(
-        global_config.content["pages"]["configuration"].get("tabs"), entity_type
+        global_config.content["pages"].get("configuration", {}).get("tabs"), entity_type
     )
     _collapse_entities(global_config.content.get("alerts"), entity_type)
 
