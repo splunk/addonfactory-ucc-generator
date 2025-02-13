@@ -27,33 +27,14 @@ const linkTextIntoElement = (text: string, props: TextWithLinks, i: number) => {
  * @param slug exact slug that will be separated into single array element
  * @returns ordered array containing slugs and rest of text separated
  */
-const textIntoArrayBySlug = (text: string, slug: string) => {
-    const elements = [];
-    let currentText = text;
-    let idx = currentText.indexOf(slug);
-    // if text contains slugs
-    while (idx !== -1) {
-        const before = currentText.slice(0, idx);
-        const after = currentText.slice(idx + slug.length);
-        // add slug and text before slug to array
-        elements.push(before);
-        elements.push(slug);
-
-        // operation will be repeated on text after slug, as there might be more slugs
-        currentText = after;
-        idx = currentText.indexOf(slug);
-        // if no more slugs moving forward add rest of text
-        if (idx === -1) {
-            elements.push(after);
-        }
-    }
-    // if no slugs in text (empty elements array) return text as array
-    if (elements.length === 0) {
+const textIntoArrayBySlug = (text: string, slug: string): string[] => {
+    if (!text.includes(slug)) {
         return [text];
-    }
+    } // No slug, return original text as array
 
-    // return array with slugs and text separated
-    return elements;
+    return text
+        .split(slug)
+        .flatMap((part, index, arr) => (index < arr.length - 1 ? [part, slug] : [part]));
 };
 
 /**
