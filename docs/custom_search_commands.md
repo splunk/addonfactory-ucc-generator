@@ -9,7 +9,7 @@ There are two versions of implementing custom search commands:
 
 ## Generation of custom search command
 
-A new tag has been introuced in globalConfig (same indent level as of `meta` tag) named `customSearchCommand` where you need to define the configuration for the custom search command.
+A new tag has been introduced in globalConfig (same indent level as of `meta` tag) named `customSearchCommand` where you need to define the configuration for the custom search command.
 
 ### Minimal definition
 
@@ -56,7 +56,7 @@ python.version = python3
 | commandType<span class="required-asterisk">\*</span>  | string  | Specify type of custom search command. Four types of commands are allowed, `streaming`,`generating`,`reporting` and `eventing`. |
 | version                                               | number  | Specifies the protocol being used (default is 2).  |
 | arguments<span class="required-asterisk">\*</span>    | object  | Arguments which can be passed to custom search command. |
-| requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command|
+| requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command. Default: false. |
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
 | description                                           | string  | Provide description of the custom search command.   |
 | syntax                                                | string  | Provide syntax for custom search command   |
