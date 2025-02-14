@@ -26,7 +26,11 @@ class AccountConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.account_fields: List[Tuple[str, List[str]]] = []
-        if self._global_config and self._gc_schema:
+        if (
+            self._global_config
+            and self._global_config.has_configuration()
+            and self._gc_schema
+        ):
             self.conf_spec_file = (
                 self._global_config.namespace.lower() + "_account.conf.spec"
             )

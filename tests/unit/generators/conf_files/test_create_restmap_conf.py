@@ -11,6 +11,11 @@ def global_config():
 
 
 @fixture
+def global_config_for_conf_only_TA():
+    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
+
+
+@fixture
 def input_dir(tmp_path):
     return str(tmp_path / "input_dir")
 
@@ -66,17 +71,28 @@ def test_generate_conf(
     assert file_paths == {exp_fname: file_path}
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.RestMapConf._set_attributes",
-    return_value=MagicMock(),
-)
 def test_generate_conf_no_gc_schema(
-    mock_set_attribute, global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
     restmap_conf = RestMapConf(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
     restmap_conf._gc_schema = None
+
+    file_paths = restmap_conf.generate_conf()
+    assert file_paths is None
+
+
+def test_generate_conf_for_conf_only_TA(
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+):
+    restmap_conf = RestMapConf(
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
 
     file_paths = restmap_conf.generate_conf()
     assert file_paths is None
