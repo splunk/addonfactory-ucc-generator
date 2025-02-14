@@ -3081,16 +3081,19 @@
             "type": "string",
             "description": "Used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets.",
             "maxLength": 50,
-            "pattern": "^\\w+$"
+            "pattern": "^\\w+$",
+            "minLength": 1
           },
           "linkText": {
             "type": "string",
             "description": "The text to be inserted, instead of slug.",
-            "maxLength": 500
+            "maxLength": 500,
+            "minLength": 1
           },
           "link": {
             "description": "The link to be used.",
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           }
         },
         "required": [

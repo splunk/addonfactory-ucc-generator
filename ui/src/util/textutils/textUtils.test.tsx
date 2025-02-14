@@ -21,7 +21,7 @@ const setup = (props: PropType = mockProps) => {
 describe('mapTextToElements', () => {
     it('should return null if no text is provided', () => {
         const { container } = setup({ ...mockProps, text: '' });
-        expect(container.innerHTML).toBe('<span></span>');
+        expect(container.innerHTML).toBe('');
     });
 
     it('should render text without links correctly', () => {

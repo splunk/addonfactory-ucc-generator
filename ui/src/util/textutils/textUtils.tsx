@@ -74,6 +74,10 @@ const changeManyLinesIntoSpans = (arrayOfText: string[], props: TextWithLinks) =
         });
 
 export const mapTextToElements = (props: TextWithLinks) => {
+    if (!props.text) {
+        return null;
+    }
+
     const textSplitByLines = props.text.split('\n');
     const textWithNewLines =
         textSplitByLines.length > 1
