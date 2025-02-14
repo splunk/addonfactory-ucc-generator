@@ -3952,8 +3952,7 @@
     }
   },
   "required": [
-    "meta",
-    "pages"
+    "meta"
   ],
   "additionalProperties": false
 }
