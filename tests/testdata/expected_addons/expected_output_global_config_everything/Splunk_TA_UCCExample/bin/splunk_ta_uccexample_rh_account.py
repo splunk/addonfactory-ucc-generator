@@ -127,6 +127,13 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'config3_help_text_with_links',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'username',
         required=False,
         encrypted=False,
