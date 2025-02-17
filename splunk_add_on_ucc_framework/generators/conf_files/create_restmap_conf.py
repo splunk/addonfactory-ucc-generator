@@ -32,15 +32,11 @@ class RestMapConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "restmap.conf"
-
         self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
-        self.endpoint_names = ""
 
-        if self._gc_schema:
+        if self._global_config and self._global_config.has_pages() and self._gc_schema:
             self.endpoints.extend(self._gc_schema.endpoints)
             self.namespace = self._gc_schema.namespace
-
-        if self._global_config:
             self.endpoints.extend(
                 self._global_config.user_defined_handlers.endpoint_registration_entries
             )
@@ -48,7 +44,9 @@ class RestMapConf(ConfGenerator):
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
 
     def generate_conf(self) -> Union[Dict[str, str], None]:
-        if not self._gc_schema:
+        if not (
+            self._global_config and self._global_config.has_pages() and self._gc_schema
+        ):
             return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])

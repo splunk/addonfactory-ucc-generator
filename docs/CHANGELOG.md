@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.57.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.1...v5.57.2) (2025-02-14)
+
+
+### Bug Fixes
+
+* pass os-dependentLibraries.python_version as is to pip ([0ba94bf](https://github.com/splunk/addonfactory-ucc-generator/commit/0ba94bf82b3d9d2ded8f2810875c400f01dbb9af))
+* pass os-dependentLibraries.python_version as is to pip ([#1578](https://github.com/splunk/addonfactory-ucc-generator/issues/1578)) ([441e2fb](https://github.com/splunk/addonfactory-ucc-generator/commit/441e2fbc7353e5bcb4d52ea895a377aca282aa6f))
+
 ## [5.57.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.0...v5.57.1) (2025-02-04)
 
 

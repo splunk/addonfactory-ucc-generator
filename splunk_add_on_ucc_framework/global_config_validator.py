@@ -720,17 +720,18 @@ class GlobalConfigValidator:
 
     def validate(self) -> None:
         self._validate_config_against_schema()
-        self._validate_configuration_tab_table_has_name_field()
-        self._validate_file_type_entity()
-        self._validate_custom_rest_handlers()
-        self._validate_validators()
-        self._validate_multilevel_menu()
-        self._validate_duplicates()
+        if self._global_config.has_pages():
+            self._validate_configuration_tab_table_has_name_field()
+            self._validate_custom_rest_handlers()
+            self._validate_file_type_entity()
+            self._validate_validators()
+            self._validate_multilevel_menu()
+            self._validate_duplicates()
+            self._validate_panels()
+            self._validate_checkbox_group()
+            self._validate_groups()
+            self._validate_field_modifications()
         self._validate_alerts()
-        self._validate_panels()
-        self._validate_checkbox_group()
-        self._validate_groups()
-        self._validate_field_modifications()
         self._validate_meta_default_view()
 
 

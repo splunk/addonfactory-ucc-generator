@@ -149,29 +149,40 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                 if (group?.groupServices) {
                     servicesGroup[group.groupName] = [];
                     group.groupServices.forEach((serviceName: string) => {
-                        servicesGroup[group.groupName].push({
-                            name: serviceName,
-                            hasSubmenu: false,
-                            title:
-                                services.find((service) => service.name === serviceName)?.title ||
-                                '', // what should be done when title empty
-                            subTitle: services.find((service) => service.name === serviceName)
-                                ?.subTitle,
+                        const processedService = services.find(
+                            (service) => service.name === serviceName
+                        );
+                        // service can be hidden by hideForPlatform and wont be in services array
+                        if (processedService) {
+                            servicesGroup[group.groupName].push({
+                                name: serviceName,
+                                hasSubmenu: false,
+                                title: processedService?.title || '', // what should be done when title empty
+                                subTitle: processedService?.subTitle,
+                            });
+                        }
+                    });
+                    // if there are services with hideForPlatform array can be empty
+                    if (servicesGroup[group.groupName].length > 0) {
+                        servicesGroup[ROOT_GROUP_NAME].push({
+                            name: group.groupName,
+                            title: group.groupTitle,
+                            hasSubmenu: true,
                         });
-                    });
-                    servicesGroup[ROOT_GROUP_NAME].push({
-                        name: group.groupName,
-                        title: group.groupTitle,
-                        hasSubmenu: true,
-                    });
+                    }
                 } else {
-                    servicesGroup[ROOT_GROUP_NAME].push({
-                        name: group.groupName,
-                        title: group.groupTitle,
-                        subTitle: services.find((service) => service.name === group.groupName)
-                            ?.subTitle,
-                        hasSubmenu: false,
-                    });
+                    const serviceWithoutSubElements = services.find(
+                        (service) => service.name === group.groupName
+                    );
+                    // service can be hidden by hideForPlatform and wont be in services array
+                    if (serviceWithoutSubElements) {
+                        servicesGroup[ROOT_GROUP_NAME].push({
+                            name: group.groupName,
+                            title: group.groupTitle,
+                            subTitle: serviceWithoutSubElements?.subTitle,
+                            hasSubmenu: false,
+                        });
+                    }
                 }
             });
         } else {

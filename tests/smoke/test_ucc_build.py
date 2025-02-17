@@ -307,6 +307,65 @@ def test_ucc_generate_with_configuration():
             assert path.exists(actual_file_path)
 
 
+def test_ucc_generate_for_conf_only_TA():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_conf_only_TA",
+            "package",
+        )
+        build.generate(source=package_folder, output_directory=temp_dir)
+
+        expected_folder = path.join(
+            path.dirname(__file__),
+            "..",
+            "testdata",
+            "expected_addons",
+            "expected_addon_for_conf_only_TA",
+            "Splunk_TA_UCCExample",
+        )
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        # app.manifest and appserver/static/js/build/globalConfig.json
+        # should be included too, but they may introduce flaky tests as
+        # their content depends on the git commit.
+        _compare_app_conf(expected_folder, actual_folder)
+        # Expected add-on package folder does not have "lib" in it.
+        files_to_be_equal = [
+            ("README.txt",),
+            ("metadata", "default.meta"),
+        ]
+        helpers.compare_file_content(
+            files_to_be_equal,
+            expected_folder,
+            actual_folder,
+        )
+        files_should_be_absent = [
+            ("default", "web.conf"),
+            ("default", "restmap.conf"),
+            ("appserver", "static", "js", "build", "entry_page.js.map"),
+        ]
+        for af in files_should_be_absent:
+            actual_file_path = path.join(actual_folder, *af)
+            assert not path.exists(actual_file_path)
+
+        directories_should_be_absent = [
+            ("default", "data", "ui", "views"),
+            ("default", "data", "ui", "nav"),
+            ("appserver", "templates"),
+            ("static"),
+            ("lib"),
+            ("bin"),
+        ]
+
+        for dir_path in directories_should_be_absent:
+            actual_dir_path = path.join(actual_folder, *dir_path)
+            assert not path.exists(actual_dir_path)
+
+
 def test_ucc_generate_with_no_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
