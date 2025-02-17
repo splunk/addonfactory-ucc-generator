@@ -751,11 +751,13 @@
             },
             "hideForPlatform": {
               "$ref": "#/definitions/HideForPlatform"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
             }
           },
           "required": [
-            "text",
-            "link"
+            "text"
           ],
           "additionalProperties": false
         },
@@ -2989,38 +2991,10 @@
           "maxLength": 1500
         },
         "links": {
-          "type": "array",
-          "description": "Enables including links inside description",
-          "items": {
-            "type": "object",
-            "properties": {
-              "slug": {
-                "type": "string",
-                "description": "Used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets.",
-                "maxLength": 50,
-                "pattern": "^\\w+$"
-              },
-              "linkText": {
-                "type": "string",
-                "description": "The text to be inserted, instead of slug.",
-                "maxLength": 500
-              },
-              "link": {
-                "description": "The link to be used.",
-                "type": "string"
-              }
-            },
-            "required": [
-              "slug",
-              "linkText",
-              "link"
-            ]
-          },
-          "required": [
-            "text"
-          ]
+          "$ref": "#/definitions/links"
         }
-      }
+      },
+      "required": ["text"]
     },
     "singleFieldToModify": {
       "type": "object",
@@ -3074,6 +3048,38 @@
       "required": [
         "fieldId"
       ]
+    },
+    "links": {
+      "type": "array",
+      "description": "Enables including links inside description",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets.",
+            "maxLength": 50,
+            "pattern": "^\\w+$",
+            "minLength": 1
+          },
+          "linkText": {
+            "type": "string",
+            "description": "The text to be inserted, instead of slug.",
+            "maxLength": 500,
+            "minLength": 1
+          },
+          "link": {
+            "description": "The link to be used.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "slug",
+          "linkText",
+          "link"
+        ]
+      }
     },
     "fieldToModify": {
       "type": "object",
