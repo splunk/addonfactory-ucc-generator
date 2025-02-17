@@ -15,6 +15,11 @@ def global_config():
 
 
 @fixture
+def global_config_for_conf_only_TA():
+    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
+
+
+@fixture
 def input_dir(tmp_path):
     return str(tmp_path / "input_dir")
 
@@ -91,6 +96,21 @@ def test_set_attribute_gc_schema_only(
     settings_conf._set_attributes()
     assert settings_conf.conf_file == f"{ta_name}_settings.conf"
     assert settings_conf.conf_spec_file == f"{ta_name}_settings.conf.spec"
+    assert settings_conf.settings_stanzas == []
+    assert settings_conf.default_content == ""
+
+
+def test_set_attribute_for_conf_only_TA(
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+):
+    settings_conf = SettingsConf(
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    settings_conf._set_attributes()
     assert settings_conf.settings_stanzas == []
     assert settings_conf.default_content == ""
 

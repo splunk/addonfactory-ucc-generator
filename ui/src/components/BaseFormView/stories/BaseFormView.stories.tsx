@@ -14,11 +14,11 @@ import { Mode } from '../../../constants/modes';
 import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 import { Platforms } from '../../../types/globalConfig/pages';
 import {
-    getGlobalConfigMockGroupsForInputPage,
     getGlobalConfigMockGroupsForConfigPage,
+    getGlobalConfigMockGroupsForInputPage,
+    getGlobalConfigMockModificationToFieldItself,
     getGlobalConfigMockModificationToGroupsConfig,
-} from '../BaseFormConfigMock';
-import { getGlobalConfigMockModificationToFieldItself } from '../tests/configMocks';
+} from '../tests/configMocks';
 import { invariant } from '../../../util/invariant';
 
 interface BaseFormStoriesProps extends BaseFormProps {

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
-from typing import Dict, Any
+from typing import Dict, Any, Union
 import os
 from splunk_add_on_ucc_framework import data_ui_generator
 import logging
@@ -24,8 +24,8 @@ logger = logging.getLogger("ucc_gen")
 
 class DefaultXml(XMLGenerator):
     __description__ = (
-        "Generates default.xml file based on configs present in globalConfig"
-        "in in `default/data/ui/nav` folder."
+        "Generates default.xml file based on configs present in globalConfig,"
+        " in `default/data/ui/nav` folder."
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
@@ -41,16 +41,17 @@ class DefaultXml(XMLGenerator):
                 "Skipping generating data/ui/nav/default.xml because file already exists."
             )
         else:
-            if self._global_config:
+            if self._global_config and self._global_config.has_pages():
                 self.default_xml_content = data_ui_generator.generate_nav_default_xml(
                     include_inputs=self._global_config.has_inputs(),
                     include_dashboard=self._global_config.has_dashboard(),
-                    default_view=self._global_config.meta.get(
-                        "default_view", data_ui_generator.DEFAULT_VIEW
-                    ),
+                    include_configuration=self._global_config.has_configuration(),
+                    default_view=self._global_config.meta.get("default_view"),
                 )
 
-    def generate_xml(self) -> Dict[str, str]:
+    def generate_xml(self) -> Union[Dict[str, str], None]:
+        if self._global_config and not self._global_config.has_pages():
+            return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "nav", "default.xml"]
         )
