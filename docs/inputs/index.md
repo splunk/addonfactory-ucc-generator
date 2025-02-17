@@ -58,4 +58,4 @@ This is how the global configuration looks like without tabs
 
 ### Output
 
-<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-page-view&full=1&shortcuts=false&singleStory=true"></iframe>
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-inputpage--input-tab-custom-header&full=1&shortcuts=false&singleStory=true"></iframe>

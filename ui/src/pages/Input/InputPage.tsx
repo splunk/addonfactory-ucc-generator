@@ -218,8 +218,8 @@ function InputPage(): ReactElement {
 
     // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row: RowDataFields, mode: Mode): void => {
-        const serviceName = services.find((x) => x.name === row.serviceName);
-        const label = serviceName?.formTitle || serviceName?.title;
+        const service = services.find((x) => x.name === row.serviceName);
+        const label = service?.formTitle || service?.title;
         setEntity({
             ...entity,
             open: true,

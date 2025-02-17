@@ -93,4 +93,4 @@ More information about how to set Proxy tab, can be found [here](./proxy.md).
 
 This is how custom header look in the UI:
 
-![image](../images/configuration/custom_header.png)
+<iframe src="/addonfactory-ucc-generator/storybook/?path=/story/pages-configurationpage--configuration-custom-header&full=1&shortcuts=false&singleStory=true"></iframe>

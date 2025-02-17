@@ -234,8 +234,7 @@
               }
             }
           ],
-          "title": "demo_input",
-          "formTitle": "custom header"
+          "title": "demo_input"
         },
         {
           "name": "demo_input_page",
@@ -441,6 +440,48 @@
             }
           ],
           "title": "Demo input page"
+        },
+        {
+          "name": "demo_input_custom",
+          "entity": [
+            {
+              "type": "text",
+              "label": "Name",
+              "validators": [
+                {
+                  "type": "regex",
+                  "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                  "pattern": "^[a-zA-Z]\\w*$"
+                },
+                {
+                  "type": "string",
+                  "errorMsg": "Length of input name should be between 1 and 100",
+                  "minLength": 1,
+                  "maxLength": 100
+                }
+              ],
+              "field": "name",
+              "help": "A unique name for the data input.",
+              "required": true
+            },
+            {
+              "type": "text",
+              "label": "Interval",
+              "validators": [
+                {
+                  "type": "regex",
+                  "errorMsg": "Interval must be an integer.",
+                  "pattern": "^\\-[1-9]\\d*$|^\\d*$"
+                }
+              ],
+              "defaultValue": "300",
+              "field": "interval",
+              "help": "Time interval of the data input, in seconds.",
+              "required": true
+            }
+          ],
+          "title": "demo_input_custom",
+          "formTitle": "custom header"
         }
       ],
       "title": "Inputs",

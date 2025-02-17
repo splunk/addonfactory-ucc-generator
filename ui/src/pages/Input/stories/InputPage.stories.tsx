@@ -53,6 +53,17 @@ const meta = {
                             );
                         case 'demo_addon_for_splunk_demo_input_page':
                             return HttpResponse.json(mockServerResponseForInput);
+                        case 'demo_addon_for_splunk_demo_input_custom':
+                            return HttpResponse.json(
+                                getMockServerResponseForInput([
+                                    {
+                                        name: 'name_demo_custom',
+                                        content: {
+                                            account: 'value1',
+                                        },
+                                    },
+                                ])
+                            );
                         default:
                             return HttpResponse.error();
                     }
@@ -75,10 +86,9 @@ type Story = StoryObj<typeof meta>;
 export const InputPageView: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
-
-        // there are 4 inputs where 1 is hidden
+        // there are 5 inputs where 1 is hidden
         // the header counts as a row
-        await expect(await canvas.findAllByRole('row')).toHaveLength(4);
+        await expect(await canvas.findAllByRole('row')).toHaveLength(5);
     },
 };
 export const InputPageExpandedRow: Story = {
@@ -118,7 +128,7 @@ export const InputPageViewUpdateInput: Story = {
         await userEvent.click(editButtons[0]);
 
         await expect(
-            await body.findByRole('dialog', { name: 'Update custom header' })
+            await body.findByRole('dialog', { name: 'Update demo_input' })
         ).toBeInTheDocument();
     },
 };
@@ -134,5 +144,24 @@ export const InputTabViewAdd: Story = {
         await userEvent.click(canvas.getByRole('button', { name: 'Create New Input' }));
 
         await userEvent.click(await body.findByText('Demo input page'));
+    },
+};
+
+export const InputTabCustomHeader: Story = {
+    play: async ({ canvasElement }) => {
+        const body = within(canvasElement.ownerDocument.body);
+        const canvas = within(canvasElement);
+
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await userEvent.click(closeBtn);
+        }
+
+        const editButtons = await canvas.findAllByRole('button', { name: 'Edit' });
+        await userEvent.click(editButtons[2]);
+
+        await expect(
+            await body.findByRole('dialog', { name: 'Update custom header' })
+        ).toBeInTheDocument();
     },
 };
