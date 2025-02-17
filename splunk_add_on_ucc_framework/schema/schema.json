@@ -3197,7 +3197,7 @@
         },
         "link": {
           "type": "string",
-          "description": "Declare url that will use for redirection"
+          "description": "Declare url used for redirection"
         }
       },
       "required": [
@@ -3780,15 +3780,17 @@
     },
     "helpWithLinks": {
       "type": "object",
-      "description": "Place to provide broader description of page",
+      "description": "Property to provide structured help message",
       "properties": {
         "text": {
           "type": "string",
-          "description": "Text used for the description, you can put \n to add a breakline.",
-          "maxLength": 1500
+          "description": "Text used for the help message, you can put \n to add a breakline."
         },
         "links": {
           "$ref": "#/definitions/links"
+        },
+        "link": {
+          "type": "string"
         }
       },
       "required": ["text"]
