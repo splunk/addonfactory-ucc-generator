@@ -500,7 +500,18 @@ It will open the link in a new tab.
 | Property                                     | Type   | Description                                     | Default Value |
 | -------------------------------------------- | ------ | ----------------------------------------------- | ------------- |
 | text<span class="required-asterisk">*</span> | string | It is a message to be displayed.                | -             |
-| link<span class="required-asterisk">*</span> | string | It is a link where the user will be redirected. | -             |
+| link                                         | string | It is a link where the user will be redirected. | -             |
+| links                                        | array  | It is array of objects to add into text         | -             |
+
+
+#### Links
+
+| Property                                          | Type   | Description                                                                                                     |
+| ------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| slug<span class="required-asterisk">\*</span>     | string | is used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets. |
+| link<span class="required-asterisk">\*</span>     | string | is the link to be used.                                                                                         |
+| linkText<span class="required-asterisk">\*</span> | string | is the text to be inserted, instead of slug.                                                                    |
+
 
 See the following example usage:
 
@@ -618,14 +629,14 @@ A field used to specify [index](https://docs.splunk.com/Splexicon:Index).
 
 <h3> Attributes </h3>
 
-| Property     | Type    | Description                                                                                                                      |
-|--------------|---------|----------------------------------------------------------------------------------------------------------------------------------|
-| type*        | string  | To specify the type of entity to be rendered in inputs or configuration form.                                                    |
-| field*       | string  | To define a particular entity field.                                                                                             |
-| label*       | string  | Text displayed next to entity field.                                                                                             |
-| defaultValue | string  | The initial input value.                                                                                                         |
-| help         | string  | Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field. |
-| required     | string  | To specify whether the field is required or not.                                                                                 |
+| Property     | Type   | Description                                                                                                                      |
+| ------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| type*        | string | To specify the type of entity to be rendered in inputs or configuration form.                                                    |
+| field*       | string | To define a particular entity field.                                                                                             |
+| label*       | string | Text displayed next to entity field.                                                                                             |
+| defaultValue | string | The initial input value.                                                                                                         |
+| help         | string | Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field. |
+| required     | string | To specify whether the field is required or not.                                                                                 |
 
 
 See the following examples:

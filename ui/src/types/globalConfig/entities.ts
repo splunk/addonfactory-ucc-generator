@@ -14,6 +14,26 @@ const ValueLabelPair = z.object({
     label: z.string(),
 });
 
+/**
+ *
+ * @param text - Text to be used for convertion into link
+ * @param links - Links object to be mapped into the text
+ * @param link - Link to be used for the whole text
+ */
+export const TextElementWithLinksSchema = z.object({
+    text: z.string(),
+    links: z
+        .array(
+            z.object({
+                slug: z.string(),
+                link: z.string(),
+                linkText: z.string(),
+            })
+        )
+        .optional(),
+    link: z.string().optional(),
+});
+
 export const MarkdownMessageText = z.object({
     markdownType: z.literal('text'),
     text: z.string(),
@@ -101,11 +121,9 @@ const AllValidators = z.array(
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
     label: z.string().optional(),
-    options: z.object({
-        text: z.string(),
-        link: z.string(),
+    options: TextElementWithLinksSchema.extend({
         hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
-    }),
+    }).optional(),
     required: z.literal(false).default(false).optional(),
 });
 

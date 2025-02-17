@@ -14,6 +14,11 @@ export type RowDataFields = {
 // serviceName > specificRowName > dataForRow
 export type RowDataType = Record<string, Record<string, RowDataFields>>;
 
+export type TableContextDataTypes = Pick<
+    TableContextProviderType,
+    'rowData' | 'searchText' | 'searchType' | 'pageSize' | 'currentPage'
+>;
+
 export type TableContextProviderType = {
     rowData: RowDataType;
     setRowData: React.Dispatch<React.SetStateAction<RowDataType>>;

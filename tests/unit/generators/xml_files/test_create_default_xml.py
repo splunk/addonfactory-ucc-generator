@@ -2,12 +2,17 @@ from pytest import fixture, raises
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
-import tests.unit.helpers as helpers
+from tests.unit.helpers import get_testdata_file_path
 
 
 @fixture
 def global_config():
-    return GlobalConfig(helpers.get_testdata_file_path("valid_config.json"))
+    return GlobalConfig(get_testdata_file_path("valid_config.json"))
+
+
+@fixture
+def global_config_for_conf_only_TA():
+    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
 
 
 @fixture
@@ -55,9 +60,6 @@ def test_set_attribute_with_error(
 def test_set_attribute(
     mock_data_ui_generator, global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    global_config = GlobalConfig(
-        helpers.get_testdata_file_path("valid_config_all_alerts.json")
-    )
     default_xml = DefaultXml(
         global_config,
         input_dir=input_dir,
@@ -67,6 +69,20 @@ def test_set_attribute(
     )
 
     assert hasattr(default_xml, "default_xml_content")
+
+
+def test_set_attribute_with_no_pages(
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+):
+    default_xml = DefaultXml(
+        global_config_for_conf_only_TA,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert not hasattr(default_xml, "default_xml_content")
 
 
 @patch(

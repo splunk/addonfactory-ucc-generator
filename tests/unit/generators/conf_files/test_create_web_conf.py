@@ -11,6 +11,11 @@ def global_config():
 
 
 @fixture
+def global_config_for_conf_only_TA():
+    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
+
+
+@fixture
 def input_dir(tmp_path):
     return str(tmp_path / "input_dir")
 
@@ -82,6 +87,22 @@ def test_generate_conf_no_gc_schema(
 ):
     web_conf = WebConf(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+    )
+    web_conf._gc_schema = None
+
+    file_paths = web_conf.generate_conf()
+    assert file_paths is None
+
+
+def test_generate_conf_for_conf_only_TA(
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+):
+    web_conf = WebConf(
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
     web_conf._gc_schema = None
 

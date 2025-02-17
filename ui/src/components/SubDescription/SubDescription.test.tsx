@@ -26,16 +26,22 @@ it('Sub Description component - links', async () => {
     };
     render(<SubDescription {...props} />);
 
-    const firstParagraph = await screen.findByText((text) =>
-        text.startsWith('Ingesting data from to Splunk Cloud?')
-    );
-    expect(firstParagraph).toBeInTheDocument();
-    const wholeSubDescription = firstParagraph.parentNode;
-    expect(wholeSubDescription?.textContent).toEqual(
-        props.text.replaceAll('[[blogPost]]', 'blog post(Opens new window)')
+    // visual aspects are verified by storybook images
+
+    screen.getByText('Ingesting data from to Splunk Cloud?', {
+        exact: true,
+    });
+
+    screen.getByText('Read our ', { exact: false });
+
+    screen.getByText(
+        "to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+        { exact: false }
     );
 
-    const linkInsideDescription = wholeSubDescription?.querySelector('a');
-    expect(linkInsideDescription).toBeInTheDocument();
-    expect(linkInsideDescription?.href).toEqual('https://splk.it/31oy2b2');
+    const linkInsideDescription = screen.getByRole('link', {
+        name: 'blog post (Opens new window)',
+    });
+
+    expect(linkInsideDescription).toHaveAttribute('href', 'https://splk.it/31oy2b2');
 });

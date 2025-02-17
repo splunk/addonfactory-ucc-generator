@@ -28,10 +28,10 @@ export default {
     coverageDirectory: 'coverage',
     coverageThreshold: {
         global: {
-            statements: 66,
-            branches: 57,
-            functions: 65,
-            lines: 66,
+            statements: 73,
+            branches: 65,
+            functions: 73,
+            lines: 73,
         },
     },
     testEnvironmentOptions: {
