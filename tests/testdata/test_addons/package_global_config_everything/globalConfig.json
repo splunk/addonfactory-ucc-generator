@@ -469,8 +469,22 @@
                             "field": "config2_help_link",
                             "type": "helpLink",
                             "options": {
-                                "text": "SSL configuration documentation",
+                                "text": "SSL configuration \ndocumentation",
                                 "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "field": "config3_help_text_with_links",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Check out our new documentation [[here]]. \nIt is super awesome",
+                                "links": [
+                                    {
+                                        "slug": "here",
+                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
+                                        "linkText": "here"
+                                    }
+                                ]
                             }
                         }
                     ],
