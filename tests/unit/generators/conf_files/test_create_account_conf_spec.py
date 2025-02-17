@@ -15,6 +15,11 @@ def global_config():
 
 
 @fixture
+def global_config_for_conf_only_TA():
+    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
+
+
+@fixture
 def input_dir(tmp_path):
     return str(tmp_path / "input_dir")
 
@@ -71,6 +76,25 @@ def test_set_attributes_gc_only(global_config, input_dir, output_dir, ucc_dir, t
     )
     account_spec._global_config = MagicMock()
     account_spec._gc_schema = None
+
+    account_spec._set_attributes()
+
+    assert account_spec.account_fields == []
+
+
+def test_set_attributes_conf_only_TA(
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+):
+    """Test when _global_config is provided but it is a conf only TA, which implies it has no configuration."""
+    account_spec = AccountConf(
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    account_spec._global_config = MagicMock()
+    account_spec._gc_schema = MagicMock()
 
     account_spec._set_attributes()
 

@@ -75,7 +75,6 @@ def _modify_and_replace_token_for_oauth_templates(
     redirect_html_src = os.path.join(
         outputdir, ta_name, "appserver", "templates", "redirect.html"
     )
-
     if global_config.has_oauth():
         html_template_path = os.path.join(outputdir, ta_name, "appserver", "templates")
         with open(os.path.join(html_template_path, "redirect.html")) as f:
@@ -472,24 +471,22 @@ def generate(
             sys.exit(1)
         global_config.parse_user_defined_handlers()
         scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
-        utils.recursive_overwrite(
-            os.path.join(internal_root_dir, "package"),
-            os.path.join(output_directory, ta_name),
-            ui_source_map,
-        )
+        if global_config.has_pages():
+            utils.recursive_overwrite(
+                os.path.join(internal_root_dir, "package"),
+                os.path.join(output_directory, ta_name),
+                ui_source_map,
+            )
         global_config_file = (
             "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
         )
-        output_global_config_path = os.path.join(
-            output_directory,
-            ta_name,
-            "appserver",
-            "static",
-            "js",
-            "build",
-            global_config_file,
+        output_build_path = os.path.join(
+            output_directory, ta_name, "appserver", "static", "js", "build"
         )
-        global_config.dump(output_global_config_path)
+        if not os.path.isdir(output_build_path):
+            # this path may not exist for the .conf-only add-ons
+            os.makedirs(output_build_path)
+        global_config.dump(os.path.join(output_build_path, global_config_file))
         logger.info("Copied globalConfig to output")
         ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
         try:
@@ -562,13 +559,14 @@ def generate(
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison
-        builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
-        builder_obj.build()
-        _modify_and_replace_token_for_oauth_templates(
-            ta_name,
-            global_config,
-            output_directory,
-        )
+        if global_config.has_pages():
+            builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
+            builder_obj.build()
+            _modify_and_replace_token_for_oauth_templates(
+                ta_name,
+                global_config,
+                output_directory,
+            )
         if global_config.has_inputs():
             logger.info("Generating inputs code")
             _add_modular_input(ta_name, global_config, output_directory)
@@ -655,7 +653,7 @@ def generate(
         )
 
     ui_available = False
-    if global_config:
+    if global_config and global_config.has_pages():
         ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(

@@ -1,17 +1,25 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
-import {
-    getGlobalConfigMockCustomControl,
-    getGlobalConfigMockGroupsForInputPage,
-    getGlobalConfigMockGroupsForConfigPage,
-} from '../BaseFormConfigMock';
+import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
 import BaseFormView from '../BaseFormView';
+import {
+    getGlobalConfigMockCustomControl,
+    getGlobalConfigMockFourInputServices,
+    getGlobalConfigMockGroupsForConfigPage,
+    getGlobalConfigMockGroupsForInputPage,
+} from './configMocks';
+import { MOCK_CONTEXT_STATE_THREE_INPUTS } from './contextMocks';
+import { PAGE_INPUT } from '../../../constants/pages';
+import { invariant } from '../../../util/invariant';
+import TableContext, { TableContextDataTypes } from '../../../context/TableContext';
+import { server } from '../../../mocks/server';
 
 const handleFormSubmit = jest.fn();
 
@@ -144,4 +152,190 @@ it.each([
     verifyDisplayedGroup('1');
     verifyDisplayedGroup('2');
     verifyDisplayedGroup('3'); // after modifications all groups should be displayed
+});
+
+describe('Verify if submiting BaseFormView works', () => {
+    const renderAndGetFormRef = (
+        mockConfig: GlobalConfig,
+        mockContext?: TableContextDataTypes,
+        serviceName = 'example_input_four'
+    ) => {
+        setUnifiedConfig(mockConfig);
+
+        const formRef = React.createRef<BaseFormView>();
+
+        render(
+            <TableContext.Provider
+                value={{
+                    rowData: {},
+                    setRowData: () => {},
+                    setSearchText: () => {},
+                    setSearchType: () => {},
+                    pageSize: 10,
+                    setPageSize: () => {},
+                    setCurrentPage: () => {},
+                    currentPage: 0,
+                    searchText: '',
+                    searchType: 'all',
+                    ...mockContext,
+                }}
+            >
+                <BaseFormView
+                    ref={formRef}
+                    page={PAGE_INPUT}
+                    stanzaName={STANZA_NAME}
+                    serviceName={serviceName}
+                    mode="create"
+                    handleFormSubmit={handleFormSubmit}
+                />
+            </TableContext.Provider>
+        );
+        return formRef;
+    };
+
+    const getEntityTextBox = (entityField: string) => {
+        const entityWrapper = document.querySelector(`[data-name="${entityField}"]`);
+        invariant(entityWrapper);
+        return within(entityWrapper as HTMLElement).getByRole('textbox');
+    };
+
+    it('Correctly pass form data via post', async () => {
+        const formRef = renderAndGetFormRef(
+            getGlobalConfigMockFourInputServices(),
+            MOCK_CONTEXT_STATE_THREE_INPUTS
+        );
+
+        const NAME_INPUT = 'new_unique_test_name';
+        const INTERVAL_INPUT = '123123123';
+
+        const nameInput = getEntityTextBox('name');
+        await userEvent.type(nameInput, NAME_INPUT);
+
+        const intervalInput = getEntityTextBox('interval');
+        await userEvent.type(intervalInput, INTERVAL_INPUT);
+
+        server.use(
+            http.post(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_four',
+                async ({ request }) => {
+                    const formData = await request.formData();
+                    const name = formData.get('name');
+                    const interval = formData.get('interval');
+                    expect(name).toEqual(NAME_INPUT);
+                    expect(interval).toEqual(INTERVAL_INPUT);
+                    return HttpResponse.json(
+                        {
+                            entry: [
+                                {
+                                    name,
+                                    content: {
+                                        interval,
+                                    },
+                                },
+                            ],
+                        },
+                        { status: 201 }
+                    );
+                }
+            )
+        );
+
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+
+        // response was success(mocked) and handled
+        await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
+    });
+
+    it('should throw error as name already used', async () => {
+        const formRef = renderAndGetFormRef(
+            getGlobalConfigMockFourInputServices(),
+            MOCK_CONTEXT_STATE_THREE_INPUTS
+        );
+
+        const NAME_INPUT = 'test';
+        const INTERVAL_INPUT = '123123123';
+
+        const nameInput = getEntityTextBox('name');
+        await userEvent.type(nameInput, NAME_INPUT);
+
+        const intervalInput = getEntityTextBox('interval');
+        await userEvent.type(intervalInput, INTERVAL_INPUT);
+
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+
+        const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
+        expect(errorMessage).toBeInTheDocument();
+    });
+
+    const renderAndSubmitForm = async (
+        inputsUniqueAcrossSingleService: boolean,
+        nameInputValue: string,
+        intervalInputValue: string
+    ) => {
+        const globalConfigMock = getGlobalConfigMockFourInputServices();
+
+        if (globalConfigMock.pages.inputs) {
+            // not ideal way to write property but seems easiest and more clean the others
+            globalConfigMock.pages.inputs.inputsUniqueAcrossSingleService =
+                inputsUniqueAcrossSingleService;
+        }
+
+        const formRef = renderAndGetFormRef(
+            globalConfigMock,
+            MOCK_CONTEXT_STATE_THREE_INPUTS,
+            'example_input_two'
+        );
+
+        const nameInput = getEntityTextBox('name');
+        await userEvent.type(nameInput, nameInputValue);
+
+        const intervalInput = getEntityTextBox('interval');
+        await userEvent.type(intervalInput, intervalInputValue);
+
+        server.use(
+            http.post(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_two',
+                async ({ request }) => {
+                    const formData = await request.formData();
+                    const name = formData.get('name');
+                    const interval = formData.get('interval');
+                    return HttpResponse.json(
+                        {
+                            entry: [
+                                {
+                                    name,
+                                    content: {
+                                        interval,
+                                    },
+                                },
+                            ],
+                        },
+                        { status: 201 }
+                    );
+                }
+            )
+        );
+
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+    };
+
+    it('Add already existing name for different service - inputsUniqueAcrossSingleService true', async () => {
+        const NAME_INPUT = 'test'; // already existing as data in service example_input_one and example_input_four
+        const INTERVAL_INPUT = '123123123';
+
+        await renderAndSubmitForm(true, NAME_INPUT, INTERVAL_INPUT);
+        // response was success(mocked) and handled
+        // if response is sucess it is called twice with (true, false) and (false, true)
+        await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
+    });
+
+    it('Error name already exists for different service - inputsUniqueAcrossSingleService false', async () => {
+        const NAME_INPUT = 'test'; // already existing as data in service example_input_one and example_input_four
+        const INTERVAL_INPUT = '123123123';
+
+        await renderAndSubmitForm(false, NAME_INPUT, INTERVAL_INPUT);
+
+        const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
+        expect(errorMessage).toBeInTheDocument();
+    });
 });

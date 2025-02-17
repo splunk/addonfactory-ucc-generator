@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { UserEvent } from '@testing-library/user-event';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { z } from 'zod';
 import MenuInput from './MenuInput';
@@ -36,7 +36,7 @@ function setup(inputs: z.infer<typeof pages.shape.inputs>) {
         },
     }));
     render(
-        <PageContextProvider platform={undefined}>
+        <PageContextProvider platform="cloud">
             <AnimationToggleProvider enabled={false}>
                 <MenuInput handleRequestOpen={mockHandleRequestOpen} />
             </AnimationToggleProvider>
@@ -137,9 +137,10 @@ describe('multiple services', () => {
     });
 
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
+        const user = userEvent.setup();
         const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
-        await userEvent.click(getCreateDropdown());
-        await userEvent.click(screen.getByText('test-service-title2'));
+        await user.click(getCreateDropdown());
+        await user.click(screen.getByText('test-service-title2'));
         expect(mockHandleRequestOpen).toHaveBeenCalledWith({
             groupName: 'main_panel',
             serviceName: 'test-service-name2',
@@ -204,21 +205,22 @@ describe('multiple services', () => {
         });
 
         it('should render group items', async () => {
+            const userEventSetup = userEvent.setup();
             setup(getGroupedServices());
             // open dropdown
-            await userEvent.click(getCreateDropdown());
+            await userEventSetup.click(getCreateDropdown());
             // check sub menu is not rendered
             expect(screen.queryByText('test-subservice1-title1')).not.toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).not.toBeInTheDocument();
             // click on group title
-            await userEvent.click(screen.getByText('test-group-title1'));
+            await userEventSetup.click(screen.getByText('test-group-title1'));
             // check sub menu is rendered
             expect(screen.queryByText('test-subservice1-title1')).toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).toBeInTheDocument();
             await waitFor(() => screen.queryByText('test-group-title1'), { timeout: 1000 });
             expect(screen.queryByText('test-group-title1')).not.toBeInTheDocument();
 
-            await userEvent.click(screen.getByRole('menuitem', { name: 'Back' }));
+            await userEventSetup.click(screen.getByRole('menuitem', { name: 'Back' }));
             await waitFor(() =>
                 expect(screen.queryByText('test-subservice-subTitle1')).not.toBeInTheDocument()
             );
@@ -228,24 +230,219 @@ describe('multiple services', () => {
         it('should render group as menu item if no underlying services', async () => {
             setup({
                 ...getGroupedServices(),
-                groupsMenu: [{ groupName: 'test-group-name1', groupTitle: 'test-group-title1' }],
+                groupsMenu: [
+                    { groupName: 'test-service-name1', groupTitle: 'test-service-title1' },
+                ],
             });
+
             await userEvent.click(getCreateDropdown());
-            // await userEvent.click(screen.getByText('test-group-title1'));
-            expect(screen.getByText('test-group-title1')).toBeInTheDocument();
-            expect(screen.getByText('test-group-title1')).not.toHaveAttribute('aria-haspopup');
+
+            expect(screen.getByText('test-service-title1')).toBeInTheDocument();
+            expect(screen.getByText('test-service-title1')).not.toHaveAttribute('aria-haspopup');
+        });
+
+        it('should not render group as menu item if no services exists for groupName', async () => {
+            const groupName = 'unexisting-name';
+            const groupTitle = 'unexisting-title1';
+            setup({
+                ...getGroupedServices(),
+                groupsMenu: [{ groupName, groupTitle }],
+            });
+
+            await userEvent.click(getCreateDropdown());
+
+            expect(screen.queryByText(groupTitle)).not.toBeInTheDocument();
+        });
+
+        it('should render group as menu item only for existing services', async () => {
+            const unexistingElement = {
+                groupName: 'unexisting-name',
+                groupTitle: 'unexisting-title1',
+            };
+            const elem1 = {
+                groupName: 'test-service-name1',
+                groupTitle: 'test-service-title1',
+            };
+
+            const elem2 = {
+                groupName: 'test-group-name1',
+                groupTitle: 'test-group-title1',
+                groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+            };
+            setup({
+                ...getGroupedServices(),
+                groupsMenu: [unexistingElement, elem1, elem2],
+            });
+
+            await userEvent.click(getCreateDropdown());
+
+            expect(screen.queryByText(unexistingElement.groupTitle)).not.toBeInTheDocument();
+            expect(screen.queryByText(elem1.groupTitle)).toBeInTheDocument();
+            expect(screen.queryByText(elem2.groupTitle)).toBeInTheDocument();
         });
 
         it('should call handleRequestOpen callback on click', async () => {
+            const user = userEvent.setup();
             const { mockHandleRequestOpen } = setup(getGroupedServices());
-            await userEvent.click(getCreateDropdown());
 
-            await userEvent.click(screen.getByText('test-group-title1'));
-            await userEvent.click(screen.getByText('test-subservice1-title1'));
+            await user.click(getCreateDropdown());
+
+            await user.click(screen.getByText('test-group-title1'));
+            await user.click(screen.getByText('test-subservice1-title1'));
 
             expect(mockHandleRequestOpen).toHaveBeenCalledWith({
                 groupName: 'test-group-name1',
                 serviceName: 'test-subservice1-name1',
+            });
+        });
+
+        it('should not render hideForPlatform services', async () => {
+            const user = userEvent.setup();
+            setup({
+                services: [
+                    {
+                        name: 'test-subservice1-name1',
+                        title: 'test-subservice1-title1',
+                        subTitle: 'test-subservice1-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'enterprise',
+                    },
+                    {
+                        name: 'test-subservice2-name1',
+                        title: 'test-subservice2-title1',
+                        subTitle: 'test-subservice2-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'cloud',
+                    },
+                    {
+                        name: 'test-subservice1-name2',
+                        title: 'test-subservice1-title2',
+                        subTitle: 'test-subservice1-subTitle2',
+                        entity: [],
+                        hideForPlatform: 'cloud',
+                    },
+                    {
+                        name: 'test-subservice2-name2',
+                        title: 'test-subservice2-title2',
+                        subTitle: 'test-subservice2-subTitle2',
+                        entity: [],
+                        hideForPlatform: 'enterprise',
+                    },
+                    {
+                        name: 'test-service-enterprise-hidden-name1',
+                        title: 'test-service-enterprise-hidden-title1',
+                        subTitle: 'test-service-enterprise-hidden-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'enterprise',
+                    },
+                    {
+                        name: 'test-service-cloud-hidden-name1',
+                        title: 'test-service-cloud-hidden-title1',
+                        subTitle: 'test-service-cloud-hidden-subTitle1',
+                        entity: [],
+                        hideForPlatform: 'cloud',
+                    },
+                    {
+                        name: 'test-service-standard-name1',
+                        title: 'test-service-standard-title1',
+                        subTitle: 'test-service-standard-subTitle1',
+                        entity: [],
+                    },
+                ],
+                groupsMenu: [
+                    {
+                        groupName: 'test-service-enterprise-hidden-name1',
+                        groupTitle: 'test-service-enterprise-hidden-title1',
+                    },
+                    {
+                        groupName: 'test-service-standard-name1',
+                        groupTitle: 'test-service-standard-title1',
+                    },
+                    {
+                        groupName: 'test-service-cloud-hidden-name1',
+                        groupTitle: 'test-service-cloud-hidden-title1',
+                    },
+                    {
+                        groupName: 'test-group-name1',
+                        groupTitle: 'test-group-title1',
+                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+                    },
+                    {
+                        groupName: 'test-group-name2',
+                        groupTitle: 'test-group-title2',
+                        groupServices: ['test-subservice2-name1', 'test-subservice2-name2'],
+                    },
+                ],
+                title: '',
+                table: {
+                    actions: [],
+                    header: [
+                        {
+                            field: '',
+                            label: '',
+                        },
+                    ],
+                    customRow: {},
+                },
+            });
+            // the loading indicator from CustomMenu component
+
+            await user.click(getCreateDropdown());
+
+            const openAndVerifyGroup = async ({
+                groupTitle,
+                existsTitles,
+                doesNotExistsTitles,
+                userEventSetup,
+            }: {
+                groupTitle: string;
+                existsTitles: string[];
+                doesNotExistsTitles: string[];
+                userEventSetup: UserEvent;
+            }) => {
+                await userEventSetup.click(screen.getByText(groupTitle));
+
+                // is displayed as element
+                existsTitles.forEach((title) => {
+                    expect(screen.queryByText(title)).toBeInTheDocument();
+                });
+
+                // animation needs to finish, during animation elements are still visible
+                await waitFor(
+                    () =>
+                        expect(screen.queryAllByRole('menuitem')).toHaveLength(
+                            // length should be number of existsTitles + 1 (Back button)
+                            existsTitles.length + 1
+                        ),
+                    { timeout: 1000 }
+                );
+
+                // elements are HIDDEN via hideForPlatform "cloud"
+                doesNotExistsTitles.forEach((title) => {
+                    expect(screen.queryByText(title)).not.toBeInTheDocument();
+                });
+
+                await userEventSetup.click(screen.getByText('Back'));
+                await waitFor(() => expect(screen.queryByText('Back')).not.toBeInTheDocument(), {
+                    timeout: 500,
+                });
+            };
+
+            // 2+1+1 two groups, one standard service, one service not hidden for cloud
+            expect(screen.queryAllByRole('menuitem')).toHaveLength(4);
+
+            await openAndVerifyGroup({
+                groupTitle: 'test-group-title1',
+                existsTitles: ['test-subservice1-title1'],
+                doesNotExistsTitles: ['test-subservice1-title2'],
+                userEventSetup: user,
+            });
+
+            await openAndVerifyGroup({
+                groupTitle: 'test-group-title2',
+                existsTitles: ['test-subservice2-title2'],
+                doesNotExistsTitles: ['test-subservice2-title1'],
+                userEventSetup: user,
             });
         });
     });

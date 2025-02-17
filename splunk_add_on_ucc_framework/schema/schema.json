@@ -2478,29 +2478,7 @@
               },
               "python_version": {
                 "type": "string",
-                "description": "Python version compatible with the library.",
-                "anyOf": [
-                  {
-                    "const": "3.7",
-                    "type": "string",
-                    "description": "Exactly: 3.7"
-                  },
-                  {
-                    "const": "37",
-                    "type": "string",
-                    "description": "Alternative syntax for 3.7"
-                  },
-                  {
-                    "const": "3.9",
-                    "type": "string",
-                    "description": "Exactly: 3.9"
-                  },
-                  {
-                    "const": "39",
-                    "type": "string",
-                    "description": "Alternative syntax for 3.9"
-                  }
-                ]
+                "description": "Python version compatible with the library."
               },
               "target": {
                 "type": "string",
@@ -3872,6 +3850,9 @@
         },
         "useInputToggleConfirmation": {
           "$ref": "#/definitions/useInputToggleConfirmation"
+        },
+        "inputsUniqueAcrossSingleService": {
+          "$ref": "#/definitions/inputsUniqueAcrossSingleService"
         }
       },
       "required": [
@@ -3980,6 +3961,9 @@
         },
         "readonlyFieldId": {
           "type": "string"
+        },
+        "inputsUniqueAcrossSingleService": {
+          "$ref": "#/definitions/inputsUniqueAcrossSingleService"
         }
       },
       "required": [
@@ -4100,6 +4084,11 @@
         }
       ]
     },
+    "inputsUniqueAcrossSingleService":{
+      "description": "Defines if inputs in different services can share same name.",
+      "type": "boolean",
+      "default": false
+    },
     "IntervalValue": {
       "anyOf": [
         {
@@ -4174,8 +4163,7 @@
     }
   },
   "required": [
-    "meta",
-    "pages"
+    "meta"
   ],
   "additionalProperties": false
 }

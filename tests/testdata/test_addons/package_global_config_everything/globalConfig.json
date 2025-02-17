@@ -1761,7 +1761,8 @@
                 ]
             },
             "hideFieldId": "hide_in_ui",
-            "readonlyFieldId": "hard_disabled"
+            "readonlyFieldId": "hard_disabled",
+            "inputsUniqueAcrossSingleService": false
         },
         "dashboard": {
             "panels": [

@@ -55,15 +55,8 @@ class OSDependentLibraryConfig:
         }
         deps_flag = "" if result.get("dependencies") else "--no-deps"
         result.update({"deps_flag": deps_flag})
-        result.update(
-            {"python_version": cls._format_python_version(result["python_version"])}
-        )
+        result.update({"python_version": result["python_version"]})
         return cls(**result)
-
-    @staticmethod
-    def _format_python_version(python_version: str) -> str:
-        """Remove all non-numeric characters from the python version string to simplify processing"""
-        return "".join(x for x in python_version if x.isnumeric())
 
 
 class GlobalConfig:
@@ -97,15 +90,17 @@ class GlobalConfig:
         self.expand_entities()
 
     def expand_tabs(self) -> None:
-        if self.has_configuration():
+        if self.has_pages() and self.has_configuration():
             for i, tab in enumerate(self._content["pages"]["configuration"]["tabs"]):
                 self._content["pages"]["configuration"]["tabs"][i] = resolve_tab(tab)
 
     def expand_entities(self) -> None:
         self._expand_entities(
-            self._content["pages"].get("configuration", {}).get("tabs")
+            self._content.get("pages", {}).get("configuration", {}).get("tabs")
         )
-        self._expand_entities(self._content["pages"].get("inputs", {}).get("services"))
+        self._expand_entities(
+            self._content.get("pages", {}).get("inputs", {}).get("services")
+        )
         self._expand_entities(self._content.get("alerts"))
 
     @staticmethod
@@ -123,19 +118,25 @@ class GlobalConfig:
 
     @property
     def inputs(self) -> List[Any]:
-        if "inputs" in self._content["pages"]:
+        if self.has_pages() and "inputs" in self._content["pages"]:
             return self._content["pages"]["inputs"]["services"]
         return []
 
     @property
+    def pages(self) -> List[Any]:
+        if "pages" in self._content:
+            return self._content["pages"]
+        return []
+
+    @property
     def tabs(self) -> List[Any]:
-        if "configuration" in self._content["pages"]:
+        if self.has_pages() and "configuration" in self._content["pages"]:
             return self._content["pages"]["configuration"]["tabs"]
         return []
 
     @property
     def dashboard(self) -> Dict[str, Any]:
-        return self._content["pages"].get("dashboard")
+        return self._content.get("pages", {}).get("dashboard")
 
     @property
     def settings(self) -> List[Any]:
@@ -221,6 +222,9 @@ class GlobalConfig:
 
     def add_ucc_version(self, version: str) -> None:
         self.content.setdefault("meta", {})["_uccVersion"] = version
+
+    def has_pages(self) -> bool:
+        return bool(self.pages)
 
     def has_inputs(self) -> bool:
         return bool(self.inputs)
