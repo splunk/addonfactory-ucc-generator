@@ -394,7 +394,7 @@
                 "endpoint": "Splunk_TA_Example_full",
                 "handlerType": "EAI",
                 "registerHandler": {
-                    "file": "someFile",
+                    "file": "someFile.py",
                     "actions": [
                         "create",
                         "edit",
