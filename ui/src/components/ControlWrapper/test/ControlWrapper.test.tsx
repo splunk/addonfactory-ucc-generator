@@ -200,6 +200,37 @@ describe('Help message', () => {
         expect(help).toHaveTextContent('to documentation');
     });
 
+    it('Check if help rendered twice', () => {
+        const helpDef = {
+            text: 'Some line that contains link [[here]] to documentation ([[here]])',
+            links: [
+                {
+                    slug: 'here',
+                    link: 'https://splunk.github.io/addonfactory-ucc-generator/',
+                    linkText: 'reference',
+                },
+            ],
+        };
+
+        renderControlWrapper({
+            entity: {
+                field: 'url',
+                label: 'URL',
+                type: 'text',
+                required: true,
+                help: helpDef,
+            },
+        });
+
+        // verify if elements are displayed at all
+        // visual correctnes of display is checked via storybook images
+
+        const linkElems = screen.getAllByRole('link', {
+            name: `${helpDef.links[0].linkText} (Opens new window)`,
+        });
+        expect(linkElems).toHaveLength(2);
+    });
+
     it('Check if help with many links displayed', () => {
         const helpDef = {
             text: 'Some line that contains link [[thisLink]] to documentation or you can use [[thatLink]]',
@@ -295,5 +326,60 @@ describe('Help message', () => {
         expect(help).toHaveTextContent(
             'to documentation or you can use UCC Reference(Opens new window)'
         );
+    });
+
+    it('Check if only correct references replaced', () => {
+        const helpDef = {
+            text: 'Some line that contains link [[unexisting]] to documentation ([[unexsting]])',
+            links: [
+                {
+                    slug: 'here',
+                    link: 'https://splunk.github.io/addonfactory-ucc-generator/',
+                    linkText: 'reference',
+                },
+            ],
+        };
+
+        renderControlWrapper({
+            entity: {
+                field: 'url',
+                label: 'URL',
+                type: 'text',
+                required: true,
+                help: helpDef,
+            },
+        });
+
+        // verify if elements are displayed at all
+        // visual correctnes of display is checked via storybook images
+
+        const linkElem = screen.queryByRole('link');
+        expect(linkElem).toBeNull();
+
+        const help = screen.getByTestId('help');
+        expect(help).toHaveTextContent(helpDef.text);
+    });
+
+    it('Check if correctly rendered as one link', () => {
+        const helpDef = {
+            text: 'Some line that contains link [[unexisting]] to documentation ([[unexsting]])',
+            link: 'https://splunk.github.io/addonfactory-ucc-generator/',
+        };
+
+        renderControlWrapper({
+            entity: {
+                field: 'url',
+                label: 'URL',
+                type: 'text',
+                required: true,
+                help: helpDef,
+            },
+        });
+
+        // verify if elements are displayed at all
+        // visual correctnes of display is checked via storybook images
+
+        const linkElem = screen.queryByRole('link');
+        expect(linkElem).toHaveTextContent(helpDef.text);
     });
 });
