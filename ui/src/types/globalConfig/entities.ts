@@ -300,7 +300,7 @@ export const OAuthFields = z.object({
     label: z.string(),
     field: z.string(),
     type: z.literal('text').default('text').optional(),
-    help: z.string(),
+    help: StringOrTextWithLinks.optional(),
     encrypted: z.boolean().default(false).optional(),
     required: z.boolean().default(false).optional(),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),

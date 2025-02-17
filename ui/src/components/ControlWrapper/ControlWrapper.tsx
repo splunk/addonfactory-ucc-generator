@@ -1,6 +1,7 @@
 import React from 'react';
 import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
+import { z } from 'zod';
 
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
@@ -9,6 +10,7 @@ import { AcceptableFormValueOrNullish } from '../../types/components/shareableTy
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
 import { mapTextToElements } from '../../util/textutils/textUtils';
+import { StringOrTextWithLinks } from '../../types/globalConfig/entities';
 
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
@@ -19,6 +21,8 @@ const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: strin
         color: red;
     }
 `;
+
+type StringOrTextWithLinksType = z.TypeOf<typeof StringOrTextWithLinks>;
 
 export interface ControlWrapperProps {
     mode: Mode;
@@ -40,7 +44,7 @@ export interface ControlWrapperProps {
     };
     fileNameToDisplay?: string;
     modifiedEntitiesData?: {
-        help?: string;
+        help?: StringOrTextWithLinksType;
         label?: string;
         required?: boolean;
     };
