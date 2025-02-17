@@ -59,7 +59,8 @@
                             "label": "Field no validators",
                             "field": "field_no_validators",
                             "help": {
-                                "text": "Some field with description\nin separated line"
+                                "text": "Some field with description\nin separated line",
+                                "link": "https://splunk.github.io/addonfactory-ucc-generator/"
                             },
                             "required": false
                         },
@@ -1932,7 +1933,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.55.0+36810ea3",
+        "version": "5.57.2+4ae940e2e",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
