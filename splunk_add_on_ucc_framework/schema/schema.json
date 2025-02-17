@@ -3031,8 +3031,7 @@
           "description": "Declares if component should be required"
         },
         "help": {
-          "type": "string",
-          "description": "Declares help text of target component"
+          "$ref": "#/definitions/help"
         },
         "label": {
           "type": "string",

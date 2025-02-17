@@ -8,7 +8,7 @@ import { AnyEntity, UtilControlWrapper } from '../../types/components/BaseFormTy
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
-import { mapTextToElements } from '../../util/textUtils';
+import { mapTextToElements } from '../../util/textutils/textUtils';
 
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
