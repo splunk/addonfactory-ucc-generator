@@ -33,6 +33,12 @@ When you use UCC to create an add-on, the following elements are generated and s
 * the monitoring dashboard. For more information, see [Dashboard](dashboard.md),
 * the necessary files defined for the alert action, if you defined the alert action in the `globalConfig` file. For more information, see [Alert actions](alert_actions/index.md).
 
+UCC now provides support for `.conf-only-TA's`, ensuring the following elements are generated and stored in their respective directories:
+
+* `app.conf` is generated in the `default` directory.
+* Metadata files are stored in the `metadata` folder.
+* No Python or JavaScript files are created.
+
 You can extend your add-ons with the following files:
 
 * to extend the UI, use custom codes. For more information, see [Custom hook](custom_ui_extensions/custom_hook.md).

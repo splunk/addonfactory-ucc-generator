@@ -382,6 +382,80 @@
             "description": "Set up your add-on"
         }
     },
+    "options": {
+        "restHandlers": [
+            {
+                "name": "rest_handler_minimal",
+                "endpoint": "Splunk_TA_Example_minimal",
+                "handlerType": "EAI"
+            },
+            {
+                "name": "rest_handler_full",
+                "endpoint": "Splunk_TA_Example_full",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "someFile.py",
+                    "actions": [
+                        "create",
+                        "edit",
+                        "list"
+                    ]
+                },
+                "requestParameters": {
+                    "create": {
+                        "param1_req": {
+                            "schema": {
+                                "type": "string"
+                            },
+                            "required": true
+                        },
+                        "param1": {
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "edit": {
+                        "param2": {
+                            "schema": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "list": {
+                        "param3": {
+                            "schema": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                },
+                "responseParameters": {
+                    "create": {
+                        "param1": {
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "edit": {
+                        "param2": {
+                            "schema": {
+                                "type": "number"
+                            }
+                        }
+                    },
+                    "list": {
+                        "param3": {
+                            "schema": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",

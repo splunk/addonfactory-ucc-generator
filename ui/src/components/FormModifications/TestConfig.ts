@@ -146,6 +146,7 @@ export const getConfigWithModifications = () => {
             ...standardConfig.pages,
             configuration: {
                 ...standardConfig.pages.configuration,
+                title: standardConfig.pages.configuration?.title ?? '',
                 tabs: [
                     {
                         entity: [

@@ -1,0 +1,176 @@
+{
+    "pages": {
+        "inputs": {
+            "title": "Inputs",
+            "services": [
+                {
+                    "name": "example_input_one",
+                    "description": "This is a description for Input One",
+                    "title": "Example Input One",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ]
+                    },
+                    "warning": {
+                        "create": {
+                            "message": "Warning text for create mode"
+                        },
+                        "edit": {
+                            "message": "Warning text for edit mode"
+                        },
+                        "clone": {
+                            "message": "Warning text for clone mode"
+                        },
+                        "config": {
+                            "message": "Warning text for config mode"
+                        }
+                    }
+                },
+                {
+                    "name": "example_input_two",
+                    "description": "This is a description for Input Two",
+                    "title": "Example Input Two",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Interval",
+                                "field": "interval"
+                            },
+                            {
+                                "label": "Status",
+                                "field": "disabled"
+                            }
+                        ]
+                    },
+                    "useInputToggleConfirmation": true
+                }
+            ]
+        },
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "default"
+                }
+            ]
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "5.55.0+1bb56cc1",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.9"
+    }
+}

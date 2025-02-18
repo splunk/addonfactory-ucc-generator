@@ -108,6 +108,7 @@ export const InputsPageRegular = z
     .object({
         title: z.string(),
         services: z.array(TableFullServiceSchema),
+        inputsUniqueAcrossSingleService: z.boolean().default(false).optional(),
     })
     // The strict method disallows a table field to distinguish between to inputs
     .strict();
@@ -154,6 +155,7 @@ export const InputsPageTableSchema = z
         hideFieldId: z.string().optional(),
         readonlyFieldId: z.string().optional(),
         useInputToggleConfirmation: z.boolean().optional(),
+        inputsUniqueAcrossSingleService: z.boolean().default(false).optional(),
     })
     .strict();
 
@@ -161,12 +163,14 @@ const InputsPageSchema = z.union([InputsPageRegular, InputsPageTableSchema]).opt
 const ServiceTableSchema = z.union([TableFullServiceSchema, TableLessServiceSchema]);
 
 export const pages = z.object({
-    configuration: z.object({
-        title: z.string(),
-        description: z.string().optional(),
-        subDescription: SubDescriptionSchema,
-        tabs: z.array(TabSchema).min(1),
-    }),
+    configuration: z
+        .object({
+            title: z.string(),
+            description: z.string().optional(),
+            subDescription: SubDescriptionSchema,
+            tabs: z.array(TabSchema).min(1),
+        })
+        .optional(),
     inputs: InputsPageSchema,
     dashboard: z
         .object({

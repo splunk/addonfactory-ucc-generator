@@ -3,7 +3,8 @@
   "compilerOptions": {
     "emitDeclarationOnly": true,
     "declaration": true,
-    "declarationDir": "./dist/lib"
+    "declarationDir": "./dist/lib",
+    "outDir": "./dist/lib"
   },
   "include": [
     "src/publicApi.ts"

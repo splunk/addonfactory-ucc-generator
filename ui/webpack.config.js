@@ -18,59 +18,64 @@ function isItStaticAsset(url) {
     return isItAsset;
 }
 
-module.exports = merge(baseConfig, {
-    entry: {
-        entry_page: path.join(__dirname, 'src/pages/entry_page'),
-    },
-    output: {
-        path: path.join(__dirname, 'dist/build'),
-        filename: (pathData) =>
-            pathData.chunk.name === 'entry_page' ? '[name].js' : '[name].[contenthash].js',
-        chunkFilename: '[name].[contenthash].js',
-    },
-    module: {
-        rules: [
-            {
-                test: /\.(s*)css$/,
-                use: ['style-loader', 'css-loader'],
-            },
-        ],
-    },
-    plugins: [
-        new LicenseWebpackPlugin({
-            stats: {
-                warnings: false,
-                errors: true,
-            },
-        }),
-        new ForkTsCheckerWebpackPlugin(),
-    ],
-    devtool: 'source-map',
-    resolve: {
-        fallback: { querystring: require.resolve('querystring-es3') },
-    },
-    devServer: {
-        hot: false,
-        proxy: [
-            {
-                target: proxyTargetUrl,
-                context(pathname) {
-                    if (pathname.endsWith('globalConfig.json')) {
-                        return true;
-                    }
-                    return !isItStaticAsset(pathname);
-                },
-            },
-        ],
-        setupMiddlewares: (middlewares, devServer) => {
-            devServer.app.use((req, res, next) => {
-                if (isItStaticAsset(req.url)) {
-                    req.url = req.url.replace(jsAssetsRegex, '$1');
-                }
-                next();
-            });
+module.exports = (env, argv) => {
+    const DEBUG = argv !== 'production';
 
-            return middlewares;
+    return merge(baseConfig, {
+        bail: !DEBUG,
+        entry: {
+            entry_page: path.join(__dirname, 'src/pages/entry_page'),
         },
-    },
-});
+        output: {
+            path: path.join(__dirname, 'dist/build'),
+            filename: (pathData) =>
+                pathData.chunk.name === 'entry_page' ? '[name].js' : '[name].[contenthash].js',
+            chunkFilename: '[name].[contenthash].js',
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.(s*)css$/,
+                    use: ['style-loader', 'css-loader'],
+                },
+            ],
+        },
+        plugins: [
+            new LicenseWebpackPlugin({
+                stats: {
+                    warnings: false,
+                    errors: true,
+                },
+            }),
+            new ForkTsCheckerWebpackPlugin(),
+        ],
+        devtool: 'source-map',
+        resolve: {
+            fallback: { querystring: require.resolve('querystring-es3') },
+        },
+        devServer: {
+            hot: false,
+            proxy: [
+                {
+                    target: proxyTargetUrl,
+                    context(pathname) {
+                        if (pathname.endsWith('globalConfig.json')) {
+                            return true;
+                        }
+                        return !isItStaticAsset(pathname);
+                    },
+                },
+            ],
+            setupMiddlewares: (middlewares, devServer) => {
+                devServer.app.use((req, res, next) => {
+                    if (isItStaticAsset(req.url)) {
+                        req.url = req.url.replace(jsAssetsRegex, '$1');
+                    }
+                    next();
+                });
+
+                return middlewares;
+            },
+        },
+    });
+};

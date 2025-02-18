@@ -68,6 +68,9 @@ nav:
       - Tabs: "inputs/tabs.md"
       - Multi-level menu: "inputs/multilevel_menu.md"
       - Helper module: "inputs/helper.md"
+  - Options:
+      - "options/index.md"
+      - Rest Handlers: "options/rest_handlers.md"
   - Configuration:
       - "configurations/index.md"
       - Introduction: "configurations/index.md"
@@ -84,6 +87,7 @@ nav:
       - Components: "entity/components.md"
       - Validators: "entity/validators.md"
       - Modify fields On change: "entity/modifyFieldsOnValue.md"
+      - Help property: "entity/help_message.md"
 
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"

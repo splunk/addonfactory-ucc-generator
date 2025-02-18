@@ -12,6 +12,17 @@ def test_transform_config_all(global_config_all_json, app_manifest_correct):
     assert json.loads(expected_open_api_json) == openapi_object.json
 
 
+def test_transform_no_configuration(
+    global_config_no_configuration, app_manifest_correct
+):
+    openapi_object = ucc_to_oas.transform(
+        global_config_no_configuration, app_manifest_correct
+    )
+
+    expected_open_api_json = get_testdata_file("openapi.json.no_config.generated")
+    assert json.loads(expected_open_api_json) == openapi_object.json
+
+
 def test_transform_multiple_account(
     global_config_multiple_account, app_manifest_correct
 ):
@@ -37,4 +48,13 @@ def test_transform_one_auth_type(
     expected_open_api_json = get_testdata_file(
         "openapi.json.single_authentication.generated"
     )
+    assert json.loads(expected_open_api_json) == openapi_object.json
+
+
+def test_transform_for_conf_only_TA(global_config_conf_only_TA, app_manifest_correct):
+    openapi_object = ucc_to_oas.transform(
+        global_config_conf_only_TA, app_manifest_correct
+    )
+
+    expected_open_api_json = get_testdata_file("openapi.json.conf_only_TA.generated")
     assert json.loads(expected_open_api_json) == openapi_object.json

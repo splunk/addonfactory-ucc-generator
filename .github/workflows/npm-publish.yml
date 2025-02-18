@@ -3,14 +3,24 @@ name: NPM Publish
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        description: "Git tag to publish"
+      branch:
+        description: "Branch to publish"
         required: true
+        default: "develop"
       dry_run:
         description: "Perform a dry run of the npm publish"
         required: false
         default: true
         type: boolean
+      version_type:
+        description: "Type of version bump (prerelease or specific version like 1.2.3-dev.0)"
+        required: false
+        default: "prerelease"
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   publish:
@@ -23,10 +33,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.tag }}
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Install deps
         uses: ./.github/actions/cached-ui-deps
+
+      - name: Bump version
+        run: |
+          if [ "${{ github.event.inputs.version_type }}" = "prerelease" ]; then
+            npm version prerelease --preid=dev --no-git-tag-version
+          else
+            npm version ${{ github.event.inputs.version_type }} --no-git-tag-version
+          fi
 
       - name: Publish NPM package
         run: |

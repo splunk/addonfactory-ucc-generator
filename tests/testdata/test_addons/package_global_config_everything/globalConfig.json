@@ -58,14 +58,26 @@
                             "type": "text",
                             "label": "Field no validators",
                             "field": "field_no_validators",
-                            "help": "Some field",
+                            "help": {
+                                "text": "Some field with description\nin separated line",
+                                "link": "https://splunk.github.io/addonfactory-ucc-generator/"
+                            },
                             "required": false
                         },
                         {
                             "type": "text",
                             "label": "Field no validators (suppressed)",
                             "field": "field_no_validators_suppressed",
-                            "help": "Some field",
+                            "help": {
+                                "text": "Description with link as individual word [[link]]",
+                                "links": [
+                                    {
+                                        "slug": "link",
+                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            },
                             "required": false,
                             "validators": []
                         },
@@ -148,7 +160,16 @@
                             "label": "Example Radio",
                             "field": "account_radio",
                             "defaultValue": "yes",
-                            "help": "This is an example radio button for the account entity",
+                            "help": {
+                                "text": "This is an example radio button for the account entity. \nRead more about it [[radio_docs]]",
+                                "links": [
+                                    {
+                                        "slug": "radio_docs",
+                                        "link": "http://localhost:8001/addonfactory-ucc-generator/entity/components/#radio-bar",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            },
                             "required": true,
                             "options": {
                                 "items": [
@@ -469,8 +490,22 @@
                             "field": "config2_help_link",
                             "type": "helpLink",
                             "options": {
-                                "text": "SSL configuration documentation",
+                                "text": "SSL configuration \ndocumentation",
                                 "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "field": "config3_help_text_with_links",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Check out our new documentation [[here]]. \nIt is super awesome",
+                                "links": [
+                                    {
+                                        "slug": "here",
+                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
+                                        "linkText": "here"
+                                    }
+                                ]
                             }
                         }
                     ],
@@ -1761,7 +1796,8 @@
                 ]
             },
             "hideFieldId": "hide_in_ui",
-            "readonlyFieldId": "hard_disabled"
+            "readonlyFieldId": "hard_disabled",
+            "inputsUniqueAcrossSingleService": false
         },
         "dashboard": {
             "panels": [
@@ -1897,7 +1933,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.57.0+f11804ebf",
+        "version": "5.57.2+4ae940e2e",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
