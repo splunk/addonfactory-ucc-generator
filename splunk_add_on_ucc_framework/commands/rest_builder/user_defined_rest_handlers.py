@@ -65,6 +65,23 @@ def _eai_response_schema(schema: Any) -> oas.MediaTypeObject:
 
 
 @dataclass
+class EndpointRegistrationEntry:
+    """
+    Represents an entry in the endpoint registration file.
+    """
+
+    name: str
+    rh_name: str
+    actions_list: List[str]
+
+    def actions(self) -> List[str]:
+        """
+        Method for consistency with RestEndpointBuilder.
+        """
+        return self.actions_list
+
+
+@dataclass
 class RestHandlerConfig:
     """
     Represents a REST handler configuration. See schema.json.
@@ -155,7 +172,7 @@ class RestHandlerConfig:
         if action not in self.supported_actions:
             return None
 
-        request_parameters = deepcopy(self.request_parameters[action])
+        request_parameters = deepcopy(self.request_parameters.get(action, {}))
 
         if action == "create":
             request_parameters["name"] = {
@@ -270,6 +287,27 @@ class RestHandlerConfig:
         else:
             raise ValueError(f"Unsupported handler type: {self.handlerType}")
 
+    @property
+    def endpoint_registration_entry(self) -> Optional[EndpointRegistrationEntry]:
+        if not self.registerHandler:
+            return None
+
+        if not self.registerHandler.get("actions") or not self.registerHandler.get(
+            "file"
+        ):
+            return None
+
+        file: str = self.registerHandler["file"]
+
+        if file.endswith(".py"):
+            file = file[:-3]
+
+        return EndpointRegistrationEntry(
+            name=self.endpoint,
+            rh_name=file,
+            actions_list=self.registerHandler["actions"],
+        )
+
 
 class UserDefinedRestHandlers:
     """
@@ -294,10 +332,16 @@ class UserDefinedRestHandlers:
             definition = RestHandlerConfig(**definition)
 
         if definition.name in self._names:
-            raise ValueError(f"Duplicate REST handler name: {definition.name}")
+            raise ValueError(
+                f"REST handler defined in Global Config contains duplicated name: {definition.name}. "
+                "Please change it to a unique name."
+            )
 
         if definition.endpoint in self._endpoints:
-            raise ValueError(f"Duplicate REST handler endpoint: {definition.endpoint}")
+            raise ValueError(
+                f"REST handler defined in Global Config contains duplicated endpoint: {definition.endpoint} "
+                f"(name={definition.name}). Please change it to a unique endpoint."
+            )
 
         self._names.add(definition.name)
         self._endpoints.add(definition.endpoint)
@@ -312,3 +356,17 @@ class UserDefinedRestHandlers:
             paths.update(definition.oas_paths)
 
         return paths
+
+    @property
+    def endpoint_registration_entries(self) -> List[EndpointRegistrationEntry]:
+        entries = []
+
+        for definition in self._definitions:
+            entry = definition.endpoint_registration_entry
+
+            if entry is None:
+                continue
+
+            entries.append(entry)
+
+        return entries
