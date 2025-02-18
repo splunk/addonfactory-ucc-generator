@@ -83,3 +83,68 @@ export const WithModificationsMakeRequired: Story = {
         },
     },
 };
+
+export const MultiLineHelpText: Story = {
+    args: {
+        ...Base.args,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: 'Enter the URL, for example\nhttps://splunk.github.io/addonfactory-ucc-generator/\nhttps://github.com/splunk/addonfactory-ucc-generator',
+            required: false,
+            encrypted: false,
+        },
+    },
+};
+
+export const MultiLineHelpTextWithLinks: Story = {
+    args: {
+        ...Base.args,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: {
+                text: 'Check [[link]] to learn more about UCC\n Also you can check this \n[[repository]]\n to view UCC generator repository',
+                links: [
+                    {
+                        slug: 'link',
+                        link: 'https://splunk.github.io/addonfactory-ucc-generator/',
+                        linkText: 'documentation',
+                    },
+                    {
+                        slug: 'repository',
+                        link: 'https://github.com/splunk/addonfactory-ucc-generator',
+                        linkText: 'link',
+                    },
+                ],
+            },
+            required: false,
+            encrypted: false,
+        },
+    },
+};
+
+export const HelpWithLink: Story = {
+    args: {
+        ...Base.args,
+        entity: {
+            field: 'url',
+            label: 'URL',
+            type: 'text',
+            help: {
+                text: 'Check [[link]] to learn more about UCC',
+                links: [
+                    {
+                        slug: 'link',
+                        link: 'https://splunk.github.io/addonfactory-ucc-generator/',
+                        linkText: 'documentation',
+                    },
+                ],
+            },
+            required: false,
+            encrypted: false,
+        },
+    },
+};
