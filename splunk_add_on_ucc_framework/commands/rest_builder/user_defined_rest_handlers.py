@@ -360,7 +360,6 @@ class UserDefinedRestHandlers:
     @property
     def endpoint_registration_entries(self) -> List[EndpointRegistrationEntry]:
         entries = []
-        files = set()
 
         for definition in self._definitions:
             entry = definition.endpoint_registration_entry
@@ -368,10 +367,6 @@ class UserDefinedRestHandlers:
             if entry is None:
                 continue
 
-            if entry.rh_name in files:
-                raise ValueError(f"Duplicate REST handler file: {entry.rh_name}")
-
             entries.append(entry)
-            files.add(entry.rh_name)
 
         return entries
