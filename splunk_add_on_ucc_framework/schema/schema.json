@@ -3036,8 +3036,7 @@
           "description": "Declares if component should be required"
         },
         "help": {
-          "type": "string",
-          "description": "Declares help text of target component"
+          "$ref": "#/definitions/help"
         },
         "label": {
           "type": "string",
@@ -3203,7 +3202,7 @@
         },
         "link": {
           "type": "string",
-          "description": "Declare url that will use for redirection"
+          "description": "Declare url used for redirection"
         }
       },
       "required": [
@@ -3785,8 +3784,31 @@
       "maxLength": 400
     },
     "help": {
-      "type": "string",
-      "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."        },
+        {
+          "$ref": "#/definitions/helpWithLinks"
+        }
+      ]
+    },
+    "helpWithLinks": {
+      "type": "object",
+      "description": "Property to provide structured help message",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text used for the help message, you can put \n to add a breakline."
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "link": {
+          "type": "string"
+        }
+      },
+      "required": ["text"]
     },
     "tooltip": {
       "type": "string",

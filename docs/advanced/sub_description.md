@@ -6,7 +6,7 @@ This feature allows us to pass a broader description on the Input and Configurat
 
 | Property                                      | Type   | Description                                                          |
 | --------------------------------------------- | ------ | -------------------------------------------------------------------- |
-| text<span class="required-asterisk">\*</span> | string | is text used for the description, you can put \n to add a breakline. |
+| text<span class="required-asterisk">\*</span> | string | is text used for the description, you can put `\n` to add a breakline. |
 | links                                         | object | enables including links inside description                         |
 
 ### Links

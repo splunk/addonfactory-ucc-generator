@@ -1,6 +1,8 @@
 import React from 'react';
 import { screen, render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { z } from 'zod';
+
 import { setUnifiedConfig } from '../../util/util';
 import {
     firstModificationField,
@@ -13,6 +15,7 @@ import {
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
 import { EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
+import { StringOrTextWithLinks } from '../../types/globalConfig/entities';
 
 const handleRequestClose = jest.fn();
 const setUpConfigWithDefaultValue = () => {
@@ -23,6 +26,8 @@ const setUpConfigWithDefaultValue = () => {
 const renderModalWithProps = (props: EntityModalProps) => {
     render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
 };
+
+type StringOrTextWithLinksType = z.TypeOf<typeof StringOrTextWithLinks>;
 
 const props = {
     serviceName: 'account',
@@ -114,7 +119,11 @@ it('verify modification after text components change', async () => {
     const verifyAllProps = (
         parentElement: Element,
         input: Element,
-        mods: { value?: string | number | boolean; help?: string; label?: string }
+        mods: {
+            value?: string | number | boolean;
+            help?: StringOrTextWithLinksType;
+            label?: string;
+        }
     ) => {
         expect(input).toHaveAttribute('value', mods.value);
         invariant(typeof mods.help === 'string');
