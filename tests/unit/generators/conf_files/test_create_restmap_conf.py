@@ -1,14 +1,19 @@
+import os.path
 from textwrap import dedent
 
 from pytest import fixture
 from unittest.mock import patch, MagicMock
 
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     RestHandlerConfig,
 )
 from splunk_add_on_ucc_framework.generators.conf_files import RestMapConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
+
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 @fixture
@@ -160,7 +165,9 @@ def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
         handlerpersistentmode = true
         """
     ).lstrip()
-    restmap_conf = RestMapConf(global_config, input_dir, output_dir, addon_name=ta_name)
+    restmap_conf = RestMapConf(
+        global_config, input_dir, output_dir, addon_name=ta_name, ucc_dir=UCC_DIR
+    )
     file_paths = restmap_conf.generate_conf()
 
     assert file_paths is not None
@@ -196,7 +203,9 @@ def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
         ]
     )
 
-    restmap_conf = RestMapConf(global_config, input_dir, output_dir, addon_name=ta_name)
+    restmap_conf = RestMapConf(
+        global_config, input_dir, output_dir, addon_name=ta_name, ucc_dir=UCC_DIR
+    )
     file_paths = restmap_conf.generate_conf()
 
     assert file_paths is not None
