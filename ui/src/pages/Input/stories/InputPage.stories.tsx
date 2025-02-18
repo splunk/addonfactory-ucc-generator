@@ -101,17 +101,18 @@ export const InputPageExpandedRow: Story = {
 };
 export const InputPageViewAdd: Story = {
     play: async ({ canvasElement }) => {
+        const user = userEvent.setup();
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
 
         const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
         if (closeBtn) {
-            await userEvent.click(closeBtn);
+            await user.click(closeBtn);
         }
 
-        await userEvent.click(canvas.getByRole('button', { name: 'Create New Input' }));
+        await user.click(canvas.getByRole('button', { name: 'Create New Input' }));
 
-        await userEvent.click(await body.findByText('demo_input'));
+        await user.click(await body.findByText('demo_input'));
         await expect(
             await body.findByRole('dialog', { name: 'Add demo_input' })
         ).toBeInTheDocument();
@@ -120,16 +121,17 @@ export const InputPageViewAdd: Story = {
 
 export const InputPageViewUpdateInput: Story = {
     play: async ({ canvasElement }) => {
+        const user = userEvent.setup();
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
 
         const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
         if (closeBtn) {
-            await userEvent.click(closeBtn);
+            await user.click(closeBtn);
         }
 
         const editButtons = await canvas.findAllByRole('button', { name: 'Edit' });
-        await userEvent.click(editButtons[0]);
+        await user.click(editButtons[0]);
 
         await expect(
             await body.findByRole('dialog', { name: 'Update demo_input' })
@@ -139,31 +141,33 @@ export const InputPageViewUpdateInput: Story = {
 
 export const InputTabViewAdd: Story = {
     play: async ({ canvasElement }) => {
+        const user = userEvent.setup();
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
         const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
         if (closeBtn) {
-            await userEvent.click(closeBtn);
+            await user.click(closeBtn);
         }
-        await userEvent.click(canvas.getByRole('button', { name: 'Create New Input' }));
+        await user.click(canvas.getByRole('button', { name: 'Create New Input' }));
 
-        await userEvent.click(await body.findByText('Demo input page'));
+        await user.click(await body.findByText('Demo input page'));
         await expect(await canvas.findByRole('textbox', { name: /name/i })).toBeInTheDocument();
     },
 };
 
 export const InputTabCustomHeader: Story = {
     play: async ({ canvasElement }) => {
+        const user = userEvent.setup();
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
 
         const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
         if (closeBtn) {
-            await userEvent.click(closeBtn);
+            await user.click(closeBtn);
         }
 
         const editButtons = await canvas.findAllByRole('button', { name: 'Edit' });
-        await userEvent.click(editButtons[2]);
+        await user.click(editButtons[2]);
 
         await expect(
             await body.findByRole('dialog', { name: 'Update custom header' })

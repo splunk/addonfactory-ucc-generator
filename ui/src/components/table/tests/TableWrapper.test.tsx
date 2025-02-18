@@ -75,6 +75,7 @@ describe('TableWrapper - Configuration Page', () => {
     it('sort items after filtering', async () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
         setup();
+        const user = userEvent.setup();
 
         const numberOfItems = await screen.findByText('Custom Text');
         expect(numberOfItems).toBeInTheDocument();
@@ -98,7 +99,7 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await userEvent.click(customHeader!);
+        await user.click(customHeader!);
 
         const allCustomTextsAsc = document.querySelectorAll('[data-column="custom_text"]');
         const mappedTextAsc = Array.from(allCustomTextsAsc).map((el: Node) => el.textContent);
@@ -117,7 +118,7 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await userEvent.click(customHeader!);
+        await user.click(customHeader!);
 
         const allCustomTextsDesc = document.querySelectorAll('[data-column="custom_text"]');
         const mappedTextDesc = Array.from(allCustomTextsDesc).map((el: Node) => el.textContent);
@@ -155,48 +156,50 @@ describe('TableWrapper - Configuration Page', () => {
     it('Check modal correctly renders title', async () => {
         setUnifiedConfig(getSimpleConfig());
         setup();
+        const user = userEvent.setup();
 
         // check for custom header in edit modal
         const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
-        await userEvent.click(allEditButtons[0]);
+        await user.click(allEditButtons[0]);
         expect(screen.getByRole('heading', { name: 'Update Account' })).toBeInTheDocument();
         const cancelButton = screen.getByRole('button', { name: /cancel/i });
-        await userEvent.click(cancelButton);
+        await user.click(cancelButton);
 
         // check for custom header in clone modal
         const allCloneButtons = await screen.findAllByRole('button', { name: /clone/i });
-        await userEvent.click(allCloneButtons[0]);
+        await user.click(allCloneButtons[0]);
         expect(screen.getByRole('heading', { name: 'Clone Account' })).toBeInTheDocument();
-        await userEvent.click(cancelButton);
+        await user.click(cancelButton);
 
         // check for custom header in delete modal
         const allDeleteButtons = await screen.findAllByRole('button', { name: /delete/i });
-        await userEvent.click(allDeleteButtons[0]);
+        await user.click(allDeleteButtons[0]);
         expect(screen.getByRole('heading', { name: 'Delete Confirmation' })).toBeInTheDocument();
     });
 
     it('Check modal correctly render custom header', async () => {
         setUnifiedConfig(getCustomModalHeaderData());
         setup();
+        const user = userEvent.setup();
         // check for custom header in edit modal
         const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
-        await userEvent.click(allEditButtons[0]);
+        await user.click(allEditButtons[0]);
         expect(
             screen.getByRole('heading', { name: 'Update this is custom header' })
         ).toBeInTheDocument();
 
         // check for custom header in clone modal
         const allCloneButtons = await screen.findAllByRole('button', { name: /clone/i });
-        await userEvent.click(allCloneButtons[0]);
+        await user.click(allCloneButtons[0]);
         expect(
             screen.getByRole('heading', { name: 'Clone this is custom header' })
         ).toBeInTheDocument();
         const cancelButton = screen.getByRole('button', { name: /cancel/i });
-        await userEvent.click(cancelButton);
+        await user.click(cancelButton);
 
         // check for custom header in delete modal
         const allDeleteButtons = await screen.findAllByRole('button', { name: /delete/i });
-        await userEvent.click(allDeleteButtons[0]);
+        await user.click(allDeleteButtons[0]);
         expect(
             screen.getByRole('heading', { name: 'Delete this is custom header' })
         ).toBeInTheDocument();
