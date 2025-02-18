@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent, { UserEvent } from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
 import { BrowserRouter } from 'react-router-dom';
@@ -153,28 +153,34 @@ describe('TableWrapper - Configuration Page', () => {
         expect(inActiveStatusCell).toHaveTextContent('Disabled Field');
     });
 
+    const getHeaderTitleForAction = async (headingName: string, buttonName: RegExp) => {
+        const allDeleteButtons = await screen.findAllByRole('button', { name: buttonName });
+        await userEvent.click(allDeleteButtons[0]);
+        return screen.getByRole('heading', { name: headingName });
+    };
+    const closeModal = async (user: UserEvent) => {
+        const cancelButton = screen.getByRole('button', { name: /cancel/i });
+        await user.click(cancelButton);
+    };
+
     it('Check modal correctly renders title', async () => {
         setUnifiedConfig(getSimpleConfig());
         setup();
         const user = userEvent.setup();
 
         // check for custom header in edit modal
-        const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
-        await user.click(allEditButtons[0]);
-        expect(screen.getByRole('heading', { name: 'Update Account' })).toBeInTheDocument();
-        const cancelButton = screen.getByRole('button', { name: /cancel/i });
-        await user.click(cancelButton);
+        const editHeader = await getHeaderTitleForAction('Update Account', /edit/i);
+        expect(editHeader).toBeInTheDocument();
+        await closeModal(user);
 
         // check for custom header in clone modal
-        const allCloneButtons = await screen.findAllByRole('button', { name: /clone/i });
-        await user.click(allCloneButtons[0]);
-        expect(screen.getByRole('heading', { name: 'Clone Account' })).toBeInTheDocument();
-        await user.click(cancelButton);
+        const cloneHeader = await getHeaderTitleForAction('Clone Account', /clone/i);
+        expect(cloneHeader).toBeInTheDocument();
+        await closeModal(user);
 
         // check for custom header in delete modal
-        const allDeleteButtons = await screen.findAllByRole('button', { name: /delete/i });
-        await user.click(allDeleteButtons[0]);
-        expect(screen.getByRole('heading', { name: 'Delete Confirmation' })).toBeInTheDocument();
+        const deleteHeader = await getHeaderTitleForAction('Delete Confirmation', /delete/i);
+        expect(deleteHeader).toBeInTheDocument();
     });
 
     it('Check modal correctly render custom header', async () => {
