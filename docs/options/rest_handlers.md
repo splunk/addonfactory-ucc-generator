@@ -48,7 +48,7 @@ OpenApi entries will be generated for the handler with the specified request and
 | Property    | Description                                                                                                                                                   |
 |-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | name        | Name of the rest handler. Used in descriptions in the OpenApi specification. Only letters, digits and underscore.                                             |
-| endpoint    | Endpoint of the rest handler: `https://localhost:PORT/servicesNS/-/<app_name>/<meta.restRoot>/<ENDPOINT>`. Only letters, digits and underscore.               |
+| endpoint    | Endpoint of the rest handler: `https://<SPLUNK_URL>:<MGMT_PORT>/servicesNS/-/<app_name>/<meta.restRoot>/<ENDPOINT>`. Only letters, digits and underscore.               |
 | handlerType | Type of the handler. At the moment only `EAI` ([read more](https://dev.splunk.com/enterprise/docs/devtools/customrestendpoints/customresteai/)) is supported. |
 
 ## EAI properties (optional)
