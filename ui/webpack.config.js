@@ -49,7 +49,7 @@ module.exports = (env, argv) => {
             }),
             new ForkTsCheckerWebpackPlugin(),
         ],
-        devtool: DEBUG ? 'source-map' : false,
+        devtool: 'source-map',
         resolve: {
             fallback: { querystring: require.resolve('querystring-es3') },
         },
