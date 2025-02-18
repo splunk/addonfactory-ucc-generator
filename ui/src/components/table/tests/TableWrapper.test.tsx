@@ -181,34 +181,31 @@ describe('TableWrapper - Configuration Page', () => {
         // check for custom header in delete modal
         const deleteHeader = await getHeaderTitleForAction('Delete Confirmation', /delete/i);
         expect(deleteHeader).toBeInTheDocument();
+        await closeModal(user);
     });
 
     it('Check modal correctly render custom header', async () => {
         setUnifiedConfig(getCustomModalHeaderData());
         setup();
         const user = userEvent.setup();
+
         // check for custom header in edit modal
-        const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
-        await user.click(allEditButtons[0]);
-        expect(
-            screen.getByRole('heading', { name: 'Update this is custom header' })
-        ).toBeInTheDocument();
+        const editHeader = await getHeaderTitleForAction('Update this is custom header', /edit/i);
+        expect(editHeader).toBeInTheDocument();
+        await closeModal(user);
 
         // check for custom header in clone modal
-        const allCloneButtons = await screen.findAllByRole('button', { name: /clone/i });
-        await user.click(allCloneButtons[0]);
-        expect(
-            screen.getByRole('heading', { name: 'Clone this is custom header' })
-        ).toBeInTheDocument();
-        const cancelButton = screen.getByRole('button', { name: /cancel/i });
-        await user.click(cancelButton);
+        const cloneHeader = await getHeaderTitleForAction('Clone this is custom header', /clone/i);
+        expect(cloneHeader).toBeInTheDocument();
+        await closeModal(user);
 
         // check for custom header in delete modal
-        const allDeleteButtons = await screen.findAllByRole('button', { name: /delete/i });
-        await user.click(allDeleteButtons[0]);
-        expect(
-            screen.getByRole('heading', { name: 'Delete this is custom header' })
-        ).toBeInTheDocument();
+        const deleteHeader = await getHeaderTitleForAction(
+            'Delete this is custom header',
+            /delete/i
+        );
+        expect(deleteHeader).toBeInTheDocument();
+        await closeModal(user);
     });
 });
 
