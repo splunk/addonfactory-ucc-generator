@@ -84,6 +84,7 @@ nav:
       - Components: "entity/components.md"
       - Validators: "entity/validators.md"
       - Modify fields On change: "entity/modifyFieldsOnValue.md"
+      - Help property: "entity/help_message.md"
 
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"

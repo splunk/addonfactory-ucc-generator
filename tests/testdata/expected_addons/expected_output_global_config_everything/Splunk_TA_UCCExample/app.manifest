@@ -19,7 +19,7 @@
         "id": {
             "group": null,
             "name": "Splunk_TA_UCCExample",
-            "version": "5.5.8R5fd76615"
+            "version": "5.5.8+5fd76615"
         },
         "license": {
             "name": null,
