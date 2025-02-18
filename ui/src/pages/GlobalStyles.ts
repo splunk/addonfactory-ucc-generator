@@ -12,13 +12,13 @@ export const StyledContainer = styled.div`
 export const GlobalBodyStyle = createGlobalStyle`
     body {
         background-color: ${variables.backgroundColorPage};
+        min-width: 960px;
+    }
 
     /* Safari browser specific issue - https://stackoverflow.com/questions/21400182/safari-css-font-color-issue?noredirect=1&lq=1 */
     input[disabled],
     textarea[disabled],
     select[disabled='disabled'] {
-        -webkit-text-fill-color: #c3cbd4;
+        -webkit-text-fill-color: #c3cbd4
     }
-    }
-
 `;
