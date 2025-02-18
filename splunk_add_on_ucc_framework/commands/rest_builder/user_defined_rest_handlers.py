@@ -332,10 +332,16 @@ class UserDefinedRestHandlers:
             definition = RestHandlerConfig(**definition)
 
         if definition.name in self._names:
-            raise ValueError(f"Duplicate REST handler name: {definition.name}")
+            raise ValueError(
+                f"REST handler defined in Global Config contains duplicated name: {definition.name}. "
+                "Please change it to a unique name."
+            )
 
         if definition.endpoint in self._endpoints:
-            raise ValueError(f"Duplicate REST handler endpoint: {definition.endpoint}")
+            raise ValueError(
+                f"REST handler defined in Global Config contains duplicated endpoint: {definition.endpoint} "
+                f"(name={definition.name}). Please change it to a unique endpoint."
+            )
 
         self._names.add(definition.name)
         self._endpoints.add(definition.endpoint)
