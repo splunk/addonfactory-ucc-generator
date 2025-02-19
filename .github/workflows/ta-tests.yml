@@ -61,7 +61,7 @@ jobs:
       - name: Build UCC Framework Package
         working-directory: UCC
         run: |
-          poetry add ../UCC --group dev
+          poetry install
           poetry build
 
       - name: Install Dependencies in Target Add-on
