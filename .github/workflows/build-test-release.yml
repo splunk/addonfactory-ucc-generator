@@ -472,6 +472,9 @@ jobs:
       - pre-commit
       - all-checks
     runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: read
     if: "! github.event.pull_request.head.repo.fork "
     steps:
       - uses: actions/checkout@v4
