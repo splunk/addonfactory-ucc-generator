@@ -96,7 +96,7 @@ jobs:
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
           poetry add ../UCC/$UCC_WHL splunktaucclib --group dev
-          poetry add splunktaucclib
+          poetry add splunktaucclib@latest
           poetry export --without-hashes -o package/lib/requirements.txt
 
       - name: Run ucc-gen build in Target Add-on
