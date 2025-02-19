@@ -34,6 +34,7 @@ jobs:
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
+          token: ${{ secrets.GH_TOKEN_ADMIN }}
 
       - name: Checkout Target Add-on Repository (manual)
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repo != '' }}
@@ -42,6 +43,7 @@ jobs:
           repository: ${{ github.event.inputs.target_repo }}
           ref: ${{ github.event.inputs.target_branch }}
           path: TA
+          token: ${{ secrets.GH_TOKEN_ADMIN }}
 
       - name: Checkout UCC Framework Repository
         uses: actions/checkout@v4
