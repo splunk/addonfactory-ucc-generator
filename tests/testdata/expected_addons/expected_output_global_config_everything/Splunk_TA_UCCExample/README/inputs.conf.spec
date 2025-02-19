@@ -47,4 +47,4 @@ interval = Time interval of the data input, in seconds.
 interval = Time interval of the data input, in seconds.
 
 [service_with_conf_param://<name>]
-interval = Time interval of the data input, in seconds.
+placeholder = placeholder

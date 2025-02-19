@@ -1704,6 +1704,7 @@
                 },
                 {
                     "name": "service_with_conf_param",
+                    "conf": "some_conf",
                     "entity": [
                         {
                             "type": "interval",
@@ -1946,7 +1947,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.58.0+ccff9fea6",
+        "version": "5.58.0+f4479e4b2",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
