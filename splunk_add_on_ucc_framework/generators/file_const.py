@@ -54,7 +54,7 @@ GEN_FILE_LIST: List[FileClass] = [
     FileClass("app.conf", AppConf, "default", AppConf.__description__),
     FileClass("commands.conf", CommandsConf, "default", CommandsConf.__description__),
     FileClass(
-        "serachbnf.conf", SearchbnfConf, "default", SearchbnfConf.__description__
+        "searchbnf.conf", SearchbnfConf, "default", SearchbnfConf.__description__
     ),
     FileClass("inputs.conf", InputsConf, "default", InputsConf.__description__),
     FileClass("server.conf", ServerConf, "default", ServerConf.__description__),

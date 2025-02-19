@@ -25,7 +25,7 @@ GENERATED_FILES = {}
 
 class CustomCommandPy(PyGenerator):
     __description__ = (
-        "Generates python files for custom commands provided in the globalConfig."
+        "Generates Python files for custom commands provided in the globalConfig."
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:

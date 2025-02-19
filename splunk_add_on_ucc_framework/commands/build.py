@@ -507,43 +507,42 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
-        if global_config.has_custom_search_commands():
-            for command in global_config.custom_search_commands:
-                file_path = os.path.join(source, "bin", command["fileName"])
-                if not os.path.isfile(file_path):
-                    logger.error(
-                        f"{command['fileName']} is not present in `{os.path.join(source, 'bin')}` directory. "
-                        "Please ensure the file exists."
-                    )
-                    sys.exit(1)
+        for command in global_config.custom_search_commands:
+            file_path = os.path.join(source, "bin", command["fileName"])
+            if not os.path.isfile(file_path):
+                logger.error(
+                    f"{command['fileName']} is not present in `{os.path.join(source, 'bin')}` directory. "
+                    "Please ensure the file exists."
+                )
+                sys.exit(1)
 
-                if (command["requireSeachAssistant"] is False) and (
-                    command.get("description")
-                    or command.get("usage")
-                    or command.get("syntax")
-                ):
-                    logger.warning(
-                        "requireSeachAssistant is set to false "
-                        "but atrributes required for 'searchbnf.conf' is defined which is not required."
-                    )
-                if (command["requireSeachAssistant"] is True) and not (
-                    command.get("description")
-                    and command.get("usage")
-                    and command.get("syntax")
-                ):
+            if (command["requireSeachAssistant"] is False) and (
+                command.get("description")
+                or command.get("usage")
+                or command.get("syntax")
+            ):
+                logger.warning(
+                    "requireSeachAssistant is set to false "
+                    "but attributes required for 'searchbnf.conf' is defined which is not required."
+                )
+            if (command["requireSeachAssistant"] is True) and not (
+                command.get("description")
+                and command.get("usage")
+                and command.get("syntax")
+            ):
+                logger.error(
+                    "One of the attributes among `description`, `usage`, `syntax` "
+                    " is not been defined in globalConfig. Defined them as requireSeachAssistant is set to True. "
+                )
+                sys.exit(1)
+            if command["version"] == 1:
+                command["fileName"] = command["fileName"].replace(".py", "")
+                if command["commandName"] != command["fileName"]:
                     logger.error(
-                        "One of the attributes among `description`, `usage`, `syntax` "
-                        " is not been defined in globalConfig. Defined them as requireSeachAssistant is set to True. "
+                        f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
+                        " should be same for version 1 of custom search command."
                     )
                     sys.exit(1)
-                if command["version"] == 1:
-                    command["fileName"] = command["fileName"].replace(".py", "")
-                    if command["commandName"] != command["fileName"]:
-                        logger.error(
-                            f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
-                            " should be same for version 1 of custom search command."
-                        )
-                        sys.exit(1)
 
         generated_files.extend(
             begin(
