@@ -24,8 +24,8 @@ jobs:
     strategy:
       matrix:
         target_repo:
-          - splunk/splunk-add-on-for-microsoft-cloud-services
-          - splunk/splunk-add-on-for-amazon-web-services
+          - splunk/splunk-add-on-for-microsoft-cloud-services@develop
+          - splunk/splunk-add-on-for-amazon-web-services@develop
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Target Add-on Repository
@@ -34,7 +34,6 @@ jobs:
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Checkout Target Add-on Repository (manual)
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repo != '' }}
@@ -43,7 +42,6 @@ jobs:
           repository: ${{ github.event.inputs.target_repo }}
           ref: ${{ github.event.inputs.target_branch }}
           path: TA
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       - name: Checkout UCC Framework Repository
         uses: actions/checkout@v4
