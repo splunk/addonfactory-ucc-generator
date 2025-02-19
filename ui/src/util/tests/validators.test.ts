@@ -1,8 +1,5 @@
+import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import Validator from '../Validator';
-
-jest.mock('../messageUtil', () => ({
-    getFormattedMessage: jest.fn((id, params) => `Error message ${id} with params ${params}`),
-}));
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -70,7 +67,7 @@ describe('Validator.doValidation - regex case', () => {
         const result = validator.doValidation(data);
         expect(result).toEqual({
             errorField: 'testField',
-            errorMsg: 'Error message 15 with params Test Field,^[a-zA-Z0-9]+$',
+            errorMsg: 'Field Test Field does not match regular expression ^[a-zA-Z0-9]+$',
         });
     });
 
@@ -92,7 +89,7 @@ describe('Validator.doValidation - regex case', () => {
         const result = validator.doValidation(data);
         expect(result).toEqual({
             errorField: 'testField',
-            errorMsg: 'Error message 12 with params [invalid',
+            errorMsg: '[invalid is not a valid regular expression',
         });
     });
 
@@ -145,5 +142,254 @@ describe('Validator.doValidation - regex case', () => {
         });
 
         expect(validator.doValidation({ testField: '$ ' })).toEqual(false);
+    });
+});
+
+describe('Validator.doValidation - string case', () => {
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'string',
+                    minLength: 5,
+                    maxLength: 10,
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid string length', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'valid' };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for string shorter than minLength', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'shor' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Length of Test Field should be greater than or equal to 5',
+        });
+    });
+
+    it('should return an error for string longer than maxLength', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'thisisaverylongstring' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Length of Test Field should be less than or equal to 10',
+        });
+    });
+});
+
+describe('Validator.doValidation - number case', () => {
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'number',
+                    range: [1, 10],
+                    isInteger: true,
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid number', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 5 };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for number out of range', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 15 };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field should be within the range of [1 and 10]',
+        });
+    });
+
+    it('should return an error for non-integer number', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 5.5 };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is not a integer',
+        });
+    });
+});
+
+describe('Validator.doValidation - url case', () => {
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'url',
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid URL', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'https://example.com' };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for invalid URL', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'invalid url' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is not a valid URL',
+        });
+    });
+});
+
+describe('Validator.doValidation - date case', () => {
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'date',
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid date', () => {
+        const validator = new Validator(entities);
+        const data = { testField: '2025-02-19' };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for invalid date', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'invalid-date' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is not a valid date in ISO 8601 format',
+        });
+    });
+});
+
+describe('Validator.doValidation - email case', () => {
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'email',
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid email', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'test@example.com' };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for invalid email', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'invalid-email' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is not a valid email address',
+        });
+    });
+});
+
+describe('Validator.doValidation - ipv4 case', () => {
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'ipv4',
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid IPv4 address', () => {
+        const validator = new Validator(entities);
+        const data = { testField: '192.168.0.1' };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for invalid IPv4 address', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'invalid-ip' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is not a valid IPV4 address',
+        });
+    });
+});
+
+describe('Validator.doValidation - custom case', () => {
+    const customValidatorFunc = (field: string, data: AcceptableFormValueOrNullish) => {
+        if (data !== 'custom-valid') {
+            return `Custom validation failed for ${field}`;
+        }
+        return false;
+    };
+
+    const entities = [
+        {
+            field: 'testField',
+            label: 'Test Field',
+            validators: [
+                {
+                    type: 'custom',
+                    validatorFunc: customValidatorFunc,
+                },
+            ],
+        },
+    ];
+
+    it('should return false for valid custom validation', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'custom-valid' };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it('should return an error for invalid custom validation', () => {
+        const validator = new Validator(entities);
+        const data = { testField: 'invalid' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Custom validation failed for testField',
+        });
     });
 });
