@@ -1,11 +1,10 @@
-
 import import_declare_test
 
 from splunktaucclib.rest_handler.endpoint import (
     field,
     validator,
     RestModel,
-    DataInputModel,
+    SingleModel,
 )
 from splunktaucclib.rest_handler import admin_external, util
 from splunktaucclib.rest_handler.admin_external import AdminExternalHandler
@@ -21,9 +20,9 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""", 
+            regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""",
         )
-    ), 
+    ),
 
     field.RestField(
         'disabled',
@@ -35,10 +34,11 @@ fields = [
 model = RestModel(fields, name=None)
 
 
-
-endpoint = DataInputModel(
-    'service_with_conf_param',
+endpoint = SingleModel(
+    'splunk_ta_uccexample_service_with_conf_param',
     model,
+    config_name='service_with_conf_param',
+    need_reload=False,
 )
 
 
