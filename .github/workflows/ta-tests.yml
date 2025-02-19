@@ -20,7 +20,36 @@ on:
         default: "main"
 
 jobs:
+  build-ucc:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout UCC Framework Repository
+        uses: actions/checkout@v4
+        with:
+          path: UCC
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+
+      - name: Install Poetry
+        run: pip install poetry==1.5.1
+
+      - name: Build UCC Framework Package
+        working-directory: UCC
+        run: |
+          poetry install
+          poetry build
+
+      - name: Upload UCC Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucc-package-whl
+          path: UCC/dist/*.whl
+
   test-addons:
+    needs: build-ucc
     strategy:
       matrix:
         target_repo:
@@ -45,11 +74,6 @@ jobs:
           path: TA
           token: ${{ secrets.GH_TOKEN_ADMIN }}
 
-      - name: Checkout UCC Framework Repository
-        uses: actions/checkout@v4
-        with:
-          path: UCC
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -58,16 +82,17 @@ jobs:
       - name: Install Poetry
         run: pip install poetry==1.5.1
 
-      - name: Build UCC Framework Package
-        working-directory: UCC
-        run: |
-          poetry install
-          poetry build
+      - name: Download UCC Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ucc-package-whl
+          path: UCC
 
       - name: Install Dependencies in Target Add-on
         working-directory: TA
         run: |
-          poetry add ../UCC --group dev
+          UCC_WHL=$(ls ../UCC/*.whl)
+          poetry add ../UCC/$UCC_WHL --group dev
           poetry export --without-hashes -o package/lib/requirements.txt
 
       - name: Run ucc-gen build in Target Add-on
