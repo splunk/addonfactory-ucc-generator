@@ -1,0 +1,75 @@
+name: TAs Regression Test
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: "Target repository"
+        required: false
+        default: ""
+      target_branch:
+        description: "Target branch"
+        required: false
+        default: "main"
+
+jobs:
+  test-addons:
+    strategy:
+      matrix:
+        target_repo:
+          - splunk/splunk-add-on-for-microsoft-cloud-services
+          - splunk/splunk-add-on-for-amazon-web-services
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Target Add-on Repository
+        if: ${{ github.event_name == 'push' || github.event.inputs.target_repo == '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.target_repo }}
+          path: TA
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Checkout Target Add-on Repository (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repo != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.target_repo }}
+          ref: ${{ github.event.inputs.target_branch }}
+          path: TA
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Checkout UCC Framework Repository
+        uses: actions/checkout@v4
+        with:
+          path: UCC
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Build UCC Framework Package
+        working-directory: UCC
+        run: |
+          poetry add ../UCC --group dev
+          poetry build
+
+      - name: Install Dependencies in Target Add-on
+        working-directory: TA
+        run: |
+          poetry add ../UCC --group dev
+          poetry export --without-hashes -o package/lib/requirements.txt
+
+      - name: Set PYTHONPATH to use local UCC Framework
+        run: echo "PYTHONPATH=$GITHUB_WORKSPACE/UCC:$PYTHONPATH" >> $GITHUB_ENV
+
+      - name: Run ucc-gen build in Target Add-on
+        working-directory: TA
+        run: |
+          poetry run ucc-gen build
