@@ -14,6 +14,28 @@ const ValueLabelPair = z.object({
     label: z.string(),
 });
 
+/**
+ *
+ * @param text - Text to be used for convertion into link
+ * @param links - Links object to be mapped into the text
+ * @param link - Link to be used for the whole text
+ */
+export const TextElementWithLinksSchema = z.object({
+    text: z.string(),
+    links: z
+        .array(
+            z.object({
+                slug: z.string(),
+                link: z.string(),
+                linkText: z.string(),
+            })
+        )
+        .optional(),
+    link: z.string().optional(),
+});
+
+export const StringOrTextWithLinks = z.union([z.string(), TextElementWithLinksSchema]);
+
 export const MarkdownMessageText = z.object({
     markdownType: z.literal('text'),
     text: z.string(),
@@ -43,7 +65,7 @@ const CommonEntityFields = z.object({
     type: z.string(),
     field: z.string(),
     label: z.string(),
-    help: z.string().optional(),
+    help: StringOrTextWithLinks.optional(),
     tooltip: z.string().optional(),
 });
 
@@ -77,7 +99,7 @@ const FieldToModify = z.object({
             value: z.union([z.number(), z.string(), z.boolean()]).optional(),
             disabled: z.boolean().optional(),
             required: z.boolean().optional(),
-            help: z.string().optional(),
+            help: StringOrTextWithLinks.optional(),
             label: z.string().optional(),
             markdownMessage: MarkdownMessageType.optional(),
         })
@@ -101,11 +123,9 @@ const AllValidators = z.array(
 export const LinkEntity = CommonEntityFields.extend({
     type: z.literal('helpLink'),
     label: z.string().optional(),
-    options: z.object({
-        text: z.string(),
-        link: z.string(),
+    options: TextElementWithLinksSchema.extend({
         hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
-    }),
+    }).optional(),
     required: z.literal(false).default(false).optional(),
 });
 
@@ -280,7 +300,7 @@ export const OAuthFields = z.object({
     label: z.string(),
     field: z.string(),
     type: z.literal('text').default('text').optional(),
-    help: z.string(),
+    help: StringOrTextWithLinks.optional(),
     encrypted: z.boolean().default(false).optional(),
     required: z.boolean().default(false).optional(),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),

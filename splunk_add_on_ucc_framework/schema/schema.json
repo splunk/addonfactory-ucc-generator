@@ -966,11 +966,13 @@
             },
             "hideForPlatform": {
               "$ref": "#/definitions/HideForPlatform"
+            },
+            "links": {
+              "$ref": "#/definitions/links"
             }
           },
           "required": [
-            "text",
-            "link"
+            "text"
           ],
           "additionalProperties": false
         },
@@ -2831,7 +2833,8 @@
           "properties": {
             "file": {
               "type": "string",
-              "description": "The file where the custom rest handler is located."
+              "description": "The file where the custom rest handler is located.",
+                "pattern": "^[a-zA-Z0-9_]+\\.py$"
             },
             "actions": {
               "type": "array",
@@ -2839,7 +2842,9 @@
               "items": {
                 "type": "string",
                 "description": "The action that the custom rest handler supports.",
-                "enum": ["list", "edit", "create", "remove"]
+                "enum": ["list", "edit", "create", "remove"],
+                "minItems": 1,
+                "uniqueItems": true
               }
             }
           },
@@ -3204,38 +3209,10 @@
           "maxLength": 1500
         },
         "links": {
-          "type": "array",
-          "description": "Enables including links inside description",
-          "items": {
-            "type": "object",
-            "properties": {
-              "slug": {
-                "type": "string",
-                "description": "Used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets.",
-                "maxLength": 50,
-                "pattern": "^\\w+$"
-              },
-              "linkText": {
-                "type": "string",
-                "description": "The text to be inserted, instead of slug.",
-                "maxLength": 500
-              },
-              "link": {
-                "description": "The link to be used.",
-                "type": "string"
-              }
-            },
-            "required": [
-              "slug",
-              "linkText",
-              "link"
-            ]
-          },
-          "required": [
-            "text"
-          ]
+          "$ref": "#/definitions/links"
         }
-      }
+      },
+      "required": ["text"]
     },
     "singleFieldToModify": {
       "type": "object",
@@ -3272,8 +3249,7 @@
           "description": "Declares if component should be required"
         },
         "help": {
-          "type": "string",
-          "description": "Declares help text of target component"
+          "$ref": "#/definitions/help"
         },
         "label": {
           "type": "string",
@@ -3289,6 +3265,38 @@
       "required": [
         "fieldId"
       ]
+    },
+    "links": {
+      "type": "array",
+      "description": "Enables including links inside description",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets.",
+            "maxLength": 50,
+            "pattern": "^\\w+$",
+            "minLength": 1
+          },
+          "linkText": {
+            "type": "string",
+            "description": "The text to be inserted, instead of slug.",
+            "maxLength": 500,
+            "minLength": 1
+          },
+          "link": {
+            "description": "The link to be used.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "slug",
+          "linkText",
+          "link"
+        ]
+      }
     },
     "fieldToModify": {
       "type": "object",
@@ -3407,7 +3415,7 @@
         },
         "link": {
           "type": "string",
-          "description": "Declare url that will use for redirection"
+          "description": "Declare url used for redirection"
         }
       },
       "required": [
@@ -3979,8 +3987,31 @@
       "maxLength": 400
     },
     "help": {
-      "type": "string",
-      "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."        },
+        {
+          "$ref": "#/definitions/helpWithLinks"
+        }
+      ]
+    },
+    "helpWithLinks": {
+      "type": "object",
+      "description": "Property to provide structured help message",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text used for the help message, you can put \n to add a breakline."
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "link": {
+          "type": "string"
+        }
+      },
+      "required": ["text"]
     },
     "tooltip": {
       "type": "string",

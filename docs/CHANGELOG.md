@@ -1,5 +1,25 @@
 # Changelog
 
+# [5.58.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.2...v5.58.0) (2025-02-18)
+
+
+### Bug Fixes
+
+* correctly display status in more info ([#1576](https://github.com/splunk/addonfactory-ucc-generator/issues/1576)) ([0deb79f](https://github.com/splunk/addonfactory-ucc-generator/commit/0deb79f3338e3632e60679fc89115a2bd122e299))
+* **hideForPlatform:** hide inputs when in groups menu ([#1564](https://github.com/splunk/addonfactory-ucc-generator/issues/1564)) ([3deefbb](https://github.com/splunk/addonfactory-ucc-generator/commit/3deefbb781a4383e75146fe78f3d88ff11c2cdfb))
+
+
+### Features
+
+* add default values of entities to inputs.conf ([#1530](https://github.com/splunk/addonfactory-ucc-generator/issues/1530)) ([d86342a](https://github.com/splunk/addonfactory-ucc-generator/commit/d86342abcd10677b8d23e677dd2dc56968b1e32e))
+* add support for custom REST handlers without UI in openapi.json ([#1529](https://github.com/splunk/addonfactory-ucc-generator/issues/1529)) ([e4b1f61](https://github.com/splunk/addonfactory-ucc-generator/commit/e4b1f61393853aa5a2951a660da32cf6fd609cf1))
+* add support for custom REST handlers without UI in web.conf and restmap.conf ([#1532](https://github.com/splunk/addonfactory-ucc-generator/issues/1532)) ([09fe1e6](https://github.com/splunk/addonfactory-ucc-generator/commit/09fe1e634f60f6e72a18a2f9cddc177b1cc910cd))
+* allow same service name across different inputs ([#1413](https://github.com/splunk/addonfactory-ucc-generator/issues/1413)) ([f121dd4](https://github.com/splunk/addonfactory-ucc-generator/commit/f121dd4e546075b018f1ff7fb3f62d759d660df4)), closes [#1369](https://github.com/splunk/addonfactory-ucc-generator/issues/1369)
+* **helplink:** links as part of longer text, new lines ([#1561](https://github.com/splunk/addonfactory-ucc-generator/issues/1561)) ([28263da](https://github.com/splunk/addonfactory-ucc-generator/commit/28263dab603c8372d0a336915a1e83d5e1fc7442))
+* **help:** message with links and new lines ([#1562](https://github.com/splunk/addonfactory-ucc-generator/issues/1562)) ([88c41f0](https://github.com/splunk/addonfactory-ucc-generator/commit/88c41f0f6d08207a1f5c634b9786088c956f0a6f))
+* make configuration page as optional ([#1521](https://github.com/splunk/addonfactory-ucc-generator/issues/1521)) ([0f67e30](https://github.com/splunk/addonfactory-ucc-generator/commit/0f67e30873ed48f5f15312bc41096b701027fc0a))
+* provide support for .conf-only add-ons ([#1546](https://github.com/splunk/addonfactory-ucc-generator/issues/1546)) ([d814388](https://github.com/splunk/addonfactory-ucc-generator/commit/d814388198fa971473253b09a400e61fdeb8c56e))
+
 ## [5.57.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.1...v5.57.2) (2025-02-14)
 
 
