@@ -91,6 +91,7 @@ jobs:
       - name: Install Dependencies in Target Add-on
         working-directory: TA
         run: |
+          poetry install
           UCC_WHL=$(ls ../UCC/*.whl)
           poetry add ../UCC/$UCC_WHL --group dev
           poetry export --without-hashes -o package/lib/requirements.txt
