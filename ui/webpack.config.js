@@ -19,12 +19,12 @@ function isItStaticAsset(url) {
 }
 
 module.exports = (env, argv) => {
-    const DEBUG = argv !== 'production';
+    const DEBUG = argv.mode !== 'production';
 
     return merge(baseConfig, {
         bail: !DEBUG,
         entry: {
-            entry_page: path.join(__dirname, 'src/pages/entry_page'),
+            entry_page: path.join(__dirname, 'src/pages/EntryPage.tsx'),
         },
         output: {
             path: path.join(__dirname, 'dist/build'),

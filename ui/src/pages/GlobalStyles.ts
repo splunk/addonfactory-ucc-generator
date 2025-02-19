@@ -1,8 +1,7 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import { variables, mixins } from '@splunk/themes';
-import Button from '@splunk/react-ui/Button';
 
-const StyledContainer = styled.div`
+export const StyledContainer = styled.div`
     ${mixins.reset('inline')};
     display: block;
     font-size: ${variables.fontSizeLarge};
@@ -10,20 +9,16 @@ const StyledContainer = styled.div`
     margin: calc(${variables.spacing} * 1) calc(${variables.spacing} * 1);
 `;
 
-const StyledGreeting = styled.div`
-    font-weight: bold;
-    color: ${variables.infoColor};
-    font-size: ${variables.fontSizeXXLarge};
-`;
-
-const StyledButton = styled(Button)`
-    min-width: 80px;
-`;
-
 export const GlobalBodyStyle = createGlobalStyle`
     body {
         background-color: ${variables.backgroundColorPage};
+        min-width: 960px;
+    }
+
+    /* Safari browser specific issue - https://stackoverflow.com/questions/21400182/safari-css-font-color-issue?noredirect=1&lq=1 */
+    input[disabled],
+    textarea[disabled],
+    select[disabled='disabled'] {
+        -webkit-text-fill-color: #c3cbd4
     }
 `;
-
-export { StyledContainer, StyledGreeting, StyledButton };

@@ -4,7 +4,7 @@ import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { BrowserRouter as Router } from 'react-router-dom';
 import React, { Suspense } from 'react';
-import { GlobalBodyStyle, StyledContainer } from '../src/pages/EntryPageStyle';
+import { GlobalBodyStyle, StyledContainer } from '../src/pages/GlobalStyles';
 import { WaitSpinnerWrapper } from '../src/components/table/CustomTableStyle';
 import fontDefinitions from './fontDefinitions';
 import { PageContextProvider } from '../src/context/PageContext';
