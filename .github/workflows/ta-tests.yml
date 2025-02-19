@@ -24,8 +24,8 @@ jobs:
     strategy:
       matrix:
         target_repo:
-          - splunk/splunk-add-on-for-microsoft-cloud-services@develop
-          - splunk/splunk-add-on-for-amazon-web-services@develop
+          - splunk/splunk-add-on-for-microsoft-cloud-services
+          - splunk/splunk-add-on-for-amazon-web-services
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Target Add-on Repository
