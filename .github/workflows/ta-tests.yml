@@ -1,0 +1,113 @@
+name: TAs Regression Test
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - "**"
+  workflow_dispatch:
+    inputs:
+      target_repo:
+        description: "Target repository"
+        required: false
+        default: ""
+      target_branch:
+        description: "Target branch"
+        required: false
+        default: "main"
+
+jobs:
+  build-ucc:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout UCC Framework Repository
+        uses: actions/checkout@v4
+        with:
+          path: UCC
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+
+      - name: Install Poetry
+        run: pip install poetry==1.5.1
+
+      - name: Build UCC Framework Package
+        working-directory: UCC
+        run: |
+          poetry install
+          poetry build
+
+      - name: Upload UCC Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucc-package-whl
+          path: UCC/dist/*.whl
+
+  test-addons:
+    needs: build-ucc
+    strategy:
+      matrix:
+        target_repo:
+          - splunk/splunk-add-on-for-amazon-web-services
+          - splunk/splunk-add-on-for-google-cloud-platform
+          - splunk/splunk-add-on-for-google-workspace
+          - splunk/splunk-add-on-for-microsoft-cloud-services
+          - splunk/splunk-add-on-for-microsoft-office-365
+          - splunk/splunk-add-on-for-salesforce
+          - splunk/splunk-add-on-for-servicenow
+          - splunk/splunk-add-on-for-mysql
+    continue-on-error: true
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Target Add-on Repository
+        if: ${{ github.event_name == 'push' || github.event.inputs.target_repo == '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.target_repo }}
+          path: TA
+          token: ${{ secrets.GH_TOKEN_ADMIN }}
+
+      - name: Checkout Target Add-on Repository (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repo != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.inputs.target_repo }}
+          ref: ${{ github.event.inputs.target_branch }}
+          path: TA
+          token: ${{ secrets.GH_TOKEN_ADMIN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+
+      - name: Install Poetry
+        run: pip install poetry==1.5.1
+
+      - name: Download UCC Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ucc-package-whl
+          path: UCC
+
+      - name: Install Dependencies in Target Add-on
+        working-directory: TA
+        run: |
+          UCC_WHL=$(ls ../UCC/*.whl)
+          # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
+          git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
+          git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
+          poetry add ../UCC/$UCC_WHL --group dev
+          poetry add splunktaucclib@latest
+          mkdir -p package/lib
+          poetry export --without-hashes -o package/lib/requirements.txt
+
+      - name: Run ucc-gen build in Target Add-on
+        working-directory: TA
+        run: |
+          poetry run ucc-gen build
