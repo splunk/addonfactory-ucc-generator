@@ -1701,6 +1701,19 @@
                     ],
                     "title": "Service hidden for enterprise",
                     "hideForPlatform": "enterprise"
+                },
+                {
+                    "name": "service_with_conf_param",
+                    "entity": [
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service with conf param"
                 }
             ],
             "title": "Inputs",
@@ -1933,7 +1946,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.57.2+4ae940e2e",
+        "version": "5.58.0+ccff9fea6",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
