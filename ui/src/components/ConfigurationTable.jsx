@@ -25,7 +25,9 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
             ...entity,
             open: true,
             mode: MODE_CREATE,
-            formLabel: `Add ${selectedTab.title}`,
+            formLabel: selectedTab.formTitle
+                ? `Add ${selectedTab.formTitle}`
+                : `Add ${selectedTab.title}`,
         });
     };
 
@@ -48,12 +50,12 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
 
     // handle clone/edit request per row from table for page style dialog
     const handleOpenPageStyleDialog = (row, mode) => {
+        const formlabel = selectedTab?.formTitle || selectedTab.title;
         setEntity({
             ...entity,
             open: true,
             stanzaName: row.name,
-            formLabel:
-                mode === MODE_CLONE ? `Clone ${selectedTab.title}` : `Update ${selectedTab.title}`,
+            formLabel: mode === MODE_CLONE ? `Clone ${formlabel}` : `Update ${formlabel}`,
             mode,
         });
     };

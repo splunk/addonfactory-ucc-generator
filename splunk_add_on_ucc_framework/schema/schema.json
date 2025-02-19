@@ -2805,6 +2805,11 @@
         },
         "groups": {
           "$ref": "#/definitions/Groups"
+        },
+        "formTitle": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Custom modal title that replaces the default 'Add selectedTab' text. When specified, the modal will display 'Add' followed by the formTitle value"
         }
       },
       "anyOf": [
@@ -3621,6 +3626,11 @@
               },
               "hideForPlatform": {
                 "$ref": "#/definitions/HideForPlatform"
+              },
+              "formTitle": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Custom modal title that replaces the default 'Add inputname' text in the header. When specified, the header will display 'Add' followed by the formTitle value"
               }
             },
             "not": {
@@ -3747,6 +3757,11 @@
           },
           "hideForPlatform": {
             "$ref": "#/definitions/HideForPlatform"
+          },
+          "formTitle": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Custom modal title that replaces the default 'Add selectedInputTab' text in the header. When specified, the header will display 'Add' followed by the formTitle value"
           }
         },
         "hideFieldId": {
