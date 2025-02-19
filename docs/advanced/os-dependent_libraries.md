@@ -3,15 +3,15 @@
 This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
 To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries** field. This field takes the following attributes:
 
-| Property                                               | Type    | Description                                                                                                                                                                                                                                                                                                                        | default value |
-|--------------------------------------------------------|---------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| name<span class="required-asterisk">*</span>           | string  | is the name of the library we want to download.                                                                                                                                                                                                                                                                                           | -             |
-| version<span class="required-asterisk">*</span>        | string  | is the specific version of the given library.                                                                                                                                                                                                                                                                                                 | -             |
+| Property                                               | Type    | Description                                                                                                                                                                                                                                                                                                                                        | default value |
+|--------------------------------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| name<span class="required-asterisk">*</span>           | string  | is the name of the library we want to download.                                                                                                                                                                                                                                                                                                    | -             |
+| version<span class="required-asterisk">*</span>        | string  | is the specific version of the given library.                                                                                                                                                                                                                                                                                                      | -             |
 | dependencies                                           | boolean | (Optional) is the parameter which determines whether the `--no-deps` flag will be used when installing the package from `pip`. When the value is set to `true`, the library will be installed along with all its dependencies. When the value is set to `false` *(default)* `{name}={version}`, it must be present in packages `requirements.txt`. | false         |
-| platform<span class="required-asterisk">*</span>       | string  | is the platform for downloading the specified library. The value depends on the available wheels for a given library, for example, for this wheel, **cryptography-41.0.5-cp37-abi3-manylinux_2_28_x86_64.whl**, the platform is **manylinux_2_28_x86_64**.                                                                             | -             |
-| python_version<span class="required-asterisk">*</span> | string  | is the python version compatible with the library.                                                                                                                                                                                                                                                                                        | -             |
-| target<span class="required-asterisk">*</span>         | string  | is the Path where the selected library will be unpacked.                                                                                                                                                                                                                                                                                  | -             |
-| os<span class="required-asterisk">*</span>             | string  | is the name of the operating system which the library is intended for. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux**, and **darwin**.                                                                                                                            | -             |
+| platform<span class="required-asterisk">*</span>       | string  | is the platform for downloading the specified library. The value depends on the available wheels for a given library, for example, for this wheel, **cryptography-41.0.5-cp37-abi3-manylinux_2_28_x86_64.whl**, the platform is **manylinux_2_28_x86_64**.                                                                                         | -             |
+| python_version<span class="required-asterisk">*</span> | string  | is the Python version compatible with the library.                                                                                                                                                                                                                                                                                                 | -             |
+| target<span class="required-asterisk">*</span>         | string  | is the path where the selected library will be unpacked.                                                                                                                                                                                                                                                                                           | -             |
+| os<span class="required-asterisk">*</span>             | string  | is the name of the operating system which the library is intended for. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux**, and **darwin**.                                                                                                                                        | -             |
 
 ### About wheels files
 
@@ -32,9 +32,9 @@ and your pip command should look like this:<br>
 A dot in the platform part indicates that a given distribution supports several platforms.
 In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
 
-Currently supported python versions are "3.7" and "3.9". Syntax without dots ("37" or "39") is also supported.
+`python_version` parameter follow the same syntax as `--python-version` flag in `pip download` command, see [documentation](https://pip.pypa.io/en/stable/cli/pip_download/#cmdoption-python-version) for more details.
 
-If there are libraries specified for different python versions, they must have **different target** paths.
+If there are libraries specified for different Python versions, they must have **different target** paths.
 
 ```
             "os-dependentLibraries": [
@@ -57,7 +57,7 @@ If there are libraries specified for different python versions, they must have *
             },
 ```
 
-For more informations, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
+For more information, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
 
 ### Usage
 
@@ -167,5 +167,4 @@ if platform.startswith("linux"):
     sys.path.insert(0, os.path.join(libdir, "3rdparty/linux"))
 if platform.startswith("win"):
     sys.path.insert(0, os.path.join(libdir, "3rdparty/windows"))
-
 ```
