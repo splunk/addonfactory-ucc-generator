@@ -39,6 +39,7 @@ jobs:
         uses: ./.github/actions/cached-ui-deps
 
       - name: Bump version
+        if: github.event.inputs.version_type
         run: |
           if [ "${{ github.event.inputs.version_type }}" = "prerelease" ]; then
             npm version prerelease --preid=dev --no-git-tag-version
