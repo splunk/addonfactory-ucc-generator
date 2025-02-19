@@ -75,7 +75,7 @@ class Validator {
     static checkIsFieldHasInput = (attrValue) =>
         attrValue !== undefined &&
         attrValue !== null &&
-        (typeof attrValue === 'string' ? attrValue.trim() !== '' : true);
+        (typeof attrValue === 'string' ? attrValue !== '' : true);
 
     /**
      * Validate the required field has value
