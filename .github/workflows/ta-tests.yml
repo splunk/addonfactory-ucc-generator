@@ -95,7 +95,7 @@ jobs:
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
-          poetry add ../UCC/$UCC_WHL splunktaucclib --group dev
+          poetry add ../UCC/$UCC_WHL --group dev
           poetry add splunktaucclib@latest
           poetry export --without-hashes -o package/lib/requirements.txt
 
