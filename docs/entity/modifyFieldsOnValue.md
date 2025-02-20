@@ -36,6 +36,9 @@ This feature allows to specify conditions to modify other fields based on curren
 
 ### Usage
 
+<details>
+  <summary>Checkbox</summary>
+
 ```json
 {
     "type": "checkbox",
@@ -73,6 +76,11 @@ This feature allows to specify conditions to modify other fields based on curren
     ]
 },
 ```
+
+</details>
+
+<details>
+  <summary>Text input</summary>
 
 ```json
 {
@@ -176,3 +184,54 @@ This feature allows to specify conditions to modify other fields based on curren
     ]
 },
 ```
+
+</details>
+
+### Troubleshooting
+
+Examples of issue you might encounter
+
+<details>
+  <summary>Usage Modification with Checkbox component</summary>
+
+Make sure the fieldValue fields are declared as `1` for any `truthy`(checked) value and `0` for any `falsy`(unchecked) value as it is mapped considering those values. Checkbox by default do not have any value at all, so if you want to consider also this state use `[[any_other_value]]` as it will also consider basic state.
+
+```json
+{
+    "type": "checkbox",
+    "label": "Example Checkbox",
+    "field": "account_checkbox",
+    "help": "This is an example checkbox for the account entity",
+    "modifyFieldsOnValue": [
+        {
+            "fieldValue": 1,
+            "fieldsToModify": [
+                {
+                    "fieldId": "account_radio",
+                    "disabled": false
+                },
+                {
+                    "fieldId": "endpoint",
+                    "display": true
+                }
+            ]
+        },
+        {
+            "fieldValue": 0,
+            "mode": "edit",
+            "fieldsToModify": [
+                {
+                    "fieldId": "account_radio",
+                    "disabled": true
+                },
+                {
+                    "fieldId": "endpoint",
+                    "display": false
+                }
+            ]
+        }
+    ]
+},
+```
+
+</details>
