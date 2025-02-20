@@ -229,6 +229,21 @@ Make sure the fieldValue fields are declared as `1` for any `truthy`(checked) va
                     "display": false
                 }
             ]
+        },
+        {
+            "fieldValue": "[[any_other_value]]",
+            "fieldsToModify": [
+                {
+                    "fieldId": "account_radio",
+                    "disabled": true,
+                    "display": true
+                },
+                {
+                    "fieldId": "endpoint",
+                    "display": true,
+                    "display": true
+                }
+            ]
         }
     ]
 },
