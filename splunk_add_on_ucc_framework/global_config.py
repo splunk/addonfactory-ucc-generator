@@ -123,15 +123,24 @@ class GlobalConfig:
         return []
 
     @property
+    def configuration(self) -> List[Any]:
+        if self.has_pages() and "configuration" in self._content["pages"]:
+            return self._content["pages"]["configuration"]["tabs"]
+        return []
+
+    @property
     def pages(self) -> List[Any]:
         if "pages" in self._content:
             return self._content["pages"]
         return []
 
     @property
-    def tabs(self) -> List[Any]:
-        if self.has_pages() and "configuration" in self._content["pages"]:
-            return self._content["pages"]["configuration"]["tabs"]
+    def config_tabs(self) -> List[Any]:
+        if self.has_pages() and "configuration" in self.pages:
+            return [
+                resolve_tab(tab)
+                for tab in self._content["pages"]["configuration"]["tabs"]
+            ]
         return []
 
     @property
@@ -141,14 +150,14 @@ class GlobalConfig:
     @property
     def settings(self) -> List[Any]:
         settings = []
-        for tab in self.tabs:
+        for tab in self.configuration:
             if "table" not in tab:
                 settings.append(tab)
         return settings
 
     @property
     def logging_tab(self) -> Dict[str, Any]:
-        for tab in self.tabs:
+        for tab in self.configuration:
             if LoggingTab.from_definition(tab) is not None:
                 return tab
         return {}
@@ -156,7 +165,7 @@ class GlobalConfig:
     @property
     def configs(self) -> List[Any]:
         configs = []
-        for tab in self.tabs:
+        for tab in self.configuration:
             if "table" in tab:
                 configs.append(tab)
         return configs
@@ -226,7 +235,7 @@ class GlobalConfig:
         return bool(self.inputs)
 
     def has_configuration(self) -> bool:
-        return bool(self.tabs)
+        return bool(self.configuration)
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
@@ -235,7 +244,7 @@ class GlobalConfig:
         return self.dashboard is not None
 
     def has_oauth(self) -> bool:
-        for tab in self.tabs:
+        for tab in self.configuration:
             if tab["name"] == "account":
                 for entity in tab["entity"]:
                     if entity["type"] == "oauth":

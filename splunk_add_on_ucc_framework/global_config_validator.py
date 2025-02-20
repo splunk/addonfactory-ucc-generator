@@ -25,7 +25,7 @@ import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
+from splunk_add_on_ucc_framework.tabs import Tab
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
@@ -51,15 +51,7 @@ class GlobalConfigValidator:
         self._source_dir = source_dir
         self._global_config = global_config
         self._config = global_config.content
-
-    @property
-    def config_tabs(self) -> List[Any]:
-        if self._global_config.has_configuration():
-            return [
-                resolve_tab(tab)
-                for tab in self._config["pages"]["configuration"]["tabs"]
-            ]
-        return []
+        self.config_tabs = global_config.config_tabs
 
     def _validate_config_against_schema(self) -> None:
         """
