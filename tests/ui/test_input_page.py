@@ -254,6 +254,7 @@ class TestInputPage(UccTester):
             "Example Input Three",
             "Example Input Four",
             "Service hidden for cloud",
+            "Service with conf param",
         ]
         self.assert_util(
             input_page.create_new_input.get_inputs_list, create_new_input_list
@@ -279,6 +280,7 @@ class TestInputPage(UccTester):
             "Example Input Four",
             "Service hidden for cloud",
             "Service hidden for enterprise",
+            "Service with conf param",
         ]
         self.assert_util(input_page.type_filter.get_input_type_list, type_filter_list)
         input_page.type_filter.select_input_type(
