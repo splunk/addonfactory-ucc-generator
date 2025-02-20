@@ -34,6 +34,7 @@ class InputsConf(ConfGenerator):
         if self._global_config and self._global_config.has_inputs():
             for service in self._global_config.inputs:
                 properties = []
+                self.default_value_info[service["name"]] = {}
                 if service.get("disableNewInput"):
                     self.disable = True
                     self.service_name = service["name"]
@@ -43,7 +44,6 @@ class InputsConf(ConfGenerator):
                         {service["name"]: ["placeholder = placeholder"]}
                     )
                     continue
-                self.default_value_info[service["name"]] = {}
                 for entity in service.get("entity", {"field": "name"}):
                     # TODO: add the details and updates on what to skip and process
                     if entity["field"] == "name":

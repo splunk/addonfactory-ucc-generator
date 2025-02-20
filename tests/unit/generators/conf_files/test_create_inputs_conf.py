@@ -1,9 +1,19 @@
-from pytest import fixture
+import json
+import os
+from pathlib import Path
+from textwrap import dedent
+from typing import Dict, List
 from unittest.mock import patch, MagicMock
+
+from pytest import fixture
+
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from splunk_add_on_ucc_framework.generators.conf_files import InputsConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
-from typing import Dict, List
+
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 @fixture
@@ -225,3 +235,88 @@ def test_generate_conf_no_input_names(
     inputs_conf.input_names = []
     result = inputs_conf.generate_conf_spec()
     assert result is None
+
+
+def test_inputs_conf_content(global_config, input_dir, output_dir, ta_name):
+    inputs_conf = InputsConf(
+        global_config,
+        input_dir,
+        output_dir,
+        ucc_dir=UCC_DIR,
+        addon_name=ta_name,
+    )
+    generated_files = inputs_conf.generate_conf()
+    assert generated_files is not None
+    assert generated_files.keys() == {"inputs.conf"}
+    assert (
+        Path(generated_files["inputs.conf"]).read_text()
+        == dedent(
+            """
+            [example_input_one]
+            python.version = python3
+            input_one_radio = yes
+            index = default
+            order_by = LastModifiedDate
+            use_existing_checkpoint = yes
+            limit = 1000
+
+            [example_input_two]
+            python.version = python3
+            disabled = true
+            index = default
+            input_two_radio = yes
+            use_existing_checkpoint = yes
+            """
+        ).lstrip()
+    )
+
+
+def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp_path):
+    config_content = json.loads(
+        Path(get_testdata_file_path("valid_config.json")).read_text()
+    )
+    config_content["pages"]["inputs"]["services"] = [
+        {
+            "name": "example_input_three",
+            "conf": "some_conf",
+            "entity": [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "validators": [
+                        {
+                            "type": "regex",
+                            "pattern": "^[a-zA-Z]\\w*$",
+                        },
+                    ],
+                    "field": "name",
+                    "required": True,
+                },
+            ],
+            "title": "Example Input Three",
+            "disableNewInput": True,
+        }
+    ]
+    config = tmp_path / "valid_config_input_with_conf.json"
+    config.write_text(json.dumps(config_content))
+
+    inputs_conf = InputsConf(
+        GlobalConfig(str(config)),
+        input_dir,
+        output_dir,
+        ucc_dir=UCC_DIR,
+        addon_name=ta_name,
+    )
+    generated_files = inputs_conf.generate_conf()
+    assert generated_files is not None
+    assert generated_files.keys() == {"inputs.conf"}
+    assert (
+        Path(generated_files["inputs.conf"]).read_text()
+        == dedent(
+            """
+            [example_input_three]
+            python.version = python3
+            disabled = true
+            """
+        ).lstrip()
+    )

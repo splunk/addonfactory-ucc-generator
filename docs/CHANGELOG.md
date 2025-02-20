@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.58.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.58.0...v5.58.1) (2025-02-20)
+
+
+### Bug Fixes
+
+* build if "conf" param specified for a configuration tab ([#1590](https://github.com/splunk/addonfactory-ucc-generator/issues/1590)) ([6b069ec](https://github.com/splunk/addonfactory-ucc-generator/commit/6b069ec8054e66a0cbb7f6c1415ce03cbafbe4b5))
+
 # [5.58.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.57.2...v5.58.0) (2025-02-18)
 
 
