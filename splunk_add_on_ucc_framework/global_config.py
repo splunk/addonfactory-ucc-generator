@@ -135,12 +135,9 @@ class GlobalConfig:
         return []
 
     @property
-    def config_tabs(self) -> List[Any]:
+    def resolved_configuration(self) -> List[Any]:
         if self.has_pages() and "configuration" in self.pages:
-            return [
-                resolve_tab(tab)
-                for tab in self._content["pages"]["configuration"]["tabs"]
-            ]
+            return [resolve_tab(tab) for tab in self.configuration]
         return []
 
     @property
