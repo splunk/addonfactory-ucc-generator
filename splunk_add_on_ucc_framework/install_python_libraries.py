@@ -79,8 +79,12 @@ def _subprocess_run(
 def _pip_install(installer: str, command: str, command_desc: str) -> None:
     cmd = f"{installer} -m pip install {command}"
     try:
-        return_code = _subprocess_run(command=cmd, command_desc=command_desc).returncode
+        subprocess_result = _subprocess_run(command=cmd, command_desc=command_desc)
+        return_code = subprocess_result.returncode
         if return_code != 0:
+            logger.error(
+                f"Command execution failed with error message: {subprocess_result.stderr.decode()}"
+            )
             raise CouldNotInstallRequirements
     except OSError as e:
         raise CouldNotInstallRequirements from e
