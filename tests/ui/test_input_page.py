@@ -413,6 +413,46 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_example_input_with_complex_validation_wrong_start(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies correct errors when validation fails due to wrong start text"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Group One")
+        input_page.create_new_input.select("Service 1 Inside Menu")
+        input_page.entity1.text_with_validators.set_value(
+            "invalid as should start with $"
+        )
+        input_page.entity1.interval.set_value("900")
+
+        self.assert_util(
+            input_page.entity1.save,
+            r"Query parameters should start with '$'",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_with_complex_validation_too_short(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies correct errors when validation fails due to length"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Group One")
+        input_page.create_new_input.select("Service 1 Inside Menu")
+        input_page.entity1.text_with_validators.set_value("1")
+        input_page.entity1.interval.set_value("900")
+
+        self.assert_util(
+            input_page.entity1.save,
+            r"Length of Query parameters should be between 2 and 8192",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     def test_example_input_one_valid_length_name(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
