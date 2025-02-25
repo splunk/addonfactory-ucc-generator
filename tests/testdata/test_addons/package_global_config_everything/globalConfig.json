@@ -1731,6 +1731,24 @@
                             "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "text_with_validators",
+                            "label": "Text with validators",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 8192,
+                                    "errorMsg": "Length of Query parameters should be between 2 and 8192"
+                                },
+                                {
+                                    "type": "regex",
+                                    "pattern": "^\\$",
+                                    "errorMsg": "Query parameters should start with '$'"
+                                }
+                            ]
                         }
                     ],
                     "title": "Service 1 Inside Menu "
@@ -2072,7 +2090,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.58.0+f4479e4b2",
+        "version": "5.58.1+10197a346",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [

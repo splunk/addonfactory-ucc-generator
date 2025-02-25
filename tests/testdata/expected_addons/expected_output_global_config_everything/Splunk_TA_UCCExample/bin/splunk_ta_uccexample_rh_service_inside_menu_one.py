@@ -34,6 +34,21 @@ fields = [
             regex=r"""^((?:-1|\d+(?:\.\d+)?)|(([\*\d{1,2}\,\-\/]+\s){4}[\*\d{1,2}\,\-\/]+))$""", 
         )
     ), 
+    field.RestField(
+        'text_with_validators',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=validator.AllOf(
+            validator.String(
+                max_len=8192, 
+                min_len=2, 
+            ), 
+            validator.Pattern(
+                regex=r"""^\$""", 
+            )
+        )
+    ), 
 
     field.RestField(
         'disabled',
