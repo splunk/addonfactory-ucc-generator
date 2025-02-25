@@ -420,13 +420,15 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Group One")
         input_page.create_new_input.select("Service 1 Inside Menu")
-        input_page.entity1.text_with_validators.set_value(
+
+        input_page.entity3.name.set_value("dummy_input_name_complex_validators")
+        input_page.entity3.interval.set_value("900")
+        input_page.entity3.text_with_validators.set_value(
             "invalid as should start with $"
         )
-        input_page.entity1.interval.set_value("900")
 
         self.assert_util(
-            input_page.entity1.save,
+            input_page.entity3.save,
             r"Query parameters should start with '$'",
             left_args={"expect_error": True},
         )
@@ -441,11 +443,13 @@ class TestInputPage(UccTester):
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         input_page.create_new_input.select("Group One")
         input_page.create_new_input.select("Service 1 Inside Menu")
-        input_page.entity1.text_with_validators.set_value("1")
-        input_page.entity1.interval.set_value("900")
+
+        input_page.entity3.name.set_value("dummy_input_name_complex_validators")
+        input_page.entity3.interval.set_value("900")
+        input_page.entity3.text_with_validators.set_value("1")
 
         self.assert_util(
-            input_page.entity1.save,
+            input_page.entity3.save,
             r"Length of Query parameters should be between 2 and 8192",
             left_args={"expect_error": True},
         )

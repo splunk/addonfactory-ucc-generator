@@ -237,6 +237,39 @@ class ExampleInputTwo(Entity):
         self.title = BaseComponent(browser, Selector(select=' [data-test="title"]'))
 
 
+class ExampleServiceInsideMenu(Entity):
+    """
+    Form to configure a new Input for Service Inside Menu (menu slider)
+    """
+
+    def __init__(self, browser, container):
+        """
+        :param browser: The selenium webdriver
+        :param container: The container in which the entity is located in
+        """
+        add_btn = Button(
+            browser, Selector(select=container.select + ' [id="addInputBtn"]')
+        )
+        entity_container = Selector(select=' [data-test="modal"]')
+
+        super().__init__(browser, entity_container, add_btn=add_btn)
+
+        # Controls
+        self.name = TextBox(
+            browser, Selector(select='[data-test="control-group"][data-name="name"]')
+        )
+        self.interval = TextBox(
+            browser,
+            Selector(select=' [data-test="control-group"][data-name="interval"]'),
+        )
+        self.text_with_validators = TextBox(
+            browser,
+            Selector(
+                select=' [data-test="control-group"][data-name="text_with_validators"]'
+            ),
+        )
+
+
 class InputPage(Page):
     """
     Page: Input page
@@ -273,6 +306,9 @@ class InputPage(Page):
                 ucc_smartx_selenium_helper.browser, input_container
             )
             self.entity2 = ExampleInputTwo(
+                ucc_smartx_selenium_helper.browser, input_container
+            )
+            self.entity2 = ExampleServiceInsideMenu(
                 ucc_smartx_selenium_helper.browser, input_container
             )
             self.pagination = Dropdown(
