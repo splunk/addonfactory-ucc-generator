@@ -12,7 +12,7 @@ class SERVICE_INSIDE_MENU_ONE(smi.Script):
 
     def get_scheme(self):
         scheme = smi.Scheme('service_inside_menu_one')
-        scheme.description = 'Service 1 Inside Menu '
+        scheme.description = 'Service 1 Inside Menu'
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
         scheme.use_single_instance = False
