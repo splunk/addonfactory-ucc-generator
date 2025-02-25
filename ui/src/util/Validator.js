@@ -59,7 +59,8 @@ const parseRegexRawStr = (rawStr) => {
     try {
         result = new RegExp(rawStr);
     } catch (e) {
-        error = getFormattedMessage(12, rawStr);
+        // rawStr is wrapped in array as latter on message is formated with {{args[0]}}
+        error = getFormattedMessage(12, [rawStr]);
     }
 
     return { error, result };
@@ -75,7 +76,7 @@ class Validator {
     static checkIsFieldHasInput = (attrValue) =>
         attrValue !== undefined &&
         attrValue !== null &&
-        (typeof attrValue === 'string' ? attrValue.trim() !== '' : true);
+        (typeof attrValue === 'string' ? attrValue !== '' : true);
 
     /**
      * Validate the required field has value

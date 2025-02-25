@@ -12,7 +12,7 @@ class SERVICE_INSIDE_MENU_ONE(smi.Script):
 
     def get_scheme(self):
         scheme = smi.Scheme('service_inside_menu_one')
-        scheme.description = 'Service 1 Inside Menu '
+        scheme.description = 'Service 1 Inside Menu'
         scheme.use_external_validation = True
         scheme.streaming_mode_xml = True
         scheme.use_single_instance = False
@@ -25,23 +25,30 @@ class SERVICE_INSIDE_MENU_ONE(smi.Script):
                 required_on_create=True
             )
         )
+        scheme.add_argument(
+            smi.Argument(
+                "text_with_validators",
+                required_on_create=False,
+            )
+        )
+
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
         return
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
-        input_items = [{'count': len(inputs.inputs)}]
+        input_items = [{"count": len(inputs.inputs)}]
         for input_name, input_item in inputs.inputs.items():
-            input_item['name'] = input_name
+            input_item["name"] = input_name
             input_items.append(input_item)
         event = smi.Event(
             data=json.dumps(input_items),
-            sourcetype='service_inside_menu_one',
+            sourcetype="service_inside_menu_one",
         )
         ew.write_event(event)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     exit_code = SERVICE_INSIDE_MENU_ONE().run(sys.argv)
     sys.exit(exit_code)
