@@ -308,7 +308,7 @@ class InputPage(Page):
             self.entity2 = ExampleInputTwo(
                 ucc_smartx_selenium_helper.browser, input_container
             )
-            self.entity2 = ExampleServiceInsideMenu(
+            self.entity3 = ExampleServiceInsideMenu(
                 ucc_smartx_selenium_helper.browser, input_container
             )
             self.pagination = Dropdown(
