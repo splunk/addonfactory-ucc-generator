@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
-// import { variables } from '@splunk/themes';
 import variables from '@splunk/themes/variables';
 import pick from '@splunk/themes/pick';
 import Switch from '@splunk/react-ui/Switch';
