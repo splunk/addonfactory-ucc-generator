@@ -11,10 +11,12 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
+    "moduleResolution": "bundler",
+    "module": "es2020"
   },
   "include": [
-    "src/publicApi.ts",
-    "src/**/*"
+    "src/types/*.d.ts",
+    "src/publicApi.ts"
   ],
   "exclude": [
     "**/stories/**/*",

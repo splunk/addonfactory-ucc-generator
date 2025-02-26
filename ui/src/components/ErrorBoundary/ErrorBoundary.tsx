@@ -4,7 +4,7 @@ import { gettext } from '@splunk/ui-utils/i18n';
 import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/enterprise/Warning';
 import styled from 'styled-components';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import { parseErrorMsg } from '../../util/messageUtil';
 
 interface ErrorBoundaryProps {

@@ -3,7 +3,7 @@ import React, { memo, useRef, useState } from 'react';
 import Link from '@splunk/react-ui/Link';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import { _ } from '@splunk/ui-utils/i18n';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 
 import Heading from '@splunk/react-ui/Heading';
 import styled from 'styled-components';
