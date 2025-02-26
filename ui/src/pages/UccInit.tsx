@@ -6,21 +6,9 @@ import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
 import messageDict from '../constants/messageDict';
 import { AppProviders } from './AppProviders';
 
-const InputPage = React.lazy(
-    () => import(/* webpackChunkName: "input-page", webpackPrefetch: true */ './Input/InputPage')
-);
-const ConfigurationPage = React.lazy(
-    () =>
-        import(
-            /* webpackChunkName: "configuration-page", webpackPrefetch: true */ './Configuration/ConfigurationPage'
-        )
-);
-const DashboardPage = React.lazy(
-    () =>
-        import(
-            /* webpackChunkName: "dashboard-page", webpackPrefetch: true */ './Dashboard/DashboardPage'
-        )
-);
+const InputPage = React.lazy(() => import('./Input/InputPage'));
+const ConfigurationPage = React.lazy(() => import('./Configuration/ConfigurationPage'));
+const DashboardPage = React.lazy(() => import('./Dashboard/DashboardPage'));
 
 const url = window.location.pathname;
 const urlParts = url.substring(1).split('/');

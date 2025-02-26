@@ -3,7 +3,7 @@ import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import TabLayout from '@splunk/react-ui/TabLayout';
 import styled from 'styled-components';
 import variables from '@splunk/themes/variables';
-import { pick } from '@splunk/themes';
+import pick from '@splunk/themes/pick';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { OverviewDashboard } from './Overview';
 import { DataIngestionDashboard } from './DataIngestion';
