@@ -25,6 +25,7 @@ import Group from '../Group/Group';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
+    NullishFormRecord,
 } from '../../types/components/shareableTypes';
 import {
     CustomHookError,
@@ -104,7 +105,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     oauthConf?: OauthConfiguration;
 
-    datadict: Record<string, AcceptableFormValueOrNullish>;
+    datadict: NullishFormRecord;
 
     hook?: CustomHookInstance;
 
@@ -514,13 +515,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             string,
             {
                 dependencyValues: {
-                    $set: Record<string, AcceptableFormValueOrNullish>;
+                    $set: NullishFormRecord;
                 };
             }
         > = {};
         Object.keys(flattenedMap).forEach((field) => {
             const values = flattenedMap[field];
-            const data: Record<string, AcceptableFormValueOrNullish> = {};
+            const data: NullishFormRecord = {};
             let load = true;
 
             values.forEach((dependency) => {
@@ -948,7 +949,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             if (this.dependencyMap.has(field)) {
                 const value = this.dependencyMap.get(field);
                 Object.keys(value || {}).forEach((loadField) => {
-                    const data: Record<string, AcceptableFormValueOrNullish> = {};
+                    const data: NullishFormRecord = {};
                     let load = true;
 
                     value?.[loadField].forEach((dependency) => {
@@ -1146,7 +1147,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         const url = baseUrl.toString();
 
         const code = decodeURIComponent(message.code);
-        const data: Record<string, AcceptableFormValueOrNullish> = {
+        const data: NullishFormRecord = {
             method: 'POST',
             url,
             grant_type: 'authorization_code',
