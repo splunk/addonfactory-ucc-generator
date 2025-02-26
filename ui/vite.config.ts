@@ -1,30 +1,49 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { defineConfig, Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import dts from 'vite-plugin-dts';
+import { resolve } from 'path';
+import checker from 'vite-plugin-checker';
+import license from 'rollup-plugin-license';
 
-export default defineConfig({
-    plugins: [
-        react(),
-        dts({
-            tsconfigPath: resolve(__dirname, 'tsconfig.lib.json'),
-            include: 'src/types/*.d.ts',
-        }),
-    ],
-    build: {
-        copyPublicDir: false,
-        lib: {
-            entry: resolve(__dirname, 'src/publicApi.ts'),
-            formats: ['es'],
+const proxyTargetUrl = 'http://localhost:8000';
+const devServerUrl = 'http://localhost:5173';
+
+export default defineConfig(({ mode }) => {
+    const DEBUG = mode !== 'production';
+
+    return {
+        plugins: [
+            react(),
+            checker({ typescript: true }),
+            {
+                ...license({
+                    thirdParty: {
+                        output: {
+                            file: resolve(__dirname, 'dist/build/licenses.txt'),
+                        },
+                    },
+                }),
+                apply: 'build',
+            },
+        ],
+        build: {
+            outDir: 'dist/build',
+            sourcemap: true,
+            rollupOptions: {
+                input: {
+                    entry_page: resolve(__dirname, 'src/pages/EntryPage.tsx'),
+                },
+                output: {
+                    entryFileNames: '[name].js',
+                    chunkFileNames: '[name].[hash].js',
+                },
+            },
+            minify: !DEBUG ? 'esbuild' : false,
+            target: 'es2020',
         },
-        rollupOptions: {
-            // externalize deps that shouldn't be bundled into your library
-            external: ['react', 'react-dom'],
-            output: {
-                dir: 'dist/lib',
-                entryFileNames: 'index.js',
-                chunkFileNames: '[name]-[hash].js',
+        resolve: {
+            alias: {
+                querystring: 'querystring-es3',
             },
         },
-    },
+    };
 });
