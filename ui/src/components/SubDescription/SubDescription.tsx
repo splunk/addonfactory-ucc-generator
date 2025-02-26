@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { z } from 'zod';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import { SubDescriptionSchema } from '../../types/globalConfig/pages';
 import { mapTextToElements } from '../../util/textutils/textUtils';
 

@@ -7,7 +7,7 @@ import SlidingPanels from '@splunk/react-ui/SlidingPanels';
 import ChevronLeft from '@splunk/react-icons/ChevronLeft';
 import { _ as i18n } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 
 import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';

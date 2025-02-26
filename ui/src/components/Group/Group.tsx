@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 
 const GroupWrapper = styled.div`
     display: flex;

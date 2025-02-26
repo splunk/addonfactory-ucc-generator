@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import variables from '@splunk/themes/variables';
-import { pick } from '@splunk/themes';
+import pick from '@splunk/themes/pick';
 
 export const GlobalDashboardStyle = createGlobalStyle`
     body {
