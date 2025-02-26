@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-env node */
 const path = require('path');
-const { merge } = require('webpack-merge');
+const { mergeWithRules, CustomizeRule } = require('webpack-merge');
 const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const baseConfig = require('@splunk/webpack-configs/base.config').default;
@@ -21,7 +21,11 @@ function isItStaticAsset(url) {
 module.exports = (env, argv) => {
     const DEBUG = argv.mode !== 'production';
 
-    return merge(baseConfig, {
+    const res = mergeWithRules({
+        module: {
+            rules: CustomizeRule.Replace,
+        },
+    })(baseConfig, {
         bail: !DEBUG,
         entry: {
             entry_page: path.join(__dirname, 'src/pages/EntryPage.tsx'),
@@ -31,9 +35,17 @@ module.exports = (env, argv) => {
             filename: (pathData) =>
                 pathData.chunk.name === 'entry_page' ? '[name].js' : '[name].[contenthash].js',
             chunkFilename: '[name].[contenthash].js',
+            clean: true,
         },
         module: {
             rules: [
+                {
+                    test: /\.[jt]sx?$/,
+                    loader: 'esbuild-loader',
+                    options: {
+                        target: 'ES2020',
+                    },
+                },
                 {
                     test: /\.(s*)css$/,
                     use: ['style-loader', 'css-loader'],
@@ -78,4 +90,6 @@ module.exports = (env, argv) => {
             },
         },
     });
+
+    return res;
 };

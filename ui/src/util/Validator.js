@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import { PREDEFINED_VALIDATORS_DICT } from '../constants/preDefinedRegex';
-import { getFormattedMessage } from './messageUtil';
+import { PREDEFINED_VALIDATORS_DICT } from '../constants/preDefinedRegex.ts';
+import { getFormattedMessage } from './messageUtil.ts';
 
 /**
  * @typedef Error
