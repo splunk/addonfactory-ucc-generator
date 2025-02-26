@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import checker from 'vite-plugin-checker';
@@ -28,11 +28,63 @@ const isLocalResource = (url: string) => {
     );
 };
 
+// the fix for Uncaught Error: @vitejs/plugin-react can't detect preamble. Something is wrong.
+// try to remove if after updating to React 18 and check if HMR works without it
+const reactHmrWorkaround = {
+    name: 'react-refresh-preamble',
+    apply: 'serve',
+    resolveId(id) {
+        if (id === 'virtual:react-refresh-preamble') {
+            return '\0virtual:react-refresh-preamble';
+        }
+        return null;
+    },
+    load(id) {
+        if (id === '\0virtual:react-refresh-preamble') {
+            return `
+            import RefreshRuntime from '/@react-refresh';
+            RefreshRuntime.injectIntoGlobalHook(window);
+            window.$RefreshReg$ = () => {};
+            window.$RefreshSig$ = () => (type) => type;
+            window.__vite_plugin_react_preamble_installed__ = true;
+          `;
+        }
+        return null;
+    },
+    transform(code, id) {
+        if (id.endsWith('src/pages/EntryPage.tsx')) {
+            return {
+                code: `import 'virtual:react-refresh-preamble';\n${code}`,
+                map: null,
+            };
+        }
+        return null;
+    },
+} satisfies PluginOption;
+
+const splunkPathRewriter = {
+    name: 'splunk-path-rewriter',
+    configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+            if (!req.url) return next();
+
+            // Entry point handling
+            if (isEntryPageRequest(req.url)) {
+                console.log(`Serving entry_page.js for: ${req.url}`);
+                req.url = '/src/pages/EntryPage.tsx';
+                return next();
+            }
+
+            next();
+        });
+    },
+} satisfies PluginOption;
+
 export default defineConfig(({ mode }) => {
     const DEBUG = mode !== 'production';
-
     return {
         plugins: [
+            reactHmrWorkaround,
             react(),
             checker({ typescript: true }),
             {
@@ -45,46 +97,7 @@ export default defineConfig(({ mode }) => {
                 }),
                 apply: 'build',
             },
-            // Custom plugin for path rewriting
-            {
-                name: 'splunk-path-rewriter',
-                configureServer(server) {
-                    server.middlewares.use((req, res, next) => {
-                        if (!req.url) return next();
-
-                        // Entry point handling
-                        if (isEntryPageRequest(req.url)) {
-                            console.log(`Serving entry_page.js for: ${req.url}`);
-                            req.url = '/src/pages/EntryPage.tsx';
-                            return next();
-                        }
-
-                        // Handle localized source paths
-                        const localeSourceMatch = req.url.match(/^\/[a-z]{2}-[A-Z]{2}(\/.+)$/);
-                        if (localeSourceMatch) {
-                            const actualPath = localeSourceMatch[1];
-                            if (isLocalResource(actualPath)) {
-                                console.log(
-                                    `Rewriting localized path: ${req.url} -> ${actualPath}`
-                                );
-                                req.url = actualPath;
-                            }
-                        }
-
-                        next();
-                    });
-                },
-            },
-            {
-                name: 'full-reload',
-                enforce: 'post',
-                handleHotUpdate({ server, file }) {
-                    console.log('File changed:', file);
-
-                    server.ws.send({ type: 'full-reload' });
-                    return [];
-                },
-            },
+            splunkPathRewriter,
         ],
         build: {
             outDir: 'dist/build',
@@ -98,7 +111,7 @@ export default defineConfig(({ mode }) => {
                     chunkFileNames: '[name].[hash].js',
                 },
             },
-            minify: !DEBUG ? 'esbuild' : false,
+            minify: DEBUG ? false : 'esbuild',
             target: 'es2020',
         },
         resolve: {
@@ -107,60 +120,30 @@ export default defineConfig(({ mode }) => {
             },
         },
         optimizeDeps: {
-            // Force Vite to pre-bundle these dependencies
             include: ['react', 'react-dom', 'react/jsx-dev-runtime'],
-            // Ensure optimization happens at startup
-            force: true,
         },
         server: {
             port: devServerPort,
-            fs: {
-                // Allow serving files from more paths
-                allow: ['.', './node_modules', '../node_modules'],
-                strict: false,
-            },
-            //https://github.com/vitejs/vite-plugin-react/issues/11 the issue is still reproducible
-            hmr: {
-                clientPort: devServerPort, // Ensure correct port is used
-                timeout: 10000, // Increase timeout for slower systems
-            },
-            watch: {
-                // Ensure all files are watched correctly
-                usePolling: true,
-            },
             proxy: {
                 '/': {
                     target: proxyTargetUrl,
                     changeOrigin: true,
                     configure: (proxy) => {
-                        // Handle redirects
                         proxy.on('proxyRes', (proxyRes, req, res) => {
-                            if (
-                                proxyRes.headers.location &&
-                                proxyRes.headers.location.startsWith(proxyTargetUrl)
-                            ) {
+                            // Sometimes Splunk throws a 303 redirect with location to the proxy target (localhost:8000)
+                            // We need to rewrite the location back to the dev server URL
+                            if (proxyRes.headers.location?.startsWith(proxyTargetUrl)) {
                                 const newLocation = proxyRes.headers.location.replace(
                                     proxyTargetUrl,
                                     devServerUrl
                                 );
                                 proxyRes.headers.location = newLocation;
-                                console.log(
-                                    `Rewritten redirect: ${proxyRes.headers.location} -> ${newLocation}`
-                                );
                             }
                         });
                     },
                     bypass: (req) => {
-                        if (!req.url) return undefined;
-
                         // Always serve local resources directly
-                        if (isLocalResource(req.url)) {
-                            return req.url;
-                        }
-
-                        // Check if a localized path should be served locally
-                        const localeMatch = req.url.match(/^\/[a-z]{2}-[A-Z]{2}(\/.+)$/);
-                        if (localeMatch && isLocalResource(localeMatch[1])) {
+                        if (req.url && isLocalResource(req.url)) {
                             return req.url;
                         }
 
