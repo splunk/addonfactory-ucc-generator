@@ -1,5 +1,5 @@
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import Validator from '../Validator';
+import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -391,5 +391,51 @@ describe('Validator.doValidation - custom case', () => {
             errorField: 'testField',
             errorMsg: 'Custom validation failed for testField',
         });
+    });
+});
+
+describe('parseFunctionRawStr', () => {
+    it('should correctly parse a valid function string', () => {
+        const validFunctionString = '(data) => data === "valid"';
+        const { error, result } = parseFunctionRawStr(validFunctionString);
+        expect(error).toBeUndefined();
+        expect(result).toBeInstanceOf(Function);
+        expect(result('valid')).toBe(true);
+    });
+
+    it('should return an error for an empty function string', () => {
+        const emptyFunctionString = '';
+        const { error, result } = parseFunctionRawStr(emptyFunctionString);
+        expect(error).toBe(' is not a function');
+        expect(result).toBeUndefined();
+    });
+});
+
+describe('SaveValidator', () => {
+    it('should correctly parse and execute a valid function string', () => {
+        const validFunctionString = '(data) => data === "valid" ? false : "Invalid data"';
+        const formData = 'valid';
+        const result = SaveValidator(validFunctionString, formData);
+        expect(result).toBeUndefined();
+    });
+
+    it('should return an error for an invalid function string', () => {
+        const invalidFunctionString = '(data) => { invalid }';
+        const formData = 'valid';
+        expect(SaveValidator.bind(null, invalidFunctionString, formData)).toThrow();
+    });
+
+    it('should return the error string when the parsed function returns an error string', () => {
+        const functionReturningErrorString = '(data) => "Error occurred"';
+        const formData = 'valid';
+        const result = SaveValidator(functionReturningErrorString, formData);
+        expect(result).toEqual({ errorMsg: 'Error occurred' });
+    });
+
+    it('should not return an error when the parsed function returns a non-error value', () => {
+        const functionReturningNonErrorValue = '(data) => false';
+        const formData = 'valid';
+        const result = SaveValidator(functionReturningNonErrorValue, formData);
+        expect(result).toBeUndefined();
     });
 });
