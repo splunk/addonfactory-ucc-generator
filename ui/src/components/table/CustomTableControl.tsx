@@ -103,7 +103,7 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
             const globalConfig = getUnifiedConfigs();
 
             if (type === 'external') {
-                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}.js`)
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))
                     .catch((error) => reject(error));
             } else {

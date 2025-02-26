@@ -11,7 +11,7 @@
   "author": "Splunk Inc.",
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
   "scripts": {
-    "dev": "vite --config vite.config.ts --debug",
+    "dev": "vite --config vite.config.ts",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --config vite.config.ts",
     "build:lib": "yarn run vite build",
     "build:lib:types": "tsc --project tsconfig.lib.json",
