@@ -11,3 +11,7 @@ export { CustomControlBase } from './components/CustomControl/CustomControlBase'
 export { CustomTabBase } from './components/CustomTab/CustomTabBase';
 
 export { CustomMenuBase } from './components/CustomMenu/CustomMenuBase';
+
+export { CustomCellBase } from './components/table/CustomTableCellBase';
+
+export { init } from './pages/UccInit';

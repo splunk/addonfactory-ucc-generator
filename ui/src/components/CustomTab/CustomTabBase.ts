@@ -7,7 +7,7 @@ export type CustomTabConstructor<T extends typeof CustomTabBase = typeof CustomT
     ...args: ConstructorParameters<T>
 ) => CustomTabInstance<T>;
 
-export abstract class CustomTabBase {
+abstract class CustomTabBase {
     protected tab: Tab;
 
     protected el: HTMLDivElement;
@@ -19,3 +19,5 @@ export abstract class CustomTabBase {
 
     abstract render(): void;
 }
+
+export { CustomTabBase };

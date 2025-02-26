@@ -12,7 +12,7 @@
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
   "scripts": {
     "build": "webpack --mode=production",
-    "build:lib": "webpack --mode=production --config webpack.config.lib.js",
+    "build:lib": "webpack --mode=production --config webpack.config.lib.cjs",
     "build:lib:types": "tsc --project tsconfig.lib.json",
     "build:lib:full": "yarn run build:lib && yarn run build:lib:types",
     "build:watch": "webpack --mode=development --watch",
@@ -98,6 +98,7 @@
     "babel-jest": "^29.7.0",
     "babel-loader": "^8.4.1",
     "css-loader": "^7.1.2",
+    "esbuild-loader": "^4.3.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^7.2.0",
@@ -160,9 +161,9 @@
       "src/public"
     ]
   },
-  "types": "./dist/lib/publicApi.d.ts",
   "files": [
     "dist/lib"
   ],
-  "main": "./dist/lib/main.js"
+  "types": "./dist/lib/ui/src/publicApi.d.ts",
+  "module": "./dist/lib/index.js"
 }

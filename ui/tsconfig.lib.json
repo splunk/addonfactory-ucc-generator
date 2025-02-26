@@ -1,12 +1,28 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
     "emitDeclarationOnly": true,
     "declaration": true,
     "declarationDir": "./dist/lib",
-    "outDir": "./dist/lib"
+    "outDir": "./dist/lib",
+    "jsx": "react",
+    "lib": ["es2022", "dom"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
   },
   "include": [
-    "src/publicApi.ts"
+    "src/publicApi.ts",
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/stories/**/*",
+    "**/jest.setup.ts",
+    "**/tests/**/*",
+    "**/*.test.*",
+    "*/__mocks__/**/*",
+    "src/mocks/**/*",
+    "src/public/**/*",
   ]
 }
