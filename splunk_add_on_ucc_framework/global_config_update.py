@@ -56,7 +56,7 @@ def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, 
 
 
 def _handle_biased_terms_update(global_config: global_config_lib.GlobalConfig) -> None:
-    for tab in global_config.tabs:
+    for tab in global_config.configuration:
         conf_entities = tab.get("entity")
 
         if conf_entities is None:
@@ -151,7 +151,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
         logger.info("Updated globalConfig schema to version 0.0.1")
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
-        for tab in global_config.tabs:
+        for tab in global_config.configuration:
             if tab.get("type") in ["loggingTab", "proxyTab"]:
                 continue
             if tab["name"] == "account":
@@ -325,7 +325,7 @@ def _stop_build_on_placeholder_usage(
         "`placeholder` option found for %s '%s'. It has been removed from UCC. "
         "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
     )
-    for tab in global_config.tabs:
+    for tab in global_config.configuration:
         for entity in tab.get("entity", []):
             if "placeholder" in entity.get("options", {}):
                 logger.error(
