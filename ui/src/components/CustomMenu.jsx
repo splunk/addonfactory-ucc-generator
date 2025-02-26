@@ -42,9 +42,7 @@ class CustomMenu extends Component {
         new Promise((resolve) => {
             if (this.props.type === 'external') {
                 import(
-                    /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
-                        this.props.fileName
-                    }.js`
+                    /* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`
                 ).then((external) => {
                     const Control = external.default;
                     resolve(Control);
