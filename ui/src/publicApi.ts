@@ -9,3 +9,5 @@ export { CustomHookClass } from './types/components/CustomHookClass';
 export { CustomControlBase } from './components/CustomControl/CustomControlBase';
 
 export { CustomTabBase } from './components/CustomTab/CustomTabBase';
+
+export { init } from './pages/UccInit';

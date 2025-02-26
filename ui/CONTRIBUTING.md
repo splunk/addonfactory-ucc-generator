@@ -36,7 +36,7 @@ This project incorporates [webpack-dev-server](https://webpack.js.org/configurat
 yarn start
 ```
 
-This starts the server at <http://localhost:8080> (or a custom port, if specified) and automatically refreshes the browser when file changes are detected. It intersects static assets for all TAs. You might want to modify the proxy target in the [webpack.config.js](webpack.config.js) file.
+This starts the server at <http://localhost:8080> (or a custom port, if specified) and automatically refreshes the browser when file changes are detected. It intersects static assets for all TAs. You might want to modify the proxy target in the [webpack.config.js](webpack.config.cjs) file.
 
 ## Code Formatting
 
