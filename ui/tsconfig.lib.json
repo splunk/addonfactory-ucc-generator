@@ -7,12 +7,12 @@
     "declarationDir": "./dist/lib",
     "outDir": "./dist/lib",
     "jsx": "react",
-    "lib": ["es2022", "dom"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
     "moduleResolution": "bundler",
-    "module": "es2020"
+    "module": "ES2022"
   },
   "include": [
     "src/types/*.d.ts",
