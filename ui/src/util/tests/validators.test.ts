@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { AnyEntity } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { TextEntity } from '../../types/globalConfig/entities';
 import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
 import { TextEntity } from '../../types/globalConfig/entities';
 
