@@ -1,6 +1,9 @@
+import { z } from 'zod';
+import { AnyEntity } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { invariant } from '../invariant';
 import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
+import { TextEntity } from '../../types/globalConfig/entities';
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -36,8 +39,12 @@ describe('Validator.checkIsFieldHasInput', () => {
         expect(Validator.checkIsFieldHasInput({})).toBe(true);
     });
 
-    it('should return true for array input', () => {
-        expect(Validator.checkIsFieldHasInput([])).toBe(true);
+    it('should return true for file input', () => {
+        expect(Validator.checkIsFieldHasInput({ fileContent: 'string' })).toBe(true);
+    });
+
+    it('should return true for empty file input', () => {
+        expect(Validator.checkIsFieldHasInput({ fileContent: '' })).toBe(true);
     });
 });
 
@@ -46,6 +53,7 @@ describe('Validator.doValidation - regex case', () => {
         {
             field: 'testField',
             label: 'Test Field',
+            type: 'text',
             validators: [
                 {
                     type: 'regex',
@@ -53,7 +61,7 @@ describe('Validator.doValidation - regex case', () => {
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid regex match', () => {
         const validator = new Validator(entities);
@@ -77,6 +85,7 @@ describe('Validator.doValidation - regex case', () => {
             {
                 field: 'testField',
                 label: 'Test Field',
+                type: 'text',
                 validators: [
                     {
                         type: 'regex',
@@ -84,7 +93,8 @@ describe('Validator.doValidation - regex case', () => {
                     },
                 ],
             },
-        ];
+        ] satisfies z.TypeOf<typeof TextEntity>[];
+
         const validator = new Validator(invalidEntities);
         const data = { testField: 'test' };
         const result = validator.doValidation(data);
@@ -95,10 +105,11 @@ describe('Validator.doValidation - regex case', () => {
     });
 
     it('should return correct errors for start with $ and length 2-8192', () => {
-        const validator = new Validator([
+        const testEntity = [
             {
                 field: 'testField',
                 label: 'Test Field',
+                type: 'text',
                 validators: [
                     {
                         type: 'string',
@@ -113,7 +124,9 @@ describe('Validator.doValidation - regex case', () => {
                     },
                 ],
             },
-        ]);
+        ] satisfies z.TypeOf<typeof TextEntity>[];
+
+        const validator = new Validator(testEntity);
 
         expect(validator.doValidation({ testField: ' ' })).toEqual({
             errorField: 'testField',
@@ -151,6 +164,7 @@ describe('Validator.doValidation - string case', () => {
         {
             field: 'testField',
             label: 'Test Field',
+            type: 'text',
             validators: [
                 {
                     type: 'string',
@@ -159,7 +173,7 @@ describe('Validator.doValidation - string case', () => {
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid string length', () => {
         const validator = new Validator(entities);
@@ -193,8 +207,8 @@ describe('Validator.doValidation - number case', () => {
     const entities = [
         {
             field: 'testField',
-            label: 'Test Field',
             type: 'text',
+            label: 'Test Field',
             validators: [
                 {
                     type: 'number',
@@ -203,7 +217,7 @@ describe('Validator.doValidation - number case', () => {
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid number', () => {
         const validator = new Validator(entities);
@@ -261,13 +275,14 @@ describe('Validator.doValidation - url case', () => {
         {
             field: 'testField',
             label: 'Test Field',
+            type: 'text',
             validators: [
                 {
                     type: 'url',
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid URL', () => {
         const validator = new Validator(entities);
@@ -291,6 +306,7 @@ describe('Validator.doValidation - date case', () => {
     const entities = [
         {
             field: 'testField',
+            type: 'text',
             label: 'Test Field',
             validators: [
                 {
@@ -298,7 +314,7 @@ describe('Validator.doValidation - date case', () => {
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid date', () => {
         const validator = new Validator(entities);
@@ -322,6 +338,7 @@ describe('Validator.doValidation - email case', () => {
     const entities = [
         {
             field: 'testField',
+            type: 'text',
             label: 'Test Field',
             validators: [
                 {
@@ -329,7 +346,7 @@ describe('Validator.doValidation - email case', () => {
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid email', () => {
         const validator = new Validator(entities);
@@ -353,6 +370,7 @@ describe('Validator.doValidation - ipv4 case', () => {
     const entities = [
         {
             field: 'testField',
+            type: 'text',
             label: 'Test Field',
             validators: [
                 {
@@ -360,7 +378,7 @@ describe('Validator.doValidation - ipv4 case', () => {
                 },
             ],
         },
-    ];
+    ] satisfies z.TypeOf<typeof TextEntity>[];
 
     it('should return false for valid IPv4 address', () => {
         const validator = new Validator(entities);
@@ -391,6 +409,7 @@ describe('Validator.doValidation - custom case', () => {
     const entities = [
         {
             field: 'testField',
+            type: 'checkboxGroup',
             label: 'Test Field',
             validators: [
                 {
@@ -399,7 +418,12 @@ describe('Validator.doValidation - custom case', () => {
                 },
             ],
         },
-    ];
+        // to be changed
+        // custom validators do not exist on anyEntity but should be there
+        // as users can add it ie. via custom control
+        // it is not possible to add it via global config
+        // but done via custom js code
+    ] as unknown as AnyEntity[];
 
     it('should return false for valid custom validation', () => {
         const validator = new Validator(entities);
@@ -438,28 +462,29 @@ describe('parseFunctionRawStr', () => {
 
 describe('SaveValidator', () => {
     it('should correctly parse and execute a valid function string', () => {
-        const validFunctionString = '(data) => data === "valid" ? false : "Invalid data"';
-        const formData = 'valid';
+        const validFunctionString =
+            '(data) => data.someFieldName === "valid" ? false : "Invalid data"';
+        const formData = { someFieldName: 'valid' };
         const result = SaveValidator(validFunctionString, formData);
         expect(result).toBeUndefined();
     });
 
     it('should return an error for an invalid function string', () => {
         const invalidFunctionString = '(data) => { invalid }';
-        const formData = 'valid';
+        const formData = { someFieldName: 'valid' };
         expect(SaveValidator.bind(null, invalidFunctionString, formData)).toThrow();
     });
 
     it('should return the error string when the parsed function returns an error string', () => {
         const functionReturningErrorString = '(data) => "Error occurred"';
-        const formData = 'valid';
+        const formData = { someFieldName: 'valid' };
         const result = SaveValidator(functionReturningErrorString, formData);
         expect(result).toEqual({ errorMsg: 'Error occurred' });
     });
 
     it('should not return an error when the parsed function returns a non-error value', () => {
         const functionReturningNonErrorValue = '(data) => false';
-        const formData = 'valid';
+        const formData = { someFieldName: 'valid' };
         const result = SaveValidator(functionReturningNonErrorValue, formData);
         expect(result).toBeUndefined();
     });
