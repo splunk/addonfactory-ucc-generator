@@ -153,6 +153,10 @@ jobs:
       - name: Set output if steps failed
         run: |
           echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+      - name: Run codecov
+        uses: codecov/codecov-action@v5
+        with:
+          directory: tests/unit
     outputs:
       failed: ${{ env.failed }}
 
