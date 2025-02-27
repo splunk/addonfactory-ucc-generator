@@ -1,6 +1,5 @@
 import { defineConfig, PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
 import checker from 'vite-plugin-checker';
 import license from 'rollup-plugin-license';
 
@@ -9,10 +8,10 @@ const devServerPort = 5173;
 const devServerUrl = `http://localhost:${devServerPort}`;
 
 // Function to check if URL is requesting entry_page.js
-const isEntryPageRequest = (url: string) => url && url.includes('/js/build/entry_page.js');
+const isEntryPageRequest = (url?: string) => url?.includes('/js/build/entry_page.js');
 
 // Function to check if a path should be served locally and not proxied
-const isLocalResource = (url: string) => {
+const isLocalResource = (url?: string) => {
     return (
         url &&
         // Source files
@@ -65,12 +64,11 @@ const reactHmrWorkaround = {
 const splunkPathRewriter = {
     name: 'splunk-path-rewriter',
     configureServer(server) {
-        server.middlewares.use((req, res, next) => {
+        server.middlewares.use((req, _res, next) => {
             if (!req.url) return next();
 
             // Entry point handling
             if (isEntryPageRequest(req.url)) {
-                console.log(`Serving entry_page.js for: ${req.url}`);
                 req.url = '/src/pages/EntryPage.tsx';
                 return next();
             }
@@ -83,15 +81,20 @@ const splunkPathRewriter = {
 export default defineConfig(({ mode }) => {
     const DEBUG = mode !== 'production';
     return {
+        base: '',
         plugins: [
             reactHmrWorkaround,
             react(),
-            checker({ typescript: true }),
+            checker({
+                typescript: {
+                    tsconfigPath: 'tsconfig.app.json',
+                },
+            }),
             {
                 ...license({
                     thirdParty: {
                         output: {
-                            file: resolve(__dirname, 'dist/build/licenses.txt'),
+                            file: 'dist/build/licenses.txt',
                         },
                     },
                 }),
@@ -104,7 +107,7 @@ export default defineConfig(({ mode }) => {
             sourcemap: true,
             rollupOptions: {
                 input: {
-                    entry_page: resolve(__dirname, 'src/pages/EntryPage.tsx'),
+                    entry_page: 'src/pages/EntryPage.tsx',
                 },
                 output: {
                     entryFileNames: '[name].js',
@@ -129,7 +132,7 @@ export default defineConfig(({ mode }) => {
                     target: proxyTargetUrl,
                     changeOrigin: true,
                     configure: (proxy) => {
-                        proxy.on('proxyRes', (proxyRes, req, res) => {
+                        proxy.on('proxyRes', (proxyRes) => {
                             // Sometimes Splunk throws a 303 redirect with location to the proxy target (localhost:8000)
                             // We need to rewrite the location back to the dev server URL
                             if (proxyRes.headers.location?.startsWith(proxyTargetUrl)) {
@@ -143,7 +146,7 @@ export default defineConfig(({ mode }) => {
                     },
                     bypass: (req) => {
                         // Always serve local resources directly
-                        if (req.url && isLocalResource(req.url)) {
+                        if (isLocalResource(req.url)) {
                             return req.url;
                         }
 
