@@ -109,10 +109,7 @@ export interface UtilBaseForm {
 
 export interface UtilControlWrapper {
     handleChange: (field: string, targetValue: AcceptableFormValueOrNullish) => void;
-    addCustomValidator: (
-        field: string,
-        validatorFunc: (submittedField: string, submittedValue: string) => void
-    ) => void;
+    addCustomValidator: (field: string, validatorFunc: CustomValidatorFunc) => void;
     utilCustomFunctions: UtilBaseForm;
 }
 
@@ -158,3 +155,14 @@ export interface ChangeRecord {
     value?: { $set: AcceptableFormValueOrNullish };
     dependencyValues?: { $set: NullishFormRecord };
 }
+
+/**
+ * Custom validator function.
+ * @param submittedField  the field name of the form field.
+ * @param submittedValue  the value of the form field.
+ * @returns  a string if the validation fails, otherwise undefined.
+ */
+export type CustomValidatorFunc = (
+    submittedField: string,
+    submittedValue: AcceptableFormValueOrNullish
+) => string | undefined;
