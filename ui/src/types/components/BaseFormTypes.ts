@@ -165,4 +165,4 @@ export interface ChangeRecord {
 export type CustomValidatorFunc = (
     submittedField: string,
     submittedValue: AcceptableFormValueOrNullish
-) => string | undefined;
+) => string | boolean | undefined;
