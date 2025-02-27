@@ -290,7 +290,7 @@ function InputPage(): ReactElement {
                                     className={isTabs ? 'title_menu_column' : ''}
                                     span={9}
                                 >
-                                    <TitleComponent style={{ color: 'red' }}>
+                                    <TitleComponent>
                                         {isTabs ? _(selectedTab?.title || '') : _(title || '')}
                                     </TitleComponent>
                                     <SubTitleComponent
