@@ -169,11 +169,12 @@ class Validator {
         validator: z.TypeOf<typeof StringValidator>,
         data: AcceptableFormValueOrNullish
     ) {
-        if (typeof data !== 'string') {
+        // If data should be string or undefined
+        if (typeof data !== 'string' && typeof data !== 'undefined') {
             return { errorField: field, errorMsg: getFormattedMessage(1, [label]) };
         }
 
-        if (Validator.checkIsFieldHasInput(data) && data.length > validator.maxLength) {
+        if (Validator.checkIsFieldHasInput(data) && data && data.length > validator.maxLength) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
@@ -181,7 +182,8 @@ class Validator {
                     : getFormattedMessage(18, [label, validator.maxLength]),
             };
         }
-        if (Validator.checkIsFieldHasInput(data) && data.length < validator.minLength) {
+
+        if (Validator.checkIsFieldHasInput(data) && data && data.length < validator.minLength) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
