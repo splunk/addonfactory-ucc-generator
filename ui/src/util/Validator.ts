@@ -170,7 +170,8 @@ class Validator {
         data: AcceptableFormValueOrNullish
     ) {
         // If data should be string or undefined
-        if (typeof data !== 'string' && typeof data !== 'undefined') {
+        // to be verified before merging
+        if (typeof data !== 'string' && data !== undefined && data !== null) {
             return { errorField: field, errorMsg: getFormattedMessage(1, [label]) };
         }
 
