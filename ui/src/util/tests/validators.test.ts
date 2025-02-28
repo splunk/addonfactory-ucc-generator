@@ -210,6 +210,16 @@ describe('Validator.doValidation - number case', () => {
         expect(result).toBe(false);
     });
 
+    it.each([undefined, null])(
+        'should return false for valid undefined/null number when optional',
+        (value) => {
+            const validator = new Validator(entities);
+            const data = { testField: value };
+            const result = validator.doValidation(data);
+            expect(result).toBe(false);
+        }
+    );
+
     it('should return an error for number out of range', () => {
         const validator = new Validator(entities);
         const data = { testField: 15 };
