@@ -213,7 +213,7 @@ describe('Validator.doValidation - number case', () => {
     });
 
     it.each([undefined, null])(
-        'should return false for valid undefined/null number when optional',
+        'should return false validation for %s when optional',
         (value) => {
             const validator = new Validator(entities);
             const data = { testField: value };
