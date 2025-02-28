@@ -169,13 +169,11 @@ class Validator {
         validator: z.TypeOf<typeof StringValidator>,
         data: AcceptableFormValueOrNullish
     ) {
-        // If data should be string or undefined
-        // to be verified before merging
-        if (typeof data !== 'string' && data !== undefined && data !== null) {
-            return { errorField: field, errorMsg: getFormattedMessage(1, [label]) };
-        }
-
-        if (Validator.checkIsFieldHasInput(data) && data && data.length > validator.maxLength) {
+        if (
+            Validator.checkIsFieldHasInput(data) &&
+            typeof data === 'string' &&
+            data.length > validator.maxLength
+        ) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
@@ -184,7 +182,11 @@ class Validator {
             };
         }
 
-        if (Validator.checkIsFieldHasInput(data) && data && data.length < validator.minLength) {
+        if (
+            Validator.checkIsFieldHasInput(data) &&
+            typeof data === 'string' &&
+            data.length < validator.minLength
+        ) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
