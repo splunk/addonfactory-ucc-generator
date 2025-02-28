@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { AnyEntity } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { invariant } from '../invariant';
 import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
 import { TextEntity } from '../../types/globalConfig/entities';
 
@@ -226,29 +225,6 @@ describe('Validator.doValidation - number case', () => {
         expect(result).toBe(false);
     });
 
-    it.each([undefined, null])(
-        'should return false for valid undefined/null number when optional',
-        (value) => {
-            const validator = new Validator(entities);
-            const data = { testField: value };
-            const result = validator.doValidation(data);
-            expect(result).toBe(false);
-        }
-    );
-
-    it.each([undefined, null])(
-        'should return error for undefined/null number when required',
-        (value) => {
-            const requiredEntities = [{ ...entities[0], required: true }];
-            const validator = new Validator(requiredEntities);
-            const data = { testField: value };
-            const result = validator.doValidation(data);
-            invariant(result, 'result should not be false');
-            expect(result.errorField).toBe('testField');
-            expect(result.errorMsg).toBe('Field Test Field is required');
-        }
-    );
-
     it('should return an error for number out of range', () => {
         const validator = new Validator(entities);
         const data = { testField: 15 };
@@ -267,6 +243,24 @@ describe('Validator.doValidation - number case', () => {
             errorField: 'testField',
             errorMsg: 'Field Test Field is not a integer',
         });
+    });
+
+    it('should pass validation for non-integer number', () => {
+        const entitiesNoneInteger = [
+            {
+                ...entities[0],
+                validators: [
+                    {
+                        ...entities[0].validators[0],
+                        isInteger: false,
+                    },
+                ],
+            },
+        ];
+        const validator = new Validator(entitiesNoneInteger);
+        const data = { testField: 5.5 };
+        const result = validator.doValidation(data);
+        expect(result).toEqual(false);
     });
 });
 
@@ -490,7 +484,7 @@ describe('SaveValidator', () => {
     });
 });
 
-describe('Validator.doValidation - predefined validations - empty values', () => {
+describe('Validator.doValidation - empty values', () => {
     const entity = {
         field: 'testField',
         type: 'text',
@@ -501,38 +495,32 @@ describe('Validator.doValidation - predefined validations - empty values', () =>
 
     const validationTypes = ['string', 'regex', 'number', 'url', 'date', 'email', 'ipv4', 'custom'];
 
-    it.each(validationTypes)(
-        'Validator.doValidation error for empty data required %s',
-        async (validatorType) => {
-            emptyValues.forEach((emptyValue) => {
-                const validator = new Validator([
-                    { ...entity, required: true, validators: [{ type: validatorType }] },
-                ]);
-                const data = { testField: emptyValue };
-                const result = validator.doValidation(data);
-                expect(result).toEqual({
-                    errorField: 'testField',
-                    errorMsg: 'Field Test Field is required',
-                });
+    it.each(validationTypes)('error as data required %s', async (validatorType) => {
+        emptyValues.forEach((emptyValue) => {
+            const validator = new Validator([
+                { ...entity, required: true, validators: [{ type: validatorType }] },
+            ]);
+            const data = { testField: emptyValue };
+            const result = validator.doValidation(data);
+            expect(result).toEqual({
+                errorField: 'testField',
+                errorMsg: 'Field Test Field is required',
             });
-        }
-    );
+        });
+    });
 
-    it.each(validationTypes)(
-        'Validator.doValidation passes validation for empty data as NOT required %s',
-        async (validatorType) => {
-            emptyValues.forEach((emptyValue) => {
-                const validator = new Validator([
-                    {
-                        ...entity,
-                        required: false,
-                        validators: [{ type: validatorType, validatorFunc: () => false }],
-                    },
-                ]);
-                const data = { testField: emptyValue };
-                const result = validator.doValidation(data);
-                expect(result).toEqual(false);
-            });
-        }
-    );
+    it.each(validationTypes)('passes as NOT required %s', async (validatorType) => {
+        emptyValues.forEach((emptyValue) => {
+            const validator = new Validator([
+                {
+                    ...entity,
+                    required: false,
+                    validators: [{ type: validatorType, validatorFunc: () => false }],
+                },
+            ]);
+            const data = { testField: emptyValue };
+            const result = validator.doValidation(data);
+            expect(result).toEqual(false);
+        });
+    });
 });
