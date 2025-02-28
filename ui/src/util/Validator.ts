@@ -278,7 +278,7 @@ class Validator {
             return { errorField: field, errorMsg: error };
         }
 
-        if (Validator.checkIsFieldHasInput(data) && data === 'string' && !regex.test(data)) {
+        if (Validator.checkIsFieldHasInput(data) && typeof data === 'string' && !regex.test(data)) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
@@ -469,7 +469,7 @@ class Validator {
                                 currentEntity.field,
                                 currentEntity.label,
                                 currentValidator,
-                                data[this.entities[i].field],
+                                data[currentEntity.field],
                                 PREDEFINED_VALIDATORS_DICT.url.regex,
                                 PREDEFINED_VALIDATORS_DICT.url.inputValueType
                             );
@@ -482,7 +482,7 @@ class Validator {
                                 currentEntity.field,
                                 currentEntity.label,
                                 currentValidator,
-                                data[this.entities[i].field],
+                                data[currentEntity.field],
                                 PREDEFINED_VALIDATORS_DICT.date.regex,
                                 PREDEFINED_VALIDATORS_DICT.date.inputValueType
                             );
@@ -492,8 +492,8 @@ class Validator {
                             break;
                         case 'email':
                             ret = Validator.PreDefinedRegexValidator(
-                                this.entities[i].field,
-                                this.entities[i].label ?? '',
+                                currentEntity.field,
+                                currentEntity.label ?? '',
                                 currentValidator,
                                 data[this.entities[i].field],
                                 PREDEFINED_VALIDATORS_DICT.email.regex,
@@ -505,10 +505,10 @@ class Validator {
                             break;
                         case 'ipv4':
                             ret = Validator.PreDefinedRegexValidator(
-                                this.entities[i].field,
-                                this.entities[i].label ?? '',
+                                currentEntity.field,
+                                currentEntity.label ?? '',
                                 currentValidator,
-                                data[this.entities[i].field],
+                                data[currentEntity.field],
                                 PREDEFINED_VALIDATORS_DICT.ipv4.regex,
                                 PREDEFINED_VALIDATORS_DICT.ipv4.inputValueType
                             );
@@ -519,8 +519,8 @@ class Validator {
                         case 'custom':
                             ret = Validator.CustomValidator(
                                 currentValidator.validatorFunc,
-                                this.entities[i].field,
-                                data[this.entities[i].field]
+                                currentEntity.field,
+                                data[currentEntity.field]
                             );
                             if (ret) {
                                 return ret;
