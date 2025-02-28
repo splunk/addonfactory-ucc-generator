@@ -1,5 +1,6 @@
 import { NumberValidator } from '../../types/ValidatorsTypes';
 import { Mode } from '../../constants/modes';
+import { CustomValidatorFunc } from '../../types/components/BaseFormTypes';
 
 type Field = string;
 type Value = {
@@ -76,10 +77,7 @@ export interface BaseCheckboxProps {
         rows: Row[];
     };
     mode: Mode;
-    addCustomValidator?: (
-        field: string,
-        validator: (submittedField: string, submittedValue: string) => void
-    ) => void;
+    addCustomValidator?: (field: string, validator: CustomValidatorFunc) => void;
     disabled?: boolean;
 }
 
