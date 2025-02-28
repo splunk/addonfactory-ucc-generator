@@ -212,15 +212,12 @@ describe('Validator.doValidation - number case', () => {
         expect(result).toBe(false);
     });
 
-    it.each([undefined, null])(
-        'should return false validation for %s when optional',
-        (value) => {
-            const validator = new Validator(entities);
-            const data = { testField: value };
-            const result = validator.doValidation(data);
-            expect(result).toBe(false);
-        }
-    );
+    it.each([undefined, null])('should return false validation for %s when optional', (value) => {
+        const validator = new Validator(entities);
+        const data = { testField: value };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
 
     it.each([undefined, null])(
         'should return error for undefined/null number when required',
