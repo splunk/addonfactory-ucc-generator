@@ -221,10 +221,8 @@ class Validator {
         if (error || regex === undefined) {
             return { errorField: field, errorMsg: error };
         }
-        if (typeof data !== 'string') {
-            return { errorField: field, errorMsg: getFormattedMessage(1, [label]) };
-        }
-        if (Validator.checkIsFieldHasInput(data) && !regex.test(data)) {
+
+        if (Validator.checkIsFieldHasInput(data) && typeof data === 'string' && !regex.test(data)) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
@@ -279,10 +277,8 @@ class Validator {
         if (error || regex === undefined) {
             return { errorField: field, errorMsg: error };
         }
-        if (typeof data !== 'string') {
-            return { errorField: field, errorMsg: getFormattedMessage(1, [label]) };
-        }
-        if (Validator.checkIsFieldHasInput(data) && !regex.test(data)) {
+
+        if (Validator.checkIsFieldHasInput(data) && data === 'string' && !regex.test(data)) {
             return {
                 errorField: field,
                 errorMsg: validator.errorMsg
