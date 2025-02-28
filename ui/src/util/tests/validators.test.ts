@@ -489,3 +489,50 @@ describe('SaveValidator', () => {
         expect(result).toBeUndefined();
     });
 });
+
+describe('Validator.doValidation - predefined validations - empty values', () => {
+    const entity = {
+        field: 'testField',
+        type: 'text',
+        label: 'Test Field',
+    } satisfies z.TypeOf<typeof TextEntity>;
+
+    const emptyValues = [undefined, null, ''];
+
+    const validationTypes = ['string', 'regex', 'number', 'url', 'date', 'email', 'ipv4', 'custom'];
+
+    it.each(validationTypes)(
+        'Validator.doValidation error for empty data required %s',
+        async (validatorType) => {
+            emptyValues.forEach((emptyValue) => {
+                const validator = new Validator([
+                    { ...entity, required: true, validators: [{ type: validatorType }] },
+                ]);
+                const data = { testField: emptyValue };
+                const result = validator.doValidation(data);
+                expect(result).toEqual({
+                    errorField: 'testField',
+                    errorMsg: 'Field Test Field is required',
+                });
+            });
+        }
+    );
+
+    it.each(validationTypes)(
+        'Validator.doValidation passes validation for empty data as NOT required %s',
+        async (validatorType) => {
+            emptyValues.forEach((emptyValue) => {
+                const validator = new Validator([
+                    {
+                        ...entity,
+                        required: false,
+                        validators: [{ type: validatorType, validatorFunc: () => false }],
+                    },
+                ]);
+                const data = { testField: emptyValue };
+                const result = validator.doValidation(data);
+                expect(result).toEqual(false);
+            });
+        }
+    );
+});
