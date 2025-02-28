@@ -193,6 +193,7 @@ describe('Validator.doValidation - number case', () => {
         {
             field: 'testField',
             label: 'Test Field',
+            type: 'text',
             validators: [
                 {
                     type: 'number',
@@ -208,6 +209,24 @@ describe('Validator.doValidation - number case', () => {
         const data = { testField: 5 };
         const result = validator.doValidation(data);
         expect(result).toBe(false);
+    });
+
+    it.each([undefined, null])('should return false validation for %s when optional', (value) => {
+        const validator = new Validator(entities);
+        const data = { testField: value };
+        const result = validator.doValidation(data);
+        expect(result).toBe(false);
+    });
+
+    it.each([undefined, null])('should return error for %s number when required', (value) => {
+        const requiredEntities = [{ ...entities[0], required: true }];
+        const validator = new Validator(requiredEntities);
+        const data = { testField: value };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is required',
+        });
     });
 
     it('should return an error for number out of range', () => {
