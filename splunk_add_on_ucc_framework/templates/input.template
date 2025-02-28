@@ -1,6 +1,8 @@
 import import_declare_test
 
-{% if not input_helper_module -%}
+{% if input_helper_module -%}
+import inspect
+{% else -%}
 import json
 {% endif -%}
 import sys
@@ -42,6 +44,9 @@ class {{class_name}}(smi.Script):
 
     def validate_input(self, definition: smi.ValidationDefinition):
         {%- if input_helper_module %}
+        validate_input_signature = inspect.signature(validate_input)
+        if len(validate_input_signature.parameters) == 2:
+            return validate_input(definition, self)
         return validate_input(definition)
         {%- else %}
         return
@@ -49,6 +54,9 @@ class {{class_name}}(smi.Script):
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
         {%- if input_helper_module %}
+        stream_events_signature = inspect.signature(stream_events)
+        if len(stream_events_signature.parameters) == 3:
+            return stream_events(inputs, ew, self)
         return stream_events(inputs, ew)
         {%- else %}
         input_items = [{'count': len(inputs.inputs)}]
