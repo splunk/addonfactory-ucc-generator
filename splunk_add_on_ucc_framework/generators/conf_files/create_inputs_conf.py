@@ -36,7 +36,7 @@ class InputsConf(ConfGenerator):
                 if service.get("disableNewInput"):
                     self.default_value_info[service["name"]]["disabled"] = "true"
                 if service.get("conf") is not None:
-                    # Add data input of self defined conf to inputs.conf.spec
+                    # Do not add data input of self defined conf to inputs.conf.spec
                     continue
                 for entity in service.get("entity", {"field": "name"}):
                     # TODO: add the details and updates on what to skip and process
