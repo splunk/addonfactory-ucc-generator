@@ -28,21 +28,15 @@ class InputsConf(ConfGenerator):
         self.conf_file = "inputs.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
         self.input_names: List[Dict[str, List[str]]] = []
-        self.disable = False
-        self.service_name = ""
         self.default_value_info: Dict[str, Dict[str, str]] = {}
         if self._global_config and self._global_config.has_inputs():
             for service in self._global_config.inputs:
                 properties = []
                 self.default_value_info[service["name"]] = {}
                 if service.get("disableNewInput"):
-                    self.disable = True
-                    self.service_name = service["name"]
+                    self.default_value_info[service["name"]]["disabled"] = "true"
                 if service.get("conf") is not None:
                     # Add data input of self defined conf to inputs.conf.spec
-                    self.input_names.append(
-                        {service["name"]: ["placeholder = placeholder"]}
-                    )
                     continue
                 for entity in service.get("entity", {"field": "name"}):
                     # TODO: add the details and updates on what to skip and process
@@ -80,8 +74,6 @@ class InputsConf(ConfGenerator):
 
         rendered_content = self._template.render(
             input_names=stanzas,
-            disabled=self.disable,
-            service_name=self.service_name,
             default_values=self.default_value_info,
         )
         self.writer(

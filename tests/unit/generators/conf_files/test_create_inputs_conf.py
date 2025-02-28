@@ -2,7 +2,6 @@ import json
 import os
 from pathlib import Path
 from textwrap import dedent
-from typing import Dict, List
 from unittest.mock import patch, MagicMock
 
 from pytest import fixture
@@ -82,8 +81,7 @@ def test_set_attributes_with_conf_key(
 
     inputs_conf._set_attributes()
 
-    expected_output = [{"service1": ["placeholder = placeholder"]}]
-    assert inputs_conf.input_names == expected_output
+    assert inputs_conf.input_names == []
     assert inputs_conf.conf_file == "inputs.conf"
     assert inputs_conf.conf_spec_file == "inputs.conf.spec"
 
@@ -102,10 +100,8 @@ def test_set_attributes_without_conf_key_and_name_field(
 
     inputs_conf._set_attributes()
 
-    expected_output: List[Dict[str, List[str]]] = [{"service1": []}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.disable is True
-    assert inputs_conf.service_name == "service1"
+    assert inputs_conf.input_names == [{"service1": []}]
+    assert inputs_conf.default_value_info["service1"]["disabled"] == "true"
 
 
 def test_set_attributes_without_conf_key_and_other_fields(
@@ -271,6 +267,51 @@ def test_inputs_conf_content(global_config, input_dir, output_dir, ta_name):
     )
 
 
+def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
+    config_content = json.loads(
+        Path(get_testdata_file_path("valid_config.json")).read_text()
+    )
+    services = config_content["pages"]["inputs"]["services"]
+    assert len(services) == 2
+    services[0]["disableNewInput"] = True
+    services[1]["disableNewInput"] = True
+    config = tmp_path / "valid_config_disable.json"
+    config.write_text(json.dumps(config_content))
+
+    inputs_conf = InputsConf(
+        GlobalConfig(str(config)),
+        input_dir,
+        output_dir,
+        ucc_dir=UCC_DIR,
+        addon_name=ta_name,
+    )
+    generated_files = inputs_conf.generate_conf()
+    assert generated_files is not None
+    assert generated_files.keys() == {"inputs.conf"}
+    assert (
+        Path(generated_files["inputs.conf"]).read_text()
+        == dedent(
+            """
+            [example_input_one]
+            python.version = python3
+            disabled = true
+            input_one_radio = yes
+            index = default
+            order_by = LastModifiedDate
+            use_existing_checkpoint = yes
+            limit = 1000
+
+            [example_input_two]
+            python.version = python3
+            disabled = true
+            index = default
+            input_two_radio = yes
+            use_existing_checkpoint = yes
+            """
+        ).lstrip()
+    )
+
+
 def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp_path):
     config_content = json.loads(
         Path(get_testdata_file_path("valid_config.json")).read_text()
@@ -307,16 +348,5 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
         ucc_dir=UCC_DIR,
         addon_name=ta_name,
     )
-    generated_files = inputs_conf.generate_conf()
-    assert generated_files is not None
-    assert generated_files.keys() == {"inputs.conf"}
-    assert (
-        Path(generated_files["inputs.conf"]).read_text()
-        == dedent(
-            """
-            [example_input_three]
-            python.version = python3
-            disabled = true
-            """
-        ).lstrip()
-    )
+    assert inputs_conf.generate_conf() is None
+    assert inputs_conf.generate_conf_spec() is None
