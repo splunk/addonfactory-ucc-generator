@@ -1,4 +1,5 @@
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { invariant } from '../invariant';
 import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
 
 describe('Validator.checkIsFieldHasInput', () => {
@@ -193,6 +194,7 @@ describe('Validator.doValidation - number case', () => {
         {
             field: 'testField',
             label: 'Test Field',
+            type: 'text',
             validators: [
                 {
                     type: 'number',
@@ -217,6 +219,19 @@ describe('Validator.doValidation - number case', () => {
             const data = { testField: value };
             const result = validator.doValidation(data);
             expect(result).toBe(false);
+        }
+    );
+
+    it.each([undefined, null])(
+        'should return error for undefined/null number when required',
+        (value) => {
+            const requiredEntities = [{ ...entities[0], required: true }];
+            const validator = new Validator(requiredEntities);
+            const data = { testField: value };
+            const result = validator.doValidation(data);
+            invariant(result, 'result should not be false');
+            expect(result.errorField).toBe('testField');
+            expect(result.errorMsg).toBe('Field Test Field is required');
         }
     );
 
