@@ -495,7 +495,7 @@ describe('Validator.doValidation - empty values', () => {
 
     const validationTypes = ['string', 'regex', 'number', 'url', 'date', 'email', 'ipv4', 'custom'];
 
-    it.each(validationTypes)('error as data required %s', async (validatorType) => {
+    it.each(validationTypes)('error as data required %s', (validatorType) => {
         emptyValues.forEach((emptyValue) => {
             const validator = new Validator([
                 { ...entity, required: true, validators: [{ type: validatorType }] },
@@ -509,7 +509,7 @@ describe('Validator.doValidation - empty values', () => {
         });
     });
 
-    it.each(validationTypes)('passes as NOT required %s', async (validatorType) => {
+    it.each(validationTypes)('passes as NOT required %s', (validatorType) => {
         emptyValues.forEach((emptyValue) => {
             const validator = new Validator([
                 {
