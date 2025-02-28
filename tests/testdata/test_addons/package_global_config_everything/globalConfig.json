@@ -2098,5 +2098,111 @@
             "dark"
         ],
         "isVisible": true
-    }
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "mycommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "filtercommand",
+            "fileName": "filter.py",
+            "commandType": "eventing",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
+            "syntax": "| filter contains='value1' replace='value to be replaced,value to replace with'",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "contains"
+                },
+                {
+                    "name": "replace_array"
+                }
+            ]
+        },
+        {
+            "commandName": "sumcommand",
+            "fileName": "sum.py",
+            "commandType": "reporting",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
+            "syntax": "| sum total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "sumtwocommand",
+            "fileName": "sum_without_map.py",
+            "commandType": "reporting",
+            "requireSeachAssistant": true,
+            "version": 2,
+            "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
+            "syntax": "| sumtwo total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "countmatchescommand",
+            "fileName": "countmatches.py",
+            "commandType": "streaming",
+            "requireSeachAssistant": false,
+            "version": 2,
+            "arguments": [
+                {
+                    "name": "fieldname",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                },
+                {
+                    "name": "pattern",
+                    "validate": {
+                        "type": "RegularExpression"
+                    },
+                    "required": true
+                }
+            ]
+        }
+    ]
 }
