@@ -1,5 +1,4 @@
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { invariant } from '../invariant';
 import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
 
 describe('Validator.checkIsFieldHasInput', () => {
@@ -219,18 +218,16 @@ describe('Validator.doValidation - number case', () => {
         expect(result).toBe(false);
     });
 
-    it.each([undefined, null])(
-        'should return error for undefined/null number when required',
-        (value) => {
-            const requiredEntities = [{ ...entities[0], required: true }];
-            const validator = new Validator(requiredEntities);
-            const data = { testField: value };
-            const result = validator.doValidation(data);
-            invariant(result, 'result should not be false');
-            expect(result.errorField).toBe('testField');
-            expect(result.errorMsg).toBe('Field Test Field is required');
-        }
-    );
+    it.each([undefined, null])('should return error for %s number when required', (value) => {
+        const requiredEntities = [{ ...entities[0], required: true }];
+        const validator = new Validator(requiredEntities);
+        const data = { testField: value };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'testField',
+            errorMsg: 'Field Test Field is required',
+        });
+    });
 
     it('should return an error for number out of range', () => {
         const validator = new Validator(entities);
