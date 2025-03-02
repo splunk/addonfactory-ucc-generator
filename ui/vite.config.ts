@@ -66,7 +66,8 @@ const splunkPathRewriter = {
     configureServer(server) {
         server.middlewares.use((req, _res, next) => {
             if (!req.url) return next();
-
+            // http://localhost:5173/**/js/build/entry_page.js
+            // http://localhost:5173/src/pages/EntryPage.tsx
             // Entry point handling
             if (isEntryPageRequest(req.url)) {
                 req.url = '/src/pages/EntryPage.tsx';
@@ -104,7 +105,8 @@ export default defineConfig(({ mode }) => {
         ],
         build: {
             outDir: 'dist/build',
-            sourcemap: true,
+            sourcemap: false,
+            minify: false,
             rollupOptions: {
                 input: {
                     entry_page: 'src/pages/EntryPage.tsx',
@@ -114,7 +116,7 @@ export default defineConfig(({ mode }) => {
                     chunkFileNames: '[name].[hash].js',
                 },
             },
-            minify: DEBUG ? false : 'esbuild',
+            // minify: DEBUG ? false : 'esbuild',
             target: 'es2020',
         },
         resolve: {
