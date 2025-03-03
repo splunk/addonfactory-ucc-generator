@@ -68,7 +68,7 @@ def test_install_libraries(mock_subprocess_run):
 def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_run):
     mock_subprocess_run.side_effect = OSError
 
-    with pytest.raises(CouldNotInstallRequirements):
+    with pytest.raises(SystemExit):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )
@@ -95,7 +95,7 @@ def test_install_libraries_when_subprocess_returns_non_zero_codes(
         statuses.append(MockSubprocessResult(el))
     mock_subprocess_run.side_effect = statuses
 
-    with pytest.raises(CouldNotInstallRequirements):
+    with pytest.raises(SystemExit):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )
@@ -108,9 +108,9 @@ def test_install_libraries_failed_stderr_msg(mock_subprocess_run, caplog):
         MockSubprocessResult(-1, stderr=b"No matching distribution for python 3.7"),
     ]
     mock_subprocess_run.side_effect = statuses
-    expected_msg = " Command execution failed with error message: No matching distribution for python 3.7"
+    expected_msg = "Command execution failed with error message: No matching distribution for python 3.7"
 
-    with pytest.raises(CouldNotInstallRequirements):
+    with pytest.raises(SystemExit):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )

@@ -82,10 +82,7 @@ def _pip_install(installer: str, command: str, command_desc: str) -> None:
         subprocess_result = _subprocess_run(command=cmd, command_desc=command_desc)
         return_code = subprocess_result.returncode
         if return_code != 0:
-            logger.error(
-                f"Command execution failed with error message: {subprocess_result.stderr.decode()}"
-            )
-            raise CouldNotInstallRequirements
+            raise CouldNotInstallRequirements(subprocess_result.stderr.decode())
     except OSError as e:
         raise CouldNotInstallRequirements from e
 
@@ -269,13 +266,17 @@ def install_libraries(
         f'--target "{installation_path}" '
         f"{custom_flag}"
     )
-    _pip_install(
-        installer=installer, command=pip_update_command, command_desc="pip upgrade"
-    )
+    try:
+        _pip_install(
+            installer=installer, command=pip_update_command, command_desc="pip upgrade"
+        )
 
-    _pip_install(
-        installer=installer, command=pip_install_command, command_desc="pip install"
-    )
+        _pip_install(
+            installer=installer, command=pip_install_command, command_desc="pip install"
+        )
+    except CouldNotInstallRequirements as exc:
+        logger.error(f"Command execution failed with error message: {str(exc)}")
+        sys.exit(1)
 
 
 def remove_packages(installation_path: str, package_names: Iterable[str]) -> None:
@@ -353,11 +354,11 @@ Possible solutions, either:
                 command=pip_download_command,
                 command_desc="pip download",
             )
-        except CouldNotInstallRequirements:
+        except CouldNotInstallRequirements as exc:
             logger.error(
                 "Downloading process failed. Please verify parameters in the globalConfig.json file."
             )
-            sys.exit("Package building process interrupted.")
+            sys.exit(f"Package build aborted with error message: {str(exc)}")
         cleanup_libraries.add(os_lib.name)
     return cleanup_libraries
 
