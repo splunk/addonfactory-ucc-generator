@@ -208,7 +208,6 @@ describe('Validator.doValidation - number case', () => {
             field: 'testField',
             type: 'text',
             label: 'Test Field',
-            type: 'text',
             validators: [
                 {
                     type: 'number',
