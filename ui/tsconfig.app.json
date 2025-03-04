@@ -14,13 +14,16 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "node", // SUI throws errors on "bundler"
+    /*
+     * It should be "bundler", but SUI throws errors
+     * for "nodenext" requires specifying explicit extensions (.js)
+     */
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react", // react-jsx for react-18
 
     /* Linting */
     "strict": true,
