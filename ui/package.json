@@ -6,7 +6,7 @@
     "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
     "directory": "ui"
   },
-  "version": "5.58.2-63",
+  "version": "5.58.2-79",
   "license": "Apache-2.0",
   "author": "Splunk Inc.",
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
@@ -159,7 +159,7 @@
     "string-width": "^4.2.3"
   },
   "engines": {
-    "node": ">=20.10.0",
+    "node": ">=20.11.0",
     "yarn": "^1.22.22"
   },
   "msw": {
