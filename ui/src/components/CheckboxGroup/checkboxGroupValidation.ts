@@ -18,7 +18,7 @@ export function validateCheckboxGroup(
 ): MaybeError {
     invariant(
         typeof packedValue === 'string' || typeof packedValue === 'undefined',
-        'Error occured while validating CheckboxGroup value, value should be a string or undefined'
+        `Error occurred while validating CheckboxGroup value for the field "${field}", value should be a string or undefined. Got: "${packedValue}"`
     );
     let errorMessage: MaybeError = false;
     const parsedValue = parseValue(packedValue);
