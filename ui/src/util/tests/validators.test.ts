@@ -1,8 +1,5 @@
-import { z } from 'zod';
-import { AnyEntity } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { TextEntity } from '../../types/globalConfig/entities';
-import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
+import Validator, { parseFunctionRawStr, SaveValidator, ValidatorEntity } from '../Validator';
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -60,7 +57,7 @@ describe('Validator.doValidation - regex case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid regex match', () => {
         const validator = new Validator(entities);
@@ -92,7 +89,7 @@ describe('Validator.doValidation - regex case', () => {
                     },
                 ],
             },
-        ] satisfies z.TypeOf<typeof TextEntity>[];
+        ] satisfies ValidatorEntity[];
 
         const validator = new Validator(invalidEntities);
         const data = { testField: 'test' };
@@ -123,7 +120,7 @@ describe('Validator.doValidation - regex case', () => {
                     },
                 ],
             },
-        ] satisfies z.TypeOf<typeof TextEntity>[];
+        ] satisfies ValidatorEntity[];
 
         const validator = new Validator(testEntity);
 
@@ -172,7 +169,7 @@ describe('Validator.doValidation - string case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid string length', () => {
         const validator = new Validator(entities);
@@ -216,7 +213,7 @@ describe('Validator.doValidation - number case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid number', () => {
         const validator = new Validator(entities);
@@ -294,7 +291,7 @@ describe('Validator.doValidation - url case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid URL', () => {
         const validator = new Validator(entities);
@@ -326,7 +323,7 @@ describe('Validator.doValidation - date case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid date', () => {
         const validator = new Validator(entities);
@@ -358,7 +355,7 @@ describe('Validator.doValidation - email case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid email', () => {
         const validator = new Validator(entities);
@@ -390,7 +387,7 @@ describe('Validator.doValidation - ipv4 case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid IPv4 address', () => {
         const validator = new Validator(entities);
@@ -435,7 +432,7 @@ describe('Validator.doValidation - custom case', () => {
         // as users can add it ie. via custom control
         // it is not possible to add it via global config
         // but done via custom js code
-    ] as unknown as AnyEntity[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid custom validation', () => {
         const validator = new Validator(entities);
@@ -507,11 +504,20 @@ describe('Validator.doValidation - empty values', () => {
         field: 'testField',
         type: 'text',
         label: 'Test Field',
-    } satisfies z.TypeOf<typeof TextEntity>;
+    } satisfies ValidatorEntity;
 
     const emptyValues = [undefined, null, ''];
 
-    const validationTypes = ['string', 'regex', 'number', 'url', 'date', 'email', 'ipv4', 'custom'];
+    const validationTypes: (
+        | 'string'
+        | 'number'
+        | 'date'
+        | 'regex'
+        | 'email'
+        | 'ipv4'
+        | 'url'
+        | 'custom'
+    )[] = ['string', 'regex', 'number', 'url', 'date', 'email', 'custom', 'ipv4'];
 
     it.each(validationTypes)('error as data required %s', (validatorType) => {
         emptyValues.forEach((emptyValue) => {
@@ -519,9 +525,9 @@ describe('Validator.doValidation - empty values', () => {
                 {
                     ...entity,
                     required: true,
-                    validators: [{ type: validatorType }],
-                    // to be changed when validators consider custom as validation type
-                } as AnyEntity,
+                    // to do change when validators consider custom as validation type
+                    validators: [{ type: validatorType }] as ValidatorEntity['validators'],
+                } satisfies ValidatorEntity,
             ]);
             const data = { testField: emptyValue };
             const result = validator.doValidation(data);
@@ -538,9 +544,11 @@ describe('Validator.doValidation - empty values', () => {
                 {
                     ...entity,
                     required: false,
-                    validators: [{ type: validatorType, validatorFunc: () => false }],
-                    // to be changed when validators consider custom as validation type
-                } as unknown as AnyEntity,
+                    validators: [
+                        { type: validatorType, validatorFunc: () => false },
+                        // to do change when validators consider custom as validation type
+                    ] as ValidatorEntity['validators'],
+                } satisfies ValidatorEntity,
             ]);
             const data = { testField: emptyValue };
             const result = validator.doValidation(data);

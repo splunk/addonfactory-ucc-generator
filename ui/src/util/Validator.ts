@@ -100,26 +100,18 @@ const parseRegexRawStr = (rawStr: string | RegExp) => {
 
 type CustomValidator = { type: 'custom'; validatorFunc: CustomValidatorFunc };
 
-export type ValidatorEntity = {
+type entitiesWithoutValidators = Omit<AnyEntity, 'validators'>;
+
+export type ValidatorEntity = entitiesWithoutValidators & {
     validators?: (z.infer<typeof AnyOfValidators> | CustomValidator)[];
-    label?: string;
-    field: string;
-    type?: string;
-    required?: boolean;
 };
 
 class Validator {
     entities: ValidatorEntity[];
 
-    /**
-     * @type {AnyEntity[] | undefined}
-     */
-    isName?: AnyEntity;
+    isName?: ValidatorEntity;
 
-    /**
-     * @param {AnyEntity[] | undefined} entities
-     */
-    constructor(entities?: AnyEntity[]) {
+    constructor(entities?: ValidatorEntity[]) {
         this.entities = entities || [];
 
         this.isName = entities?.find((e) => e.field === 'name');
