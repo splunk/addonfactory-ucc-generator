@@ -3,7 +3,6 @@ import { AnyEntity } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { TextEntity } from '../../types/globalConfig/entities';
 import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
-import { TextEntity } from '../../types/globalConfig/entities';
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -517,7 +516,12 @@ describe('Validator.doValidation - empty values', () => {
     it.each(validationTypes)('error as data required %s', (validatorType) => {
         emptyValues.forEach((emptyValue) => {
             const validator = new Validator([
-                { ...entity, required: true, validators: [{ type: validatorType }] },
+                {
+                    ...entity,
+                    required: true,
+                    validators: [{ type: validatorType }],
+                    // to be changed when validators consider custom as validation type
+                } as AnyEntity,
             ]);
             const data = { testField: emptyValue };
             const result = validator.doValidation(data);
@@ -535,7 +539,8 @@ describe('Validator.doValidation - empty values', () => {
                     ...entity,
                     required: false,
                     validators: [{ type: validatorType, validatorFunc: () => false }],
-                },
+                    // to be changed when validators consider custom as validation type
+                } as unknown as AnyEntity,
             ]);
             const data = { testField: emptyValue };
             const result = validator.doValidation(data);
