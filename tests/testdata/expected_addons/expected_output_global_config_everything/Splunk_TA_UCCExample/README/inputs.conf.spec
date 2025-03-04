@@ -34,7 +34,7 @@ start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after whic
 use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data collection.  Default: yes
 
 [example_input_three://<name>]
-event_filters =
+event_filters = 
 interval = Time interval of the data input, in seconds.
 
 [example_input_four://<name>]
@@ -48,3 +48,16 @@ interval = Time interval of the data input, in seconds.
 
 [service_with_conf_param://<name>]
 placeholder = placeholder
+
+[service_inside_menu_one://<name>]
+interval = Time interval of the data input, in seconds.
+text_with_validators = 
+
+[service_inside_menu_two://<name>]
+interval = Time interval of the data input, in seconds.
+
+[service_inside_menu_three://<name>]
+interval = Time interval of the data input, in seconds.
+
+[service_inside_menu_four://<name>]
+interval = Time interval of the data input, in seconds.

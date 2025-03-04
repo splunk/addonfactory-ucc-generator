@@ -17,21 +17,30 @@ import { getFormattedMessage } from './messageUtil';
  * @property {string} [errorMsg]
  */
 
-const parseFunctionRawStr = (rawStr) => {
-    let err;
+/**
+ * @param {string} rawStr
+ * @returns {{ error:string, result:Function }}
+ */
+export const parseFunctionRawStr = (rawStr) => {
+    let error;
     let result;
 
     try {
         // eslint-disable-next-line no-eval
         result = eval(`(${rawStr})`);
     } catch (e) {
-        err = getFormattedMessage(11, rawStr);
+        error = getFormattedMessage(11, [rawStr]);
     }
 
-    return { err, result };
+    return { error, result };
 };
 
 // Validate provided saveValidator function
+/**
+ * @param {string} validatorFunc
+ * @param {NullishFormRecord} formData
+ * @returns {{ errorMsg: string }}
+ */
 export function SaveValidator(validatorFunc, formData) {
     const { error, result } = parseFunctionRawStr(validatorFunc);
     if (error) {
@@ -43,6 +52,11 @@ export function SaveValidator(validatorFunc, formData) {
     }
 }
 
+/**
+ *
+ * @param {[start: number, end: number]} range
+ * @returns {{ error: string | undefined }}
+ */
 const parseNumberValidator = (range) => {
     const isRangeLegal =
         range.length === 2 && _.isNumber(range[0]) && _.isNumber(range[1]) && range[0] <= range[1];
@@ -52,6 +66,11 @@ const parseNumberValidator = (range) => {
     return { error };
 };
 
+/**
+ *
+ * @param {string} rawStr
+ * @returns {{ error: string | undefined, result: RegExp | undefined }}
+ */
 const parseRegexRawStr = (rawStr) => {
     let error;
     let result;
@@ -59,23 +78,40 @@ const parseRegexRawStr = (rawStr) => {
     try {
         result = new RegExp(rawStr);
     } catch (e) {
-        error = getFormattedMessage(12, rawStr);
+        // rawStr is wrapped in array as latter on message is formated with {{args[0]}}
+        error = getFormattedMessage(12, [rawStr]);
     }
 
     return { error, result };
 };
 
 class Validator {
+    /**
+     * @type {AnyEntity[] | undefined}
+     */
+    entities;
+
+    /**
+     * @type {AnyEntity | undefined}
+     */
+    isName;
+
+    /**
+     * @param {AnyEntity[] | undefined} entities
+     */
     constructor(entities) {
         this.entities = entities;
         this.isName = entities.find((e) => e.field === 'name');
     }
 
-    // eslint-disable-next-line class-methods-use-this
+    /**
+     * @param {AcceptableFormValueOrNullish} attrValue
+     * @returns {boolean}
+     */
     static checkIsFieldHasInput = (attrValue) =>
         attrValue !== undefined &&
         attrValue !== null &&
-        (typeof attrValue === 'string' ? attrValue.trim() !== '' : true);
+        (typeof attrValue === 'string' ? attrValue !== '' : true);
 
     /**
      * Validate the required field has value
@@ -155,6 +191,13 @@ class Validator {
     }
 
     // Validate the custom component
+    /**
+     *
+     * @param {*} validatorFunc
+     * @param {string} field
+     * @param {*} data
+     * @returns
+     */
     static CustomValidator(validatorFunc, field, data) {
         const ret = validatorFunc(field, data);
         if (typeof ret === 'string') {
@@ -164,6 +207,16 @@ class Validator {
     }
 
     // Validate the field should match predefined Regexes
+    /**
+     *
+     * @param {string} field
+     * @param {string} label
+     * @param {NumberValidator | StringValidator | RegexValidator | EmailValidator | Ipv4Validator | UrlValidator | DateValidator } validator
+     * @param {AcceptableFormValueOrNullish} data
+     * @param {string} pattern
+     * @param {string} inputValueType
+     * @returns {Error|false}
+     */
     static PreDefinedRegexValidator(field, label, validator, data, pattern, inputValueType) {
         const { error, result: regex } = parseRegexRawStr(pattern);
         if (error) {
@@ -191,11 +244,17 @@ class Validator {
      * @param {string} field
      * @param {string|number} label
      * @param {NumberValidatorOptions} validator
-     * @param {string|number} [data]
+     * @param {NullishFormRecord} data
      * @returns {Error|false}
      */
     // Validate the range of numeric field
     static NumberValidator(field, label, validator, data) {
+        // this validation should be before this function but adding it
+        // here to avoid any errors until this module is moved to ts
+        if (data === null || data === undefined) {
+            return false;
+        }
+
         const { error } = parseNumberValidator(validator.range);
         if (error) {
             return { errorField: field, errorMsg: error };
@@ -231,6 +290,11 @@ class Validator {
         return false;
     }
 
+    /**
+     *
+     * @param {NullishFormRecord} data
+     * @returns {Error|false}
+     */
     doValidation(data) {
         if (this.isName) {
             const targetValue = data.name;
@@ -261,7 +325,14 @@ class Validator {
         }
 
         let ret;
+
+        /**
+         * @type {number}
+         */
         let i;
+        /**
+         * @type {number}
+         */
         let j;
 
         for (i = 0; i < this.entities.length; i += 1) {

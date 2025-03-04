@@ -18,6 +18,7 @@ export interface DeleteModalProps {
     serviceName: string;
     stanzaName: string;
     open?: boolean;
+    formTitle?: string;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
@@ -26,6 +27,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     serviceName,
     stanzaName,
     open = false,
+    formTitle,
 }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -71,7 +73,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
     return (
         <Modal open={open} style={{ width: '800px' }}>
             <Modal.Header
-                title={getFormattedMessage(101)}
+                title={formTitle ? `Delete ${formTitle}` : getFormattedMessage(101)}
                 onRequestClose={handleRequestCloseInternal}
             />
             <Modal.Body className="deletePrompt">

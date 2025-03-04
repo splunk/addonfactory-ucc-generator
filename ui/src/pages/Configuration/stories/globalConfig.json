@@ -639,6 +639,84 @@
               ]
             }
           ]
+        },
+        {
+          "name": "custom_header",
+          "title": "Custom header tab",
+          "warning": {
+            "create": {
+              "message": "Some warning for account text create"
+            },
+            "edit": {
+              "message": "Some warning for account text edit",
+              "alwaysDisplay": true
+            },
+            "clone": {
+              "message": "Some warning for account text clone"
+            }
+          },
+          "table": {
+            "actions": ["edit", "delete", "clone"],
+            "header": [
+              {
+                "label": "Name",
+                "field": "name"
+              },
+              {
+                "label": "Auth Type",
+                "field": "auth_type"
+              }
+            ]
+          },
+          "entity": [
+            {
+              "type": "text",
+              "label": "Name",
+              "validators": [
+                {
+                  "type": "string",
+                  "errorMsg": "Length of ID should be between 1 and 50",
+                  "minLength": 1,
+                  "maxLength": 50
+                },
+                {
+                  "type": "regex",
+                  "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                  "pattern": "^[a-zA-Z]\\w*$"
+                }
+              ],
+              "field": "name",
+              "help": "Enter a unique name for this account.",
+              "required": true
+            },
+            {
+              "type": "singleSelect",
+              "label": "Example Environment",
+              "options": {
+                "disableSearch": true,
+                "autoCompleteFields": [
+                  {
+                    "value": 1,
+                    "label": "Value1"
+                  },
+                  {
+                    "value": "test.example.com",
+                    "label": "Value2"
+                  },
+                  {
+                    "value": "other",
+                    "label": "Other"
+                  }
+                ],
+                "display": true
+              },
+              "help": "",
+              "field": "custom_endpoint",
+              "defaultValue": 1,
+              "required": true
+            }
+          ],
+          "formTitle": "custom header"
         }
       ],
       "title": "Configuration",

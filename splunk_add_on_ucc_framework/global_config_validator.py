@@ -25,7 +25,7 @@ import jsonschema
 
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
-from splunk_add_on_ucc_framework.tabs import resolve_tab, Tab
+from splunk_add_on_ucc_framework.tabs import Tab
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
@@ -51,15 +51,7 @@ class GlobalConfigValidator:
         self._source_dir = source_dir
         self._global_config = global_config
         self._config = global_config.content
-
-    @property
-    def config_tabs(self) -> List[Any]:
-        if self._global_config.has_configuration():
-            return [
-                resolve_tab(tab)
-                for tab in self._config["pages"]["configuration"]["tabs"]
-            ]
-        return []
+        self.resolved_configuration = global_config.resolved_configuration
 
     def _validate_config_against_schema(self) -> None:
         """
@@ -80,7 +72,7 @@ class GlobalConfigValidator:
         Validates that if a configuration tab should be rendered as a table,
         then it needs to have an entity which has field "name".
         """
-        for tab in self.config_tabs:
+        for tab in self.resolved_configuration:
             if "table" in tab:
                 entities = tab["entity"]
                 has_name_field = False
@@ -141,7 +133,7 @@ class GlobalConfigValidator:
         Also if file is encrypted but not required, this is not supported,
         and we need to throw a validation error.
         """
-        for tab in self.config_tabs:
+        for tab in self.resolved_configuration:
             entities = tab["entity"]
             for entity in entities:
                 if entity["type"] == "file":
@@ -251,7 +243,7 @@ class GlobalConfigValidator:
         number and regex are supported.
         """
         pages = self._config["pages"]
-        for tab in self.config_tabs:
+        for tab in self.resolved_configuration:
             entities = tab["entity"]
             for entity in entities:
                 self._validate_entity_validators(entity)
@@ -432,7 +424,7 @@ class GlobalConfigValidator:
         not required in schema, so this checks if globalConfig has inputs
         """
         pages = self._config["pages"]
-        self._validate_tabs_duplicates(self.config_tabs)
+        self._validate_tabs_duplicates(self.resolved_configuration)
 
         inputs = pages.get("inputs")
         if inputs:

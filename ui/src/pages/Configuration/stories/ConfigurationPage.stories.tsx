@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
-import { userEvent, within } from '@storybook/test';
+import { userEvent, within, expect } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import ConfigurationPage from '../ConfigurationPage';
@@ -53,5 +53,24 @@ export const ConfigurationViewAdd: Story = {
         }
         const addButton = await canvas.findByRole('button', { name: 'Add' });
         await userEvent.click(addButton);
+    },
+};
+
+export const ConfigurationCustomHeader: Story = {
+    play: async ({ canvasElement }) => {
+        const body = within(canvasElement.ownerDocument.body);
+        const canvas = within(canvasElement);
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await userEvent.click(closeBtn);
+        }
+        const findTab = await canvas.findByRole('tab', { name: 'Custom header tab' });
+        await userEvent.click(findTab);
+
+        const addButton = await canvas.findByRole('button', { name: 'Add' });
+        await userEvent.click(addButton);
+        await expect(
+            await body.findByRole('dialog', { name: 'Add custom header' })
+        ).toBeInTheDocument();
     },
 };
