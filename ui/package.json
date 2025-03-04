@@ -6,7 +6,7 @@
     "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
     "directory": "ui"
   },
-  "version": "5.58.2-30",
+  "version": "5.58.2-63",
   "license": "Apache-2.0",
   "author": "Splunk Inc.",
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
@@ -142,6 +142,8 @@
   "peerDependencies": {
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-is": "^16.14.0",
+    "styled-components": "^5.3.11",
     "typescript": "^5.7.3"
   },
   "resolutions": {
@@ -170,5 +172,9 @@
   ],
   "type": "module",
   "types": "./dist/lib/publicApi.d.ts",
-  "module": "./dist/lib/index.js"
+  "module": "./dist/lib/index.js",
+  "exports": {
+    ".": "./dist/lib/index.js",
+    "./style.css": "./dist/lib/index.css"
+  }
 }
