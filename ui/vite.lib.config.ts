@@ -2,7 +2,9 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
-import styledComponentBabelPlugin from './styled-component-babel-plugin';
+import { peerDependencies } from './package.json';
+
+const modulesNotToBundle = Object.keys(peerDependencies);
 
 export default defineConfig({
     optimizeDeps: {
@@ -10,25 +12,12 @@ export default defineConfig({
     },
     plugins: [
         react({
-            babel: {
-                plugins: [
-                    // styledComponentBabelPlugin,
-                    // [
-                    //     'module-resolver',
-                    //     {
-                    //         alias: {
-                    //             'styled-components': './styled-components.cjs', // <!-- cjs or js depending on your package.json `type: `
-                    //         },
-                    //     },
-                    // ],
-                ],
-            },
+            jsxRuntime: 'classic',
         }),
         dts({
             tsconfigPath: 'tsconfig.app.json',
             outDir: 'dist/lib',
             rollupTypes: true,
-            // include: ['src/types/*.d.ts', 'src/publicApi.ts'],
         }),
     ],
     base: '',
@@ -36,30 +25,23 @@ export default defineConfig({
         copyPublicDir: false,
         lib: {
             entry: resolve(__dirname, 'src/publicApi.ts'),
+            name: 'ucc-ui',
             formats: ['es'],
-        },
-        commonjsOptions: {
-            transformMixedEsModules: true,
-            requireReturnsDefault: 'auto',
+            fileName: 'index',
         },
         minify: false,
         emptyOutDir: true,
-        rollupOptions: {
-            // externalize deps that shouldn't be bundled into your library
-            external: ['react', 'react-dom', 'styled-components'],
-            output: {
-                format: 'esm',
-                dir: 'dist/lib',
-                entryFileNames: 'index.js',
-                chunkFileNames: '[name]-[hash].js',
-                // https://github.com/styled-components/styled-components/issues/3700
-                interop: 'auto',
-            },
+        commonjsOptions: {
+            transformMixedEsModules: true,
+            esmExternals: (id) => id === 'styled-components',
         },
-    },
-    resolve: {
-        alias: {
-            'styled-components': 'src/styled-components-shim.js',
+        rollupOptions: {
+            external: modulesNotToBundle,
+            output: {
+                format: 'module',
+                dir: 'dist/lib',
+                interop: 'compat',
+            },
         },
     },
 });

@@ -142,7 +142,10 @@
   },
   "peerDependencies": {
     "react": "^16.14.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "react-dom": "^16.14.0",
+    "react-is": "^16.14.0",
+    "styled-components": "^5.3.11"
   },
   "resolutions": {
     "@npmcli/git": "^2.1.0",
@@ -173,5 +176,9 @@
   ],
   "type": "module",
   "types": "./dist/lib/publicApi.d.ts",
-  "module": "./dist/lib/index.js"
+  "module": "./dist/lib/index.js",
+  "exports": {
+    ".": "./dist/lib/index.js",
+    "./style.css": "./dist/lib/index.css"
+  }
 }
