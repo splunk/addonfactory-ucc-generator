@@ -249,6 +249,12 @@ class Validator {
      */
     // Validate the range of numeric field
     static NumberValidator(field, label, validator, data) {
+        // this validation should be before this function but adding it
+        // here to avoid any errors until this module is moved to ts
+        if (data === null || data === undefined) {
+            return false;
+        }
+
         const { error } = parseNumberValidator(validator.range);
         if (error) {
             return { errorField: field, errorMsg: error };
