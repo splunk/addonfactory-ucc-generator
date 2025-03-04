@@ -77,6 +77,7 @@ export const TabSchema = z.object({
     warning: WarningSchema,
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     groups: GroupsSchema,
+    formTitle: z.string().optional(),
 });
 
 export const TableLessServiceSchema = z.object({
@@ -96,6 +97,7 @@ export const TableLessServiceSchema = z.object({
     inputHelperModule: z.string().optional(),
     disableNewInput: z.boolean().optional(),
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    formTitle: z.string().optional(),
 });
 
 export const TableFullServiceSchema = TableLessServiceSchema.extend({

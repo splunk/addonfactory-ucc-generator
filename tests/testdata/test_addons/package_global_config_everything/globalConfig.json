@@ -1701,6 +1701,116 @@
                     ],
                     "title": "Service hidden for enterprise",
                     "hideForPlatform": "enterprise"
+                },
+                {
+                    "name": "service_with_conf_param",
+                    "conf": "some_conf",
+                    "entity": [
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service with conf param"
+                },
+                {
+                    "name": "service_inside_menu_one",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "text_with_validators",
+                            "label": "Text with validators",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 8192,
+                                    "errorMsg": "Length of Query parameters should be between 2 and 8192"
+                                },
+                                {
+                                    "type": "regex",
+                                    "pattern": "^\\$",
+                                    "errorMsg": "Query parameters should start with '$'"
+                                }
+                            ]
+                        }
+                    ],
+                    "title": "Service 1 Inside Menu"
+                },
+                {
+                    "name": "service_inside_menu_two",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service 2 Inside Menu "
+                },
+                {
+                    "name": "service_inside_menu_three",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service 3 Inside Menu - style Dialog",
+                    "style": "dialog"
+                },
+                {
+                    "name": "service_inside_menu_four",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "interval",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service 4 Inside Menu - style page",
+                    "style": "page"
                 }
             ],
             "title": "Inputs",
@@ -1797,7 +1907,54 @@
             },
             "hideFieldId": "hide_in_ui",
             "readonlyFieldId": "hard_disabled",
-            "inputsUniqueAcrossSingleService": false
+            "inputsUniqueAcrossSingleService": false,
+            "groupsMenu": [
+                {
+                    "groupName": "example_input_one",
+                    "groupTitle": "Example Input One"
+                },
+                {
+                    "groupName": "example_input_two",
+                    "groupTitle": "Example Input Two"
+                },
+                {
+                    "groupName": "example_input_three",
+                    "groupTitle": "Example Input Three"
+                },
+                {
+                    "groupName": "example_input_four",
+                    "groupTitle": "Example Input Four"
+                },
+                {
+                    "groupName": "service_hidden_for_cloud",
+                    "groupTitle": "Service hidden for cloud"
+                },
+                {
+                    "groupName": "service_hidden_for_enterprise",
+                    "groupTitle": "Service hidden for enterprise"
+                },
+                {
+                    "groupName": "service_with_conf_param",
+                    "groupTitle": "Service with conf param"
+                },
+                {
+                    "groupName": "group_one",
+                    "groupTitle": "Group One",
+                    "groupServices": [
+                        "service_inside_menu_one",
+                        "service_inside_menu_two"
+                    ]
+                },
+                {
+                    "groupName": "group_two",
+                    "groupTitle": "Group Two",
+                    "groupServices": [
+                        "service_inside_menu_two",
+                        "service_inside_menu_four",
+                        "service_inside_menu_three"
+                    ]
+                }
+            ]
         },
         "dashboard": {
             "panels": [
@@ -1933,7 +2090,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.57.2+4ae940e2e",
+        "version": "5.58.1+10197a346",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [

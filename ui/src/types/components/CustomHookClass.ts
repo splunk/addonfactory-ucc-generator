@@ -1,6 +1,6 @@
 import { GlobalConfig } from '../globalConfig/globalConfig';
 import { Mode } from '../../constants/modes';
-import { AcceptableFormValueOrNullish } from './shareableTypes';
+import { AcceptableFormValueOrNullish, NullishFormRecord } from './shareableTypes';
 import { BaseFormState, UtilBaseForm } from './BaseFormTypes';
 
 export type CustomHookInstance<T extends typeof CustomHookClass = typeof CustomHookClass> =
@@ -51,9 +51,9 @@ export abstract class CustomHookClass {
 
     onEditLoad?(): void;
 
-    onSave?(datadict?: Record<string, AcceptableFormValueOrNullish>): Promise<boolean>;
+    onSave?(datadict?: NullishFormRecord): Promise<boolean>;
 
-    onSave?(datadict?: Record<string, AcceptableFormValueOrNullish>): boolean;
+    onSave?(datadict?: NullishFormRecord): boolean;
 
     onSaveSuccess?(): void;
 

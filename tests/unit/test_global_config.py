@@ -130,14 +130,14 @@ def test_global_config_expand(tmp_path):
 
     global_config = global_config_lib.GlobalConfig(global_config_path)
 
-    assert {"type": "loggingTab"} in global_config.tabs
+    assert {"type": "loggingTab"} in global_config.configuration
     assert count_tabs(global_config, name="logging") == 0
     assert count_entities(global_config, type="interval") == 3
     assert count_entities(global_config, type="text", field="interval") == 0
 
     global_config.expand()
 
-    assert {"type": "loggingTab"} not in global_config.tabs
+    assert {"type": "loggingTab"} not in global_config.configuration
     assert count_tabs(global_config, name="logging") == 1
     assert count_entities(global_config, type="interval") == 0
     assert count_entities(global_config, type="text", field="interval") == 3
@@ -179,7 +179,7 @@ def test_global_config_add_ucc_version(global_config_only_logging, tmp_path):
 
 
 def all_entities(gc: global_config_lib.GlobalConfig) -> Iterator[Any]:
-    objects = itertools.chain(gc.tabs, gc.alerts, gc.inputs)
+    objects = itertools.chain(gc.configuration, gc.alerts, gc.inputs)
     return itertools.chain(*(obj["entity"] for obj in objects if "entity" in obj))
 
 
@@ -193,5 +193,7 @@ def count_entities(gc: global_config_lib.GlobalConfig, **kwargs: str) -> int:
 
 def count_tabs(gc: global_config_lib.GlobalConfig, **kwargs: str) -> int:
     return sum(
-        1 for tab in gc.tabs if all(tab.get(k, "") == v for k, v in kwargs.items())
+        1
+        for tab in gc.configuration
+        if all(tab.get(k, "") == v for k, v in kwargs.items())
     )

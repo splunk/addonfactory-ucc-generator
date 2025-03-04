@@ -50,12 +50,12 @@ def test_handle_biased_terms_update(filename):
     input_entity_2_options_keys = global_config.inputs[0]["entity"][1]["options"].keys()
     assert "allowList" in input_entity_2_options_keys
     assert "whileList" not in input_entity_2_options_keys
-    configuration_entity_1_options_keys = global_config.tabs[0]["entity"][0][
+    configuration_entity_1_options_keys = global_config.configuration[0]["entity"][0][
         "options"
     ].keys()
     assert "denyList" in configuration_entity_1_options_keys
     assert "blackList" not in configuration_entity_1_options_keys
-    configuration_entity_2_options_keys = global_config.tabs[0]["entity"][1][
+    configuration_entity_2_options_keys = global_config.configuration[0]["entity"][1][
         "options"
     ].keys()
     assert "allowList" in configuration_entity_2_options_keys

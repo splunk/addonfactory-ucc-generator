@@ -254,6 +254,9 @@ class TestInputPage(UccTester):
             "Example Input Three",
             "Example Input Four",
             "Service hidden for cloud",
+            "Service with conf param",
+            "Group One",
+            "Group Two",
         ]
         self.assert_util(
             input_page.create_new_input.get_inputs_list, create_new_input_list
@@ -279,6 +282,11 @@ class TestInputPage(UccTester):
             "Example Input Four",
             "Service hidden for cloud",
             "Service hidden for enterprise",
+            "Service with conf param",
+            "Service 1 Inside Menu",
+            "Service 2 Inside Menu",
+            "Service 3 Inside Menu - style Dialog",
+            "Service 4 Inside Menu - style page",
         ]
         self.assert_util(input_page.type_filter.get_input_type_list, type_filter_list)
         input_page.type_filter.select_input_type(
@@ -399,6 +407,50 @@ class TestInputPage(UccTester):
         self.assert_util(
             input_page.entity1.save,
             r"Field Name is required",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_with_complex_validation_wrong_start(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies correct errors when validation fails due to wrong start text"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Group One")
+        input_page.create_new_input.select("Service 1 Inside Menu")
+
+        input_page.entity3.name.set_value("dummy_input_name_complex_validators")
+        input_page.entity3.interval.set_value("900")
+        input_page.entity3.text_with_validators.set_value(
+            "invalid as should start with $"
+        )
+
+        self.assert_util(
+            input_page.entity3.save,
+            r"Query parameters should start with '$'",
+            left_args={"expect_error": True},
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_example_input_with_complex_validation_too_short(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies correct errors when validation fails due to length"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        input_page.create_new_input.select("Group One")
+        input_page.create_new_input.select("Service 1 Inside Menu")
+
+        input_page.entity3.name.set_value("dummy_input_name_complex_validators")
+        input_page.entity3.interval.set_value("900")
+        input_page.entity3.text_with_validators.set_value("1")
+
+        self.assert_util(
+            input_page.entity3.save,
+            r"Length of Query parameters should be between 2 and 8192",
             left_args={"expect_error": True},
         )
 
