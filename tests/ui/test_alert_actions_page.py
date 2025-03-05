@@ -1,11 +1,8 @@
 import pytest
-import time
-import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
-from selenium import webdriver
 from tests.ui.pages.alert_action_page import AlertPage
 
 
@@ -101,6 +98,7 @@ class TestAlertActions(UccTester):
     @pytest.mark.alert
     def test_toggle(self, ucc_smartx_selenium_helper):
         driver = ucc_smartx_selenium_helper.browser
+
         def run_test():
             alert_page = AlertPage(ucc_smartx_selenium_helper, None)
             alert_page.alert_entity.open()
@@ -122,8 +120,9 @@ class TestAlertActions(UccTester):
             run_test()
         except Exception as e:
             # Maximize window and retry
+            print(f"Test failed: {e}, retrying with maximized window...")
             driver.maximize_window()
-            run_test() 
+            run_test()
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
