@@ -58,7 +58,8 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.target_repo }}" ]]; then
             echo "repos=[\"${{ github.event.inputs.target_repo }}\"]" >> $GITHUB_OUTPUT
           else
-            echo 'repos=[
+            echo "repos<<EOF" >> $GITHUB_OUTPUT
+            echo '[
               "splunk/splunk-add-on-for-amazon-web-services",
               "splunk/splunk-add-on-for-google-cloud-platform",
               "splunk/splunk-add-on-for-google-workspace",
@@ -68,6 +69,7 @@ jobs:
               "splunk/splunk-add-on-for-servicenow",
               "splunk/splunk-add-on-for-mysql"
             ]' >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
           fi
 
   test-addons:
