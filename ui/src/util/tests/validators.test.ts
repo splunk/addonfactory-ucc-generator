@@ -454,11 +454,11 @@ describe('Validator.doValidation - custom case', () => {
 
 describe('parseFunctionRawStr', () => {
     it('should correctly parse a valid function string', () => {
-        const validFunctionString = '(data) => data === "valid"';
+        const validFunctionString = '(data) => data.data === "valid"';
         const { error, result } = parseFunctionRawStr(validFunctionString);
         expect(error).toBeUndefined();
         expect(result).toBeInstanceOf(Function);
-        expect(result('valid')).toBe(true);
+        expect(result && result({ data: 'valid' })).toBe(true);
     });
 
     it('should return an error for an empty function string', () => {
@@ -496,6 +496,13 @@ describe('SaveValidator', () => {
         const formData = { someFieldName: 'valid' };
         const result = SaveValidator(functionReturningNonErrorValue, formData);
         expect(result).toBeUndefined();
+    });
+
+    it('should return an error when incorrect parse fnc shared', () => {
+        const functionReturningError = ' ';
+        const formData = { someFieldName: 'data' };
+        const result = SaveValidator(functionReturningError, formData);
+        expect(result).toEqual({ errorMsg: '  is not a function' });
     });
 });
 
