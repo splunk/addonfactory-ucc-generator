@@ -2495,6 +2495,15 @@
     lodash "^4.17.14"
     prop-types "^15.6.2"
 
+"@splunk/react-icons@^4.12.0":
+  version "4.12.0"
+  resolved "https://registry.npmjs.org/@splunk/react-icons/-/react-icons-4.12.0.tgz#019ad73046a3ac1317cb4c181c065f92cb1aea6e"
+  integrity sha512-nRWGInCtItSOeO+ocd1q8PfU0DbKQ5TbTaZRfe8ROosB0RGHLgozChzuwya6jqg4B+rYHjJciOMSRJS3YQLEAQ==
+  dependencies:
+    "@splunk/ui-utils" "^1.8.0"
+    lodash "^4.17.14"
+    prop-types "^15.6.2"
+
 "@splunk/react-page@^7.1.0":
   version "7.1.0"
   resolved "https://registry.npmjs.org/@splunk/react-page/-/react-page-7.1.0.tgz#1eab91f0e610d1357d5db673a27076e32fd54b86"
@@ -2549,7 +2558,7 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.33.0", "@splunk/react-ui@^4.39.0", "@splunk/react-ui@^4.41.0", "@splunk/react-ui@^4.42.0":
+"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.33.0", "@splunk/react-ui@^4.39.0", "@splunk/react-ui@^4.41.0":
   version "4.42.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.42.0.tgz#9f430468fa026988e89d10a64743a0603fca5430"
   integrity sha512-Mjz8kABT8GQBAQfOVfMZkhMMAmJ45PGiE469mlm5CkTkefMt3K9y415HSCzChnASYR8FeeSj44U9r/o/J8FENQ==
@@ -2561,6 +2570,29 @@
     "@splunk/react-icons" "^4.11.0"
     "@splunk/themes" "^0.23.0"
     "@splunk/ui-utils" "^1.7.1"
+    commonmark "^0.30.0"
+    commonmark-react-renderer "^4.3.2"
+    decimal.js-light "^2.2.3"
+    lodash "^4.17.14"
+    moment "^2.29.4"
+    prop-types "^15.6.2"
+    react-resize-detector "^3.2.1"
+    react-spring "9.2.4"
+    tinycolor2 "^1.4.1"
+    use-typed-event-listener "^3.0.0"
+
+"@splunk/react-ui@^4.43.0":
+  version "4.43.0"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.43.0.tgz#939f54773bf5e9535664a4fc307d1f4d1130ac80"
+  integrity sha512-tLa3xT98Hq1ODUH07DCaatq23Mxqeyk1wcCj9gS/gk1uzz03HR92XFU3ePyKsDRv1b5vfz7ewnMNRGJEtX3J1g==
+  dependencies:
+    "@dnd-kit/core" "^6.1.0"
+    "@dnd-kit/modifiers" "^7.0.0"
+    "@dnd-kit/sortable" "^8.0.0"
+    "@dnd-kit/utilities" "^3.2.2"
+    "@splunk/react-icons" "^4.12.0"
+    "@splunk/themes" "^0.23.0"
+    "@splunk/ui-utils" "^1.8.0"
     commonmark "^0.30.0"
     commonmark-react-renderer "^4.3.2"
     decimal.js-light "^2.2.3"
@@ -2597,6 +2629,16 @@
   integrity sha512-x4OSnnr5VG23uMtg8HNVU0SYKVQXEdQskLbnBgDchLNkcc5NuuWIKWd6C11BVQiOqtY8r5i6/qjU/VG/U98Atg==
   dependencies:
     "@splunk/ui-utils" "^1.6.0"
+    lodash "^4.17.14"
+    querystring "^0.2.1"
+    scriptjs "^2.5.8"
+
+"@splunk/splunk-utils@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/@splunk/splunk-utils/-/splunk-utils-3.2.0.tgz#70498935bd37cca99ebddd3e99a04b633d2e90ea"
+  integrity sha512-cysY2Tm+JznegFDCMPC+SvuJPVB0elMiVKqldKkQGwreZaGXRGFYJsEeWadWglDZ3f36xDtFuNwZkCDth+29lw==
+  dependencies:
+    "@splunk/ui-utils" "^1.8.0"
     lodash "^4.17.14"
     querystring "^0.2.1"
     scriptjs "^2.5.8"
@@ -2667,12 +2709,12 @@
   dependencies:
     "@splunk/ui-utils" "^1.7.1"
 
-"@splunk/visualization-context@^27.1.0":
-  version "27.1.0"
-  resolved "https://registry.npmjs.org/@splunk/visualization-context/-/visualization-context-27.1.0.tgz#586c7e1299e3888a733020a2b808650d9db98026"
-  integrity sha512-edn2Ofgs0bC3wTsk5YCCeYG48zH4WM9DgS7NP+QhSVd4NVFtoc9axb5KPj7s5ESvLFNoS/kPBqg5E5ULxjJA1Q==
+"@splunk/visualization-context@^27.2.1":
+  version "27.2.1"
+  resolved "https://registry.npmjs.org/@splunk/visualization-context/-/visualization-context-27.2.1.tgz#8c34da573553cc14fe1c223af6ff8456645b47bb"
+  integrity sha512-nHPu9elB9tugti+ZoVqhtV5ykWsBB6Wkvp5IDqbbby8xxwVU79VzhlewcDzwMl3og7H/0urj1SgSBvR+KnZdQQ==
   dependencies:
-    "@splunk/ui-utils" "^1.7.1"
+    "@splunk/ui-utils" "^1.8.0"
     uuid-v4 "^0.1.0"
 
 "@splunk/visualization-encoding@^27.1.0":
@@ -6473,10 +6515,10 @@ eslint-plugin-react@^7.37.4:
     string.prototype.matchall "^4.0.12"
     string.prototype.repeat "^1.0.0"
 
-eslint-plugin-storybook@^0.11.3:
-  version "0.11.3"
-  resolved "https://registry.npmjs.org/eslint-plugin-storybook/-/eslint-plugin-storybook-0.11.3.tgz#3a73bc0ba0299a575bb2a5e3cf81e6ae8c1df486"
-  integrity sha512-gDBnBZiyk4ZG7OMSJRaHBcuJ8TMCXgMIQ3HB/XvtN0SvSio2ZOIeYD3yGj39g/DbyCe/Bg02j/ip9tWlDEs82A==
+eslint-plugin-storybook@^0.11.4:
+  version "0.11.4"
+  resolved "https://registry.npmjs.org/eslint-plugin-storybook/-/eslint-plugin-storybook-0.11.4.tgz#137a425c20683face8848e692ad6dd7803a69a75"
+  integrity sha512-OvLf1ljpDQ6Y/U2kM7hT5hESn+hg0vq/nh62+YiPFWdRIEjuQM9ivmwoTP9nRBExH8fT2VPqM5t/RB68lqTWJw==
   dependencies:
     "@storybook/csf" "^0.1.11"
     "@typescript-eslint/utils" "^8.8.1"
