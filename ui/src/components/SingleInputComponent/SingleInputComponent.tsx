@@ -169,7 +169,6 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         <>
             <ComboBox
                 {...restSuiProps}
-                // @ts-expect-error SUI does not declare inputId, but it is there
                 inputId={id}
                 value={
                     // if value is empty use empty string as ComboBox accepts only string
