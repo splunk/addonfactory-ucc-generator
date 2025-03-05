@@ -119,4 +119,4 @@ jobs:
         run: |
           # prevents "pytest_plugins in non-top-level conftest files" error 
           cp tests/unit/pytest-ci.ini pytest.ini
-          poetry run pytest tests tests/unit
+          poetry run pytest --junitxml=test-results/junit.xml tests/unit
