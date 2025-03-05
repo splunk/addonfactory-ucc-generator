@@ -11,11 +11,11 @@ on:
   workflow_dispatch:
     inputs:
       target_repo:
-        description: "Target repository"
+        description: "TA repository (leave empty to test all TAs)"
         required: false
         default: ""
       target_branch:
-        description: "Target branch"
+        description: "TA repository branch"
         required: false
         default: "main"
       splunktaucclib_branch:
@@ -140,4 +140,8 @@ jobs:
         run: |
           # prevents "pytest_plugins in non-top-level conftest files" error 
           cp tests/unit/pytest-ci.ini pytest.ini
+          # some tests expect the splunk directory to exist
+          mkdir -p /opt/splunk/var/log/splunk
+          chmod -R 777 /opt/splunk/var/log/splunk
+
           poetry run pytest --junitxml=test-results/junit.xml tests/unit
