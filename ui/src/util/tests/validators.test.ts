@@ -1,5 +1,7 @@
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { getFormattedMessage } from '../messageUtil';
 import Validator, { parseFunctionRawStr, SaveValidator, ValidatorEntity } from '../Validator';
+import FILE_CONST from '../../constants/fileInputConstant';
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -561,5 +563,145 @@ describe('Validator.doValidation - empty values', () => {
             const result = validator.doValidation(data);
             expect(result).toEqual(false);
         });
+    });
+});
+
+describe('Validator - static methods', () => {
+    const entity = {
+        field: 'testField',
+        label: 'Test Field',
+        type: 'text',
+    } satisfies ValidatorEntity;
+    it('PreDefinedRegexValidator - should return error for invalid regex pattern', () => {
+        const result = Validator.PreDefinedRegexValidator(
+            entity.field,
+            entity.label,
+            {
+                type: 'regex',
+                pattern: '[invalid',
+            },
+            {},
+            '[invalid',
+            getFormattedMessage(104)
+        );
+
+        expect(result).toEqual({
+            errorField: entity.field,
+            errorMsg: '[invalid is not a valid regular expression',
+        });
+    });
+
+    it('NumberValidator- should return error for not a number', () => {
+        const result = Validator.NumberValidator(
+            entity.field,
+            entity.label,
+            {
+                type: 'number',
+                range: [1, 10],
+                isInteger: true,
+            },
+            {}
+        );
+
+        expect(result).toEqual({
+            errorField: entity.field,
+            errorMsg: 'Field Test Field is not a number',
+        });
+    });
+
+    it('NumberValidator- should return error for invalid range', () => {
+        const result = Validator.NumberValidator(
+            entity.field,
+            entity.label,
+            {
+                type: 'number',
+                range: [11, 10],
+                isInteger: true,
+            },
+            {}
+        );
+
+        expect(result).toEqual({
+            errorField: entity.field,
+            errorMsg: '[11,10] is not a valid number range',
+        });
+    });
+});
+
+describe('Validator.doValidation - name validation', () => {
+    const entity = {
+        field: 'name',
+        label: 'Name',
+        type: 'text',
+    } satisfies ValidatorEntity;
+
+    it('error as name paratemer required', () => {
+        const validator = new Validator([entity]);
+
+        const data = { name: '' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({ errorField: 'name', errorMsg: 'Field Name is required' });
+    });
+
+    it('error as name not a string', () => {
+        const validator = new Validator([entity]);
+
+        const data = { name: 1 };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'name',
+            errorMsg: 'Field Name must be a string',
+        });
+    });
+
+    it('error as name starts with incorrect value', () => {
+        const validator = new Validator([entity]);
+
+        const data = { name: '_invalidaName' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'name',
+            errorMsg:
+                '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',
+        });
+    });
+
+    it('error as name contains invalid values', () => {
+        const validator = new Validator([entity]);
+
+        const data = { name: 'only_seems_li*ke_valid_name' };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'name',
+            errorMsg:
+                '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',
+        });
+    });
+
+    it('error as name too long', () => {
+        const validator = new Validator([entity]);
+
+        const data = { name: 'v'.repeat(1025) };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'name',
+            errorMsg: 'Field Name must be less than 1024 characters',
+        });
+    });
+});
+
+describe('Validator.doValidation - file validation', () => {
+    const entity = {
+        field: 'file',
+        label: 'File',
+        type: 'file',
+    } satisfies ValidatorEntity;
+
+    it('error as invalid file content', () => {
+        const validator = new Validator([entity]);
+
+        const data = { file: FILE_CONST.INVALID_FILE_MESSAGE };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({ errorField: 'file', errorMsg: 'The file is invalid' });
     });
 });
