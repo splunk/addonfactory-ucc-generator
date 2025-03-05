@@ -48,38 +48,43 @@ jobs:
           name: ucc-package-whl
           path: UCC/dist/*.whl
 
+  determine-repos:
+    runs-on: ubuntu-22.04
+    outputs:
+      repos: ${{ steps.set-repos.outputs.repos }}
+    steps:
+      - id: set-repos
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.target_repo }}" != "" ]]; then
+            echo "repos=[\"${{ github.event.inputs.target_repo }}\"]" >> $GITHUB_OUTPUT
+          else
+            echo 'repos=[
+              "splunk/splunk-add-on-for-amazon-web-services",
+              "splunk/splunk-add-on-for-google-cloud-platform",
+              "splunk/splunk-add-on-for-google-workspace",
+              "splunk/splunk-add-on-for-microsoft-cloud-services",
+              "splunk/splunk-add-on-for-microsoft-office-365",
+              "splunk/splunk-add-on-for-salesforce",
+              "splunk/splunk-add-on-for-servicenow",
+              "splunk/splunk-add-on-for-mysql"
+            ]' >> $GITHUB_OUTPUT
+          fi
+
   test-addons:
-    needs: build-ucc
+    needs: [ build-ucc, determine-repos ]
     strategy:
       matrix:
-        target_repo:
-          - splunk/splunk-add-on-for-amazon-web-services
-          - splunk/splunk-add-on-for-google-cloud-platform
-          - splunk/splunk-add-on-for-google-workspace
-          - splunk/splunk-add-on-for-microsoft-cloud-services
-          - splunk/splunk-add-on-for-microsoft-office-365
-          - splunk/splunk-add-on-for-salesforce
-          - splunk/splunk-add-on-for-servicenow
-          - splunk/splunk-add-on-for-mysql
+        target_repo: ${{ fromJSON(needs.determine-repos.outputs.repos) }}
     continue-on-error: true
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Target Add-on Repository
-        if: ${{ github.event_name == 'push' || github.event.inputs.target_repo == '' }}
         uses: actions/checkout@v4
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
           token: ${{ secrets.GH_TOKEN_ADMIN }}
-
-      - name: Checkout Target Add-on Repository (manual)
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repo != '' }}
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.target_repo }}
           ref: ${{ github.event.inputs.target_branch }}
-          path: TA
-          token: ${{ secrets.GH_TOKEN_ADMIN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
