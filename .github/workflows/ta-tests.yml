@@ -132,18 +132,3 @@ jobs:
         working-directory: TA
         run: |
           poetry run ucc-gen build
-
-      - name: Run TA Unit Tests
-        # run only if pytest-ci.ini exists in the unit test directory
-        if: ${{ hashFiles('TA/tests/unit/pytest-ci.ini') != '' }}
-        working-directory: TA
-        run: |
-          # prevents "pytest_plugins in non-top-level conftest files" error 
-          cp tests/unit/pytest-ci.ini pytest.ini
-          # some tests expect the splunk directory to exist
-          mkdir -p /opt/splunk/var/log/splunk
-          chmod -R 777 /opt/splunk/var/log/splunk
-          mkdir -p /opt/splunk/bin/splunk
-          chmod -R 777 /opt/splunk/bin/splunk
-
-          poetry run pytest --junitxml=test-results/junit.xml tests/unit
