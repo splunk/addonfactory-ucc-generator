@@ -635,57 +635,28 @@ describe('Validator.doValidation - name validation', () => {
         type: 'text',
     } satisfies ValidatorEntity;
 
-    it('error as name paratemer required', () => {
-        const validator = new Validator([entity]);
-
-        const data = { name: '' };
-        const result = validator.doValidation(data);
-        expect(result).toEqual({ errorField: 'name', errorMsg: 'Field Name is required' });
-    });
-
-    it('error as name not a string', () => {
-        const validator = new Validator([entity]);
-
-        const data = { name: 1 };
-        const result = validator.doValidation(data);
-        expect(result).toEqual({
-            errorField: 'name',
-            errorMsg: 'Field Name must be a string',
-        });
-    });
-
-    it('error as name starts with incorrect value', () => {
-        const validator = new Validator([entity]);
-
-        const data = { name: '_invalidaName' };
-        const result = validator.doValidation(data);
-        expect(result).toEqual({
-            errorField: 'name',
+    it.each([
+        { nameValue: '', errorMsg: 'Field Name is required' },
+        { nameValue: 1, errorMsg: 'Field Name must be a string' },
+        {
+            nameValue: '_invalidaName',
             errorMsg:
                 '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',
-        });
-    });
-
-    it('error as name contains invalid values', () => {
-        const validator = new Validator([entity]);
-
-        const data = { name: 'only_seems_li*ke_valid_name' };
-        const result = validator.doValidation(data);
-        expect(result).toEqual({
-            errorField: 'name',
+        },
+        {
+            nameValue: 'only_seems_li*ke_valid_name',
             errorMsg:
                 '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',
-        });
-    });
-
-    it('error as name too long', () => {
+        },
+        { nameValue: 'v'.repeat(1025), errorMsg: 'Field Name must be less than 1024 characters' },
+    ])('error as name starts with incorrect value %s', ({ nameValue, errorMsg }) => {
         const validator = new Validator([entity]);
 
-        const data = { name: 'v'.repeat(1025) };
+        const data = { name: nameValue };
         const result = validator.doValidation(data);
         expect(result).toEqual({
             errorField: 'name',
-            errorMsg: 'Field Name must be less than 1024 characters',
+            errorMsg,
         });
     });
 });
