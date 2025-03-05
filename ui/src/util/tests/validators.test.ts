@@ -508,16 +508,16 @@ describe('Validator.doValidation - empty values', () => {
 
     const emptyValues = [undefined, null, ''];
 
-    const validationTypes: (
-        | 'string'
-        | 'number'
-        | 'date'
-        | 'regex'
-        | 'email'
-        | 'ipv4'
-        | 'url'
-        | 'custom'
-    )[] = ['string', 'regex', 'number', 'url', 'date', 'email', 'custom', 'ipv4'];
+    const validationTypes = [
+        'string',
+        'regex',
+        'number',
+        'url',
+        'date',
+        'email',
+        'custom',
+        'ipv4',
+    ] as const;
 
     it.each(validationTypes)('error as data required %s', (validatorType) => {
         emptyValues.forEach((emptyValue) => {
