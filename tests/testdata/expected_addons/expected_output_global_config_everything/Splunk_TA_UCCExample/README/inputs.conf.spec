@@ -46,9 +46,6 @@ interval = Time interval of the data input, in seconds.
 [service_hidden_for_enterprise://<name>]
 interval = Time interval of the data input, in seconds.
 
-[service_with_conf_param://<name>]
-placeholder = placeholder
-
 [service_inside_menu_one://<name>]
 interval = Time interval of the data input, in seconds.
 text_with_validators = 
