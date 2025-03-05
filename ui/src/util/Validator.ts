@@ -414,10 +414,7 @@ class Validator {
                 };
             }
 
-            const currentEntity = this.entities[i];
-            if (!currentEntity?.label) {
-                currentEntity.label = '';
-            }
+            const currentEntity = { label: '', ...this.entities[i] };
 
             if (currentEntity.validators) {
                 for (j = 0; j < currentEntity.validators.length; j += 1) {
