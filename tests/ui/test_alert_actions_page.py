@@ -1,6 +1,8 @@
 import pytest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
-
 from tests.ui.pages.alert_action_page import AlertPage
 
 
@@ -95,15 +97,32 @@ class TestAlertActions(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.alert
     def test_toggle(self, ucc_smartx_selenium_helper):
-        alert_page = AlertPage(ucc_smartx_selenium_helper, None)
-        alert_page.alert_entity.open()
-        alert_page.alert_entity.add_action_dropdown.wait_for_values()
-        alert_page.alert_entity.add_action_dropdown.select_action("Test Alert")
+        driver = ucc_smartx_selenium_helper.browser
 
-        alert_page.action_entity.action.select("Delete")
-        assert alert_page.action_entity.action.get_value() == "delete"
-        alert_page.action_entity.action.select("Update")
-        assert alert_page.action_entity.action.get_value() == "update"
+        def run_test():
+            alert_page = AlertPage(ucc_smartx_selenium_helper, None)
+            alert_page.alert_entity.open()
+
+            # Wait for the button before interacting
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, ".new-alert-button"))
+            )
+
+            alert_page.alert_entity.add_action_dropdown.wait_for_values()
+            alert_page.alert_entity.add_action_dropdown.select_action("Test Alert")
+
+            alert_page.action_entity.action.select("Delete")
+            assert alert_page.action_entity.action.get_value() == "delete"
+            alert_page.action_entity.action.select("Update")
+            assert alert_page.action_entity.action.get_value() == "update"
+
+        try:
+            run_test()
+        except Exception as e:
+            # Maximize window and retry
+            print(f"Test failed: {e}, retrying with maximized window...")
+            driver.maximize_window()
+            run_test()
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
