@@ -113,8 +113,10 @@ jobs:
           poetry run ucc-gen build
 
       - name: Run TA Unit Tests
-        # run only if there are files in the unit test directory
-        if: ${{ hashFiles('TA/tests/unit/**') != '' }}
+        # run only if pytest-ci.ini exists in the unit test directory
+        if: ${{ hashFiles('TA/tests/unit/pytest-ci.ini') != '' }}
         working-directory: TA
         run: |
+          # prevents "pytest_plugins in non-top-level conftest files" error 
+          cp tests/unit/pytest-ci.ini pytest.ini
           poetry run pytest tests tests/unit
