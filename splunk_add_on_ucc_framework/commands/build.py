@@ -24,7 +24,6 @@ import subprocess
 import colorama as c
 import fnmatch
 import filecmp
-
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -508,6 +507,43 @@ def generate(
         logger.info(
             f"Installed add-on requirements into {ucc_lib_target} from {source}"
         )
+        for command in global_config.custom_search_commands:
+            file_path = os.path.join(source, "bin", command["fileName"])
+            if not os.path.isfile(file_path):
+                logger.error(
+                    f"{command['fileName']} is not present in `{os.path.join(source, 'bin')}` directory. "
+                    "Please ensure the file exists."
+                )
+                sys.exit(1)
+
+            if (command["requiredSearchAssistant"] is False) and (
+                command.get("description")
+                or command.get("usage")
+                or command.get("syntax")
+            ):
+                logger.warning(
+                    "requiredSearchAssistant is set to false "
+                    "but attributes required for 'searchbnf.conf' is defined which is not required."
+                )
+            if (command["requiredSearchAssistant"] is True) and not (
+                command.get("description")
+                and command.get("usage")
+                and command.get("syntax")
+            ):
+                logger.error(
+                    "One of the attributes among `description`, `usage`, `syntax` "
+                    " is not been defined in globalConfig. Define them as requiredSearchAssistant is set to True. "
+                )
+                sys.exit(1)
+            if command["version"] == 1:
+                command["fileName"] = command["fileName"].replace(".py", "")
+                if command["commandName"] != command["fileName"]:
+                    logger.error(
+                        f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
+                        " should be same for version 1 of custom search command."
+                    )
+                    sys.exit(1)
+
         generated_files.extend(
             begin(
                 global_config=global_config,
@@ -518,6 +554,7 @@ def generate(
                 app_manifest=app_manifest,
                 addon_version=addon_version,
                 has_ui=global_config.meta.get("isVisible", True),
+                custom_search_commands=global_config.custom_search_commands,
             )
         )
         # TODO: all FILES GENERATED object: generated_files, use it for comparison

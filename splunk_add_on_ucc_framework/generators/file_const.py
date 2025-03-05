@@ -24,6 +24,7 @@ from splunk_add_on_ucc_framework.generators.xml_files import (
     RedirectXml,
 )
 from splunk_add_on_ucc_framework.generators.html_files import AlertActionsHtml
+from splunk_add_on_ucc_framework.generators.python_files import CustomCommandPy
 from splunk_add_on_ucc_framework.generators.conf_files import (
     AlertActionsConf,
     AppConf,
@@ -35,6 +36,8 @@ from splunk_add_on_ucc_framework.generators.conf_files import (
     WebConf,
     AccountConf,
     SettingsConf,
+    CommandsConf,
+    SearchbnfConf,
 )
 
 __all__ = ["FileClass", "GEN_FILE_LIST"]
@@ -49,6 +52,10 @@ class FileClass(NamedTuple):
 
 GEN_FILE_LIST: List[FileClass] = [
     FileClass("app.conf", AppConf, "default", AppConf.__description__),
+    FileClass("commands.conf", CommandsConf, "default", CommandsConf.__description__),
+    FileClass(
+        "searchbnf.conf", SearchbnfConf, "default", SearchbnfConf.__description__
+    ),
     FileClass("inputs.conf", InputsConf, "default", InputsConf.__description__),
     FileClass("server.conf", ServerConf, "default", ServerConf.__description__),
     FileClass("restmap.conf", RestMapConf, "default", RestMapConf.__description__),
@@ -100,5 +107,11 @@ GEN_FILE_LIST: List[FileClass] = [
         AlertActionsHtml,
         ["default", "data", "ui", "alerts"],
         AlertActionsHtml.__description__,
+    ),
+    FileClass(
+        "_.py",
+        CustomCommandPy,
+        "bin",
+        CustomCommandPy.__description__,
     ),
 ]
