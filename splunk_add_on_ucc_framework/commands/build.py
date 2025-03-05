@@ -516,23 +516,23 @@ def generate(
                 )
                 sys.exit(1)
 
-            if (command["requireSeachAssistant"] is False) and (
+            if (command["requiredSearchAssistant"] is False) and (
                 command.get("description")
                 or command.get("usage")
                 or command.get("syntax")
             ):
                 logger.warning(
-                    "requireSeachAssistant is set to false "
+                    "requiredSearchAssistant is set to false "
                     "but attributes required for 'searchbnf.conf' is defined which is not required."
                 )
-            if (command["requireSeachAssistant"] is True) and not (
+            if (command["requiredSearchAssistant"] is True) and not (
                 command.get("description")
                 and command.get("usage")
                 and command.get("syntax")
             ):
                 logger.error(
                     "One of the attributes among `description`, `usage`, `syntax` "
-                    " is not been defined in globalConfig. Defined them as requireSeachAssistant is set to True. "
+                    " is not been defined in globalConfig. Define them as requiredSearchAssistant is set to True. "
                 )
                 sys.exit(1)
             if command["version"] == 1:

@@ -429,13 +429,13 @@
     },
     "customSearchCommand": {
       "type": "object",
-      "description": "Support for custom Seach Command",
+      "description": "Support for custom Search Command",
       "properties": {
         "commandName": {
           "type": "string",
           "pattern": "^[a-z0-9]+$",
           "maxLength": 100,
-          "description": "Name of the cutom Search Command"
+          "description": "Name of the custom Search Command"
         },
         "fileName": {
           "type": "string",
@@ -452,7 +452,7 @@
             "eventing"
           ]
         },
-        "requireSeachAssistant": {
+        "requiredSearchAssistant": {
           "type": "boolean",
           "default": false,
           "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
@@ -501,7 +501,7 @@
       "additionalProperties": false
     },
     "arguments": {
-      "type":"object",
+      "type": "object",
       "description": "Arguments used for custom search command",
       "properties": {
         "name": {
@@ -538,23 +538,23 @@
     "CustomSearchCommandValidator": {
       "type": "object",
       "description": "It is used to validate the values of arguments for custom search command",
-        "oneOf": [
-          {
-            "$ref": "#/definitions/CustomIntegerValidator"
-          },
-          {
-            "$ref": "#/definitions/CustomFloatValidator"
-          },
-          {
-            "$ref": "#/definitions/CustomRegularExpressionValidator"
-          },
-          {
-            "$ref": "#/definitions/CustomFieldnameValidator"
-          },
-          {
-            "$ref": "#/definitions/CustomBooleanValidator"
-          }
-        ]
+      "oneOf": [
+        {
+          "$ref": "#/definitions/CustomIntegerValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomFloatValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomRegularExpressionValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomFieldnameValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomBooleanValidator"
+        }
+      ]
     },
     "CustomIntegerValidator": {
       "type": "object",
@@ -570,7 +570,7 @@
         "type": {
           "const": "Integer",
           "type": "string",
-          "description": "This is integer Validator for custom search command, provide atleast one of `minimumValue` or `maximumValue`"
+          "description": "This is integer Validator for custom search command, provide at least one of `minimumValue` or `maximumValue`"
         }
       },
       "required": [
@@ -592,7 +592,7 @@
         "type": {
           "const": "Float",
           "type": "string",
-          "description": "This is Float Validator for custom search command, provide atleast one of `minimumValue` or `maximumValue` for validation pusrpose."
+          "description": "This is Float Validator for custom search command, provide at least one of `minimumValue` or `maximumValue` for validation purpose."
         }
       },
       "required": [
@@ -695,7 +695,7 @@
               "field": {
                 "type": "string",
                 "pattern": "^\\w+$",
-                "description": "Used to dispaly the data in a column."
+                "description": "Used to display the data in a column."
               },
               "label": {
                 "type": "string",
@@ -1729,7 +1729,10 @@
                     "uniqueItems": true
                   }
                 },
-                "required": ["label", "fields"],
+                "required": [
+                  "label",
+                  "fields"
+                ],
                 "additionalProperties": false
               }
             },
@@ -1761,7 +1764,9 @@
                     "additionalProperties": false
                   }
                 },
-                "required": ["field"],
+                "required": [
+                  "field"
+                ],
                 "additionalProperties": false
               },
               "minItems": 1
@@ -1770,7 +1775,9 @@
               "$ref": "#/definitions/disableonEdit"
             }
           },
-          "required": ["rows"],
+          "required": [
+            "rows"
+          ],
           "additionalProperties": false
         },
         "validators": {
@@ -1787,7 +1794,12 @@
           "type": "boolean"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "RadioEntity": {
@@ -2064,12 +2076,12 @@
             "access_token_endpoint": {
               "type": "string",
               "maxLength": 350,
-              "description": "Must be present and its value should be the endpoint value for getting the ccess_token using the auth_code received."
+              "description": "Must be present and its value should be the endpoint value for getting the access_token using the auth_code received."
             },
             "auth_endpoint_token_access_type": {
               "type": "string",
               "maxLength": 350,
-              "description": "Optional parameter that is mapped into the value of the token_access_type query param in the authorisation url."
+              "description": "Optional parameter that is mapped into the value of the token_access_type query param in the authorization url."
             },
             "oauth_state_enabled": {
               "type": "boolean",
@@ -2671,7 +2683,12 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["string", "number", "integer", "boolean"]
+              "enum": [
+                "string",
+                "number",
+                "integer",
+                "boolean"
+              ]
             },
             "nullable": {
               "type": "boolean",
@@ -2735,7 +2752,7 @@
             "anyOf": {
               "type": "array",
               "items": {
-                  "$ref": "#/definitions/OpenApiType"
+                "$ref": "#/definitions/OpenApiType"
               }
             },
             "nullable": {
@@ -2753,7 +2770,7 @@
             "oneOf": {
               "type": "array",
               "items": {
-                  "$ref": "#/definitions/OpenApiType"
+                "$ref": "#/definitions/OpenApiType"
               }
             },
             "nullable": {
@@ -2785,7 +2802,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["schema"]
+          "required": [
+            "schema"
+          ]
         }
       }
     },
@@ -2825,7 +2844,9 @@
         "handlerType": {
           "type": "string",
           "description": "The type of the handler.",
-          "enum": ["EAI"]
+          "enum": [
+            "EAI"
+          ]
         },
         "registerHandler": {
           "type": "object",
@@ -2834,7 +2855,7 @@
             "file": {
               "type": "string",
               "description": "The file where the custom rest handler is located.",
-                "pattern": "^[a-zA-Z0-9_]+\\.py$"
+              "pattern": "^[a-zA-Z0-9_]+\\.py$"
             },
             "actions": {
               "type": "array",
@@ -2842,7 +2863,12 @@
               "items": {
                 "type": "string",
                 "description": "The action that the custom rest handler supports.",
-                "enum": ["list", "edit", "create", "remove"],
+                "enum": [
+                  "list",
+                  "edit",
+                  "create",
+                  "remove"
+                ],
                 "minItems": 1,
                 "uniqueItems": true
               }
@@ -3217,7 +3243,9 @@
           "$ref": "#/definitions/links"
         }
       },
-      "required": ["text"]
+      "required": [
+        "text"
+      ]
     },
     "singleFieldToModify": {
       "type": "object",
@@ -4005,7 +4033,8 @@
       "anyOf": [
         {
           "type": "string",
-          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."        },
+          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."
+        },
         {
           "$ref": "#/definitions/helpWithLinks"
         }
@@ -4026,7 +4055,9 @@
           "type": "string"
         }
       },
-      "required": ["text"]
+      "required": [
+        "text"
+      ]
     },
     "tooltip": {
       "type": "string",
@@ -4130,7 +4161,7 @@
         }
       ]
     },
-    "inputsUniqueAcrossSingleService":{
+    "inputsUniqueAcrossSingleService": {
       "description": "Defines if inputs in different services can share same name.",
       "type": "boolean",
       "default": false

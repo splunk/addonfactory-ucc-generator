@@ -140,7 +140,7 @@ For example:
             "commandName": "testcommand",
             "fileName": "commandlogic.py",
             "commandType": "streaming",
-            "requireSeachAssistant": true,
+            "requiredSearchAssistant": true,
             "version": 2,
             "description": "This is a test command",
             "syntax": "| testcommand fieldname=<Name of field> pattern=<Valid regex pattern>",

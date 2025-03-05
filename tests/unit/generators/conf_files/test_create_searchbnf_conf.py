@@ -42,7 +42,7 @@ def custom_search_commands():
             "commandName": "testcommand",
             "commandType": "generating",
             "fileName": "test.py",
-            "requireSeachAssistant": True,
+            "requiredSearchAssistant": True,
             "version": 2,
             "description": "This is test command",
             "syntax": "testcommand",

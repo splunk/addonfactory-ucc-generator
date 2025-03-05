@@ -68,7 +68,7 @@ def test_global_config_custom_search_commands(global_config_all_json):
             "commandName": "generatetextcommand",
             "fileName": "generatetext.py",
             "commandType": "generating",
-            "requireSeachAssistant": True,
+            "requiredSearchAssistant": True,
             "version": 2,
             "description": " This command generates COUNT occurrences of a TEXT string.",
             "syntax": "mycommand count=<event_count> text=<string>",

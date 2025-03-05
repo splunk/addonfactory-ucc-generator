@@ -26,7 +26,7 @@ class SearchbnfConf(ConfGenerator):
         if self._global_config and self._global_config.has_custom_search_commands():
             self.searchbnf_info = []
             for command in kwargs["custom_search_commands"]:
-                if command["requireSeachAssistant"]:
+                if command["requiredSearchAssistant"]:
                     searchbnf_dict = {
                         "command_name": command["commandName"],
                         "description": command["description"],
