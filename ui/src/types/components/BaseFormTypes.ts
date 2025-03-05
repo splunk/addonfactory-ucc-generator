@@ -3,6 +3,7 @@ import { Mode } from '../../constants/modes';
 import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
+    NullishFormRecord,
     StandardPages,
 } from './shareableTypes';
 import { MarkdownMessageProps } from '../../components/MarkdownMessage/MarkdownMessage';
@@ -155,5 +156,5 @@ export interface BasicEntity {
 export interface ChangeRecord {
     display?: { $set: boolean };
     value?: { $set: AcceptableFormValueOrNullish };
-    dependencyValues?: { $set: Record<string, AcceptableFormValueOrNullish> };
+    dependencyValues?: { $set: NullishFormRecord };
 }

@@ -1,5 +1,19 @@
 # Changelog
 
+# [5.59.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.58.1...v5.59.0) (2025-03-04)
+
+
+### Bug Fixes
+
+* **validation:** correct regexp validation for empty strings ([#1592](https://github.com/splunk/addonfactory-ucc-generator/issues/1592)) ([0759afe](https://github.com/splunk/addonfactory-ucc-generator/commit/0759afeb0f4b64b99f11f60a5cacf811e90b7e46))
+* **validation:** correctly display error in save validator fnc ([#1602](https://github.com/splunk/addonfactory-ucc-generator/issues/1602)) ([f1b1068](https://github.com/splunk/addonfactory-ucc-generator/commit/f1b106878624aa64005499f9d2b840c715f8c7de))
+* **validation:** correctly validate empty not required data ([#1606](https://github.com/splunk/addonfactory-ucc-generator/issues/1606)) ([7f8c08a](https://github.com/splunk/addonfactory-ucc-generator/commit/7f8c08a065ed9a6cd0d48457946f72b8cf73a3e1))
+
+
+### Features
+
+* **modals:** provide support for custom headers ([#1572](https://github.com/splunk/addonfactory-ucc-generator/issues/1572)) ([13aeae6](https://github.com/splunk/addonfactory-ucc-generator/commit/13aeae642c4fb376f26b35d91416ebaa06f3feea))
+
 ## [5.58.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.58.0...v5.58.1) (2025-02-20)
 
 
