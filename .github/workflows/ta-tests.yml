@@ -18,6 +18,10 @@ on:
         description: "Target branch"
         required: false
         default: "main"
+      splunktaucclib_branch:
+        description: "Branch of splunk/addonfactory-ucc-library to use (leave empty to use latest from PyPI)"
+        required: false
+        default: ""
 
 jobs:
   build-ucc:
@@ -49,6 +53,7 @@ jobs:
           path: UCC/dist/*.whl
 
   determine-repos:
+    # This job determines the repositories to run tests on based on the event type and inputs
     runs-on: ubuntu-22.04
     outputs:
       repos: ${{ steps.set-repos.outputs.repos }}
@@ -110,7 +115,16 @@ jobs:
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
           poetry add ../UCC/$UCC_WHL --group dev
-          poetry add splunktaucclib@latest
+          
+          # Install splunktaucclib either from GitHub or PyPI based on input
+          if [[ -n "${{ github.event.inputs.splunktaucclib_branch }}" ]]; then
+            echo "Installing splunktaucclib from branch ${{ github.event.inputs.splunktaucclib_branch }}"
+            poetry add git+https://github.com/splunk/addonfactory-ucc-library.git@${{ github.event.inputs.splunktaucclib_branch }}
+          else
+            echo "Installing latest splunktaucclib from PyPI"
+            poetry add splunktaucclib@latest
+          fi
+          
           mkdir -p package/lib
           poetry export --without-hashes -o package/lib/requirements.txt
 
