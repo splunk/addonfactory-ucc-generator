@@ -15,9 +15,11 @@ import {
 } from '../types/globalConfig/validators';
 import { AnyEntity, CustomValidatorFunc } from '../types/components/BaseFormTypes';
 
+type SaveValidatorFunc = (formData: NullishFormRecord) => string | undefined;
+
 export const parseFunctionRawStr = (rawStr: string) => {
     let error;
-    let result;
+    let result: SaveValidatorFunc | undefined;
 
     try {
         // eslint-disable-next-line no-eval
@@ -35,7 +37,7 @@ export function SaveValidator(validatorFunc: string, formData: NullishFormRecord
     if (error) {
         return { errorMsg: error };
     }
-    const ret = result(formData);
+    const ret = result && result(formData);
     if (typeof ret === 'string') {
         return { errorMsg: ret };
     }
