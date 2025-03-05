@@ -111,3 +111,10 @@ jobs:
         working-directory: TA
         run: |
           poetry run ucc-gen build
+
+      - name: Run TA Unit Tests
+        # run only if there are files in the unit test directory
+        if: ${{ hashFiles('TA/tests/unit/**') != '' }}
+        working-directory: TA
+        run: |
+          poetry run pytest tests tests/unit
