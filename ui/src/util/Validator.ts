@@ -15,25 +15,6 @@ import {
 } from '../types/globalConfig/validators';
 import { AnyEntity, CustomValidatorFunc } from '../types/components/BaseFormTypes';
 
-/**
- * @typedef Error
- * @type {object}
- * @property {string} errorMsg
- * @property {string} errorField
- */
-
-/**
- * @typedef ValidatorBase
- * @type {object}
- * @property {string} type
- * @property {string} [errorField]
- * @property {string} [errorMsg]
- */
-
-/**
- * @param {string} rawStr
- * @returns {{ error:string, result:Function }}
- */
 export const parseFunctionRawStr = (rawStr: string) => {
     let error;
     let result;
@@ -49,11 +30,6 @@ export const parseFunctionRawStr = (rawStr: string) => {
 };
 
 // Validate provided saveValidator function
-/**
- * @param {string} validatorFunc
- * @param {NullishFormRecord} formData
- * @returns {{ errorMsg: string }}
- */
 export function SaveValidator(validatorFunc: string, formData: NullishFormRecord) {
     const { error, result } = parseFunctionRawStr(validatorFunc);
     if (error) {
@@ -65,11 +41,6 @@ export function SaveValidator(validatorFunc: string, formData: NullishFormRecord
     }
 }
 
-/**
- *
- * @param {[start: number, end: number]} range
- * @returns {{ error: string | undefined }}
- */
 const parseNumberValidator = (range: [number, number]) => {
     const isRangeLegal =
         range.length === 2 && _.isNumber(range[0]) && _.isNumber(range[1]) && range[0] <= range[1];
@@ -79,11 +50,6 @@ const parseNumberValidator = (range: [number, number]) => {
     return { error };
 };
 
-/**
- *
- * @param {string} rawStr
- * @returns {{ error: string | undefined, result: RegExp | undefined }}
- */
 const parseRegexRawStr = (rawStr: string | RegExp) => {
     let error;
     let result;
@@ -117,22 +83,11 @@ class Validator {
         this.isName = entities?.find((e) => e.field === 'name');
     }
 
-    /**
-     * @param {AcceptableFormValueOrNullish} attrValue
-     * @returns {boolean}
-     */
     static checkIsFieldHasInput = (attrValue: AcceptableFormValueOrNullish) =>
         attrValue !== undefined &&
         attrValue !== null &&
         (typeof attrValue === 'string' ? attrValue !== '' : true);
 
-    /**
-     * Validate the required field has value
-     * @param {string} field
-     * @param {string|number} label
-     * @param {string|number} [data]
-     * @returns {Error|false}
-     */
     static RequiredValidator(field: string, label: string, data: AcceptableFormValueOrNullish) {
         if (!Validator.checkIsFieldHasInput(data)) {
             return { errorField: field, errorMsg: getFormattedMessage(6, [label]) };
@@ -140,21 +95,6 @@ class Validator {
         return false;
     }
 
-    /**
-     * @typedef {ValidatorBase} StringValidatorOptions
-     * @property {number} minLength
-     * @property {number} maxLength
-     * @property {string} errorMsg
-     */
-
-    /**
-     * Validate the string length of field
-     * @param {string} field
-     * @param {string|number} label
-     * @param {StringValidatorOptions} validator
-     * @param {string} data
-     * @returns {Error|false}
-     */
     static StringValidator(
         field: string,
         label: string,
@@ -189,19 +129,6 @@ class Validator {
         return false;
     }
 
-    /**
-     * @typedef {ValidatorBase} RegexValidatorOptions
-     * @property {string} pattern
-     */
-
-    /**
-     * Validate the field should match the provided Regex
-     * @param {string} field
-     * @param {string|number} label
-     * @param {RegexValidatorOptions} validator
-     * @param {string} [data]
-     * @returns {Error|false}
-     */
     static RegexValidator(
         field: string,
         label: string,
@@ -226,13 +153,6 @@ class Validator {
     }
 
     // Validate the custom component
-    /**
-     *
-     * @param {CustomValidatorFunc} validatorFunc
-     * @param {string} field
-     * @param {*} data
-     * @returns
-     */
     static CustomValidator(
         validatorFunc: CustomValidatorFunc,
         field: string,
@@ -246,16 +166,6 @@ class Validator {
     }
 
     // Validate the field should match predefined Regexes
-    /**
-     *
-     * @param {string} field
-     * @param {string} label
-     * @param {NumberValidator | StringValidator | RegexValidator | EmailValidator | Ipv4Validator | UrlValidator | DateValidator } validator
-     * @param {AcceptableFormValueOrNullish} data
-     * @param {string} pattern
-     * @param {string} inputValueType
-     * @returns {Error|false}
-     */
     static PreDefinedRegexValidator(
         field: string,
         label: string,
@@ -281,20 +191,6 @@ class Validator {
         return false;
     }
 
-    /**
-     * @typedef {ValidatorBase} NumberValidatorOptions
-     * @property {[number, number]} range
-     * @property {boolean} isInteger
-     */
-
-    /**
-     * Validate the field should match the provided Regex
-     * @param {string} field
-     * @param {string|number} label
-     * @param {NumberValidatorOptions} validator
-     * @param {NullishFormRecord} data
-     * @returns {Error|false}
-     */
     // Validate the range of numeric field
     static NumberValidator(
         field: string,
@@ -342,11 +238,6 @@ class Validator {
         return false;
     }
 
-    /**
-     *
-     * @param {NullishFormRecord} data
-     * @returns {Error|false}
-     */
     doValidation(data: NullishFormRecord) {
         if (this.isName) {
             const targetValue = data.name;
@@ -378,16 +269,7 @@ class Validator {
 
         let ret;
 
-        /**
-         * @type {number}
-         */
-        let i;
-        /**
-         * @type {number}
-         */
-        let j;
-
-        for (i = 0; this.entities && i < this.entities.length; i += 1) {
+        for (let i = 0; this.entities && i < this.entities.length; i += 1) {
             if (this.entities[i].required === true) {
                 ret = Validator.RequiredValidator(
                     this.entities[i].field,
@@ -417,7 +299,7 @@ class Validator {
             const currentEntity = { label: '', ...this.entities[i] };
 
             if (currentEntity.validators) {
-                for (j = 0; j < currentEntity.validators.length; j += 1) {
+                for (let j = 0; j < currentEntity.validators.length; j += 1) {
                     const currentValidator = currentEntity.validators[j];
                     switch (currentValidator.type) {
                         case 'string':
