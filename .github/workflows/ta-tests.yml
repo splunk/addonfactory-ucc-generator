@@ -55,7 +55,7 @@ jobs:
     steps:
       - id: set-repos
         run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.target_repo }}" != "" ]]; then
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.target_repo }}" ]]; then
             echo "repos=[\"${{ github.event.inputs.target_repo }}\"]" >> $GITHUB_OUTPUT
           else
             echo 'repos=[
