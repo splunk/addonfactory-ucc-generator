@@ -143,5 +143,7 @@ jobs:
           # some tests expect the splunk directory to exist
           mkdir -p /opt/splunk/var/log/splunk
           chmod -R 777 /opt/splunk/var/log/splunk
+          mkdir -p /opt/splunk/bin/splunk
+          chmod -R 777 /opt/splunk/bin/splunk
 
           poetry run pytest --junitxml=test-results/junit.xml tests/unit
