@@ -2090,7 +2090,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.58.1+10197a346",
+        "version": "5.58.1+4f0a32fff",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
@@ -2104,7 +2104,7 @@
             "commandName": "generatetextcommand",
             "fileName": "generatetext.py",
             "commandType": "generating",
-            "requireSeachAssistant": true,
+            "requiredSearchAssistant": true,
             "version": 2,
             "description": " This command generates COUNT occurrences of a TEXT string.",
             "syntax": "mycommand count=<event_count> text=<string>",
@@ -2129,7 +2129,7 @@
             "commandName": "filtercommand",
             "fileName": "filter.py",
             "commandType": "eventing",
-            "requireSeachAssistant": true,
+            "requiredSearchAssistant": true,
             "version": 2,
             "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
             "syntax": "| filter contains='value1' replace='value to be replaced,value to replace with'",
@@ -2147,7 +2147,7 @@
             "commandName": "sumcommand",
             "fileName": "sum.py",
             "commandType": "reporting",
-            "requireSeachAssistant": true,
+            "requiredSearchAssistant": true,
             "version": 2,
             "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
             "syntax": "| sum total=lines linecount",
@@ -2166,7 +2166,7 @@
             "commandName": "sumtwocommand",
             "fileName": "sum_without_map.py",
             "commandType": "reporting",
-            "requireSeachAssistant": true,
+            "requiredSearchAssistant": true,
             "version": 2,
             "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
             "syntax": "| sumtwo total=lines linecount",
@@ -2185,7 +2185,7 @@
             "commandName": "countmatchescommand",
             "fileName": "countmatches.py",
             "commandType": "streaming",
-            "requireSeachAssistant": false,
+            "requiredSearchAssistant": false,
             "version": 2,
             "arguments": [
                 {
