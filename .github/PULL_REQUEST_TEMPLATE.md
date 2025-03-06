@@ -30,6 +30,6 @@ If an item doesn't apply to your changes, leave it unchecked.
 * [ ] Changes are documented. The documentation is understandable, examples work [(more info)](https://splunk.github.io/addonfactory-ucc-generator/contributing/#documentation-guidelines)
 * [ ] PR title and description follows the [contributing principles](https://splunk.github.io/addonfactory-ucc-generator/contributing/#pull-requests)
 * [ ] I have checked the code coverage of my changes [(see more)](https://splunk.github.io/addonfactory-ucc-generator/contributing/#checking-the-code-coverage)
-* [ ] I have scheduled a meeting or demo to explain these changes (if there is a recorded video, put a link below and in the ticket)
+* [ ] I have scheduled a meeting or recorded a demo to explain these changes (if there is a video, put a link below and in the ticket)
 
 *Reviewers are encouraged to request meetings or demos if any part of the change is unclear*
