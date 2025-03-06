@@ -7,6 +7,8 @@ We welcome contributions from the community! This guide will help you understand
 1. Small PRs ([blogpost](https://testing.googleblog.com/2024/07/in-praise-of-small-pull-requests.html))
 1. When fixing a bug, include a test that reproduces the issue in the same pull request (the test should fail without your changes)
 1. If you are refactoring, ensure adequate test coverage exists for the target area. If coverage is insufficient, create tests in a separate pull request first. This approach provides a safety net for validating current behavior and simplifies code reviews.
+1. A feature should have unit, smoke and UI tests, if applicable
+1. It is encourage to record a demo of your change, or schedule a meeting for reviewers
 
 ## Build and Test
 
@@ -41,6 +43,23 @@ poetry build
 ```bash
 poetry run pytest tests/unit
 ```
+
+### Smoke tests
+
+```bash
+poetry run pytest tests/smoke
+```
+
+### Checking the code coverage
+
+Use the pytest parameter `--cov` and `--cov-report`:
+
+```bash
+poetry run pytest tests/unit --cov splunk_add_on_ucc_framework --cov-report html
+poetry run pytest tests/smoke --cov splunk_add_on_ucc_framework --cov-report html
+```
+
+A report is created in `htmlcov/index.html`.
 
 ### UI tests
 
@@ -147,6 +166,12 @@ To verify changes locally:
 ```bash
 poetry run mkdocs serve -a localhost:8001
 ```
+
+## Documentation guidelines
+
+1. Every feature should be covered in the documentation
+1. The documentation should be easy to understand
+1. At the end of developing a feature, an author is encouraged to manually check the steps of the documentation and see if the change and examples work as expected
 
 ## Issues and bug reports
 
