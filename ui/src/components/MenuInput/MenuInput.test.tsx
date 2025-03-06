@@ -1,10 +1,11 @@
+import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { z } from 'zod';
 import MenuInput from './MenuInput';
-import { mockCustomMenu, MockCustomRenderable } from '../../tests/helpers';
+import { mockCustomMenu } from '../../tests/helpers';
 import { getUnifiedConfigs } from '../../util/util';
 import {
     InputsPageTableSchema,
@@ -14,10 +15,13 @@ import {
 } from '../../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { PageContextProvider } from '../../context/PageContext';
+import { MockCustomRenderable } from '@/tests/MockCustomRenderable';
 
-jest.mock('../../util/util');
+vi.mock('../../util/util', { spy: true });
 
-const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
+const getUnifiedConfigsMock = getUnifiedConfigs as unknown as MockInstance<
+    typeof getUnifiedConfigs
+>;
 let mockCustomMenuInstance: MockCustomRenderable;
 
 beforeEach(() => {
@@ -25,7 +29,7 @@ beforeEach(() => {
 });
 
 function setup(inputs: z.infer<typeof pages.shape.inputs>) {
-    const mockHandleRequestOpen = jest.fn();
+    const mockHandleRequestOpen = vi.fn();
     const globalConfigMock = getGlobalConfigMock();
 
     getUnifiedConfigsMock.mockImplementation(() => ({

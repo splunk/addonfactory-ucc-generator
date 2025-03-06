@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -9,12 +10,12 @@ import { setUnifiedConfig } from '../../util/util';
 
 const MODULE = 'CustomControlForTest';
 
-const handleChange = jest.fn();
-const addingCustomValidation = jest.fn();
-const mockSetState = jest.fn();
-const mockSetErrorFieldMsg = jest.fn();
-const mockSetErrorMsg = jest.fn();
-const mockClearErrorMsg = jest.fn();
+const handleChange = vi.fn();
+const addingCustomValidation = vi.fn();
+const mockSetState = vi.fn();
+const mockSetErrorFieldMsg = vi.fn();
+const mockSetErrorMsg = vi.fn();
+const mockClearErrorMsg = vi.fn();
 
 const FIELD_NAME = 'testCustomField';
 
@@ -22,9 +23,7 @@ const setup = async () => {
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
 
-    jest.mock(`${getBuildDirPath()}/custom/${MODULE}.js`, () => mockCustomControlMockForTest, {
-        virtual: true,
-    });
+    vi.mock(import(`${getBuildDirPath()}/custom/${MODULE}.js`), () => mockCustomControlMockForTest);
 
     await act(async () => {
         render(

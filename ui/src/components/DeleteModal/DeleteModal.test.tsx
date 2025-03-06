@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React, { createContext } from 'react';
 import userEvent from '@testing-library/user-event';
@@ -5,9 +6,9 @@ import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
 
-jest.mock('../../util/util');
+vi.mock('../../util/util');
 
-const handleClose = jest.fn();
+const handleClose = vi.fn();
 
 const TableContext = createContext({
     rowData: { serviceName: { stanzaName: 1 } },

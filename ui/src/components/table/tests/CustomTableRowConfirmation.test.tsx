@@ -1,3 +1,4 @@
+import { beforeEach, expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -20,8 +21,8 @@ beforeEach(() => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
-        handleRequestModalOpen: jest.fn(),
-        handleOpenPageStyleDialog: jest.fn(),
+        handleRequestModalOpen: vi.fn(),
+        handleOpenPageStyleDialog: vi.fn(),
         displayActionBtnAllRows: false,
     } satisfies ITableWrapperProps;
 

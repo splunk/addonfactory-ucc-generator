@@ -1,8 +1,9 @@
+import { describe, expect, it, vi } from 'vitest';
 import * as React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 
 import { http, HttpResponse, RequestHandler } from 'msw';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup.ts';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
 import { server } from '../../../mocks/server';
@@ -12,8 +13,8 @@ import { DataIngestionModal } from '../DataIngestionModal';
 import { MOCK_DS_MODAL_DEFINITION } from './mockData';
 import { DASHBOARD_JSON_MOCKS } from './mockJs';
 
-const handleClose = jest.fn();
-const handleSelect = jest.fn();
+const handleClose = vi.fn();
+const handleSelect = vi.fn();
 
 describe('render data ingestion modal inputs', () => {
     it('renders with all default modal dashboard elements', async () => {
