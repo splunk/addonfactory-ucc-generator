@@ -1,3 +1,4 @@
+import { expect, it, test, vi } from 'vitest';
 import React from 'react';
 
 import { render, screen, waitFor } from '@testing-library/react';
@@ -12,7 +13,7 @@ test('Check FileInputComponent render properly with the fileSupportMessage optio
         fileSupportMessage: 'Support Message',
         supportedFileTypes: ['json'],
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
 
     const testfile = new File(['{"test":"test"}'], 'test.json', {
         type: 'application/json',
@@ -49,7 +50,7 @@ test('Check file remove button works properly.', async () => {
     const controlOptions = {
         supportedFileTypes: ['txt'],
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
 
     const testfile = new File(['test file content'], 'test.txt', {
         type: 'text/plain',
@@ -87,7 +88,7 @@ test('Check that the proper error message is displayed for an invalid file type 
     const controlOptions = {
         supportedFileTypes: ['json'],
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
 
     const invalidFile = new File(['test file content'], 'test.txt', {
         type: 'text/plain',
@@ -120,7 +121,7 @@ test('Check that the proper error message is displayed for an invalid file type 
     const controlOptions = {
         supportedFileTypes: ['txt', 'pem'],
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
 
     const invalidFile = new File(['{"test":"test"}'], 'test.json', {
         type: 'application/json',
@@ -155,7 +156,7 @@ test('Check that the proper error message is displayed for invalid file size.', 
         supportedFileTypes: ['json'],
         maxFileSize: 10,
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
 
     const invalidFile = new File(['{"test":"test"}'], 'test.json', {
         type: 'application/json',
@@ -192,7 +193,7 @@ test('Check that the default file name is displayed correctly', async () => {
         supportedFileTypes: ['json'],
         maxFileSize: 10,
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
     const testFileName = 'testFileName.json';
 
     render(
@@ -217,7 +218,7 @@ test('File name and default file error message is displayed when file encrypted'
         supportedFileTypes: ['json'],
         maxFileSize: 10,
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
     const testFileName = 'testFileName.json';
 
     render(
@@ -245,7 +246,7 @@ test('File name is displayed without error message when file not encrypted', asy
         supportedFileTypes: ['json'],
         maxFileSize: 10,
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
     const testFileName = 'testFileName.json';
 
     render(
@@ -273,7 +274,7 @@ test('Default error message disappears when reuploading encrypted file', async (
         fileSupportMessage: 'Support Message',
         supportedFileTypes: ['json'],
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
     const testfile = new File(['{"test":"test"}'], 'test.json', {
         type: 'application/json',
     });
@@ -319,7 +320,7 @@ test('Default error message disappears when reuploading encrypted file', async (
 
 it('File input disabled - rendered correctly with disabled attr', () => {
     // throws error Could not parse CSS styleshee, which only obscures tests
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
 
     const field = 'testFileField';
     const disabled = true;
@@ -327,7 +328,7 @@ it('File input disabled - rendered correctly with disabled attr', () => {
         supportedFileTypes: ['json'],
         maxFileSize: 10,
     };
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
     const testFileName = 'testFileName.json';
 
     render(
@@ -356,7 +357,7 @@ test('Check FileInputComponent encodes base64 correctly and passed it to handler
         useBase64Encoding: true,
     };
     const fileContent = '{"test":"test"}';
-    const handleChange = jest.fn();
+    const handleChange = vi.fn();
 
     const testfile = new File([fileContent], 'test.json', {
         type: 'application/json',

@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -9,13 +10,23 @@ import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { getBuildDirPath } from '../../../util/script';
-import { invariant } from '../../../util/invariant';
-import { MOCK_CONFIG } from './mocks';
-import mockCustomInputRow from './mocks/CustomRowMock';
 import mockCustomInputRowGetDLError from './mocks/CustomRowMockGetDLError';
 import mockCustomInputRowRenderError from './mocks/CustomRowMockRenderError';
 import mockCustomInputRowUnvalid from './mocks/CustomRowMockGetDLUnvalid';
-import { consoleError } from '../../../../jest.setup';
+
+// Import the mock outside of the setup function
+import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
+import { invariant } from '../../../util/invariant';
+import { MOCK_CONFIG } from './mocks';
+import { GlobalConfig } from '../../../publicApi';
+import { consoleError } from '../../../../test.setup';
+
+// Set up the mock before any tests run
+vi.mock(`/custom/CustomInputRow.js`, () => {
+    return {
+        default: mockCustomInputRow,
+    };
+});
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -24,51 +35,38 @@ const updatedInterval = 7788;
 const props = {
     page: 'inputs',
     serviceName: inputName,
-    handleRequestModalOpen: jest.fn(),
-    handleOpenPageStyleDialog: jest.fn(),
+    handleRequestModalOpen: vi.fn(),
+    handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
 const customRowFileName = 'CustomInputRow';
 
 const mockCustomRowInput = () => {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
-        virtual: true,
-    });
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow);
 };
 
 const mockCustomRowInputGetDLError = () => {
-    jest.mock(
+    vi.doMock(
         `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowGetDLError,
-        {
-            virtual: true,
-        }
+        () => mockCustomInputRowGetDLError
     );
 };
 
 const mockCustomRowInputToUndefined = () => {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => undefined, {
-        virtual: true,
-    });
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => '');
 };
 
 const mockCustomRowInputToUnvalidGetDL = () => {
-    jest.mock(
+    vi.doMock(
         `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowUnvalid,
-        {
-            virtual: true,
-        }
+        () => mockCustomInputRowUnvalid
     );
 };
 
 const mockCustomRowInputRenderError = () => {
-    jest.mock(
+    vi.doMock(
         `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowRenderError,
-        {
-            virtual: true,
-        }
+        () => mockCustomInputRowRenderError
     );
 };
 
@@ -82,7 +80,52 @@ const waitForRowAndExpand = async (rowName: string) => {
 };
 
 function setup() {
-    setUnifiedConfig(MOCK_CONFIG);
+    const headers = [
+        {
+            label: 'Name',
+            field: 'name',
+        },
+        {
+            label: 'Interval',
+            field: 'interval',
+        },
+    ];
+    setUnifiedConfig({
+        ...MOCK_CONFIG,
+        pages: {
+            ...MOCK_CONFIG.pages,
+            inputs: {
+                title: inputName,
+                services: [
+                    {
+                        title: inputName,
+                        name: inputName,
+                        entity: [
+                            {
+                                label: 'Name',
+                                field: 'name',
+                                type: 'text',
+                            },
+                            {
+                                label: 'Interval',
+                                field: 'interval',
+                                type: 'text',
+                            },
+                        ],
+                    },
+                ],
+                table: {
+                    actions: ['edit'],
+                    header: headers,
+                    moreInfo: headers,
+                    customRow: {
+                        src: customRowFileName,
+                        type: 'external',
+                    },
+                },
+            },
+        },
+    } satisfies GlobalConfig);
 
     server.use(
         http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_${inputName}`, () =>
@@ -187,10 +230,10 @@ it('should update custom Expansion Row when Input has changed', async () => {
 });
 
 it('Should display error message as getDLRows throws Error', async () => {
-    jest.resetModules();
+    vi.resetModules();
     mockCustomRowInputGetDLError();
 
-    const mockConsoleError = jest.fn();
+    const mockConsoleError = vi.fn();
     consoleError.mockImplementation(mockConsoleError);
 
     setup();
@@ -209,10 +252,10 @@ it('Should display error message as getDLRows throws Error', async () => {
 });
 
 it('Should display error message as render throws Error', async () => {
-    jest.resetModules();
+    vi.resetModules();
     mockCustomRowInputRenderError();
 
-    const mockConsoleError = jest.fn();
+    const mockConsoleError = vi.fn();
     consoleError.mockImplementation(mockConsoleError);
 
     setup();
@@ -233,7 +276,7 @@ it('Should display error message as render throws Error', async () => {
 });
 
 it('Should display error message as module not correct', async () => {
-    jest.resetModules();
+    vi.resetModules();
     mockCustomRowInputToUndefined();
 
     setup();
@@ -246,7 +289,7 @@ it('Should display error message as module not correct', async () => {
 });
 
 it('Should display error message as getDLRows return number', async () => {
-    jest.resetModules();
+    vi.resetModules();
     mockCustomRowInputToUnvalidGetDL();
 
     setup();

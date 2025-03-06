@@ -14,7 +14,7 @@ import { CUSTOM_CELL_FILE_NAME, MOCK_CONFIG_CUSTOM_CELL } from './mocks';
 import { CustomCellMock as MockCustomCell } from './mocks/CustomCellMock';
 import { CustomCellMockError as MockCustomCellError } from './mocks/CustomCellMockError';
 import { CustomCellMockNoRender as MockCustomCellNoRender } from './mocks/CustomCellMockNoRender';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup';
 
 const inputName = 'example_input_one';
 const intervalBase = 1;

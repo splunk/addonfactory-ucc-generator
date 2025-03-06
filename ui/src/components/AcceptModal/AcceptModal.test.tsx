@@ -1,9 +1,10 @@
+import { beforeEach, expect, it, vi } from 'vitest';
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
 import AcceptModal from './AcceptModal';
 
-const handleClose = jest.fn();
+const handleClose = vi.fn();
 
 const renderModal = () =>
     render(

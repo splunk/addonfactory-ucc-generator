@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig, PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
@@ -65,10 +66,16 @@ const splunkPathRewriter = {
     name: 'splunk-path-rewriter',
     configureServer(server) {
         server.middlewares.use((req, _res, next) => {
-            if (!req.url) return next();
-            // http://localhost:5173/**/js/build/entry_page.js
-            // http://localhost:5173/src/pages/EntryPage.tsx
-            // Entry point handling
+            if (!req.url) {
+                return next();
+            }
+            /**
+             * Entrypoint handling
+             * http://localhost:5173/[..]/js/build/entry_page.js
+             * to
+             * http://localhost:5173/src/pages/EntryPage.tsx
+             *
+             */
             if (isEntryPageRequest(req.url)) {
                 req.url = '/src/pages/EntryPage.tsx';
                 return next();
@@ -105,8 +112,8 @@ export default defineConfig(({ mode }) => {
         ],
         build: {
             outDir: 'dist/build',
-            sourcemap: false,
-            minify: false,
+            sourcemap: DEBUG,
+            minify: !DEBUG,
             rollupOptions: {
                 input: {
                     entry_page: 'src/pages/EntryPage.tsx',
@@ -116,7 +123,6 @@ export default defineConfig(({ mode }) => {
                     chunkFileNames: '[name].[hash].js',
                 },
             },
-            // minify: DEBUG ? false : 'esbuild',
             target: 'es2020',
         },
         resolve: {
@@ -157,6 +163,11 @@ export default defineConfig(({ mode }) => {
                     },
                 },
             },
+        },
+        test: {
+            globals: true,
+            environment: 'jsdom',
+            setupFiles: 'test.setup.ts',
         },
     };
 });
