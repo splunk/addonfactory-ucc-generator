@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
 import { variables } from '@splunk/themes';
+import { SelectionCounter } from '../CheckboxTree/StyledComponent';
 
 const GroupWrapper = styled.div`
     display: flex;
@@ -14,6 +15,7 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
         button {
             background-color: ${variables.neutral100};
             font-size: 14px;
+            background-color: red;
 
             &:hover:not([disabled]),
             &:focus:not([disabled]),
@@ -43,6 +45,7 @@ const Description = styled.span`
     padding-right: 20px;
     margin-left: 10px;
     font-size: 12px;
+    min-width: 35px;
 `;
 
 interface GroupProps {
@@ -54,13 +57,15 @@ interface GroupProps {
 }
 
 function Group({ isExpandable, defaultOpen, children, title, description }: GroupProps) {
+    const selectionCounter = <SelectionCounter>{description}</SelectionCounter>;
+
     return (
         <GroupWrapper>
             {isExpandable ? (
                 <CollapsiblePanelWrapper
                     title={title}
                     defaultOpen={defaultOpen}
-                    description={description}
+                    actions={selectionCounter}
                 >
                     <StyledPadding8>{children}</StyledPadding8>
                 </CollapsiblePanelWrapper>
