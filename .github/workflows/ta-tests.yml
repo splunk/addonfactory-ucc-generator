@@ -37,14 +37,16 @@ jobs:
         with:
           python-version: "3.7"
 
-      - name: Install Poetry
-        run: pip install poetry==1.5.1
+      - name: Install Poetry 1.5.1
+        run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+
+      - name: Install Poetry Dependencies
+        working-directory: UCC
+        run: poetry install
 
       - name: Build UCC Framework Package
         working-directory: UCC
-        run: |
-          poetry install
-          poetry build
+        run: poetry build
 
       - name: Upload UCC Artifact
         uses: actions/upload-artifact@v4
