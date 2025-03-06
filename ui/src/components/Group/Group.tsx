@@ -15,7 +15,6 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
         button {
             background-color: ${variables.neutral100};
             font-size: 14px;
-            background-color: red;
 
             &:hover:not([disabled]),
             &:focus:not([disabled]),
