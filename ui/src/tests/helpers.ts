@@ -1,30 +1,35 @@
-export class MockCustomRenderable {
-    navigator = jest.fn<void, [unknown]>();
+import { vi } from 'vitest';
+import { MockCustomRenderable } from './MockCustomRenderable';
 
-    render = jest.fn().mockReturnValue(undefined);
-}
+let mockCustomMenuInstance: MockCustomRenderable;
+
+vi.mock('/custom/Hook.js', () => {
+    return {
+        default: vi.fn(),
+    };
+});
+
+vi.mock('/custom/PrivateEndpointInput.js', () => {
+    return {
+        default: vi.fn().mockImplementation(() => new MockCustomRenderable()),
+    };
+});
+
+vi.mock('/custom/CustomMenu.js', () => {
+    return {
+        default: vi.fn().mockImplementation((globalConfig, target, navigator) => {
+            mockCustomMenuInstance.navigator = navigator;
+            return mockCustomMenuInstance;
+        }),
+    };
+});
 
 export function mockCustomMenu() {
-    jest.resetModules();
+    vi.resetModules();
 
-    const mockCustomMenuInstance = new MockCustomRenderable();
-    jest.mock(
-        '/custom/CustomMenu.js',
-        () =>
-            (
-                globalConfig: unknown,
-                target: HTMLElement,
-                navigator: MockCustomRenderable['navigator']
-            ) => {
-                mockCustomMenuInstance.navigator = navigator;
-                return mockCustomMenuInstance;
-            },
-        { virtual: true }
-    );
-    jest.mock('/custom/Hook.js', () => () => {}, { virtual: true });
-    jest.mock('/custom/PrivateEndpointInput.js', () => () => new MockCustomRenderable(), {
-        virtual: true,
-    });
+    mockCustomMenuInstance = new MockCustomRenderable();
+    mockCustomMenuInstance.navigator = vi.fn();
+    mockCustomMenuInstance.render = vi.fn().mockReturnValue(undefined);
 
     return {
         mockCustomMenuInstance,

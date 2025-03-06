@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -35,7 +36,7 @@ const getDisabledField = (fieldName: string) => {
 };
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
 
     const setUpConfigWithDisabedOauth = () => {
         const newConfig = getConfigOauthOauthDisableonEdit();
@@ -132,7 +133,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 });
 
 describe('Options - Enable field property', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
 
     const setUpConfigWithDisabledComplitelyOauthField = () => {
         const newConfig = getConfigEnableFalseForOauth();
@@ -212,7 +213,7 @@ describe('Options - Enable field property', () => {
 });
 
 describe('EntityModal - auth_endpoint_token_access_type', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
 
     const setUpConfigWithDisabedOauth = () => {
         const newConfig = getConfigAccessTokenMock();
@@ -258,7 +259,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
         const addButton = screen.getByText('Add');
         expect(addButton).toBeInTheDocument();
 
-        const windowOpenSpy = jest.spyOn(window, 'open') as jest.Mock;
+        const windowOpenSpy = vi.spyOn(window, 'open') as Mock;
 
         // mock opening verification window
         windowOpenSpy.mockImplementation((url) => {
@@ -276,7 +277,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
 });
 
 describe('EntityModal - custom warning', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
     const DEFAULT_MODE = 'create';
     const DEFAULT_PAGE = 'configuration';
 
@@ -368,7 +369,7 @@ describe('EntityModal - custom warning', () => {
 });
 
 describe('Default value', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
     const setUpConfigWithDefaultValue = () => {
         const newConfig = getConfigWithOauthDefaultValue();
         setUnifiedConfig(newConfig);
@@ -399,10 +400,10 @@ describe('Default value', () => {
 });
 
 describe('Oauth - separated endpoint authorization', () => {
-    let handleRequestClose: jest.Mock<() => void>;
+    let handleRequestClose: Mock<() => void>;
 
     beforeEach(() => {
-        handleRequestClose = jest.fn();
+        handleRequestClose = vi.fn();
     });
 
     const setUpConfigWithSeparatedEndpoints = () => {
@@ -428,7 +429,7 @@ describe('Oauth - separated endpoint authorization', () => {
     };
 
     const spyOnWindowOpen = async (addButton: HTMLElement) => {
-        const windowOpenSpy = jest.spyOn(window, 'open') as jest.Mock;
+        const windowOpenSpy = vi.spyOn(window, 'open') as Mock;
 
         // mock opening verification window
         windowOpenSpy.mockImplementation((url) => {
@@ -481,7 +482,7 @@ describe('Oauth - separated endpoint authorization', () => {
     });
 
     it('check if correct auth token endpoint created', async () => {
-        const requestHandler = jest.fn();
+        const requestHandler = vi.fn();
         server.use(
             http.post('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth', ({ request }) => {
                 requestHandler(request);

@@ -1,5 +1,6 @@
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
-import '@testing-library/jest-dom/jest-globals';
+// import '@testing-library/jest-dom/jest-globals';
 import { configure } from '@testing-library/react';
 
 import { server } from './src/mocks/server';
@@ -18,7 +19,13 @@ beforeAll(() =>
         onUnhandledRequest: 'warn',
     })
 );
-afterEach(() => server.resetHandlers());
+beforeEach(() => {
+    vi.clearAllMocks();
+});
+afterEach(() => {
+    vi.resetAllMocks();
+    server.resetHandlers();
+});
 afterAll(() => server.close());
 
 /**
@@ -30,7 +37,7 @@ export let consoleError: jest.SpyInstance<void, Parameters<(typeof console)['err
 beforeEach(() => {
     // eslint-disable-next-line no-console
     const originalConsoleError = console.error;
-    consoleError = jest.spyOn(console, 'error');
+    consoleError = vi.spyOn(console, 'error');
     consoleError.mockImplementation((...args: Parameters<typeof console.error>) => {
         originalConsoleError(...args);
         throw new Error(

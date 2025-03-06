@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { LABEL_FOR_DEFAULT_TABLE_CELL_VALUE } from '../TableConsts';
 import { getTableCellValue } from '../table.utils';
 

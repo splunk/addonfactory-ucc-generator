@@ -1,3 +1,4 @@
+import { beforeEach, expect, it, vi } from 'vitest';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,9 +10,9 @@ import { mockServerResponseWithContent } from '../../../mocks/server-response';
 import { getUnifiedConfigs } from '../../../util/util';
 import ConfigurationPage from '../ConfigurationPage';
 import { type meta as metaType } from '../../../types/globalConfig/meta';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup.ts';
 
-jest.mock('../../../util/util');
+vi.mock('../../../util/util');
 
 const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
 
