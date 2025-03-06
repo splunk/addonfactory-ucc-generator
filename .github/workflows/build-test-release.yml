@@ -126,6 +126,9 @@ jobs:
 
   test-unit:
     runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+      contents: write
     continue-on-error: true
     strategy:
       matrix:
@@ -153,6 +156,11 @@ jobs:
       - name: Set output if steps failed
         run: |
           echo "failed=${{ env.failed }}" >> $GITHUB_ENV
+
+      - if: ${{ matrix.python-version == '3.7' }}
+        uses: py-cov-action/python-coverage-comment-action@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
     outputs:
       failed: ${{ env.failed }}
 
