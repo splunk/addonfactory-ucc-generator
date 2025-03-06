@@ -32,4 +32,6 @@ If an item doesn't apply to your changes, leave it unchecked.
 * [ ] I have checked the code coverage of my changes [(see more)](https://splunk.github.io/addonfactory-ucc-generator/contributing/#checking-the-code-coverage)
 * [ ] I have scheduled a meeting or recorded a demo to explain these changes (if there is a video, put a link below and in the ticket)
 
+**Demo/meeting:**
+
 *Reviewers are encouraged to request meetings or demos if any part of the change is unclear*
