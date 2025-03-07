@@ -36,6 +36,9 @@ from splunk_add_on_ucc_framework.generators.conf_files import (
     AccountConf,
     SettingsConf,
 )
+from splunk_add_on_ucc_framework.generators.globalConfig_generator import (
+    MinimalGlobalConfig,
+)
 
 __all__ = ["FileClass", "GEN_FILE_LIST"]
 
@@ -100,5 +103,11 @@ GEN_FILE_LIST: List[FileClass] = [
         AlertActionsHtml,
         ["default", "data", "ui", "alerts"],
         AlertActionsHtml.__description__,
+    ),
+    FileClass(
+        "globalConfig.json",
+        MinimalGlobalConfig,
+        ["appserver", "static", "js", "build"],
+        MinimalGlobalConfig.__description__,
     ),
 ]
