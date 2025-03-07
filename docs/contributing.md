@@ -61,6 +61,14 @@ poetry run pytest tests/smoke --cov splunk_add_on_ucc_framework --cov-report htm
 
 A report is created in `htmlcov/index.html`.
 
+### UI validation
+
+```bash
+cd ui
+yarn run test
+cd ..
+```
+
 ### UI tests
 
 If you need to run UI tests for the PR, add a "run-ui-tests" label before the PR is created.
