@@ -62,11 +62,11 @@ export default async ({github, core, context}) => {
         // Create comment message
         let message =
             `
-    ## Code Coverage ${status === 'increased' ? '🎉' : status === 'decreased' ? '⚠️' : '🔄'}\n\n
-    | Type | PR | Develop | Change | Status |
-    |------|------|---------|--------|--------|
-    | Line Coverage | ${prLinePercent}% | ${developLinePercent}% | ${Math.abs(lineDiff).toFixed(2)}% | ${lineStatus} |
-    | Branch Coverage | ${prBranchPercent}% | ${developBranchPercent}% | ${Math.abs(branchDiff).toFixed(2)}% | ${branchStatus} |`;
+## Code Coverage ${status === 'increased' ? '🎉' : status === 'decreased' ? '⚠️' : '🔄'}\n\n
+| Type | PR | Develop | Change | Status |
+|------|------|---------|--------|--------|
+| Line Coverage | ${prLinePercent}% | ${developLinePercent}% | ${Math.abs(lineDiff).toFixed(2)}% | ${lineStatus} |
+| Branch Coverage | ${prBranchPercent}% | ${developBranchPercent}% | ${Math.abs(branchDiff).toFixed(2)}% | ${branchStatus} |`;
 
         // Find and delete previous coverage comments
         const {data: comments} = await github.rest.issues.listComments({
@@ -97,7 +97,7 @@ export default async ({github, core, context}) => {
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                body: message
+                body: message.trim()
             });
             core.info('Posted new coverage comment');
         } else {
