@@ -1,7 +1,12 @@
-name: Coverage Comparison
+name: Code Coverage
 
 on:
   pull_request:
+    branches:
+      - develop
+    paths:
+      - 'tests/**'
+      - 'splunk_add_on_ucc_framework/**'
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -26,9 +31,8 @@ jobs:
 
       - name: Generate coverage for PR branch
         run: |
-          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
           mkdir -p /tmp/coverage
-          cp coverage.xml /tmp/coverage/pr-coverage.xml
+          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/pr-coverage.json tests/unit
 
       - name: Checkout develop branch
         run: |
@@ -41,123 +45,12 @@ jobs:
 
       - name: Generate coverage for develop branch
         run: |
-          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
-          cp coverage.xml /tmp/coverage/develop-coverage.xml
+          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/develop-coverage.json tests/unit
 
-      # Compare the coverage using Linux commands
-      - name: Compare coverage
-        id: compare
-        run: |
-          # Function to extract coverage rate from XML
-          function extract_rate() {
-            local xml_file=$1
-            local rate_type=$2
-            grep -o "$rate_type-rate=\"[0-9.]*\"" "$xml_file" | head -1 | sed "s/$rate_type-rate=\"\([0-9.]*\)\"/\1/"
-          }
-
-          function to_percent() {
-            echo "$1 * 100" | bc -l | xargs printf "%.2f"
-          }
-
-          cd /tmp/coverage
-
-          # Extract coverage rates
-          PR_LINE_RATE=$(extract_rate pr-coverage.xml line)
-          DEVELOP_LINE_RATE=$(extract_rate develop-coverage.xml line)
-          PR_BRANCH_RATE=$(extract_rate pr-coverage.xml branch)
-          DEVELOP_BRANCH_RATE=$(extract_rate develop-coverage.xml branch)
-
-          # Convert to percentages
-          PR_LINE_PERCENT=$(to_percent $PR_LINE_RATE)
-          DEVELOP_LINE_PERCENT=$(to_percent $DEVELOP_LINE_RATE)
-          PR_BRANCH_PERCENT=$(to_percent $PR_BRANCH_RATE)
-          DEVELOP_BRANCH_PERCENT=$(to_percent $DEVELOP_BRANCH_RATE)
-
-          # Calculate differences
-          LINE_DIFF=$(echo "$PR_LINE_PERCENT - $DEVELOP_LINE_PERCENT" | bc -l)
-          BRANCH_DIFF=$(echo "$PR_BRANCH_PERCENT - $DEVELOP_BRANCH_PERCENT" | bc -l)
-
-          echo "PR Line Coverage: $PR_LINE_PERCENT%"
-          echo "Develop Line Coverage: $DEVELOP_LINE_PERCENT%"
-          echo "Line Coverage Diff: $LINE_DIFF%"
-
-          echo "PR Branch Coverage: $PR_BRANCH_PERCENT%"
-          echo "Develop Branch Coverage: $DEVELOP_BRANCH_PERCENT%"
-          echo "Branch Coverage Diff: $BRANCH_DIFF%"
-
-          # Set outputs
-          echo "pr_line=$PR_LINE_PERCENT" >> $GITHUB_OUTPUT
-          echo "develop_line=$DEVELOP_LINE_PERCENT" >> $GITHUB_OUTPUT
-          echo "line_diff=$LINE_DIFF" >> $GITHUB_OUTPUT
-
-          echo "pr_branch=$PR_BRANCH_PERCENT" >> $GITHUB_OUTPUT
-          echo "develop_branch=$DEVELOP_BRANCH_PERCENT" >> $GITHUB_OUTPUT
-          echo "branch_diff=$BRANCH_DIFF" >> $GITHUB_OUTPUT
-
-          # Determine overall status
-          if (( $(echo "$LINE_DIFF > 0" | bc -l) || $(echo "$BRANCH_DIFF > 0" | bc -l) )); then
-            echo "status=increased" >> $GITHUB_OUTPUT
-          elif (( $(echo "$LINE_DIFF < 0" | bc -l) || $(echo "$BRANCH_DIFF < 0" | bc -l) )); then
-            echo "status=decreased" >> $GITHUB_OUTPUT
-          else
-            echo "status=unchanged" >> $GITHUB_OUTPUT
-          fi
-
-      # Delete previous coverage comments and post a new one on the PR
-      - name: Comment on PR
+      - name: Process coverage data and comment on PR
         uses: actions/github-script@v7
         with:
           script: |
-            const status = '${{ steps.compare.outputs.status }}';
-            const prLine = '${{ steps.compare.outputs.pr_line }}';
-            const developLine = '${{ steps.compare.outputs.develop_line }}';
-            const lineDiff = parseFloat('${{ steps.compare.outputs.line_diff }}');
-            const prBranch = '${{ steps.compare.outputs.pr_branch }}';
-            const developBranch = '${{ steps.compare.outputs.develop_branch }}';
-            const branchDiff = parseFloat('${{ steps.compare.outputs.branch_diff }}');
+            const { default: compareDiff } = await import('./.github/scripts/compare-coverage.js')
 
-            const lineStatus = lineDiff > 0 ? '🟢 Increased' : lineDiff < 0 ? '🔴 Decreased' : '⚪ Unchanged';
-            const branchStatus = branchDiff > 0 ? '🟢 Increased' : branchDiff < 0 ? '🔴 Decreased' : '⚪ Unchanged';
-
-            let message = `## Code Coverage ${status === 'increased' ? '🎉' : status === 'decreased' ? '⚠️' : '🔄'}\n\n`;
-
-            message += `| Type | PR | Develop | Change | Status |
-            |------|------|---------|--------|--------|
-            | Line Coverage | ${prLine}% | ${developLine}% | ${Math.abs(lineDiff).toFixed(2)}% | ${lineStatus} |
-            | Branch Coverage | ${prBranch}% | ${developBranch}% | ${Math.abs(branchDiff).toFixed(2)}% | ${branchStatus} |`;
-
-            // First find and delete any previous coverage comments by this workflow
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number
-            });
-
-            // Find comments that start with "## Code Coverage" and were posted by the GitHub Actions bot
-            const botComments = comments.filter(comment => 
-              comment.user.login === 'github-actions[bot]' && 
-              comment.body.startsWith('## Code Coverage')
-            );
-
-            // Delete each previous coverage comment
-            for (const comment of botComments) {
-              await github.rest.issues.deleteComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: comment.id
-              });
-              console.log(`Deleted previous coverage comment with ID ${comment.id}`);
-            }
-
-            // Post the new comment if there are changes
-            if (lineDiff !== 0 || branchDiff !== 0) {
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: message
-              });
-              console.log('Posted new coverage comment');
-            } else {
-              console.log('No changes in coverage. Skipping comment.');
-            }
+            await compareDiff({github, context, core})
