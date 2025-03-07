@@ -1,0 +1,11 @@
+{
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "Splunk_TA_UCCExample",
+        "displayName": "Splunk Add-on for UCC Example",
+        "version": "5.59.0+728642d3c",
+        "checkForUpdates": true,
+        "schemaVersion": "0.0.9",
+        "_uccVersion": "5.59.0"
+    }
+}

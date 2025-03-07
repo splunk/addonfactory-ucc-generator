@@ -488,10 +488,20 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         )
         build.generate(source=package_folder, output_directory=temp_dir)
 
-        actual_file_path = path.join(
+        openapi_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        assert not path.exists(actual_file_path)
+        global_config_path = path.join(
+            temp_dir,
+            "Splunk_TA_UCCExample",
+            "appserver",
+            "static",
+            "js",
+            "build",
+            "globalConfig.json",
+        )
+        assert path.exists(openapi_file_path)
+        assert path.exists(global_config_path)
 
 
 def test_ucc_build_verbose_mode(caplog):
