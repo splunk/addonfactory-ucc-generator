@@ -47,7 +47,6 @@ export default async ({github, core, context}) => {
         core.debug(`Develop Branch Coverage: ${developBranchPercent}%`);
         core.debug(`Branch Coverage Diff: ${branchDiff.toFixed(2)}%`);
 
-        // Determine overall status
         let status = 'unchanged';
         if (lineDiff > 0 || branchDiff > 0) {
             status = 'increased';
@@ -75,7 +74,6 @@ export default async ({github, core, context}) => {
             issue_number: context.issue.number
         });
 
-        // Find comments that start with "## Code Coverage" and were posted by the GitHub Actions bot
         const botComments = comments.filter(comment =>
             comment.user.login === 'github-actions[bot]' &&
             comment.body.startsWith('## Code Coverage')
@@ -104,6 +102,6 @@ export default async ({github, core, context}) => {
             core.info('No changes in coverage. Skipping comment.');
         }
     } catch (error) {
-        core.setFailed(`Coverage comparison failed: ${error.message}`);
+        core.setFailed(`Code coverage failed: ${error.message}`);
     }
 }
