@@ -140,7 +140,7 @@ def test_dump_json_config(tmp_path):
 
     utils.dump_json_config(config, str(tmp_file_to_dump))
 
-    # Due to usage of end-of-line check in the add-on's repositories,
+    # Due to usage of end-of-line check in the add-on's repositories
     # we need to ensure that the empty line is being added to the end of the
     # file, otherwise it conflicts with `pre-commit` configuration and
     # `pre-commit` tries to add it again before commit.
