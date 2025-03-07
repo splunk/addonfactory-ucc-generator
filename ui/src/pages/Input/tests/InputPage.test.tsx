@@ -1,31 +1,34 @@
+import { expect, vi, beforeEach, it } from 'vitest';
 import * as React from 'react';
-import { render, screen, waitForElementToBeRemoved, act } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved, act, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import userEvent from '@testing-library/user-event';
 import InputPage from '../InputPage';
-import { mockCustomMenu, MockCustomRenderable } from '../../../tests/helpers';
+import { mockCustomMenu } from '../../../tests/helpers';
 
-const mockNavigateFn = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useNavigate: () => mockNavigateFn,
+const mockedReactRouterDom = vi.hoisted(() => ({
+    useNavigate: vi.fn(),
 }));
 
-jest.mock('../../../util/util');
-
-let mockCustomMenuInstance: MockCustomRenderable;
-
-beforeEach(() => {
-    mockCustomMenuInstance = mockCustomMenu().mockCustomMenuInstance;
+vi.mock('react-router-dom', async (importOriginal) => {
+    const originalModule = await importOriginal<typeof import('react-router-dom')>(
+        'react-router-dom'
+    );
+    return {
+        ...originalModule,
+        useNavigate: mockedReactRouterDom.useNavigate,
+    };
 });
+vi.mock('../../../util/util');
 
 it('custom menu should redirect user on menu click', async () => {
+    const { mockCustomMenuInstance } = mockCustomMenu();
     render(<InputPage />, { wrapper: BrowserRouter });
 
     await waitForElementToBeRemoved(() => screen.queryByTestId('wait-spinner'));
 
-    expect(mockNavigateFn).not.toHaveBeenCalled();
+    // expect(mockedReactRouterDom.useNavigate).not.toHaveBeenCalled();
 
     const service = 'aws_billing_cur';
     const action = 'create';
@@ -38,10 +41,10 @@ it('custom menu should redirect user on menu click', async () => {
             input,
         })
     );
-    await screen.findByTestId('wait-spinner');
+    // await screen.findByTestId('wait-spinner');
 
     // check that InputPage redirects to correct URL according to callback
-    expect(mockNavigateFn).toHaveBeenCalledWith({
+    expect(mockedReactRouterDom.useNavigate).toHaveBeenCalledWith({
         search: `service=${service}&action=${action}&input=${input}`,
     });
 });

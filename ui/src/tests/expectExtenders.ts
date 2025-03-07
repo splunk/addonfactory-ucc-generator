@@ -1,3 +1,4 @@
+import { expect } from 'vitest';
 import { invariant } from '../util/invariant';
 
 expect.extend({
@@ -44,12 +45,7 @@ expect.extend({
     },
 });
 
-declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace jest {
-        interface Matchers<R> {
-            toBeVisuallyDisabled(): R;
-            toBeVisuallyEnabled(): R;
-        }
-    }
+declare module 'vitest' {
+    interface toBeVisuallyDisabled extends CustomMatchers {}
+    interface toBeVisuallyEnabled extends CustomMatchers {}
 }

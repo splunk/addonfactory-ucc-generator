@@ -1,12 +1,13 @@
 import { delay, http, HttpResponse } from 'msw';
+import { vi, describe, it, expect } from 'vitest';
 import { generateEndPointUrl, getRequest } from './api';
 import { getGlobalConfigMock } from '../mocks/globalConfigMock';
 import { setUnifiedConfig } from './util';
 import { server } from '../mocks/server';
 
-const mockGenerateToastFn = jest.fn();
-jest.mock('./util', () => ({
-    ...jest.requireActual('./util'),
+const mockGenerateToastFn = vi.fn();
+vi.mock('./util', async () => ({
+    ...(await vi.importActual('./util')),
     generateToast: () => mockGenerateToastFn(),
 }));
 
@@ -44,7 +45,7 @@ describe('getRequest', () => {
         setup();
         server.use(http.get('*', () => HttpResponse.json({}, { status: 500 })));
 
-        const callbackOnError = jest.fn();
+        const callbackOnError = vi.fn();
 
         await expect(() =>
             getRequest({
@@ -60,7 +61,7 @@ describe('getRequest', () => {
     it('should not call callbackOnError if handleError is false', async () => {
         setup();
         server.use(http.get('*', () => HttpResponse.json({}, { status: 500 })));
-        const callbackOnError = jest.fn();
+        const callbackOnError = vi.fn();
 
         await expect(() =>
             getRequest({

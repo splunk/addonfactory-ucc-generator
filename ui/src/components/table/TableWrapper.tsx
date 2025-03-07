@@ -344,6 +344,7 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
     }
 
     if (loading) {
+        console.debug('Loading...');
         return <WaitSpinnerWrapper size="medium" />;
     }
 

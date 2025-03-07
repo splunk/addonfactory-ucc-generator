@@ -2,7 +2,7 @@ import Modal from '@splunk/react-ui/Modal';
 import React, { ReactElement, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import Button from '@splunk/react-ui/Button';
 import Dropdown from '@splunk/react-ui/Dropdown';
 import Menu from '@splunk/react-ui/Menu';

@@ -1,18 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import TabLayout from '@splunk/react-ui/TabLayout';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled from 'styled-components';
 import variables from '@splunk/themes/variables';
-import { pick } from '@splunk/themes';
+import pick from '@splunk/themes/pick';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
 import { OverviewDashboard } from './Overview';
 import { DataIngestionDashboard } from './DataIngestion';
 import { ErrorDashboard } from './Error';
 import { ResourceDashboard } from './Resource';
 import { CustomDashboard } from './Custom';
-import './dashboardStyle.css';
+
 import { getBuildDirPath } from '../../util/script';
 import { getUnifiedConfigs } from '../../util/util';
+import { GlobalDashboardStyle } from './dashboardStyle';
 
 /**
  *
@@ -25,7 +26,7 @@ export function loadJson(
     isComponentMounted: boolean,
     dataHandler: (data: Record<string, unknown>) => void
 ) {
-    fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
+    fetch(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}`)
         .then((res) => res.json())
         .then((external) => {
             if (isComponentMounted) {
@@ -37,18 +38,6 @@ export function loadJson(
             console.error('Loading file failed: ', e);
         });
 }
-
-const GlobalStyle = createGlobalStyle`
-    body {
-        background-color: ${pick({
-            enterprise: {
-                light: variables.gray96,
-                dark: variables.gray20,
-            },
-            prisma: variables.backgroundColorSection,
-        })};
-    }
-`;
 
 const DashboardStyles = styled.div`
     --muted-text-color: ${pick({
@@ -105,7 +94,7 @@ function DashboardPage() {
 
     return (
         <ErrorBoundary>
-            <GlobalStyle />
+            <GlobalDashboardStyle />
             <DashboardStyles>
                 <OverviewDashboard dashboardDefinition={overviewDef} />
                 {overviewDef ? ( // if overview is loaded then all default tabs should be present so table is injected

@@ -1,3 +1,4 @@
+import { expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -11,7 +12,16 @@ import { getSimpleConfig } from '../stories/configMockups';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../../util/script';
+
+// Import the mock outside of the setup function
 import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
+
+// Set up the mock before any tests run
+vi.mock(`/custom/CustomInputRow.js`, () => {
+    return {
+        default: mockCustomInputRow,
+    };
+});
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -20,18 +30,14 @@ const updatedInterval = 7788;
 const props = {
     page: 'inputs',
     serviceName: inputName,
-    handleRequestModalOpen: jest.fn(),
-    handleOpenPageStyleDialog: jest.fn(),
+    handleRequestModalOpen: vi.fn(),
+    handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
 const baseConfig = getSimpleConfig();
 const customRowFileName = 'CustomInputRow';
 
 function setup() {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
-        virtual: true,
-    });
-
     const headers = [
         {
             label: 'Name',

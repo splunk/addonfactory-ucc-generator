@@ -107,11 +107,13 @@ function InputPage(): ReactElement {
     const navigate = useNavigate();
     const query = useQuery();
 
+    const { search } = useLocation();
     useEffect(() => {
+        console.log('search', search);
         setServiceEntity();
         setActiveTab();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [useLocation().search]);
+    }, [search]);
 
     const setServiceEntity = (): void => {
         const service = services.find((x) => x.name === query.get('service'));
