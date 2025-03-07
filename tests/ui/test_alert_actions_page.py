@@ -103,7 +103,7 @@ class TestAlertActions(UccTester):
             alert_page = AlertPage(ucc_smartx_selenium_helper, None)
             alert_page.alert_entity.open()
 
-            # Wait for the button before interacting
+            # Wait for the button before interacting to the element
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, ".new-alert-button"))
             )
@@ -119,9 +119,10 @@ class TestAlertActions(UccTester):
         try:
             run_test()
         except Exception as e:
-            # Maximize window and retry
+            # if test case fails then maximise the window size and retry
             print(f"Test failed: {e}, retrying with maximized window...")
             driver.maximize_window()
+            # call test case again after maximise
             run_test()
 
     @pytest.mark.execute_enterprise_cloud_true
