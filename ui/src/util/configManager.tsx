@@ -81,13 +81,22 @@ class ConfigManager extends Component<ConfigManagerProps, ConfigManagerState> {
 
     renderComponents() {
         if (this.state.syntaxError) {
+            // returnFocus is empty because there is no element to return focus to
             return (
-                <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(20)])} open />
+                <ErrorModal
+                    returnFocus={() => {}}
+                    message={getFormattedMessage(110, [getFormattedMessage(20)])}
+                    open
+                />
             );
         }
         if (this.state.fileNotFoundError) {
             return (
-                <ErrorModal message={getFormattedMessage(110, [getFormattedMessage(118)])} open />
+                <ErrorModal
+                    returnFocus={() => {}}
+                    message={getFormattedMessage(110, [getFormattedMessage(118)])}
+                    open
+                />
             );
         }
         return this.props.children(this.state);

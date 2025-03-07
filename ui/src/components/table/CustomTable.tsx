@@ -207,11 +207,13 @@ const CustomTable: React.FC<CustomTableProps> = ({
         if (entityModal.open) {
             const label = getFormTitle(true, entityModal.serviceName);
 
+            // TODO: returnFocus
             return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal
                     page={page}
                     open={entityModal.open}
                     handleRequestClose={handleEntityClose}
+                    returnFocus={() => {}}
                     serviceName={entityModal.serviceName}
                     stanzaName={entityModal.stanzaName}
                     mode={entityModal.mode}
@@ -224,11 +226,13 @@ const CustomTable: React.FC<CustomTableProps> = ({
         return null;
     };
 
+    // TODO: returnFocus
     const generateDeleteDialog = () =>
         deleteModal.serviceName && deleteModal.stanzaName ? (
             <DeleteModal
                 page={page}
                 open={deleteModal.open}
+                returnFocus={() => {}}
                 handleRequestClose={handleDeleteClose}
                 serviceName={deleteModal.serviceName}
                 stanzaName={deleteModal.stanzaName}

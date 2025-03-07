@@ -92,8 +92,11 @@ export const DataIngestionModal = ({
     dataIngestionDropdownValues.forEach((item, index) => {
         if (selectValueForDropdownInModal !== item.value) {
             items.push(
-                // eslint-disable-next-line react/no-array-index-key
-                <Menu.Item key={`${item.label}-${index}`} className="dropdown_menu_item">
+                <Menu.Item
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={`${item.label}-${index}`}
+                    className="dropdown_menu_item"
+                >
                     {item.label}
                 </Menu.Item>
             );
@@ -116,12 +119,10 @@ export const DataIngestionModal = ({
         makeVisualAdjustmentsOnDataIngestionModal();
     }, [open]);
 
+    // TODO: set proper value for returnFocus
     return (
-        <ModalWrapper open={open}>
-            <ModalHeader
-                onRequestClose={handleRequestClose}
-                title={`Data ingestion details (By ${title})`}
-            />
+        <ModalWrapper returnFocus={() => {}} open={open} onRequestClose={handleRequestClose}>
+            <ModalHeader title={`Data ingestion details (By ${title})`} />
             <ModalBody>
                 {children}
                 <div id="data_ingestion_modal_dropdown" className="invisible_before_moving">

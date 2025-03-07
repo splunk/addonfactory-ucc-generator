@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ComponentProps } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
@@ -19,6 +19,7 @@ export interface EntityModalProps {
     mode: Mode;
     serviceName: string;
     handleRequestClose: () => void;
+    returnFocus: ComponentProps<typeof Modal>['returnFocus'];
     stanzaName?: string;
     open?: boolean;
     formLabel?: string;
@@ -75,11 +76,12 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
 
     render() {
         return (
-            <ModalWrapper open={this.props.open}>
-                <Modal.Header
-                    title={this.props.formLabel}
-                    onRequestClose={this.handleRequestClose}
-                />
+            <ModalWrapper
+                returnFocus={this.props.returnFocus}
+                open={this.props.open}
+                onRequestClose={this.handleRequestClose}
+            >
+                <Modal.Header title={this.props.formLabel} />
                 <Modal.Body>
                     <PageContext.Consumer>
                         {(pageContext) => (

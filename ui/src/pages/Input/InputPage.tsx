@@ -203,12 +203,14 @@ function InputPage(): ReactElement {
     };
 
     // generate modal style dialog
+    // TODO: returnFocus
     const generateModalDialog = () =>
         entity.serviceName && (
             <EntityModal
                 page={PAGE_INPUT}
                 open={entity.open}
                 handleRequestClose={handleModalDialogClose}
+                returnFocus={() => {}}
                 serviceName={entity.serviceName}
                 mode={MODE_CREATE}
                 formLabel={entity.formLabel}

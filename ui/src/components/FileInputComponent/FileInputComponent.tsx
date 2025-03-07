@@ -147,6 +147,7 @@ function FileInputComponent(props: FileInputComponentProps) {
             disabled={disabled}
             help={errorMsg}
             error={!!errorMsg}
+            placeholder="Select file"
         >
             {fileName && <File.Item name={fileName} />}
         </FileWrapper>

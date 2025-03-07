@@ -100,6 +100,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                         setActivePanelId(service.name);
                         setSlidingPanelsTransition('forward');
                     }}
+                    placeholder={service.title}
                 >
                     {service.title}
                 </Menu.Item>
@@ -110,6 +111,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                         handleRequestOpen({ serviceName: service.name, groupName });
                         setIsSubMenu(false);
                     }}
+                    placeholder={service.title}
                 >
                     {service.title}
                     <CustomSubTitle>&nbsp;{service.subTitle}</CustomSubTitle>
@@ -120,11 +122,12 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const getBackButton = () => (
         <>
             <Menu.Item
-                icon={<ChevronLeft />}
+                startAdornment={<ChevronLeft />}
                 onClick={() => {
                     setActivePanelId(ROOT_GROUP_NAME);
                     setSlidingPanelsTransition('backward');
                 }}
+                placeholder="Back"
             >
                 Back
             </Menu.Item>
