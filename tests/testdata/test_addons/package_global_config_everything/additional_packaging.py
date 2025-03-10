@@ -30,8 +30,6 @@ def cleanup_output_files(output_path: str, ta_name: str) -> None:
     files_to_delete.append(sep.join([output_path, ta_name, "bin", "template_rest_handler_script.py"]))
     files_to_delete.append(sep.join([output_path, ta_name, "bin", "file_does_not_exist.py"]))
     files_to_delete.append(sep.join([output_path, ta_name, "default", "nav", "views", "file_copied_from_source_code.xml"]))
-    files_to_delete.append(sep.join([output_path, ta_name, "bin", "__pycache__", "sum_without_map.cpython-37.pyc"]))
-    files_to_delete.append(sep.join([output_path, ta_name, "bin", "__pycache__", "sum.cpython-37.pyc"]))
 
     directories_to_delete.append(sep.join([output_path, ta_name, "bin", "__pycache__"]))
 

@@ -61,7 +61,7 @@ def test_set_attributes_without_custom_command(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    assert not hasattr(searchbnf_conf, "searchbnf_info")
+    assert searchbnf_conf.searchbnf_info == []
 
 
 def test_set_attributes(

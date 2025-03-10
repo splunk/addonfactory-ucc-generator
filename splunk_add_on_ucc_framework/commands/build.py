@@ -51,6 +51,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
+from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 
 
 logger = logging.getLogger("ucc_gen")
@@ -535,14 +536,36 @@ def generate(
                     " is not been defined in globalConfig. Define them as requiredSearchAssistant is set to True. "
                 )
                 sys.exit(1)
-            if command["version"] == 1:
-                command["fileName"] = command["fileName"].replace(".py", "")
-                if command["commandName"] != command["fileName"]:
-                    logger.error(
-                        f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
-                        " should be same for version 1 of custom search command."
-                    )
-                    sys.exit(1)
+            command["fileName"] = command["fileName"].replace(".py", "")
+
+            if command["commandName"] in SPLUNK_COMMANDS:
+                logger.error(
+                    f"CommandName: {command['commandName']}"
+                    " cannot have the same name as Splunk built-in command."
+                )
+                sys.exit(1)
+
+            if (
+                command["version"] == 2
+                and command["commandName"] == command["fileName"]
+            ):
+                # In version 2 we are generating file therefore the core logic should not have the same name
+                logger.error(
+                    f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
+                    " should not be same for version 2 of custom search command."
+                )
+                sys.exit(1)
+
+            if (
+                command["version"] == 1
+                and command["commandName"] != command["fileName"]
+            ):
+                # In version 1 we are generating file therefore the core logic should not have the same name
+                logger.error(
+                    f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
+                    " should be same for version 1 of custom search command."
+                )
+                sys.exit(1)
 
         generated_files.extend(
             begin(
