@@ -491,19 +491,6 @@ def test_ucc_generate_with_configuration_files_only():
         os.remove(global_config_path)
 
 
-# def test_ucc_generate_openapi_with_configuration_files_only():
-#     with tempfile.TemporaryDirectory() as temp_dir:
-#         package_folder = path.join(
-#             path.dirname(path.realpath(__file__)),
-#             "..",
-#             "testdata",
-#             "test_addons",
-#             "package_no_global_config",
-#             "package",
-#         )
-#         build.generate(source=package_folder, output_directory=temp_dir)
-
-
 def test_ucc_build_verbose_mode(caplog):
     """
     Tests results will test both no option and --verbose mode of build command.

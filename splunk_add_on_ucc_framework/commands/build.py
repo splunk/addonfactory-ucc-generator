@@ -508,12 +508,15 @@ def generate(
     global_config.dump(os.path.join(output_build_path, global_config_file))
     logger.info("Copied globalConfig to output")
     ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
+    ui_available = False
+    if global_config and global_config.has_pages():
+        ui_available = global_config.meta.get("isVisible", True)
     try:
         install_python_libraries(
             source,
             ucc_lib_target,
             python_binary_name,
-            includes_ui=True,
+            includes_ui=ui_available,
             os_libraries=global_config.os_libraries,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
@@ -610,10 +613,6 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
-
-    ui_available = False
-    if global_config and global_config.has_pages():
-        ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(
         global_config=global_config,
