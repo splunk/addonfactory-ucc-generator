@@ -447,15 +447,18 @@ def generate(
     gc_path = _get_and_check_global_config_path(source, config_path)
 
     if not gc_path:
-        MinimalGlobalConfig(
-            global_config=None,
-            input_dir=source,
-            output_dir=output_directory,
-            ucc_dir=internal_root_dir,
-            addon_name=ta_name,
-            app_manifest=app_manifest,
-        ).generate()
-        gc_path = _get_and_check_global_config_path(source, config_path)
+        gc_path = (
+            MinimalGlobalConfig(
+                global_config=None,
+                input_dir=source,
+                output_dir=output_directory,
+                ucc_dir=internal_root_dir,
+                addon_name=ta_name,
+                app_manifest=app_manifest,
+            )
+            .generate()
+            .get("globalConfig.json", "")
+        )
         logger.info(f"Created minimal globalConfig file located @ {gc_path}")
 
     logger.info(f"Using globalConfig file located @ {gc_path}")

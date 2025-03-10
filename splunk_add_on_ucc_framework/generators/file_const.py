@@ -107,7 +107,7 @@ GEN_FILE_LIST: List[FileClass] = [
     FileClass(
         "globalConfig.json",
         MinimalGlobalConfig,
-        ["appserver", "static", "js", "build"],
+        "<source_dir>",
         MinimalGlobalConfig.__description__,
     ),
 ]
