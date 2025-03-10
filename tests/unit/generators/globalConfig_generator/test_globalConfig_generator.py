@@ -1,6 +1,6 @@
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.generators.globalConfig_generator import (
-    MinimalGlobalConfigGenerator,
+    GlobalConfigGenerator,
 )
 from tests.unit.helpers import get_testdata_file_path
 from unittest.mock import patch, MagicMock
@@ -43,24 +43,24 @@ def mocked__set_attribute(this, **kwargs):
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.globalConfig_generator.MinimalGlobalConfigGenerator._set_attributes",
+    "splunk_add_on_ucc_framework.generators.globalConfig_generator.GlobalConfigGenerator._set_attributes",
     return_value=MagicMock(),
 )
 def test_generate(
     mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    html = MinimalGlobalConfigGenerator(
+    html = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
     assert html.generate() == {"": ""}
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.globalConfig_generator.MinimalGlobalConfigGenerator._set_attributes",
+    "splunk_add_on_ucc_framework.generators.globalConfig_generator.GlobalConfigGenerator._set_attributes",
     return_value=MagicMock(),
 )
 @patch(
-    "splunk_add_on_ucc_framework.generators.globalConfig_generator.MinimalGlobalConfigGenerator.generate_globalconfig"
+    "splunk_add_on_ucc_framework.generators.globalConfig_generator.GlobalConfigGenerator.generate_globalconfig"
 )
 def test_generate_globalconfig_return(
     mock_html_gen,
@@ -73,20 +73,20 @@ def test_generate_globalconfig_return(
     set_attr,
 ):
     mock_html_gen.return_value = set_attr
-    html = MinimalGlobalConfigGenerator(
+    html = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
     assert html.generate() == set_attr
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.globalConfig_generator.MinimalGlobalConfigGenerator._set_attributes",
+    "splunk_add_on_ucc_framework.generators.globalConfig_generator.GlobalConfigGenerator._set_attributes",
     return_value=MagicMock(),
 )
 def test_generate_globalconfig(
     mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    html = MinimalGlobalConfigGenerator(
+    html = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
     assert html.generate_globalconfig() == {"": ""}
@@ -97,13 +97,13 @@ def test__set_attributes_error(global_config, input_dir, output_dir, ucc_dir, ta
     This tests that the exception provided in side_effect is raised too
     """
     with raises(NotImplementedError):
-        MinimalGlobalConfigGenerator(
+        GlobalConfigGenerator(
             global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
         )
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.globalConfig_generator.MinimalGlobalConfigGenerator._set_attributes",
+    "splunk_add_on_ucc_framework.generators.globalConfig_generator.GlobalConfigGenerator._set_attributes",
     side_effect=[ValueError],
 )
 def test__set_attributes_custom_error(
@@ -111,19 +111,19 @@ def test__set_attributes_custom_error(
 ):
     """
     appending to `test__set_attributes_error`, it ensures that the exception
-    is raised from `MinimalGlobalConfigGenerator` class only
+    is raised from `GlobalConfigGenerator` class only
     """
     with raises(ValueError):
-        MinimalGlobalConfigGenerator(
+        GlobalConfigGenerator(
             global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
         )
 
 
-@patch.object(MinimalGlobalConfigGenerator, "_set_attributes", mocked__set_attribute)
+@patch.object(GlobalConfigGenerator, "_set_attributes", mocked__set_attribute)
 def test__set_attributes_no_error(
     global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    html = MinimalGlobalConfigGenerator(
+    html = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
     # the values present in `mocked__set_attribute` function

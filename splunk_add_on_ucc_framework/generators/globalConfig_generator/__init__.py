@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .globalConfig_generator import MinimalGlobalConfigGenerator
+from .globalConfig_generator import GlobalConfigGenerator
 from .create_minimal_globalconfig import MinimalGlobalConfig
 
 
-__all__ = ["MinimalGlobalConfigGenerator", "MinimalGlobalConfig"]
+__all__ = ["GlobalConfigGenerator", "MinimalGlobalConfig"]

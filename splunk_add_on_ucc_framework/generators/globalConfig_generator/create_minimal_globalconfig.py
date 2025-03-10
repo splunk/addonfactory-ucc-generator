@@ -14,17 +14,17 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.globalConfig_generator import (
-    MinimalGlobalConfigGenerator,
+    GlobalConfigGenerator,
 )
 from typing import Any, Dict, Union
 import os
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
 
-class MinimalGlobalConfig(MinimalGlobalConfigGenerator):
+class MinimalGlobalConfig(GlobalConfigGenerator):
     __description__ = (
-        "Generates minimal globalConfig.json file in source code if "
-        "globalConfig is not present in source directory."
+        "Generates globalConfig.json file in the source code if "
+        "globalConfig is not present in source directory at build time."
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:

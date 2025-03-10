@@ -1,5 +1,5 @@
 def test___init__html():
-    expected_classes = ["MinimalGlobalConfigGenerator", "MinimalGlobalConfig"]
+    expected_classes = ["GlobalConfigGenerator", "MinimalGlobalConfig"]
     expected_modules = ["globalConfig_generator", "create_minimal_globalconfig"]
     import splunk_add_on_ucc_framework.generators.globalConfig_generator as minimal_gc
 

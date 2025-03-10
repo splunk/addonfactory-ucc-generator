@@ -17,7 +17,7 @@ from typing import Any, Dict, Union, NoReturn
 from ..file_generator import FileGenerator
 
 
-class MinimalGlobalConfigGenerator(FileGenerator):
+class GlobalConfigGenerator(FileGenerator):
     __description__ = "DESCRIBE THE MINIMAL GLOBAL CONFIG FILE THAT IS GENERATED"
 
     def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
