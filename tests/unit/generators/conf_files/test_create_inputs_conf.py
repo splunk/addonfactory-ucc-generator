@@ -51,7 +51,8 @@ def test_set_attributes_no_global_config(
 
     inputs_conf._set_attributes()
 
-    assert inputs_conf.input_names == []
+    assert inputs_conf.generate_conf() is None
+    assert inputs_conf.generate_conf_spec() is None
 
 
 def test_set_attributes_no_inputs_in_global_config(
@@ -66,72 +67,8 @@ def test_set_attributes_no_inputs_in_global_config(
 
     inputs_conf._set_attributes()
 
-    assert inputs_conf.input_names == []
-
-
-def test_set_attributes_with_conf_key(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when a service has a 'conf' key."""
-    inputs_conf = InputsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [{"name": "service1", "conf": "some_conf"}]
-
-    inputs_conf._set_attributes()
-
-    assert inputs_conf.input_names == []
-    assert inputs_conf.conf_file == "inputs.conf"
-    assert inputs_conf.conf_spec_file == "inputs.conf.spec"
-
-
-def test_set_attributes_without_conf_key_and_name_field(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when a service does not have 'conf' key and 'entity' contains 'name' field."""
-    inputs_conf = InputsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {"name": "service1", "entity": [{"field": "name"}], "disableNewInput": True}
-    ]
-
-    inputs_conf._set_attributes()
-
-    assert inputs_conf.input_names == [{"service1": []}]
-    assert inputs_conf.default_value_info["service1"]["disabled"] == "true"
-
-
-def test_set_attributes_without_conf_key_and_other_fields(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when a service does not have 'conf' key and 'entity' contains fields other than 'name'."""
-    inputs_conf = InputsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {
-            "name": "service1",
-            "entity": [
-                {
-                    "field": "other_field",
-                    "help": "help text",
-                    "defaultValue": "default_val",
-                }
-            ],
-        }
-    ]
-
-    inputs_conf._set_attributes()
-
-    expected_output = [{"service1": ["other_field = help text  Default: default_val"]}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.default_value_info == {
-        "service1": {"other_field": "default_val"}
-    }
+    assert inputs_conf.generate_conf() is None
+    assert inputs_conf.generate_conf_spec() is None
 
 
 @patch(
@@ -169,21 +106,6 @@ def test_generate_conf(
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_spec_no_input_names(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    inputs_conf = InputsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    inputs_conf.input_names = []
-    result = inputs_conf.generate_conf()
-    assert result is None
-
-
-@patch(
     "splunk_add_on_ucc_framework.generators.conf_files.InputsConf.set_template_and_render"
 )
 @patch(
@@ -218,21 +140,6 @@ def test_generate_conf_spec(
     assert file_paths == {exp_fname: file_path}
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_input_names(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    inputs_conf = InputsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    inputs_conf.input_names = []
-    result = inputs_conf.generate_conf_spec()
-    assert result is None
-
-
 def test_inputs_conf_content(global_config, input_dir, output_dir, ta_name):
     inputs_conf = InputsConf(
         global_config,
@@ -260,6 +167,7 @@ def test_inputs_conf_content(global_config, input_dir, output_dir, ta_name):
             python.version = python3
             disabled = true
             index = default
+            input_two_checkbox_bool = true
             input_two_radio = yes
             use_existing_checkpoint = yes
             """
@@ -305,10 +213,53 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
             python.version = python3
             disabled = true
             index = default
+            input_two_checkbox_bool = true
             input_two_radio = yes
             use_existing_checkpoint = yes
             """
         ).lstrip()
+    )
+
+    specs = inputs_conf.generate_conf_spec()
+    assert specs is not None
+    assert specs.keys() == {"inputs.conf.spec"}
+    assert Path(specs["inputs.conf.spec"]).read_text() == "\n".join(
+        [
+            "[example_input_one://<name>]",
+            "account = ",
+            "index = Default: default",
+            "input_one_checkbox = This is an example checkbox for the input one entity",
+            "input_one_radio = This is an example radio button for the input one entity Default: yes",
+            "interval = Time interval of the data input, in seconds.",
+            "limit = The maximum number of results returned by the query. Default: 1000",
+            "multipleSelectTest = ",
+            "object = The name of the object to query for.",
+            "object_fields = Object fields from which to collect data. Delimit multiple fields using a comma.",
+            "order_by = The datetime field by which to query results in ascending order for indexing. Default: "
+            "LastModifiedDate",
+            "singleSelectTest = ",
+            "start_date = The datetime after which to query and index records, in this "
+            'format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
+            "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
+            "collection. Default: yes",
+            "",
+            "[example_input_two://<name>]",
+            "account = ",
+            "api1 = ",
+            "api2 = ",
+            "api3 = ",
+            "index = Default: default",
+            "input_two_checkbox = This is an example checkbox for the input two entity",
+            "input_two_checkbox_bool = This is an example checkbox for the input two entity with bool default "
+            "Default: True",
+            "input_two_multiple_select = This is an example multipleSelect for input two entity",
+            "input_two_radio = This is an example radio button for the input two entity Default: yes",
+            "interval = Time interval of the data input, in seconds .",
+            'start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after which to query and '
+            "index records.  The default is 90 days before today.",
+            "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
+            "collection. Default: yes\n",
+        ]
     )
 
 
@@ -324,14 +275,36 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
                 {
                     "type": "text",
                     "label": "Name",
-                    "validators": [
-                        {
-                            "type": "regex",
-                            "pattern": "^[a-zA-Z]\\w*$",
-                        },
-                    ],
                     "field": "name",
                     "required": True,
+                },
+                {
+                    "type": "text",
+                    "label": "Required field",
+                    "field": "required_field",
+                    "required": True,
+                },
+                {
+                    "type": "text",
+                    "label": "Optional field",
+                    "field": "optional_field",
+                    "required": False,
+                },
+                {
+                    "type": "text",
+                    "label": "Field with description",
+                    "field": "field_desc",
+                    "required": False,
+                    "help": "Some description",
+                },
+                {
+                    "field": "example_help_link",
+                    "label": "",
+                    "type": "helpLink",
+                    "options": {
+                        "text": "Help Link",
+                        "link": "https://docs.splunk.com/Documentation",
+                    },
                 },
             ],
             "title": "Example Input Three",
@@ -349,4 +322,18 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
         addon_name=ta_name,
     )
     assert inputs_conf.generate_conf() is None
-    assert inputs_conf.generate_conf_spec() is None
+
+    specs = inputs_conf.generate_conf_spec()
+    assert specs is not None
+    assert specs.keys() == {"some_conf.conf.spec"}
+    assert (
+        Path(specs["some_conf.conf.spec"]).read_text()
+        == dedent(
+            """
+        [<name>]
+        required_field =
+        optional_field =
+        field_desc = Some description
+        """
+        ).lstrip()
+    )
