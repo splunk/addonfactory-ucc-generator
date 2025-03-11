@@ -326,14 +326,11 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     specs = inputs_conf.generate_conf_spec()
     assert specs is not None
     assert specs.keys() == {"some_conf.conf.spec"}
-    assert (
-        Path(specs["some_conf.conf.spec"]).read_text()
-        == dedent(
-            """
-        [<name>]
-        required_field =
-        optional_field =
-        field_desc = Some description
-        """
-        ).lstrip()
+    assert Path(specs["some_conf.conf.spec"]).read_text() == "\n".join(
+        [
+            "[<name>]",
+            "required_field = ",
+            "optional_field = ",
+            "field_desc = Some description\n",
+        ]
     )
