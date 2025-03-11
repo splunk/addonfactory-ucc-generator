@@ -80,7 +80,7 @@ class InputsConf(ConfGenerator):
                         value = str(field_default_value)
 
                     default_values[entity["field"]] = value
-                    field_value_parts.append(f"Default: {field_default_value}")
+                    field_value_parts.append(f"(Default: {value})")
 
                 field_value = " ".join(field_value_parts)
                 prop = f"{field_name} = {field_value}".rstrip()
