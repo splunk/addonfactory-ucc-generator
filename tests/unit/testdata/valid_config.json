@@ -806,7 +806,7 @@
                             "help": "This is an example checkbox for the input two entity"
                         },
                         {
-                            "type": "checkbox_with_bool",
+                            "type": "checkbox",
                             "label": "Example Checkbox with bool",
                             "field": "input_two_checkbox_bool",
                             "help": "This is an example checkbox for the input two entity with bool default",
