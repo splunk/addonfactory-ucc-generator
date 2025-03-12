@@ -1257,6 +1257,22 @@ files = [
 pytest = "*"
 
 [[package]]
+name = "pytest-rerunfailures"
+version = "11.1.2"
+description = "pytest plugin to re-run tests to eliminate flaky failures"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "pytest-rerunfailures-11.1.2.tar.gz", hash = "sha256:55611661e873f1cafa384c82f08d07883954f4b76435f4b8a5b470c1954573de"},
+    {file = "pytest_rerunfailures-11.1.2-py3-none-any.whl", hash = "sha256:d21fe2e46d9774f8ad95f1aa799544ae95cac3a223477af94aa985adfae92b7e"},
+]
+
+[package.dependencies]
+importlib-metadata = {version = ">=1", markers = "python_version < \"3.8\""}
+packaging = ">=17.1"
+pytest = ">=5.3"
+
+[[package]]
 name = "pytest-split-tests"
 version = "1.1.0"
 description = "A Pytest plugin for running a subset of your tests by splitting them in to equally sized groups. Forked from Mark Adams' original project pytest-test-groups."
@@ -1799,4 +1815,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<3.14"
-content-hash = "4e7694b0fc10d92bfcca74f5b447131fecde89266c9c7c3245d09a999a54982d"
+content-hash = "72947997598e01c6045d9fca0f73c5d7b3ea593823fbea04b54e20ea8f696c01"
