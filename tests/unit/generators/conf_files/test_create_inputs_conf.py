@@ -174,6 +174,13 @@ def test_inputs_conf_content(global_config, input_dir, output_dir, ta_name):
         ).lstrip()
     )
 
+    generated_specs = inputs_conf.generate_conf_spec()
+    assert generated_specs is not None
+    assert generated_specs.keys() == {"inputs.conf.spec"}
+    assert (
+        "example_help_link" not in Path(generated_specs["inputs.conf.spec"]).read_text()
+    )
+
 
 def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
     config_content = json.loads(
