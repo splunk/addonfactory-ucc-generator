@@ -43,6 +43,7 @@ import {
     BasicEntity,
     ChangeRecord,
     EntitiesAllowingModifications,
+    CustomValidatorFunc,
 } from '../../types/components/BaseFormTypes';
 import {
     getAllFieldsWithModifications,
@@ -648,7 +649,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
 
             // validation condition of required fields in O-Auth
-            let temEntities;
+            let temEntities: AnyEntity[] | undefined;
             if (this.isOAuth) {
                 let reqFields: string[] = [];
                 Object.keys(this.authMap).forEach((type) => {
@@ -657,8 +658,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         reqFields = [...reqFields, ...this.authMap[type]];
                     }
                 });
+
                 temEntities = this.entities?.map((e) => {
-                    if (reqFields.includes(e.field)) {
+                    // helpLink do not have required field
+                    if (e.type !== 'helpLink' && reqFields.includes(e.field)) {
                         // All oauth fields are required except if explicitely `required` is set to `false`
                         return { required: true, ...e };
                     }
@@ -672,11 +675,15 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             // or if data modification is applicable
             // modification takes precedence over requiredWhenVisible
             temEntities = temEntities?.map((entity) => {
+                // helpLink do not have required field
+                if (entity.type === 'helpLink') {
+                    return entity;
+                }
+
                 const requiredModification =
                     this.state?.data?.[entity.field].modifiedEntitiesData?.required;
 
                 if (
-                    entity?.type !== 'helpLink' &&
                     entity?.type !== 'oauth' &&
                     entity?.type !== 'custom' &&
                     entity?.options?.requiredWhenVisible &&
@@ -1002,10 +1009,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         });
     };
 
-    addCustomValidator = (
-        field: string,
-        validatorFunc: (submittedField: string, submittedValue: string) => void
-    ) => {
+    addCustomValidator = (field: string, validatorFunc: CustomValidatorFunc) => {
         const index = this.entities?.findIndex((x) => x.field === field);
         const validator = [{ type: 'custom', validatorFunc }];
         if (index !== undefined && this.entities?.[index]) {
