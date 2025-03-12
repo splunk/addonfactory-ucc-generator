@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const NumberValidator = z.object({
     errorMsg: z.string().optional(),
     type: z.literal('number'),
-    range: z.array(z.number()),
+    range: z.tuple([z.number(), z.number()]),
     isInteger: z.boolean().optional(),
 });
 export const StringValidator = z.object({
@@ -33,3 +33,13 @@ export const DateValidator = z.object({
     errorMsg: z.string().optional(),
     type: z.literal('date'),
 });
+
+export const AnyOfValidators = z.discriminatedUnion('type', [
+    NumberValidator,
+    StringValidator,
+    RegexValidator,
+    EmailValidator,
+    Ipv4Validator,
+    UrlValidator,
+    DateValidator,
+]);
