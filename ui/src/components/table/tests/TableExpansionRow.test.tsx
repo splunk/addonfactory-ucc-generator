@@ -12,6 +12,7 @@ import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../../util/script';
 import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
+import { invariant } from '../../../util/invariant';
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -103,8 +104,9 @@ function setup() {
 }
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    const expandable = within(inputRow).queryByRole('button', { name: /expand/i });
-    if (expandable && expandable.getAttribute('aria-expanded') === 'false') {
+    const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
+    invariant(expandable);
+    if (expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
     }
