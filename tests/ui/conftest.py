@@ -36,6 +36,7 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
     IGNORED: List[str] = [
         "https://rum-ingest.us1.signalfx.com",
         "https://cdn.signalfx.com/o11y-gdi-rum",
+        "http://localhost:8000/en-US/splunkd/__raw/services/dmc-conf/settings/settings?output_mode=json",
     ]
 
     browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)
