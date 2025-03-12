@@ -64,6 +64,8 @@ function CustomTableRow(props: CustomTableRowProps) {
 
     const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
 
+    const toggleRef = React.createRef<HTMLDivElement>();
+
     const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
         header.customCell?.type &&
@@ -187,6 +189,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             <Table.Cell data-column={header.field} key={header.field}>
                                 <SwitchWrapper>
                                     <Switch
+                                        elementRef={toggleRef}
                                         key={row.name}
                                         value={row.disabled}
                                         onClick={() =>
@@ -215,6 +218,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                                     <span data-test="status">{statusContent}</span>
                                     {displayAcceptToggling && (
                                         <AcceptModal
+                                            returnFocus={toggleRef}
                                             message={`Do you want to make ${row.name} input ${
                                                 row.disabled ? activeText : inactiveText
                                             }?`}

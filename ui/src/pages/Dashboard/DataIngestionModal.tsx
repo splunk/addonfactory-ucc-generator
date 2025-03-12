@@ -116,11 +116,12 @@ export const DataIngestionModal = ({
         makeVisualAdjustmentsOnDataIngestionModal();
     }, [open]);
 
+    // TODO: returnFocus ADDON-78884
     return (
-        <ModalWrapper open={open}>
+        <ModalWrapper returnFocus={() => {}} open={open} onRequestClose={handleRequestClose}>
             <ModalHeader
-                onRequestClose={handleRequestClose}
                 title={`Data ingestion details (By ${title})`}
+                onRequestClose={handleRequestClose}
             />
             <ModalBody>
                 {children}
