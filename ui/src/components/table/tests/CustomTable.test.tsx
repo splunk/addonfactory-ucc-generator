@@ -157,7 +157,7 @@ const moreInfoToContainName = async (inputRow: HTMLElement, name: string) => {
     await collapseRow(inputRow);
 };
 
-it('should update custom Expansion Row when Input has changed', async () => {
+it('should correctly display expanded row section for freshly added row', async () => {
     setup();
     const allRows = screen.getAllByRole('row');
     // 3 rows + header
