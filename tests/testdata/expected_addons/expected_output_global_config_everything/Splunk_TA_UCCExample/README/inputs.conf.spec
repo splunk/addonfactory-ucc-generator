@@ -1,5 +1,6 @@
 [example_input_one://<name>]
-account =
+account = 
+example_help_link = 
 example_textarea_field = Help message
 hard_disabled = 
 hide_in_ui = 
@@ -18,7 +19,8 @@ use_existing_checkpoint = Data input already exists. Select `No` if you want to 
 
 [example_input_two://<name>]
 account = 
-apis =
+apis = 
+example_help_link = 
 hard_disabled = 
 hide_in_ui = 
 index = Default: default
