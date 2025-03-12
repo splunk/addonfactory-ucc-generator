@@ -45,9 +45,8 @@ class InputsConf(ConfGenerator):
                     )
                     continue
                 for entity in service.get("entity", {"field": "name"}):
+                    # TODO: add the details and updates on what to skip and process
                     if entity["field"] == "name":
-                        continue
-                    if entity.get("type") == "helpLink":
                         continue
                     nl = "\n"  # hack for `f-string expression part cannot include a backslash`
                     # TODO: enhance the message formation for inputs.conf.spec file
