@@ -120,8 +120,8 @@ export const DataIngestionModal = ({
     return (
         <ModalWrapper returnFocus={() => {}} open={open} onRequestClose={handleRequestClose}>
             <ModalHeader
-                title={`Data ingestion details (By ${title})`}
                 onRequestClose={handleRequestClose}
+                title={`Data ingestion details (By ${title})`}
             />
             <ModalBody>
                 {children}

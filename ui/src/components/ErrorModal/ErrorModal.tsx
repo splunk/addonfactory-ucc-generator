@@ -29,7 +29,7 @@ function ErrorModal(props: ErrorModalProps) {
             open={open}
             onRequestClose={handleRequestClose}
         >
-            <Modal.Header title={getFormattedMessage(104)} onRequestClose={handleRequestClose} />
+            <Modal.Header onRequestClose={handleRequestClose} title={getFormattedMessage(104)} />
             <Modal.Body>
                 <Message appearance="fill" type="error">
                     {props.message}

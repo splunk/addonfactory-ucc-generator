@@ -27,8 +27,8 @@ function AcceptModal(props: AcceptModalProps) {
             onRequestClose={() => props.handleRequestClose(false)}
         >
             <Modal.Header
-                title={props.title}
                 onRequestClose={() => props.handleRequestClose(false)}
+                title={props.title}
             />
             <Modal.Body>
                 <Message appearance="fill" type="warning">
