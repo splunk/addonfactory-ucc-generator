@@ -544,26 +544,12 @@ def generate(
                     " cannot have the same name as Splunk built-in command."
                 )
                 sys.exit(1)
-
-            if (
-                command["version"] == 2
-                and command["commandName"] == command["fileName"]
-            ):
-                # In version 2 we are generating file therefore the core logic should not have the same name
+            if command["commandName"] == command["fileName"]:
+                # Here we are generating file based on commandName therefore
+                # the core logic should not have the same name as commandName
                 logger.error(
                     f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
-                    " should not be same for version 2 of custom search command."
-                )
-                sys.exit(1)
-
-            if (
-                command["version"] == 1
-                and command["commandName"] != command["fileName"]
-            ):
-                # In version 1 we are generating file therefore the core logic should not have the same name
-                logger.error(
-                    f"Filename: {command['fileName']} and CommandName: {command['commandName']}"
-                    " should be same for version 1 of custom search command."
+                    " should not be same for custom search command."
                 )
                 sys.exit(1)
 

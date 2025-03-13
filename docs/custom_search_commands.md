@@ -2,10 +2,6 @@
 
 Custom search commands are user-defined [SPL](https://docs.splunk.com/Splexicon:SPL) (Splunk Search Processing Language) commands that enable users to add custom functionality to their Splunk searches.
 
-There are two versions of implementing custom search commands:
-
-- Version 1: This uses the InterSplunk module and has been deprecated. (It is not recommended to use the Version 1 protocol.)
-- Version 2: Introduced in Splunk 6.3.0, this version is faster, more scalable, and has replaced Version 1.
 
 ## Generation of custom search command
 
@@ -54,7 +50,6 @@ python.version = python3
 | commandName<span class="required-asterisk">\*</span>  | string  | Name of the custom search command |
 | fileName<span class="required-asterisk">\*</span>     | string  | Name of the Python file which contains logic of custom search command  |
 | commandType<span class="required-asterisk">\*</span>  | string  | Specify type of custom search command. Four types of commands are allowed, `streaming`,`generating`,`reporting` and `eventing`. |
-| version                                               | number  | Specifies the protocol being used (default is 2).  |
 | arguments<span class="required-asterisk">\*</span>    | object  | Arguments which can be passed to custom search command. |
 | requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command. Default: false. |
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
@@ -141,7 +136,6 @@ For example:
             "fileName": "commandlogic.py",
             "commandType": "streaming",
             "requiredSearchAssistant": true,
-            "version": 2,
             "description": "This is a test command",
             "syntax": "| testcommand fieldname=<Name of field> pattern=<Valid regex pattern>",
             "usage": "public",

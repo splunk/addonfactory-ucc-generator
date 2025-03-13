@@ -457,15 +457,6 @@
           "default": false,
           "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
         },
-        "version": {
-          "type": "number",
-          "description": "Defines which version protocol is been used for custom search command.",
-          "enum": [
-            1,
-            2
-          ],
-          "default": 2
-        },
         "description": {
           "type": "string",
           "description": "description of the custom search command.It is an required attribute for searchbnf.conf."
