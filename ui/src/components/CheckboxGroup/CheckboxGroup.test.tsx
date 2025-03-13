@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CheckboxGroup from './CheckboxGroup';
 import { CheckboxGroupProps } from './checkboxGroup.utils';
-import { MODE_CREATE } from '../../constants/modes';
+import { MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 
 const handleChange = jest.fn();
 
@@ -173,4 +173,28 @@ it('mixed incrementing and decrementing value correctly', async () => {
         defaultCheckboxProps.value,
         'checkboxGroup'
     );
+});
+
+it('Verify that checkboxes remain unchanged when disableOnEdit is enabled.', async () => {
+    renderFeature({ disabled: true, mode: MODE_EDIT });
+
+    // Check all checkboxes are initially checked and disabled
+    defaultCheckboxProps.controlOptions.rows.forEach((row) => {
+        const checkbox = screen.getByLabelText(row?.checkbox?.label || 'unexisting string');
+        expect(checkbox).toBeInTheDocument();
+        expect(checkbox).toBeDisabled();
+        expect(checkbox).toBeChecked(); // Ensuring the checkbox remains checked
+    });
+
+    // Click "Clear All" button
+    const clearButton = await screen.findByRole('button', { name: /clear all/i });
+    await userEvent.click(clearButton);
+
+    // Check all checkboxes are still checked and disabled after clicking "Clear All"
+    defaultCheckboxProps.controlOptions.rows.forEach((row) => {
+        const checkbox = screen.getByLabelText(row?.checkbox?.label || 'unexisting string');
+        expect(checkbox).toBeInTheDocument();
+        expect(checkbox).toBeDisabled();
+        expect(checkbox).toBeChecked(); // Ensuring no state change
+    });
 });

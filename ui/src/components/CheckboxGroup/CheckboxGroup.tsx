@@ -47,8 +47,10 @@ function CheckboxGroup(props: CheckboxGroupProps) {
     };
 
     const handleCheckboxToggleAll = (newCheckboxValue: boolean) => {
+        if (disabled === true) {
+            return;
+        }
         const newValues = new Map(values);
-
         controlOptions.rows.forEach((row) => {
             const oldValue = values.get(row.field);
             if (!!oldValue?.checkbox === newCheckboxValue) {
