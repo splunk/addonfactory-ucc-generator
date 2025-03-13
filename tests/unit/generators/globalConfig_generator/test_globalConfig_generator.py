@@ -49,10 +49,10 @@ def mocked__set_attribute(this, **kwargs):
 def test_generate(
     mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    html = GlobalConfigGenerator(
+    globalconfig = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
-    assert html.generate() == {"": ""}
+    assert globalconfig.generate() == {"": ""}
 
 
 @patch(
@@ -63,7 +63,7 @@ def test_generate(
     "splunk_add_on_ucc_framework.generators.globalConfig_generator.GlobalConfigGenerator.generate_globalconfig"
 )
 def test_generate_globalconfig_return(
-    mock_html_gen,
+    mock_globalconfig_gen,
     mock_set_attr,
     global_config,
     input_dir,
@@ -72,11 +72,11 @@ def test_generate_globalconfig_return(
     ta_name,
     set_attr,
 ):
-    mock_html_gen.return_value = set_attr
-    html = GlobalConfigGenerator(
+    mock_globalconfig_gen.return_value = set_attr
+    globalconfig = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
-    assert html.generate() == set_attr
+    assert globalconfig.generate() == set_attr
 
 
 @patch(
@@ -86,10 +86,10 @@ def test_generate_globalconfig_return(
 def test_generate_globalconfig(
     mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    html = GlobalConfigGenerator(
+    globalconfig = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
-    assert html.generate_globalconfig() == {"": ""}
+    assert globalconfig.generate_globalconfig() == {"": ""}
 
 
 def test__set_attributes_error(global_config, input_dir, output_dir, ucc_dir, ta_name):
@@ -123,9 +123,9 @@ def test__set_attributes_custom_error(
 def test__set_attributes_no_error(
     global_config, input_dir, output_dir, ucc_dir, ta_name
 ):
-    html = GlobalConfigGenerator(
+    globalconfig = GlobalConfigGenerator(
         global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
     )
     # the values present in `mocked__set_attribute` function
-    assert html.attrib_1 == "value_1"  # type: ignore[attr-defined]
-    assert html.attrib_2 == "value_2"  # type: ignore[attr-defined]
+    assert globalconfig.attrib_1 == "value_1"  # type: ignore[attr-defined]
+    assert globalconfig.attrib_2 == "value_2"  # type: ignore[attr-defined]
