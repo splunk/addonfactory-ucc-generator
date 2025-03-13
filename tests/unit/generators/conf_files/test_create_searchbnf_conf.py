@@ -43,10 +43,21 @@ def custom_search_commands():
             "commandType": "generating",
             "fileName": "test.py",
             "requiredSearchAssistant": True,
-            "version": 2,
             "description": "This is test command",
             "syntax": "testcommand",
             "usage": "public",
+        }
+    ]
+
+
+@fixture
+def custom_search_command_without_search_assistance():
+    return [
+        {
+            "commandName": "testcommand2",
+            "commandType": "streaming",
+            "fileName": "test2.py",
+            "requiredSearchAssistant": False,
         }
     ]
 
@@ -85,6 +96,28 @@ def test_set_attributes(
             "usage": "public",
         }
     ]
+
+
+def test_set_attributes_without_search_assistance(
+    global_config,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+    custom_search_command_without_search_assistance,
+):
+    searchbnf_conf = SearchbnfConf(
+        global_config,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+        custom_search_commands=custom_search_command_without_search_assistance,
+    )
+    searchbnf_conf._set_attributes(
+        custom_search_commands=custom_search_command_without_search_assistance
+    )
+    assert searchbnf_conf.searchbnf_info == []
 
 
 def test_generate_conf_without_custom_command(

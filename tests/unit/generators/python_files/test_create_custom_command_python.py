@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.python_files import CustomCommandPy
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
+import sys
 
 
 @fixture
@@ -43,7 +44,6 @@ def custom_search_commands():
             "commandType": "generating",
             "fileName": "test.py",
             "requiredSearchAssistant": True,
-            "version": 2,
             "description": "This is test command",
             "syntax": "testcommand count=<event_count> text=<string>",
             "usage": "public",
@@ -55,6 +55,112 @@ def custom_search_commands():
                 },
                 {"name": "text", "required": True},
             ],
+        }
+    ]
+
+
+@fixture
+def reporting_custom_search_command():
+    return [
+        {
+            "commandName": "reportingcommand",
+            "commandType": "reporting",
+            "fileName": "reporting_test.py",
+            "description": "This is a reporting command",
+            "syntax": "reportingcommand action=<action>",
+            "arguments": [
+                {
+                    "name": "action",
+                    "required": True,
+                    "validate": {"type": "String"},
+                }
+            ],
+        }
+    ]
+
+
+@patch.dict(sys.modules, {"reporting_test": MagicMock(map=True)})
+def test_set_attributes_for_reporting_command(
+    global_config,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+    reporting_custom_search_command,
+):
+    custom_command_py = CustomCommandPy(
+        global_config,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+        custom_search_commands=reporting_custom_search_command,
+    )
+
+    custom_command_py._set_attributes(
+        custom_search_commands=reporting_custom_search_command
+    )
+
+    assert custom_command_py.commands_info == [
+        {
+            "imported_file_name": "reporting_test",
+            "file_name": "reportingcommand",
+            "class_name": "Reportingcommand",
+            "description": "This is a reporting command",
+            "syntax": "reportingcommand action=<action>",
+            "template": "reporting.template",
+            "arguments": [
+                {
+                    "name": "action",
+                    "require": True,
+                    "validate": {"type": "String"},
+                    "default": None,
+                }
+            ],
+            "import_map": True,
+        }
+    ]
+
+
+@patch.dict(sys.modules, {"reporting_test": MagicMock(spec=[])})
+def test_set_attributes_for_reporting_command_without_map(
+    global_config,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+    reporting_custom_search_command,
+):
+    custom_command_py = CustomCommandPy(
+        global_config,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+        custom_search_commands=reporting_custom_search_command,
+    )
+
+    custom_command_py._set_attributes(
+        custom_search_commands=reporting_custom_search_command
+    )
+
+    assert custom_command_py.commands_info == [
+        {
+            "imported_file_name": "reporting_test",
+            "file_name": "reportingcommand",
+            "class_name": "Reportingcommand",
+            "description": "This is a reporting command",
+            "syntax": "reportingcommand action=<action>",
+            "template": "reporting.template",
+            "arguments": [
+                {
+                    "name": "action",
+                    "require": True,
+                    "validate": {"type": "String"},
+                    "default": None,
+                }
+            ],
+            "import_map": False,
         }
     ]
 

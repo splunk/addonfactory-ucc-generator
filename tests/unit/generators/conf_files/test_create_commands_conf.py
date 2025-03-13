@@ -43,7 +43,6 @@ def custom_search_commands():
             "commandType": "generating",
             "fileName": "test.py",
             "requiredSearchAssistant": False,
-            "version": 2,
         }
     ]
 
