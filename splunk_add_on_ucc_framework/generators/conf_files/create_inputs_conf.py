@@ -63,9 +63,6 @@ class InputsConf(ConfGenerator):
                 if field_name == "name":
                     continue
 
-                if entity.get("type") == "helpLink":
-                    continue
-
                 field_value_parts = []
 
                 if entity.get("help"):

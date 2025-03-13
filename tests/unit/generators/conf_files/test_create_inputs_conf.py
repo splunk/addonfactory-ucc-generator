@@ -227,6 +227,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
         [
             "[example_input_one://<name>]",
             "account = ",
+            "example_help_link = ",
             "index = (Default: default)",
             "input_one_checkbox = This is an example checkbox for the input one entity",
             "input_one_radio = This is an example radio button for the input one entity (Default: yes)",
@@ -248,6 +249,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
             "api1 = ",
             "api2 = ",
             "api3 = ",
+            "example_help_link = ",
             "index = (Default: default)",
             "input_two_checkbox = This is an example checkbox for the input two entity",
             "input_two_checkbox_bool = This is an example checkbox for the input two entity with bool default "
@@ -296,15 +298,6 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
                     "field": "field_desc",
                     "required": False,
                     "help": "Some description",
-                },
-                {
-                    "field": "example_help_link",
-                    "label": "",
-                    "type": "helpLink",
-                    "options": {
-                        "text": "Help Link",
-                        "link": "https://docs.splunk.com/Documentation",
-                    },
                 },
             ],
             "title": "Example Input Three",
