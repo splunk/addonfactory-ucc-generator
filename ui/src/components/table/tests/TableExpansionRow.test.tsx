@@ -7,11 +7,11 @@ import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
-import { getSimpleConfig } from '../stories/configMockups';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
-import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../../util/script';
 import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
+import { invariant } from '../../../util/invariant';
+import { MOCK_CONFIG } from './mocks';
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -24,7 +24,6 @@ const props = {
     handleOpenPageStyleDialog: jest.fn(),
 } satisfies ITableWrapperProps;
 
-const baseConfig = getSimpleConfig();
 const customRowFileName = 'CustomInputRow';
 
 function setup() {
@@ -32,52 +31,7 @@ function setup() {
         virtual: true,
     });
 
-    const headers = [
-        {
-            label: 'Name',
-            field: 'name',
-        },
-        {
-            label: 'Interval',
-            field: 'interval',
-        },
-    ];
-    setUnifiedConfig({
-        ...baseConfig,
-        pages: {
-            ...baseConfig.pages,
-            inputs: {
-                title: inputName,
-                services: [
-                    {
-                        title: inputName,
-                        name: inputName,
-                        entity: [
-                            {
-                                label: 'Name',
-                                field: 'name',
-                                type: 'text',
-                            },
-                            {
-                                label: 'Interval',
-                                field: 'interval',
-                                type: 'text',
-                            },
-                        ],
-                    },
-                ],
-                table: {
-                    actions: ['edit'],
-                    header: headers,
-                    moreInfo: headers,
-                    customRow: {
-                        src: customRowFileName,
-                        type: 'external',
-                    },
-                },
-            },
-        },
-    } satisfies GlobalConfig);
+    setUnifiedConfig(MOCK_CONFIG);
 
     server.use(
         http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_${inputName}`, () =>
@@ -103,8 +57,9 @@ function setup() {
 }
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    const expandable = within(inputRow).queryByRole('button', { name: /expand/i });
-    if (expandable && expandable.getAttribute('aria-expanded') === 'false') {
+    const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
+    invariant(expandable);
+    if (expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
     }
