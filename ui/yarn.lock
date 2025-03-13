@@ -2495,7 +2495,7 @@
     lodash "^4.17.14"
     prop-types "^15.6.2"
 
-"@splunk/react-icons@^4.12.0":
+"@splunk/react-icons@^4.10.0", "@splunk/react-icons@^4.12.0":
   version "4.12.0"
   resolved "https://registry.npmjs.org/@splunk/react-icons/-/react-icons-4.12.0.tgz#019ad73046a3ac1317cb4c181c065f92cb1aea6e"
   integrity sha512-nRWGInCtItSOeO+ocd1q8PfU0DbKQ5TbTaZRfe8ROosB0RGHLgozChzuwya6jqg4B+rYHjJciOMSRJS3YQLEAQ==
@@ -2558,17 +2558,17 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.33.0", "@splunk/react-ui@^4.39.0", "@splunk/react-ui@^4.41.0":
-  version "4.42.0"
-  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.42.0.tgz#9f430468fa026988e89d10a64743a0603fca5430"
-  integrity sha512-Mjz8kABT8GQBAQfOVfMZkhMMAmJ45PGiE469mlm5CkTkefMt3K9y415HSCzChnASYR8FeeSj44U9r/o/J8FENQ==
+"@splunk/react-ui@4.41.0":
+  version "4.41.0"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.41.0.tgz#c02199a059e0e8330d4ae43d13f13a2a1684fa9b"
+  integrity sha512-nhc2LIxbhD2pF06EupbjrOp7gfJS4n4b2hwR150pKw0QAIywrAOUNsIDoJ9mJ9NePoiJPNvOaXpSKtL7yT7mKA==
   dependencies:
     "@dnd-kit/core" "^6.1.0"
     "@dnd-kit/modifiers" "^7.0.0"
     "@dnd-kit/sortable" "^8.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@splunk/react-icons" "^4.11.0"
-    "@splunk/themes" "^0.23.0"
+    "@splunk/react-icons" "^4.10.0"
+    "@splunk/themes" "^0.22.0"
     "@splunk/ui-utils" "^1.7.1"
     commonmark "^0.30.0"
     commonmark-react-renderer "^4.3.2"
@@ -2581,18 +2581,18 @@
     tinycolor2 "^1.4.1"
     use-typed-event-listener "^3.0.0"
 
-"@splunk/react-ui@^4.43.0":
-  version "4.43.0"
-  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.43.0.tgz#939f54773bf5e9535664a4fc307d1f4d1130ac80"
-  integrity sha512-tLa3xT98Hq1ODUH07DCaatq23Mxqeyk1wcCj9gS/gk1uzz03HR92XFU3ePyKsDRv1b5vfz7ewnMNRGJEtX3J1g==
+"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.33.0", "@splunk/react-ui@^4.39.0", "@splunk/react-ui@^4.41.0":
+  version "4.42.0"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.42.0.tgz#9f430468fa026988e89d10a64743a0603fca5430"
+  integrity sha512-Mjz8kABT8GQBAQfOVfMZkhMMAmJ45PGiE469mlm5CkTkefMt3K9y415HSCzChnASYR8FeeSj44U9r/o/J8FENQ==
   dependencies:
     "@dnd-kit/core" "^6.1.0"
     "@dnd-kit/modifiers" "^7.0.0"
     "@dnd-kit/sortable" "^8.0.0"
     "@dnd-kit/utilities" "^3.2.2"
-    "@splunk/react-icons" "^4.12.0"
+    "@splunk/react-icons" "^4.11.0"
     "@splunk/themes" "^0.23.0"
-    "@splunk/ui-utils" "^1.8.0"
+    "@splunk/ui-utils" "^1.7.1"
     commonmark "^0.30.0"
     commonmark-react-renderer "^4.3.2"
     decimal.js-light "^2.2.3"
