@@ -76,19 +76,17 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
             >
                 Deactivate all
             </InteractAllActionButton>
-            {tryInteract && (
-                <AcceptModal
-                    message={`Do you want to ${
-                        isDisabling ? 'deactivate' : 'activate'
-                    } all? It may take a while.`}
-                    open={tryInteract}
-                    handleRequestClose={handleAcceptModal}
-                    returnFocus={isDisabling ? deactivateButtonRef : activateButtonRef}
-                    title={isDisabling ? 'Deactivate all' : 'Activate all'}
-                    declineBtnLabel="No"
-                    acceptBtnLabel="Yes"
-                />
-            )}
+            <AcceptModal
+                message={`Do you want to ${
+                    isDisabling ? 'deactivate' : 'activate'
+                } all? It may take a while.`}
+                open={tryInteract}
+                handleRequestClose={handleAcceptModal}
+                returnFocus={isDisabling ? deactivateButtonRef : activateButtonRef}
+                title={isDisabling ? 'Deactivate all' : 'Activate all'}
+                declineBtnLabel="No"
+                acceptBtnLabel="Yes"
+            />
         </div>
     ) : null;
 }
