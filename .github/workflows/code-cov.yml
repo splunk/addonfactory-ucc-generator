@@ -1,0 +1,58 @@
+name: Code Coverage
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'tests/**'
+      - 'splunk_add_on_ucc_framework/**'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  compare-coverage:
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+
+      - name: Checkout develop branch
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Generate coverage for develop branch
+        run: |
+          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/develop-coverage.json tests/unit
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Generate coverage for PR branch
+        run: |
+          poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/pr-coverage.json tests/unit
+
+      - name: Process coverage data and comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { default: compareDiff } = await import('${{ github.workspace }}/.github/scripts/code-coverage.mjs')
+
+            await compareDiff({github, context, core})
