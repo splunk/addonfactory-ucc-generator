@@ -1,7 +1,4 @@
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
 from tests.ui.pages.alert_action_page import AlertPage
 
@@ -102,12 +99,6 @@ class TestAlertActions(UccTester):
         def run_test():
             alert_page = AlertPage(ucc_smartx_selenium_helper, None)
             alert_page.alert_entity.open()
-
-            # Wait for the button before interacting to the element
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, ".new-alert-button"))
-            )
-
             alert_page.alert_entity.add_action_dropdown.wait_for_values()
             alert_page.alert_entity.add_action_dropdown.select_action("Test Alert")
 
