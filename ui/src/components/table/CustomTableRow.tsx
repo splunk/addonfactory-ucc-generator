@@ -84,7 +84,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
-                                appearance="flat"
                                 aria-label={_('Edit')}
                                 icon={<Pencil />}
                                 onClick={() => handleEditActionClick(selectedRow)}
@@ -95,7 +94,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {rowActions.includes('clone') && (
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
-                                appearance="flat"
                                 aria-label={_('Clone')}
                                 icon={<Clone size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
@@ -113,7 +111,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                                 aria-label={_(
                                     `Go to search for events associated with ${selectedRow.name}`
                                 )}
-                                appearance="flat"
                                 icon={<Magnifier />}
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
@@ -125,7 +122,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {!props.readonly && rowActions.includes('delete') && (
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
-                                appearance="flat"
                                 aria-label={_('Delete')}
                                 icon={<Trash size={1} />}
                                 onClick={() => handleDeleteActionClick(selectedRow)}
