@@ -28,7 +28,6 @@ function TextAreaComponent({
         <TextArea
             {...restSuiProps}
             inputId={id}
-            canClear
             className={field}
             value={value?.toString() || ''}
             onChange={onChange}
