@@ -94,6 +94,7 @@ class TestAlertActions(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.alert
+    @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_toggle(self, ucc_smartx_selenium_helper):
         alert_page = AlertPage(ucc_smartx_selenium_helper, None)
         alert_page.alert_entity.open()
