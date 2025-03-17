@@ -20,14 +20,14 @@ def test_set_attributes(
 
 
 def test_set_attributes_without_configuration(
-    global_config_without_configuration,
+    global_config_no_configuration,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     config_xml = ConfigurationXml(
-        global_config_without_configuration,
+        global_config_no_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
@@ -42,14 +42,14 @@ def test_set_attributes_without_configuration(
 )
 def test_generate_xml_without_configuration(
     mock_set_attributes,
-    global_config_without_configuration,
+    global_config_no_configuration,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     configuration_xml = ConfigurationXml(
-        global_config_without_configuration,
+        global_config_no_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,

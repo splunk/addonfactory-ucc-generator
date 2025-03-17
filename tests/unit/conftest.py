@@ -32,13 +32,6 @@ def ta_name():
 
 
 @pytest.fixture
-def global_config_without_configuration():
-    return global_config_lib.GlobalConfig(
-        helpers.get_testdata_file_path("valid_config_no_configuration.json")
-    )
-
-
-@pytest.fixture
 def global_config_for_alerts():
     return global_config_lib.GlobalConfig(
         helpers.get_testdata_file_path("valid_config_all_alerts.json")
@@ -67,11 +60,9 @@ def global_config_all_json() -> global_config_lib.GlobalConfig:
 
 @pytest.fixture
 def global_config_no_configuration() -> global_config_lib.GlobalConfig:
-    global_config_path = helpers.get_testdata_file_path(
-        "global_config_no_configuration.json"
+    return global_config_lib.GlobalConfig(
+        helpers.get_testdata_file_path("global_config_no_configuration.json")
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
-    return global_config
 
 
 @pytest.fixture
