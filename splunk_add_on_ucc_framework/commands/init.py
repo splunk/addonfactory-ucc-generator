@@ -114,8 +114,6 @@ def _generate_addon(
         "appIcon.png",
         "appIconAlt_2x.png",
         "appIconAlt.png",
-        "appLogo.png",
-        "appLogo_2x.png",
     ]:
         icons = utils.get_icons_path(name)
         shutil.copy(icons, icons_path)
