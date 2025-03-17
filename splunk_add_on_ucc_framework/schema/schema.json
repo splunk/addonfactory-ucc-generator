@@ -1523,7 +1523,6 @@
         },
         "label": {
           "type": "string",
-          "maxLength": 30,
           "description": "Text displayed next to entity field"
         },
         "type": {
@@ -1541,7 +1540,6 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "maxLength": 30,
                     "description": "Text displayed next to entity field"
                   },
                   "options": {
@@ -1587,7 +1585,6 @@
                     "properties": {
                       "label": {
                         "type": "string",
-                        "maxLength": 30,
                         "description": "Text displayed next to entity field"
                       },
                       "defaultValue": {
@@ -1668,7 +1665,6 @@
         },
         "label": {
           "type": "string",
-          "maxLength": 30,
           "description": "Text displayed next to entity field"
         },
         "type": {
@@ -1690,7 +1686,6 @@
                 "properties": {
                   "label": {
                     "type": "string",
-                    "maxLength": 30,
                     "description": "Text displayed next to entity field"
                   },
                   "options": {
@@ -1740,7 +1735,6 @@
                     "properties": {
                       "label": {
                         "type": "string",
-                        "maxLength": 30,
                         "description": "Text displayed next to entity field"
                       },
                       "defaultValue": {

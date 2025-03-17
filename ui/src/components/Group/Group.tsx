@@ -43,6 +43,7 @@ const Description = styled.span`
     padding-right: 20px;
     margin-left: 10px;
     font-size: 12px;
+    min-width: 35px;
 `;
 
 interface GroupProps {
