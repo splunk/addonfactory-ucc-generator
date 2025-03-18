@@ -19,9 +19,6 @@ from typing import Any, Dict, List, Union
 from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
 
 
-DEFAULT_CONF_NAME = "inputs"
-
-
 class InputsConf(ConfGenerator):
     __description__ = (
         "Generates `inputs.conf` and `inputs.conf.spec` "
