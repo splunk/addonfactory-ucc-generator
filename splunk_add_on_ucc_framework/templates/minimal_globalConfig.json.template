@@ -4,13 +4,13 @@
         "restRoot": "{{addon_name}}",
         "displayName": "{{addon_display_name}}",
         "version": "{{addon_version}}",
-        {% if supported_themes %}
+        {%- if supported_themes %}
         "supportedThemes": {{supported_themes}},
-        {% endif %}
-        {% if check_for_update %}
+        {%- endif %}
+        {%- if check_for_update -%}
         "checkForUpdates": {{check_for_update}}
-        {% else %}
+        {%- else %}
         "checkForUpdates": true
-        {% endif %}
+        {%- endif %}
     }
 }

@@ -52,9 +52,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
-from splunk_add_on_ucc_framework.generators.globalConfig_generator.create_minimal_globalconfig import (
-    MinimalGlobalConfig,
-)
+import addonfactory_splunk_conf_parser_lib as conf_parser
 
 
 logger = logging.getLogger("ucc_gen")
@@ -447,18 +445,21 @@ def generate(
     gc_path = _get_and_check_global_config_path(source, config_path)
 
     if not gc_path:
-        gc_path = (
-            MinimalGlobalConfig(
-                global_config=None,
-                input_dir=source,
-                output_dir=output_directory,
-                ucc_dir=internal_root_dir,
-                addon_name=ta_name,
-                app_manifest=app_manifest,
-            )
-            .generate()
-            .get("globalConfig.json", "")
+        app_conf_path = os.path.join(source, "default", "app.conf")
+        app_conf_content = {}
+        if os.path.isfile(app_conf_path):
+            # read only if app.conf exists in source code
+            app_conf = conf_parser.TABConfigParser()
+            app_conf.read(app_conf_path)
+            app_conf_content = app_conf.item_dict()
+
+        global_config = global_config_lib.GlobalConfig(
+            gc_path,
+            source=source,
+            app_manifest=app_manifest,
+            app_conf_content=app_conf_content,
         )
+        gc_path = os.path.join(source, os.pardir, "globalConfig.json")
         logger.info(f"Created minimal globalConfig file located @ {gc_path}")
 
     logger.info(f"Using globalConfig file located @ {gc_path}")

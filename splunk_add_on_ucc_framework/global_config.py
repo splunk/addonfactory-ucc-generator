@@ -19,6 +19,8 @@ from typing import Optional, Any, List, Dict
 from dataclasses import dataclass, field, fields
 
 import yaml
+import os
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 
 from splunk_add_on_ucc_framework import utils
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
@@ -60,7 +62,11 @@ class OSDependentLibraryConfig:
 
 
 class GlobalConfig:
-    def __init__(self, global_config_path: str) -> None:
+    def __init__(self, global_config_path: str, **kwargs: Any) -> None:
+        if global_config_path == "":
+            global_config_path = self.generate_minimal_globalconfig(
+                kwargs["source"], kwargs["app_manifest"], kwargs["app_conf_content"]
+            )
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
         self._is_global_config_yaml = (
@@ -73,6 +79,41 @@ class GlobalConfig:
         )
         self._original_path = global_config_path
         self.user_defined_handlers = UserDefinedRestHandlers()
+
+    def generate_minimal_globalconfig(
+        self,
+        source_dir: str,
+        app_manifest: app_manifest_lib.AppManifest,
+        app_conf_content: Dict[str, Any],
+    ) -> str:
+        check_for_update = app_conf_content.get("package", {}).get(
+            "check_for_updates", ""
+        )
+        supported_themes = app_conf_content.get("ui", {}).get("supported_themes", "")
+        if supported_themes:
+            supported_themes = (
+                "["
+                + ", ".join(f'"{item.strip()}"' for item in supported_themes.split(","))
+                + "]"
+            )
+        minimal_gc_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
+        rendered_content = (
+            utils.get_j2_env()
+            .get_template("minimal_globalConfig.json.template")
+            .render(
+                addon_name=app_manifest.get_addon_name(),
+                addon_version=app_manifest.get_addon_version(),
+                addon_display_name=app_manifest.get_title(),
+                check_for_update=check_for_update,
+                supported_themes=supported_themes,
+            )
+        )
+        utils.write_file(
+            file_name="globalConfig.json",
+            file_path=minimal_gc_path,
+            content=rendered_content,
+        )
+        return minimal_gc_path
 
     def parse_user_defined_handlers(self) -> None:
         """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""

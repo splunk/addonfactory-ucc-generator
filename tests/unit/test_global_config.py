@@ -11,6 +11,114 @@ import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 
+@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="{}")
+@mock.patch(
+    "splunk_add_on_ucc_framework.global_config.GlobalConfig.generate_minimal_globalconfig",
+    return_value="tmp_path",
+)
+def test_globalconfig_init_with_empty_path(
+    mock_function, mock_open_file, tmp_path, mock_app_manifest, mock_app_conf_content
+):
+    """Test GlobalConfig initialization when global_config_path is empty."""
+
+    source_dir = str(tmp_path / "source")
+    os.makedirs(source_dir, exist_ok=True)
+
+    global_config_lib.GlobalConfig(
+        global_config_path="",
+        source=source_dir,
+        app_manifest=mock_app_manifest,
+        app_conf_content=mock_app_conf_content,
+    )
+
+    mock_function.assert_called_once_with(
+        source_dir, mock_app_manifest, mock_app_conf_content
+    )
+
+
+@mock.patch("splunk_add_on_ucc_framework.global_config.utils.get_j2_env")
+@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="{}")
+def test_generate_minimal_globalconfig_without_supported_themes(
+    mock_open_file,
+    mock_get_j2_env,
+    tmp_path,
+    mock_app_manifest,
+    mock_app_conf_content_without_themes,
+):
+    mock_template = mock.MagicMock()
+    mock_template.render.return_value = '{"addon_name": "test_addon"}'
+    mock_env = mock.MagicMock()
+    mock_env.get_template.return_value = mock_template
+    mock_get_j2_env.return_value = mock_env
+
+    source_dir = str(tmp_path / "source")
+    os.makedirs(source_dir, exist_ok=True)
+    global_config_instance = global_config_lib.GlobalConfig(
+        global_config_path="dummy_path"
+    )
+
+    result_path = global_config_instance.generate_minimal_globalconfig(
+        source_dir, mock_app_manifest, mock_app_conf_content_without_themes
+    )
+
+    expected_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
+    assert result_path == expected_path
+    mock_get_j2_env.assert_called_once()
+    mock_env.get_template.assert_called_once_with("minimal_globalConfig.json.template")
+    mock_template.render.assert_called_once_with(
+        addon_name="test_addon",
+        addon_version="1.0.0",
+        addon_display_name="Test title",
+        check_for_update=True,
+        supported_themes="",
+    )
+
+
+@mock.patch("splunk_add_on_ucc_framework.global_config.utils.get_j2_env")
+@mock.patch("splunk_add_on_ucc_framework.global_config.utils.write_file")
+@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="{}")
+def test_generate_minimal_globalconfig(
+    mock_open_file,
+    mock_write_file,
+    mock_get_j2_env,
+    tmp_path,
+    mock_app_manifest,
+    mock_app_conf_content,
+):
+    mock_template = mock.MagicMock()
+    mock_template.render.return_value = '{"addon_name": "test_addon"}'
+    mock_env = mock.MagicMock()
+    mock_env.get_template.return_value = mock_template
+    mock_get_j2_env.return_value = mock_env
+
+    source_dir = str(tmp_path / "source")
+    os.makedirs(source_dir, exist_ok=True)
+    global_config_instance = global_config_lib.GlobalConfig(
+        global_config_path="dummy_path"
+    )
+
+    result_path = global_config_instance.generate_minimal_globalconfig(
+        source_dir, mock_app_manifest, mock_app_conf_content
+    )
+
+    expected_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
+    assert result_path == expected_path
+    mock_get_j2_env.assert_called_once()
+    mock_env.get_template.assert_called_once_with("minimal_globalConfig.json.template")
+    mock_template.render.assert_called_once_with(
+        addon_name="test_addon",
+        addon_version="1.0.0",
+        addon_display_name="Test title",
+        check_for_update=True,
+        supported_themes='["light", "dark"]',
+    )
+    mock_write_file.assert_called_once_with(
+        file_name="globalConfig.json",
+        file_path=expected_path,
+        content='{"addon_name": "test_addon"}',
+    )
+
+
 @pytest.mark.parametrize(
     "filename",
     [

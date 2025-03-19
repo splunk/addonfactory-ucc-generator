@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+from unittest import mock
 
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -16,6 +17,33 @@ def app_manifest_correct() -> app_manifest_lib.AppManifest:
     content = helpers.get_testdata_file("app.manifest")
     app_manifest = app_manifest_lib.AppManifest(content)
     return app_manifest
+
+
+@pytest.fixture
+def mock_app_manifest():
+    mock_manifest = mock.MagicMock()
+    mock_manifest.get_addon_name.return_value = "test_addon"
+    mock_manifest.get_addon_version.return_value = "1.0.0"
+    mock_manifest.get_title.return_value = "Test title"
+    return mock_manifest
+
+
+@pytest.fixture
+def mock_app_conf_content():
+    content = {
+        "package": {"check_for_updates": True},
+        "ui": {"supported_themes": "light, dark"},
+    }
+    return content
+
+
+@pytest.fixture
+def mock_app_conf_content_without_themes():
+    content = {
+        "package": {"check_for_updates": True},
+        "ui": {},
+    }
+    return content
 
 
 @pytest.fixture
