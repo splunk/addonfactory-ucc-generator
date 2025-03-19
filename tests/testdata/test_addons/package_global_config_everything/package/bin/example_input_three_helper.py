@@ -7,7 +7,7 @@ def validate_input(definition: smi.ValidationDefinition):
     return
 
 
-def stream_events(inputs: smi.InputDefinition, ew: smi.EventWriter):
+def stream_events(inputs: smi.InputDefinition, ew: smi.EventWriter, modular_input: smi.Script):
     # INPUT 3
     input_items = [{'count': len(inputs.inputs)}]
     for input_name, input_item in inputs.inputs.items():
