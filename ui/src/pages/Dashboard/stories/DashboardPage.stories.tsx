@@ -31,6 +31,8 @@ type Story = StoryObj<typeof meta>;
 
 export const DashboardPageView: Story = {
     play: async ({ canvasElement }) => {
+        console.log('!!!!');
+        console.log(window.navigator.language);
         const canvas = within(canvasElement);
 
         await canvas.findByRole('heading', { name: 'Data Ingestion' });
