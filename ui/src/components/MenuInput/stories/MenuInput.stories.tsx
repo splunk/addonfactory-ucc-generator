@@ -298,8 +298,6 @@ export const WithOpenedSubMenu: Story = {
         },
     },
     play: async ({ canvasElement }) => {
-        console.log('!!!!');
-        console.log(window.navigator.language);
         const { canvas, body, user } = setup(canvasElement);
 
         const menuDropdown = await canvas.findByRole('button', { name: 'Create New Input' });
@@ -318,6 +316,5 @@ export const WithOpenedSubMenu: Story = {
                     name: 'test-group hide for platform',
                 })
         );
-        throw new Error(window.navigator.language);
     },
 };
