@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { ComponentProps, useContext, useState } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import update from 'immutability-helper';
@@ -15,6 +15,7 @@ import { UCCButton } from '../UCCButton/UCCButton';
 export interface DeleteModalProps {
     page: StandardPages;
     handleRequestClose: () => void;
+    returnFocus: ComponentProps<typeof Modal>['returnFocus'];
     serviceName: string;
     stanzaName: string;
     open?: boolean;
@@ -24,6 +25,7 @@ export interface DeleteModalProps {
 const DeleteModal: React.FC<DeleteModalProps> = ({
     page,
     handleRequestClose,
+    returnFocus,
     serviceName,
     stanzaName,
     open = false,
@@ -71,7 +73,12 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             : getFormattedMessage(102, [stanzaName]);
 
     return (
-        <Modal open={open} style={{ width: '800px' }}>
+        <Modal
+            returnFocus={returnFocus}
+            open={open}
+            style={{ width: '800px' }}
+            onRequestClose={handleRequestCloseInternal}
+        >
             <Modal.Header
                 title={formTitle ? `Delete ${formTitle}` : getFormattedMessage(101)}
                 onRequestClose={handleRequestCloseInternal}
