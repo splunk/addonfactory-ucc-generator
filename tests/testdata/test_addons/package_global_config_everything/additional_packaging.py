@@ -1,5 +1,6 @@
 from os.path import sep, exists, dirname, realpath, join
 from os import remove, system, _exit, WEXITSTATUS
+from shutil import rmtree
 
 def additional_packaging(ta_name=None):
     """
@@ -21,12 +22,23 @@ def cleanup_output_files(output_path: str, ta_name: str) -> None:
                     or present in app.manifest file of add-on.
     """
     files_to_delete = []
+    directories_to_delete = []
+
     files_to_delete.append(sep.join([output_path, ta_name, "default", "redundant.conf"]))
     files_to_delete.append(sep.join([output_path, ta_name, "bin", "template_modinput_layout.py"]))
     files_to_delete.append(sep.join([output_path, ta_name, "bin", "example_one_input_one.py"]))
     files_to_delete.append(sep.join([output_path, ta_name, "bin", "template_rest_handler_script.py"]))
     files_to_delete.append(sep.join([output_path, ta_name, "bin", "file_does_not_exist.py"]))
     files_to_delete.append(sep.join([output_path, ta_name, "default", "nav", "views", "file_copied_from_source_code.xml"]))
+
+    directories_to_delete.append(sep.join([output_path, ta_name, "bin", "__pycache__"]))
+
+    for directories in directories_to_delete:
+        try:
+            rmtree(directories)
+        except (NotADirectoryError):
+            # simply pass if the directory doesn't exist
+            pass
 
     for delete_file in files_to_delete:
         try:
