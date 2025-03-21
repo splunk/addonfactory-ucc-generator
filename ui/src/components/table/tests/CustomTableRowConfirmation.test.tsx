@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -86,6 +86,7 @@ it('Status toggling with acceptance model - displayed correctly', async () => {
 
     await userEvent.click(noBtn);
 
+    await waitForElementToBeRemoved(acceptModal);
     expect(acceptModal).not.toBeInTheDocument();
 });
 
@@ -132,6 +133,7 @@ it('Status toggling with acceptance model - decline modal still Active', async (
     await userEvent.click(noBtn);
 
     expect(statusCell).toHaveTextContent('Active');
+    expect(statusToggle).toHaveFocus();
 });
 
 it('Status toggling with acceptance model - decline modal still Inactive', async () => {
@@ -149,4 +151,5 @@ it('Status toggling with acceptance model - decline modal still Inactive', async
     await userEvent.click(noBtn);
 
     expect(statusCell).toHaveTextContent('Inactive');
+    expect(statusToggle).toHaveFocus();
 });

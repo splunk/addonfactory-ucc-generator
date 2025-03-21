@@ -1,33 +1,6 @@
 from pytest import fixture
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AppConf
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
-
-
-@fixture
-def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return "test_addon"
 
 
 @fixture
@@ -59,7 +32,7 @@ def app_manifest():
 )
 def test_set_attributes_no_global_config_or_schema(
     mock_time,
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
@@ -70,7 +43,7 @@ def test_set_attributes_no_global_config_or_schema(
 ):
     """Test _set_attributes when both _global_config and _gc_schema are None."""
     app_conf = AppConf(
-        global_config,
+        global_config_all_json,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
@@ -102,7 +75,7 @@ def test_set_attributes_no_global_config_or_schema(
 
 
 def test_set_attributes_check_for_updates_false(
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
@@ -113,7 +86,7 @@ def test_set_attributes_check_for_updates_false(
 ):
     """Test _set_attributes when _global_config has checkForUpdates set to False."""
     app_conf = AppConf(
-        global_config,
+        global_config_all_json,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
@@ -134,7 +107,7 @@ def test_set_attributes_check_for_updates_false(
 
 
 def test_set_attributes_supported_themes(
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
@@ -145,7 +118,7 @@ def test_set_attributes_supported_themes(
 ):
     """Test _set_attributes when _global_config has supportedThemes."""
     app_conf = AppConf(
-        global_config,
+        global_config_all_json,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
@@ -166,7 +139,7 @@ def test_set_attributes_supported_themes(
 
 
 def test_set_attributes_with_global_config_and_schema(
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
@@ -177,7 +150,7 @@ def test_set_attributes_with_global_config_and_schema(
 ):
     """Test _set_attributes when _global_config and _gc_schema provide config file names."""
     app_conf = AppConf(
-        global_config,
+        global_config_all_json,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
@@ -208,7 +181,7 @@ def test_set_attributes_with_global_config_and_schema(
 def test_generate_conf(
     mock_op_path,
     mock_template,
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
@@ -225,7 +198,7 @@ def test_generate_conf(
     template_render.render.return_value = content
 
     app_conf = AppConf(
-        global_config,
+        global_config_all_json,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,

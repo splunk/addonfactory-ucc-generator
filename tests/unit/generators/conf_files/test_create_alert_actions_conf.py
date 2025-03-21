@@ -1,33 +1,5 @@
-from pytest import fixture
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AlertActionsConf
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
-
-
-@fixture
-def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config_all_alerts.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return "test_addon"
 
 
 def mocked__set_attribute(this, **kwargs):
@@ -90,15 +62,15 @@ def test_set_attributes_global_config_none(input_dir, output_dir, ucc_dir, ta_na
 
 
 def test_set_attributes_global_config_with_empty_alerts(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
-    global_config = MagicMock()
-    global_config.alerts = []
+    global_config_for_alerts = MagicMock()
+    global_config_for_alerts.alerts = []
 
     alert_action_conf = AlertActionsConf(
-        global_config,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -116,7 +88,13 @@ def test_set_attributes_global_config_with_empty_alerts(
     "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.get_file_output_path"
 )
 def test_generate_conf(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    mock_template,
+    global_config_for_alerts,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     content = "content"
     exp_fname = "alert_actions.conf"
@@ -126,7 +104,11 @@ def test_generate_conf(
     template_render.render.return_value = content
 
     alert_actions_conf = AlertActionsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
 
     alert_actions_conf.writer = MagicMock()
@@ -146,12 +128,12 @@ def test_generate_conf(
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 def test_generate_conf_no_alerts(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
     alert_action_conf = AlertActionsConf(
-        global_config,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -168,7 +150,13 @@ def test_generate_conf_no_alerts(
     "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.get_file_output_path"
 )
 def test_generate_conf_spec(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    mock_template,
+    global_config_for_alerts,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     content = "content"
     exp_fname = "alert_actions.conf.spec"
@@ -178,7 +166,11 @@ def test_generate_conf_spec(
     template_render.render.return_value = content
 
     alert_actions_conf = AlertActionsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
 
     alert_actions_conf.writer = MagicMock()
@@ -198,12 +190,12 @@ def test_generate_conf_spec(
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 def test_generate_conf_no_alerts_spec(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
     alert_action_conf = AlertActionsConf(
-        global_config,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )

@@ -113,9 +113,9 @@ def test_global_config_only_logging(global_config_only_logging):
     assert global_config_only_logging.has_alerts() is False
 
 
-def test_global_config_for_conf_only_TA(global_config_conf_only_TA):
-    assert global_config_conf_only_TA.has_pages() is False
-    assert hasattr(global_config_conf_only_TA, "meta")
+def test_global_config_for_conf_only_TA(global_config_for_conf_only_TA):
+    assert global_config_for_conf_only_TA.has_pages() is False
+    assert hasattr(global_config_for_conf_only_TA, "meta")
 
 
 def test_global_config_update_addon_version(global_config_only_configuration):

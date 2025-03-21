@@ -12,6 +12,33 @@ from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 
 @pytest.fixture
+def input_dir(tmp_path):
+    return str(tmp_path / "input_dir")
+
+
+@pytest.fixture
+def output_dir(tmp_path):
+    return str(tmp_path / "output_dir")
+
+
+@pytest.fixture
+def ucc_dir(tmp_path):
+    return str(tmp_path / "ucc_dir")
+
+
+@pytest.fixture
+def ta_name():
+    return "test_addon"
+
+
+@pytest.fixture
+def global_config_for_alerts():
+    return global_config_lib.GlobalConfig(
+        helpers.get_testdata_file_path("valid_config_all_alerts.json")
+    )
+
+
+@pytest.fixture
 def app_manifest_correct() -> app_manifest_lib.AppManifest:
     content = helpers.get_testdata_file("app.manifest")
     app_manifest = app_manifest_lib.AppManifest(content)
@@ -33,11 +60,9 @@ def global_config_all_json() -> global_config_lib.GlobalConfig:
 
 @pytest.fixture
 def global_config_no_configuration() -> global_config_lib.GlobalConfig:
-    global_config_path = helpers.get_testdata_file_path(
-        "global_config_no_configuration.json"
+    return global_config_lib.GlobalConfig(
+        helpers.get_testdata_file_path("global_config_no_configuration.json")
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
-    return global_config
 
 
 @pytest.fixture
@@ -57,7 +82,7 @@ def global_config_only_configuration() -> global_config_lib.GlobalConfig:
 
 
 @pytest.fixture
-def global_config_conf_only_TA() -> global_config_lib.GlobalConfig:
+def global_config_for_conf_only_TA() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_global_config_conf_only_TA.json"
     )

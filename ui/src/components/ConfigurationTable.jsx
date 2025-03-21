@@ -36,12 +36,14 @@ function ConfigurationTable({ selectedTab, updateIsPageOpen }) {
         setEntity({ ...entity, open: false });
     };
 
+    // TODO: returnFocus ADDON-78884
     // generate modal style dialog
     const generateModalDialog = () => (
         <EntityModal
             page={PAGE_CONF}
             open={entity.open}
             handleRequestClose={handleModalDialogClose}
+            returnFocus={() => {}}
             serviceName={selectedTab.name}
             mode={MODE_CREATE}
             formLabel={entity.formLabel}
