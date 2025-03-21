@@ -427,6 +427,212 @@
       ],
       "additionalProperties": false
     },
+    "customSearchCommand": {
+      "type": "object",
+      "description": "Support for custom Search Command",
+      "properties": {
+        "commandName": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+$",
+          "maxLength": 100,
+          "description": "Name of the custom Search Command"
+        },
+        "fileName": {
+          "type": "string",
+          "pattern": "^\\w+\\.py$",
+          "description": "Name of the file which contains logic for custom search command. The file should be a python file only."
+        },
+        "commandType": {
+          "type": "string",
+          "description": "Type of the custom search command. There are 4 types of command i.e generating, streaming, reporting and eventing.",
+          "enum": [
+            "generating",
+            "streaming",
+            "reporting",
+            "eventing"
+          ]
+        },
+        "requiredSearchAssistant": {
+          "type": "boolean",
+          "default": false,
+          "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
+        },
+        "description": {
+          "type": "string",
+          "description": "description of the custom search command.It is an required attribute for searchbnf.conf."
+        },
+        "syntax": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "syntax for the custom search command, It is an required attribute for searchbnf.conf."
+        },
+        "usage": {
+          "type": "string",
+          "description": "Specifies what will be the usage of custom search command. It is an required attribute for searchbnf.conf.",
+          "enum": [
+            "public",
+            "private",
+            "deprecated"
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/arguments"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "commandName",
+        "fileName",
+        "commandType",
+        "arguments"
+      ],
+      "additionalProperties": false
+    },
+    "arguments": {
+      "type": "object",
+      "description": "Arguments used for custom search command",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the argument"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies if the argument is required or not"
+        },
+        "validate": {
+          "$ref": "#/definitions/CustomSearchCommandValidator"
+        },
+        "defaultValue": {
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "description": "Provide default value to the arguments passed for custom search command"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "CustomSearchCommandValidator": {
+      "type": "object",
+      "description": "It is used to validate the values of arguments for custom search command",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/CustomIntegerValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomFloatValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomRegularExpressionValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomFieldnameValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomBooleanValidator"
+        }
+      ]
+    },
+    "CustomIntegerValidator": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "description": "Minimum value used for validation"
+        },
+        "maximum": {
+          "type": "number",
+          "description": "Maximum value used for validation"
+        },
+        "type": {
+          "const": "Integer",
+          "type": "string",
+          "description": "This is integer Validator for custom search command, provide at least one of `minimumValue` or `maximumValue`"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomFloatValidator": {
+      "type": "object",
+      "properties": {
+        "minimumValue": {
+          "type": "number",
+          "description": "Minimum value used for validation"
+        },
+        "maximumValue": {
+          "type": "number",
+          "description": "Maximum value used for validation"
+        },
+        "type": {
+          "const": "Float",
+          "type": "string",
+          "description": "This is Float Validator for custom search command, provide at least one of `minimumValue` or `maximumValue` for validation purpose."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomRegularExpressionValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "RegularExpression",
+          "type": "string",
+          "description": "This is RegularExpression Validator which validates if the input value is a valid regular expression pattern or not."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomFieldnameValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Fieldname",
+          "type": "string",
+          "description": "Validates field name option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomBooleanValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Boolean",
+          "type": "string",
+          "description": "Validates Boolean option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
     "ConfigurationPage": {
       "type": "object",
       "properties": {
@@ -480,7 +686,7 @@
               "field": {
                 "type": "string",
                 "pattern": "^\\w+$",
-                "description": "Used to dispaly the data in a column."
+                "description": "Used to display the data in a column."
               },
               "label": {
                 "type": "string",
@@ -1509,7 +1715,10 @@
                     "uniqueItems": true
                   }
                 },
-                "required": ["label", "fields"],
+                "required": [
+                  "label",
+                  "fields"
+                ],
                 "additionalProperties": false
               }
             },
@@ -1540,7 +1749,9 @@
                     "additionalProperties": false
                   }
                 },
-                "required": ["field"],
+                "required": [
+                  "field"
+                ],
                 "additionalProperties": false
               },
               "minItems": 1
@@ -1549,7 +1760,9 @@
               "$ref": "#/definitions/disableonEdit"
             }
           },
-          "required": ["rows"],
+          "required": [
+            "rows"
+          ],
           "additionalProperties": false
         },
         "validators": {
@@ -1566,7 +1779,12 @@
           "type": "boolean"
         }
       },
-      "required": ["field", "label", "type", "options"],
+      "required": [
+        "field",
+        "label",
+        "type",
+        "options"
+      ],
       "additionalProperties": false
     },
     "RadioEntity": {
@@ -1843,12 +2061,12 @@
             "access_token_endpoint": {
               "type": "string",
               "maxLength": 350,
-              "description": "Must be present and its value should be the endpoint value for getting the ccess_token using the auth_code received."
+              "description": "Must be present and its value should be the endpoint value for getting the access_token using the auth_code received."
             },
             "auth_endpoint_token_access_type": {
               "type": "string",
               "maxLength": 350,
-              "description": "Optional parameter that is mapped into the value of the token_access_type query param in the authorisation url."
+              "description": "Optional parameter that is mapped into the value of the token_access_type query param in the authorization url."
             },
             "oauth_state_enabled": {
               "type": "boolean",
@@ -2450,7 +2668,12 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["string", "number", "integer", "boolean"]
+              "enum": [
+                "string",
+                "number",
+                "integer",
+                "boolean"
+              ]
             },
             "nullable": {
               "type": "boolean",
@@ -2514,7 +2737,7 @@
             "anyOf": {
               "type": "array",
               "items": {
-                  "$ref": "#/definitions/OpenApiType"
+                "$ref": "#/definitions/OpenApiType"
               }
             },
             "nullable": {
@@ -2532,7 +2755,7 @@
             "oneOf": {
               "type": "array",
               "items": {
-                  "$ref": "#/definitions/OpenApiType"
+                "$ref": "#/definitions/OpenApiType"
               }
             },
             "nullable": {
@@ -2564,7 +2787,9 @@
             }
           },
           "additionalProperties": false,
-          "required": ["schema"]
+          "required": [
+            "schema"
+          ]
         }
       }
     },
@@ -2604,7 +2829,9 @@
         "handlerType": {
           "type": "string",
           "description": "The type of the handler.",
-          "enum": ["EAI"]
+          "enum": [
+            "EAI"
+          ]
         },
         "registerHandler": {
           "type": "object",
@@ -2613,7 +2840,7 @@
             "file": {
               "type": "string",
               "description": "The file where the custom rest handler is located.",
-                "pattern": "^[a-zA-Z0-9_]+\\.py$"
+              "pattern": "^[a-zA-Z0-9_]+\\.py$"
             },
             "actions": {
               "type": "array",
@@ -2621,7 +2848,12 @@
               "items": {
                 "type": "string",
                 "description": "The action that the custom rest handler supports.",
-                "enum": ["list", "edit", "create", "remove"],
+                "enum": [
+                  "list",
+                  "edit",
+                  "create",
+                  "remove"
+                ],
                 "minItems": 1,
                 "uniqueItems": true
               }
@@ -2996,7 +3228,9 @@
           "$ref": "#/definitions/links"
         }
       },
-      "required": ["text"]
+      "required": [
+        "text"
+      ]
     },
     "singleFieldToModify": {
       "type": "object",
@@ -3784,7 +4018,8 @@
       "anyOf": [
         {
           "type": "string",
-          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."        },
+          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."
+        },
         {
           "$ref": "#/definitions/helpWithLinks"
         }
@@ -3805,7 +4040,9 @@
           "type": "string"
         }
       },
-      "required": ["text"]
+      "required": [
+        "text"
+      ]
     },
     "tooltip": {
       "type": "string",
@@ -3909,7 +4146,7 @@
         }
       ]
     },
-    "inputsUniqueAcrossSingleService":{
+    "inputsUniqueAcrossSingleService": {
       "description": "Defines if inputs in different services can share same name.",
       "type": "boolean",
       "default": false
@@ -3973,6 +4210,13 @@
       "description": "Alerts configuration. The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.",
       "items": {
         "$ref": "#/definitions/Alerts"
+      },
+      "minItems": 1
+    },
+    "customSearchCommand": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/customSearchCommand"
       },
       "minItems": 1
     },

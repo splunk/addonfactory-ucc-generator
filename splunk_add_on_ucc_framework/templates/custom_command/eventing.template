@@ -1,0 +1,61 @@
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \
+    dispatch, EventingCommand, Configuration, Option, validators
+from {{imported_file_name}} import transform
+
+@Configuration()
+class {{class_name}}Command(EventingCommand):
+    {% if syntax or description%}
+    """
+
+    {% if syntax %}
+    ##Syntax
+    {{syntax}}
+    {% endif %}
+
+    {% if description %}
+    ##Description
+    {{description}}
+    {% endif %}
+
+    """
+    {% endif %}
+
+    {% for arg in arguments %}
+    {{ arg.name }} = Option(name="{{arg.name}}"
+    {%- if arg.require  -%}
+    , require={{ arg.require }}
+    {%- else -%}
+    , require=False
+    {%- endif -%}
+    
+    {%- if arg.validate -%}
+        {%- if (arg.validate.type == "Integer" or arg.validate.type == "Float") -%}
+            {%- if (arg.validate.minimum and arg.validate.maximum) -%}
+            , validate=validators.{{ arg.validate.type }}(minimum={{ arg.validate.minimum }}, maximum={{ arg.validate.maximum }})
+            {%- elif (arg.validate.minimum and not arg.validate.maximum) -%}
+            , validate=validators.{{ arg.validate.type }}(minimum={{ arg.validate.minimum }})
+            {%- elif (not arg.validate.minimum and arg.validate.maximum) -%}
+            , validate=validators.{{ arg.validate.type }}(maximum={{ arg.validate.maximum }})
+            {%- else -%}
+            , validate=validators.{{ arg.validate.type }}()
+            {%- endif -%}
+        {%- else -%}
+        , validate=validators.{{ arg.validate.type }}()
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- if arg.default -%}    
+    , default={{ arg.default }}
+    {%- else -%}
+    , default=""
+    {%- endif -%}
+    )
+    {% endfor %}
+
+    def transform(self, events):
+       return transform(self, events)
+
+dispatch({{class_name}}Command, sys.argv, sys.stdin, sys.stdout, __name__)
