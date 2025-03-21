@@ -33,7 +33,7 @@ def ta_name():
 
 @pytest.fixture
 def global_config_for_alerts():
-    return global_config_lib.GlobalConfig(
+    return global_config_lib.GlobalConfig.from_file(
         helpers.get_testdata_file_path("valid_config_all_alerts.json")
     )
 
@@ -54,13 +54,13 @@ def global_config_all_json_content():
 @pytest.fixture
 def global_config_all_json() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path("valid_config.json")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
 @pytest.fixture
 def global_config_no_configuration() -> global_config_lib.GlobalConfig:
-    return global_config_lib.GlobalConfig(
+    return global_config_lib.GlobalConfig.from_file(
         helpers.get_testdata_file_path("global_config_no_configuration.json")
     )
 
@@ -68,7 +68,7 @@ def global_config_no_configuration() -> global_config_lib.GlobalConfig:
 @pytest.fixture
 def global_config_all_yaml() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path("valid_config.yaml")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -77,7 +77,7 @@ def global_config_only_configuration() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_configuration.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -86,7 +86,7 @@ def global_config_for_conf_only_TA() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_global_config_conf_only_TA.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -95,7 +95,7 @@ def global_config_only_logging() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_logging.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -104,7 +104,7 @@ def global_config_multiple_account() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_multiple_account.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -113,7 +113,7 @@ def global_config_single_authentication() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_single_authentication_config.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 

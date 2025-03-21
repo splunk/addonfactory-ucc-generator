@@ -9,7 +9,7 @@ TA_NAME = "test_addon"
 
 @fixture
 def global_config():
-    gc = GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc = GlobalConfig.from_file(get_testdata_file_path("valid_config.json"))
     gc._content["meta"]["restRoot"] = TA_NAME
     return gc
 

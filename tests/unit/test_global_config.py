@@ -20,7 +20,7 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib
 )
 def test_global_config_parse(filename):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     assert global_config.namespace == "splunk_ta_uccexample"
     assert global_config.product == "Splunk_TA_UCCExample"
@@ -102,7 +102,7 @@ def test_global_config_update_addon_version(global_config_only_configuration):
 def test_global_config_expand(tmp_path):
     global_config_path = helpers.get_testdata_file_path("valid_config_expand.json")
 
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     assert {"type": "loggingTab"} in global_config.configuration
     assert count_tabs(global_config, name="logging") == 0
@@ -130,7 +130,7 @@ def test_global_config_cleanup_unwanted_params(global_config_only_logging, tmp_p
     with open(new_path, "w") as fp:
         json.dump(content, fp)
 
-    global_config = global_config_lib.GlobalConfig(new_path)
+    global_config = global_config_lib.GlobalConfig.from_file(new_path)
 
     assert global_config.content["meta"].get("_uccVersion") == "1.0.0"
 
@@ -141,7 +141,7 @@ def test_global_config_cleanup_unwanted_params(global_config_only_logging, tmp_p
 
 def test_global_config_add_ucc_version(global_config_only_logging, tmp_path):
     global_config_path = helpers.get_testdata_file_path("valid_config.json")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     assert "_uccVersion" not in global_config.content["meta"]
     global_config.add_ucc_version("1.0.0")
