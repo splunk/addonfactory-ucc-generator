@@ -89,6 +89,7 @@ nav:
       - Modify fields On change: "entity/modifyFieldsOnValue.md"
       - Help property: "entity/help_message.md"
 
+  - Custom search commands: "custom_search_commands.md"
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
   - UCC ignore: "uccignore.md"
