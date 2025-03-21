@@ -60,19 +60,26 @@ class OSDependentLibraryConfig:
 
 
 class GlobalConfig:
-    def __init__(self, global_config_path: str) -> None:
+    def __init__(
+        self,
+        content: Dict[str, Any],
+        is_yaml: bool,
+        original_path: str,
+    ) -> None:
+        self._content = content
+        self._is_global_config_yaml = is_yaml
+        self._original_path = original_path
+        self.user_defined_handlers = UserDefinedRestHandlers()
+
+    @classmethod
+    def from_file(cls, global_config_path: str) -> "GlobalConfig":
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
-        self._is_global_config_yaml = (
-            True if global_config_path.endswith(".yaml") else False
+        is_global_config_yaml = True if global_config_path.endswith(".yaml") else False
+        content = (
+            yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
         )
-        self._content = (
-            yaml_load(config_raw)
-            if self._is_global_config_yaml
-            else json.loads(config_raw)
-        )
-        self._original_path = global_config_path
-        self.user_defined_handlers = UserDefinedRestHandlers()
+        return GlobalConfig(content, is_global_config_yaml, global_config_path)
 
     def parse_user_defined_handlers(self) -> None:
         """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
