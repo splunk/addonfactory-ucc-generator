@@ -192,3 +192,74 @@ def test_ta_name_mismatch(
             pip_legacy_resolver=False,
             ui_source_map=False,
         )
+
+
+@patch("splunk_add_on_ucc_framework.commands.build._get_app_manifest")
+@patch("splunk_add_on_ucc_framework.commands.build._get_and_check_global_config_path")
+@patch("os.path.isfile")
+def app_conf_not_present(
+    mock_os_isfile,
+    mock_get_and_check_global_config_path,
+    mock_get_app_manifest,
+):
+    mock_os_isfile.return_value = False
+
+    mock_app_manifest = MagicMock()
+    mock_get_app_manifest.return_value = mock_app_manifest
+    mock_get_and_check_global_config_path.return_value = ""
+
+    generate(
+        source="source/path",
+        addon_version="1.0.0",
+        python_binary_name="python3",
+        verbose_file_summary_report=False,
+        pip_version="latest",
+        pip_legacy_resolver=False,
+        ui_source_map=False,
+    )
+
+
+@patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
+@patch("splunk_add_on_ucc_framework.commands.build._get_app_manifest")
+@patch("splunk_add_on_ucc_framework.commands.build._get_and_check_global_config_path")
+@patch("os.path.isfile")
+@patch("os.path.exists")
+def test_generate_when_gc_path_is_empty(
+    mock_os_path,
+    mock_os_isfile,
+    mock_get_and_check_global_config_path,
+    mock_get_app_manifest,
+    mock_global_config,
+):
+    """Test generate() when global_config_path is empty."""
+
+    mock_os_path.return_value = True
+    mock_get_and_check_global_config_path.return_value = ""
+
+    mock_app_manifest = MagicMock()
+    mock_get_app_manifest.return_value = mock_app_manifest
+
+    mock_os_isfile.return_value = False
+
+    # Exception is raised to stop the further execution of generate function.
+    mock_global_config.side_effect = Exception("Stop execution after condition is met")
+    try:
+        generate(
+            source="mock_source",
+            addon_version="1.0.0",
+            python_binary_name="python3",
+            verbose_file_summary_report=False,
+            pip_version="latest",
+            pip_legacy_resolver=False,
+            ui_source_map=False,
+        )
+    except Exception as e:
+        assert str(e) == "Stop execution after condition is met"
+
+    # Ensure GlobalConfig is instantiated when gc_path is empty
+    mock_global_config.assert_called_once_with(
+        "",
+        source="mock_source",
+        app_manifest=mock_app_manifest,
+        app_conf_content={},  # Since app.conf does not exist, it should be an empty dict
+    )

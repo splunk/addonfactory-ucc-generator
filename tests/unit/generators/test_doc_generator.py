@@ -40,6 +40,9 @@ def test_generate_docs(mock_open, mock_dirname, mock_realpath):
             "| ------------ | ------------ | ----------------- |",
             "| file1.conf | output/&lt;YOUR_ADDON_NAME&gt;/some/path | Conf file |",
             "| file2.xml | output/&lt;YOUR_ADDON_NAME&gt;/xml/path | XML file |",
+            "| globalConfig.json | &lt;source_dir&gt; | "
+            "Generates globalConfig.json file in the source code if globalConfig "
+            "is not present in source directory at build time. |",
             "\n",
         ]
     )
@@ -75,7 +78,10 @@ def test_generate_docs_empty_list(mock_open_file, mock_dirname, mock_realpath):
             "",
             "| File Name  | File Location | File Description |",
             "| ------------ | ------------ | ----------------- |",
-            "\n",
+            "| globalConfig.json | &lt;source_dir&gt; | "
+            "Generates globalConfig.json file in the source code if globalConfig "
+            "is not present in source directory at build time. |"
+            "\n\n",
         ]
     )
 
