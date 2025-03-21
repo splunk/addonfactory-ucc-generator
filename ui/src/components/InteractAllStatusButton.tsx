@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from '@splunk/react-ui/Button';
 import { variables } from '@splunk/themes';
@@ -32,6 +32,8 @@ const InteractAllActionButton = styled(Button)`
 export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
     const [tryInteract, setTryInteract] = useState(false);
     const [isDisabling, setIsDisabling] = useState(false);
+    const activateButtonRef = useRef<HTMLButtonElement>(null);
+    const deactivateButtonRef = useRef<HTMLButtonElement>(null);
 
     const handleInteractWithAllRowsStatus = (rowsData: InputRowData[]) => {
         rowsData.forEach((row) => {
@@ -58,6 +60,7 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                 }}
                 role="button"
                 disabled={props.dataRows.length < 1}
+                elementRef={activateButtonRef}
             >
                 Activate all
             </InteractAllActionButton>
@@ -69,21 +72,21 @@ export function InteractAllStatusButtons(props: DisableAllStatusButtonProps) {
                 }}
                 role="button"
                 disabled={props.dataRows.length < 1}
+                elementRef={deactivateButtonRef}
             >
                 Deactivate all
             </InteractAllActionButton>
-            {tryInteract && (
-                <AcceptModal
-                    message={`Do you want to ${
-                        isDisabling ? 'deactivate' : 'activate'
-                    } all? It may take a while.`}
-                    open={tryInteract}
-                    handleRequestClose={handleAcceptModal}
-                    title={isDisabling ? 'Deactivate all' : 'Activate all'}
-                    declineBtnLabel="No"
-                    acceptBtnLabel="Yes"
-                />
-            )}
+            <AcceptModal
+                message={`Do you want to ${
+                    isDisabling ? 'deactivate' : 'activate'
+                } all? It may take a while.`}
+                open={tryInteract}
+                handleRequestClose={handleAcceptModal}
+                returnFocus={isDisabling ? deactivateButtonRef : activateButtonRef}
+                title={isDisabling ? 'Deactivate all' : 'Activate all'}
+                declineBtnLabel="No"
+                acceptBtnLabel="Yes"
+            />
         </div>
     ) : null;
 }
