@@ -28,19 +28,4 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 });
 
-// required by @splunk/dashboards
-Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: jest.fn().mockImplementation((query) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn(),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
-    })),
-});
-
 // --- END of unnecessary polyfills
