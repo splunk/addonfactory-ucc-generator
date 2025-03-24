@@ -64,54 +64,65 @@ class OSDependentLibraryConfig:
 class GlobalConfig:
     def __init__(self, global_config_path: str, **kwargs: Any) -> None:
         if global_config_path == "":
-            global_config_path = self.generate_minimal_globalconfig(
+            global_config_path = self.from_app_conf_and_app_manifest(
                 kwargs["source"], kwargs["app_manifest"], kwargs["app_conf_content"]
             )
-        with open(global_config_path) as f_config:
-            config_raw = f_config.read()
-        self._is_global_config_yaml = (
-            True if global_config_path.endswith(".yaml") else False
-        )
-        self._content = (
-            yaml_load(config_raw)
-            if self._is_global_config_yaml
-            else json.loads(config_raw)
-        )
+        else:
+            with open(global_config_path) as f_config:
+                config_raw = f_config.read()
+            self._is_global_config_yaml = (
+                True if global_config_path.endswith(".yaml") else False
+            )
+            self._content = (
+                yaml_load(config_raw)
+                if self._is_global_config_yaml
+                else json.loads(config_raw)
+            )
         self._original_path = global_config_path
         self.user_defined_handlers = UserDefinedRestHandlers()
 
-    def generate_minimal_globalconfig(
+    def from_app_conf_and_app_manifest(
         self,
         source_dir: str,
         app_manifest: app_manifest_lib.AppManifest,
         app_conf_content: Dict[str, Any],
     ) -> str:
         check_for_update = app_conf_content.get("package", {}).get(
-            "check_for_updates", ""
+            "check_for_updates", "true"
         )
+        # checkForUpdates is by default set to 'true'
+        check_for_update = check_for_update.lower() in ("true", "1", "t", "y", "yes")
         supported_themes = app_conf_content.get("ui", {}).get("supported_themes", "")
         if supported_themes:
-            supported_themes = (
-                "["
-                + ", ".join(f'"{item.strip()}"' for item in supported_themes.split(","))
-                + "]"
-            )
+            supported_themes = [item.strip() for item in supported_themes.split(",")]
         minimal_gc_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
-        rendered_content = (
-            utils.get_j2_env()
-            .get_template("minimal_globalConfig.json.template")
-            .render(
-                addon_name=app_manifest.get_addon_name(),
-                addon_version=app_manifest.get_addon_version(),
-                addon_display_name=app_manifest.get_title(),
-                check_for_update=check_for_update,
-                supported_themes=supported_themes,
-            )
+        self._is_global_config_yaml = False
+
+        def create_globalConfig(
+            app_manifest: app_manifest_lib.AppManifest,
+            check_for_update: bool,
+            supported_themes: List[str],
+        ) -> Dict[str, Any]:
+            minimal_gc = {
+                "meta": {
+                    "name": f"{app_manifest.get_addon_name()}",
+                    "restRoot": f"{app_manifest.get_addon_name()}",
+                    "displayName": f"{app_manifest.get_title()}",
+                    "version": f"{app_manifest.get_addon_version()}",
+                    "checkForUpdates": check_for_update,
+                }
+            }
+            if supported_themes:
+                minimal_gc["meta"]["supportedThemes"] = supported_themes
+            return minimal_gc
+
+        self._content = create_globalConfig(
+            app_manifest, check_for_update, supported_themes
         )
         utils.write_file(
             file_name="globalConfig.json",
             file_path=minimal_gc_path,
-            content=rendered_content,
+            content=json.dumps(self._content, indent=4),
         )
         return minimal_gc_path
 

@@ -11,18 +11,16 @@ import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 
-@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="{}")
 @mock.patch(
-    "splunk_add_on_ucc_framework.global_config.GlobalConfig.generate_minimal_globalconfig",
+    "splunk_add_on_ucc_framework.global_config.GlobalConfig.from_app_conf_and_app_manifest",
     return_value="tmp_path",
 )
 def test_globalconfig_init_with_empty_path(
-    mock_function, mock_open_file, tmp_path, mock_app_manifest, mock_app_conf_content
+    mock_function, tmp_path, mock_app_manifest, mock_app_conf_content
 ):
     """Test GlobalConfig initialization when global_config_path is empty."""
 
     source_dir = str(tmp_path / "source")
-    os.makedirs(source_dir, exist_ok=True)
 
     global_config_lib.GlobalConfig(
         global_config_path="",
@@ -36,86 +34,82 @@ def test_globalconfig_init_with_empty_path(
     )
 
 
-@mock.patch("splunk_add_on_ucc_framework.global_config.utils.get_j2_env")
-@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="{}")
-def test_generate_minimal_globalconfig_without_supported_themes(
-    mock_open_file,
-    mock_get_j2_env,
-    tmp_path,
-    mock_app_manifest,
-    mock_app_conf_content_without_themes,
-):
-    mock_template = mock.MagicMock()
-    mock_template.render.return_value = '{"addon_name": "test_addon"}'
-    mock_env = mock.MagicMock()
-    mock_env.get_template.return_value = mock_template
-    mock_get_j2_env.return_value = mock_env
-
-    source_dir = str(tmp_path / "source")
-    os.makedirs(source_dir, exist_ok=True)
-    global_config_instance = global_config_lib.GlobalConfig(
-        global_config_path="dummy_path"
-    )
-
-    result_path = global_config_instance.generate_minimal_globalconfig(
-        source_dir, mock_app_manifest, mock_app_conf_content_without_themes
-    )
-
-    expected_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
-    assert result_path == expected_path
-    mock_get_j2_env.assert_called_once()
-    mock_env.get_template.assert_called_once_with("minimal_globalConfig.json.template")
-    mock_template.render.assert_called_once_with(
-        addon_name="test_addon",
-        addon_version="1.0.0",
-        addon_display_name="Test title",
-        check_for_update=True,
-        supported_themes="",
-    )
-
-
-@mock.patch("splunk_add_on_ucc_framework.global_config.utils.get_j2_env")
+@pytest.mark.parametrize(
+    "check_for_updates, expected_check_for_updates",
+    [
+        ("true", True),
+        ("false", False),
+        ("1", True),
+        ("0", False),
+        ("yes", True),
+        ("no", False),
+        ("t", True),
+        ("f", False),
+    ],
+)
+@pytest.mark.parametrize(
+    "supported_themes, expected_supported_themes",
+    [
+        ("light, dark", ["light", "dark"]),
+        ("light", ["light"]),
+        ("", []),  # Empty case
+        (None, []),  # None case
+    ],
+)
 @mock.patch("splunk_add_on_ucc_framework.global_config.utils.write_file")
-@mock.patch("builtins.open", new_callable=mock.mock_open, read_data="{}")
-def test_generate_minimal_globalconfig(
-    mock_open_file,
+def test_from_app_conf_and_app_manifest(
     mock_write_file,
-    mock_get_j2_env,
+    check_for_updates,
+    expected_check_for_updates,
+    supported_themes,
+    expected_supported_themes,
     tmp_path,
-    mock_app_manifest,
-    mock_app_conf_content,
 ):
-    mock_template = mock.MagicMock()
-    mock_template.render.return_value = '{"addon_name": "test_addon"}'
-    mock_env = mock.MagicMock()
-    mock_env.get_template.return_value = mock_template
-    mock_get_j2_env.return_value = mock_env
+    mock_app_manifest = mock.MagicMock()
+    mock_app_manifest.get_addon_name.return_value = "test_addon"
+    mock_app_manifest.get_title.return_value = "Test Addon"
+    mock_app_manifest.get_addon_version.return_value = "1.0.0"
+
+    mock_app_conf_content = {
+        "package": {"check_for_updates": check_for_updates},
+        "ui": {"supported_themes": supported_themes},
+    }
 
     source_dir = str(tmp_path / "source")
     os.makedirs(source_dir, exist_ok=True)
-    global_config_instance = global_config_lib.GlobalConfig(
-        global_config_path="dummy_path"
-    )
 
-    result_path = global_config_instance.generate_minimal_globalconfig(
-        source_dir, mock_app_manifest, mock_app_conf_content
+    # Creating the instance automatically calls `from_app_conf_and_app_manifest`
+    global_config_lib.GlobalConfig(
+        global_config_path="",
+        source=source_dir,
+        app_manifest=mock_app_manifest,
+        app_conf_content=mock_app_conf_content,
     )
 
     expected_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
-    assert result_path == expected_path
-    mock_get_j2_env.assert_called_once()
-    mock_env.get_template.assert_called_once_with("minimal_globalConfig.json.template")
-    mock_template.render.assert_called_once_with(
-        addon_name="test_addon",
-        addon_version="1.0.0",
-        addon_display_name="Test title",
-        check_for_update=True,
-        supported_themes='["light", "dark"]',
-    )
-    mock_write_file.assert_called_once_with(
+
+    # Verify the function was called **once** during instantiation
+    assert mock_write_file.call_count == 1
+
+    # Verify the correct JSON content is written
+    expected_content = {
+        "meta": {
+            "name": "test_addon",
+            "restRoot": "test_addon",
+            "displayName": "Test Addon",
+            "version": "1.0.0",
+            "checkForUpdates": expected_check_for_updates,
+        }
+    }
+
+    if expected_supported_themes:
+        expected_content["meta"]["supportedThemes"] = expected_supported_themes
+
+    # Ensure `write_file` was called with correct content
+    mock_write_file.assert_called_with(
         file_name="globalConfig.json",
         file_path=expected_path,
-        content='{"addon_name": "test_addon"}',
+        content=json.dumps(expected_content, indent=4),
     )
 
 
