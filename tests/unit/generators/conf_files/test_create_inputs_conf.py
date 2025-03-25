@@ -97,6 +97,40 @@ def test_set_attributes_without_conf_key_and_name_field(
     assert inputs_conf.service_name == "service1"
 
 
+def test_set_attributes_without_conf_key_and_default_boolean(
+    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+):
+    """Test when a service does not have 'conf' key and 'entity' contains fields other than 'name'
+    with a boolean default value.
+    """
+    inputs_conf = InputsConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    inputs_conf._global_config = MagicMock()
+    inputs_conf._global_config.inputs = [
+        {
+            "name": "service1",
+            "entity": [
+                {
+                    "field": "other_field",
+                    "help": "help text",
+                    "defaultValue": True,
+                }
+            ],
+        }
+    ]
+
+    inputs_conf._set_attributes()
+
+    expected_output = [{"service1": ["other_field = help text  Default: True"]}]
+    assert inputs_conf.input_names == expected_output
+    assert inputs_conf.default_value_info == {"service1": {"other_field": "true"}}
+
+
 def test_set_attributes_without_conf_key_and_other_fields(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):

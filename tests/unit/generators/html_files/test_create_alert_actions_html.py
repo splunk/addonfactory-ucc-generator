@@ -48,6 +48,23 @@ def mocked__set_attribute(this, **kwargs):
     this._html_home = "_html_home"
 
 
+def test_set_attribute_no_global_config(
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    alert_html = AlertActionsHtml(
+        global_config=None,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    alert_html._set_attributes()
+    assert not hasattr(alert_html, "_html_home")
+
+
 @patch(
     "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml._set_attributes",
     return_value=MagicMock(),

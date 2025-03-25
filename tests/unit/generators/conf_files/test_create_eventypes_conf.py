@@ -16,6 +16,20 @@ def test_set_attribute(global_config_all_json, input_dir, output_dir, ucc_dir, t
     assert eventtypes_conf.conf_file == "eventtypes.conf"
 
 
+def test_set_attribute_without_global_config(input_dir, output_dir, ucc_dir, ta_name):
+    eventtypes_conf = EventtypesConf(
+        None,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    eventtypes_conf._set_attributes()
+    assert eventtypes_conf.alert_settings == {}
+    assert eventtypes_conf.conf_file == "eventtypes.conf"
+
+
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.EventtypesConf.set_template_and_render"
 )

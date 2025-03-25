@@ -63,6 +63,37 @@ def test_generate_conf_return(
     "splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator._set_attributes",
     return_value=MagicMock(),
 )
+@patch("splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator.generate_conf")
+@patch(
+    "splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator.generate_conf_spec"
+)
+def test_generate_conf_and_conf_spec_is_absent(
+    mock_generate_conf_spec,
+    mock_generate_conf,
+    mock_set_attr,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    mock_generate_conf.return_value = {}
+    mock_generate_conf_spec.return_value = {}
+
+    conf = ConfGenerator(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    assert conf.generate() == {}
+
+
+@patch(
+    "splunk_add_on_ucc_framework.generators.conf_files.ConfGenerator._set_attributes",
+    return_value=MagicMock(),
+)
 def test_generate_conf(
     mock_set_attr, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):

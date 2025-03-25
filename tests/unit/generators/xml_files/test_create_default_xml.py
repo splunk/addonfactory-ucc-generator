@@ -40,8 +40,32 @@ def test_set_attribute(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-
     assert hasattr(default_xml, "default_xml_content")
+
+
+@patch("os.path.exists", return_value=True)
+def test_set_attribute_when_file_is_present(
+    mock_os_path,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+    caplog,
+):
+    default_xml = DefaultXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    expected_msg = (
+        "Skipping generating data/ui/nav/default.xml because file already exists."
+    )
+    assert expected_msg in caplog.text
+    assert not hasattr(default_xml, "default_xml_content")
 
 
 def test_set_attribute_with_no_pages(
@@ -56,6 +80,32 @@ def test_set_attribute_with_no_pages(
     )
 
     assert not hasattr(default_xml, "default_xml_content")
+
+
+@patch(
+    "splunk_add_on_ucc_framework.generators.xml_files.DefaultXml._set_attributes",
+    return_value=MagicMock(),
+)
+def test_generate_xml_without_pages(
+    mock_set_attributes,
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    default_xml = DefaultXml(
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    mock_writer = MagicMock()
+    with patch.object(default_xml, "writer", mock_writer):
+        file_paths = default_xml.generate_xml()
+        assert file_paths is None
 
 
 @patch(
