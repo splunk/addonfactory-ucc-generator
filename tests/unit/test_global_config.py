@@ -56,9 +56,7 @@ def test_globalconfig_init_with_empty_path(
         (None, []),  # None case
     ],
 )
-@mock.patch("splunk_add_on_ucc_framework.global_config.utils.write_file")
 def test_from_app_conf_and_app_manifest(
-    mock_write_file,
     check_for_updates,
     expected_check_for_updates,
     supported_themes,
@@ -77,19 +75,17 @@ def test_from_app_conf_and_app_manifest(
 
     source_dir = str(tmp_path / "source")
     os.makedirs(source_dir, exist_ok=True)
-
-    # Creating the instance automatically calls `from_app_conf_and_app_manifest`
-    global_config_lib.GlobalConfig(
+    gc_instance = global_config_lib.GlobalConfig(
         global_config_path="",
         source=source_dir,
         app_manifest=mock_app_manifest,
         app_conf_content=mock_app_conf_content,
     )
+    global_config_path = gc_instance.from_app_conf_and_app_manifest(
+        source_dir, mock_app_manifest, mock_app_conf_content
+    )
 
     expected_path = os.path.join(source_dir, os.pardir, "globalConfig.json")
-
-    # Verify the function was called **once** during instantiation
-    assert mock_write_file.call_count == 1
 
     # Verify the correct JSON content is written
     expected_content = {
@@ -105,12 +101,8 @@ def test_from_app_conf_and_app_manifest(
     if expected_supported_themes:
         expected_content["meta"]["supportedThemes"] = expected_supported_themes
 
-    # Ensure `write_file` was called with correct content
-    mock_write_file.assert_called_with(
-        file_name="globalConfig.json",
-        file_path=expected_path,
-        content=json.dumps(expected_content, indent=4),
-    )
+    assert global_config_path == expected_path
+    assert gc_instance._content == expected_content
 
 
 @pytest.mark.parametrize(

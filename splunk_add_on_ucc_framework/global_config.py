@@ -119,11 +119,6 @@ class GlobalConfig:
         self._content = create_globalConfig(
             app_manifest, check_for_update, supported_themes
         )
-        utils.write_file(
-            file_name="globalConfig.json",
-            file_path=minimal_gc_path,
-            content=json.dumps(self._content, indent=4),
-        )
         return minimal_gc_path
 
     def parse_user_defined_handlers(self) -> None:

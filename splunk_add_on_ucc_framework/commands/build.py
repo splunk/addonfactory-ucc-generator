@@ -460,6 +460,7 @@ def generate(
             app_conf_content=app_conf_content,
         )
         gc_path = os.path.join(source, os.pardir, "globalConfig.json")
+        global_config.dump(gc_path)
         logger.info(f"Created minimal globalConfig file located @ {gc_path}")
 
     logger.info(f"Using globalConfig file located @ {gc_path}")
