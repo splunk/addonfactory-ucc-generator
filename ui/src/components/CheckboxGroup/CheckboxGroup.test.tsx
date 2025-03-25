@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CheckboxGroup from './CheckboxGroup';
 import { CheckboxGroupProps } from './checkboxGroup.utils';
-import { MODE_CREATE } from '../../constants/modes';
+import { MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 
 const handleChange = jest.fn();
 
@@ -173,4 +173,50 @@ it('mixed incrementing and decrementing value correctly', async () => {
         defaultCheckboxProps.value,
         'checkboxGroup'
     );
+});
+
+describe('CheckboxGroup behavior when disableOnEdit is enabled', () => {
+    const verifyCheckboxesState = (expectedChecked: boolean) => {
+        defaultCheckboxProps.controlOptions.rows.forEach((row) => {
+            const checkbox = screen.getByLabelText(row?.checkbox?.label || 'unexisting string');
+            expect(checkbox).toBeInTheDocument();
+            expect(checkbox).toBeDisabled();
+
+            if (expectedChecked) {
+                expect(checkbox).toBeChecked();
+            } else {
+                expect(checkbox).not.toBeChecked();
+            }
+        });
+    };
+
+    it('should keep checkboxes checked after clicking "Clear All"', async () => {
+        renderFeature({
+            disabled: true,
+            mode: MODE_EDIT,
+            value: 'collect_collaboration/1200,collect_file/1,collect_task/1',
+        });
+
+        // Ensures Jest detects assertions inside verifyCheckboxesState and assertions are executed
+        expect(() => verifyCheckboxesState(true)).not.toThrow();
+
+        // Click "Clear All" button
+        await userEvent.click(await screen.findByRole('button', { name: /clear all/i }));
+
+        // Ensure assertions are executed
+        expect(() => verifyCheckboxesState(true)).not.toThrow();
+    });
+
+    it('should keep checkboxes unchecked after clicking "Select All"', async () => {
+        renderFeature({ disabled: true, mode: MODE_EDIT, value: '' });
+
+        // Ensures Jest detects assertions inside verifyCheckboxesState and assertions are executed
+        expect(() => verifyCheckboxesState(false)).not.toThrow();
+
+        // Click "Select All" button
+        await userEvent.click(await screen.findByRole('button', { name: /select all/i }));
+
+        // Ensure assertions are executed
+        expect(() => verifyCheckboxesState(false)).not.toThrow();
+    });
 });

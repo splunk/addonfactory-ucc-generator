@@ -12,6 +12,7 @@ const renderModal = () =>
             message="test message"
             open
             handleRequestClose={handleClose}
+            returnFocus={() => {}}
             declineBtnLabel="No"
             acceptBtnLabel="Yes"
         />
