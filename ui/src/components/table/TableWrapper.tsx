@@ -279,12 +279,15 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
         if (searchType === 'all') {
             Object.keys(rowData).forEach((key) => {
                 const newArr = searchText
-                    ? findByMatchingValue(rowData[key])
+                    ? // there is no async await queries
+                      // eslint-disable-next-line testing-library/await-async-queries
+                      findByMatchingValue(rowData[key])
                     : Object.keys(rowData[key]).map((val) => rowData[key][val]);
 
                 allRowsData = allRowsData.concat(newArr);
             });
         } else {
+            // eslint-disable-next-line testing-library/await-async-queries
             allRowsData = findByMatchingValue(rowData[searchType]);
         }
 

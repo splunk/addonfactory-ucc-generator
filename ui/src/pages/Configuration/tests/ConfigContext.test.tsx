@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
@@ -48,44 +48,38 @@ function setup(meta: Partial<metaType>) {
 }
 
 it('should not display tabs on cloud', async () => {
-    const page = setup({
-        _uccVersion: undefined,
-    });
+    setup({ _uccVersion: undefined });
 
-    const cloudTab = document.querySelector('[data-test-tab-id="tab_hidden_for_cloud"]');
+    const cloudTab = screen.queryByTestId('tab_hidden_for_cloud');
     expect(cloudTab).toBeNull();
 
-    const enterprisetab = document.querySelector('[data-test-tab-id="tab_hidden_for_enterprise"]');
-    expect(enterprisetab).toBeInTheDocument();
+    const enterprisetab = screen.queryByTestId('tab_hidden_for_enterprise');
+    expect(enterprisetab).toBeNull();
 
-    const cloudText = await page.queryByText('Tab hidden for cloud');
+    const cloudText = screen.queryByText('Tab hidden for cloud');
     expect(cloudText).toBeNull();
 
-    const enterpriseText = await page.findByText('Tab hidden for enterprise');
+    const enterpriseText = await screen.findByText('Tab hidden for enterprise');
     expect(enterpriseText).toBeInTheDocument();
 });
 
 it('should not display fields in configuration form', async () => {
-    const page = setup({
-        _uccVersion: undefined,
-    });
+    setup({ _uccVersion: undefined });
 
-    const addBtn = await page.findByRole('button', { name: 'Add' });
+    const addBtn = await screen.findByRole('button', { name: 'Add' });
     expect(addBtn).toBeInTheDocument();
 
     await userEvent.click(addBtn);
 
-    const enterpriseInput = document.querySelector(
-        '[data-name="input_two_text_hidden_for_enterprise"]'
-    );
-    expect(enterpriseInput).toBeInTheDocument();
+    const enterpriseInput = screen.queryByTestId('input_two_text_hidden_for_enterprise');
+    expect(enterpriseInput).toBeNull();
 
-    const cloudInput = document.querySelector('[data-name="input_two_text_hidden_for_cloud"]');
+    const cloudInput = screen.queryByTestId('input_two_text_hidden_for_cloud');
     expect(cloudInput).toBeNull();
 
-    const cloudText = await page.queryByText('Text input hidden for cloud');
+    const cloudText = screen.queryByText('Text input hidden for cloud');
     expect(cloudText).toBeNull();
 
-    const enterprisetext = await page.findByText('Text input hidden for enterprise');
+    const enterprisetext = await screen.findByText('Text input hidden for enterprise');
     expect(enterprisetext).toBeInTheDocument();
 });

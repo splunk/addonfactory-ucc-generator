@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import EntityModal, { EntityModalProps } from './EntityModal';
@@ -27,6 +27,13 @@ import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
 
+const getDisabledField = async (fieldName: string) => {
+    const elements = screen.getAllByTestId('text');
+    const extractedFieldName = elements.find((element) => element.classList.contains(fieldName));
+    expect(extractedFieldName).toBeTruthy();
+    return within(extractedFieldName!).getByRole('textbox');
+};
+
 describe('Oauth field disabled on edit - diableonEdit property', () => {
     const handleRequestClose = jest.fn();
 
@@ -43,9 +50,9 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledOauthField = () => document.querySelector('.oauth_oauth_text_jest_test input');
+    const getDisabledOauthField = async () => getDisabledField('oauth_oauth_text_jest_test');
 
-    const getDisabledBasicField = () => document.querySelector('.basic_oauth_text_jest_test input');
+    const getDisabledBasicField = async () => getDisabledField('basic_oauth_text_jest_test');
 
     it('Oauth Oauth - disableonEdit = true, oauth field not disabled on create', async () => {
         setUpConfigWithDisabedOauth();
@@ -60,7 +67,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
             handleRequestClose: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
-        const oauthTextBox = getDisabledOauthField();
+        const oauthTextBox = await getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyEnabled();
     });
@@ -80,7 +87,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         renderModalWithProps(props);
 
-        const oauthTextBox = getDisabledOauthField();
+        const oauthTextBox = await getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyDisabled();
     });
@@ -100,7 +107,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 
         renderModalWithProps(props);
 
-        const oauthTextBox = getDisabledBasicField();
+        const oauthTextBox = await getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyDisabled();
     });
@@ -118,7 +125,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
             handleRequestClose: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
-        const oauthTextBox = getDisabledBasicField();
+        const oauthTextBox = await getDisabledBasicField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyEnabled();
     });
@@ -146,7 +153,7 @@ describe('Options - Enable field property', () => {
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
 
-    const getDisabledOauthField = () => document.querySelector('.oauth_oauth_text_jest_test input');
+    const getDisabledOauthField = async () => getDisabledField('oauth_oauth_text_jest_test');
 
     it('Oauth Oauth - Enable field equal false, so field disabled', async () => {
         setUpConfigWithDisabledComplitelyOauthField();
@@ -161,7 +168,7 @@ describe('Options - Enable field property', () => {
             handleRequestClose: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
-        const oauthTextBox = getDisabledOauthField();
+        const oauthTextBox = await getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyDisabled();
     });
@@ -179,7 +186,7 @@ describe('Options - Enable field property', () => {
             handleRequestClose: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
-        const oauthTextBox = getDisabledOauthField();
+        const oauthTextBox = await getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyDisabled();
     });
@@ -197,7 +204,7 @@ describe('Options - Enable field property', () => {
             handleRequestClose: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
-        const oauthTextBox = getDisabledOauthField();
+        const oauthTextBox = await getDisabledOauthField();
         expect(oauthTextBox).toBeInTheDocument();
         expect(oauthTextBox).toBeVisuallyEnabled();
     });
@@ -230,13 +237,16 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
 
         renderModalWithProps(props);
 
-        const cliendIdField = document.querySelector('.client_id input');
+        const getDisabledOauthFieldForClientID = async () => getDisabledField('client_id');
+        const cliendIdField = await getDisabledOauthFieldForClientID();
         expect(cliendIdField).toBeInTheDocument();
 
-        const secretField = document.querySelector('.client_secret input');
+        const getDisabledOauthFieldForClientSecret = async () => getDisabledField('client_secret');
+        const secretField = await getDisabledOauthFieldForClientSecret();
         expect(secretField).toBeInTheDocument();
 
-        const redirectField = document.querySelector('.redirect_url');
+        const getDisabledOauthFieldForRedirectURL = async () => getDisabledField('redirect_url');
+        const redirectField = await getDisabledOauthFieldForRedirectURL();
         expect(redirectField).toBeInTheDocument();
 
         if (cliendIdField) {
@@ -404,8 +414,13 @@ describe('Oauth - separated endpoint authorization', () => {
     };
 
     const getFilledOauthFields = async () => {
-        const endpointAuth = document.querySelector('.endpoint_authorize input');
-        const endpointToken = document.querySelector('.endpoint_token input');
+        const getDisabledOauthFieldForEndpointAuthorize = async () =>
+            getDisabledField('endpoint_authorize');
+        const endpointAuth = await getDisabledOauthFieldForEndpointAuthorize();
+
+        const getDisabledOauthFieldForEndpointToken = async () =>
+            getDisabledField('endpoint_token');
+        const endpointToken = await getDisabledOauthFieldForEndpointToken();
 
         if (endpointAuth) {
             await userEvent.type(endpointAuth, 'authendpoint');

@@ -8,8 +8,9 @@ module.exports = {
         'plugin:import/typescript', // resolves import TS files from JS code
         'plugin:jest/recommended',
         'plugin:storybook/recommended',
+        'plugin:testing-library/react', // enables rule for testing library for react
     ],
-    plugins: ['@typescript-eslint', 'prettier', 'jest'],
+    plugins: ['@typescript-eslint', 'prettier', 'jest', 'testing-library'],
     env: {
         'jest/globals': true,
     },
@@ -42,6 +43,11 @@ module.exports = {
         ],
         'react/jsx-one-expression-per-line': 'off', // This rule is not compatible with prettier
         'react/jsx-curly-newline': 'off', // This rule is not compatible with prettier
+        'testing-library/no-debugging-utils': 'error', // Prevent leaving debug utilities in tests
+        'testing-library/prefer-find-by': 'warn', // Suggest async queries instead of getBy
+        'testing-library/await-async-queries': 'error', // Prevent missing awaits on async queries
+        'testing-library/no-await-sync-queries': 'error', // Prevent unnecessary await on sync queries
+        'testing-library/no-dom-import': 'error', // Prevent wrong imports; enforce @testing-library/react
     },
     root: true,
 };

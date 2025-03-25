@@ -75,15 +75,16 @@ describe('TableWrapper - Configuration Page', () => {
     it('sort items after filtering', async () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
         setup();
-        const user = userEvent.setup();
+        const utils = userEvent.setup();
 
         const numberOfItems = await screen.findByText('Custom Text');
         expect(numberOfItems).toBeInTheDocument();
 
-        const customHeader = document.querySelector('[data-test-label="Custom Text"]');
-        expect(customHeader).toBeInTheDocument();
+        const customHeader = screen.getByTestId('Custom Text');
+        const customHeaderLabel = within(customHeader).getByText('Custom Text');
+        expect(customHeaderLabel).toBeInTheDocument();
 
-        const defaultOrder = document.querySelectorAll('[data-column="custom_text"]');
+        const defaultOrder = screen.getAllByTestId('custom_text');
         const mappedTextDefaultOrder = Array.from(defaultOrder).map((el: Node) => el.textContent);
         expect(mappedTextDefaultOrder).toMatchInlineSnapshot(`
         [
@@ -99,9 +100,9 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await user.click(customHeader!);
+        await utils.click(customHeader!);
 
-        const allCustomTextsAsc = document.querySelectorAll('[data-column="custom_text"]');
+        const allCustomTextsAsc = screen.getAllByTestId('custom_text');
         const mappedTextAsc = Array.from(allCustomTextsAsc).map((el: Node) => el.textContent);
 
         expect(mappedTextAsc).toMatchInlineSnapshot(`
@@ -118,9 +119,9 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await user.click(customHeader!);
+        await utils.click(customHeader!);
 
-        const allCustomTextsDesc = document.querySelectorAll('[data-column="custom_text"]');
+        const allCustomTextsDesc = screen.getAllByTestId('custom_text');
         const mappedTextDesc = Array.from(allCustomTextsDesc).map((el: Node) => el.textContent);
 
         expect(mappedTextDesc).toMatchInlineSnapshot(`
@@ -166,38 +167,38 @@ describe('TableWrapper - Configuration Page', () => {
     it('Check modal correctly renders title', async () => {
         setUnifiedConfig(getSimpleConfig());
         setup();
-        const user = userEvent.setup();
+        const utils = userEvent.setup();
 
         // check for custom header in edit modal
         const editHeader = await getHeaderTitleForAction('Update Account', /edit/i);
         expect(editHeader).toBeInTheDocument();
-        await closeModal(user);
+        await closeModal(utils);
 
         // check for custom header in clone modal
         const cloneHeader = await getHeaderTitleForAction('Clone Account', /clone/i);
         expect(cloneHeader).toBeInTheDocument();
-        await closeModal(user);
+        await closeModal(utils);
 
         // check for custom header in delete modal
         const deleteHeader = await getHeaderTitleForAction('Delete Confirmation', /delete/i);
         expect(deleteHeader).toBeInTheDocument();
-        await closeModal(user);
+        await closeModal(utils);
     });
 
     it('Check modal correctly render custom header', async () => {
         setUnifiedConfig(getCustomModalHeaderData());
         setup();
-        const user = userEvent.setup();
+        const utils = userEvent.setup();
 
         // check for custom header in edit modal
         const editHeader = await getHeaderTitleForAction('Update this is custom header', /edit/i);
         expect(editHeader).toBeInTheDocument();
-        await closeModal(user);
+        await closeModal(utils);
 
         // check for custom header in clone modal
         const cloneHeader = await getHeaderTitleForAction('Clone this is custom header', /clone/i);
         expect(cloneHeader).toBeInTheDocument();
-        await closeModal(user);
+        await closeModal(utils);
 
         // check for custom header in delete modal
         const deleteHeader = await getHeaderTitleForAction(
@@ -205,7 +206,7 @@ describe('TableWrapper - Configuration Page', () => {
             /delete/i
         );
         expect(deleteHeader).toBeInTheDocument();
-        await closeModal(user);
+        await closeModal(utils);
     });
 });
 

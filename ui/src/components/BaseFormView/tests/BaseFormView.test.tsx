@@ -60,8 +60,12 @@ it('should render base form correctly with name and File fields', async () => {
     );
 
     screen.getByRole('textbox', { name: 'Name' });
+    // Find all elements with data-test="control-group"
+    const controlGroups = screen.getAllByTestId('control-group');
 
-    const fileField = document.querySelector('[data-name="name"]');
+    // Find the specific one with data-name="name"
+    const fileField = controlGroups.find((el) => el.getAttribute('data-name') === 'name');
+
     expect(fileField).toBeInTheDocument();
 });
 
@@ -194,13 +198,16 @@ describe('Verify if submiting BaseFormView works', () => {
     };
 
     const getEntityTextBox = (entityField: string) => {
-        const entityWrapper = document.querySelector(`[data-name="${entityField}"]`);
-        invariant(entityWrapper);
-        return within(entityWrapper as HTMLElement).getByRole('textbox');
+        const controlGroups = screen.getAllByTestId('control-group');
+        const extractEntity = controlGroups.find(
+            (el) => el.getAttribute('data-name') === entityField
+        );
+        invariant(extractEntity);
+        return within(extractEntity as HTMLElement).getByRole('textbox');
     };
 
     it('Correctly pass form data via post', async () => {
-        const formRef = renderAndGetFormRef(
+        const utils = renderAndGetFormRef(
             getGlobalConfigMockFourInputServices(),
             MOCK_CONTEXT_STATE_THREE_INPUTS
         );
@@ -240,14 +247,14 @@ describe('Verify if submiting BaseFormView works', () => {
             )
         );
 
-        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+        await utils.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
 
         // response was success(mocked) and handled
         await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
     });
 
     it('should throw error as name already used', async () => {
-        const formRef = renderAndGetFormRef(
+        const utils = renderAndGetFormRef(
             getGlobalConfigMockFourInputServices(),
             MOCK_CONTEXT_STATE_THREE_INPUTS
         );
@@ -261,7 +268,7 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, INTERVAL_INPUT);
 
-        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+        await utils.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
 
         const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
         expect(errorMessage).toBeInTheDocument();
@@ -280,7 +287,7 @@ describe('Verify if submiting BaseFormView works', () => {
                 inputsUniqueAcrossSingleService;
         }
 
-        const formRef = renderAndGetFormRef(
+        const utils = renderAndGetFormRef(
             globalConfigMock,
             MOCK_CONTEXT_STATE_THREE_INPUTS,
             'example_input_two'
@@ -316,7 +323,7 @@ describe('Verify if submiting BaseFormView works', () => {
             )
         );
 
-        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+        await utils.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
     };
 
     it('Add already existing name for different service - inputsUniqueAcrossSingleService true', async () => {

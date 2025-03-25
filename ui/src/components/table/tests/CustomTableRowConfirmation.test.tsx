@@ -16,7 +16,7 @@ import {
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { invariant } from '../../../util/invariant';
 
-beforeEach(() => {
+const renderTable = () => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
@@ -39,7 +39,7 @@ beforeEach(() => {
         </TableContextProvider>,
         { wrapper: BrowserRouter }
     );
-});
+};
 
 const getRowData = (isDisabled: boolean) => {
     const active = MockRowData.entry.find(
@@ -73,6 +73,8 @@ const getRowElements = async (isDisabled: boolean) => {
 };
 
 it('Status toggling with acceptance model - displayed correctly', async () => {
+    renderTable();
+
     const { activeRowData, statusToggle } = await getRowElements(false);
 
     await userEvent.click(statusToggle);
@@ -90,6 +92,8 @@ it('Status toggling with acceptance model - displayed correctly', async () => {
 });
 
 it('Status toggling with acceptance model - toggles state', async () => {
+    renderTable();
+
     const { activeRowData, statusCell, statusToggle } = await getRowElements(false);
 
     expect(statusCell).toHaveTextContent('Active');
@@ -118,6 +122,8 @@ it('Status toggling with acceptance model - toggles state', async () => {
 });
 
 it('Status toggling with acceptance model - decline modal still Active', async () => {
+    renderTable();
+
     const { activeRowData, statusCell, statusToggle } = await getRowElements(false);
 
     expect(statusCell).toHaveTextContent('Active');
@@ -135,6 +141,8 @@ it('Status toggling with acceptance model - decline modal still Active', async (
 });
 
 it('Status toggling with acceptance model - decline modal still Inactive', async () => {
+    renderTable();
+
     const { activeRowData, statusCell, statusToggle } = await getRowElements(true);
 
     expect(statusCell).toHaveTextContent('Inactive');
