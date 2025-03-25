@@ -174,11 +174,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                     let cellHTML: string | ReactElement = '';
                     if (header.customCell && header.customCell.src) {
                         cellHTML = (
-                            <Table.Cell
-                                data-test={header.field}
-                                data-column={header.field}
-                                key={header.field}
-                            >
+                            <Table.Cell data-column={header.field} key={header.field}>
                                 {header.customCell && getCustomCell(row, header)}
                             </Table.Cell>
                         );
@@ -192,11 +188,7 @@ function CustomTableRow(props: CustomTableRowProps) {
                             : 'Inactive';
 
                         cellHTML = (
-                            <Table.Cell
-                                data-test={header.field}
-                                data-column={header.field}
-                                key={header.field}
-                            >
+                            <Table.Cell data-column={header.field} key={header.field}>
                                 <SwitchWrapper>
                                     {/* TODO: use toggleRef from SUI 5 instead of elementRef */}
                                     <Switch
@@ -251,7 +243,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                         cellHTML = (
                             <Table.Cell
                                 style={{ wordBreak: 'break-word' }}
-                                data-test={header.field}
                                 data-column={header.field}
                                 key={header.field}
                             >

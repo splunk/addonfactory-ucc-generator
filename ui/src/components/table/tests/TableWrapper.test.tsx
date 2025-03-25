@@ -79,12 +79,14 @@ describe('TableWrapper - Configuration Page', () => {
 
         const numberOfItems = await screen.findByText('Custom Text');
         expect(numberOfItems).toBeInTheDocument();
+        const customHeader = screen
+            .getAllByTestId('head-cell')
+            .find((el) => el.getAttribute('data-test-label') === 'Custom Text');
+        expect(customHeader).toBeInTheDocument();
 
-        const customHeader = screen.getByTestId('Custom Text');
-        const customHeaderLabel = within(customHeader).getByText('Custom Text');
-        expect(customHeaderLabel).toBeInTheDocument();
-
-        const defaultOrder = screen.getAllByTestId('custom_text');
+        // No unique data-testid available to extract the columns in order
+        // eslint-disable-next-line testing-library/no-node-access
+        const defaultOrder = document.querySelectorAll('[data-column="custom_text"]');
         const mappedTextDefaultOrder = Array.from(defaultOrder).map((el: Node) => el.textContent);
         expect(mappedTextDefaultOrder).toMatchInlineSnapshot(`
         [
@@ -102,7 +104,9 @@ describe('TableWrapper - Configuration Page', () => {
 
         await utils.click(customHeader!);
 
-        const allCustomTextsAsc = screen.getAllByTestId('custom_text');
+        // No unique data-testid available to extract the columns in order
+        // eslint-disable-next-line testing-library/no-node-access
+        const allCustomTextsAsc = document.querySelectorAll('[data-column="custom_text"]');
         const mappedTextAsc = Array.from(allCustomTextsAsc).map((el: Node) => el.textContent);
 
         expect(mappedTextAsc).toMatchInlineSnapshot(`
@@ -121,7 +125,9 @@ describe('TableWrapper - Configuration Page', () => {
 
         await utils.click(customHeader!);
 
-        const allCustomTextsDesc = screen.getAllByTestId('custom_text');
+        // No unique data-testid available to extract the columns in order
+        // eslint-disable-next-line testing-library/no-node-access
+        const allCustomTextsDesc = document.querySelectorAll('[data-column="custom_text"]');
         const mappedTextDesc = Array.from(allCustomTextsDesc).map((el: Node) => el.textContent);
 
         expect(mappedTextDesc).toMatchInlineSnapshot(`

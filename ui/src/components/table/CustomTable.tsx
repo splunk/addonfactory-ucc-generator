@@ -269,7 +269,6 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     columns.map((headData) => (
                         <Table.HeadCell
                             key={headData.field}
-                            data-test={headData.label}
                             onSort={headData.sortKey ? handleSort : undefined}
                             sortKey={headData.sortKey ?? undefined}
                             sortDir={
