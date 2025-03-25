@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ interface AcceptModalProps {
     title: string;
     open: boolean;
     handleRequestClose: (accepted: boolean) => void;
+    returnFocus: ComponentProps<typeof Modal>['returnFocus'];
     message?: string;
     declineBtnLabel?: string;
     acceptBtnLabel?: string;
@@ -20,7 +21,11 @@ interface AcceptModalProps {
 
 function AcceptModal(props: AcceptModalProps) {
     return (
-        <ModalWrapper open={props.open}>
+        <ModalWrapper
+            returnFocus={props.returnFocus}
+            open={props.open}
+            onRequestClose={() => props.handleRequestClose(false)}
+        >
             <Modal.Header
                 onRequestClose={() => props.handleRequestClose(false)}
                 title={props.title}

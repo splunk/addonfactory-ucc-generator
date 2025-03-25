@@ -64,6 +64,8 @@ function CustomTableRow(props: CustomTableRowProps) {
 
     const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
 
+    const toggleRef = React.createRef<HTMLDivElement>();
+
     const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
         header.customCell?.type &&
@@ -153,6 +155,12 @@ function CustomTableRow(props: CustomTableRowProps) {
         statusContent = headerMapping.disabled[String(row.disabled)];
     }
 
+    const returnFocus = () => {
+        if (toggleRef.current?.firstChild instanceof HTMLButtonElement) {
+            toggleRef.current.firstChild.focus();
+        }
+    };
+
     // Fix set of props are passed to Table.Row element
     return (
         <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
@@ -190,7 +198,9 @@ function CustomTableRow(props: CustomTableRowProps) {
                                 key={header.field}
                             >
                                 <SwitchWrapper>
+                                    {/* TODO: use toggleRef from SUI 5 instead of elementRef */}
                                     <Switch
+                                        elementRef={toggleRef}
                                         key={row.name}
                                         value={row.disabled}
                                         onClick={() =>
@@ -217,8 +227,9 @@ function CustomTableRow(props: CustomTableRowProps) {
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>
-                                    {displayAcceptToggling && (
+                                    {useInputToggleConfirmation && (
                                         <AcceptModal
+                                            returnFocus={returnFocus}
                                             message={`Do you want to make ${row.name} input ${
                                                 row.disabled ? activeText : inactiveText
                                             }?`}
