@@ -444,7 +444,7 @@ def generate(
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
         logger.info(f"Using globalConfig file located @ {gc_path}")
-        global_config = global_config_lib.GlobalConfig(gc_path)
+        global_config = global_config_lib.GlobalConfig.from_file(gc_path)
         global_config.cleanup_unwanted_params()
         # handle the update of globalConfig before validating
         global_config_update.handle_global_config_update(global_config)

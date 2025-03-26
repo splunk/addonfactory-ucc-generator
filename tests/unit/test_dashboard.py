@@ -63,7 +63,7 @@ def setup(tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_custom_dashboard.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
     tmp_ta_path = tmp_path / "test_ta"
     os.makedirs(tmp_ta_path)
     custom_dash_path = os.path.join(tmp_ta_path, "custom_dashboard.json")
@@ -106,7 +106,7 @@ def test_generate_dashboard_only_custom_components(setup, tmp_path):
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_custom_dashboard.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
 
     with open(custom_dash_path, "w") as file:
         file.write(json.dumps(custom_definition))
