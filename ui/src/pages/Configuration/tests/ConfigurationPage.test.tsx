@@ -1,4 +1,4 @@
-import { beforeEach, expect, it, vi } from 'vitest';
+import { beforeEach, expect, it, MockInstance, vi } from 'vitest';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -14,7 +14,9 @@ import { consoleError } from '../../../../test.setup.ts';
 
 vi.mock('../../../util/util');
 
-const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
+const getUnifiedConfigsMock = getUnifiedConfigs as unknown as MockInstance<
+    typeof getUnifiedConfigs
+>;
 
 beforeEach(() => {
     server.use(

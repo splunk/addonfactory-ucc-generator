@@ -21,12 +21,10 @@ import { MOCK_CONFIG } from './mocks';
 import { GlobalConfig } from '../../../publicApi';
 import { consoleError } from '../../../../test.setup';
 
-// Set up the mock before any tests run
-vi.mock(`/custom/CustomInputRow.js`, () => {
-    return {
-        default: mockCustomInputRow,
-    };
-});
+// Set up the mock before any tests run, doMock is not hoisted to the top of the file
+vi.doMock(`${getBuildDirPath()}/custom/CustomInputRow.js`, () => ({
+    default: mockCustomInputRow,
+}));
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -170,8 +168,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
     if (loading) {
         await waitForElementToBeRemoved(loading);
     }
-
-    const allDefinitions = screen.getAllByRole('definition').map((el) => el.textContent);
+    const allDefinitions = (await screen.findAllByRole('definition')).map((el) => el.textContent);
 
     expect(allDefinitions).toContain(`${expectedInterval} sec`);
 }

@@ -1,4 +1,3 @@
-import { expect } from 'vitest';
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
