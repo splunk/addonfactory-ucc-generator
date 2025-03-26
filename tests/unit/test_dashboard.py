@@ -46,6 +46,7 @@ def test_generate_only_default_dashboard(global_config_all_json, tmp_path):
 
     dashboard.generate_dashboard(
         global_config_all_json,
+        helpers.get_testdata_file_path("valid_config.json"),
         "Splunk_TA_UCCExample",
         str(definition_jsons_file_path),
     )
@@ -68,12 +69,17 @@ def setup(tmp_path):
     os.makedirs(tmp_ta_path)
     custom_dash_path = os.path.join(tmp_ta_path, "custom_dashboard.json")
     definition_jsons_file_path = tmp_path / "custom"
-    yield global_config, custom_dash_path, definition_jsons_file_path
+    yield global_config, global_config_path, custom_dash_path, definition_jsons_file_path
     shutil.rmtree(tmp_ta_path)
 
 
 def test_generate_dashboard_default_and_custom_components(setup, tmp_path):
-    global_config, custom_dash_path, definition_jsons_file_path = setup
+    (
+        global_config,
+        global_config_path,
+        custom_dash_path,
+        definition_jsons_file_path,
+    ) = setup
 
     with open(custom_dash_path, "w") as file:
         file.write(json.dumps(custom_definition))
@@ -82,6 +88,7 @@ def test_generate_dashboard_default_and_custom_components(setup, tmp_path):
         path_abs.return_value = custom_dash_path
         dashboard.generate_dashboard(
             global_config,
+            global_config_path,
             "Splunk_TA_UCCExample",
             str(definition_jsons_file_path),
         )
@@ -101,7 +108,7 @@ def test_generate_dashboard_default_and_custom_components(setup, tmp_path):
 
 
 def test_generate_dashboard_only_custom_components(setup, tmp_path):
-    _, custom_dash_path, definition_jsons_file_path = setup
+    _, _, custom_dash_path, definition_jsons_file_path = setup
 
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_custom_dashboard.json"
@@ -115,6 +122,7 @@ def test_generate_dashboard_only_custom_components(setup, tmp_path):
         path_abs.return_value = custom_dash_path
         dashboard.generate_dashboard(
             global_config,
+            global_config_path,
             "Splunk_TA_UCCExample",
             str(definition_jsons_file_path),
         )
@@ -134,10 +142,15 @@ def test_generate_dashboard_only_custom_components(setup, tmp_path):
 
 
 def test_generate_dashboard_with_custom_components_no_file(setup, tmp_path, caplog):
-    global_config, custom_dash_path, definition_jsons_file_path = setup
+    (
+        global_config,
+        global_config_path,
+        custom_dash_path,
+        definition_jsons_file_path,
+    ) = setup
     custom_dashboard_path = os.path.abspath(
         os.path.join(
-            global_config.original_path,
+            global_config_path,
             os.pardir,
             "custom_dashboard.json",
         )
@@ -146,6 +159,7 @@ def test_generate_dashboard_with_custom_components_no_file(setup, tmp_path, capl
     with pytest.raises(SystemExit):
         dashboard.generate_dashboard(
             global_config,
+            global_config_path,
             "Splunk_TA_UCCExample",
             str(definition_jsons_file_path),
         )
@@ -155,7 +169,12 @@ def test_generate_dashboard_with_custom_components_no_file(setup, tmp_path, capl
 def test_generate_dashboard_with_custom_components_invalid_xml_file(
     setup, tmp_path, caplog
 ):
-    global_config, custom_dash_path, definition_jsons_file_path = setup
+    (
+        global_config,
+        global_config_path,
+        custom_dash_path,
+        definition_jsons_file_path,
+    ) = setup
     with open(custom_dash_path, "w") as file:
         file.write("")
 
@@ -165,6 +184,7 @@ def test_generate_dashboard_with_custom_components_invalid_xml_file(
             path_abs.return_value = custom_dash_path
             dashboard.generate_dashboard(
                 global_config,
+                global_config_path,
                 "Splunk_TA_UCCExample",
                 str(definition_jsons_file_path),
             )
@@ -172,7 +192,12 @@ def test_generate_dashboard_with_custom_components_invalid_xml_file(
 
 
 def test_generate_dashboard_with_custom_components_no_content(setup, tmp_path, caplog):
-    global_config, custom_dash_path, definition_jsons_file_path = setup
+    (
+        global_config,
+        global_config_path,
+        custom_dash_path,
+        definition_jsons_file_path,
+    ) = setup
 
     with open(custom_dash_path, "w") as file:
         file.write("{}")
@@ -182,6 +207,7 @@ def test_generate_dashboard_with_custom_components_no_content(setup, tmp_path, c
             path_abs.return_value = custom_dash_path
             dashboard.generate_dashboard(
                 global_config,
+                global_config_path,
                 "Splunk_TA_UCCExample",
                 str(definition_jsons_file_path),
             )
@@ -218,7 +244,12 @@ def test_generate_dashboard_with_custom_components_no_content(setup, tmp_path, c
 def test_custom_license_usage_search(
     setup, tmp_path, caplog, custom_settings, expected_result
 ):
-    global_config, custom_dash_path, definition_jsons_file_path = setup
+    (
+        global_config,
+        global_config_path,
+        custom_dash_path,
+        definition_jsons_file_path,
+    ) = setup
 
     settings = {
         "settings": {
@@ -238,6 +269,7 @@ def test_custom_license_usage_search(
         path_abs.return_value = custom_dash_path
         dashboard.generate_dashboard(
             global_config,
+            global_config_path,
             "Splunk_TA_UCCExample",
             str(definition_jsons_file_path),
         )

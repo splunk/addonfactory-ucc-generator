@@ -25,7 +25,6 @@ def test_global_config_parse(filename):
     assert global_config.namespace == "splunk_ta_uccexample"
     assert global_config.product == "Splunk_TA_UCCExample"
     assert global_config.display_name == "Splunk UCC test Add-on"
-    assert global_config.original_path == global_config_path
     assert global_config.schema_version == "0.0.3"
     assert global_config.version == "1.0.0"
     assert global_config.has_pages() is True

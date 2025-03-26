@@ -64,11 +64,9 @@ class GlobalConfig:
         self,
         content: Dict[str, Any],
         is_yaml: bool,
-        original_path: str,
     ) -> None:
         self._content = content
         self._is_global_config_yaml = is_yaml
-        self._original_path = original_path
         self.user_defined_handlers = UserDefinedRestHandlers()
 
     @classmethod
@@ -79,7 +77,7 @@ class GlobalConfig:
         content = (
             yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
         )
-        return GlobalConfig(content, is_global_config_yaml, global_config_path)
+        return GlobalConfig(content, is_global_config_yaml)
 
     def parse_user_defined_handlers(self) -> None:
         """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
@@ -201,10 +199,6 @@ class GlobalConfig:
     @property
     def ucc_version(self) -> str:
         return self.meta["_uccVersion"]
-
-    @property
-    def original_path(self) -> str:
-        return self._original_path
 
     @property
     def schema_version(self) -> Optional[str]:

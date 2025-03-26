@@ -84,7 +84,7 @@ def test_handle_alert_action_updates(tmp_path, caplog):
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_all_alerts.json")
     global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
 
-    _handle_alert_action_updates(global_config)
+    _handle_alert_action_updates(global_config, tmp_file_gc)
 
     expected_schema_version = "0.0.4"
     assert expected_schema_version == global_config.schema_version
@@ -112,7 +112,7 @@ def test_migrate_old_dashboard(tmp_path, caplog):
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_old_dashboard.json")
 
     global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
-    _handle_xml_dashboard_update(global_config)
+    _handle_xml_dashboard_update(global_config, tmp_file_gc)
 
     expected_schema_version = "0.0.5"
     expected_panel = json.loads('{"panels": [{"name": "default"}]}')
@@ -133,7 +133,7 @@ def test_tab_migration(tmp_path):
     assert "loggingTab" not in tmp_file_gc.read_text()
 
     global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
-    _dump_with_migrated_tabs(global_config, global_config.original_path)
+    _dump_with_migrated_tabs(global_config, tmp_file_gc)
 
     assert "loggingTab" in tmp_file_gc.read_text()
 
@@ -154,9 +154,7 @@ def test_entity_migration(tmp_path):
     assert '"type": "interval"' not in tmp_file_gc.read_text()
 
     global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
-    _dump_with_migrated_entities(
-        global_config, global_config.original_path, [IntervalEntity]
-    )
+    _dump_with_migrated_entities(global_config, tmp_file_gc, [IntervalEntity])
 
     assert '"type": "interval"' in tmp_file_gc.read_text()
 
@@ -258,6 +256,6 @@ def test_handle_global_config_update_when_valid_config(tmp_path):
     global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
     expected_schema_version = "0.0.9"
 
-    handle_global_config_update(global_config)
+    handle_global_config_update(global_config, tmp_file_gc)
 
     assert global_config.schema_version == expected_schema_version
