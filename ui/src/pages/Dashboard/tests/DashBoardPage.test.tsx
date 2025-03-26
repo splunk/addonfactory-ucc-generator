@@ -9,7 +9,7 @@ import { server } from '../../../mocks/server';
 import { DASHBOARD_JSON_MOCKS } from './mockJs';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
-import { consoleError } from '../../../../test.setup.ts';
+// import { consoleError } from '../../../../test.setup.ts';
 
 it('dashboard page renders waiting spinner', async () => {
     server.use(http.get('/custom/panels_to_display.json', () => HttpResponse.json({})));
@@ -23,7 +23,7 @@ it('dashboard page renders waiting spinner', async () => {
 });
 
 it('render with all default dashboards', async () => {
-    consoleError.mockImplementation(() => {});
+    // consoleError.mockImplementation(() => {});
     DASHBOARD_JSON_MOCKS.forEach((mock: RequestHandler) => server.use(mock));
 
     const mockConfig = getGlobalConfigMock();

@@ -320,7 +320,7 @@ test('Default error message disappears when reuploading encrypted file', async (
 
 it('File input disabled - rendered correctly with disabled attr', () => {
     // throws error Could not parse CSS styleshee, which only obscures tests
-    const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const field = 'testFileField';
     const disabled = true;

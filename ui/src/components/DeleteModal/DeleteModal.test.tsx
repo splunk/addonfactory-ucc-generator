@@ -5,8 +5,8 @@ import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
-
-vi.mock('../../util/util');
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../util/util';
 
 const handleClose = vi.fn();
 
@@ -14,6 +14,11 @@ const TableContext = createContext({
     rowData: { serviceName: { stanzaName: 1 } },
     setRowData: () => {},
 });
+
+const mockGlobalConfig = () => {
+    const mockConfig = getGlobalConfigMock();
+    setUnifiedConfig(mockConfig);
+};
 
 describe('Tests that require DeleteModal in beforeEach', () => {
     const setup = () =>
@@ -45,10 +50,12 @@ describe('Tests that require DeleteModal in beforeEach', () => {
     });
 
     it('correct delete request', async () => {
+        mockGlobalConfig();
         setup();
         server.use(
-            http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
-                HttpResponse.json({}, { status: 201 })
+            http.delete(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_serviceName/stanzaName?output_mode=json',
+                () => HttpResponse.json({}, { status: 201 })
             )
         );
         const deleteButton = screen.getByRole('button', { name: /delete/i });
@@ -57,20 +64,23 @@ describe('Tests that require DeleteModal in beforeEach', () => {
     });
 
     it('failed delete request', async () => {
+        mockGlobalConfig();
         setup();
         const errorMessage = 'Oopsy doopsy';
         server.use(
-            http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
-                HttpResponse.json(
-                    {
-                        messages: [
-                            {
-                                text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
-                            },
-                        ],
-                    },
-                    { status: 500 }
-                )
+            http.delete(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_serviceName/stanzaName?output_mode=json',
+                () =>
+                    HttpResponse.json(
+                        {
+                            messages: [
+                                {
+                                    text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
+                                },
+                            ],
+                        },
+                        { status: 500 }
+                    )
             )
         );
         const deleteButton = screen.getByRole('button', { name: /delete/i });

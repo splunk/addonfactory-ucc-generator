@@ -1,4 +1,3 @@
-import { expect } from 'vitest';
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { within, userEvent, expect } from '@storybook/test';
