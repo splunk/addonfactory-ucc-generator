@@ -33,33 +33,47 @@ class InputsConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = self._conf_file_name("inputs")
+
+        # A list of service names from globalConfig that will be in inputs.conf
         self.inputs_conf_names: List[str] = []
+        # A dictionary of dictionaries of default properties for each service in inputs.conf
         self.inputs_conf_params: Dict[str, Dict[str, Any]] = defaultdict(
             lambda: defaultdict(dict)
         )
+
+        # A dictionary of lists of properties for each service in inputs.conf
         self.inputs_conf_spec: Dict[str, List[str]] = defaultdict(list)
+        # A dictionary of lists of properties for each service in their own spec files
+        # (i.e. dict key is the spec file name)
         self.other_spec_files: Dict[str, List[str]] = defaultdict(list)
 
         if not self._global_config or not self._global_config.has_inputs():
             return
 
         for service in self._global_config.inputs:
+            default_values = None
+
+            # If the service has a conf property, it will be in a separate spec file
+            # Otherwise, it will be in inputs.conf
             if service.get("conf") is not None:
                 spec_properties = self.other_spec_files[service["conf"]]
             else:
                 spec_properties = self.inputs_conf_spec[service["name"]]
+                # Add the service name to the list of service names in inputs.conf
                 self.inputs_conf_names.append(service["name"])
+                default_values = self.inputs_conf_params[service["name"]]
 
-            default_values = self.inputs_conf_params[service["name"]]
-
-            if service.get("disableNewInput"):
+            if default_values is not None and service.get("disableNewInput"):
                 default_values["disabled"] = "true"
-            for entity in service.get("entity", {"field": "name"}):
+
+            for entity in service.get("entity", []):
                 field_name = entity["field"]
 
+                # Skip the name field as it is already in the service name
                 if field_name == "name":
                     continue
 
+                # Construct the property spec description
                 field_value_parts = []
 
                 if entity.get("help"):
@@ -68,12 +82,15 @@ class InputsConf(ConfGenerator):
                 field_default_value = entity.get("defaultValue")
 
                 if field_default_value:
+                    # Convert boolean values to lowercase strings
                     if type(field_default_value) is bool:
                         value = str(field_default_value).lower()
                     else:
                         value = str(field_default_value)
 
-                    default_values[entity["field"]] = value
+                    # Add the default value to the description and dictionary
+                    if default_values is not None:
+                        default_values[field_name] = value
                     field_value_parts.append(f"(Default: {value})")
 
                 field_value = " ".join(field_value_parts)
