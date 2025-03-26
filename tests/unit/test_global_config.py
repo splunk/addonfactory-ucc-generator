@@ -35,6 +35,23 @@ def test_global_config_parse(filename):
     assert global_config.has_dashboard() is True
 
 
+def test_global_config_equal():
+    global_config_1 = global_config_2 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+
+    assert global_config_1 == global_config_2
+
+
+def test_global_config_equal_when_wrong_object_type():
+    global_config = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+
+    with pytest.raises(NotImplementedError):
+        _ = global_config == ""
+
+
 @mock.patch("splunk_add_on_ucc_framework.utils.dump_json_config")
 def test_global_config_dump_when_json(
     mock_utils_dump_json_config, global_config_all_json, tmp_path
