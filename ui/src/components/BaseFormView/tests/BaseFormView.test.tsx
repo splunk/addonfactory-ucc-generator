@@ -80,7 +80,10 @@ it('should pass default values to custom component correctly', async () => {
     const mockConfig = getGlobalConfigMockCustomControl();
     setUnifiedConfig(mockConfig);
 
-    vi.mock(`${getBuildDirPath()}/custom/${CUSTOM_MODULE}.js`, () => mockCustomControlMockForTest);
+    // doMock is not hoisted to the top of the file
+    vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_MODULE}.js`, () => ({
+        default: mockCustomControlMockForTest,
+    }));
 
     render(
         <BaseFormView

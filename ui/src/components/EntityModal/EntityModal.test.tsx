@@ -430,13 +430,14 @@ describe('Oauth - separated endpoint authorization', () => {
 
     const spyOnWindowOpen = async (addButton: HTMLElement) => {
         const windowOpenSpy = vi.spyOn(window, 'open') as Mock;
+        vi.mock('uuid', () => ({ v4: () => '123456789' }));
 
         // mock opening verification window
         windowOpenSpy.mockImplementation((url) => {
             expect(url).toContain(
-                'https://authendpoint/services/oauth2/authorize?response_type=code&client_id=Client%20Id&redirect_uri=http%3A%2F%2Flocalhost%2F'
+                'https://authendpoint/services/oauth2/authorize?response_type=code&client_id=Client%20Id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F'
             );
-            expect(url).toContain('state=');
+            expect(url).toContain('state=123456789');
             return { closed: true };
         });
 
@@ -527,7 +528,7 @@ describe('Oauth - separated endpoint authorization', () => {
             client_id: 'Client Id',
             client_secret: 'Client Secret',
             code,
-            redirect_uri: 'http://localhost/',
+            redirect_uri: 'http://localhost:3000/',
         });
     });
 

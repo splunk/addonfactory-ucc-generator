@@ -23,8 +23,10 @@ const setup = async () => {
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
 
-    vi.mock(import(`${getBuildDirPath()}/custom/${MODULE}.js`), () => mockCustomControlMockForTest);
-
+    // doMock is not hoisted to the top of the file
+    vi.doMock(`${getBuildDirPath()}/custom/${MODULE}.js`, () => ({
+        default: mockCustomControlMockForTest,
+    }));
     render(
         <CustomControl
             data={{
