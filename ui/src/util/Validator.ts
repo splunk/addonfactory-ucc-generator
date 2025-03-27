@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import { z } from 'zod';
+import { PREDEFINED_VALIDATORS_DICT } from '../constants/preDefinedRegex.ts';
+import { getFormattedMessage } from './messageUtil.ts';
 
-import { PREDEFINED_VALIDATORS_DICT } from '../constants/preDefinedRegex';
-import { getFormattedMessage } from './messageUtil';
 import {
     AcceptableFormValueOrNullish,
     NullishFormRecord,

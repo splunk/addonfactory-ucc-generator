@@ -1,5 +1,6 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { variables, mixins } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
+import mixins from '@splunk/themes/mixins';
 
 export const StyledContainer = styled.div`
     ${mixins.reset('inline')};

@@ -63,7 +63,7 @@ function onCustomHookError(params: { methodName: string; error?: CustomHookError
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
-    context!: React.ContextType<typeof TableContext>;
+    declare context: React.ContextType<typeof TableContext>;
 
     flag: boolean;
 
@@ -1087,7 +1087,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     loadHook = (module: string, type: string, globalConfig: GlobalConfig) => {
         const myPromise = new Promise((resolve) => {
             if (type === 'external') {
-                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {
                         const Hook = external.default as CustomHookConstructor;
                         this.hook = new Hook(

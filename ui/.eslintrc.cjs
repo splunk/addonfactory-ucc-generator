@@ -35,7 +35,9 @@ module.exports = {
                     '**/tests/**',
                     '**/mocks/**',
                     '**/*{.,_}{test,spec}.{ts,tsx}', // tests where the extension or filename suffix denotes that it is a test,
-                    '*.js', // js configs from the root folder
+                    '*.{ts,js}', // js configs from the root folder
+                    '**/vite.config.*', // vite config
+                    '**/test.setup.ts', // jest config
                 ],
                 optionalDependencies: false,
             },

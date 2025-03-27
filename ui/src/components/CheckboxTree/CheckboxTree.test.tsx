@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -5,7 +6,7 @@ import CheckboxTree from './CheckboxTree';
 import { MODE_CREATE } from '../../constants/modes';
 import { CheckboxTreeProps } from './types';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 // Default props for the CheckboxTree component
 const defaultCheckboxTreeProps: CheckboxTreeProps = {
