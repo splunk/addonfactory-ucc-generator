@@ -112,7 +112,7 @@ export default defineConfig(({ mode }) => {
         ],
         build: {
             outDir: 'dist/build',
-            sourcemap: DEBUG,
+            sourcemap: true, // sourcemap is added always but latter on not copied in backend code, to be deleted fully
             minify: !DEBUG,
             rollupOptions: {
                 input: {
