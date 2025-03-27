@@ -1,33 +1,6 @@
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.generators.html_files import HTMLGenerator
-from tests.unit.helpers import get_testdata_file_path
 from unittest.mock import patch, MagicMock
 from pytest import raises, fixture
-
-
-@fixture
-def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config_all_alerts.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return "test_addon"
 
 
 @fixture
@@ -45,10 +18,14 @@ def mocked__set_attribute(this, **kwargs):
     return_value=MagicMock(),
 )
 def test_generate(
-    mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attr, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
     html = HTMLGenerator(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
     assert html.generate() == {"": ""}
 
@@ -61,7 +38,7 @@ def test_generate(
 def test_generate_html_return(
     mock_html_gen,
     mock_set_attr,
-    global_config,
+    global_config_for_alerts,
     input_dir,
     output_dir,
     ucc_dir,
@@ -70,7 +47,11 @@ def test_generate_html_return(
 ):
     mock_html_gen.return_value = set_attr
     html = HTMLGenerator(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
     assert html.generate() == set_attr
 
@@ -80,21 +61,31 @@ def test_generate_html_return(
     return_value=MagicMock(),
 )
 def test_generate_html(
-    mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attr, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
     html = HTMLGenerator(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
     assert html.generate_html() == {"": ""}
 
 
-def test__set_attributes_error(global_config, input_dir, output_dir, ucc_dir, ta_name):
+def test__set_attributes_error(
+    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+):
     """
     This tests that the exception provided in side_effect is raised too
     """
     with raises(NotImplementedError):
         HTMLGenerator(
-            global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+            global_config_for_alerts,
+            input_dir,
+            output_dir,
+            ucc_dir=ucc_dir,
+            addon_name=ta_name,
         )
 
 
@@ -103,7 +94,7 @@ def test__set_attributes_error(global_config, input_dir, output_dir, ucc_dir, ta
     side_effect=[ValueError],
 )
 def test__set_attributes_custom_error(
-    mock_set_attr, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attr, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
     """
     appending to `test__set_attributes_error`, it ensures that the exception
@@ -111,16 +102,24 @@ def test__set_attributes_custom_error(
     """
     with raises(ValueError):
         HTMLGenerator(
-            global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+            global_config_for_alerts,
+            input_dir,
+            output_dir,
+            ucc_dir=ucc_dir,
+            addon_name=ta_name,
         )
 
 
 @patch.object(HTMLGenerator, "_set_attributes", mocked__set_attribute)
 def test__set_attributes_no_error(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
     html = HTMLGenerator(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
     # the values present in `mocked__set_attribute` function
     assert html.attrib_1 == "value_1"  # type: ignore[attr-defined]

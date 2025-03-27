@@ -120,7 +120,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const getBackButton = () => (
         <>
             <Menu.Item
-                icon={<ChevronLeft />}
+                startAdornment={<ChevronLeft />}
                 onClick={() => {
                     setActivePanelId(ROOT_GROUP_NAME);
                     setSlidingPanelsTransition('backward');

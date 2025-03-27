@@ -11,13 +11,17 @@ on:
   workflow_dispatch:
     inputs:
       target_repo:
-        description: "Target repository"
+        description: "TA repository (leave empty to test all TAs)"
         required: false
         default: ""
       target_branch:
-        description: "Target branch"
+        description: "TA repository branch"
         required: false
         default: "main"
+      splunktaucclib_branch:
+        description: "Branch of splunk/addonfactory-ucc-library to use (leave empty to use latest from PyPI)"
+        required: false
+        default: ""
 
 jobs:
   build-ucc:
@@ -33,14 +37,16 @@ jobs:
         with:
           python-version: "3.7"
 
-      - name: Install Poetry
-        run: pip install poetry==1.5.1
+      - name: Install Poetry 1.5.1
+        run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+
+      - name: Install Poetry Dependencies
+        working-directory: UCC
+        run: poetry install
 
       - name: Build UCC Framework Package
         working-directory: UCC
-        run: |
-          poetry install
-          poetry build
+        run: poetry build
 
       - name: Upload UCC Artifact
         uses: actions/upload-artifact@v4
@@ -48,46 +54,54 @@ jobs:
           name: ucc-package-whl
           path: UCC/dist/*.whl
 
+  determine-repos:
+    # This job determines the repositories to run tests on based on the event type and inputs
+    runs-on: ubuntu-22.04
+    outputs:
+      repos: ${{ steps.set-repos.outputs.repos }}
+    steps:
+      - id: set-repos
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.target_repo }}" ]]; then
+            echo "repos=[\"${{ github.event.inputs.target_repo }}\"]" >> $GITHUB_OUTPUT
+          else
+            echo "repos<<EOF" >> $GITHUB_OUTPUT
+            echo '[
+              "splunk/splunk-add-on-for-amazon-web-services",
+              "splunk/splunk-add-on-for-google-cloud-platform",
+              "splunk/splunk-add-on-for-google-workspace",
+              "splunk/splunk-add-on-for-microsoft-cloud-services",
+              "splunk/splunk-add-on-for-microsoft-office-365",
+              "splunk/splunk-add-on-for-salesforce",
+              "splunk/splunk-add-on-for-servicenow",
+              "splunk/splunk-add-on-for-mysql"
+            ]' >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
   test-addons:
-    needs: build-ucc
+    needs: [ build-ucc, determine-repos ]
     strategy:
       matrix:
-        target_repo:
-          - splunk/splunk-add-on-for-amazon-web-services
-          - splunk/splunk-add-on-for-google-cloud-platform
-          - splunk/splunk-add-on-for-google-workspace
-          - splunk/splunk-add-on-for-microsoft-cloud-services
-          - splunk/splunk-add-on-for-microsoft-office-365
-          - splunk/splunk-add-on-for-salesforce
-          - splunk/splunk-add-on-for-servicenow
-          - splunk/splunk-add-on-for-mysql
+        target_repo: ${{ fromJSON(needs.determine-repos.outputs.repos) }}
     continue-on-error: true
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Target Add-on Repository
-        if: ${{ github.event_name == 'push' || github.event.inputs.target_repo == '' }}
         uses: actions/checkout@v4
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
           token: ${{ secrets.GH_TOKEN_ADMIN }}
-
-      - name: Checkout Target Add-on Repository (manual)
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.target_repo != '' }}
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ github.event.inputs.target_repo }}
           ref: ${{ github.event.inputs.target_branch }}
-          path: TA
-          token: ${{ secrets.GH_TOKEN_ADMIN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.7"
 
-      - name: Install Poetry
-        run: pip install poetry==1.5.1
+      - name: Install Poetry 1.5.1
+        run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
 
       - name: Download UCC Artifact
         uses: actions/download-artifact@v4
@@ -102,11 +116,37 @@ jobs:
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
-          poetry add ../UCC/$UCC_WHL --group dev
-          poetry add splunktaucclib@latest
+          
+          # Retry logic for poetry install
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          
+          until [ $RETRY_COUNT -ge $MAX_RETRIES ]
+          do
+            poetry add ../UCC/$UCC_WHL --group dev && break
+            RETRY_COUNT=$((RETRY_COUNT+1))
+            echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
+            sleep 5
+          done
+          
+          # Install splunktaucclib with retries
+          RETRY_COUNT=0
+          until [ $RETRY_COUNT -ge $MAX_RETRIES ]
+          do
+            if [[ -n "${{ github.event.inputs.splunktaucclib_branch }}" ]]; then
+              echo "Installing splunktaucclib from branch ${{ github.event.inputs.splunktaucclib_branch }}"
+              poetry add git+https://github.com/splunk/addonfactory-ucc-library.git@${{ github.event.inputs.splunktaucclib_branch }} && break
+            else
+              echo "Installing latest splunktaucclib from PyPI"
+              poetry add splunktaucclib@latest && break
+            fi
+            RETRY_COUNT=$((RETRY_COUNT+1))
+            echo "splunktaucclib install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
+            sleep 5
+          done
+          
           mkdir -p package/lib
           poetry export --without-hashes -o package/lib/requirements.txt
-
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |

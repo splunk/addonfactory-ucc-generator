@@ -39,6 +39,7 @@ const props = {
     groupName: '',
     open: true,
     handleRequestClose: () => {},
+    returnFocus: () => {},
 } satisfies EntityModalProps;
 
 const findMods = (

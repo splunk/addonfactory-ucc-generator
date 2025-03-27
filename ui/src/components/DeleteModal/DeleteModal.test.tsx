@@ -9,6 +9,7 @@ import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../util/util';
 
 const handleClose = vi.fn();
+const handleReturnFocus = vi.fn();
 
 const TableContext = createContext({
     rowData: { serviceName: { stanzaName: 1 } },
@@ -28,6 +29,7 @@ describe('Tests that require DeleteModal in beforeEach', () => {
             >
                 <DeleteModal
                     handleRequestClose={handleClose}
+                    returnFocus={handleReturnFocus}
                     serviceName="serviceName"
                     stanzaName="stanzaName"
                     page="inputs"
@@ -98,6 +100,7 @@ describe('Tests with a custom DeleteModal render', () => {
             >
                 <DeleteModal
                     handleRequestClose={handleClose}
+                    returnFocus={handleReturnFocus}
                     serviceName="serviceName"
                     stanzaName="stanzaName"
                     page="inputs"
@@ -121,6 +124,7 @@ describe('Tests with a custom DeleteModal render', () => {
             >
                 <DeleteModal
                     handleRequestClose={handleClose}
+                    returnFocus={handleReturnFocus}
                     serviceName="serviceName"
                     stanzaName="stanzaName"
                     page="inputs"

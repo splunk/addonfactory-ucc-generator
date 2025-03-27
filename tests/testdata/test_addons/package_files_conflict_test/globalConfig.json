@@ -199,7 +199,7 @@
     "meta": {
         "name": "test_addon",
         "restRoot": "test_addon",
-        "version": "5.57.0+f11804ebf",
+        "version": "5.60.0+34ad0cb7a",
         "displayName": "This is my add-on",
         "schemaVersion": "0.0.9"
     }

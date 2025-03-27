@@ -1,5 +1,25 @@
 # Changelog
 
+# [5.60.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.59.0...v5.60.0) (2025-03-18)
+
+
+### Bug Fixes
+
+* more info correctly expands ([#1628](https://github.com/splunk/addonfactory-ucc-generator/issues/1628)) ([6ead9b5](https://github.com/splunk/addonfactory-ucc-generator/commit/6ead9b5852497047e8fcd428874adf0b36c64d9f))
+* remove max length for checkboxgroup and checkboxtree label ([#1620](https://github.com/splunk/addonfactory-ucc-generator/issues/1620)) ([0e36a56](https://github.com/splunk/addonfactory-ucc-generator/commit/0e36a564ea731fe2168e96bd9b297e7118b05524))
+
+
+### Features
+
+* skip help links in inputs.conf.spec ([#1630](https://github.com/splunk/addonfactory-ucc-generator/issues/1630)) ([ca88890](https://github.com/splunk/addonfactory-ucc-generator/commit/ca88890babb727c47d5d0362a2357d71f742c1fa))
+* **TextArea:** remove clear button ([#1635](https://github.com/splunk/addonfactory-ucc-generator/issues/1635)) ([3abec93](https://github.com/splunk/addonfactory-ucc-generator/commit/3abec931f254260bd152bc7a8e27a043b6a1ead2))
+
+
+### Reverts
+
+* "feat: skip help links in inputs.conf.spec" ([#1632](https://github.com/splunk/addonfactory-ucc-generator/issues/1632)) ([c67de92](https://github.com/splunk/addonfactory-ucc-generator/commit/c67de92cbd035994341b1b033103396bde51a2fb))
+* remove stretched out icons ([#1647](https://github.com/splunk/addonfactory-ucc-generator/issues/1647)) ([7eb10df](https://github.com/splunk/addonfactory-ucc-generator/commit/7eb10df4a13b95cabf6b1925e40ff4518d670a44))
+
 # [5.59.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.58.1...v5.59.0) (2025-03-04)
 
 

@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { z } from 'zod';
-import { AnyEntity } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import Validator, { parseFunctionRawStr, SaveValidator } from '../Validator';
-import { TextEntity } from '../../types/globalConfig/entities';
+import { getFormattedMessage } from '../messageUtil';
+import Validator, { parseFunctionRawStr, SaveValidator, ValidatorEntity } from '../Validator';
+import FILE_CONST from '../../constants/fileInputConstant';
 
 describe('Validator.checkIsFieldHasInput', () => {
     it('should return false for undefined input', () => {
@@ -61,7 +60,7 @@ describe('Validator.doValidation - regex case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid regex match', () => {
         const validator = new Validator(entities);
@@ -93,7 +92,7 @@ describe('Validator.doValidation - regex case', () => {
                     },
                 ],
             },
-        ] satisfies z.TypeOf<typeof TextEntity>[];
+        ] satisfies ValidatorEntity[];
 
         const validator = new Validator(invalidEntities);
         const data = { testField: 'test' };
@@ -124,7 +123,7 @@ describe('Validator.doValidation - regex case', () => {
                     },
                 ],
             },
-        ] satisfies z.TypeOf<typeof TextEntity>[];
+        ] satisfies ValidatorEntity[];
 
         const validator = new Validator(testEntity);
 
@@ -173,7 +172,7 @@ describe('Validator.doValidation - string case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid string length', () => {
         const validator = new Validator(entities);
@@ -217,7 +216,7 @@ describe('Validator.doValidation - number case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid number', () => {
         const validator = new Validator(entities);
@@ -295,7 +294,7 @@ describe('Validator.doValidation - url case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid URL', () => {
         const validator = new Validator(entities);
@@ -327,7 +326,7 @@ describe('Validator.doValidation - date case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid date', () => {
         const validator = new Validator(entities);
@@ -359,7 +358,7 @@ describe('Validator.doValidation - email case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid email', () => {
         const validator = new Validator(entities);
@@ -391,7 +390,7 @@ describe('Validator.doValidation - ipv4 case', () => {
                 },
             ],
         },
-    ] satisfies z.TypeOf<typeof TextEntity>[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid IPv4 address', () => {
         const validator = new Validator(entities);
@@ -436,7 +435,7 @@ describe('Validator.doValidation - custom case', () => {
         // as users can add it ie. via custom control
         // it is not possible to add it via global config
         // but done via custom js code
-    ] as unknown as AnyEntity[];
+    ] satisfies ValidatorEntity[];
 
     it('should return false for valid custom validation', () => {
         const validator = new Validator(entities);
@@ -458,11 +457,11 @@ describe('Validator.doValidation - custom case', () => {
 
 describe('parseFunctionRawStr', () => {
     it('should correctly parse a valid function string', () => {
-        const validFunctionString = '(data) => data === "valid"';
+        const validFunctionString = '(data) => data.data === "valid"';
         const { error, result } = parseFunctionRawStr(validFunctionString);
         expect(error).toBeUndefined();
         expect(result).toBeInstanceOf(Function);
-        expect(result('valid')).toBe(true);
+        expect(result && result({ data: 'valid' })).toBe(true);
     });
 
     it('should return an error for an empty function string', () => {
@@ -501,6 +500,13 @@ describe('SaveValidator', () => {
         const result = SaveValidator(functionReturningNonErrorValue, formData);
         expect(result).toBeUndefined();
     });
+
+    it('should return an error when incorrect parse fnc shared', () => {
+        const functionReturningError = ' ';
+        const formData = { someFieldName: 'data' };
+        const result = SaveValidator(functionReturningError, formData);
+        expect(result).toEqual({ errorMsg: '  is not a function' });
+    });
 });
 
 describe('Validator.doValidation - empty values', () => {
@@ -508,16 +514,30 @@ describe('Validator.doValidation - empty values', () => {
         field: 'testField',
         type: 'text',
         label: 'Test Field',
-    } satisfies z.TypeOf<typeof TextEntity>;
+    } satisfies ValidatorEntity;
 
     const emptyValues = [undefined, null, ''];
 
-    const validationTypes = ['string', 'regex', 'number', 'url', 'date', 'email', 'ipv4', 'custom'];
+    const validationTypes = [
+        'string',
+        'regex',
+        'number',
+        'url',
+        'date',
+        'email',
+        'custom',
+        'ipv4',
+    ] as const;
 
     it.each(validationTypes)('error as data required %s', (validatorType) => {
         emptyValues.forEach((emptyValue) => {
             const validator = new Validator([
-                { ...entity, required: true, validators: [{ type: validatorType }] },
+                {
+                    ...entity,
+                    required: true,
+                    // to do change when validators consider custom as validation type
+                    validators: [{ type: validatorType }] as ValidatorEntity['validators'],
+                } satisfies ValidatorEntity,
             ]);
             const data = { testField: emptyValue };
             const result = validator.doValidation(data);
@@ -534,12 +554,126 @@ describe('Validator.doValidation - empty values', () => {
                 {
                     ...entity,
                     required: false,
-                    validators: [{ type: validatorType, validatorFunc: () => false }],
-                },
+                    validators: [
+                        { type: validatorType, validatorFunc: () => false },
+                        // to do change when validators consider custom as validation type
+                    ] as ValidatorEntity['validators'],
+                } satisfies ValidatorEntity,
             ]);
             const data = { testField: emptyValue };
             const result = validator.doValidation(data);
             expect(result).toEqual(false);
         });
+    });
+});
+
+describe('Validator - static methods', () => {
+    const entity = {
+        field: 'testField',
+        label: 'Test Field',
+        type: 'text',
+    } satisfies ValidatorEntity;
+    it('PreDefinedRegexValidator - should return error for invalid regex pattern', () => {
+        const result = Validator.PreDefinedRegexValidator(
+            entity.field,
+            entity.label,
+            {
+                type: 'regex',
+                pattern: '[invalid',
+            },
+            {},
+            '[invalid',
+            getFormattedMessage(104)
+        );
+
+        expect(result).toEqual({
+            errorField: entity.field,
+            errorMsg: '[invalid is not a valid regular expression',
+        });
+    });
+
+    it('NumberValidator- should return error for not a number', () => {
+        const result = Validator.NumberValidator(
+            entity.field,
+            entity.label,
+            {
+                type: 'number',
+                range: [1, 10],
+                isInteger: true,
+            },
+            {}
+        );
+
+        expect(result).toEqual({
+            errorField: entity.field,
+            errorMsg: 'Field Test Field is not a number',
+        });
+    });
+
+    it('NumberValidator- should return error for invalid range', () => {
+        const result = Validator.NumberValidator(
+            entity.field,
+            entity.label,
+            {
+                type: 'number',
+                range: [11, 10],
+                isInteger: true,
+            },
+            {}
+        );
+
+        expect(result).toEqual({
+            errorField: entity.field,
+            errorMsg: '[11,10] is not a valid number range',
+        });
+    });
+});
+
+describe('Validator.doValidation - name validation', () => {
+    const entity = {
+        field: 'name',
+        label: 'Name',
+        type: 'text',
+    } satisfies ValidatorEntity;
+
+    it.each([
+        { nameValue: '', errorMsg: 'Field Name is required' },
+        { nameValue: 1, errorMsg: 'Field Name must be a string' },
+        {
+            nameValue: '_invalidaName',
+            errorMsg:
+                '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',
+        },
+        {
+            nameValue: 'only_seems_li*ke_valid_name',
+            errorMsg:
+                '"default", ".", "..", string started with "_" and string including any one of ["*", "\\", "[", "]", "(", ")", "?", ":"] are reserved value which cannot be used for field Name',
+        },
+        { nameValue: 'v'.repeat(1025), errorMsg: 'Field Name must be less than 1024 characters' },
+    ])('error as name starts with incorrect value %s', ({ nameValue, errorMsg }) => {
+        const validator = new Validator([entity]);
+
+        const data = { name: nameValue };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({
+            errorField: 'name',
+            errorMsg,
+        });
+    });
+});
+
+describe('Validator.doValidation - file validation', () => {
+    const entity = {
+        field: 'file',
+        label: 'File',
+        type: 'file',
+    } satisfies ValidatorEntity;
+
+    it('error as invalid file content', () => {
+        const validator = new Validator([entity]);
+
+        const data = { file: FILE_CONST.INVALID_FILE_MESSAGE };
+        const result = validator.doValidation(data);
+        expect(result).toEqual({ errorField: 'file', errorMsg: 'The file is invalid' });
     });
 });

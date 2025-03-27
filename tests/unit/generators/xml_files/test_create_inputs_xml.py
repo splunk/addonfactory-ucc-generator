@@ -1,38 +1,5 @@
 from unittest.mock import patch, MagicMock
-from pytest import fixture
 from splunk_add_on_ucc_framework.generators.xml_files import InputsXml
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
-
-
-@fixture
-def global_config_with_inputs():
-    return GlobalConfig(get_testdata_file_path("valid_config.json"))
-
-
-@fixture
-def global_config_without_inputs():
-    return GlobalConfig(get_testdata_file_path("valid_config_only_configuration.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return "test_addon"
 
 
 @patch(
@@ -41,16 +8,16 @@ def ta_name():
 )
 def test_set_attributes_with_inputs(
     mock_generate_dashboard_xml,
-    global_config_with_inputs,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     inputs_xml = InputsXml(
-        global_config=global_config_with_inputs,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_all_json,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -64,16 +31,16 @@ def test_set_attributes_with_inputs(
 )
 def test_set_attributes_without_inputs(
     mock_generate_dashboard_xml,
-    global_config_without_inputs,
+    global_config_only_configuration,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     inputs_xml = InputsXml(
-        global_config=global_config_without_inputs,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_only_configuration,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -91,16 +58,16 @@ def test_set_attributes_without_inputs(
 def test_generate_xml_with_inputs(
     mock_op_path,
     mock_set_attributes,
-    global_config_with_inputs,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     inputs_xml = InputsXml(
-        global_config=global_config_with_inputs,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_all_json,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -128,16 +95,16 @@ def test_generate_xml_with_inputs(
 )
 def test_generate_xml_without_inputs(
     mock_set_attributes,
-    global_config_without_inputs,
+    global_config_only_configuration,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     inputs_xml = InputsXml(
-        global_config=global_config_without_inputs,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_only_configuration,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )

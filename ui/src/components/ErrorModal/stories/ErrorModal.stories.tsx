@@ -13,5 +13,6 @@ export const Base: Story = {
     args: {
         message: 'Error message',
         open: true,
+        returnFocus: () => {},
     },
 };

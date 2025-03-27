@@ -9,34 +9,9 @@ TA_NAME = "test_addon"
 
 @fixture
 def global_config():
-    gc = GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc = GlobalConfig.from_file(get_testdata_file_path("valid_config.json"))
     gc._content["meta"]["restRoot"] = TA_NAME
     return gc
-
-
-@fixture
-def global_config_for_conf_only_TA():
-    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return TA_NAME
 
 
 def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):

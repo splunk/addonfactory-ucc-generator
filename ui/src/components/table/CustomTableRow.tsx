@@ -64,6 +64,8 @@ function CustomTableRow(props: CustomTableRowProps) {
 
     const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
 
+    const toggleRef = React.createRef<HTMLDivElement>();
+
     const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
         header.customCell?.type &&
@@ -82,7 +84,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
-                                appearance="flat"
                                 aria-label={_('Edit')}
                                 icon={<Pencil />}
                                 onClick={() => handleEditActionClick(selectedRow)}
@@ -93,7 +94,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {rowActions.includes('clone') && (
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
-                                appearance="flat"
                                 aria-label={_('Clone')}
                                 icon={<Clone size={1} />}
                                 onClick={() => handleCloneActionClick(selectedRow)}
@@ -111,7 +111,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                                 aria-label={_(
                                     `Go to search for events associated with ${selectedRow.name}`
                                 )}
-                                appearance="flat"
                                 icon={<Magnifier />}
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
@@ -123,7 +122,6 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {!props.readonly && rowActions.includes('delete') && (
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
-                                appearance="flat"
                                 aria-label={_('Delete')}
                                 icon={<Trash size={1} />}
                                 onClick={() => handleDeleteActionClick(selectedRow)}
@@ -157,6 +155,12 @@ function CustomTableRow(props: CustomTableRowProps) {
         statusContent = headerMapping.disabled[String(row.disabled)];
     }
 
+    const returnFocus = () => {
+        if (toggleRef.current?.firstChild instanceof HTMLButtonElement) {
+            toggleRef.current.firstChild.focus();
+        }
+    };
+
     // Fix set of props are passed to Table.Row element
     return (
         <Table.Row // nosemgrep: typescript.react.security.audit.react-props-injection.react-props-injection, typescript.react.best-practice.react-props-spreading.react-props-spreading
@@ -186,7 +190,9 @@ function CustomTableRow(props: CustomTableRowProps) {
                         cellHTML = (
                             <Table.Cell data-column={header.field} key={header.field}>
                                 <SwitchWrapper>
+                                    {/* TODO: use toggleRef from SUI 5 instead of elementRef */}
                                     <Switch
+                                        elementRef={toggleRef}
                                         key={row.name}
                                         value={row.disabled}
                                         onClick={() =>
@@ -213,8 +219,9 @@ function CustomTableRow(props: CustomTableRowProps) {
                                         )}
                                     />
                                     <span data-test="status">{statusContent}</span>
-                                    {displayAcceptToggling && (
+                                    {useInputToggleConfirmation && (
                                         <AcceptModal
+                                            returnFocus={returnFocus}
                                             message={`Do you want to make ${row.name} input ${
                                                 row.disabled ? activeText : inactiveText
                                             }?`}

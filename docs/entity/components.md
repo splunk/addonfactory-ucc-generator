@@ -344,7 +344,7 @@ See the following example usage:
             "label": "Group 3",
             "options": {
                 "isExpandable": true,
-                "expand": true,
+                "expand": true
             },
             "fields": ["firstRowUnderGroup3", "secondRowUnderGroup3", "thirdRowUnderGroup3"]
         }
@@ -381,7 +381,7 @@ See the following example usage:
             "field": "thirdRowUnderGroup3",
             "checkbox": {
                 "label": "third row checked under group 3",
-                "defaultValue": true,
+                "defaultValue": true
             }
         }
     ]

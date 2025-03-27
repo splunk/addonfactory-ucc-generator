@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
@@ -17,6 +17,7 @@ interface DashboardInfoModalProps {
     title: string;
     subtitle?: string;
     handleRequestClose: () => void;
+    returnFocus: ComponentProps<typeof Modal>['returnFocus'];
     errorTypesInfo: { header: string; description: string }[];
     closeBtnLabel?: string;
     infoMessage?: string;
@@ -26,7 +27,11 @@ interface DashboardInfoModalProps {
 
 function DashboardInfoModal(props: DashboardInfoModalProps) {
     return (
-        <ModalWrapper open={props.open}>
+        <ModalWrapper
+            returnFocus={props.returnFocus}
+            open={props.open}
+            onRequestClose={() => props.handleRequestClose()}
+        >
             <Modal.Header
                 onRequestClose={() => props.handleRequestClose()}
                 title={props.title}

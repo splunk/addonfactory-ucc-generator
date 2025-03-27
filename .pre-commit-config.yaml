@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-exclude: (^tests/testdata/expected_addons|^tests/testdata/test_addons|^example)
+exclude: (^tests/testdata/expected_addons|^tests/testdata/test_addons|^example|^splunk_add_on_ucc_framework/commands/imports.py)
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -34,13 +34,17 @@ repos:
     rev: v1.4.1
     hooks:
     -   id: mypy
-        exclude: (^docs/|^splunk_add_on_ucc_framework/commands/imports.py)
+        exclude: (^docs/)
         additional_dependencies: ['types-PyYAML']
 -   repo: https://github.com/PyCQA/flake8
     rev: 5.0.4
     hooks:
     -   id: flake8
-        exclude: (^splunk_add_on_ucc_framework/commands/init_template/|^splunk_add_on_ucc_framework/commands/imports.py)
+        exclude: (^splunk_add_on_ucc_framework/commands/init_template/)
+-   repo: https://github.com/PyCQA/autoflake
+    rev: v2.1.1
+    hooks:
+    -   id: autoflake
 -   repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.42.0
     hooks:

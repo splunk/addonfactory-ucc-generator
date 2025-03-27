@@ -40,7 +40,7 @@ def test_version_tuple(version, expected):
 )
 def test_handle_biased_terms_update(filename):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     _handle_biased_terms_update(global_config)
     expected_schema_version = "0.0.1"
     assert expected_schema_version == global_config.schema_version
@@ -71,7 +71,7 @@ def test_handle_biased_terms_update(filename):
 )
 def test_handle_dropping_api_version_update(filename):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     _handle_dropping_api_version_update(global_config)
     expected_schema_version = "0.0.3"
     assert expected_schema_version == global_config.schema_version
@@ -82,9 +82,9 @@ def test_handle_alert_action_updates(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.json"
     # a new globalConfig with minimal configs for input and configuration
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_all_alerts.json")
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
 
-    _handle_alert_action_updates(global_config)
+    _handle_alert_action_updates(global_config, tmp_file_gc)
 
     expected_schema_version = "0.0.4"
     assert expected_schema_version == global_config.schema_version
@@ -111,8 +111,8 @@ def test_migrate_old_dashboard(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.json"
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_old_dashboard.json")
 
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
-    _handle_xml_dashboard_update(global_config)
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
+    _handle_xml_dashboard_update(global_config, tmp_file_gc)
 
     expected_schema_version = "0.0.5"
     expected_panel = json.loads('{"panels": [{"name": "default"}]}')
@@ -132,8 +132,8 @@ def test_tab_migration(tmp_path):
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config_only_logging.json")
     assert "loggingTab" not in tmp_file_gc.read_text()
 
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
-    _dump_with_migrated_tabs(global_config, global_config.original_path)
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
+    _dump_with_migrated_tabs(global_config, tmp_file_gc)
 
     assert "loggingTab" in tmp_file_gc.read_text()
 
@@ -153,10 +153,8 @@ def test_entity_migration(tmp_path):
     )
     assert '"type": "interval"' not in tmp_file_gc.read_text()
 
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
-    _dump_with_migrated_entities(
-        global_config, global_config.original_path, [IntervalEntity]
-    )
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
+    _dump_with_migrated_entities(global_config, tmp_file_gc, [IntervalEntity])
 
     assert '"type": "interval"' in tmp_file_gc.read_text()
 
@@ -189,7 +187,7 @@ def test_config_validation_when_placeholder_is_absent(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.json"
 
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
     expected_schema_version = "0.0.8"
 
     _stop_build_on_placeholder_usage(global_config)
@@ -204,7 +202,7 @@ def test_config_validation_when_placeholder_is_present(tmp_path, caplog):
     helpers.copy_testdata_gc_to_tmp_file(
         tmp_file_gc, "valid_config_renounced_placeholder_usage.json"
     )
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
     error_log = (
         "`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
         "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
@@ -229,7 +227,7 @@ def test_dump_enable_from_global_config_enable_present(tmp_path, caplog):
     helpers.copy_testdata_gc_to_tmp_file(
         tmp_file_gc, "valid_config_input_with_enable_action.json"
     )
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
     expected_schema_version = "0.0.9"
 
     _dump_enable_from_global_config(global_config)
@@ -242,7 +240,7 @@ def test_dump_enable_from_global_config_enable_absent(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.yaml"
 
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.yaml")
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
     expected_schema_version = "0.0.9"
 
     _dump_enable_from_global_config(global_config)
@@ -255,9 +253,9 @@ def test_handle_global_config_update_when_valid_config(tmp_path):
     tmp_file_gc = tmp_path / "globalConfig.json"
 
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
-    global_config = global_config_lib.GlobalConfig(str(tmp_file_gc))
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
     expected_schema_version = "0.0.9"
 
-    handle_global_config_update(global_config)
+    handle_global_config_update(global_config, tmp_file_gc)
 
     assert global_config.schema_version == expected_schema_version

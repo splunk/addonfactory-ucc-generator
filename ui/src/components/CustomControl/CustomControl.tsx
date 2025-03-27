@@ -3,7 +3,7 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { UtilBaseForm } from '../../types/components/BaseFormTypes';
+import { CustomValidatorFunc, UtilBaseForm } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 import { CustomControlConstructor } from './CustomControlBase';
 import { ControlData } from './CustomControl.types';
@@ -13,10 +13,7 @@ interface Props {
     field: string;
     handleChange: (field: string, newValue: AcceptableFormValueOrNullish) => void;
     controlOptions: { src: string; type: string };
-    addCustomValidator: (
-        field: string,
-        validatorFunc: (submittedField: string, submittedValue: string) => void
-    ) => void;
+    addCustomValidator: (field: string, validatorFunc: CustomValidatorFunc) => void;
     utilCustomFunctions: UtilBaseForm;
 }
 

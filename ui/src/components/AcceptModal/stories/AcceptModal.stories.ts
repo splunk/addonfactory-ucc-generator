@@ -13,6 +13,7 @@ type Story = StoryObj<typeof meta>;
 export const Base: Story = {
     args: {
         handleRequestClose: fn(),
+        returnFocus: fn(),
         title: 'Accept Modal Title',
         open: true,
         message: 'Some message',

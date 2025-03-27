@@ -333,6 +333,7 @@ def generate_dashboard_content(
 
 def generate_dashboard(
     global_config: global_config_lib.GlobalConfig,
+    global_config_path: str,
     addon_name: str,
     definition_json_path: str,
 ) -> None:
@@ -366,7 +367,7 @@ def generate_dashboard(
     if PANEL_CUSTOM in panel_names:
         dashboard_components_path = os.path.abspath(
             os.path.join(
-                global_config.original_path,
+                global_config_path,
                 os.pardir,
                 "custom_dashboard.json",
             )

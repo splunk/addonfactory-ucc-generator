@@ -8,13 +8,14 @@ import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
-import { getSimpleConfig } from '../stories/configMockups';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
-import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../../util/script';
 
 // Import the mock outside of the setup function
 import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
+import { invariant } from '../../../util/invariant';
+import { MOCK_CONFIG } from './mocks';
+import { GlobalConfig } from '../../../publicApi';
 
 // Set up the mock before any tests run, doMock is not hoisted to the top of the file
 vi.doMock(`${getBuildDirPath()}/custom/CustomInputRow.js`, () => ({
@@ -32,7 +33,6 @@ const props = {
     handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
-const baseConfig = getSimpleConfig();
 const customRowFileName = 'CustomInputRow';
 
 function setup() {
@@ -47,9 +47,9 @@ function setup() {
         },
     ];
     setUnifiedConfig({
-        ...baseConfig,
+        ...MOCK_CONFIG,
         pages: {
-            ...baseConfig.pages,
+            ...MOCK_CONFIG.pages,
             inputs: {
                 title: inputName,
                 services: [
@@ -107,8 +107,9 @@ function setup() {
 }
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    const expandable = within(inputRow).queryByRole('button', { name: /expand/i });
-    if (expandable && expandable.getAttribute('aria-expanded') === 'false') {
+    const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
+    invariant(expandable);
+    if (expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
     }

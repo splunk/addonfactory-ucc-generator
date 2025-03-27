@@ -95,7 +95,7 @@ export const InputPageExpandedRow: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await userEvent.click((await canvas.findAllByRole('button', { name: /expand/i }))[0]);
+        await userEvent.click((await canvas.findAllByRole('cell', { name: /expand/i }))[0]);
         await expect((await canvas.findAllByRole('definition')).length).toBeGreaterThan(0);
     },
 };

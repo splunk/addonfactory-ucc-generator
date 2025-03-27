@@ -59,6 +59,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
@@ -77,6 +78,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
 
         renderModalWithProps(props);
@@ -97,6 +99,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
 
         renderModalWithProps(props);
@@ -117,6 +120,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledBasicField();
@@ -160,6 +164,7 @@ describe('Options - Enable field property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
@@ -178,6 +183,7 @@ describe('Options - Enable field property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
@@ -196,6 +202,7 @@ describe('Options - Enable field property', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
         const oauthTextBox = getDisabledOauthField();
@@ -227,6 +234,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
 
         renderModalWithProps(props);
@@ -292,6 +300,7 @@ describe('EntityModal - custom warning', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
     };
@@ -380,6 +389,7 @@ describe('Default value', () => {
             groupName: '',
             open: true,
             handleRequestClose: () => {},
+            returnFocus: () => {},
         } satisfies EntityModalProps;
         renderModalWithProps(props);
         const component = screen.getByRole('textbox');
@@ -444,6 +454,7 @@ describe('Oauth - separated endpoint authorization', () => {
         groupName: '',
         open: true,
         handleRequestClose: () => {},
+        returnFocus: () => {},
     } satisfies EntityModalProps;
 
     it('render modal with separated oauth fields', async () => {

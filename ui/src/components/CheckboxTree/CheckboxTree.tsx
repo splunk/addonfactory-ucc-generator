@@ -129,12 +129,12 @@ function CheckboxTree(props: CheckboxTreeProps) {
             <div>
                 <Button
                     label="Select All"
-                    appearance="pill"
+                    appearance="subtle"
                     onClick={() => handleCheckboxToggleAll(true)}
                 />
                 <Button
                     label="Clear All"
-                    appearance="pill"
+                    appearance="subtle"
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>
