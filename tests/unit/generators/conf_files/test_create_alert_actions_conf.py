@@ -79,7 +79,6 @@ def test_parameters_processing(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
 
     assert "param.param1 = value1" in alert_action_conf.alerts["dev_alert"]
     assert "param.param2 = value2" in alert_action_conf.alerts["dev_alert"]
@@ -101,7 +100,6 @@ def test_keys_not_in_deny_list(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_actions_conf._set_attributes(ucc_dir=ucc_dir)
 
     assert "custom_property = custom_value" in alert_actions_conf.alerts["dev_alert"]
 
@@ -127,7 +125,6 @@ def test_parameters_without_default_value(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_actions_conf._set_attributes(ucc_dir=ucc_dir)
 
     assert "param.action = " in alert_actions_conf.alerts["dev_alert"]
 
@@ -147,8 +144,6 @@ def test_custom_icon_file_name(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
 
     assert "icon_path = dev_icon.png" in alert_action_conf.alerts["dev_alert"]
     # Ensures no file copy occurs for custom icons
@@ -171,7 +166,6 @@ def test_default_icon_file_name(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
 
     assert "icon_path = alerticon.png" in alert_action_conf.alerts["dev_alert"]
 
@@ -196,7 +190,6 @@ def test_adaptive_response(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
 
     expected_json = json.dumps({"key1": "value1", "key2": "value2"})
     assert f"param._cam = {expected_json}" in alert_action_conf.alerts["dev_alert"]
@@ -211,8 +204,6 @@ def test_set_attributes_global_config_none(input_dir, output_dir, ucc_dir, ta_na
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-
-    alert_action_conf._set_attributes()
 
     assert not hasattr(alert_action_conf, "alerts")
     assert not hasattr(alert_action_conf, "alerts_spec")
@@ -233,7 +224,6 @@ def test_set_attributes_global_config_with_empty_alerts(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
     assert alert_action_conf._alert_settings == []
     assert alert_action_conf.alerts == {}
     assert alert_action_conf.alerts_spec == {}

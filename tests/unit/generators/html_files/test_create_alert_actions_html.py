@@ -61,7 +61,6 @@ def test_set_attribute_no_global_config(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_html._set_attributes()
     assert not hasattr(alert_html, "_html_home")
 
 

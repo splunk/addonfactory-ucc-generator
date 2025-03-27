@@ -71,8 +71,6 @@ def test_set_attributes_conf_only_TA(
     account_spec._global_config = MagicMock()
     account_spec._gc_schema = MagicMock()
 
-    account_spec._set_attributes()
-
     assert account_spec.account_fields == []
 
 

@@ -85,7 +85,6 @@ def test_set_attribute_for_conf_only_TA(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    settings_conf._set_attributes()
     assert settings_conf.settings_stanzas == []
     assert settings_conf.default_content == ""
 

@@ -99,7 +99,6 @@ def test_set_attributes(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    restmap_conf._set_attributes()
     assert hasattr(restmap_conf, "endpoints")
     assert hasattr(restmap_conf, "endpoint_names")
     assert hasattr(restmap_conf, "namespace")
