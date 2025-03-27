@@ -1,5 +1,5 @@
-import type { StorybookConfig } from '@storybook/react-webpack5';
-import * as custom from '../webpack.config.cjs';
+import type { StorybookConfig } from '@storybook/react-vite';
+import * as custom from '../vite.config.ts';
 import * as path from 'path';
 
 const config: StorybookConfig = {
@@ -22,17 +22,17 @@ const config: StorybookConfig = {
         '@kickstartds/storybook-addon-jsonschema',
     ],
     framework: {
-        name: '@storybook/react-webpack5',
+        name: '@storybook/react-vite',
         options: {},
     },
     staticDirs: ['../src/public', './assets'],
-    webpackFinal: async (config) => {
+    viteFinal: async (config) => {
+        const { mergeConfig } = await import('vite');
+
         const alias = config.resolve?.alias || {};
-        return {
-            ...config,
+        return mergeConfig(config, {
             resolve: {
                 ...config.resolve,
-                ...custom.resolve,
                 alias: {
                     ...alias,
                     'msw/native': require.resolve(
@@ -43,7 +43,7 @@ const config: StorybookConfig = {
                     ),
                 },
             },
-        };
+        });
     },
     typescript: {
         check: true,
