@@ -59,5 +59,5 @@ it('should modify correctly all properties of field, self modification', async (
     expect(within(modifyTextField).getByTestId('msg-markdown')).toHaveTextContent(
         'markdown message after modification'
     );
-    expect(await within(modifyTextField).findByText('*')).toBeInTheDocument();
+    expect(within(modifyTextField).getByText('*')).toBeInTheDocument();
 });

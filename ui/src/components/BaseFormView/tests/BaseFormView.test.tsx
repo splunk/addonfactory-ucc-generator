@@ -159,7 +159,7 @@ it.each([
 });
 
 describe('Verify if submiting BaseFormView works', () => {
-    const renderAndGetFormRef = (
+    const initializeFormRef = (
         mockConfig: GlobalConfig,
         mockContext?: TableContextDataTypes,
         serviceName = 'example_input_four'
@@ -207,7 +207,7 @@ describe('Verify if submiting BaseFormView works', () => {
     };
 
     it('Correctly pass form data via post', async () => {
-        const utils = renderAndGetFormRef(
+        const formRef = initializeFormRef(
             getGlobalConfigMockFourInputServices(),
             MOCK_CONTEXT_STATE_THREE_INPUTS
         );
@@ -247,14 +247,14 @@ describe('Verify if submiting BaseFormView works', () => {
             )
         );
 
-        await utils.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
 
         // response was success(mocked) and handled
         await waitFor(() => expect(handleFormSubmit).toHaveBeenCalledWith(false, true));
     });
 
     it('should throw error as name already used', async () => {
-        const utils = renderAndGetFormRef(
+        const formRef = initializeFormRef(
             getGlobalConfigMockFourInputServices(),
             MOCK_CONTEXT_STATE_THREE_INPUTS
         );
@@ -268,7 +268,7 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, INTERVAL_INPUT);
 
-        await utils.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
 
         const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
         expect(errorMessage).toBeInTheDocument();
@@ -287,7 +287,7 @@ describe('Verify if submiting BaseFormView works', () => {
                 inputsUniqueAcrossSingleService;
         }
 
-        const utils = renderAndGetFormRef(
+        const formRef = initializeFormRef(
             globalConfigMock,
             MOCK_CONTEXT_STATE_THREE_INPUTS,
             'example_input_two'
@@ -323,7 +323,7 @@ describe('Verify if submiting BaseFormView works', () => {
             )
         );
 
-        await utils.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+        await formRef.current?.handleSubmit({ preventDefault: () => {} } as React.FormEvent);
     };
 
     it('Add already existing name for different service - inputsUniqueAcrossSingleService true', async () => {

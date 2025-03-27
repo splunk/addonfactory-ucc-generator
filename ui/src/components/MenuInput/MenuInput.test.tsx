@@ -130,17 +130,17 @@ describe('multiple services', () => {
     it('should render service menu items on opening dropdown', async () => {
         setup({ title: '', services: getTwoServices() });
         await userEvent.click(getCreateDropdown());
-        expect(await screen.findByTestId('menu')).toBeInTheDocument();
-        expect(await screen.findAllByTestId('item')).toHaveLength(2);
-        expect(await screen.findByText('test-service-title1')).toBeInTheDocument();
-        expect(await screen.findByText('test-service-subTitle2')).toBeInTheDocument();
+        expect(screen.getByTestId('menu')).toBeInTheDocument();
+        expect(screen.getAllByTestId('item')).toHaveLength(2);
+        expect(screen.getByText('test-service-title1')).toBeInTheDocument();
+        expect(screen.getByText('test-service-subTitle2')).toBeInTheDocument();
     });
 
     it('should call callback with service name and default group name (main_panel) on menu item click', async () => {
         const user = userEvent.setup();
         const { mockHandleRequestOpen } = setup({ title: '', services: getTwoServices() });
         await user.click(getCreateDropdown());
-        await user.click(await screen.findByText('test-service-title2'));
+        await user.click(screen.getByText('test-service-title2'));
         expect(mockHandleRequestOpen).toHaveBeenCalledWith({
             groupName: 'main_panel',
             serviceName: 'test-service-name2',

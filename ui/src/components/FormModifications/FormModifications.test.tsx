@@ -53,7 +53,7 @@ const findMods = (
     return modification;
 };
 
-const getTextElementForField = async (field: string) => {
+const getTextElementForField = (field: string) => {
     const componentParentElement = screen
         .getAllByTestId('control-group')
         .find((el) => el.getAttribute('data-name') === field);
