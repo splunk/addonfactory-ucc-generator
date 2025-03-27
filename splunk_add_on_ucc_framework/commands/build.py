@@ -444,10 +444,10 @@ def generate(
     gc_path = _get_and_check_global_config_path(source, config_path)
     if gc_path:
         logger.info(f"Using globalConfig file located @ {gc_path}")
-        global_config = global_config_lib.GlobalConfig(gc_path)
+        global_config = global_config_lib.GlobalConfig.from_file(gc_path)
         global_config.cleanup_unwanted_params()
         # handle the update of globalConfig before validating
-        global_config_update.handle_global_config_update(global_config)
+        global_config_update.handle_global_config_update(global_config, gc_path)
         try:
             validator = global_config_validator.GlobalConfigValidator(
                 internal_root_dir, global_config
@@ -458,7 +458,7 @@ def generate(
             logger.error(f"globalConfig file is not valid. Error: {e}")
             sys.exit(1)
         global_config.update_addon_version(addon_version)
-        global_config.dump(global_config.original_path)
+        global_config.dump(gc_path)
         logger.info(
             f"Updated and saved add-on version in the globalConfig file to {addon_version}"
         )
@@ -553,7 +553,7 @@ def generate(
                 "custom",
             )
             dashboard.generate_dashboard(
-                global_config, ta_name, dashboard_definition_json_path
+                global_config, gc_path, ta_name, dashboard_definition_json_path
             )
 
     else:

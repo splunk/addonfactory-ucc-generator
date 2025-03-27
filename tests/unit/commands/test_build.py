@@ -96,7 +96,7 @@ def test_add_modular_input(GlobalConfig, tmp_path):
     (tmp_path / ta_name / "bin").mkdir(parents=True)
     (tmp_path / ta_name / "default").mkdir(parents=True)
 
-    gc = GlobalConfig("", False)
+    gc = GlobalConfig.from_file("", False)
     gc.inputs = [
         {
             "name": "example_input_three",
