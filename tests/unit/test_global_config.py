@@ -56,11 +56,25 @@ def test_global_config_from_app_manifest(app_manifest_correct):
 
 
 def test_global_config_equal():
-    global_config_1 = global_config_2 = global_config_lib.GlobalConfig.from_file(
+    global_config_1 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+    global_config_2 = global_config_lib.GlobalConfig.from_file(
         helpers.get_testdata_file_path("valid_config.json")
     )
 
     assert global_config_1 == global_config_2
+
+
+def test_global_config_when_no_equal():
+    global_config_1 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+    global_config_2 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config_only_logging.json")
+    )
+
+    assert global_config_1 != global_config_2
 
 
 def test_global_config_equal_when_wrong_object_type():
