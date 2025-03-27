@@ -35,6 +35,26 @@ def test_global_config_parse(filename):
     assert global_config.has_dashboard() is True
 
 
+def test_global_config_from_app_manifest(app_manifest_correct):
+    expected_global_config = global_config_lib.GlobalConfig(
+        {
+            "meta": {
+                "name": "Splunk_TA_UCCExample",
+                "restRoot": "Splunk_TA_UCCExample",
+                "displayName": "Splunk Add-on for UCC Example",
+                "version": "7.0.1",
+            }
+        },
+        False,
+    )
+
+    global_config = global_config_lib.GlobalConfig.from_app_manifest(
+        app_manifest_correct
+    )
+
+    assert expected_global_config == global_config
+
+
 def test_global_config_equal():
     global_config_1 = global_config_2 = global_config_lib.GlobalConfig.from_file(
         helpers.get_testdata_file_path("valid_config.json")

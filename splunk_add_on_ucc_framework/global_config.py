@@ -21,6 +21,7 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     UserDefinedRestHandlers,
 )
@@ -78,6 +79,24 @@ class GlobalConfig:
             yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
         )
         return GlobalConfig(content, is_global_config_yaml)
+
+    @classmethod
+    def from_app_manifest(
+        cls, app_manifest: app_manifest_lib.AppManifest
+    ) -> "GlobalConfig":
+        content = {
+            "meta": {
+                "name": app_manifest.get_addon_name(),
+                # TODO(ADDON-79208): once `restRoot` is optional, this line can be removed
+                "restRoot": app_manifest.get_addon_name(),
+                "displayName": app_manifest.get_title(),
+                "version": app_manifest.get_addon_version(),
+            }
+        }
+        return GlobalConfig(
+            content,
+            False,
+        )
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, GlobalConfig):
