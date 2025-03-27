@@ -11,8 +11,20 @@ def test_set_attribute(global_config_all_json, input_dir, output_dir, ucc_dir, t
         addon_name=ta_name,
     )
 
-    tags_conf._set_attributes()
     assert tags_conf.alert_settings
+    assert tags_conf.conf_file == "tags.conf"
+
+
+def test_set_attribute_no_global_config(input_dir, output_dir, ucc_dir, ta_name):
+    tags_conf = TagsConf(
+        None,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert tags_conf.alert_settings == {}
     assert tags_conf.conf_file == "tags.conf"
 
 

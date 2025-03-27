@@ -166,6 +166,37 @@ def test_begin(
     )
 
 
+@patch(
+    "splunk_add_on_ucc_framework.generators.file_generator.fc.GEN_FILE_LIST",
+    new_callable=list,
+)
+@patch("splunk_add_on_ucc_framework.generators.file_generator.logger")
+def test_begin_if_empty_dict(
+    mock_logger,
+    mock_gen_file_list,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    mock_item = MagicMock()
+    mock_item.file_class.return_value.generate.return_value = {"": "/path/to/file1"}
+
+    mock_gen_file_list.extend([mock_item])
+
+    result = begin(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert result == [{"": "/path/to/file1"}]
+    mock_logger.info.assert_not_called()
+
+
 def test__set_attributes_error(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):
