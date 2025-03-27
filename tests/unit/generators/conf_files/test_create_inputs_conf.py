@@ -188,7 +188,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
     config.write_text(json.dumps(config_content))
 
     inputs_conf = InputsConf(
-        GlobalConfig(str(config)),
+        GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
         ucc_dir=UCC_DIR,
@@ -309,7 +309,7 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     config.write_text(json.dumps(config_content))
 
     inputs_conf = InputsConf(
-        GlobalConfig(str(config)),
+        GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
         ucc_dir=UCC_DIR,
