@@ -517,7 +517,7 @@ def generate(
                 )
                 sys.exit(1)
 
-            if (command["requiredSearchAssistant"] is False) and (
+            if (command.get("requiredSearchAssistant", False) is False) and (
                 command.get("description")
                 or command.get("usage")
                 or command.get("syntax")
@@ -526,7 +526,7 @@ def generate(
                     "requiredSearchAssistant is set to false "
                     "but attributes required for 'searchbnf.conf' is defined which is not required."
                 )
-            if (command["requiredSearchAssistant"] is True) and not (
+            if (command.get("requiredSearchAssistant", False) is True) and not (
                 command.get("description")
                 and command.get("usage")
                 and command.get("syntax")
