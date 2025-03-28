@@ -270,7 +270,7 @@ def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
             continue
         global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
 
-    _dump(global_config.content, path, global_config._is_global_config_yaml)
+    _dump(global_config.content, path, global_config.is_yaml)
 
 
 def _dump_with_migrated_entities(
@@ -288,7 +288,7 @@ def _dump_with_migrated_entities(
     )
     _collapse_entities(global_config.content.get("alerts"), entity_type)
 
-    _dump(global_config.content, path, global_config._is_global_config_yaml)
+    _dump(global_config.content, path, global_config.is_yaml)
 
 
 def _collapse_entities(
