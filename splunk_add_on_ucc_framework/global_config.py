@@ -21,6 +21,7 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     UserDefinedRestHandlers,
 )
@@ -79,13 +80,41 @@ class GlobalConfig:
         )
         return GlobalConfig(content, is_global_config_yaml)
 
+    @classmethod
+    def from_app_manifest(
+        cls, app_manifest: app_manifest_lib.AppManifest
+    ) -> "GlobalConfig":
+        content = {
+            "meta": {
+                "name": app_manifest.get_addon_name(),
+                # TODO(ADDON-79208): once `restRoot` is optional, this line can be removed
+                "restRoot": app_manifest.get_addon_name(),
+                "displayName": app_manifest.get_title(),
+                "version": app_manifest.get_addon_version(),
+            }
+        }
+        return GlobalConfig(
+            content,
+            False,
+        )
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, GlobalConfig):
+            raise NotImplementedError()
+        return all(
+            [
+                self.content == other.content,
+                self.is_yaml == other.is_yaml,
+            ]
+        )
+
     def parse_user_defined_handlers(self) -> None:
         """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
         rest_handlers = self._content.get("options", {}).get("restHandlers", [])
         self.user_defined_handlers.add_definitions(rest_handlers)
 
     def dump(self, path: str) -> None:
-        if self._is_global_config_yaml:
+        if self.is_yaml:
             utils.dump_yaml_config(self.content, path)
         else:
             utils.dump_json_config(self.content, path)
@@ -120,6 +149,10 @@ class GlobalConfig:
     @property
     def content(self) -> Any:
         return self._content
+
+    @property
+    def is_yaml(self) -> bool:
+        return self._is_global_config_yaml
 
     @property
     def inputs(self) -> List[Any]:
