@@ -44,6 +44,17 @@ const verifyNotDisplayedElement = (group: string) => {
     expect(secondField).not.toBeInTheDocument();
 };
 
+const getControlGroupByDataName = (dataName: string) => {
+    const controlGroups = screen.getAllByTestId('control-group');
+    return controlGroups.find((el) => el.getAttribute('data-name') === dataName);
+};
+
+const getEntityTextBox = (entityField: string) => {
+    const controlGroup = getControlGroupByDataName(entityField);
+    invariant(controlGroup, `Control group with data-name="${entityField}" not found`);
+    return within(controlGroup as HTMLElement).getByRole('textbox');
+};
+
 it('should render base form correctly with name and File fields', async () => {
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
@@ -60,12 +71,7 @@ it('should render base form correctly with name and File fields', async () => {
     );
 
     screen.getByRole('textbox', { name: 'Name' });
-    // Find all elements with data-test="control-group"
-    const controlGroups = screen.getAllByTestId('control-group');
-
-    // Find the specific one with data-name="name"
-    const fileField = controlGroups.find((el) => el.getAttribute('data-name') === 'name');
-
+    const fileField = getControlGroupByDataName('name');
     expect(fileField).toBeInTheDocument();
 });
 
@@ -195,15 +201,6 @@ describe('Verify if submiting BaseFormView works', () => {
             </TableContext.Provider>
         );
         return formRef;
-    };
-
-    const getEntityTextBox = (entityField: string) => {
-        const controlGroups = screen.getAllByTestId('control-group');
-        const extractEntity = controlGroups.find(
-            (el) => el.getAttribute('data-name') === entityField
-        );
-        invariant(extractEntity);
-        return within(extractEntity as HTMLElement).getByRole('textbox');
     };
 
     it('Correctly pass form data via post', async () => {

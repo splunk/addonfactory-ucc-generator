@@ -42,7 +42,7 @@ it('should show UCC label', async () => {
 
     const uccLink = await screen.findByRole('link', { name: /ucc/i });
     expect(uccLink).toBeInTheDocument();
-    expect(uccLink).toHaveAttribute('href', expect.stringContaining('github.io'));
+    expect(uccLink).toHaveAttribute('href', 'https://splunk.github.io/addonfactory-ucc-generator/');
 });
 
 it('should not show UCC label', async () => {

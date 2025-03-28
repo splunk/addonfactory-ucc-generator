@@ -61,7 +61,7 @@ const getTextElementForField = (field: string) => {
     expect(componentParentElement).toBeInTheDocument();
 
     if (!componentParentElement) {
-        return null;
+        return [];
     }
 
     const componentInput = within(componentParentElement).getByRole('textbox');
@@ -94,13 +94,14 @@ it('verify modification after text components change', async () => {
 
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
-    const [componentParentElement, componentInput] =
-        (await getTextElementForField(firstStandardTextField.field)) || [];
-    const [component2ParentElement, component2Input] =
-        (await getTextElementForField(secondStandardTextField.field)) || [];
+    const [componentParentElement, componentInput] = getTextElementForField(
+        firstStandardTextField.field
+    );
+    const [component2ParentElement, component2Input] = getTextElementForField(
+        secondStandardTextField.field
+    );
 
-    const [, componentMakingModsTextBox1] =
-        (await getTextElementForField(firstModificationField.field)) || [];
+    const [, componentMakingModsTextBox1] = getTextElementForField(firstModificationField.field);
 
     const mods1Field1 = findMods(
         firstModificationField,
@@ -167,13 +168,10 @@ it('verify markdown modifications', async () => {
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
-    const [componentParentElement] =
-        (await getTextElementForField(firstStandardTextField.field)) || [];
-    const [component2ParentElement] =
-        (await getTextElementForField(secondStandardTextField.field)) || [];
+    const [componentParentElement] = getTextElementForField(firstStandardTextField.field);
+    const [component2ParentElement] = getTextElementForField(secondStandardTextField.field);
 
-    const [, componentMakingModsTextBox1] =
-        (await getTextElementForField(secondModificationField.field)) || [];
+    const [, componentMakingModsTextBox1] = getTextElementForField(secondModificationField.field);
 
     const firstElementOuterHTMLBeforeMods = componentParentElement.outerHTML;
 

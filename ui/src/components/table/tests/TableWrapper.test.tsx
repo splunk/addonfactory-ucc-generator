@@ -27,7 +27,7 @@ const props = {
     displayActionBtnAllRows: false,
 } satisfies ITableWrapperProps;
 
-const setup = () =>
+const renderTable = () =>
     render(
         <TableContextProvider>
             <TableWrapper {...props} />
@@ -45,7 +45,7 @@ describe('TableWrapper - Configuration Page', () => {
     });
     it('correct render table with all elements', async () => {
         setUnifiedConfig(SIMPLE_NAME_TABLE_MOCK_DATA);
-        setup();
+        renderTable();
 
         const numberOfItems = await screen.findByText('9 Items');
         expect(numberOfItems).toBeInTheDocument();
@@ -74,19 +74,19 @@ describe('TableWrapper - Configuration Page', () => {
 
     it('sort items after filtering', async () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
-        setup();
-        const utils = userEvent.setup();
+        renderTable();
+        const user = userEvent.setup();
 
-        const numberOfItems = await screen.findByText('Custom Text');
+        const numberOfItems = await screen.findByText('9 Items');
         expect(numberOfItems).toBeInTheDocument();
         const customHeader = screen
             .getAllByTestId('head-cell')
             .find((el) => el.getAttribute('data-test-label') === 'Custom Text');
         expect(customHeader).toBeInTheDocument();
 
-        // No unique data-testid available to extract the columns in order
-        // eslint-disable-next-line testing-library/no-node-access
-        const defaultOrder = document.querySelectorAll('[data-column="custom_text"]');
+        const defaultOrder = screen
+            .getAllByTestId('cell')
+            .filter((el) => el.dataset.column === 'custom_text');
         const mappedTextDefaultOrder = Array.from(defaultOrder).map((el: Node) => el.textContent);
         expect(mappedTextDefaultOrder).toMatchInlineSnapshot(`
         [
@@ -102,11 +102,11 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await utils.click(customHeader!);
+        await user.click(customHeader!);
 
-        // No unique data-testid available to extract the columns in order
-        // eslint-disable-next-line testing-library/no-node-access
-        const allCustomTextsAsc = document.querySelectorAll('[data-column="custom_text"]');
+        const allCustomTextsAsc = screen
+            .getAllByTestId('cell')
+            .filter((el) => el.dataset.column === 'custom_text');
         const mappedTextAsc = Array.from(allCustomTextsAsc).map((el: Node) => el.textContent);
 
         expect(mappedTextAsc).toMatchInlineSnapshot(`
@@ -123,7 +123,7 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await utils.click(customHeader!);
+        await user.click(customHeader!);
 
         // No unique data-testid available to extract the columns in order
         // eslint-disable-next-line testing-library/no-node-access
@@ -147,7 +147,7 @@ describe('TableWrapper - Configuration Page', () => {
 
     it('Correctly render status labels with mapped values', async () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
-        setup();
+        renderTable();
 
         const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
         const activeRow = await screen.findByLabelText(`row-${active?.name}`);
@@ -172,39 +172,39 @@ describe('TableWrapper - Configuration Page', () => {
 
     it('Check modal correctly renders title', async () => {
         setUnifiedConfig(getSimpleConfig());
-        setup();
-        const utils = userEvent.setup();
+        renderTable();
+        const user = userEvent.setup();
 
         // check for custom header in edit modal
         const editHeader = await getHeaderTitleForAction('Update Account', /edit/i);
         expect(editHeader).toBeInTheDocument();
-        await closeModal(utils);
+        await closeModal(user);
 
         // check for custom header in clone modal
         const cloneHeader = await getHeaderTitleForAction('Clone Account', /clone/i);
         expect(cloneHeader).toBeInTheDocument();
-        await closeModal(utils);
+        await closeModal(user);
 
         // check for custom header in delete modal
         const deleteHeader = await getHeaderTitleForAction('Delete Confirmation', /delete/i);
         expect(deleteHeader).toBeInTheDocument();
-        await closeModal(utils);
+        await closeModal(user);
     });
 
     it('Check modal correctly render custom header', async () => {
         setUnifiedConfig(getCustomModalHeaderData());
-        setup();
-        const utils = userEvent.setup();
+        renderTable();
+        const user = userEvent.setup();
 
         // check for custom header in edit modal
         const editHeader = await getHeaderTitleForAction('Update this is custom header', /edit/i);
         expect(editHeader).toBeInTheDocument();
-        await closeModal(utils);
+        await closeModal(user);
 
         // check for custom header in clone modal
         const cloneHeader = await getHeaderTitleForAction('Clone this is custom header', /clone/i);
         expect(cloneHeader).toBeInTheDocument();
-        await closeModal(utils);
+        await closeModal(user);
 
         // check for custom header in delete modal
         const deleteHeader = await getHeaderTitleForAction(
@@ -212,7 +212,7 @@ describe('TableWrapper - Configuration Page', () => {
             /delete/i
         );
         expect(deleteHeader).toBeInTheDocument();
-        await closeModal(utils);
+        await closeModal(user);
     });
 });
 

@@ -216,11 +216,11 @@ describe('multiple services', () => {
             expect(screen.queryByText('test-subservice-subTitle2')).not.toBeInTheDocument();
 
             // Click on group title
-            await userEventSetup.click(await screen.findByText('test-group-title1'));
+            await userEventSetup.click(screen.getByText('test-group-title1'));
 
             // Check sub menu is rendered
-            expect(await screen.findByText('test-subservice1-title1')).toBeInTheDocument();
-            expect(await screen.findByText('test-subservice-subTitle2')).toBeInTheDocument();
+            expect(screen.getByText('test-subservice1-title1')).toBeInTheDocument();
+            expect(screen.getByText('test-subservice-subTitle2')).toBeInTheDocument();
 
             // Ensure the group title disappears
             await waitFor(() =>
@@ -235,7 +235,7 @@ describe('multiple services', () => {
             );
 
             // Ensure group title reappears
-            expect(await screen.findByText('test-group-title1')).toBeInTheDocument();
+            expect(screen.getByText('test-group-title1')).toBeInTheDocument();
         });
 
         it('should render group as menu item if no underlying services', async () => {
@@ -288,8 +288,8 @@ describe('multiple services', () => {
             await userEvent.click(getCreateDropdown());
 
             expect(screen.queryByText(unexistingElement.groupTitle)).not.toBeInTheDocument();
-            expect(await screen.findByText(elem1.groupTitle)).toBeInTheDocument();
-            expect(await screen.findByText(elem2.groupTitle)).toBeInTheDocument();
+            expect(screen.getByText(elem1.groupTitle)).toBeInTheDocument();
+            expect(screen.getByText(elem2.groupTitle)).toBeInTheDocument();
         });
 
         it('should call handleRequestOpen callback on click', async () => {
@@ -416,7 +416,7 @@ describe('multiple services', () => {
                 // Ensure UI updates before assertions
                 await waitFor(() => {
                     existsTitles.forEach(async (title) => {
-                        expect(await screen.findByText(title)).toBeInTheDocument();
+                        expect(screen.getByText(title)).toBeInTheDocument();
                     });
                 });
 

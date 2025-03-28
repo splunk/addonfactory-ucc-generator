@@ -59,8 +59,7 @@ it('should not display tabs on cloud', async () => {
     const cloudText = screen.queryByText('Tab hidden for cloud');
     expect(cloudText).toBeNull();
 
-    const enterpriseText = await screen.findByText('Tab hidden for enterprise');
-    expect(enterpriseText).toBeInTheDocument();
+    await screen.findByText('Tab hidden for enterprise');
 });
 
 it('should not display fields in configuration form', async () => {
@@ -80,6 +79,5 @@ it('should not display fields in configuration form', async () => {
     const cloudText = screen.queryByText('Text input hidden for cloud');
     expect(cloudText).toBeNull();
 
-    const enterprisetext = await screen.findByText('Text input hidden for enterprise');
-    expect(enterprisetext).toBeInTheDocument();
+    await screen.findByText('Text input hidden for enterprise');
 });

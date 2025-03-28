@@ -99,12 +99,12 @@ describe('InteractAllStatusButtons', () => {
         renderStatusbutton();
 
         const user = userEvent.setup();
-        const disableBtn = await screen.findByText('Deactivate all');
+        const disableBtn = screen.getByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
         await user.click(disableBtn);
 
-        const yesPopUpBtn = await screen.findByText('Yes');
+        const yesPopUpBtn = screen.getByText('Yes');
         expect(yesPopUpBtn).toBeInTheDocument();
 
         await user.click(yesPopUpBtn);
@@ -125,12 +125,12 @@ describe('InteractAllStatusButtons', () => {
         renderStatusbutton();
 
         const user = userEvent.setup();
-        const enableBtn = await screen.findByText('Activate all');
+        const enableBtn = screen.getByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
         await user.click(enableBtn);
 
-        const yesPopUpBtn = await screen.findByText('Yes');
+        const yesPopUpBtn = screen.getByText('Yes');
         expect(yesPopUpBtn).toBeInTheDocument();
 
         await user.click(yesPopUpBtn);
@@ -151,12 +151,12 @@ describe('InteractAllStatusButtons', () => {
         renderStatusbutton();
 
         const user = userEvent.setup();
-        const disableBtn = await screen.findByText('Deactivate all');
+        const disableBtn = screen.getByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
         await user.click(disableBtn);
 
-        const noPopUpBtn = await screen.findByText('No');
+        const noPopUpBtn = screen.getByText('No');
         expect(noPopUpBtn).toBeInTheDocument();
 
         await user.click(noPopUpBtn);
@@ -168,12 +168,12 @@ describe('InteractAllStatusButtons', () => {
         renderStatusbutton();
 
         const user = userEvent.setup();
-        const enableBtn = await screen.findByText('Activate all');
+        const enableBtn = screen.getByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
         await user.click(enableBtn);
 
-        const noPopUpBtn = await screen.findByText('No');
+        const noPopUpBtn = screen.getByText('No');
         expect(noPopUpBtn).toBeInTheDocument();
 
         await user.click(noPopUpBtn);
@@ -185,7 +185,7 @@ describe('InteractAllStatusButtons', () => {
         renderStatusbutton();
 
         const user = userEvent.setup();
-        const enableBtn = await screen.findByText('Activate all');
+        const enableBtn = screen.getByText('Activate all');
         expect(enableBtn).toBeInTheDocument();
 
         await user.click(enableBtn);
@@ -202,7 +202,7 @@ describe('InteractAllStatusButtons', () => {
         renderStatusbutton();
 
         const user = userEvent.setup();
-        const disableBtn = await screen.findByText('Deactivate all');
+        const disableBtn = screen.getByText('Deactivate all');
         expect(disableBtn).toBeInTheDocument();
 
         await user.click(disableBtn);
