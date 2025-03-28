@@ -43,5 +43,19 @@ module.exports = {
         'react/jsx-one-expression-per-line': 'off', // This rule is not compatible with prettier
         'react/jsx-curly-newline': 'off', // This rule is not compatible with prettier
     },
+    overrides: [
+        {
+            files: ['**/*.test.tsx'], // Apply only to .test.tsx files
+            extends: ['plugin:testing-library/react'], // Enables Testing Library rules
+            plugins: ['testing-library'],
+            rules: {
+                'testing-library/no-debugging-utils': 'error', // Prevent leaving debug utilities in tests
+                'testing-library/await-async-queries': 'error', // Prevent missing awaits on async queries
+                'testing-library/no-await-sync-queries': 'error', // Prevent unnecessary await on sync queries
+                'testing-library/no-dom-import': 'error', // Prevent wrong imports; enforce @testing-library/react
+                'testing-library/prefer-presence-queries': 'error', // prefers getBy*/queryBy* over findBy* for presence/absence checks 
+            },
+        },
+    ],
     root: true,
 };

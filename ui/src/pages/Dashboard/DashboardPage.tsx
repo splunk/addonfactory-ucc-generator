@@ -113,6 +113,7 @@ function DashboardPage() {
                         autoActivate
                         defaultActivePanelId="dataIngestionTabPanel"
                         id="dashboardTable"
+                        data-test="dashboardTable"
                         style={{ minHeight: '98vh' }}
                     >
                         {dataIngestionDef && (

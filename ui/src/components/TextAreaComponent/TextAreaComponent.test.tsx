@@ -5,17 +5,21 @@ import TextAreaComponent from './TextAreaComponent';
 
 const handleChange = jest.fn();
 
-beforeEach(() => {
+const renderTextAreaComponent = () => {
     render(<TextAreaComponent value="test" handleChange={handleChange} field="fieldId" />);
-});
+};
 
 it('should render text component correctly with value', async () => {
+    renderTextAreaComponent();
+
     const textBox = screen.getByRole('textbox');
 
     expect(textBox).toHaveValue('test');
 });
 
 it('should trigger callback correctly after typing', async () => {
+    renderTextAreaComponent();
+
     const textBox = screen.getByRole('textbox');
 
     await userEvent.type(textBox, 'f');
@@ -26,6 +30,8 @@ it('should trigger callback correctly after typing', async () => {
 });
 
 it('should use callback with empty string after clear', async () => {
+    renderTextAreaComponent();
+
     const textBox = screen.getByRole('textbox');
 
     await userEvent.clear(textBox);

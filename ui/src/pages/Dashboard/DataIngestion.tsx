@@ -209,8 +209,14 @@ export const DataIngestionDashboard = ({
                     actionMenus={getActionButtons('data_ingestion')}
                 />
 
-                <div id="data_ingestion_search" className="invisible_before_moving">
-                    <p id="data_ingestion_search_label">Search</p>
+                <div
+                    id="data_ingestion_search"
+                    data-test="data_ingestion_search"
+                    className="invisible_before_moving"
+                >
+                    <p id="data_ingestion_search_label" data-test="data_ingestion_search_label">
+                        Search
+                    </p>
                     <Search
                         id="data_ingestion_search_input"
                         onChange={handleChangeSearch}
@@ -218,7 +224,11 @@ export const DataIngestionDashboard = ({
                         style={{ minWidth: '150px', gridRow: '6', gridColumn: '1' }}
                     />
                 </div>
-                <div id="info_message_for_data_ingestion" className="invisible_before_moving">
+                <div
+                    id="info_message_for_data_ingestion"
+                    data-test="info_message_for_data_ingestion"
+                    className="invisible_before_moving"
+                >
                     {infoMessage && (
                         <Message appearance="fill" type="info">
                             {infoMessage}

@@ -30,8 +30,9 @@ it('should modify correctly all properties of field, self modification', async (
 
     await screen.findByText('default label');
 
-    const modifyTextField = document.querySelector(
-        '[data-name="text_field_with_modifications"]'
+    const controlGroups = screen.getAllByTestId('control-group');
+    const modifyTextField = controlGroups.find(
+        (el) => el.getAttribute('data-name') === 'text_field_with_modifications'
     ) as HTMLElement;
 
     expect(modifyTextField).toBeInTheDocument();
@@ -58,5 +59,5 @@ it('should modify correctly all properties of field, self modification', async (
     expect(within(modifyTextField).getByTestId('msg-markdown')).toHaveTextContent(
         'markdown message after modification'
     );
-    expect(within(modifyTextField).queryByText('*')).toBeInTheDocument();
+    expect(within(modifyTextField).getByText('*')).toBeInTheDocument();
 });

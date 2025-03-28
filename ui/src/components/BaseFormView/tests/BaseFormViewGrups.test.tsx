@@ -32,8 +32,9 @@ it('should modify correctly all properties of field in groups', async () => {
         help: string,
         markdownMsg: string
     ) => {
-        const modifiedFieldSameGroup = document.querySelector(
-            `[data-name="${fieldId}"]`
+        const controlGroups = screen.getAllByTestId('control-group');
+        const modifiedFieldSameGroup = controlGroups.find(
+            (el) => el.getAttribute('data-name') === fieldId
         ) as HTMLElement;
 
         expect(modifiedFieldSameGroup).toBeInTheDocument();

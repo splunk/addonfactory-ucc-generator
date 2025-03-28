@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import CustomControl from './CustomControl';
@@ -26,30 +26,30 @@ const setup = async () => {
         virtual: true,
     });
 
-    await act(async () => {
-        render(
-            <CustomControl
-                data={{
-                    value: 'input_default',
-                    mode: 'create',
-                    serviceName: 'serviceName',
-                }}
-                field={FIELD_NAME}
-                handleChange={handleChange}
-                controlOptions={{
-                    src: MODULE,
-                    type: 'external',
-                }}
-                addCustomValidator={addingCustomValidation}
-                utilCustomFunctions={{
-                    setState: mockSetState,
-                    setErrorFieldMsg: mockSetErrorFieldMsg,
-                    clearAllErrorMsg: mockClearErrorMsg,
-                    setErrorMsg: mockSetErrorMsg,
-                }}
-            />
-        );
+    render(
+        <CustomControl
+            data={{
+                value: 'input_default',
+                mode: 'create',
+                serviceName: 'serviceName',
+            }}
+            field={FIELD_NAME}
+            handleChange={handleChange}
+            controlOptions={{
+                src: MODULE,
+                type: 'external',
+            }}
+            addCustomValidator={addingCustomValidation}
+            utilCustomFunctions={{
+                setState: mockSetState,
+                setErrorFieldMsg: mockSetErrorFieldMsg,
+                clearAllErrorMsg: mockClearErrorMsg,
+                setErrorMsg: mockSetErrorMsg,
+            }}
+        />
+    );
 
+    await waitFor(async () => {
         const loading = screen.queryByText('Loading...');
         if (loading) {
             await waitFor(() => expect(loading).not.toHaveTextContent('Loading...'));
@@ -70,7 +70,7 @@ it('should try to add validator', async () => {
 
 it('should correctly call handler on change', async () => {
     await setup();
-    const selectElem = document.querySelector('select');
+    const selectElem = screen.getByTestId('customSelect');
     expect(selectElem).toBeInTheDocument();
     const SELECTED_OPTION = 'input_one';
     await userEvent.selectOptions(selectElem!, SELECTED_OPTION);
