@@ -3,7 +3,7 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';
-import type { EventType } from '@splunk/react-events-viewer/common-types';
+import { EventType } from '@splunk/react-events-viewer/types/common-types';
 import { getUnifiedConfigs } from '../../util/util';
 
 import {
