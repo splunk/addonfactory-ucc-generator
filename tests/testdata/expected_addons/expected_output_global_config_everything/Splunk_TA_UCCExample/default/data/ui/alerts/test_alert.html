@@ -1,5 +1,5 @@
 <form class="form-horizontal form-complex">
-<div class="control-group">
+<splunk-control-group>
     <label class="control-label" for="test_alert_name">Name <span class="required">*</span> </label>
     <div class="controls">
 <input type="text" name="action.test_alert.param.name"
@@ -8,18 +8,18 @@
         Please enter your name
     </span>
     </div>
-</div>
-<div class="control-group">
+</splunk-control-group>
+<splunk-control-group>
     <label class="control-label" for="test_alert_description">Description <span class="required">*</span> </label>
     <div class="controls">
-<textarea name="action.test_alert.param.description"
+<splunk-text-area name="action.test_alert.param.description"
 		id="test_alert_description" ></textarea>
             <span class="help-block">
         Please enter the description for the alert
     </span>
     </div>
-</div>
-<div class="control-group">
+</splunk-control-group>
+<splunk-control-group>
     <div class="controls">
 		<label class="checkbox" for="test_alert_all_incidents">
 			<input type="checkbox" name="action.test_alert.param.all_incidents" id="test_alert_all_incidents"  />
@@ -29,8 +29,8 @@
         Tick if you want to update all incidents/problems
     </span>
     </div>
-</div>
-<div class="control-group">
+</splunk-control-group>
+<splunk-control-group>
     <label class="control-label" for="test_alert_table_list">Table List  </label>
     <div class="controls">
 <select name="action.test_alert.param.table_list" id="test_alert_table_list">
@@ -41,8 +41,8 @@
         Please select the table
     </span>
     </div>
-</div>
-<div class="control-group">
+</splunk-control-group>
+<splunk-control-group>
 	<label class="control-label">Action:</label>
 		<div class="controls">
 				<label class="radio" for="test_alert_action_update">
@@ -61,8 +61,8 @@
         Select the action you want to perform
     </span>
 		</div>
-</div>
-<div class="control-group">
+</splunk-control-group>
+<splunk-control-group>
     <label class="control-label" for="test_alert_account">Select Account <span class="required">*</span> </label>
     <div class="controls">
 		<splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account"                 value-field="title"
@@ -75,5 +75,5 @@
         Select the account from the dropdown
     </span>
     </div>
-</div>
+</splunk-control-group>
 </form>
