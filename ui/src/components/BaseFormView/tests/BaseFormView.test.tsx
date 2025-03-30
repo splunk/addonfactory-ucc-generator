@@ -44,15 +44,10 @@ const verifyNotDisplayedElement = (group: string) => {
     expect(secondField).not.toBeInTheDocument();
 };
 
-const getControlGroupByDataName = (dataName: string) => {
-    const controlGroups = screen.getAllByTestId('control-group');
-    return controlGroups.find((el) => el.getAttribute('data-name') === dataName);
-};
-
 const getEntityTextBox = (entityField: string) => {
-    const controlGroup = getControlGroupByDataName(entityField);
-    invariant(controlGroup, `Control group with data-name="${entityField}" not found`);
-    return within(controlGroup as HTMLElement).getByRole('textbox');
+    const getEntityField = screen.queryByTestId(entityField);
+    invariant(getEntityField, 'Entity field is not found');
+    return within(getEntityField as HTMLElement).getByRole('textbox');
 };
 
 it('should render base form correctly with name and File fields', async () => {
@@ -71,7 +66,7 @@ it('should render base form correctly with name and File fields', async () => {
     );
 
     screen.getByRole('textbox', { name: 'Name' });
-    const fileField = getControlGroupByDataName('name');
+    const fileField = screen.queryByTestId('name');
     expect(fileField).toBeInTheDocument();
 });
 

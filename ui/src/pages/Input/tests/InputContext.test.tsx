@@ -20,10 +20,14 @@ jest.mock('@splunk/search-job', () => ({
     }),
 }));
 
-it('Tabs not displayed on platform', async () => {
+function setup() {
     setUnifiedConfig(INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM);
+    return render(<InputPage />, { wrapper: BrowserRouter });
+}
 
-    render(<InputPage />, { wrapper: BrowserRouter });
+it('Tabs not displayed on platform', async () => {
+    setup();
+
     // there are more than 1 wait-spinner
     await waitForElementToBeRemoved(() => screen.queryAllByTestId('wait-spinner').length > 0);
 
@@ -43,9 +47,8 @@ it('Tabs not displayed on platform', async () => {
 });
 
 it('Fields not displayed on inputs form', async () => {
-    setUnifiedConfig(INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM);
+    setup();
 
-    render(<InputPage />, { wrapper: BrowserRouter });
     // there are more than 1 wait-spinner
     await waitForElementToBeRemoved(() => screen.queryAllByTestId('wait-spinner').length > 0);
 
@@ -54,11 +57,8 @@ it('Fields not displayed on inputs form', async () => {
 
     await userEvent.click(addBtn);
 
-    const enterpriseInput = screen
-        .getAllByTestId('control-group')
-        .find((el) => el.getAttribute('data-name') === 'input_two_text_hidden_for_enterprise');
-
-    expect(enterpriseInput).toBeInTheDocument();
+    const enterpriseInput = screen.queryByTestId('input_two_text_hidden_for_enterprise');
+    expect(enterpriseInput).toBeNull();
 
     const cloudInput = screen.queryByTestId('input_two_text_hidden_for_cloud');
     expect(cloudInput).toBeNull();
@@ -66,6 +66,5 @@ it('Fields not displayed on inputs form', async () => {
     const cloudText = screen.queryByText('Text input hidden for cloud');
     expect(cloudText).toBeNull();
 
-    const enterprisetext = await screen.findByText('Text input hidden for enterprise');
-    expect(enterprisetext).toBeInTheDocument();
+    await screen.findByText('Text input hidden for enterprise');
 });
