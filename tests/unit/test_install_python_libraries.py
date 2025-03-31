@@ -184,8 +184,8 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
 
     with pytest.raises(SplunktaucclibNotFound) as exc:
         install_python_libraries(
-            str(tmp_path),
-            str(tmp_ucc_lib_target),
+            source_path=str(tmp_path),
+            ucc_lib_target=str(tmp_ucc_lib_target),
             python_binary_name="python3",
             includes_ui=True,
         )
