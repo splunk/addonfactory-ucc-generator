@@ -1,69 +1,79 @@
 <form class="form-horizontal form-complex">
-    <splunk-control-group>
-        <label class="control-label" for="test_alert_name">Name <span class="required">*</span></label>
-        <div class="controls">
-            <splunk-text-input type="text" name="action.test_alert.param.name" id="test_alert_name" />
-            <span class="help-block">Please enter your name</span>
-        </div>
-    </splunk-control-group>
-
-    <splunk-control-group>
-        <label class="control-label" for="test_alert_description">Description <span class="required">*</span></label>
-        <div class="controls">
-            <splunk-text-area name="action.test_alert.param.description" id="test_alert_description" />
-            <span class="help-block">Please enter the description for the alert</span>
-        </div>
-    </splunk-control-group>
-
-    <splunk-control-group>
-        <div class="controls">
-            <label class="checkbox" for="test_alert_all_incidents">
-                <splunk-text-input type="checkbox" name="action.test_alert.param.all_incidents" id="test_alert_all_incidents" />
-                All Incidents
-            </label>
-            <span class="help-block">Tick if you want to update all incidents/problems</span>
-        </div>
-    </splunk-control-group>
-
-    <splunk-control-group>
-        <label class="control-label" for="test_alert_table_list">Table List</label>
-        <div class="controls">
-            <splunk-select name="action.test_alert.param.table_list" id="test_alert_table_list">
-                <option value="incident">Incident</option>
-                <option value="problem">Problem</option>
-            </splunk-select>
-            <span class="help-block">Please select the table</span>
-        </div>
-    </splunk-control-group>
-
-    <splunk-control-group>
-        <label class="control-label">Action:</label>
-        <div class="controls">
-            <label class="radio" for="test_alert_action_update">
-                <splunk-radio-input type="radio" name="action.test_alert.param.action" id="test_alert_action_update" value="update" />
-                Update
-            </label>
-            <label class="radio" for="test_alert_action_delete">
-                <splunk-radio-input type="radio" name="action.test_alert.param.action" id="test_alert_action_delete" value="delete" />
-                Delete
-            </label>
-            <span class="help-block">Select the action you want to perform</span>
-        </div>
-    </splunk-control-group>
-
-    <splunk-control-group>
-        <label class="control-label" for="test_alert_account">Select Account <span class="required">*</span></label>
-        <div class="controls">
-            <splunk-search-dropdown 
-                name="action.test_alert.param.account" 
-                id="test_alert_account"
-                value-field="title"
+<splunk-control-group>
+    <label class="control-label" for="test_alert_name">Name <span class="required">*</span> </label>
+    <div class="controls">
+<splunk-input-text type="text" name="action.test_alert.param.name"
+		id="test_alert_name" />
+            <span class="help-block">
+        Please enter your name
+    </span>
+    </div>
+</splunk-control-group>
+<splunk-control-group>
+    <label class="control-label" for="test_alert_description">Description <span class="required">*</span> </label>
+    <div class="controls">
+<splunk-text-area name="action.test_alert.param.description"
+		id="test_alert_description"  />
+            <span class="help-block">
+        Please enter the description for the alert
+    </span>
+    </div>
+</splunk-control-group>
+<splunk-control-group>
+    <div class="controls">
+		<label class="checkbox" for="test_alert_all_incidents">
+			<splunk-text-input type="checkbox" name="action.test_alert.param.all_incidents" id="test_alert_all_incidents"  />
+			All Incidents
+		</label>
+		    <span class="help-block">
+        Tick if you want to update all incidents/problems
+    </span>
+    </div>
+</splunk-control-group>
+<splunk-control-group>
+    <label class="control-label" for="test_alert_table_list">Table List  </label>
+    <div class="controls">
+<splunk-select name="action.test_alert.param.table_list" id="test_alert_table_list">
+        <option value="incident">Incident</option>
+        <option value="problem">Problem</option>
+</splunk-select>
+            <span class="help-block">
+        Please select the table
+    </span>
+    </div>
+</splunk-control-group>
+<splunk-control-group>
+	<label class="control-label">Action:</label>
+		<div class="controls">
+				<label class="radio" for="test_alert_action_update">
+					<splunk-radio-input
+					name="action.test_alert.param.action" id="test_alert_action_update" value="update"
+				     />
+					Update
+				</label>
+				<label class="radio" for="test_alert_action_delete">
+					<splunk-radio-input
+					name="action.test_alert.param.action" id="test_alert_action_delete" value="delete"
+				     />
+					Delete
+				</label>
+			    <span class="help-block">
+        Select the action you want to perform
+    </span>
+		</div>
+</splunk-control-group>
+<splunk-control-group>
+    <label class="control-label" for="test_alert_account">Select Account <span class="required">*</span> </label>
+    <div class="controls">
+		<splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account"                 value-field="title"
                 label-field="title"
                 search="| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title"
                 earliest="-4@h"
                 latest="now"
-            />
-            <span class="help-block">Select the account from the dropdown</span>
-        </div>
-    </splunk-control-group>
+ />
+            <span class="help-block">
+        Select the account from the dropdown
+    </span>
+    </div>
+</splunk-control-group>
 </form>
