@@ -91,8 +91,6 @@ class GlobalConfig:
                 "restRoot": app_manifest.get_addon_name(),
                 "displayName": app_manifest.get_title(),
                 "version": app_manifest.get_addon_version(),
-                # adding this by default as to omit reading of app.conf
-                "checkForUpdates": True,
             }
         }
         return GlobalConfig(

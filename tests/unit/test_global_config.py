@@ -43,7 +43,6 @@ def test_global_config_from_app_manifest(app_manifest_correct):
                 "restRoot": "Splunk_TA_UCCExample",
                 "displayName": "Splunk Add-on for UCC Example",
                 "version": "7.0.1",
-                "checkForUpdates": True,
             }
         },
         False,
