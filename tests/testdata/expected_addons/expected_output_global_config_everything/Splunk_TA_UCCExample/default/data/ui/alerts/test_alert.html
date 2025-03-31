@@ -13,7 +13,7 @@
     <label class="control-label" for="test_alert_description">Description <span class="required">*</span> </label>
     <div class="controls">
 <splunk-text-area name="action.test_alert.param.description"
-		id="test_alert_description" ></splunk-text-area>
+		id="test_alert_description" />
             <span class="help-block">
         Please enter the description for the alert
     </span>
@@ -46,13 +46,13 @@
 	<label class="control-label">Action:</label>
 		<div class="controls">
 				<label class="radio" for="test_alert_action_update">
-					<splunk-text-input type="radio"
+					<splunk-radio-input type="radio"
 					name="action.test_alert.param.action" id="test_alert_action_update" value="update"
 				     />
 					Update
 				</label>
 				<label class="radio" for="test_alert_action_delete">
-					<splunk-text-input type="radio"
+					<splunk-radio-input type="radio"
 					name="action.test_alert.param.action" id="test_alert_action_delete" value="delete"
 				     />
 					Delete
