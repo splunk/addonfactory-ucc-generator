@@ -18,6 +18,10 @@ import subprocess
 
 import logging
 import sys
+import json
+
+from typing import Dict, Any
+from splunk_add_on_ucc_framework import app_manifest as ap
 
 logger = logging.getLogger("ucc_gen")
 
@@ -36,3 +40,38 @@ def import_from_aob(addon_name: str) -> None:
         os.path.dirname(os.path.dirname(__file__)), "commands", "imports.py"
     )
     subprocess.call((import_from_aob_script_path, addon_name, imports_py_path))
+    addon_ucc_path = addon_name_directory + "_ucc"
+    a_path = os.path.join(*[os.getcwd(), addon_ucc_path, "package", "app.manifest"])
+    with open(a_path, encoding="utf-8") as f:
+        data = json.loads(f.read())
+
+    add_app_manifest_key(data, "supportedDeployments", "amsd")
+    add_app_manifest_key(data, "targetWorkloads", "amtw")
+    check_app_manifest_schema_version(data)
+
+    with open(a_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, default=list, ensure_ascii=False, indent=4)
+
+
+def add_app_manifest_key(
+    app_manifest_data: Dict[Any, Any], key: str, mode: str
+) -> None:
+    value = (
+        ap.APP_MANIFEST_SUPPORTED_DEPLOYMENTS
+        if mode == "amsd"
+        else ap.APP_MANIFEST_TARGET_WORKLOADS
+    )
+
+    if key not in app_manifest_data:
+        app_manifest_data.update({key: value})
+    elif app_manifest_data[key] is None:
+        app_manifest_data.pop(key)
+        app_manifest_data.update({key: value})
+
+
+def check_app_manifest_schema_version(app_manifest_data: Dict[Any, Any]) -> None:
+    key = "schemaVersion"
+    version = app_manifest_data[key]
+    if version != ap.APP_MANIFEST_SCHEMA_VERSION:
+        app_manifest_data.pop(key)
+        app_manifest_data.update({key: ap.APP_MANIFEST_SCHEMA_VERSION})
