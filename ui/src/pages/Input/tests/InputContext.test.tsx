@@ -57,8 +57,10 @@ it('Fields not displayed on inputs form', async () => {
 
     await userEvent.click(addBtn);
 
-    const enterpriseInput = screen.queryByTestId('input_two_text_hidden_for_enterprise');
-    expect(enterpriseInput).toBeNull();
+    const enterpriseInput = screen
+        .getAllByTestId('control-group')
+        .find((el) => el.getAttribute('data-name') === 'input_two_text_hidden_for_enterprise');
+    expect(enterpriseInput).toBeInTheDocument();
 
     const cloudInput = screen.queryByTestId('input_two_text_hidden_for_cloud');
     expect(cloudInput).toBeNull();

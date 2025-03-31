@@ -53,8 +53,10 @@ it('should not display tabs on cloud', async () => {
     const cloudTab = screen.queryByTestId('tab_hidden_for_cloud');
     expect(cloudTab).toBeNull();
 
-    const enterprisetab = screen.queryByTestId('tab_hidden_for_enterprise');
-    expect(enterprisetab).toBeNull();
+    const enterprisetab = screen
+        .getAllByTestId('tab')
+        .find((el) => el.getAttribute('data-test-tab-id') === 'tab_hidden_for_enterprise');
+    expect(enterprisetab).toBeInTheDocument();
 
     const cloudText = screen.queryByText('Tab hidden for cloud');
     expect(cloudText).toBeNull();
@@ -70,8 +72,10 @@ it('should not display fields in configuration form', async () => {
 
     await userEvent.click(addBtn);
 
-    const enterpriseInput = screen.queryByTestId('input_two_text_hidden_for_enterprise');
-    expect(enterpriseInput).toBeNull();
+    const enterprisetab = screen
+        .getAllByTestId('control-group')
+        .find((el) => el.getAttribute('data-name') === 'input_two_text_hidden_for_enterprise');
+    expect(enterprisetab).toBeInTheDocument();
 
     const cloudInput = screen.queryByTestId('input_two_text_hidden_for_cloud');
     expect(cloudInput).toBeNull();
