@@ -29,19 +29,22 @@ from splunk_add_on_ucc_framework import app_manifest as am
     ],
 )
 class TestImportFromAob:
-    test_root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    test_root_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "..")
+    )
     aob_addon_path = os.path.join(test_root_path, "Splunk_TA_Dynatrace")
     ucc_addon_path = os.path.join(test_root_path, "Splunk_TA_Dynatrace_ucc")
     ucc_app_manifest_path = os.path.join(ucc_addon_path, "package", "app.manifest")
-    test_files = os.path.abspath(os.path.join(test_root_path, "testdata"))
+    test_files = os.path.abspath(
+        os.path.join(test_root_path, "tests", "unit", "testdata")
+    )
 
     @classmethod
     def setup_class(cls):
         aob_addon_path = os.path.abspath(
             os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
+                cls.test_root_path,
+                "tests",
                 "smoke",
                 "dynatrace-add-on-for-splunk_214_modified.tar.gz",
             )
