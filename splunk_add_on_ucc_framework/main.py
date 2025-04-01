@@ -243,7 +243,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.command == "build":
         if args.ui_source_map:
             logger.warning(
-                "The '--ui-source-map' parameter is deprecated and will be removed in a future release."
+                "The '--ui-source-map' parameter is deprecated and will be removed in a future release. "
                 "Please avoid using this parameter."
             )
 
