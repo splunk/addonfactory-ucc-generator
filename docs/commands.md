@@ -37,11 +37,11 @@ It takes the following parameters:
 
     Example:  `--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"`
 
-* `--ui-source-map` - [**Deprecated**] [optional] if present generates front-end source maps (.js.map files), that helps with code debugging. </br> **NOTE:** The '--ui-source-map' parameter is deprecated and will be removed in a future.
+* `--ui-source-map` - [**Deprecated**] [optional] if present generates front-end source maps (.js.map files), that helps with code debugging. </br> **NOTE:** The '--ui-source-map' parameter is deprecated and is scheduled for removal on 3rd June 2025. It is recommended to discontinue using this parameter.
 
 !!! warning "Deprecation --ui-source-map"
 
-    The `--ui-source-map` parameter is deprecated and will be removed in a future. Please avoid using this parameter.
+    The `--ui-source-map` parameter is deprecated and is scheduled for removal on 03/06/2025. It is recommended to discontinue using this parameter.
 
 
 ### Verbose mode
