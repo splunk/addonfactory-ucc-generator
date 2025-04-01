@@ -59,16 +59,15 @@ def test_generate_conf(
 
 
 def test_generate_conf_no_gc_schema(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
 ):
     restmap_conf = RestMapConf(
-        global_config_all_json,
+        global_config_for_conf_only_TA,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    restmap_conf._gc_schema = None
 
     file_paths = restmap_conf.generate_conf()
     assert file_paths is None
