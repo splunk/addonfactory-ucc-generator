@@ -41,7 +41,7 @@ It takes the following parameters:
 
 !!! warning "Deprecation --ui-source-map"
 
-    The '--ui-source-map' parameter is deprecated and will be removed in a future. Please avoid using this parameter.
+    The `--ui-source-map` parameter is deprecated and will be removed in a future. Please avoid using this parameter.
 
 
 ### Verbose mode
