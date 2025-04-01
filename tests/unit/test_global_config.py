@@ -20,12 +20,11 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib
 )
 def test_global_config_parse(filename):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     assert global_config.namespace == "splunk_ta_uccexample"
     assert global_config.product == "Splunk_TA_UCCExample"
     assert global_config.display_name == "Splunk UCC test Add-on"
-    assert global_config.original_path == global_config_path
     assert global_config.schema_version == "0.0.3"
     assert global_config.version == "1.0.0"
     assert global_config.has_pages() is True
@@ -34,6 +33,57 @@ def test_global_config_parse(filename):
     assert global_config.has_alerts() is True
     assert global_config.has_oauth() is True
     assert global_config.has_dashboard() is True
+
+
+def test_global_config_from_app_manifest(app_manifest_correct):
+    expected_global_config = global_config_lib.GlobalConfig(
+        {
+            "meta": {
+                "name": "Splunk_TA_UCCExample",
+                "restRoot": "Splunk_TA_UCCExample",
+                "displayName": "Splunk Add-on for UCC Example",
+                "version": "7.0.1",
+            }
+        },
+        False,
+    )
+
+    global_config = global_config_lib.GlobalConfig.from_app_manifest(
+        app_manifest_correct
+    )
+
+    assert expected_global_config == global_config
+
+
+def test_global_config_equal():
+    global_config_1 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+    global_config_2 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+
+    assert global_config_1 == global_config_2
+
+
+def test_global_config_when_no_equal():
+    global_config_1 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+    global_config_2 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config_only_logging.json")
+    )
+
+    assert global_config_1 != global_config_2
+
+
+def test_global_config_equal_when_wrong_object_type():
+    global_config = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+
+    with pytest.raises(NotImplementedError):
+        _ = global_config == ""
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dump_json_config")
@@ -102,7 +152,7 @@ def test_global_config_update_addon_version(global_config_only_configuration):
 def test_global_config_expand(tmp_path):
     global_config_path = helpers.get_testdata_file_path("valid_config_expand.json")
 
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     assert {"type": "loggingTab"} in global_config.configuration
     assert count_tabs(global_config, name="logging") == 0
@@ -130,7 +180,7 @@ def test_global_config_cleanup_unwanted_params(global_config_only_logging, tmp_p
     with open(new_path, "w") as fp:
         json.dump(content, fp)
 
-    global_config = global_config_lib.GlobalConfig(new_path)
+    global_config = global_config_lib.GlobalConfig.from_file(new_path)
 
     assert global_config.content["meta"].get("_uccVersion") == "1.0.0"
 
@@ -141,7 +191,7 @@ def test_global_config_cleanup_unwanted_params(global_config_only_logging, tmp_p
 
 def test_global_config_add_ucc_version(global_config_only_logging, tmp_path):
     global_config_path = helpers.get_testdata_file_path("valid_config.json")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     assert "_uccVersion" not in global_config.content["meta"]
     global_config.add_ucc_version("1.0.0")

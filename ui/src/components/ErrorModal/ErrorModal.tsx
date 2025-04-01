@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ComponentProps, useState } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import Message from '@splunk/react-ui/Message';
 import styled from 'styled-components';
@@ -13,6 +13,7 @@ const ModalWrapper = styled(Modal)`
 interface ErrorModalProps {
     message: string;
     open: boolean;
+    returnFocus: ComponentProps<typeof Modal>['returnFocus'];
 }
 
 function ErrorModal(props: ErrorModalProps) {
@@ -23,7 +24,11 @@ function ErrorModal(props: ErrorModalProps) {
     };
 
     return (
-        <ModalWrapper open={open}>
+        <ModalWrapper
+            returnFocus={props.returnFocus}
+            open={open}
+            onRequestClose={handleRequestClose}
+        >
             <Modal.Header onRequestClose={handleRequestClose} title={getFormattedMessage(104)} />
             <Modal.Body>
                 <Message appearance="fill" type="error">

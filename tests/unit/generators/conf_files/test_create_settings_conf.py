@@ -9,7 +9,7 @@ TA_NAME = "test_addon"
 
 @fixture
 def global_config():
-    gc = GlobalConfig(get_testdata_file_path("valid_config.json"))
+    gc = GlobalConfig.from_file(get_testdata_file_path("valid_config.json"))
     gc._content["meta"]["restRoot"] = TA_NAME
     return gc
 
@@ -43,36 +43,6 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
     )
     assert settings_conf.settings_stanzas == [("setting1", ["field1 = "])]
     assert settings_conf.default_content == "default_values"
-
-
-def test_set_attribute_gc_only(global_config, input_dir, output_dir, ucc_dir, ta_name):
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    settings_conf._global_config = MagicMock()
-    settings_conf._gc_schema = None
-
-    settings_conf._set_attributes()
-    assert settings_conf.conf_file == f"{ta_name}_settings.conf"
-    assert settings_conf.conf_spec_file == f"{ta_name}_settings.conf.spec"
-    assert settings_conf.settings_stanzas == []
-    assert settings_conf.default_content == ""
-
-
-def test_set_attribute_gc_schema_only(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    settings_conf._gc_schema = MagicMock()
-    settings_conf._global_config = None
-
-    settings_conf._set_attributes()
-    assert settings_conf.conf_file == f"{ta_name}_settings.conf"
-    assert settings_conf.conf_spec_file == f"{ta_name}_settings.conf.spec"
-    assert settings_conf.settings_stanzas == []
-    assert settings_conf.default_content == ""
 
 
 def test_set_attribute_for_conf_only_TA(
