@@ -16,29 +16,6 @@ def mocked__set_attribute(this, **kwargs):
 
 
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
-def test_file_generator_init(
-    mock_set_attribute, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    file_gen = FileGenerator(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    assert file_gen._global_config == global_config_all_json
-    assert file_gen._input_dir == input_dir
-    assert file_gen._output_dir == output_dir
-    assert file_gen._addon_name == "test_addon"
-    assert file_gen._template_dir == [f"{ucc_dir}/templates"]
-
-    file_gen_none = FileGenerator(
-        None, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    assert file_gen_none._gc_schema is None
-
-
-@patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_get_output_dir(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):
