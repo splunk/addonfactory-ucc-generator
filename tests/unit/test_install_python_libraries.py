@@ -323,6 +323,16 @@ def test_install_python_libraries_invalid_os_libraries(
         )
 
 
+@mock.patch(
+    "subprocess.run", autospec=True, side_effect=OSError("test oserror message")
+)
+def test_is_pip_lib_installed_oserror(sub_process_mock, caplog):
+    expected_msg = "Command execution failed with error message: test oserror message"
+    with pytest.raises(CouldNotInstallRequirements):
+        _pip_is_lib_installed("i", "t", "l")
+    assert expected_msg in caplog.text
+
+
 @mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
