@@ -48,24 +48,17 @@ def mocked__set_attribute(this, **kwargs):
     this._html_home = "_html_home"
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml._set_attributes",
-    return_value=MagicMock(),
-)
 def test_alert_html_generate_html_no_global_config(
-    mock_set_attributes,
+    global_config_for_conf_only_TA,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
-    mocked_gc = MagicMock()
-    mocked_gc.return_value = None
-
     alert_html = AlertActionsHtml(
-        global_config=mocked_gc(),
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )

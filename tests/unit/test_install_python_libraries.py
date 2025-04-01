@@ -184,8 +184,8 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
 
     with pytest.raises(SplunktaucclibNotFound) as exc:
         install_python_libraries(
-            str(tmp_path),
-            str(tmp_ucc_lib_target),
+            source_path=str(tmp_path),
+            ucc_lib_target=str(tmp_ucc_lib_target),
             python_binary_name="python3",
             includes_ui=True,
         )
@@ -293,7 +293,7 @@ def test_install_python_libraries_invalid_os_libraries(
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_invalid_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
 
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
@@ -324,7 +324,7 @@ def test_install_libraries_valid_os_libraries(
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
     mock_subprocess_run.side_effect = [
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
@@ -419,7 +419,7 @@ def test_install_libraries_version_mismatch(
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
 
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     ucc_lib_target = str(tmp_ucc_lib_target)

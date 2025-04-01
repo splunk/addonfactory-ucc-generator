@@ -14,24 +14,6 @@ from tests.unit.helpers import get_testdata_file_path
 UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
-def test_set_attributes_no_global_config(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when _global_config is None."""
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf._global_config = None
-
-    inputs_conf._set_attributes()
-
-    assert inputs_conf.input_names == []
-
-
 def test_set_attributes_no_inputs_in_global_config(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):
@@ -322,7 +304,7 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     config.write_text(json.dumps(config_content))
 
     inputs_conf = InputsConf(
-        GlobalConfig(str(config)),
+        GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
         ucc_dir=UCC_DIR,
