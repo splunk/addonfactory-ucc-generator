@@ -29,7 +29,7 @@ It takes the following parameters:
 * `--pip-version` - [optional] pip version that is used to install python libraries. The default is `latest`.
 * `--pip-legacy-resolver` - [optional] Use old pip dependency resolver by adding flag '--use-deprecated=legacy-resolver'
     to pip install command. The default is`False`.
-    >**NOTE:** This flag is deprecated and will be removed from pip in the future.
+    </br> **NOTE:** This flag is **deprecated** and will be removed from pip in the future.
     Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version `23.2`. Use `23.2.1` instead.
 * `--pip-custom-flag` - [optional] Additional flag(s) that will be added to the `pip install` command.
     By default, all the following flags are added to the `pip install` command: `--no-compile`, `--prefer-binary` and `--ignore-installed`.
@@ -37,7 +37,12 @@ It takes the following parameters:
 
     Example:  `--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"`
 
-* `--ui-source-map` - [optional] if present generates front-end source maps (.js.map files), that helps with code debugging.
+* `--ui-source-map` - [**Deprecated**] [optional] if present generates front-end source maps (.js.map files), that helps with code debugging. </br> **NOTE:** The '--ui-source-map' parameter is deprecated and will be removed in a future.
+
+!!! warning "Deprecation --ui-source-map"
+
+    The '--ui-source-map' parameter is deprecated and will be removed in a future.
+
 
 ### Verbose mode
 
