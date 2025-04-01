@@ -1,5 +1,4 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-import * as custom from '../vite.config.ts';
 import * as path from 'path';
 
 const config: StorybookConfig = {
@@ -18,12 +17,14 @@ const config: StorybookConfig = {
         '@storybook/addon-essentials',
         '@storybook/addon-interactions',
         '@storybook/addon-a11y',
-        '@storybook/addon-webpack5-compiler-babel',
         '@kickstartds/storybook-addon-jsonschema',
     ],
     framework: {
         name: '@storybook/react-vite',
         options: {},
+    },
+    core: {
+        builder: '@storybook/builder-vite', // 👈 The builder enabled here.
     },
     staticDirs: ['../src/public', './assets'],
     viteFinal: async (config) => {
@@ -41,6 +42,9 @@ const config: StorybookConfig = {
                     'msw/node': require.resolve(
                         path.resolve(__dirname, '../node_modules/msw/lib/node/index.mjs')
                     ),
+                },
+                optimizeDeps: {
+                    include: ['storybook-dark-mode'],
                 },
             },
         });
