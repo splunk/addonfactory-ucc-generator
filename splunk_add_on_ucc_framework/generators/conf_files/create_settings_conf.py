@@ -28,16 +28,12 @@ class SettingsConf(ConfGenerator):
         self.settings_stanzas: List[Tuple[str, List[str]]] = []
         self.default_content: str = ""
 
-        if (
-            self._global_config
-            and self._gc_schema
-            and self._global_config.has_configuration()
-        ):
+        if self._global_config.has_configuration():
             self.conf_file = self._global_config.namespace.lower() + "_settings.conf"
             self.conf_spec_file = f"{self.conf_file}.spec"
             for setting in self._global_config.settings:
                 content = self._gc_schema._get_oauth_enitities(setting["entity"])
-                fields, special_fields = self._gc_schema._parse_fields(content)
+                fields, _ = self._gc_schema._parse_fields(content)
                 self.settings_stanzas.append(
                     (setting["name"], [f"{f._name} = " for f in fields])
                 )

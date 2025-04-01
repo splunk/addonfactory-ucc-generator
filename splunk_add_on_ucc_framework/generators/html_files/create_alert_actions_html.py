@@ -30,7 +30,7 @@ class AlertActionsHtml(HTMLGenerator):
     )
 
     def _set_attributes(self, **kwargs: Dict[str, Any]) -> None:
-        if self._global_config and self._global_config.has_alerts():
+        if self._global_config.has_alerts():
             self._html_home = "alert_html_skeleton.template"
             envs = normalize.normalize(
                 self._global_config.alerts,
@@ -40,9 +40,7 @@ class AlertActionsHtml(HTMLGenerator):
             self._alert_settings = schema_content["modular_alerts"]
 
     def generate_html(self) -> Union[Dict[str, str], None]:
-        if (not self._global_config) or (
-            self._global_config and not self._global_config.has_alerts()
-        ):
+        if not self._global_config.has_alerts():
             return None
 
         alert_details: Dict[str, str] = {}
