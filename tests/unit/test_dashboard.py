@@ -178,7 +178,7 @@ def test_generate_dashboard_with_custom_components_invalid_xml_file(
     with open(custom_dash_path, "w") as file:
         file.write("")
 
-    expected_msg = f"{custom_dash_path} it's not a valid json file"
+    expected_msg = f"{custom_dash_path} it's not a valid json file. Error message: Expecting value: line 1 column 1"
     with pytest.raises(SystemExit):
         with mock.patch("os.path.abspath") as path_abs:
             path_abs.return_value = custom_dash_path
