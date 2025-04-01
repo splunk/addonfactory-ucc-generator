@@ -45,6 +45,8 @@ from splunk_add_on_ucc_framework.commands.rest_builder import (
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
+    WrongSplunktaucclibVersion,
+    WrongSolnlibVersion,
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
@@ -271,9 +273,9 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         ).stdout.decode("utf-8")
 
         return python_binary_version.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except (subprocess.CalledProcessError, FileNotFoundError) as exc:
         raise exceptions.CouldNotIdentifyPythonVersionException(
-            f"Failed to identify python version for binary {python_binary_name}"
+            f"Failed to identify python version for binary {python_binary_name}. Error message: {exc}"
         )
 
 
@@ -507,9 +509,13 @@ def generate(
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
             pip_custom_flag=pip_custom_flag,
-            includes_oauth=global_config.has_oauth(),
+            includes_oauth=True,
         )
-    except SplunktaucclibNotFound as e:
+    except (
+        SplunktaucclibNotFound,
+        WrongSplunktaucclibVersion,
+        WrongSolnlibVersion,
+    ) as e:
         logger.error(str(e))
         sys.exit(1)
     logger.info(f"Installed add-on requirements into {ucc_lib_target} from {source}")

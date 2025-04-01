@@ -65,13 +65,17 @@ def test_install_libraries(mock_subprocess_run):
 
 
 @mock.patch("subprocess.run", autospec=True)
-def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_run):
-    mock_subprocess_run.side_effect = OSError
+def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_run, caplog):
+    mock_subprocess_run.side_effect = OSError("Test error message")
+    expected_output1 = "Command execution failed with error message: Test error message"
+    expected_output2 = "Execution (pip upgrade) failed due to Test error message"
 
     with pytest.raises(SystemExit):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )
+    assert expected_output1 in caplog.text
+    assert expected_output2 in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -170,7 +174,9 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_no_ui(
     )
 
 
-def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path):
+def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(
+    tmp_path, caplog
+):
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -182,6 +188,8 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
         f"Please add it there and make sure it is at least version 6.6.0."
     )
 
+    expected_caplog = "Command result:  WARNING: Package(s) not found: splunktaucclib"
+
     with pytest.raises(SplunktaucclibNotFound) as exc:
         install_python_libraries(
             source_path=str(tmp_path),
@@ -190,9 +198,12 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
             includes_ui=True,
         )
     assert expected_msg in str(exc.value)
+    assert expected_caplog in caplog.text
 
 
-def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_path):
+def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(
+    tmp_path, caplog
+):
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -200,6 +211,7 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
     tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
 
     expected_msg = "splunktaucclib found but has the wrong version. Please make sure it is at least version 6.6.0."
+    expected_caplog = "Command result: Name: splunktaucclib\nVersion: 6.3.0"
 
     with pytest.raises(WrongSplunktaucclibVersion) as exc:
         install_python_libraries(
@@ -209,6 +221,7 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
             includes_ui=True,
         )
     assert expected_msg in str(exc.value)
+    assert expected_caplog in caplog.text
 
 
 def test_install_libraries_when_wrong_solnlib_is_present_but_has_oauth(tmp_path):
