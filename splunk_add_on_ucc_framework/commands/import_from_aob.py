@@ -20,7 +20,7 @@ import logging
 import sys
 import json
 
-from typing import Dict, Any
+from typing import Dict, Any, FrozenSet
 from splunk_add_on_ucc_framework import app_manifest as ap
 
 logger = logging.getLogger("ucc_gen")
@@ -43,10 +43,12 @@ def import_from_aob(addon_name: str) -> None:
     addon_ucc_path = addon_name_directory + "_ucc"
     a_path = os.path.join(*[os.getcwd(), addon_ucc_path, "package", "app.manifest"])
     with open(a_path, encoding="utf-8") as f:
-        data = json.loads(f.read())
+        data = json.load(f)
 
-    add_app_manifest_key(data, "supportedDeployments", "amsd")
-    add_app_manifest_key(data, "targetWorkloads", "amtw")
+    add_app_manifest_key(
+        data, "supportedDeployments", ap.APP_MANIFEST_SUPPORTED_DEPLOYMENTS
+    )
+    add_app_manifest_key(data, "targetWorkloads", ap.APP_MANIFEST_TARGET_WORKLOADS)
     check_app_manifest_schema_version(data)
 
     with open(a_path, "w", encoding="utf-8") as f:
@@ -54,14 +56,8 @@ def import_from_aob(addon_name: str) -> None:
 
 
 def add_app_manifest_key(
-    app_manifest_data: Dict[Any, Any], key: str, mode: str
+    app_manifest_data: Dict[Any, Any], key: str, value: FrozenSet[str]
 ) -> None:
-    value = (
-        ap.APP_MANIFEST_SUPPORTED_DEPLOYMENTS
-        if mode == "amsd"
-        else ap.APP_MANIFEST_TARGET_WORKLOADS
-    )
-
     if key not in app_manifest_data:
         app_manifest_data.update({key: value})
     elif app_manifest_data[key] is None:

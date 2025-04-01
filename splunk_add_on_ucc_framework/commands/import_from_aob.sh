@@ -295,7 +295,7 @@ rm ./package/default/web.conf
 rm ./package/default/data/ui/views/configuration.xml
 rm ./package/default/data/ui/views/inputs.xml
 rm ./package/default/inputs.conf
-#rm ./package/app.manifest.aob
+rm ./package/app.manifest.aob
 
 rm ./package/splunkbase.manifest
 
