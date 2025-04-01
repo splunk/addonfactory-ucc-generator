@@ -32,17 +32,16 @@ class AppConf(ConfGenerator):
         self.id = self._addon_name
         self.supported_themes = ""
 
-        if self._global_config and self._gc_schema:
-            self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
-            self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
-            self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
-            if self._global_config.meta.get("checkForUpdates") is False:
-                self.check_for_updates = "false"
-            if self._global_config.meta.get("supportedThemes") is not None:
-                self.supported_themes = ", ".join(
-                    self._global_config.meta["supportedThemes"]
-                )
+        if self._global_config.meta.get("checkForUpdates") is False:
+            self.check_for_updates = "false"
+        if self._global_config.meta.get("supportedThemes") is not None:
+            self.supported_themes = ", ".join(
+                self._global_config.meta["supportedThemes"]
+            )
 
         self.addon_version = kwargs["addon_version"]
         self.is_visible = str(kwargs["has_ui"]).lower()
