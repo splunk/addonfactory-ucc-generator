@@ -41,7 +41,7 @@ class DefaultXml(XMLGenerator):
                 "Skipping generating data/ui/nav/default.xml because file already exists."
             )
         else:
-            if self._global_config and self._global_config.has_pages():
+            if self._global_config.has_pages():
                 self.default_xml_content = data_ui_generator.generate_nav_default_xml(
                     include_inputs=self._global_config.has_inputs(),
                     include_dashboard=self._global_config.has_dashboard(),
@@ -50,7 +50,7 @@ class DefaultXml(XMLGenerator):
                 )
 
     def generate_xml(self) -> Union[Dict[str, str], None]:
-        if self._global_config and not self._global_config.has_pages():
+        if not self._global_config.has_pages():
             return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "nav", "default.xml"]

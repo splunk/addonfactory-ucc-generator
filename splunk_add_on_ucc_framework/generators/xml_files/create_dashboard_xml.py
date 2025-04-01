@@ -25,13 +25,13 @@ class DashboardXml(XMLGenerator):
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        if self._global_config and self._global_config.has_dashboard():
+        if self._global_config.has_dashboard():
             self.dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(
                 self._addon_name
             )
 
     def generate_xml(self) -> Union[Dict[str, str], None]:
-        if self._global_config and not self._global_config.has_dashboard():
+        if not self._global_config.has_dashboard():
             return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "dashboard.xml"]

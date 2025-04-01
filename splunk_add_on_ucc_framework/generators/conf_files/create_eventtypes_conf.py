@@ -28,13 +28,12 @@ class EventtypesConf(ConfGenerator):
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "eventtypes.conf"
         self.alert_settings: Dict[str, List[Dict[str, Any]]] = {}
-        if self._global_config:
-            envs = normalize.normalize(
-                self._global_config.alerts,
-                self._global_config.namespace,
-            )
-            schema_content = envs["schema.content"]
-            self.alert_settings = schema_content["modular_alerts"]
+        envs = normalize.normalize(
+            self._global_config.alerts,
+            self._global_config.namespace,
+        )
+        schema_content = envs["schema.content"]
+        self.alert_settings = schema_content["modular_alerts"]
 
     def generate_conf(self) -> Union[Dict[str, str], None]:
         if not self.alert_settings:

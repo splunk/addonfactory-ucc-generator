@@ -25,13 +25,13 @@ class InputsXml(XMLGenerator):
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        if self._global_config and self._global_config.has_inputs():
+        if self._global_config.has_inputs():
             self.inputs_xml_content = data_ui_generator.generate_views_inputs_xml(
                 self._addon_name,
             )
 
     def generate_xml(self) -> Union[Dict[str, str], None]:
-        if self._global_config and not self._global_config.has_inputs():
+        if not self._global_config.has_inputs():
             return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "inputs.xml"]
