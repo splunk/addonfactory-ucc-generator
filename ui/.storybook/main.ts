@@ -46,6 +46,7 @@ const config: StorybookConfig = {
                 optimizeDeps: {
                     include: ['storybook-dark-mode'],
                 },
+                viteConfigPath: '../vite.config.ts',
             },
         });
     },
