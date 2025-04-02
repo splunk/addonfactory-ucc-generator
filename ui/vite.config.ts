@@ -65,6 +65,7 @@ const reactHmrWorkaround = {
 const splunkPathRewriter = {
     name: 'splunk-path-rewriter',
     configureServer(server) {
+        // eslint-disable-next-line consistent-return
         server.middlewares.use((req, _res, next) => {
             if (!req.url) {
                 return next();
@@ -148,6 +149,7 @@ export default defineConfig(({ mode }) => {
                                     proxyTargetUrl,
                                     devServerUrl
                                 );
+                                // eslint-disable-next-line no-param-reassign
                                 proxyRes.headers.location = newLocation;
                             }
                         });
