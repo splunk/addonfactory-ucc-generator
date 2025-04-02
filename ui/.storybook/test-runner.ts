@@ -15,6 +15,15 @@ const config: TestRunnerConfig = {
         const width = parameters.snapshots?.width || 1000;
 
         await page.setViewportSize({ width, height });
+
+        // can't use waitForPageReady because networkidle never fires due to HMR for locally running Storybook
+        if (process.env.CI) {
+            await waitForPageReady(page);
+        } else {
+            await page.waitForLoadState('domcontentloaded');
+            await page.waitForLoadState('load');
+        }
+
     },
     async postVisit(page, context) {
         const storyContext = await getStoryContext(page, context);
