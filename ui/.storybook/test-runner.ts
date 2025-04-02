@@ -1,6 +1,24 @@
-import { getStoryContext, TestRunnerConfig, waitForPageReady } from '@storybook/test-runner';
+import {
+    getStoryContext,
+    TestContext,
+    TestRunnerConfig,
+    waitForPageReady,
+} from '@storybook/test-runner';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
+import { Page } from 'playwright';
 
+async function waitForStoryContext(page: Page, story: TestContext, attempt = 1, maxAttempts = 20) {
+    try {
+        return await getStoryContext(page, story);
+    } catch (e) {
+        if (attempt > maxAttempts) {
+            throw e;
+        }
+        // ¯\_(ツ)_/¯ - If this is not the first attempt: add a timeout.
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        return waitForStoryContext(page, story, attempt + 1);
+    }
+}
 
 const config: TestRunnerConfig = {
     setup() {
@@ -8,7 +26,7 @@ const config: TestRunnerConfig = {
         expect.extend({ toMatchImageSnapshot });
     },
     async preVisit(page, context) {
-        const storyContext = await getStoryContext(page, context);
+        const storyContext = await waitForStoryContext(page, context);
         const parameters = storyContext.parameters;
 
         const height = parameters.snapshots?.height || 600;
@@ -23,7 +41,6 @@ const config: TestRunnerConfig = {
             await page.waitForLoadState('domcontentloaded');
             await page.waitForLoadState('load');
         }
-
     },
     async postVisit(page, context) {
         const storyContext = await getStoryContext(page, context);
