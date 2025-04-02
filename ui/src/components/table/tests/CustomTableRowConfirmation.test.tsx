@@ -1,5 +1,5 @@
 import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react';
-import { beforeEach, expect, it, vi } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
