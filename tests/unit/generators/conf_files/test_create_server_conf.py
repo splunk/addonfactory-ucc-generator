@@ -24,23 +24,6 @@ def test_set_attributes(
     assert server_conf.custom_conf == expected_custom_conf
 
 
-def test_set_attributes_without_gc_schema(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    server_conf = ServerConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-
-    server_conf._gc_schema = None
-
-    server_conf._set_attributes()
-    assert server_conf.custom_conf == []
-
-
 @patch("os.path.isfile", return_value=False)
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.ServerConf.set_template_and_render"

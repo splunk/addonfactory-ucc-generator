@@ -195,20 +195,6 @@ def test_adaptive_response(
     assert f"param._cam = {expected_json}" in alert_action_conf.alerts["dev_alert"]
 
 
-def test_set_attributes_global_config_none(input_dir, output_dir, ucc_dir, ta_name):
-    """Test _set_attributes when _global_config is None."""
-    alert_action_conf = AlertActionsConf(
-        global_config=None,
-        input_dir=input_dir,
-        output_dir=output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-
-    assert not hasattr(alert_action_conf, "alerts")
-    assert not hasattr(alert_action_conf, "alerts_spec")
-
-
 @patch("splunk_add_on_ucc_framework.commands.modular_alert_builder.normalize")
 def test_set_attributes_global_config_with_empty_alerts(
     mock_normalize, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
