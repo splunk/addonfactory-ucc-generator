@@ -1,11 +1,11 @@
 {% from "helper.html" import expand_ctrl_props with context %}
 {% from "helper.html" import show_help with context %}
-<div class="control-group">
+<splunk-control-group>
 	<label class="control-label">{{ param.label }}</label>
 		<div class="controls">
 			{% for option, value in param.possible_values.items() %}
 				<label class="radio" for="{{ mod_alert.short_name }}_{{ param.name }}_{{ value }}">
-					<input type="radio"
+					<splunk-radio-input
 					name="action.{{ mod_alert.short_name }}.param.{{ param.name }}" id="{{ mod_alert.short_name }}_{{ param.name }}_{{ value }}" value="{{ value }}"
 				    {{ expand_ctrl_props(param) }} />
 					{{ option }}
@@ -13,4 +13,4 @@
 			{% endfor %}
 			{{ show_help(param) }}
 		</div>
-</div>
+</splunk-control-group>

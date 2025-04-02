@@ -1,11 +1,12 @@
 {% from "helper.html" import expand_ctrl_props with context %}
 {% from "helper.html" import show_help with context %}
-<div class="control-group">
+<splunk-control-group>
     <div class="controls">
 		<label class="checkbox" for="{{ mod_alert.short_name }}_{{ param.name }}">
-			<input type="checkbox" name="action.{{ mod_alert.short_name }}.param.{{ param.name }}" id="{{ mod_alert.short_name }}_{{ param.name }}" {{ expand_ctrl_props(param) }} />
+			<splunk-text-input type="checkbox" name="action.{{ mod_alert.short_name }}.param.{{ param.name }}" id="{{ mod_alert.short_name }}_{{ param.name }}" {{ expand_ctrl_props(param) }} />
 			{{ param.label }}
 		</label>
 		{{ show_help(param) }}
     </div>
-</div>
+</splunk-control-group>
+

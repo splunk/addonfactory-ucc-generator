@@ -1,10 +1,10 @@
 {% from "helper.html" import show_help with context %}
-<div class="control-group">
+<splunk-control-group>
     <label class="control-label" for="{{ mod_alert.short_name }}_{{ param.name }}">{{ param.label }} {{ '<span class="required">*</span>' if param.get("required") and param.required else '' }} </label>
     <div class="controls">
         {% block control %}
         {% endblock %}
         {{ show_help(param) }}
     </div>
-</div>
+</splunk-control-group>
 
