@@ -1,5 +1,20 @@
 # Changelog
 
+# [5.61.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.60.0...v5.61.0) (2025-04-01)
+
+
+### Bug Fixes
+
+* checkboxgroup select all button selects disabled fields ([#1636](https://github.com/splunk/addonfactory-ucc-generator/issues/1636)) ([3434a37](https://github.com/splunk/addonfactory-ucc-generator/commit/3434a378262f2608271d54f17f4d078d8e8fd929))
+* **import-from-aob:** fixed incorrect merging and added app.manifest validations ([#1670](https://github.com/splunk/addonfactory-ucc-generator/issues/1670)) ([2dba52b](https://github.com/splunk/addonfactory-ucc-generator/commit/2dba52b256be708c8655267cc4cee8b446603b39))
+
+
+### Features
+
+* **build:** --ui-source-map deprecation notice ([#1674](https://github.com/splunk/addonfactory-ucc-generator/issues/1674)) ([13efe91](https://github.com/splunk/addonfactory-ucc-generator/commit/13efe9126080a35d1e15e6be8aca4ef2eb22419b))
+* create globalConfig from app.manifest ([#1669](https://github.com/splunk/addonfactory-ucc-generator/issues/1669)) ([07a37c4](https://github.com/splunk/addonfactory-ucc-generator/commit/07a37c4405c9bc8aa45221bd065a44559f32cb22))
+* introduce GlobalConfig.from_app_manifest ([#1661](https://github.com/splunk/addonfactory-ucc-generator/issues/1661)) ([d5edd88](https://github.com/splunk/addonfactory-ucc-generator/commit/d5edd8803fd51e4ffbc6eba575e5116207228406))
+
 # [5.60.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.59.0...v5.60.0) (2025-03-18)
 
 
