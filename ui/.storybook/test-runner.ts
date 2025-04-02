@@ -1,9 +1,10 @@
-import { expect } from "vitest";
 import { getStoryContext, TestRunnerConfig, waitForPageReady } from '@storybook/test-runner';
 import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
+
 const config: TestRunnerConfig = {
     setup() {
+        // @ts-ignore
         expect.extend({ toMatchImageSnapshot });
     },
     async preVisit(page, context) {
@@ -49,6 +50,7 @@ const config: TestRunnerConfig = {
         await page.evaluate(() => document.fonts.ready);
 
         const image = await page.screenshot({ animations: 'disabled', scale: 'css' });
+        // @ts-ignore
         expect(image).toMatchImageSnapshot({
             customSnapshotsDir,
             customDiffDir,
