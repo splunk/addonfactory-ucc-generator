@@ -77,8 +77,10 @@ it('should not display fields in configuration form', async () => {
         .find((el) => el.getAttribute('data-name') === 'input_two_text_hidden_for_enterprise');
     expect(enterprisetab).toBeInTheDocument();
 
-    const cloudInput = screen.queryByTestId('input_two_text_hidden_for_cloud');
-    expect(cloudInput).toBeNull();
+    const cloudInput = screen
+        .getAllByTestId('control-group')
+        .find((el) => el.getAttribute('data-name') === 'input_two_text_hidden_for_cloud');
+    expect(cloudInput).toBeUndefined();
 
     const cloudText = screen.queryByText('Text input hidden for cloud');
     expect(cloudText).toBeNull();

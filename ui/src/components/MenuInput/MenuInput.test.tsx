@@ -415,7 +415,7 @@ describe('multiple services', () => {
 
                 // Ensure UI updates before assertions
                 await waitFor(() => {
-                    existsTitles.forEach(async (title) => {
+                    existsTitles.forEach((title) => {
                         expect(screen.getByText(title)).toBeInTheDocument();
                     });
                 });
