@@ -27,7 +27,7 @@ export const DASHBOARD_JSON_MOCKS = [
     http.get('/custom/data_ingestion_modal_definition.json', () =>
         HttpResponse.json(MOCK_DS_MODAL_DEFINITION)
     ),
-    http.post('/services/search/jobs', () =>
+    http.post('/services/search/v2/jobs', () =>
         HttpResponse.json(
             {
                 sid: 'sid',
@@ -35,8 +35,8 @@ export const DASHBOARD_JSON_MOCKS = [
             { status: 201 }
         )
     ),
-    http.post('/services/search/jobs/sid/control', () => HttpResponse.json({})),
-    http.get('/services/search/jobs', () => HttpResponse.json(SEARCH_JOB_RESULT)),
+    http.post('/services/search/v2/jobs/sid/control', () => HttpResponse.json({})),
+    http.get('/services/search/v2/jobs', () => HttpResponse.json(SEARCH_JOB_RESULT)),
     http.get('/services/authentication/current-context', () =>
         HttpResponse.json(CURRENT_CONTEXT_RESPONSE)
     ),
