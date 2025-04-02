@@ -207,24 +207,35 @@ describe('multiple services', () => {
         it('should render group items', async () => {
             const userEventSetup = userEvent.setup();
             setup(getGroupedServices());
-            // open dropdown
+
+            // Open dropdown
             await userEventSetup.click(getCreateDropdown());
-            // check sub menu is not rendered
+
+            // Check sub menu is not rendered
             expect(screen.queryByText('test-subservice1-title1')).not.toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).not.toBeInTheDocument();
-            // click on group title
-            await userEventSetup.click(screen.getByText('test-group-title1'));
-            // check sub menu is rendered
-            expect(screen.queryByText('test-subservice1-title1')).toBeInTheDocument();
-            expect(screen.queryByText('test-subservice-subTitle2')).toBeInTheDocument();
-            await waitFor(() => screen.queryByText('test-group-title1'), { timeout: 1000 });
-            expect(screen.queryByText('test-group-title1')).not.toBeInTheDocument();
 
+            // Click on group title
+            await userEventSetup.click(screen.getByText('test-group-title1'));
+
+            // Check sub menu is rendered
+            expect(screen.getByText('test-subservice1-title1')).toBeInTheDocument();
+            expect(screen.getByText('test-subservice-subTitle2')).toBeInTheDocument();
+
+            // Ensure the group title disappears
+            await waitFor(() =>
+                expect(screen.queryByText('test-group-title1')).not.toBeInTheDocument()
+            );
+
+            // Click back button
             await userEventSetup.click(screen.getByRole('menuitem', { name: 'Back' }));
+
             await waitFor(() =>
                 expect(screen.queryByText('test-subservice-subTitle1')).not.toBeInTheDocument()
             );
-            expect(screen.queryByText('test-group-title1')).toBeInTheDocument();
+
+            // Ensure group title reappears
+            expect(screen.getByText('test-group-title1')).toBeInTheDocument();
         });
 
         it('should render group as menu item if no underlying services', async () => {
@@ -277,8 +288,8 @@ describe('multiple services', () => {
             await userEvent.click(getCreateDropdown());
 
             expect(screen.queryByText(unexistingElement.groupTitle)).not.toBeInTheDocument();
-            expect(screen.queryByText(elem1.groupTitle)).toBeInTheDocument();
-            expect(screen.queryByText(elem2.groupTitle)).toBeInTheDocument();
+            expect(screen.getByText(elem1.groupTitle)).toBeInTheDocument();
+            expect(screen.getByText(elem2.groupTitle)).toBeInTheDocument();
         });
 
         it('should call handleRequestOpen callback on click', async () => {
@@ -402,9 +413,11 @@ describe('multiple services', () => {
             }) => {
                 await userEventSetup.click(screen.getByText(groupTitle));
 
-                // is displayed as element
-                existsTitles.forEach((title) => {
-                    expect(screen.queryByText(title)).toBeInTheDocument();
+                // Ensure UI updates before assertions
+                await waitFor(() => {
+                    existsTitles.forEach((title) => {
+                        expect(screen.getByText(title)).toBeInTheDocument();
+                    });
                 });
 
                 // animation needs to finish, during animation elements are still visible

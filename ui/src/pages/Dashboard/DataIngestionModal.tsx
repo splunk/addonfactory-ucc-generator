@@ -125,8 +125,14 @@ export const DataIngestionModal = ({
             />
             <ModalBody>
                 {children}
-                <div id="data_ingestion_modal_dropdown" className="invisible_before_moving">
-                    <P id="data_ingestion_dropdown_label">{title}</P>
+                <div
+                    id="data_ingestion_modal_dropdown"
+                    data-test="data_ingestion_modal_dropdown"
+                    className="invisible_before_moving"
+                >
+                    <P id="data_ingestion_dropdown_label" data-test="data_ingestion_dropdown_label">
+                        {title}
+                    </P>
                     <Dropdown toggle={toggle}>
                         <Menu
                             stopScrollPropagation
@@ -147,6 +153,7 @@ export const DataIngestionModal = ({
                 <FooterButtonGroup>
                     <Button
                         id="open_search_on_visualization"
+                        data-test="open_search_on_visualization"
                         label="View ingested events in search"
                         openInNewContext
                         onClick={() => {
@@ -166,6 +173,7 @@ export const DataIngestionModal = ({
                     />
                     <UCCButton
                         id="done_button_footer"
+                        data-test="done_button_footer"
                         className="footerBtn"
                         onClick={handleRequestClose}
                         label={acceptBtnLabel}
