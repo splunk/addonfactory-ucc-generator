@@ -1,6 +1,4 @@
-{% for stanza in input_stanzas %}
-{{ "[" ~ stanza.keys() | join("") ~ "://<name>]" }}
-    {% for property in stanza.values() -%}
-{{ property | sort() | join("\n") }}
-    {% endfor %}
+{% for name, properties in input_stanzas.items() %}
+{{ "[" ~ name | join("") ~ "://<name>]" }}
+{{ properties | sort() | join("\n") }}
 {% endfor %}
