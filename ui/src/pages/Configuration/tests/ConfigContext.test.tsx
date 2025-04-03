@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-
+import { vi } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../../mocks/server';
 import { mockServerResponseWithContent } from '../../../mocks/server-response';
@@ -11,8 +11,8 @@ import ConfigurationPage from '../ConfigurationPage';
 import { type meta as metaType } from '../../../types/globalConfig/meta';
 import { CONFIG_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM } from './mockConfigs';
 
-jest.mock('@splunk/search-job', () => ({
-    create: () => ({
+vi.mock('@splunk/search-job', () => {
+    const create = () => ({
         getResults: () => ({
             subscribe: (
                 callbackFunction: (params: { results: { instance_type: string }[] }) => void
@@ -21,8 +21,14 @@ jest.mock('@splunk/search-job', () => ({
                 return { unsubscribe: () => {} };
             },
         }),
-    }),
-}));
+    });
+
+    // Return both the named export and default export
+    return {
+        create,
+        default: { create }, // Add this default export
+    };
+});
 
 beforeEach(() => {
     server.use(

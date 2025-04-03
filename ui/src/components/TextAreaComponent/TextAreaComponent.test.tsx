@@ -1,9 +1,10 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import TextAreaComponent from './TextAreaComponent';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 const renderTextAreaComponent = () => {
     render(<TextAreaComponent value="test" handleChange={handleChange} field="fieldId" />);

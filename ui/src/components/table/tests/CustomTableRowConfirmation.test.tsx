@@ -1,4 +1,5 @@
 import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react';
+import { expect, it, vi } from 'vitest';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -20,8 +21,8 @@ const renderTable = () => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
-        handleRequestModalOpen: jest.fn(),
-        handleOpenPageStyleDialog: jest.fn(),
+        handleRequestModalOpen: vi.fn(),
+        handleOpenPageStyleDialog: vi.fn(),
         displayActionBtnAllRows: false,
     } satisfies ITableWrapperProps;
 

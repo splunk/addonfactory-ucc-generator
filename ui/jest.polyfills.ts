@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 // --- START of unnecessary polyfills
 /**
  * @note The block below contains polyfills for Node.js globals
@@ -11,6 +12,6 @@
 
 // the most of the polyfills are applied with jest-fixed-jsdom package
 
-HTMLCanvasElement.prototype.getContext = jest.fn();
+HTMLCanvasElement.prototype.getContext = vi.fn();
 
 // --- END of unnecessary polyfills

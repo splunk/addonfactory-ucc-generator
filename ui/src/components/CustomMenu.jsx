@@ -11,12 +11,14 @@ class CustomMenu extends Component {
             loading: true,
         };
         this.shouldRender = true;
+        this.customComponentContext = props.customComponentContext;
     }
 
     componentDidMount() {
         const unifiedConfigs = getUnifiedConfigs();
         const { services, menu: customMenuField, groupsMenu } = unifiedConfigs.pages.inputs;
         this.setState({ loading: true });
+
         this.loadCustomMenu().then((Control) => {
             const customControl = new Control(unifiedConfigs, this.el, this.setValue);
             if (services && customMenuField && !groupsMenu) {
@@ -40,11 +42,13 @@ class CustomMenu extends Component {
 
     loadCustomMenu = () =>
         new Promise((resolve) => {
+            if (this.customComponentContext?.[this.props.fileName]) {
+                const Control = this.customComponentContext?.[this.props.fileName];
+                resolve(Control);
+            }
             if (this.props.type === 'external') {
                 import(
-                    /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
-                        this.props.fileName
-                    }.js`
+                    /* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`
                 ).then((external) => {
                     const Control = external.default;
                     resolve(Control);
@@ -78,6 +82,7 @@ CustomMenu.propTypes = {
     fileName: PropTypes.string.isRequired,
     type: PropTypes.string,
     handleChange: PropTypes.func,
+    customComponentContext: PropTypes.object,
 };
 
 export default CustomMenu;

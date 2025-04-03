@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
@@ -9,9 +10,17 @@ import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { getBuildDirPath } from '../../../util/script';
+
+// Import the mock outside of the setup function
 import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
 import { invariant } from '../../../util/invariant';
 import { MOCK_CONFIG } from './mocks';
+import { GlobalConfig } from '../../../publicApi';
+
+// Set up the mock before any tests run, doMock is not hoisted to the top of the file
+vi.doMock(`${getBuildDirPath()}/custom/CustomInputRow.js`, () => ({
+    default: mockCustomInputRow,
+}));
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -20,18 +29,59 @@ const updatedInterval = 7788;
 const props = {
     page: 'inputs',
     serviceName: inputName,
-    handleRequestModalOpen: jest.fn(),
-    handleOpenPageStyleDialog: jest.fn(),
+    handleRequestModalOpen: vi.fn(),
+    handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
 const customRowFileName = 'CustomInputRow';
 
 function setup() {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
-        virtual: true,
-    });
-
-    setUnifiedConfig(MOCK_CONFIG);
+    const headers = [
+        {
+            label: 'Name',
+            field: 'name',
+        },
+        {
+            label: 'Interval',
+            field: 'interval',
+        },
+    ];
+    setUnifiedConfig({
+        ...MOCK_CONFIG,
+        pages: {
+            ...MOCK_CONFIG.pages,
+            inputs: {
+                title: inputName,
+                services: [
+                    {
+                        title: inputName,
+                        name: inputName,
+                        entity: [
+                            {
+                                label: 'Name',
+                                field: 'name',
+                                type: 'text',
+                            },
+                            {
+                                label: 'Interval',
+                                field: 'interval',
+                                type: 'text',
+                            },
+                        ],
+                    },
+                ],
+                table: {
+                    actions: ['edit'],
+                    header: headers,
+                    moreInfo: headers,
+                    customRow: {
+                        src: customRowFileName,
+                        type: 'external',
+                    },
+                },
+            },
+        },
+    } satisfies GlobalConfig);
 
     server.use(
         http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_${inputName}`, () =>
@@ -67,8 +117,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
     if (loading) {
         await waitForElementToBeRemoved(loading);
     }
-
-    const allDefinitions = screen.getAllByRole('definition').map((el) => el.textContent);
+    const allDefinitions = (await screen.findAllByRole('definition')).map((el) => el.textContent);
 
     expect(allDefinitions).toContain(`${expectedInterval} sec`);
 }

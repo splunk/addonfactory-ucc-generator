@@ -1,5 +1,4 @@
-import type { StorybookConfig } from '@storybook/react-webpack5';
-import * as custom from '../webpack.config.js';
+import type { StorybookConfig } from '@storybook/react-vite';
 import * as path from 'path';
 
 const config: StorybookConfig = {
@@ -18,21 +17,23 @@ const config: StorybookConfig = {
         '@storybook/addon-essentials',
         '@storybook/addon-interactions',
         '@storybook/addon-a11y',
-        '@storybook/addon-webpack5-compiler-babel',
         '@kickstartds/storybook-addon-jsonschema',
     ],
     framework: {
-        name: '@storybook/react-webpack5',
+        name: '@storybook/react-vite',
         options: {},
     },
+    core: {
+        builder: '@storybook/builder-vite', // 👈 The builder enabled here.
+    },
     staticDirs: ['../src/public', './assets'],
-    webpackFinal: async (config) => {
+    viteFinal: async (config) => {
+        const { mergeConfig } = await import('vite');
+
         const alias = config.resolve?.alias || {};
-        return {
-            ...config,
+        return mergeConfig(config, {
             resolve: {
                 ...config.resolve,
-                ...custom.resolve,
                 alias: {
                     ...alias,
                     'msw/native': require.resolve(
@@ -42,8 +43,12 @@ const config: StorybookConfig = {
                         path.resolve(__dirname, '../node_modules/msw/lib/node/index.mjs')
                     ),
                 },
+                optimizeDeps: {
+                    include: ['storybook-dark-mode'],
+                },
+                viteConfigPath: '../vite.config.ts',
             },
-        };
+        });
     },
     typescript: {
         check: true,

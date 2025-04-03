@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { SplunkThemeProvider } from '@splunk/themes';
+import SplunkThemeProvider from '@splunk/themes/SplunkThemeProvider';
 import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import React, { useCallback, useState } from 'react';
 import { http, HttpResponse } from 'msw';

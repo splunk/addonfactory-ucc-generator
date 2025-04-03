@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import React from 'react';
 
 import { render, screen } from '@testing-library/react';
@@ -5,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 import { InputRowData, InteractAllStatusButtons } from './InteractAllStatusButton';
 
 describe('InteractAllStatusButtons', () => {
-    const handleToggleStatusChange = jest.fn();
+    const handleToggleStatusChange = vi.fn();
 
     let allDataRowsMockUp: InputRowData[];
 
