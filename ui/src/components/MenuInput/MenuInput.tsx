@@ -85,7 +85,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
         setOpenDropDown(true);
     };
 
-    const handleChangeCustomMenu = (val: { service: string; input: string }) => {
+    const handleChangeCustomMenu = (val: { service: string; input?: string }) => {
         const { service, input } = val;
         handleRequestOpen({ serviceName: service, input });
     };
