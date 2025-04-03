@@ -1,11 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
+import userEvent from '@testing-library/user-event';
+
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
 import CustomMenu from '../CustomMenu';
 import mockCustomMenu from './mocks/CustomMenuMock';
 import { getGlobalConfigMockCustomMenu, GroupsMenuType } from './mocks/globalConfigMock';
-import userEvent from '@testing-library/user-event';
 
 const MODULE = 'customMenuFileName';
 
@@ -28,7 +29,7 @@ const setup = (groupsMenu?: GroupsMenuType) => {
         virtual: true,
     });
 
-    render(<CustomMenu fileName={MODULE} type={'external'} handleChange={handleChange} />);
+    render(<CustomMenu fileName={MODULE} type="external" handleChange={handleChange} />);
 };
 
 it('should render loading text correctly (constantly)', () => {

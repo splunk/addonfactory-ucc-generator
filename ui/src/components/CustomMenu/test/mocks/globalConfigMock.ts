@@ -24,7 +24,7 @@ export const getGlobalConfigMockCustomMenu = (
                     src: customMenuFileName,
                     type: 'external',
                 },
-                groupsMenu: groupsMenu
+                groupsMenu,
             },
         },
     } satisfies GlobalConfig;

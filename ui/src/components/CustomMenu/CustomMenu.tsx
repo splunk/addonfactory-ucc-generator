@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
@@ -27,7 +26,6 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
             loading: true,
         };
         this.shouldRender = true;
-        this.el;
     }
 
     componentDidMount() {
