@@ -60,10 +60,10 @@ it('renders correctly', () => {
 
 it('renders disabled', () => {
     renderFeature({ disabled: true });
+
     defaultRadioProps.controlOptions.items.forEach((option) => {
-        const optionWithCorrectText = screen.getByText(option.label);
-        expect(optionWithCorrectText).toBeInTheDocument();
-        expect(optionWithCorrectText.parentElement?.parentElement).toHaveAttribute('disabled');
+        const radioButton = screen.getByRole('radio', { name: option.label });
+        expect(radioButton).toBeDisabled(); // Directly checks the `disabled` attribute
     });
 });
 

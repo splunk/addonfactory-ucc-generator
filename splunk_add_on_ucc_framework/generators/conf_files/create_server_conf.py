@@ -27,10 +27,9 @@ class ServerConf(ConfGenerator):
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "server.conf"
         self.custom_conf = []
-        if self._gc_schema:
-            self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
-            self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
-            self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
+        self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
     def generate_conf(self) -> Union[Dict[str, str], None]:
         if not self.custom_conf:

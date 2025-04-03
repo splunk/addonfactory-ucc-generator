@@ -25,14 +25,14 @@ class RedirectXml(XMLGenerator):
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        if self._global_config and self._global_config.has_oauth():
+        if self._global_config.has_oauth():
             self.redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
                 self._addon_name,
             )
             self.ta_name = self._addon_name.lower()
 
     def generate_xml(self) -> Union[Dict[str, str], None]:
-        if self._global_config and not self._global_config.has_oauth():
+        if not self._global_config.has_oauth():
             return None
         file_name = f"{self.ta_name}_redirect.xml"
         file_path = self.get_file_output_path(

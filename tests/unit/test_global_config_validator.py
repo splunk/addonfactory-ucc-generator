@@ -35,6 +35,17 @@ def test_config_validation_when_valid(filename):
         validator.validate()
 
 
+def test_validation_when_created_from_app_manifest(app_manifest_correct):
+    global_config = global_config_lib.GlobalConfig.from_app_manifest(
+        app_manifest_correct
+    )
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with does_not_raise():
+        validator.validate()
+
+
 def test_autocompletefields_support_integer_values():
     # Regression unit test: https://github.com/splunk/addonfactory-ucc-generator/issues/794
     global_config_path = helpers.get_testdata_file_path(

@@ -35,6 +35,57 @@ def test_global_config_parse(filename):
     assert global_config.has_dashboard() is True
 
 
+def test_global_config_from_app_manifest(app_manifest_correct):
+    expected_global_config = global_config_lib.GlobalConfig(
+        {
+            "meta": {
+                "name": "Splunk_TA_UCCExample",
+                "restRoot": "Splunk_TA_UCCExample",
+                "displayName": "Splunk Add-on for UCC Example",
+                "version": "7.0.1",
+            }
+        },
+        False,
+    )
+
+    global_config = global_config_lib.GlobalConfig.from_app_manifest(
+        app_manifest_correct
+    )
+
+    assert expected_global_config == global_config
+
+
+def test_global_config_equal():
+    global_config_1 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+    global_config_2 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+
+    assert global_config_1 == global_config_2
+
+
+def test_global_config_when_no_equal():
+    global_config_1 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+    global_config_2 = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config_only_logging.json")
+    )
+
+    assert global_config_1 != global_config_2
+
+
+def test_global_config_equal_when_wrong_object_type():
+    global_config = global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config.json")
+    )
+
+    with pytest.raises(NotImplementedError):
+        _ = global_config == ""
+
+
 @mock.patch("splunk_add_on_ucc_framework.utils.dump_json_config")
 def test_global_config_dump_when_json(
     mock_utils_dump_json_config, global_config_all_json, tmp_path

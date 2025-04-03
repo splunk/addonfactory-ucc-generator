@@ -5,7 +5,7 @@ import AcceptModal from './AcceptModal';
 
 const handleClose = jest.fn();
 
-beforeEach(() => {
+const renderModal = () =>
     render(
         <AcceptModal
             title="test Title"
@@ -17,9 +17,10 @@ beforeEach(() => {
             acceptBtnLabel="Yes"
         />
     );
-});
 
 it('Return true on accept btn click', async () => {
+    renderModal();
+
     const modal = await screen.findByTestId('modal');
     expect(modal).toBeInTheDocument();
 
@@ -31,6 +32,8 @@ it('Return true on accept btn click', async () => {
 });
 
 it('Return false on decline btn click', async () => {
+    renderModal();
+
     const modal = await screen.findByTestId('modal');
     expect(modal).toBeInTheDocument();
 
@@ -42,6 +45,8 @@ it('Return false on decline btn click', async () => {
 });
 
 it('Return false on closing modal by X btn', async () => {
+    renderModal();
+
     const modal = await screen.findByTestId('modal');
     expect(modal).toBeInTheDocument();
 

@@ -47,7 +47,7 @@ class InputsConf(ConfGenerator):
         # (i.e. dict key is the spec file name)
         self.other_spec_files: Dict[str, List[str]] = defaultdict(list)
 
-        if not self._global_config or not self._global_config.has_inputs():
+        if not self._global_config.has_inputs():
             return
 
         for service in self._global_config.inputs:

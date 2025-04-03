@@ -446,6 +446,12 @@ def test_ucc_generate_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
+        global_config_path = path.join(
+            package_folder,
+            path.pardir,
+            "globalConfig.json",
+        )
+        assert not path.exists(global_config_path)
         build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_folder = path.join(
@@ -475,6 +481,10 @@ def test_ucc_generate_with_configuration_files_only():
             expected_folder,
             actual_folder,
         )
+        # the globalConfig would now always exist
+        assert path.exists(global_config_path)
+        # clean-up for tests
+        os.remove(global_config_path)
 
 
 def test_ucc_generate_openapi_with_configuration_files_only():
@@ -492,7 +502,16 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         actual_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        assert not path.exists(actual_file_path)
+        # the openapi.json would now exist as globalConfig.json would always exist
+        assert path.exists(actual_file_path)
+        # clean-up for tests
+        os.remove(
+            path.join(
+                package_folder,
+                path.pardir,
+                "globalConfig.json",
+            )
+        )
 
 
 def test_ucc_build_verbose_mode(caplog):

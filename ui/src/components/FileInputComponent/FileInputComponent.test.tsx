@@ -262,7 +262,7 @@ test('File name is displayed without error message when file not encrypted', asy
     const fileName = await screen.findByTestId('label');
     expect(fileName).toHaveTextContent(testFileName);
 
-    const existingHelpElement = await screen.queryByTestId('help');
+    const existingHelpElement = screen.queryByTestId('help');
     expect(existingHelpElement).toBeNull();
 });
 
@@ -297,7 +297,7 @@ test('Default error message disappears when reuploading encrypted file', async (
     expect(await screen.findByTestId('label')).toHaveTextContent('test.json');
 
     // check if message to reupload encrypted file is used
-    const reuploadMessage = await screen.queryByTestId('help');
+    const reuploadMessage = screen.queryByTestId('help');
     expect(reuploadMessage).toHaveTextContent(fileContants.REUPLOAD_MESSAGE);
 
     // Check if support message is rendered
@@ -313,7 +313,7 @@ test('Default error message disappears when reuploading encrypted file', async (
     // Check that handleChange is called with valid args.
     expect(handleChange).toHaveBeenCalledWith('testFileField', '{"test":"test"}');
 
-    const nullHelpElement = await screen.queryByTestId('help');
+    const nullHelpElement = screen.queryByTestId('help');
     expect(nullHelpElement).toBeNull();
 });
 

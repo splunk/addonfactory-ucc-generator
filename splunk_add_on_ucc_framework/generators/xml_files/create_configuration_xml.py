@@ -25,7 +25,7 @@ class ConfigurationXml(XMLGenerator):
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        if self._global_config and self._global_config.has_configuration():
+        if self._global_config.has_configuration():
             self.configuration_xml_content = (
                 data_ui_generator.generate_views_configuration_xml(
                     self._addon_name,
@@ -33,7 +33,7 @@ class ConfigurationXml(XMLGenerator):
             )
 
     def generate_xml(self) -> Union[Dict[str, str], None]:
-        if self._global_config and not self._global_config.has_configuration():
+        if not self._global_config.has_configuration():
             return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "configuration.xml"]
