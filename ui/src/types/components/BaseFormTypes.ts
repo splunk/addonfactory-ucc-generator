@@ -18,8 +18,6 @@ import {
     TextAreaEntity,
     TextEntity,
 } from '../globalConfig/entities';
-import { PageContextProviderType } from '../../context/PageContext';
-import { CustomElementsMap } from '../CustomTypes';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -63,18 +61,6 @@ export interface BaseFormStateData {
             required?: boolean;
         };
     };
-}
-
-export interface BaseFormProps {
-    currentServiceState?: Record<string, AcceptableFormValueOrNull>;
-    serviceName: string;
-    mode: Mode;
-    page: StandardPages;
-    stanzaName: string;
-    groupName?: string;
-    handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
-    pageContext?: PageContextProviderType;
-    customComponentContext?: CustomElementsMap;
 }
 
 export interface BaseFormState {
