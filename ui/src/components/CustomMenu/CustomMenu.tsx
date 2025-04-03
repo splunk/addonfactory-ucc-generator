@@ -26,6 +26,7 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
             loading: true,
         };
         this.shouldRender = true;
+        this.customComponentContext = props.customComponentContext;
     }
 
     componentDidMount() {
@@ -67,6 +68,10 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
 
     loadCustomMenu = (): Promise<CustomMenuConstructor> =>
         new Promise((resolve) => {
+            if (this.customComponentContext?.[this.props.fileName]) {
+                const Control = this.customComponentContext?.[this.props.fileName];
+                resolve(Control);
+            }
             if (this.props.type === 'external') {
                 import(
                     /* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`

@@ -5,6 +5,8 @@ import { getUserTheme, ThemeMap } from '@splunk/splunk-utils/themes';
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';
 import messageDict from '../constants/messageDict';
 import { AppProviders } from './AppProviders';
+import { CustomElementsMap } from '../types/CustomTypes';
+import { CustomComponentContextProvider } from '../context/CustomComponentContext';
 
 const InputPage = React.lazy(() => import('./Input/InputPage'));
 const ConfigurationPage = React.lazy(() => import('./Configuration/ConfigurationPage'));
@@ -30,14 +32,16 @@ function getNormalizedTheme(theme: keyof ThemeMap) {
     return 'light';
 }
 
-export async function init() {
+export async function init(components?: CustomElementsMap) {
     return getUserTheme().then((userTheme) => {
         const theme = getNormalizedTheme(userTheme);
         switch (page) {
             case PAGE_INPUT:
                 layout(
                     <AppProviders>
-                        <InputPage />
+                        <CustomComponentContextProvider customComponents={components}>
+                            <InputPage />
+                        </CustomComponentContextProvider>
                     </AppProviders>,
                     { pageTitle: messageDict[116], theme }
                 );
@@ -45,7 +49,9 @@ export async function init() {
             case PAGE_CONF:
                 layout(
                     <AppProviders>
-                        <ConfigurationPage />
+                        <CustomComponentContextProvider customComponents={components}>
+                            <ConfigurationPage />
+                        </CustomComponentContextProvider>
                     </AppProviders>,
                     { pageTitle: messageDict[117], theme }
                 );

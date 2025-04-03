@@ -52,6 +52,7 @@ import {
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
+import { CustomElementsMap } from '../../types/CustomTypes';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -130,6 +131,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     inputsUniqueAcrossSingleService?: boolean;
 
+    customComponentContext?: CustomElementsMap;
+
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
@@ -167,6 +170,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             utilCustomFunctions: this.util,
         };
         this.customWarningMessage = { message: '' };
+
+        this.customComponentContext = this.props.customComponentContext;
 
         if (props.page === PAGE_INPUT) {
             this.inputsUniqueAcrossSingleService =
@@ -1086,6 +1091,18 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     // generatesubmitMessage
     loadHook = (module: string, type: string, globalConfig: GlobalConfig) => {
         const myPromise = new Promise((resolve) => {
+            if (this.customComponentContext?.[module]) {
+                const Hook = this.customComponentContext?.[module] as CustomHookConstructor;
+                this.hook = new Hook(
+                    globalConfig,
+                    this.props.serviceName,
+                    this.state,
+                    this.props.mode,
+                    this.util,
+                    this.props.groupName
+                );
+                resolve(Hook);
+            }
             if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {

@@ -1,15 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { CustomTabConstructor } from './CustomTabBase';
 import { Tab } from './CustomTab.types';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 interface CustomTabProps {
     tab: Tab;
 }
 
 const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
+    const customCompontentContext = useContext(CustomComponentContext);
+
     const [loading, setLoading] = useState(true);
     const divRef = useRef<HTMLDivElement>(null);
 
@@ -18,6 +21,10 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
 
     const loadCustomTab = (): Promise<CustomTabConstructor> =>
         new Promise((resolve) => {
+            if (customCompontentContext?.[tab?.customTab?.src]) {
+                const Control = customCompontentContext[tab?.customTab?.src];
+                resolve(Control as CustomTabConstructor);
+            }
             if (tab.customTab?.type === 'external') {
                 import(
                     /* @vite-ignore */ `${getBuildDirPath()}/custom/${tab.customTab.src}.js`
