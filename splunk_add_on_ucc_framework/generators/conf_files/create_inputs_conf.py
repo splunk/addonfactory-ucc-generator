@@ -59,9 +59,11 @@ class InputsConf(ConfGenerator):
                 spec_properties = self.other_spec_files[service["conf"]]
             else:
                 spec_properties = self.inputs_conf_spec[service["name"]]
-                # Add the service name to the list of service names in inputs.conf
-                self.inputs_conf_names.append(service["name"])
                 default_values = self.inputs_conf_params[service["name"]]
+
+            # Always add the service name to the list of service names in inputs.conf
+            # to add at least the Python version
+            self.inputs_conf_names.append(service["name"])
 
             if default_values is not None and service.get("disableNewInput"):
                 default_values["disabled"] = "true"

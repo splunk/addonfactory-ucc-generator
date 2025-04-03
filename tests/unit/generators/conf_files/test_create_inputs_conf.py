@@ -296,7 +296,12 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
         ucc_dir=UCC_DIR,
         addon_name=ta_name,
     )
-    assert inputs_conf.generate_conf() is None
+
+    conf = inputs_conf.generate_conf()
+    assert conf is not None
+    assert Path(conf["inputs.conf"]).read_text() == (
+        "[example_input_three]\npython.version = python3\n"
+    )
 
     specs = inputs_conf.generate_conf_spec()
     assert specs is not None
