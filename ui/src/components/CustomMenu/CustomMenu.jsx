@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { _ } from '@splunk/ui-utils/i18n';
-import { getUnifiedConfigs } from '../util/util';
-import { getBuildDirPath } from '../util/script';
+import { getUnifiedConfigs } from '../../util/util';
+import { getBuildDirPath } from '../../util/script';
 
 class CustomMenu extends Component {
     constructor(props) {
