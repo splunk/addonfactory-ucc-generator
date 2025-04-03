@@ -7,6 +7,7 @@ import { CustomValidatorFunc, UtilBaseForm } from '../../types/components/BaseFo
 import { invariant } from '../../util/invariant';
 import { CustomControlConstructor } from './CustomControlBase';
 import { ControlData } from './CustomControl.types';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 interface Props {
     data: ControlData;
@@ -22,12 +23,19 @@ interface State {
 }
 
 class CustomControl extends React.Component<Props, State> {
+    static contextType = CustomComponentContext;
+
     static loadCustomControl = (
         module: string,
         type: string,
-        appName: string
+        appName: string,
+        context?: React.ContextType<typeof CustomComponentContext>
     ): Promise<CustomControlConstructor> =>
         new Promise((resolve) => {
+            if (context?.[module]) {
+                const Control = context[module];
+                resolve(Control as CustomControlConstructor);
+            }
             if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     async (external) => {
@@ -65,7 +73,8 @@ class CustomControl extends React.Component<Props, State> {
         CustomControl.loadCustomControl(
             this.props.controlOptions.src,
             this.props.controlOptions.type,
-            appName
+            appName,
+            this.context
         ).then((Control) => {
             invariant(this.el !== undefined, 'Element should be defined');
             const customControl = new Control(
