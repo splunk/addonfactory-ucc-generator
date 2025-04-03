@@ -31,10 +31,6 @@ def test_get_output_dir(
 
 
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
-@patch(
-    "splunk_add_on_ucc_framework.generators.FileGenerator._get_output_dir",
-    return_value="tmp/path",
-)
 def test_get_file_output_path(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):
@@ -48,11 +44,11 @@ def test_get_file_output_path(
 
     # Test with string
     result = file_gen.get_file_output_path("output_file")
-    assert result == "tmp/path/output_file"
+    assert result == f"{output_dir}/{ta_name}/output_file"
 
     # Test with list
     result = file_gen.get_file_output_path(["dir1", "dir2", "output_file"])
-    assert result == "tmp/path/dir1/dir2/output_file"
+    assert result == f"{output_dir}/{ta_name}/dir1/dir2/output_file"
 
     # Test with invalid type
     with raises(TypeError):
@@ -112,15 +108,14 @@ def test_set_template_and_render_invalid_file_name(
     "splunk_add_on_ucc_framework.generators.file_generator.fc.GEN_FILE_LIST",
     new_callable=list,
 )
-@patch("splunk_add_on_ucc_framework.generators.file_generator.logger")
 def test_begin(
-    mock_logger,
     mock_gen_file_list,
     global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
+    caplog,
 ):
     mock_item = MagicMock()
     mock_item.file_class.return_value.generate.return_value = {
@@ -138,9 +133,8 @@ def test_begin(
     )
 
     assert result == [{"file1": "/path/to/file1"}]
-    mock_logger.info.assert_called_once_with(
-        "Successfully generated 'file1' at '/path/to/file1'."
-    )
+    expected_msg = "Successfully generated 'file1' at '/path/to/file1'."
+    assert expected_msg in caplog.text
 
 
 @patch(

@@ -15,146 +15,123 @@ UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 def test_set_attributes_no_inputs_in_global_config(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_only_configuration, input_dir, output_dir, ucc_dir, ta_name
 ):
     """Test when _global_config is provided but has no inputs."""
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_only_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = []
-
-    inputs_conf._set_attributes()
 
     assert inputs_conf.input_names == []
 
 
 def test_set_attributes_with_conf_key(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_with_with_one_entity_per_input,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     """Test when a service has a 'conf' key."""
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_with_with_one_entity_per_input,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [{"name": "service1", "conf": "some_conf"}]
 
-    inputs_conf._set_attributes()
-
-    expected_output = [{"service1": ["placeholder = placeholder"]}]
-    assert inputs_conf.input_names == expected_output
+    expected_output = {"service_with_conf_param": ["placeholder = placeholder"]}
+    assert expected_output in inputs_conf.input_names
     assert inputs_conf.conf_file == "inputs.conf"
     assert inputs_conf.conf_spec_file == "inputs.conf.spec"
 
 
 def test_set_attributes_without_conf_key_and_name_field(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_with_with_one_entity_per_input,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     """Test when a service does not have 'conf' key and 'entity' contains 'name' field."""
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_with_with_one_entity_per_input,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {"name": "service1", "entity": [{"field": "name"}], "disableNewInput": True}
-    ]
 
-    inputs_conf._set_attributes()
-
-    expected_output: List[Dict[str, List[str]]] = [{"service1": []}]
-    assert inputs_conf.input_names == expected_output
+    expected_output: Dict[str, List[str]] = {"example_input_three": []}
+    assert expected_output in inputs_conf.input_names
     assert inputs_conf.disable is True
-    assert inputs_conf.service_name == "service1"
+    assert inputs_conf.service_name == "example_input_three"
 
 
 def test_set_attributes_without_conf_key_and_default_boolean(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_with_with_one_entity_per_input,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     """Test when a service does not have 'conf' key and 'entity' contains fields other than 'name'
     with a boolean default value.
     """
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_with_with_one_entity_per_input,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {
-            "name": "service1",
-            "entity": [
-                {
-                    "field": "other_field",
-                    "help": "help text",
-                    "defaultValue": True,
-                }
-            ],
-        }
-    ]
-
-    inputs_conf._set_attributes()
-
-    expected_output = [{"service1": ["other_field = help text  Default: True"]}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.default_value_info == {"service1": {"other_field": "true"}}
+    expected_output = {
+        "input_with_default_boolean": [
+            "test_checkbox = This is an example checkbox.  Default: True"
+        ]
+    }
+    assert expected_output in inputs_conf.input_names
+    assert inputs_conf.default_value_info.get("input_with_default_boolean") == {
+        "test_checkbox": "true"
+    }
 
 
 def test_set_attributes_without_conf_key_and_other_fields(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_with_with_one_entity_per_input,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     """Test when a service does not have 'conf' key and 'entity' contains fields other than 'name'."""
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_with_with_one_entity_per_input,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {
-            "name": "service1",
-            "entity": [
-                {
-                    "field": "other_field",
-                    "help": "help text",
-                    "defaultValue": "default_val",
-                }
-            ],
-        }
-    ]
 
-    inputs_conf._set_attributes()
-
-    expected_output = [{"service1": ["other_field = help text  Default: default_val"]}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.default_value_info == {
-        "service1": {"other_field": "default_val"}
+    expected_output = {
+        "example_input_four": [
+            "Interval = Time interval of the data input, in seconds.  Default: 600"
+        ]
+    }
+    assert expected_output in inputs_conf.input_names
+    assert inputs_conf.default_value_info.get("example_input_four") == {
+        "Interval": "600"
     }
 
 
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.InputsConf.set_template_and_render"
 )
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf.get_file_output_path"
-)
 def test_generate_conf(
-    mock_op_path,
     mock_template,
     global_config_all_json,
     input_dir,
@@ -164,8 +141,6 @@ def test_generate_conf(
 ):
     content = "content"
     exp_fname = "inputs.conf"
-    file_path = "output_path/inputs.conf"
-    mock_op_path.return_value = file_path
     template_render = MagicMock()
     template_render.render.return_value = content
 
@@ -176,36 +151,24 @@ def test_generate_conf(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf.writer = MagicMock()
     inputs_conf._template = template_render
     file_paths = inputs_conf.generate_conf()
 
     # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
-    inputs_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-    assert file_paths == {exp_fname: file_path}
+    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/default/{exp_fname}"}
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_spec_no_input_names(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+def test_generate_conf_no_input_names(
+    global_config_only_configuration, input_dir, output_dir, ucc_dir, ta_name
 ):
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_only_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf.input_names = []
     result = inputs_conf.generate_conf()
     assert result is None
 
@@ -213,11 +176,7 @@ def test_generate_conf_spec_no_input_names(
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.InputsConf.set_template_and_render"
 )
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf.get_file_output_path"
-)
 def test_generate_conf_spec(
-    mock_op_path,
     mock_template,
     global_config_all_json,
     input_dir,
@@ -227,8 +186,6 @@ def test_generate_conf_spec(
 ):
     content = "content"
     exp_fname = "inputs.conf.spec"
-    file_path = "output_path/inputs.conf.spec"
-    mock_op_path.return_value = file_path
     mock_template_render = MagicMock()
     mock_template_render.render.return_value = content
 
@@ -239,37 +196,25 @@ def test_generate_conf_spec(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf.writer = MagicMock()
     inputs_conf._template = mock_template_render
 
     file_paths = inputs_conf.generate_conf_spec()
 
     # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
-    inputs_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-    assert file_paths == {exp_fname: file_path}
+    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/README/{exp_fname}"}
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_input_names(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+def test_generate_conf_spec_no_input_names(
+    global_config_only_configuration, input_dir, output_dir, ucc_dir, ta_name
 ):
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_only_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    inputs_conf.input_names = []
     result = inputs_conf.generate_conf_spec()
     assert result is None
 

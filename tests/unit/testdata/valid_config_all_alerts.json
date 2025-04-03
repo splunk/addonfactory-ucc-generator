@@ -45,6 +45,7 @@
             "name": "test_alert_active",
             "label": "Test Alert Active",
             "description": "Description for test Alert Action",
+            "iconFileName": "alerticon.png",
             "activeResponse": {
                 "task": [
                     "Create"
@@ -73,7 +74,6 @@
                     "type": "text",
                     "label": "Name",
                     "field": "name",
-                    "defaultValue": "xyz",
                     "required": true,
                     "help": "Please enter your name"
                 }
@@ -122,6 +122,7 @@
             "name": "test_alert_default",
             "label": "Test Alert Default",
             "description": "Description for test Alert Action",
+            "iconFileName": "dev_icon.png",
             "adaptiveResponse": {
                 "task": [
                     "Create"
@@ -153,7 +154,8 @@
                     "required": true,
                     "help": "Please enter your name"
                 }
-            ]
+            ],
+            "custom_property": "custom_value"
         },
         {
             "name": "test_alert_no_support",
