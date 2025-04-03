@@ -7,7 +7,7 @@ import Message from '@splunk/react-ui/Message';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG, Mode } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
 import { generateEndPointUrl, postRequest } from '../../util/api';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
@@ -26,10 +26,10 @@ import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
     NullishFormRecord,
+    StandardPages,
 } from '../../types/components/shareableTypes';
 import {
     CustomHookError,
-    BaseFormProps,
     BaseFormState,
     SingleSelectEntityType,
     BaseFormStateData,
@@ -53,12 +53,26 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
 import { CustomElementsMap } from '../../types/CustomTypes';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
+import { PageContextProviderType } from '../../context/PageContext';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
     console.error(
         `[Custom Hook] Something went wrong while calling ${params.methodName}. Error: ${params.error?.name} ${params.error?.message}`
     );
+}
+
+export interface BaseFormProps {
+    currentServiceState?: Record<string, AcceptableFormValueOrNull>;
+    serviceName: string;
+    mode: Mode;
+    page: StandardPages;
+    stanzaName: string;
+    groupName?: string;
+    handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
+    pageContext?: PageContextProviderType;
+    customComponentContext?: CustomComponentContextType;
 }
 
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {

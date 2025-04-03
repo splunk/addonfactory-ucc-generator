@@ -11,7 +11,7 @@ import { MODE_CONFIG } from '../constants/modes';
 import { WaitSpinnerWrapper } from './table/CustomTableStyle';
 import { PAGE_CONF } from '../constants/pages';
 import PageContext from '../context/PageContext';
-import CustomComponentContext from '@/context/CustomComponentContext';
+import CustomComponentContext from '../context/CustomComponentContext';
 
 const ButtonWrapper = styled.div`
     margin-left: 270px !important;
