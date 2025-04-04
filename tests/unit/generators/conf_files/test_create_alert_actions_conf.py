@@ -75,8 +75,7 @@ def test_keys_not_in_deny_list(
     )
 
     assert (
-        "custom_property = custom_value"
-        in alert_actions_conf.alerts["test_alert_default"]
+        "label = Test Alert Default" in alert_actions_conf.alerts["test_alert_default"]
     )
 
 

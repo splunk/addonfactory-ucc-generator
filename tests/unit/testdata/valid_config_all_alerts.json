@@ -154,8 +154,7 @@
                     "required": true,
                     "help": "Please enter your name"
                 }
-            ],
-            "custom_property": "custom_value"
+            ]
         },
         {
             "name": "test_alert_no_support",
