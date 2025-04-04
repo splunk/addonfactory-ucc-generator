@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, List
 import os
 from importlib import import_module
 import sys
@@ -28,11 +28,53 @@ class CustomCommandPy(PyGenerator):
         "Generates Python files for custom commands provided in the globalConfig."
     )
 
+    def argument_generator(
+        self, argument_list: List[str], arg: Dict[str, Any]
+    ) -> List[str]:
+        arg_str = ""
+        arg_str = arg_str + f"{arg['name']} = Option(name='{arg['name']}'"
+        if arg["require"]:
+            arg_str += f", require={arg['require']}"
+        else:
+            arg_str += ", require=False"
+
+        if arg["validate"]:
+            if (
+                arg["validate"]["type"] == "Integer"
+                or arg["validate"]["type"] == "Float"
+            ):
+                if arg["validate"].get("minimum") and arg["validate"].get("maximum"):
+                    arg_str += f", validate=validators.{arg['validate']['type']}"
+                    arg_str += f"(minimum={arg['validate'].get('minimum')}, "
+                    arg_str += f"maximum={arg['validate'].get('maximum')})"
+                elif arg["validate"].get("minimum") and not arg["validate"].get(
+                    "maximum"
+                ):
+                    arg_str += f", validate=validators.{arg['validate']['type']}"
+                    arg_str += f"(minimum={arg['validate'].get('minimum')})"
+                elif not arg["validate"].get("minimum") and arg["validate"].get(
+                    "maximum"
+                ):
+                    arg_str += f", validate=validators.{arg['validate']['type']}"
+                    arg_str += f"(maximum={ arg['validate'].get('maximum')})"
+                else:
+                    arg_str += f", validate=validators.{arg['validate']['type']}()"
+            else:
+                arg_str += f", validate=validators.{arg['validate']['type']}()"
+
+        if arg["default"]:
+            arg_str += f", default='{arg['default']}'"
+        else:
+            arg_str += ", default=''"
+        arg_str += ")"
+        argument_list.append(arg_str)
+        return argument_list
+
     def _set_attributes(self, **kwargs: Any) -> None:
         self.commands_info = []
         if self._global_config and self._global_config.has_custom_search_commands():
             for command in kwargs["custom_search_commands"]:
-                arguments = []
+                argument_list: List[str] = []
                 import_map = False
                 command["fileName"] = command["fileName"].replace(".py", "")
                 template = command["commandType"] + ".template"
@@ -43,14 +85,13 @@ class CustomCommandPy(PyGenerator):
                         import_map = True
                     sys.path.pop(0)
                 for argument in command["arguments"]:
-                    arguments.append(
-                        {
-                            "name": argument["name"],
-                            "require": argument.get("required"),
-                            "validate": argument.get("validate"),
-                            "default": argument.get("defaultValue"),
-                        }
-                    )
+                    argument_dict = {
+                        "name": argument["name"],
+                        "require": argument.get("required"),
+                        "validate": argument.get("validate"),
+                        "default": argument.get("defaultValue"),
+                    }
+                    self.argument_generator(argument_list, argument_dict)
 
                 self.commands_info.append(
                     {
@@ -60,8 +101,8 @@ class CustomCommandPy(PyGenerator):
                         "description": command.get("description"),
                         "syntax": command.get("syntax"),
                         "template": template,
-                        "arguments": arguments,
                         "import_map": import_map,
+                        "list_arg": argument_list,
                     }
                 )
 
@@ -83,8 +124,8 @@ class CustomCommandPy(PyGenerator):
                 class_name=command_info["class_name"],
                 description=command_info["description"],
                 syntax=command_info["syntax"],
-                arguments=command_info["arguments"],
                 import_map=command_info["import_map"],
+                list_arg=command_info["list_arg"],
             )
             self.writer(
                 file_name=file_name,

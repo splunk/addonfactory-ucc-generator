@@ -21,38 +21,10 @@ class {{class_name}}Command(StreamingCommand):
     {% endif %}
 
     """
-    {%- endif -%}
+    {% endif %}
 
-    {% for arg in arguments %}
-    {{ arg.name }} = Option(name="{{arg.name}}"
-    {%- if arg.require  -%}
-    , require={{ arg.require }}
-    {%- else -%}
-    , require=False
-    {%- endif -%}
-    
-    {%- if arg.validate -%}
-        {%- if (arg.validate.type == "Integer" or arg.validate.type == "Float") -%}
-            {%- if (arg.validate.minimum and arg.validate.maximum) -%}
-            , validate=validators.{{ arg.validate.type }}(minimum={{ arg.validate.minimum }}, maximum={{ arg.validate.maximum }})
-            {%- elif (arg.validate.minimum and not arg.validate.maximum) -%}
-            , validate=validators.{{ arg.validate.type }}(minimum={{ arg.validate.minimum }})
-            {%- elif (not arg.validate.minimum and arg.validate.maximum) -%}
-            , validate=validators.{{ arg.validate.type }}(maximum={{ arg.validate.maximum }})
-            {%- else -%}
-            , validate=validators.{{ arg.validate.type }}()
-            {%- endif -%}
-        {%- else -%}
-        , validate=validators.{{ arg.validate.type }}()
-        {%- endif -%}
-    {%- endif -%}
-
-    {%- if arg.default -%}    
-    , default={{ arg.default }}
-    {%- else -%}
-    , default=""
-    {%- endif -%}
-    )
+    {% for arg in list_arg %}
+    {{arg}}
     {% endfor %}
 
     def stream(self, events):
