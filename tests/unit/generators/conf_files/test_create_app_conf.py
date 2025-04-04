@@ -47,12 +47,6 @@ def test_set_attributes_check_for_updates_false(
         has_ui=has_ui,
         app_manifest=app_manifest,
     )
-    app_conf._global_config = MagicMock()
-    app_conf._global_config.meta = {"checkForUpdates": False}
-
-    app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
-    )
 
     assert app_conf.check_for_updates == "false"
 
@@ -77,12 +71,6 @@ def test_set_attributes_supported_themes(
         addon_version=addon_version,
         has_ui=has_ui,
         app_manifest=app_manifest,
-    )
-    app_conf._global_config = MagicMock()
-    app_conf._global_config.meta = {"supportedThemes": ["dark", "light"]}
-
-    app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
     )
 
     assert app_conf.supported_themes == "dark, light"
@@ -109,27 +97,19 @@ def test_set_attributes_with_global_config_and_schema(
         has_ui=has_ui,
         app_manifest=app_manifest,
     )
-    app_conf._global_config = MagicMock()
-    app_conf._gc_schema = MagicMock()
 
-    app_conf._gc_schema.settings_conf_file_names = ["settings1.conf"]
-    app_conf._gc_schema.configs_conf_file_names = ["configs1.conf"]
-    app_conf._gc_schema.oauth_conf_file_names = ["oauth1.conf"]
-
-    app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
-    )
-
-    expected_custom_conf = ["settings1.conf", "configs1.conf", "oauth1.conf"]
+    expected_custom_conf = [
+        "splunk_ta_uccexample_settings",
+        "splunk_ta_uccexample_account",
+        "splunk_ta_uccexample_oauth",
+    ]
     assert app_conf.custom_conf == expected_custom_conf
 
 
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.AppConf.set_template_and_render"
 )
-@patch("splunk_add_on_ucc_framework.generators.conf_files.AppConf.get_file_output_path")
 def test_generate_conf(
-    mock_op_path,
     mock_template,
     global_config_all_json,
     input_dir,
@@ -142,8 +122,6 @@ def test_generate_conf(
 ):
     content = "content"
     exp_fname = "app.conf"
-    file_path = "output_path/app.conf"
-    mock_op_path.return_value = file_path
     template_render = MagicMock()
     template_render.render.return_value = content
 
@@ -157,17 +135,9 @@ def test_generate_conf(
         has_ui=has_ui,
         app_manifest=app_manifest,
     )
-    app_conf.writer = MagicMock()
     app_conf._template = template_render
     file_paths = app_conf.generate_conf()
 
     # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
-    app_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-        merge_mode="item_overwrite",
-    )
-    assert file_paths == {exp_fname: file_path}
+    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/default/{exp_fname}"}

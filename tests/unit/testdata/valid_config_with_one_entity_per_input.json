@@ -1,0 +1,237 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "account",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Auth Type",
+                                "field": "auth_type"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "singleSelect",
+                            "label": "Example Environment",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "login.example.com",
+                                        "label": "Value1"
+                                    },
+                                    {
+                                        "value": "test.example.com",
+                                        "label": "Value2"
+                                    },
+                                    {
+                                        "value": "other",
+                                        "label": "Other"
+                                    }
+                                ],
+                                "display": true
+                            },
+                            "help": "",
+                            "field": "custom_endpoint",
+                            "defaultValue": "login.example.com",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Endpoint URL",
+                            "help": "Enter the endpoint URL.",
+                            "field": "endpoint",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "account_checkbox",
+                            "help": "This is an example checkbox for the account entity"
+                        }
+                    ],
+                    "title": "Account"
+                }
+            ]
+        },
+        "inputs": {
+            "services": [
+                {
+                    "name": "example_input_three",
+                    "title": "Example Input Three",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name"
+                        }
+                    ],
+                    "disableNewInput": true
+                },
+                {
+                    "name": "example_input_four",
+                    "title": "Example Input Four",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Interval",
+                            "field": "Interval",
+                            "defaultValue": 600,
+                            "help": "Time interval of the data input, in seconds."
+                        }
+                    ]
+                },
+                {
+                    "name": "input_with_default_boolean",
+                    "title": "Input with default boolean",
+                    "entity": [
+                        {
+                            "type": "checkbox",
+                            "label": "Example Checkbox",
+                            "field": "test_checkbox",
+                            "help": "This is an example checkbox.",
+                            "defaultValue": true
+                        }
+                    ]
+                },
+                {
+                    "name": "service_with_conf_param",
+                    "conf": "some_conf",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service with conf param"
+                }
+            ],
+            "title": "Inputs",
+            "description": "Manage your data inputs",
+            "table": {
+                "actions": [
+                    "edit",
+                    "delete",
+                    "clone"
+                ],
+                "header": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Account Name",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled"
+                    }
+                ],
+                "moreInfo": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled",
+                        "mapping": {
+                            "true": "Disabled",
+                            "false": "Enabled"
+                        }
+                    },
+                    {
+                        "label": "Example Account",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Object",
+                        "field": "object"
+                    },
+                    {
+                        "label": "Object Fields",
+                        "field": "object_fields"
+                    },
+                    {
+                        "label": "Order By",
+                        "field": "order_by"
+                    },
+                    {
+                        "label": "Query Start Date",
+                        "field": "start_date"
+                    },
+                    {
+                        "label": "Limit",
+                        "field": "limit"
+                    }
+                ]
+            }
+        }
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "test_addon",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3",
+        "checkForUpdates": false,
+        "supportedThemes": [
+            "dark",
+            "light"
+        ]
+    }
+}

@@ -14,6 +14,50 @@
                     "title": "Some page"
                 },
                 {
+                    "name": "oauth",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Endpoint",
+                                "field": "endpoint"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "client id",
+                            "field": "client_id",
+                            "required": true,
+                            "encrypted": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "client secret",
+                            "field": "client_secret",
+                            "required": true,
+                            "encrypted": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Redirect URL",
+                            "field": "redirect_url",
+                            "encrypted": true,
+                            "required": true
+                        }
+                    ],
+                    "title": "Account with name Oauth"
+                },
+                {
                     "type": "loggingTab"
                 }
             ],
