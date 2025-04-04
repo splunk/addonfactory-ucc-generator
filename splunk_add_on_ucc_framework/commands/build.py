@@ -24,7 +24,6 @@ import subprocess
 import colorama as c
 import fnmatch
 import filecmp
-
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
@@ -457,7 +456,7 @@ def generate(
     global_config_update.handle_global_config_update(global_config, gc_path)
     try:
         validator = global_config_validator.GlobalConfigValidator(
-            internal_root_dir, global_config
+            internal_root_dir, global_config, source=source
         )
         validator.validate()
         logger.info("globalConfig file is valid")
@@ -513,6 +512,7 @@ def generate(
         logger.error(str(e))
         sys.exit(1)
     logger.info(f"Installed add-on requirements into {ucc_lib_target} from {source}")
+
     generated_files.extend(
         begin(
             global_config=global_config,
@@ -523,6 +523,7 @@ def generate(
             app_manifest=app_manifest,
             addon_version=addon_version,
             has_ui=global_config.meta.get("isVisible", True),
+            custom_search_commands=global_config.custom_search_commands,
         )
     )
     # TODO: all FILES GENERATED object: generated_files, use it for comparison
