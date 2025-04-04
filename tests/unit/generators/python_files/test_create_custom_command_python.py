@@ -21,7 +21,11 @@ def custom_search_commands():
                     "required": True,
                     "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
                 },
-                {"name": "text", "required": True},
+                {
+                    "name": "age",
+                    "validate": {"type": "Integer", "minimum": 18},
+                },
+                {"name": "text", "required": True, "defaultValue": "test_text"},
             ],
         }
     ]
@@ -40,8 +44,11 @@ def reporting_custom_search_command():
                 {
                     "name": "action",
                     "required": True,
-                    "validate": {"type": "String"},
-                }
+                    "validate": {"type": "Fieldname"},
+                },
+                {
+                    "name": "test",
+                },
             ],
         }
     ]
@@ -65,10 +72,6 @@ def test_set_attributes_for_reporting_command(
         custom_search_commands=reporting_custom_search_command,
     )
 
-    custom_command_py._set_attributes(
-        custom_search_commands=reporting_custom_search_command
-    )
-
     assert custom_command_py.commands_info == [
         {
             "imported_file_name": "reporting_test",
@@ -77,13 +80,9 @@ def test_set_attributes_for_reporting_command(
             "description": "This is a reporting command",
             "syntax": "reportingcommand action=<action>",
             "template": "reporting.template",
-            "arguments": [
-                {
-                    "name": "action",
-                    "require": True,
-                    "validate": {"type": "String"},
-                    "default": None,
-                }
+            "list_arg": [
+                "action = Option(name='action', require=True, validate=validators.Fieldname(), default='')",
+                "test = Option(name='test', require=False, default='')",
             ],
             "import_map": True,
         }
@@ -108,10 +107,6 @@ def test_set_attributes_for_reporting_command_without_map(
         custom_search_commands=reporting_custom_search_command,
     )
 
-    custom_command_py._set_attributes(
-        custom_search_commands=reporting_custom_search_command
-    )
-
     assert custom_command_py.commands_info == [
         {
             "imported_file_name": "reporting_test",
@@ -120,13 +115,9 @@ def test_set_attributes_for_reporting_command_without_map(
             "description": "This is a reporting command",
             "syntax": "reportingcommand action=<action>",
             "template": "reporting.template",
-            "arguments": [
-                {
-                    "name": "action",
-                    "require": True,
-                    "validate": {"type": "String"},
-                    "default": None,
-                }
+            "list_arg": [
+                "action = Option(name='action', require=True, validate=validators.Fieldname(), default='')",
+                "test = Option(name='test', require=False, default='')",
             ],
             "import_map": False,
         }
@@ -162,7 +153,6 @@ def test_set_attributes(
         addon_name=ta_name,
         custom_search_commands=custom_search_commands,
     )
-    custom_command_py._set_attributes(custom_search_commands=custom_search_commands)
     assert custom_command_py.commands_info == [
         {
             "imported_file_name": "test",
@@ -171,14 +161,12 @@ def test_set_attributes(
             "description": "This is test command",
             "syntax": "testcommand count=<event_count> text=<string>",
             "template": "generating.template",
-            "arguments": [
-                {
-                    "name": "count",
-                    "require": True,
-                    "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
-                    "default": None,
-                },
-                {"name": "text", "require": True, "validate": None, "default": None},
+            "list_arg": [
+                "count = Option(name='count', require=True, "
+                "validate=validators.Integer(minimum=5, maximum=10), "
+                "default='')",
+                "age = Option(name='age', require=False, validate=validators.Integer(minimum=18), default='')",
+                "text = Option(name='text', require=True, default='test_text')",
             ],
             "import_map": False,
         }

@@ -18,7 +18,7 @@ class SumcommandCommand(ReportingCommand):
 
     """
 
-    total = Option(name="total", require=True, validate=validators.Fieldname(), default="")
+    total = Option(name='total', require=True, validate=validators.Fieldname(), default='')
 
     @Configuration()
     def map(self, events):

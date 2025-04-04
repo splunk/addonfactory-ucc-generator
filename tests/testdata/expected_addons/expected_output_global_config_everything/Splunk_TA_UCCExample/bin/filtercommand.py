@@ -17,8 +17,8 @@ class FiltercommandCommand(EventingCommand):
 
     """
 
-    contains = Option(name="contains", require=False, default="")
-    replace_array = Option(name="replace_array", require=False, default="")
+    contains = Option(name='contains', require=False, default='')
+    replace_array = Option(name='replace_array', require=False, default='')
 
     def transform(self, events):
        return transform(self, events)

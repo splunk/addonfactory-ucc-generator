@@ -7,8 +7,9 @@ from countmatches import stream
 
 @Configuration()
 class CountmatchescommandCommand(StreamingCommand):
-    fieldname = Option(name="fieldname", require=True, validate=validators.Fieldname(), default="")
-    pattern = Option(name="pattern", require=True, validate=validators.RegularExpression(), default="")
+
+    fieldname = Option(name='fieldname', require=True, validate=validators.Fieldname(), default='')
+    pattern = Option(name='pattern', require=True, validate=validators.RegularExpression(), default='')
 
     def stream(self, events):
         return stream(self, events)

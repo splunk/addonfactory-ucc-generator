@@ -18,7 +18,7 @@ class SumtwocommandCommand(ReportingCommand):
 
     """
 
-    total = Option(name="total", require=True, validate=validators.Fieldname(), default="")
+    total = Option(name='total', require=True, validate=validators.Fieldname(), default='')
 
 
     def reduce(self, events):
