@@ -1,4 +1,4 @@
-import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
+import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
 
 export const SIMPLE_NAME_TABLE_MOCK_DATA = {
     pages: {
@@ -112,8 +112,7 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
 } satisfies GlobalConfig;
 
 export const getSimpleConfig = () => {
-    const configCp = JSON.parse(JSON.stringify(SIMPLE_NAME_TABLE_MOCK_DATA));
-    return configCp as GlobalConfig;
+    return GlobalConfigSchema.parse(SIMPLE_NAME_TABLE_MOCK_DATA);
 };
 
 export const TABLE_CONFIG_WITH_MAPPING = {
@@ -252,8 +251,7 @@ export const TABLE_CONFIG_WITH_MAPPING = {
 } satisfies GlobalConfig;
 
 export const getSimpleConfigWithMapping = () => {
-    const configCp = JSON.parse(JSON.stringify(TABLE_CONFIG_WITH_MAPPING));
-    return configCp;
+    return GlobalConfigSchema.parse(TABLE_CONFIG_WITH_MAPPING);
 };
 
 export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
@@ -373,8 +371,7 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
 } satisfies GlobalConfig;
 
 export const getSimpleConfigStylePage = () => {
-    const configCp = JSON.parse(JSON.stringify(SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE));
-    return configCp;
+    return GlobalConfigSchema.parse(SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE);
 };
 
 export const SIMPLE_NAME_TABLE_MOCK_DATA_WITH_STATUS_TOGGLE_CONFIRMATION = {
@@ -606,6 +603,5 @@ export const CUSTOM_HEADER_FOR_MODAL_MOCK_DATA = {
 } satisfies GlobalConfig;
 
 export const getCustomModalHeaderData = () => {
-    const configCp = JSON.parse(JSON.stringify(CUSTOM_HEADER_FOR_MODAL_MOCK_DATA));
-    return configCp as GlobalConfig;
+    return GlobalConfigSchema.parse(CUSTOM_HEADER_FOR_MODAL_MOCK_DATA);
 };
