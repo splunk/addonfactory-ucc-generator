@@ -12,11 +12,11 @@ import Trash from '@splunk/react-icons/enterprise/Trash';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getTableCellValue } from './table.utils';
 import AcceptModal from '../AcceptModal/AcceptModal';
 import { RowDataFields } from '../../context/TableContext';
+import CustomTableCell from './CustomTableCell';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -69,13 +69,13 @@ function CustomTableRow(props: CustomTableRowProps) {
     const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
         header.customCell?.type &&
-        React.createElement(CustomTableControl, {
+        React.createElement(CustomTableCell, {
             serviceName: row.serviceName,
             field: header.field,
             row: customRow,
             fileName: header.customCell.src,
             type: header.customCell.type,
-            moreInfo: [], // this is required but not shared with the custom cell
+            moreInfo: [], // this is required but should be deleted after cleaning
         });
 
     const rowActionsPrimaryButton = useCallback(
