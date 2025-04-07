@@ -75,6 +75,7 @@ function CustomTableRow(props: CustomTableRowProps) {
             row: customRow,
             fileName: header.customCell.src,
             type: header.customCell.type,
+            moreInfo: [], // this is required but not shared with the custom cell
         });
 
     const rowActionsPrimaryButton = useCallback(
