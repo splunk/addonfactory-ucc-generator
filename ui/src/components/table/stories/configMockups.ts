@@ -351,6 +351,26 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                         label: 'Input Status',
                         field: 'disabled',
                     },
+                    {
+                        label: 'Account radio',
+                        field: 'account_radio',
+                    },
+                    {
+                        label: 'Custom endpoint',
+                        field: 'custom_endpoint',
+                    },
+                    {
+                        label: 'Custom text',
+                        field: 'custom_text',
+                    },
+                    {
+                        label: 'Username',
+                        field: 'username',
+                    },
+                    {
+                        label: 'Account multiple select',
+                        field: 'account_multiple_select',
+                    },
                 ],
                 moreInfo: [
                     {

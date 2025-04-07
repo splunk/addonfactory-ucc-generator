@@ -64,4 +64,7 @@ it.each([
 
     const customCell = within(row).getByText(expected);
     expect(customCell).toBeInTheDocument();
+
+    const nameCell = within(row).getByText(`example_input_one${interval}`);
+    expect(nameCell).toBeInTheDocument();
 });

@@ -40,7 +40,7 @@ export const ROW_DATA = [
             password: '******',
             custom_text: 'abc',
             token: '******',
-            username: 'aaaaaa',
+            username: 'aaaaaausername',
         },
     },
     {
@@ -54,7 +54,7 @@ export const ROW_DATA = [
             password: '******',
             custom_text: 'abcd',
             token: '******',
-            username: 'ccc',
+            username: 'cccusername',
         },
     },
     {
@@ -68,7 +68,7 @@ export const ROW_DATA = [
             password: '******',
             custom_text: 'ab',
             token: '******',
-            username: 'ddddd',
+            username: 'dddddusername',
         },
     },
     {
@@ -82,13 +82,13 @@ export const ROW_DATA = [
             password: '******',
             custom_text: 'aaaaa',
             token: '******',
-            username: 'test1',
+            username: 'test1username',
         },
     },
     {
         name: 'test2',
         content: {
-            account_multiple_select: 'two',
+            account_multiple_select: 'two_multiple_select',
             account_radio: '1',
             auth_type: 'basic',
             custom_endpoint: 'login.example.com',
@@ -96,21 +96,21 @@ export const ROW_DATA = [
             password: '******',
             custom_text: 'two',
             token: '******',
-            username: 'test1',
+            username: 'test1username',
         },
     },
     {
-        name: 'testsomethingelse',
+        name: 'testsomethingelseName2',
         content: {
-            account_multiple_select: 'two',
+            account_multiple_select: 'two_multiple_select',
             account_radio: '1',
             auth_type: 'basic',
             custom_endpoint: 'login.example.com',
             disabled: true,
             password: '******',
-            custom_text: 'testsomethingelse',
+            custom_text: 'testsomethingelsecustomtext2',
             token: '******',
-            username: 'test1',
+            username: 'test1username',
         },
     },
     {
@@ -124,7 +124,7 @@ export const ROW_DATA = [
             password: '******',
             custom_text: '222222',
             token: '******',
-            username: 'zzzzz',
+            username: 'zzzzzusername',
         },
     },
 ];
@@ -132,17 +132,17 @@ export const ROW_DATA = [
 export const ROW_DATA_FOR_COUNT = [
     ...ROW_DATA,
     {
-        name: 'testsomethingelse1',
+        name: 'testsomethingelseName3',
         content: {
-            account_multiple_select: 'two',
+            account_multiple_select: 'two_multiple_select',
             account_radio: '1',
             auth_type: 'basic',
             custom_endpoint: 'login.example.com',
             disabled: true,
             password: '******',
-            custom_text: 'testsomethingelse',
+            custom_text: 'testsomethingelsecustomtext3',
             token: '******',
-            username: 'test1',
+            username: 'test1username3',
         },
     },
     {
@@ -156,7 +156,7 @@ export const ROW_DATA_FOR_COUNT = [
             password: '******',
             custom_text: '222222',
             token: '******',
-            username: 'zzzzz',
+            username: 'zzzzzusername',
         },
     },
 ];
