@@ -1,0 +1,131 @@
+{
+    "visualizations": {
+      "custom_dashboard_main_label": {
+        "type": "splunk.markdown",
+        "options": {
+          "markdown": "# My custom dashboard",
+          "fontSize": "extraLarge"
+        }
+      },
+      "custom_addon_version_label": {
+        "type": "splunk.markdown",
+        "options": {
+          "markdown": "# Add-on version:",
+          "fontSize": "large"
+        }
+      },
+      "custom_addon_version": {
+        "type": "splunk.singlevalue",
+        "options": {
+          "majorFontSize": 34,
+          "backgroundColor": "transparent"
+        },
+        "dataSources": {
+          "primary": "custom_addon_version_ds"
+        }
+      },
+      "custom_events_ingested_label": {
+        "type": "splunk.markdown",
+        "options": {
+          "markdown": "# Events ingested by sourcetype:",
+          "fontSize": "default"
+        }
+      },
+      "custom_events_ingested": {
+        "type": "splunk.line",
+        "options": {
+          "xAxisVisibility": "hide",
+          "seriesColors": [
+            "#A870EF"
+          ],
+          "yAxisTitleText": "Events ingested"
+        },
+        "title": "Events ingested by sourcetype",
+        "dataSources": {
+          "primary": "custom_events_ingested_ds"
+        }
+      }
+    },
+    "dataSources": {
+      "custom_addon_version_ds": {
+        "type": "ds.search",
+        "options": {
+          "query": "| rest services/apps/local/demo_addon_for_splunk splunk_server=local | fields version"
+        }
+      },
+      "custom_events_ingested_ds": {
+        "type": "ds.search",
+        "options": {
+          "query": "index=_internal source=*demo_addon* action=events_ingested\n| timechart sum(n_events) by sourcetype_ingested",
+          "queryParameters": {
+            "earliest": "$events_ingested_time.earliest$",
+            "latest": "$events_ingested_time.latest$"
+          }
+        }
+      }
+    },
+    "inputs": {
+      "custom_events_ingested_input": {
+        "options": {
+          "defaultValue": "-7d,now",
+          "token": "events_ingested_time"
+        },
+        "title": "Time",
+        "type": "input.timerange"
+      }
+    },
+    "layout": {
+      "type": "grid",
+      "globalInputs": [
+        "custom_events_ingested_input"
+      ],
+      "structure": [
+        {
+          "item": "custom_dashboard_main_label",
+          "position": {
+            "x": 20,
+            "y": 500,
+            "w": 300,
+            "h": 50
+          }
+        },
+        {
+          "item": "custom_addon_version_label",
+          "position": {
+            "x": 20,
+            "y": 530,
+            "w": 100,
+            "h": 50
+          }
+        },
+        {
+          "item": "custom_addon_version",
+          "position": {
+            "x": 80,
+            "y": 515,
+            "w": 100,
+            "h": 50
+          }
+        },
+        {
+          "item": "custom_events_ingested_label",
+          "position": {
+            "x": 20,
+            "y": 550,
+            "w": 100,
+            "h": 50
+          }
+        },
+        {
+          "item": "custom_events_ingested",
+          "position": {
+            "x": 20,
+            "y": 580,
+            "w": 600,
+            "h": 150
+          }
+        }
+      ]
+    }
+  }
+  

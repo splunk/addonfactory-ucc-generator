@@ -10,6 +10,7 @@ client_secret =
 config1_help_link = 
 config2_help_link = 
 config3_help_text_with_links = 
+custom_control_field = 
 custom_endpoint = 
 endpoint = 
 endpoint_authorize = 

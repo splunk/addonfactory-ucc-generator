@@ -46,7 +46,7 @@ fields = [
         'index',
         required=True,
         encrypted=False,
-        default='default',
+        default='main',
         validator=validator.AllOf(
             validator.Pattern(
                 regex=r"""^[a-zA-Z0-9][a-zA-Z0-9\\_\\-]*$""",
