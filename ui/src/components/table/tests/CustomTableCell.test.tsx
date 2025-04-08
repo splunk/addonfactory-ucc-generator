@@ -11,6 +11,7 @@ import { getBuildDirPath } from '../../../util/script';
 import { CUSTOM_CELL_FILE_NAME, MOCK_CONFIG_CUSTOM_CELL } from './mocks';
 import { CustomCellMock as MockCustomCell } from './mocks/CustomCellMock';
 import { CustomCellMockError as MockCustomCellError } from './mocks/CustomCellMockError';
+import { CustomCellMockNoRender as MockCustomCellNoRender } from './mocks/CustomCellMockNoRender';
 import { consoleError } from '../../../../jest.setup';
 
 const inputName = 'example_input_one';
@@ -38,6 +39,25 @@ const mockCustomCellError = () => {
             virtual: true,
         }
     );
+};
+
+const mockCustomCellWithoutRender = () => {
+    jest.mock(
+        `${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`,
+        () => MockCustomCellNoRender,
+        {
+            virtual: true,
+        }
+    );
+};
+
+const waitForRow = async () => {
+    const nameRegexp = new RegExp(`example_input_one${intervalBase}0`, 'i');
+    // wait for the first row to be rendered
+    const row = await screen.findByRole('row', { name: nameRegexp });
+
+    expect(row).toBeInTheDocument();
+    return row;
 };
 
 function mocksAndRenderTable() {
@@ -91,18 +111,25 @@ it('Render custom cell with Error message', async () => {
     consoleError.mockImplementation(mockConsoleError);
     mocksAndRenderTable();
 
-    const nameRegexp = new RegExp(`example_input_one${intervalBase}0`, 'i');
-    // wait for the first row to be rendered
-    const row = await screen.findByRole('row', { name: nameRegexp });
-
-    expect(row).toBeInTheDocument();
+    const row = await waitForRow();
 
     expect(mockConsoleError).toHaveBeenCalledWith(
-        '[Custom Control] Something went wrong while calling render. Error: Error Custom cell render error'
-    ); // to be changed to Custom Cell
+        '[Custom Cell] Something went wrong while calling render. Error: Error Custom cell render error'
+    );
 
     // Interval cell should be empty because of the error
     const emptyCells = within(row).getAllByRole('cell', { name: '' });
     const isIntervalInEmptyCell = emptyCells.some((cell) => cell.dataset.column === 'interval');
     expect(isIntervalInEmptyCell).toBe(true);
+});
+
+it('Error as custom cell without render method', async () => {
+    jest.resetModules();
+    mockCustomCellWithoutRender();
+    mocksAndRenderTable();
+
+    const row = await waitForRow();
+
+    const errorMessage = within(row).queryByText('"Render" method should be present.');
+    expect(errorMessage).toBeInTheDocument();
 });
