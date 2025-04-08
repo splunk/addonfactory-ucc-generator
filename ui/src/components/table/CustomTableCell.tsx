@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import DL from '@splunk/react-ui/DefinitionList';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import ExclamationTriangle from '@splunk/react-icons/ExclamationTriangle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
-import { getExpansionRowData } from './TableExpansionRowData';
 import { RowDataFields } from '../../context/TableContext';
 import { CustomCellBase, CustomCellConstructor } from './CustomTableCellBase';
 import { invariant } from '../../util/invariant';
@@ -28,11 +26,6 @@ type CustomTableControlProps = {
     field: string;
     fileName: string;
     type: string;
-    moreInfo: {
-        label: string;
-        field: string;
-        mapping?: Record<string, string> | undefined;
-    }[];
 };
 
 type CustomTableControlState = {
@@ -196,8 +189,7 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
     }
 
     render() {
-        const { row, loading, checkMethodIsPresent, methodNotPresentError } = this.state;
-        const { moreInfo } = this.props;
+        const { loading, checkMethodIsPresent, methodNotPresentError } = this.state;
 
         if (
             !loading &&
@@ -221,8 +213,6 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
                     {methodNotPresentError}
                 </span>
             );
-        } else if (checkMethodIsPresent) {
-            content = <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>;
         } else {
             content = (
                 <span
