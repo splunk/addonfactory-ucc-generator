@@ -10,6 +10,8 @@ import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { getBuildDirPath } from '../../../util/script';
 import { CUSTOM_CELL_FILE_NAME, MOCK_CONFIG_CUSTOM_CELL } from './mocks';
 import { CustomCellMock as MockCustomCell } from './mocks/CustomCellMock';
+import { CustomCellMockError as MockCustomCellError } from './mocks/CustomCellMockError';
+import { consoleError } from '../../../../jest.setup';
 
 const inputName = 'example_input_one';
 const intervalBase = 1;
@@ -22,11 +24,23 @@ const props = {
     handleOpenPageStyleDialog: jest.fn(),
 } satisfies ITableWrapperProps;
 
-function renderTable() {
+const mockCustomCell = () => {
     jest.mock(`${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`, () => MockCustomCell, {
         virtual: true,
     });
+};
 
+const mockCustomCellError = () => {
+    jest.mock(
+        `${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`,
+        () => MockCustomCellError,
+        {
+            virtual: true,
+        }
+    );
+};
+
+function mocksAndRenderTable() {
     setUnifiedConfig(MOCK_CONFIG_CUSTOM_CELL);
 
     const data = dataIterators.map((iter) => ({
@@ -58,7 +72,8 @@ it.each([
     { interval: 14, expected: '14' },
     { interval: 15, expected: '15' },
 ])('Render custom cell correctly for interval $interval', async ({ interval, expected }) => {
-    renderTable();
+    mockCustomCell();
+    mocksAndRenderTable();
     const nameRegexp = new RegExp(`example_input_one${interval}`, 'i');
     const row = await screen.findByRole('row', { name: nameRegexp });
 
@@ -67,4 +82,27 @@ it.each([
 
     const nameCell = within(row).getByText(`example_input_one${interval}`);
     expect(nameCell).toBeInTheDocument();
+});
+
+it('Render custom cell with Error message', async () => {
+    jest.resetModules();
+    mockCustomCellError();
+    const mockConsoleError = jest.fn();
+    consoleError.mockImplementation(mockConsoleError);
+    mocksAndRenderTable();
+
+    const nameRegexp = new RegExp(`example_input_one${intervalBase}0`, 'i');
+    // wait for the first row to be rendered
+    const row = await screen.findByRole('row', { name: nameRegexp });
+
+    expect(row).toBeInTheDocument();
+
+    expect(mockConsoleError).toHaveBeenCalledWith(
+        '[Custom Control] Something went wrong while calling render. Error: Error Custom cell render error'
+    ); // to be changed to Custom Cell
+
+    // Interval cell should be empty because of the error
+    const emptyCells = within(row).getAllByRole('cell', { name: '' });
+    const isIntervalInEmptyCell = emptyCells.some((cell) => cell.dataset.column === 'interval');
+    expect(isIntervalInEmptyCell).toBe(true);
 });
