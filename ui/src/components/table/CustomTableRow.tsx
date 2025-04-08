@@ -17,7 +17,6 @@ import { getTableCellValue } from './table.utils';
 import AcceptModal from '../AcceptModal/AcceptModal';
 import { RowDataFields } from '../../context/TableContext';
 import CustomTableCell from './CustomTableCell';
-import CustomTableControl from './CustomTableControl';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -70,7 +69,7 @@ function CustomTableRow(props: CustomTableRowProps) {
     const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
         header.customCell?.src &&
         header.customCell?.type &&
-        React.createElement(CustomTableControl, {
+        React.createElement(CustomTableCell, {
             serviceName: row.serviceName,
             field: header.field,
             row: customRow,
