@@ -8,19 +8,19 @@ import { RowDataFields } from '../../context/TableContext';
 import { CustomCellBase, CustomCellConstructor } from './CustomTableCellBase';
 import { invariant } from '../../util/invariant';
 
-type CustomControlError = {
+type CustomCellError = {
     methodName: string;
     error: Error | null;
 };
 
-function onCustomControlError(params: { methodName: string; error: Error | null }) {
+function onCustomCellError(params: { methodName: string; error: Error | null }) {
     // eslint-disable-next-line no-console
     console.error(
         `[Custom Cell] Something went wrong while calling ${params.methodName}. Error: ${params.error?.name} ${params.error?.message}`
     );
 }
 
-type CustomTableControlProps = {
+type CustomTableCellProps = {
     serviceName: string;
     row: RowDataFields;
     field: string;
@@ -28,19 +28,19 @@ type CustomTableControlProps = {
     type: string;
 };
 
-type CustomTableControlState = {
+type CustomTableCellState = {
     loading: boolean;
     row: RowDataFields;
     methodNotPresentError: string;
     rowUpdatedByControl: boolean;
 };
 
-class CustomTableCell extends Component<CustomTableControlProps, CustomTableControlState> {
-    customControl?: CustomCellBase;
+class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellState> {
+    customCell?: CustomCellBase;
 
     el: HTMLSpanElement | null = null;
 
-    constructor(props: CustomTableControlProps) {
+    constructor(props: CustomTableCellProps) {
         super(props);
         this.state = {
             loading: true,
@@ -52,8 +52,8 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
 
     // Lifecycle method that updates the component's state when props change
     static getDerivedStateFromProps(
-        nextProps: CustomTableControlProps,
-        prevState: CustomTableControlState
+        nextProps: CustomTableCellProps,
+        prevState: CustomTableCellState
     ) {
         // Update row data only if the row prop has changed and it wasn't updated by control itself
         if (!prevState.rowUpdatedByControl && nextProps.row !== prevState.row) {
@@ -70,7 +70,7 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
         this.initializeCustomCell();
     }
 
-    componentDidUpdate(prevProps: CustomTableControlProps) {
+    componentDidUpdate(prevProps: CustomTableCellProps) {
         // If the row prop has changed, re-initialize the custom cell
         // is that one needed, to be checked
         if (prevProps.row !== this.props.row) {
@@ -79,7 +79,7 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
         }
     }
 
-    loadCustomControl = (): Promise<CustomCellConstructor> =>
+    loadCustomCell = (): Promise<CustomCellConstructor> =>
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
             const globalConfig = getUnifiedConfigs();
@@ -94,14 +94,14 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
                 // @ts-expect-error should be exported to other js module and imported here
                 __non_webpack_require__(
                     [`app/${appName}/js/build/custom/${fileName}`],
-                    (Control: CustomCellConstructor) => resolve(Control),
+                    (Cell: CustomCellConstructor) => resolve(Cell),
                     (error: Error) => reject(error)
                 );
             }
         });
 
     handleNoRender = () => {
-        if (!this.customControl || typeof this.customControl.render !== 'function') {
+        if (!this.customCell || typeof this.customCell.render !== 'function') {
             this.setState((prevState) => ({
                 ...prevState,
                 methodNotPresentError: '"Render" method should be present.',
@@ -113,12 +113,12 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
         }));
     };
 
-    // Function to initialize the custom control, loading the module and calling methods on it
+    // Function to initialize the custom cell, loading the module and calling methods on it
     async initializeCustomCell() {
         const globalConfig = getUnifiedConfigs();
-        this.loadCustomControl()
-            .then(async (Control: CustomCellConstructor) => {
-                if (typeof Control !== 'function') {
+        this.loadCustomCell()
+            .then(async (Cell: CustomCellConstructor) => {
+                if (typeof Cell !== 'function') {
                     this.setState({
                         loading: false,
                         methodNotPresentError: 'Loaded module is not a constructor function',
@@ -127,7 +127,7 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
                 }
 
                 invariant(this.el, 'Element reference is not set');
-                this.customControl = new Control(
+                this.customCell = new Cell(
                     globalConfig,
                     this.props.serviceName,
                     this.el,
@@ -135,13 +135,7 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
                     this.props.field
                 );
 
-                // Call the "getDLRows" method on the custom control instance
-                try {
-                    this.handleNoRender();
-                } catch (error) {
-                    // that is probably unreachable code but not removing it in refactor
-                    onCustomControlError({ methodName: 'render', error } as CustomControlError);
-                }
+                this.handleNoRender();
             })
             .catch(() =>
                 this.setState({
@@ -154,11 +148,11 @@ class CustomTableCell extends Component<CustomTableControlProps, CustomTableCont
     render() {
         const { loading, methodNotPresentError } = this.state;
 
-        if (!loading && this.customControl && typeof this.customControl.render === 'function') {
+        if (!loading && this.customCell && typeof this.customCell.render === 'function') {
             try {
-                this.customControl.render();
+                this.customCell.render();
             } catch (error) {
-                onCustomControlError({ methodName: 'render', error } as CustomControlError);
+                onCustomCellError({ methodName: 'render', error } as CustomCellError);
             }
         }
 
