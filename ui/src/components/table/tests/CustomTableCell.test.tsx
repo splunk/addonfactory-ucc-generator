@@ -124,7 +124,8 @@ it('Render custom cell with Error message', async () => {
     const row = await waitForRow();
 
     expect(mockConsoleError).toHaveBeenCalledWith(
-        '[Custom Cell] Something went wrong while calling render. Error: Error Custom cell render error'
+        '[Custom Control] Something went wrong while calling render. Error: Error Custom cell render error'
+        // TO BE: '[Custom Cell] Something went wrong while calling render. Error: Error Custom cell render error'
     );
 
     // Interval cell should be empty because of the error
@@ -139,7 +140,10 @@ it('Error as custom cell without render method', async () => {
 
     const row = await waitForRow();
 
-    const errorMessage = within(row).queryByText('"Render" method should be present.');
+    // TO BE: const errorMessage = within(row).queryByText('"Render" method should be present.');
+    const errorMessage = within(row).queryByText(
+        'At least "render" either "getDLRows" method should be present.'
+    );
     expect(errorMessage).toBeInTheDocument();
 });
 
