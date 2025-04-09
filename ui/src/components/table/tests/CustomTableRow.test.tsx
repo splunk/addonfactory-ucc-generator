@@ -94,3 +94,28 @@ it('Correctly render status labels with default values', async () => {
     const inactiveStatusCell = within(inactiveRow).getByTestId('status');
     expect(inactiveStatusCell).toHaveTextContent('Inactive');
 });
+
+it('Correctly render number of table rows', async () => {
+    renderTable();
+    const rows = await screen.findAllByRole('row');
+    expect(rows).toHaveLength(10); // 9 data rows + 1 header row
+});
+
+it.each(MockRowData.entry)('Correctly render row with name %s', async (row) => {
+    renderTable();
+
+    const verifyCellExistance = (field: string, rowElem: HTMLElement) => {
+        const cell = within(rowElem).getByText(field);
+        expect(cell).toBeInTheDocument();
+    };
+    const { name, content } = row;
+    const firstRow = await screen.findByLabelText(`row-${name}`);
+    expect(firstRow).toBeInTheDocument();
+
+    verifyCellExistance(name, firstRow);
+    verifyCellExistance(content.account_radio, firstRow);
+    verifyCellExistance(content.custom_endpoint, firstRow);
+    verifyCellExistance(content.custom_text, firstRow);
+    verifyCellExistance(content.username, firstRow);
+    verifyCellExistance(content.account_multiple_select, firstRow);
+});

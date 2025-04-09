@@ -9,9 +9,13 @@ import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { getBuildDirPath } from '../../../util/script';
-import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
 import { invariant } from '../../../util/invariant';
 import { MOCK_CONFIG } from './mocks';
+import mockCustomInputRow from './mocks/CustomRowMock';
+import mockCustomInputRowGetDLError from './mocks/CustomRowMockGetDLError';
+import mockCustomInputRowRenderError from './mocks/CustomRowMockRenderError';
+import mockCustomInputRowUnvalid from './mocks/CustomRowMockGetDLUnvalid';
+import { consoleError } from '../../../../jest.setup';
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -26,11 +30,58 @@ const props = {
 
 const customRowFileName = 'CustomInputRow';
 
-function setup() {
+const mockCustomRowInput = () => {
     jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
         virtual: true,
     });
+};
 
+const mockCustomRowInputGetDLError = () => {
+    jest.mock(
+        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
+        () => mockCustomInputRowGetDLError,
+        {
+            virtual: true,
+        }
+    );
+};
+
+const mockCustomRowInputToUndefined = () => {
+    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => undefined, {
+        virtual: true,
+    });
+};
+
+const mockCustomRowInputToUnvalidGetDL = () => {
+    jest.mock(
+        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
+        () => mockCustomInputRowUnvalid,
+        {
+            virtual: true,
+        }
+    );
+};
+
+const mockCustomRowInputRenderError = () => {
+    jest.mock(
+        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
+        () => mockCustomInputRowRenderError,
+        {
+            virtual: true,
+        }
+    );
+};
+
+const waitForRowAndExpand = async (rowName: string) => {
+    const inputRow = await screen.findByRole('row', { name: `row-${rowName}` });
+
+    const expandable = getExpandable(inputRow);
+
+    await userEvent.click(expandable);
+    await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
+};
+
+function setup() {
     setUnifiedConfig(MOCK_CONFIG);
 
     server.use(
@@ -56,9 +107,15 @@ function setup() {
     );
 }
 
-async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
+const getExpandable = (inputRow: HTMLElement) => {
     const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
-    invariant(expandable);
+    invariant(expandable, 'Expandable element not found');
+    return expandable;
+};
+
+async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
+    mockCustomRowInput();
+    const expandable = getExpandable(inputRow);
     if (expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
@@ -74,6 +131,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
 }
 
 it('should update custom Expansion Row when Input has changed', async () => {
+    mockCustomRowInput();
     setup();
     const inputRow = await screen.findByRole('row', { name: `row-${inputName}` });
 
@@ -123,4 +181,76 @@ it('should update custom Expansion Row when Input has changed', async () => {
         await screen.findByRole('row', { name: `row-${inputName}` }),
         updatedInterval
     );
+});
+
+it('Should display error message as getDLRows throws Error', async () => {
+    jest.resetModules();
+    mockCustomRowInputGetDLError();
+
+    const mockConsoleError = jest.fn();
+    consoleError.mockImplementation(mockConsoleError);
+
+    setup();
+    await waitForRowAndExpand(inputName);
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+    expect(mockConsoleError).toHaveBeenCalledWith(
+        '[Custom Control] Something went wrong while calling getDLRows. Error: Error getDLRows method Error during execution'
+    ); // to be changed to Custom Cell
+
+    // message should be different but thats the current state
+    const errorMessage = screen.queryByText(
+        'At least "render" either "getDLRows" method should be present.'
+    );
+    expect(errorMessage).toBeInTheDocument();
+});
+
+it('Should display error message as render throws Error', async () => {
+    jest.resetModules();
+    mockCustomRowInputRenderError();
+
+    const mockConsoleError = jest.fn();
+    consoleError.mockImplementation(mockConsoleError);
+
+    setup();
+    await waitForRowAndExpand(inputName);
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+    expect(mockConsoleError).toHaveBeenCalledWith(
+        '[Custom Control] Something went wrong while calling render. Error: Error render method Error during execution'
+    ); // to be changed to Custom Cell
+
+    const expandedRow = (await screen.findAllByRole('row')).find((row) => {
+        return row.getAttribute('data-expansion-row') === `true`;
+    });
+
+    expect(expandedRow).toBeInTheDocument();
+    // empty row as render method throws error
+    expect(expandedRow?.textContent).toBe('');
+});
+
+it('Should display error message as module not correct', async () => {
+    jest.resetModules();
+    mockCustomRowInputToUndefined();
+
+    setup();
+    await waitForRowAndExpand(inputName);
+
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+    const errorMessage = screen.queryByText('Loaded module is not a constructor function');
+    expect(errorMessage).toBeInTheDocument();
+});
+
+it('Should display error message as getDLRows return number', async () => {
+    jest.resetModules();
+    mockCustomRowInputToUnvalidGetDL();
+
+    setup();
+    await waitForRowAndExpand(inputName);
+
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+
+    const errorMessage = screen.queryByText('getDLRows method did not return a valid object');
+    expect(errorMessage).toBeInTheDocument();
 });
