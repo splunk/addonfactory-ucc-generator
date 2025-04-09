@@ -227,7 +227,7 @@ CustomTableControl.propTypes = {
     field: PropTypes.string,
     fileName: PropTypes.string.isRequired,
     type: PropTypes.string,
-    moreInfo: PropTypes.array, // more info not required when using for custom cell
+    moreInfo: PropTypes.array.isRequired,
 };
 
 export default CustomTableControl;
