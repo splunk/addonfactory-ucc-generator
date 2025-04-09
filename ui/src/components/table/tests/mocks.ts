@@ -109,3 +109,42 @@ export const MOCK_CONFIG_CUSTOM_CELL = {
         },
     },
 } satisfies GlobalConfig;
+
+export const getConfigWithHeadersManyServices = (
+    newHeaders: {
+        label: string;
+        field: string;
+    }[],
+    serviceNumber = 3
+) => {
+    return {
+        ...MOCK_CONFIG,
+        pages: {
+            ...MOCK_CONFIG.pages,
+            inputs: {
+                title: serviceName,
+                services: Array.from(Array(serviceNumber).keys()).map((_, index) => ({
+                    title: `${serviceName}${index}`,
+                    name: `${serviceName}${index}`,
+                    entity: [
+                        {
+                            label: 'Name',
+                            field: 'name',
+                            type: 'text',
+                        },
+                        {
+                            label: 'Interval',
+                            field: 'interval',
+                            type: 'text',
+                        },
+                    ],
+                })),
+                table: {
+                    actions: ['edit'],
+                    header: newHeaders,
+                    moreInfo: newHeaders,
+                },
+            },
+        },
+    } satisfies GlobalConfig;
+};
