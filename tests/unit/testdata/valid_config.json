@@ -1363,8 +1363,8 @@
             "fileName": "generatetext.py",
             "commandType": "generating",
             "requiredSearchAssistant": true,
-            "description": " This command generates COUNT occurrences of a TEXT string.",
-            "syntax": "mycommand count=<event_count> text=<string>",
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
             "usage": "public",
             "arguments": [
                 {
