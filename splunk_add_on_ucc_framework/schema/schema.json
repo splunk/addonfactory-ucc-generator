@@ -650,6 +650,11 @@
       ],
       "additionalProperties": false
     },
+    "delimiter": {
+      "type": "string",
+      "maxLength": 1,
+      "description": "It delimits each value of the field with a predefined character."
+    },
     "EmailValidator": {
       "type": "object",
       "properties": {
@@ -1217,10 +1222,8 @@
                 "$ref": "#/definitions/ValueLabelPair"
               }
             },
-            "delimiter": {
-              "type": "string",
-              "maxLength": 1,
-              "description": "It delimits each value of the field with a predefined character."
+            "delimiter":{
+              "$ref": "#/definitions/delimiter"
             },
             "hideForPlatform": {
               "$ref": "#/definitions/HideForPlatform"
@@ -1327,6 +1330,9 @@
         "options": {
           "type": "object",
           "properties": {
+            "delimiter":{
+              "$ref": "#/definitions/delimiter"
+            },
             "groups": {
               "type": "array",
               "items": {
@@ -1473,6 +1479,9 @@
         "options": {
           "type": "object",
           "properties": {
+            "delimiter":{
+              "$ref": "#/definitions/delimiter"
+            },
             "groups": {
               "type": "array",
               "items": {

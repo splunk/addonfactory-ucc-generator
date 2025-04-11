@@ -43,6 +43,17 @@ describe('parseValue', () => {
         const collection = '/field1,text2/field2';
         expect(() => parseValue(collection)).toThrow('Value is not parsable: /field1,text2/field2');
     });
+
+    it('should split string using custom delimiter', () => {
+        const collection = 'collect_collaboration/1200|collect_file/1|collect_task/1';
+        const result = parseValue(collection, '|');
+
+        expect(result.size).toBe(3);
+        expect(result.get('collect_collaboration')?.inputValue).toBe(1200);
+        expect(result.get('collect_collaboration')?.checkbox).toBeTruthy();
+        expect(result.get('collect_file')?.inputValue).toBe(1);
+        expect(result.get('collect_task')?.inputValue).toBe(1);
+    });
 });
 
 describe('packValue', () => {
@@ -76,6 +87,17 @@ describe('packValue', () => {
         const packedValue =
             'collect_collaboration/1200,collect_file/1,collect_task/1,fieldWithoutValue/0';
         expect(packValue(parseValue(packedValue))).toBe(packedValue);
+    });
+
+    it('should return a custom delimiter appended string of field/text pairs where checkbox is true', () => {
+        const testMap: ValueByField = new Map();
+        testMap.set('collect_collaboration', { checkbox: true, inputValue: 1200 });
+        testMap.set('collect_file', { checkbox: true, inputValue: 1 });
+        testMap.set('collect_task', { checkbox: true, inputValue: 1 });
+        testMap.set('field4', { checkbox: false, inputValue: 1 });
+
+        const result = packValue(testMap, '|');
+        expect(result).toBe('collect_collaboration/1200|collect_file/1|collect_task/1');
     });
 });
 

@@ -220,3 +220,50 @@ describe('CheckboxGroup behavior when disableOnEdit is enabled', () => {
         expect(() => verifyCheckboxesState(false)).not.toThrow();
     });
 });
+
+describe('checkboxgroup behaviour when custom delimiter is added', () => {
+    it('correctly handles select all action with delimiter in CheckboxGroup', async () => {
+        const user = userEvent.setup();
+        const controlOptionsWithDelimiter = {
+            ...defaultCheckboxProps.controlOptions,
+            delimiter: '|',
+        };
+
+        renderFeature({
+            value: 'collect_collaboration/1200',
+            controlOptions: controlOptionsWithDelimiter,
+        });
+
+        const selectAllButton = screen.getByRole('button', { name: 'Select All' });
+        await user.click(selectAllButton);
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        checkboxes.forEach((checkbox) => expect(checkbox).toBeChecked());
+
+        const expectedValue = 'collect_collaboration/1200|collect_file/1|collect_task/1';
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith('api', expectedValue, 'checkboxGroup');
+    });
+
+    it('updates value correctly for single checkbox toggle with custom delimiter', async () => {
+        const user = userEvent.setup();
+        const controlOptionsWithDelimiter = {
+            ...defaultCheckboxProps.controlOptions,
+            delimiter: '|',
+        };
+
+        renderFeature({
+            value: 'collect_file/1',
+            controlOptions: controlOptionsWithDelimiter,
+        });
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        await user.click(checkboxes[0]);
+
+        const expectedValue = 'collect_file/1|collect_collaboration/1200';
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith('api', expectedValue, 'checkboxGroup');
+    });
+});

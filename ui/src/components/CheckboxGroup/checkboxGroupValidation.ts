@@ -21,7 +21,7 @@ export function validateCheckboxGroup(
         `Error occurred while validating CheckboxGroup value for the field "${field}", value should be a string or undefined. Got: "${packedValue}"`
     );
     let errorMessage: MaybeError = false;
-    const parsedValue = parseValue(packedValue);
+    const parsedValue = parseValue(packedValue, options?.delimiter);
     options.rows.some((row) => {
         const rowSubmittedValue = parsedValue.get(row.field);
         if (rowSubmittedValue) {

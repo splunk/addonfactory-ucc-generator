@@ -1528,6 +1528,7 @@
                             "field": "event_filters",
                             "required": true,
                             "options": {
+                                "delimiter": "|",
                                 "groups": [
                                     {
                                         "label": "Transactions",
