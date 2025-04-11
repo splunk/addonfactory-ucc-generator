@@ -245,7 +245,7 @@ This is how it looks in the UI:
 
 | Property                                      | Type  | Description                                                    | Default Value |
 | --------------------------------------------- | ----- | -------------------------------------------------------------- | ------------- |
-| delimiter | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \| (pipe character), the combined value would look like: `rowUnderGroup1/1200|requiredField/10`| comma(`,`) |
+| delimiter | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \| (pipe character), the combined value would look like: `rowUnderGroup1/1200`\|`requiredField/10`| comma(`,`) |
 | groups | array | groups logically organize related checkboxes under a common label within the checkboxGroup control. | - |
 | rows | array | rows defines each individual row within the checkboxGroup control. | - |
 
@@ -337,7 +337,7 @@ The component maps and unmaps values into a single field in the format `fieldNam
 
 | Property                                      | Type  | Description                                                    | Default Value |
 | --------------------------------------------- | ----- | -------------------------------------------------------------- | ------------- |
-| delimiter | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \| (pipe character), the combined value would look like: `rowWithoutGroup|rowUnderGroup1|firstRowUnderGroup3`| comma(`,`) |
+| delimiter | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \| (pipe character), the combined value would look like: `rowWithoutGroup`\|`rowUnderGroup1`\|`firstRowUnderGroup3` | comma(`,`) |
 | groups | array | groups logically organize related checkboxes under a common label within the checkboxTree control. | - |
 | rows | array | rows defines each individual row within the checkboxTree control. | - |
 
