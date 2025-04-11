@@ -300,7 +300,7 @@ class InputPage(Page):
             self.table = InputTable(
                 ucc_smartx_selenium_helper.browser,
                 input_container,
-                mapping={"status": "disabled", "input_type": 3},
+                mapping={"status": "disabled", "input_type": 5, "input_service": 6},
             )
             self.entity1 = ExampleInputOne(
                 ucc_smartx_selenium_helper.browser, input_container

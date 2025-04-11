@@ -1031,7 +1031,7 @@
                             "label": "Example Account",
                             "options": {
                                 "referenceName": "account",
-                                "allowList": "^[a-zA-Z]+$"
+                                "allowList": "^[a-zA-Z]\\w*$"
                             },
                             "help": "",
                             "field": "account",
@@ -1210,7 +1210,7 @@
                             "field": "index",
                             "label": "Index",
                             "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
-                            "defaultValue": "main",
+                            "defaultValue": "default",
                             "required": true
                         },
                         {
@@ -2127,7 +2127,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.61.0+63ec928d5",
+        "version": "5.61.0+88d35d835",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
