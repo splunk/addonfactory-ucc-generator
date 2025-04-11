@@ -32,17 +32,31 @@ export function getFlattenRowsWithGroups({ groups, rows }: CheckboxTreeProps['co
 
 export function getNewCheckboxValues(
     values: ValueByField,
-    newValue: {
-        field: string;
+    options: {
+        field?: string; // single row
         checkbox: boolean;
+        groupFields?: string[]; // group
+        allRows?: string[]; // select all
     }
 ) {
     const newValues = new Map(values);
-    newValues.set(newValue.field, {
-        checkbox: newValue.checkbox,
+
+    const fieldsToUpdate =
+        options.allRows || options.groupFields || (options.field ? [options.field] : []);
+
+    let hasChanged = false; // avoid re-renders
+
+    fieldsToUpdate.forEach((field) => {
+        const oldValue = values.get(field);
+        if (oldValue?.checkbox !== options.checkbox) {
+            hasChanged = true;
+            newValues.set(field, {
+                checkbox: options.checkbox,
+            });
+        }
     });
 
-    return newValues;
+    return hasChanged ? newValues : values;
 }
 
 export function getCheckedCheckboxesCount(group: GroupWithRows, values: ValueByField) {

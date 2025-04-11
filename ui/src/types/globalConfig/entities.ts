@@ -205,6 +205,7 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
     options: CommonEditableEntityOptions.extend({
+        delimiter: z.string().length(1).optional(),
         groups: z
             .array(
                 z.object({
@@ -245,6 +246,7 @@ export const CheckboxTreeEntity = CommonEditableEntityFields.extend({
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
     options: CommonEditableEntityOptions.extend({
+        delimiter: z.string().length(1).optional(),
         groups: z
             .array(
                 z.object({
