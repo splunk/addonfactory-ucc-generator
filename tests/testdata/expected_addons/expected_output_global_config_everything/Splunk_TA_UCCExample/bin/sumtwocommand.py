@@ -6,20 +6,29 @@ from splunklib.searchcommands import \
 
 from sum_without_map import reduce
 
+try:
+    from sum_without_map import map as module_map
+except ImportError:
+    module_map = None
+
 @Configuration()
 class SumtwocommandCommand(ReportingCommand):
     """
 
     ##Syntax
-    | sumtwo total=lines linecount
+    | sumtwocommand total=lines linecount
 
     ##Description
     The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.
 
     """
 
-    total = Option(name='total', require=True, validate=validators.Fieldname(), default='')
+    total = Option(name='total', require=True, validate=validators.Fieldname())
 
+    if module_map is not None:
+        @Configuration()
+        def map(self, events):
+            return module_map(self, events)
 
     def reduce(self, events):
         return reduce(self, events)

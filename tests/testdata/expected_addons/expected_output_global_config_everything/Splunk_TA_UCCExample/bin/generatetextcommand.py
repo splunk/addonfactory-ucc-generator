@@ -10,14 +10,14 @@ class GeneratetextcommandCommand(GeneratingCommand):
     """
 
     ##Syntax
-    mycommand count=<event_count> text=<string>
+    generatetextcommand count=<event_count> text=<string>
 
     ##Description
      This command generates COUNT occurrences of a TEXT string.
 
     """
-    count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10), default='')
-    text = Option(name='text', require=True, default='')
+    count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10))
+    text = Option(name='text', require=True)
 
     def generate(self):
        return generate(self)
