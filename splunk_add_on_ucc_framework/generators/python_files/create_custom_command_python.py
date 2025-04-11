@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, Union, List
+from typing import Any, Dict, List
 import os
 from importlib import import_module
 import sys
 
-from splunk_add_on_ucc_framework.generators.python_files import PyGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 GENERATED_FILES = {}
 
 
-class CustomCommandPy(PyGenerator):
+class CustomCommandPy(FileGenerator):
     __description__ = (
         "Generates Python files for custom commands provided in the globalConfig."
     )
@@ -31,54 +31,52 @@ class CustomCommandPy(PyGenerator):
     def argument_generator(
         self, argument_list: List[str], arg: Dict[str, Any]
     ) -> List[str]:
-        arg_str = ""
-        arg_str = arg_str + f"{arg['name']} = Option(name='{arg['name']}'"
-        if arg["require"]:
-            arg_str += f", require={arg['require']}"
-        else:
-            arg_str += ", require=False"
+        validate_str = ""
+        validate = arg.get("validate", {})
+        if validate:
+            validate_type = validate["type"]
+            if validate_type in ("Integer", "Float"):
+                min_val = validate.get("minimum")
+                max_val = validate.get("maximum")
+                args = []
+                if min_val is not None:
+                    args.append(f"minimum={min_val}")
+                if max_val is not None:
+                    args.append(f"maximum={max_val}")
+                validate_args = ", ".join(args)
+                validate_str = (
+                    f", validate=validators.{validate_type}({validate_args})"
+                    if args
+                    else f", validate=validators.{validate_type}()"
+                )
+            elif validate_type:
+                validate_str = f", validate=validators.{validate_type}()"
 
-        if arg["validate"]:
-            if (
-                arg["validate"]["type"] == "Integer"
-                or arg["validate"]["type"] == "Float"
-            ):
-                if arg["validate"].get("minimum") and arg["validate"].get("maximum"):
-                    arg_str += f", validate=validators.{arg['validate']['type']}"
-                    arg_str += f"(minimum={arg['validate'].get('minimum')}, "
-                    arg_str += f"maximum={arg['validate'].get('maximum')})"
-                elif arg["validate"].get("minimum") and not arg["validate"].get(
-                    "maximum"
-                ):
-                    arg_str += f", validate=validators.{arg['validate']['type']}"
-                    arg_str += f"(minimum={arg['validate'].get('minimum')})"
-                elif not arg["validate"].get("minimum") and arg["validate"].get(
-                    "maximum"
-                ):
-                    arg_str += f", validate=validators.{arg['validate']['type']}"
-                    arg_str += f"(maximum={ arg['validate'].get('maximum')})"
-                else:
-                    arg_str += f", validate=validators.{arg['validate']['type']}()"
-            else:
-                arg_str += f", validate=validators.{arg['validate']['type']}()"
-
-        if arg["default"]:
-            arg_str += f", default='{arg['default']}'"
+        if arg["default"] is None:
+            arg_str = (
+                f"{arg['name']} = Option(name='{arg['name']}', "
+                f"require={arg.get('require')}"
+                f"{validate_str})"
+            )
         else:
-            arg_str += ", default=''"
-        arg_str += ")"
+            arg_str = (
+                f"{arg['name']} = Option(name='{arg['name']}', "
+                f"require={arg.get('require')}"
+                f"{validate_str}, "
+                f"default='{arg.get('default', '')}')"
+            )
         argument_list.append(arg_str)
         return argument_list
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.commands_info = []
-        if self._global_config and self._global_config.has_custom_search_commands():
-            for command in kwargs["custom_search_commands"]:
+        if self._global_config.has_custom_search_commands():
+            for command in self._global_config.custom_search_commands:
                 argument_list: List[str] = []
                 import_map = False
                 command["fileName"] = command["fileName"].replace(".py", "")
                 template = command["commandType"] + ".template"
-                if command["commandType"] == "reporting":
+                if command["commandType"] == "transforming":
                     src_pkg_bin = os.path.realpath(os.path.join(self._input_dir, "bin"))
                     sys.path.insert(0, src_pkg_bin)
                     if hasattr(import_module(command["fileName"]), "map"):
@@ -87,12 +85,11 @@ class CustomCommandPy(PyGenerator):
                 for argument in command["arguments"]:
                     argument_dict = {
                         "name": argument["name"],
-                        "require": argument.get("required"),
+                        "require": argument.get("required", False),
                         "validate": argument.get("validate"),
                         "default": argument.get("defaultValue"),
                     }
                     self.argument_generator(argument_list, argument_dict)
-
                 self.commands_info.append(
                     {
                         "imported_file_name": command["fileName"],
@@ -106,11 +103,9 @@ class CustomCommandPy(PyGenerator):
                     }
                 )
 
-    def generate_python(self) -> Union[Dict[str, str], None]:
-        if not (
-            self._global_config and self._global_config.has_custom_search_commands()
-        ):
-            return None
+    def generate(self) -> Dict[str, str]:
+        if not self.commands_info:
+            return {"": ""}
 
         for command_info in self.commands_info:
             file_name = command_info["file_name"] + ".py"
