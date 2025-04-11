@@ -24,8 +24,8 @@ class SearchbnfConf(ConfGenerator):
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "searchbnf.conf"
         self.searchbnf_info = []
-        if self._global_config and self._global_config.has_custom_search_commands():
-            for command in kwargs["custom_search_commands"]:
+        if self._global_config.has_custom_search_commands():
+            for command in self._global_config.custom_search_commands:
                 if command.get("requiredSearchAssistant", False):
                     searchbnf_dict = {
                         "command_name": command["commandName"],

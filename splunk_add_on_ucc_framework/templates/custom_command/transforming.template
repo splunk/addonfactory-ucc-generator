@@ -4,11 +4,12 @@ import import_declare_test
 from splunklib.searchcommands import \
     dispatch, ReportingCommand, Configuration, Option, validators
 
-{% if import_map %}
-from {{ imported_file_name }} import reduce, map
-{% else %}
 from {{ imported_file_name }} import reduce
-{% endif %}
+
+try:
+    from {{ imported_file_name }} import map as module_map
+except ImportError:
+    module_map = None
 
 @Configuration()
 class {{class_name}}Command(ReportingCommand):
@@ -32,11 +33,10 @@ class {{class_name}}Command(ReportingCommand):
     {{arg}}
     {% endfor %}
 
-    {% if import_map %}
-    @Configuration()
-    def map(self, events):
-        return map(self, events)
-    {% endif %}
+    if module_map is not None:
+        @Configuration()
+        def map(self, events):
+            return module_map(self, events)
 
     def reduce(self, events):
         return reduce(self, events)

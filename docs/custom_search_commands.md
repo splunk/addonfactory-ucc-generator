@@ -1,7 +1,16 @@
 # Custom Search Command
 
 Custom search commands are user-defined [SPL](https://docs.splunk.com/Splexicon:SPL) (Splunk Search Processing Language) commands that enable users to add custom functionality to their Splunk searches.
+There are 4 types of Custom search commands that are:
 
+- Generating
+- Streaming
+- Transforming
+- Dataset processing
+
+> Note: Reporting commands are being referred as Transforming commands [reference](https://docs.splunk.com/Splexicon:Transformingcommand).
+
+> Note: Eventing commands are being referred as Dataset processing commands [reference](https://dev.splunk.com/enterprise/docs/devtools/customsearchcommands/).
 
 ## Generation of custom search command
 
@@ -49,7 +58,7 @@ python.version = python3
 | ------------------------ | ------ | ------------------------------------ |
 | commandName<span class="required-asterisk">\*</span>  | string  | Name of the custom search command |
 | fileName<span class="required-asterisk">\*</span>     | string  | Name of the Python file which contains logic of custom search command  |
-| commandType<span class="required-asterisk">\*</span>  | string  | Specify type of custom search command. Four types of commands are allowed, `streaming`,`generating`,`reporting` and `eventing`. |
+| commandType<span class="required-asterisk">\*</span>  | string  | Specify type of custom search command. Four types of commands are allowed, `streaming`,`generating`,`transforming` and `dataset processing`. |
 | arguments<span class="required-asterisk">\*</span>    | object  | Arguments which can be passed to custom search command. |
 | requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command. Default: false. |
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
@@ -65,8 +74,8 @@ If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `u
 
 - For `Generating` command, the Python file must include a `generate` function.
 - For `Streaming` command, the Python file must include a `stream` function.
-- For `Eventing` command, the Python file must include a `transform` function.
-- For `Reporting` command, the Python file must include a `reduce` function, and optionally a `map` function if a streaming pre-operation is required.
+- For `Dataset processing` command, the Python file must include a `transform` function.
+- For `Transforming` command, the Python file must include a `reduce` function, and optionally a `map` function if a streaming pre-operation is required.
 
 ## Arguments
 
@@ -132,72 +141,69 @@ For example:
     "meta": {...}
     "customSearchCommand": [
         {
-            "commandName": "testcommand",
-            "fileName": "commandlogic.py",
-            "commandType": "streaming",
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
             "requiredSearchAssistant": true,
-            "description": "This is a test command",
-            "syntax": "| testcommand fieldname=<Name of field> pattern=<Valid regex pattern>",
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
             "usage": "public",
             "arguments": [
                 {
-                    "name": "fieldname",
+                    "name": "count",
+                    "required": true,
                     "validate": {
-                        "type": "Fieldname"
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
                     }
                 },
                 {
-                    "name": "pattern",
-                    "validate": {
-                        "type": "RegularExpression"
-                    },
+                    "name": "text",
                     "required": true
                 }
             ]
-        }
+        },
     ],
     "pages": {...}
 }
 ```
 
-Generated python file named `testcommand.py`:
+Generated python file named `generatetextcommand.py`:
 
 ``` python
-import sys
+mport sys
 import import_declare_test
 
 from splunklib.searchcommands import \
-    dispatch, StreamingCommand, Configuration, Option, validators
-from commandlogic import stream
+    dispatch, GeneratingCommand, Configuration, Option, validators
+from generatetext import generate
 
 @Configuration()
-class testcommandCommand(StreamingCommand):
+class GeneratetextcommandCommand(GeneratingCommand):
     """
 
     ##Syntax
-    This is a test command
+    generatetextcommand count=<event_count> text=<string>
 
     ##Description
-    | testcommand fieldname=<Name of field> pattern=<Valid regex pattern>
+     This command generates COUNT occurrences of a TEXT string.
 
     """
+    count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10))
+    text = Option(name='text', require=True)
 
-    fieldname = Option(name = "fieldname",require = False, validate = validators.Fieldname(), default = "")
-    pattern = Option(name = "pattern",require = True, validate = validators.RegularExpression(), default = "")
-    
+    def generate(self):
+       return generate(self)
 
-    def stream(self, events):
-        # Put your event transformation code here
-        return stream(self,events)
-
-dispatch(testcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
+dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
 ```
 
 Generated stanza in `commands.conf` file
 
 ```
-[testcommand]
-filename = testcommand.py
+[generatetextcommand]
+filename = generatetextcommand.py
 chunked = true
 python.version = python3
 ```
@@ -205,8 +211,14 @@ python.version = python3
 Generated stanza in `searchbnf.conf` file
 
 ```
-[testcommand]
-syntax = | testcommand fieldname=<Name of field> pattern=<Valid regex pattern>
-description = This is a test command.
+[generatetextcommand]
+syntax = generatetextcommand count=<event_count> text=<string>
+description = This command generates COUNT occurrences of a TEXT string.
 usage = public
 ```
+
+### Output
+
+This is how generatetextcommand search result looks like:
+
+![image](./images/custom_search_command_output.png)

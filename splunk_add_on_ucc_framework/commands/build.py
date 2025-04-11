@@ -523,7 +523,6 @@ def generate(
             app_manifest=app_manifest,
             addon_version=addon_version,
             has_ui=global_config.meta.get("isVisible", True),
-            custom_search_commands=global_config.custom_search_commands,
         )
     )
     # TODO: all FILES GENERATED object: generated_files, use it for comparison

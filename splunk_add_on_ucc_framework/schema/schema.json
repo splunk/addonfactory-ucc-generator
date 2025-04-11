@@ -444,12 +444,12 @@
         },
         "commandType": {
           "type": "string",
-          "description": "Type of the custom search command. There are 4 types of command i.e generating, streaming, reporting and eventing.",
+          "description": "Type of the custom search command. There are 4 types of command i.e generating, streaming, transforming and dataset processing",
           "enum": [
             "generating",
             "streaming",
-            "reporting",
-            "eventing"
+            "transforming",
+            "dataset processing"
           ]
         },
         "requiredSearchAssistant": {

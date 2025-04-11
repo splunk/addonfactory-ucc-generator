@@ -25,15 +25,13 @@ class CommandsConf(ConfGenerator):
 
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "commands.conf"
-        if self._global_config and self._global_config.has_custom_search_commands():
+        if self._global_config.has_custom_search_commands():
             self.command_names = []
-            for command in kwargs["custom_search_commands"]:
+            for command in self._global_config.custom_search_commands:
                 self.command_names.append(command["commandName"])
 
     def generate_conf(self) -> Union[Dict[str, str], None]:
-        if not (
-            self._global_config and self._global_config.has_custom_search_commands()
-        ):
+        if not self._global_config.has_custom_search_commands():
             return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
