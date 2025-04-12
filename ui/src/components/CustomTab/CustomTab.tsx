@@ -23,7 +23,7 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
         new Promise((resolve) => {
             if (customCompontentContext?.[tab?.customTab?.src]) {
                 const Control = customCompontentContext[tab?.customTab?.src];
-                resolve(Control as CustomTabConstructor);
+                return resolve(Control as CustomTabConstructor);
             }
             if (tab.customTab?.type === 'external') {
                 import(
