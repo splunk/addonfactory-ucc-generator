@@ -22,6 +22,8 @@ const buttonTestId = 'button-adding-row';
 
 const serviceName = 'example_input_one';
 
+const serviceTitle = 'Example Input One';
+
 const exampleProps = {
     page: 'inputs' as const,
     data: [
@@ -30,18 +32,21 @@ const exampleProps = {
             interval: '321321',
             name: 'test',
             serviceName,
+            serviceTitle,
         },
         {
             disabled: false,
             interval: '321321',
             name: 'test1',
             serviceName,
+            serviceTitle,
         },
         {
             disabled: false,
             interval: '321321',
             name: 'test2',
             serviceName,
+            serviceTitle,
         },
     ],
     sortDir: 'asc' as const,
@@ -111,6 +116,7 @@ const SimpleComponentToUpdateCustomTable = () => {
                             interval: '123123123',
                             name: `Additional Name ${rowsData.length}`,
                             serviceName,
+                            serviceTitle,
                         },
                     ]);
                 }}
