@@ -88,7 +88,7 @@ def test_generate_xml(
 
     mock_writer = MagicMock()
     with patch.object(config_xml, "writer", mock_writer):
-        file_paths = config_xml.generate_xml()
+        file_paths = config_xml.generate()
 
         mock_writer.assert_called_once_with(
             file_name=exp_fname,
