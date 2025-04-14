@@ -1,5 +1,5 @@
 from pytest import fixture, raises
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
 
 
@@ -21,12 +21,7 @@ def test_set_attribute_with_error(
         )
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_nav_default_xml",
-    return_value="<xml></xml>",
-)
 def test_set_attribute(
-    mock_data_ui_generator,
     global_config_all_json,
     input_dir,
     output_dir,
@@ -40,8 +35,32 @@ def test_set_attribute(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-
     assert hasattr(default_xml, "default_xml_content")
+
+
+@patch("os.path.exists", return_value=True)
+def test_set_attribute_when_file_is_present(
+    mock_os_path,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+    caplog,
+):
+    default_xml = DefaultXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    expected_msg = (
+        "Skipping generating data/ui/nav/default.xml because file already exists."
+    )
+    assert expected_msg in caplog.text
+    assert not hasattr(default_xml, "default_xml_content")
 
 
 def test_set_attribute_with_no_pages(
@@ -58,16 +77,26 @@ def test_set_attribute_with_no_pages(
     assert not hasattr(default_xml, "default_xml_content")
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.xml_files.DefaultXml._set_attributes",
-    return_value=MagicMock(),
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.xml_files.DefaultXml.get_file_output_path"
-)
+def test_generate_xml_without_pages(
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+):
+    default_xml = DefaultXml(
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    file_paths = default_xml.generate_xml()
+    assert file_paths is None
+
+
 def test_generate_xml(
-    mock_op_path,
-    mock_set_attributes,
     global_config_all_json,
     input_dir,
     output_dir,
@@ -81,18 +110,9 @@ def test_generate_xml(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    config_xml.default_xml_content = "<xml></xml>"
     exp_fname = "default.xml"
-    file_path = "output_path/default.xml"
-    mock_op_path.return_value = file_path
 
-    mock_writer = MagicMock()
-    with patch.object(config_xml, "writer", mock_writer):
-        file_paths = config_xml.generate_xml()
-
-        mock_writer.assert_called_once_with(
-            file_name=exp_fname,
-            file_path=file_path,
-            content=config_xml.default_xml_content,
-        )
-        assert file_paths == {exp_fname: file_path}
+    file_paths = config_xml.generate_xml()
+    assert file_paths == {
+        exp_fname: f"{output_dir}/{ta_name}/default/data/ui/nav/{exp_fname}"
+    }

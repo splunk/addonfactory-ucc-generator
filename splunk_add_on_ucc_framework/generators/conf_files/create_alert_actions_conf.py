@@ -31,8 +31,6 @@ class AlertActionsConf(ConfGenerator):
     def _set_attributes(self, **kwargs: Any) -> None:
         self.conf_file = "alert_actions.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
-        if self._global_config is None:
-            return
 
         envs = normalize.normalize(
             self._global_config.alerts,

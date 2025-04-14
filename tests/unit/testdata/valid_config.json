@@ -1329,6 +1329,11 @@
         "version": "1.0.0",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
+        "checkForUpdates": false,
+        "supportedThemes": [
+            "dark",
+            "light"
+        ],
         "os-dependentLibraries": [
             {
                 "name": "cryptography",

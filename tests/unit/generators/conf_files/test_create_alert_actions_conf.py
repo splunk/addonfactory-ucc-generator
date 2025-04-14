@@ -1,5 +1,7 @@
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AlertActionsConf
+import shutil
+import json
 
 
 def mocked__set_attribute(this, **kwargs):
@@ -45,12 +47,10 @@ def mocked__set_attribute(this, **kwargs):
     this.conf_spec_file = f"{this.conf_file}.spec"
 
 
-def test_set_attributes_global_config_with_empty_alerts(
-    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+@patch.object(shutil, "copy")
+def test_parameters_processing(
+    mock_copy, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
-    global_config_for_alerts = MagicMock()
-    global_config_for_alerts.alerts = []
-
     alert_action_conf = AlertActionsConf(
         global_config_for_alerts,
         input_dir,
@@ -58,8 +58,119 @@ def test_set_attributes_global_config_with_empty_alerts(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
 
+    assert "param.name = xyz" in alert_action_conf.alerts["test_alert_no_support"]
+
+
+@patch.object(shutil, "copy")
+def test_keys_not_in_deny_list(
+    mock_copy, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_actions_conf = AlertActionsConf(
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert (
+        "label = Test Alert Default" in alert_actions_conf.alerts["test_alert_default"]
+    )
+
+
+@patch.object(shutil, "copy")
+def test_parameters_without_default_value(
+    mock_copy, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert "param.name = " in alert_action_conf.alerts["test_alert_active"]
+
+
+@patch.object(shutil, "copy")
+def test_custom_icon_file_name(
+    mock_copy, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert "icon_path = dev_icon.png" in alert_action_conf.alerts["test_alert_default"]
+
+
+@patch.object(shutil, "copy")
+def test_default_icon_file_name(
+    mock_copy, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    assert "icon_path = alerticon.png" in alert_action_conf.alerts["test_alert_active"]
+
+
+@patch.object(shutil, "copy")
+def test_adaptive_response(
+    mock_copy, global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config_for_alerts,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+
+    expected_json = json.dumps(
+        {
+            "task": ["Create"],
+            "subject": ["endpoint"],
+            "category": ["Information Portrayal"],
+            "technology": [
+                {
+                    "version": ["1.0.0"],
+                    "product": "Test Incident Update",
+                    "vendor": "Splunk",
+                }
+            ],
+            "supports_adhoc": True,
+            "supports_cloud": True,
+            "drilldown_uri": 'search?q=search%20index%3D"_internal"&earliest=0&latest=',
+        }
+    )
+
+    assert (
+        f"param._cam = {expected_json}"
+        in alert_action_conf.alerts["test_alert_adaptive"]
+    )
+
+
+def test_set_attributes_global_config_with_empty_alerts(
+    global_config_only_configuration, input_dir, output_dir, ucc_dir, ta_name
+):
+    alert_action_conf = AlertActionsConf(
+        global_config_only_configuration,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
+    )
+    assert alert_action_conf._alert_settings == []
     assert alert_action_conf.alerts == {}
     assert alert_action_conf.alerts_spec == {}
 
@@ -68,11 +179,7 @@ def test_set_attributes_global_config_with_empty_alerts(
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.set_template_and_render"
 )
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.get_file_output_path"
-)
 def test_generate_conf(
-    mock_op_path,
     mock_template,
     global_config_for_alerts,
     input_dir,
@@ -82,8 +189,6 @@ def test_generate_conf(
 ):
     content = "content"
     exp_fname = "alert_actions.conf"
-    file_path = "output_path/alert_actions.conf"
-    mock_op_path.return_value = file_path
     template_render = MagicMock()
     template_render.render.return_value = content
 
@@ -95,33 +200,22 @@ def test_generate_conf(
         addon_name=ta_name,
     )
 
-    alert_actions_conf.writer = MagicMock()
     alert_actions_conf._template = template_render
     file_paths = alert_actions_conf.generate_conf()
-
-    # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
-    alert_actions_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-    assert file_paths == {exp_fname: file_path}
+    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/default/{exp_fname}"}
 
 
-@patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 def test_generate_conf_no_alerts(
-    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+    global_config_only_configuration, input_dir, output_dir, ucc_dir, ta_name
 ):
     alert_action_conf = AlertActionsConf(
-        global_config_for_alerts,
+        global_config_only_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf.alerts = {}
     result = alert_action_conf.generate_conf()
     assert result is None
 
@@ -130,11 +224,7 @@ def test_generate_conf_no_alerts(
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.set_template_and_render"
 )
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.AlertActionsConf.get_file_output_path"
-)
 def test_generate_conf_spec(
-    mock_op_path,
     mock_template,
     global_config_for_alerts,
     input_dir,
@@ -144,8 +234,6 @@ def test_generate_conf_spec(
 ):
     content = "content"
     exp_fname = "alert_actions.conf.spec"
-    file_path = "output_path/alert_actions.conf.spec"
-    mock_op_path.return_value = file_path
     template_render = MagicMock()
     template_render.render.return_value = content
 
@@ -157,32 +245,23 @@ def test_generate_conf_spec(
         addon_name=ta_name,
     )
 
-    alert_actions_conf.writer = MagicMock()
     alert_actions_conf._template = template_render
     file_paths = alert_actions_conf.generate_conf_spec()
 
     # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
-    alert_actions_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-    assert file_paths == {exp_fname: file_path}
+    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/README/{exp_fname}"}
 
 
-@patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 def test_generate_conf_no_alerts_spec(
-    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+    global_config_only_configuration, input_dir, output_dir, ucc_dir, ta_name
 ):
     alert_action_conf = AlertActionsConf(
-        global_config_for_alerts,
+        global_config_only_configuration,
         input_dir,
         output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    alert_action_conf.alerts_spec = {}
     result = alert_action_conf.generate_conf_spec()
     assert result is None
