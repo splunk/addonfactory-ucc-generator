@@ -100,7 +100,7 @@ def test_generate_conf_spec(
     account_spec.writer = MagicMock()
     account_spec._template = mock_template_render
 
-    file_paths = account_spec.generate_conf_spec()
+    file_paths = account_spec.generate()
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
     account_spec.writer.assert_called_once_with(
@@ -122,5 +122,5 @@ def test_generate_conf_spec_no_configuration(
         addon_name=ta_name,
     )
 
-    file_paths = account_spec.generate_conf_spec()
-    assert file_paths is None
+    file_paths = account_spec.generate()
+    assert file_paths == {"": ""}
