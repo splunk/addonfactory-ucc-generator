@@ -12,11 +12,11 @@ import Trash from '@splunk/react-icons/enterprise/Trash';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
 
-import CustomTableControl from './CustomTableControl';
 import { ActionButtonComponent } from './CustomTableStyle';
 import { getTableCellValue } from './table.utils';
 import AcceptModal from '../AcceptModal/AcceptModal';
 import { RowDataFields } from '../../context/TableContext';
+import CustomTableControl from './CustomTableControl';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;

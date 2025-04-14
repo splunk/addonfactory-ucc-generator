@@ -97,7 +97,7 @@ describe('TableWrapper - Configuration Page', () => {
           "xyz=ab",
           "aaaaa",
           "two",
-          "testsomethingelse",
+          "testsomethingelsecustomtext2",
           "222222",
         ]
     `);
@@ -113,7 +113,7 @@ describe('TableWrapper - Configuration Page', () => {
         [
           "222222",
           "aaaaa",
-          "testsomethingelse",
+          "testsomethingelsecustomtext2",
           "two",
           "wxyz=a",
           "xyz=ab",
@@ -138,7 +138,7 @@ describe('TableWrapper - Configuration Page', () => {
           "xyz=ab",
           "wxyz=a",
           "two",
-          "testsomethingelse",
+          "testsomethingelsecustomtext2",
           "aaaaa",
           "222222",
         ]
@@ -252,7 +252,17 @@ describe('TableWrapper - Inputs Page', () => {
     it('Check header columns in inputs page', async () => {
         await setup();
 
-        const expectedHeaders = ['Name', 'Input Status', 'Input Type', 'Actions'];
+        const expectedHeaders = [
+            'Name',
+            'Input Status',
+            'Input Type',
+            'Account radio',
+            'Custom endpoint',
+            'Custom text',
+            'Username',
+            'Account multiple select',
+            'Actions',
+        ];
 
         const table = screen.getByRole('table');
         const headerCells = within(table).getAllByTestId('head-cell');
