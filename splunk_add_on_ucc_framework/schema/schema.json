@@ -652,7 +652,7 @@
     },
     "delimiter": {
       "type": "string",
-      "maxLength": 1,
+      "maxLength": 20,
       "description": "It delimits each value of the field with a predefined character."
     },
     "EmailValidator": {
@@ -1222,8 +1222,10 @@
                 "$ref": "#/definitions/ValueLabelPair"
               }
             },
-            "delimiter":{
-              "$ref": "#/definitions/delimiter"
+            "delimiter": {
+              "type": "string",
+              "maxLength": 1,
+              "description": "It delimits each value of the field with a predefined character."
             },
             "hideForPlatform": {
               "$ref": "#/definitions/HideForPlatform"

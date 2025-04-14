@@ -58,10 +58,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
     const handleRowChange = useCallback(
         (newValue: { field: string; checkbox: boolean; text?: string }) => {
             setValues((prevValues) => {
-                const updatedValues = getNewCheckboxValues(prevValues, {
-                    field: newValue.field,
-                    checkbox: newValue.checkbox,
-                });
+                const updatedValues = getNewCheckboxValues(prevValues, newValue);
                 handleChange(
                     field,
                     packValue(updatedValues, controlOptions?.delimiter),

@@ -34,9 +34,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
         if (shouldUseDefaultValue) {
             handleChange(field, packValue(value, controlOptions?.delimiter), 'checkboxGroup');
         }
-        // Delimiter is static — safe to ignore for dependencies
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [field, handleChange, shouldUseDefaultValue, value]);
+    }, [controlOptions?.delimiter, field, handleChange, shouldUseDefaultValue, value]);
 
     const [values, setValues] = useState(value);
 

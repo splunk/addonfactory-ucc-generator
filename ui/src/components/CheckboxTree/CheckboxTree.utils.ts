@@ -32,18 +32,27 @@ export function getFlattenRowsWithGroups({ groups, rows }: CheckboxTreeProps['co
 
 export function getNewCheckboxValues(
     values: ValueByField,
-    options: {
-        field?: string; // single row
-        checkbox: boolean;
-        groupFields?: string[]; // group
-        allRows?: string[]; // select all
-    }
+    options:
+        | {
+              checkbox: boolean;
+              field: string; // single row
+          }
+        | {
+              checkbox: boolean;
+              groupFields: string[]; // group
+          }
+        | {
+              checkbox: boolean;
+              allRows: string[]; // select all
+          }
 ) {
     const newValues = new Map(values);
 
     const fieldsToUpdate =
-        options.allRows || options.groupFields || (options.field ? [options.field] : []);
-
+        ('allRows' in options && options.allRows) ||
+        ('groupFields' in options && options.groupFields) ||
+        ('field' in options && [options.field]) ||
+        [];
     let hasChanged = false; // avoid re-renders
 
     fieldsToUpdate.forEach((field) => {
@@ -56,6 +65,9 @@ export function getNewCheckboxValues(
         }
     });
 
+    // Avoid unnecessary re-renders:
+    // Only return a new Map if any value actually changed,
+    // otherwise return the original reference.
     return hasChanged ? newValues : values;
 }
 
