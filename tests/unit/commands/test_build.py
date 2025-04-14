@@ -200,8 +200,9 @@ def test_ta_name_mismatch(
 def test_uncaught_exception(mock_get_build_output_path, caplog):
     mock_get_build_output_path.side_effect = ValueError("Some exc msg")
 
-    expected_msg = (
-        "Uncaught exception occurred. You can report this issue using: https://github.com/splunk/"
+    expected_msg_1 = "Uncaught exception occurred. Exception details:"
+    expected_msg_2 = (
+        "You can report this issue using: https://github.com/splunk/"
         "addonfactory-ucc-generator/issues/new?template=bug_report.yml&title=%5BBUG%5D%20Some%20"
         "exc%20msg&description="
     )
@@ -220,5 +221,22 @@ def test_uncaught_exception(mock_get_build_output_path, caplog):
     whitespaces = [el for el in caplog.messages[-1].split("https")[1] if el.isspace()]
 
     assert len(whitespaces) == 0
-    assert expected_msg in caplog.text
+    assert expected_msg_1 in caplog.text and expected_msg_2 in caplog.text
     assert expected_params in caplog.text
+
+
+def test_source_directory_not_found(caplog):
+    expected_msg = "Source directory: 'some/unexisting/path' does not exist. Please verify that given source exists."
+
+    with pytest.raises(SystemExit):
+        generate(
+            source="some/unexisting/path",
+            addon_version="1.0.0",
+            python_binary_name="python3",
+            verbose_file_summary_report=False,
+            pip_version="latest",
+            pip_legacy_resolver=False,
+            ui_source_map=False,
+        )
+
+    assert expected_msg == caplog.messages[-1]
