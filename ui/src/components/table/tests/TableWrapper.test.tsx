@@ -97,7 +97,7 @@ describe('TableWrapper - Configuration Page', () => {
           "xyz=ab",
           "aaaaa",
           "two",
-          "testsomethingelse",
+          "testsomethingelsecustomtext2",
           "222222",
         ]
     `);
@@ -113,7 +113,7 @@ describe('TableWrapper - Configuration Page', () => {
         [
           "222222",
           "aaaaa",
-          "testsomethingelse",
+          "testsomethingelsecustomtext2",
           "two",
           "wxyz=a",
           "xyz=ab",
@@ -138,7 +138,7 @@ describe('TableWrapper - Configuration Page', () => {
           "xyz=ab",
           "wxyz=a",
           "two",
-          "testsomethingelse",
+          "testsomethingelsecustomtext2",
           "aaaaa",
           "222222",
         ]
