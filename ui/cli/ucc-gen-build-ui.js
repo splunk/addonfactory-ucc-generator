@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const paramOutputDir = process.argv.find(arg => arg.startsWith('output='))?.slice(7);
+const viteUccGenConfigPath = `${__dirname}/vite.config_ucc-gen-ui.ts`;
 
 execSync(
-    'vite build --config ./node_modules/@splunk/add-on-ucc-framework/cli/vite.config_ucc-gen-ui.ts',
+    `vite build --config ${viteUccGenConfigPath} output=${paramOutputDir}`,
     { stdio: 'inherit' }
 );

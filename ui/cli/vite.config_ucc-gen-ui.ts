@@ -64,7 +64,12 @@ const input: Record<string, string> = {};
 input['ucc-ui'] = join(uiDir, 'src/ucc-ui.ts');
 
 const TA_NAME = 'Splunk_TA_Example';
-const outputDir = resolve(uiDir, '../output', TA_NAME, 'appserver/static/js/build');
+
+const paramOutputDir = process.argv.find((arg) => arg.startsWith('output='))?.slice(7);
+
+const outputDir = paramOutputDir
+    ? resolve(paramOutputDir, './output', TA_NAME, 'appserver/static/js/build')
+    : resolve(uiDir, '../output', TA_NAME, 'appserver/static/js/build');
 
 export default defineConfig({
     build: {
