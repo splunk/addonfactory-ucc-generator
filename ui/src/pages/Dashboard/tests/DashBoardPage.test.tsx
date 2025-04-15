@@ -11,7 +11,7 @@ import { setUnifiedConfig } from '../../../util/util';
 import { consoleError } from '../../../../test.setup';
 
 it('dashboard page renders waiting spinner', async () => {
-    consoleError.mockImplementation(() => {})
+    consoleError.mockImplementation(() => {});
     server.use(http.get('/custom/panels_to_display.json', () => HttpResponse.json({})));
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
