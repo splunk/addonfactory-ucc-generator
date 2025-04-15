@@ -51,9 +51,7 @@ function CheckboxTree(props: CheckboxTreeProps) {
                 'checkboxTree'
             );
         }
-        // Delimiter is static — safe to ignore for dependencies
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [field, handleChange, shouldUseDefaultValue, initialValues]);
+    }, [field, handleChange, shouldUseDefaultValue, initialValues, controlOptions?.delimiter]);
 
     const handleRowChange = useCallback(
         (newValue: { field: string; checkbox: boolean; text?: string }) => {
@@ -67,9 +65,8 @@ function CheckboxTree(props: CheckboxTreeProps) {
                 return updatedValues;
             });
         },
-        // Delimiter is static — safe to ignore for dependencies
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [field, handleChange]
+
+        [controlOptions?.delimiter, field, handleChange]
     );
 
     const handleParentCheckboxForGroup = useCallback(
@@ -96,9 +93,8 @@ function CheckboxTree(props: CheckboxTreeProps) {
                 return updatedValues;
             });
         },
-        // Delimiter is static — safe to ignore for dependencies
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [controlOptions.groups, field, handleChange]
+
+        [controlOptions?.delimiter, controlOptions.groups, field, handleChange]
     );
 
     const handleCheckboxToggleAll = useCallback(
@@ -120,9 +116,8 @@ function CheckboxTree(props: CheckboxTreeProps) {
                 return updatedValues;
             });
         },
-        // Delimiter is static — safe to ignore for dependencies
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [controlOptions.rows, disabled, field, handleChange]
+
+        [controlOptions?.delimiter, controlOptions.rows, disabled, field, handleChange]
     );
 
     return (

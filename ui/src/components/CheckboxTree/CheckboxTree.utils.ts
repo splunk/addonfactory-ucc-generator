@@ -30,6 +30,11 @@ export function getFlattenRowsWithGroups({ groups, rows }: CheckboxTreeProps['co
     }, []);
 }
 
+/**
+ * To avoid unnecessary re-renders
+ * only return a new Map if any value actually changed,
+ * otherwise return the original reference.
+ */
 export function getNewCheckboxValues(
     values: ValueByField,
     options:
@@ -65,9 +70,6 @@ export function getNewCheckboxValues(
         }
     });
 
-    // Avoid unnecessary re-renders:
-    // Only return a new Map if any value actually changed,
-    // otherwise return the original reference.
     return hasChanged ? newValues : values;
 }
 
