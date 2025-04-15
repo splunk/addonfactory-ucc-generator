@@ -170,6 +170,11 @@ export default defineConfig(({ mode }) => {
             globals: true,
             environment: 'jsdom',
             setupFiles: 'test.setup.ts',
+            server: {
+                deps: {
+                    inline: ['jspdf'],
+                },
+            },
         },
     };
 });
