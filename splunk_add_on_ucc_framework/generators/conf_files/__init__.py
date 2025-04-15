@@ -24,6 +24,7 @@ from .create_tags_conf import TagsConf
 from .create_web_conf import WebConf
 from .create_account_conf import AccountConf
 from .create_settings_conf import SettingsConf
+from .create_commands_conf import CommandsConf
 
 __all__ = [
     "FileGenerator",
@@ -37,4 +38,5 @@ __all__ = [
     "InputsConf",
     "AccountConf",
     "SettingsConf",
+    "CommandsConf",
 ]
