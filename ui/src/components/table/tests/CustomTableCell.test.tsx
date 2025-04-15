@@ -143,6 +143,7 @@ test('Error as custom cell without render method', async () => {
 });
 
 test('Error as custom cell file is undefined', async () => {
+    consoleError.mockImplementation(() => {})
     mockCustomCellToUndefined();
     mocksAndRenderTable();
 
