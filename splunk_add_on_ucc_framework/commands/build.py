@@ -19,11 +19,15 @@ import logging
 import os
 import shutil
 import sys
-from typing import Optional, List
+from typing import Optional, List, Any
 import subprocess
 import colorama as c
 import fnmatch
 import filecmp
+import platform
+import traceback
+
+from urllib.parse import quote
 
 from splunk_add_on_ucc_framework import (
     __version__,
@@ -406,6 +410,30 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
+def exception_handler(func: Any) -> Any:
+    def inner_function(*args: Any, **kwargs: Any) -> Any:
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            system = platform.system()
+            exc_type, exc_value, exc_traceback = type(e), e, e.__traceback__
+            error = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            title = quote(f"[BUG] {str(exc_value)}")
+            trb = quote("".join(error))
+            url = (
+                f"https://github.com/splunk/addonfactory-ucc-generator/issues/new?template=bug_report.yml&title={title}"
+                f"&description={trb}&ucc_version={__version__}&system_info={system}"
+            )
+            logger.error(
+                f"Uncaught exception occurred. Exception details:\n"
+                f"{''.join(error)}\n"
+                f"You can report this issue using: {url}"
+            )
+
+    return inner_function
+
+
+@exception_handler
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -420,7 +448,6 @@ def generate(
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
-
     try:
         python_binary_version = _get_python_version_from_executable(python_binary_name)
         logger.info(f"Python Version: {python_binary_version}")
@@ -435,7 +462,10 @@ def generate(
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):
-        raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
+        logger.error(
+            f"Source directory: '{source}' does not exist. Please verify that given source exists."
+        )
+        sys.exit(1)
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")

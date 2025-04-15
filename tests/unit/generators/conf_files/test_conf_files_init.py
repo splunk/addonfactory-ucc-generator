@@ -1,6 +1,6 @@
 def test___init__conf():
     expected_classes = [
-        "ConfGenerator",
+        "FileGenerator",
         "ServerConf",
         "RestMapConf",
         "WebConf",
@@ -13,7 +13,7 @@ def test___init__conf():
         "SettingsConf",
     ]
     expected_modules = [
-        "conf_generator",
+        "file_generator",
         "create_alert_actions_conf",
         "create_app_conf",
         "create_eventtypes_conf",

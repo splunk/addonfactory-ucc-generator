@@ -48,7 +48,7 @@ def test_generate_conf(
 
     eventtypes_conf.writer = MagicMock()
     eventtypes_conf._template = template_render
-    file_paths = eventtypes_conf.generate_conf()
+    file_paths = eventtypes_conf.generate()
 
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
@@ -79,5 +79,5 @@ def test_generate_conf_no_alert_settings(
     )
 
     eventtypes_conf.alert_settings = {}
-    file_paths = eventtypes_conf.generate_conf()
-    assert file_paths is None
+    file_paths = eventtypes_conf.generate()
+    assert file_paths == {"": ""}
