@@ -40,32 +40,33 @@ const props = {
 const customRowFileName = 'CustomInputRow';
 
 const mockCustomRowInput = () => {
-    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow);
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRow,
+    }));
 };
 
 const mockCustomRowInputGetDLError = () => {
-    vi.doMock(
-        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowGetDLError
-    );
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRowGetDLError,
+    }));
 };
 
 const mockCustomRowInputToUndefined = () => {
-    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => '');
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: undefined,
+    }));
 };
 
 const mockCustomRowInputToUnvalidGetDL = () => {
-    vi.doMock(
-        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowUnvalid
-    );
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRowUnvalid,
+    }));
 };
 
 const mockCustomRowInputRenderError = () => {
-    vi.doMock(
-        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowRenderError
-    );
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRowRenderError,
+    }));
 };
 
 const waitForRowAndExpand = async (rowName: string) => {
@@ -227,7 +228,6 @@ it('should update custom Expansion Row when Input has changed', async () => {
 });
 
 it('Should display error message as getDLRows throws Error', async () => {
-    vi.resetModules();
     mockCustomRowInputGetDLError();
 
     const mockConsoleError = vi.fn();
@@ -237,19 +237,22 @@ it('Should display error message as getDLRows throws Error', async () => {
     await waitForRowAndExpand(inputName);
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
-    expect(mockConsoleError).toHaveBeenCalledWith(
-        '[Custom Control] Something went wrong while calling getDLRows. Error: Error getDLRows method Error during execution'
-    ); // to be changed to Custom Cell
+    await waitFor(() => {
+        expect(mockConsoleError).toHaveBeenCalledWith(
+            '[Custom Control] Something went wrong while calling getDLRows. Error: Error getDLRows method Error during execution'
+        ); // to be changed to Custom Cell
+    });
 
-    // message should be different but thats the current state
-    const errorMessage = screen.queryByText(
-        'At least "render" either "getDLRows" method should be present.'
-    );
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+        // message should be different but thats the current state
+        const errorMessage = screen.queryByText(
+            'At least "render" either "getDLRows" method should be present.'
+        );
+        expect(errorMessage).toBeInTheDocument();
+    });
 });
 
 it('Should display error message as render throws Error', async () => {
-    vi.resetModules();
     mockCustomRowInputRenderError();
 
     const mockConsoleError = vi.fn();
@@ -259,9 +262,11 @@ it('Should display error message as render throws Error', async () => {
     await waitForRowAndExpand(inputName);
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
-    expect(mockConsoleError).toHaveBeenCalledWith(
-        '[Custom Control] Something went wrong while calling render. Error: Error render method Error during execution'
-    ); // to be changed to Custom Cell
+    await waitFor(() => {
+        expect(mockConsoleError).toHaveBeenCalledWith(
+            '[Custom Control] Something went wrong while calling render. Error: Error render method Error during execution'
+        ); // to be changed to Custom Cell
+    });
 
     const expandedRow = (await screen.findAllByRole('row')).find((row) => {
         return row.getAttribute('data-expansion-row') === `true`;
@@ -273,27 +278,27 @@ it('Should display error message as render throws Error', async () => {
 });
 
 it('Should display error message as module not correct', async () => {
-    vi.resetModules();
     mockCustomRowInputToUndefined();
 
     setup();
     await waitForRowAndExpand(inputName);
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-
-    const errorMessage = screen.queryByText('Loaded module is not a constructor function');
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+        const errorMessage = screen.queryByText('Loaded module is not a constructor function');
+        expect(errorMessage).toBeInTheDocument();
+    });
 });
 
 it('Should display error message as getDLRows return number', async () => {
-    vi.resetModules();
     mockCustomRowInputToUnvalidGetDL();
 
     setup();
     await waitForRowAndExpand(inputName);
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-
-    const errorMessage = screen.queryByText('getDLRows method did not return a valid object');
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+        const errorMessage = screen.getByText('getDLRows method did not return a valid object');
+        expect(errorMessage).toBeInTheDocument();
+    });
 });

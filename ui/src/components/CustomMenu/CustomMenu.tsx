@@ -70,9 +70,8 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
         new Promise((resolve) => {
             if (this.customComponentContext?.[this.props.fileName]) {
                 const Control = this.customComponentContext?.[this.props.fileName];
-                return resolve(Control);
-            }
-            if (this.props.type === 'external') {
+                resolve(Control);
+            } else if (this.props.type === 'external') {
                 import(
                     /* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`
                 ).then((external) => {

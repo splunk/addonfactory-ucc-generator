@@ -34,9 +34,8 @@ class CustomControl extends React.Component<Props, State> {
         new Promise((resolve) => {
             if (context?.[module]) {
                 const Control = context[module];
-                return resolve(Control as CustomControlConstructor);
-            }
-            if (type === 'external') {
+                resolve(Control as CustomControlConstructor);
+            } else if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     async (external) => {
                         const Control = external.default as CustomControlConstructor;
