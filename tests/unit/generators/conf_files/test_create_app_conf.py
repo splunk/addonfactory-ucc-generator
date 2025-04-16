@@ -159,7 +159,7 @@ def test_generate_conf(
     )
     app_conf.writer = MagicMock()
     app_conf._template = template_render
-    file_paths = app_conf.generate_conf()
+    file_paths = app_conf.generate()
 
     # Ensure the appropriate methods were called and the file was generated
     assert mock_op_path.call_count == 1

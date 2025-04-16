@@ -161,7 +161,7 @@ def test_generate_conf(
     "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
     return_value=MagicMock(),
 )
-def test_generate_conf_spec_no_input_names(
+def test_generate_conf_no_input_names(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):
     inputs_conf = InputsConf(
@@ -173,7 +173,7 @@ def test_generate_conf_spec_no_input_names(
     )
     inputs_conf.input_names = []
     result = inputs_conf.generate_conf()
-    assert result is None
+    assert result == {"": ""}
 
 
 @patch(
@@ -225,7 +225,7 @@ def test_generate_conf_spec(
     "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
     return_value=MagicMock(),
 )
-def test_generate_conf_no_input_names(
+def test_generate_conf_spec_no_input_names(
     global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
 ):
     inputs_conf = InputsConf(
@@ -237,7 +237,7 @@ def test_generate_conf_no_input_names(
     )
     inputs_conf.input_names = []
     result = inputs_conf.generate_conf_spec()
-    assert result is None
+    assert result == {"": ""}
 
 
 def test_inputs_conf_content(global_config_all_json, input_dir, output_dir, ta_name):

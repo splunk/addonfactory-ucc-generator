@@ -16,10 +16,10 @@
 from time import time
 from typing import Any, Dict
 
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class AppConf(ConfGenerator):
+class AppConf(FileGenerator):
     __description__ = (
         "Generates `app.conf` with the details mentioned in globalConfig[meta]"
     )
@@ -50,7 +50,7 @@ class AppConf(ConfGenerator):
         self.author = kwargs["app_manifest"].get_authors()[0]["name"]
         self.build = str(int(time()))
 
-    def generate_conf(self) -> Dict[str, str]:
+    def generate(self) -> Dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="app_conf.template"

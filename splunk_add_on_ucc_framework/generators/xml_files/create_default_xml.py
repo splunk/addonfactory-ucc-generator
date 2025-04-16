@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
-from typing import Dict, Any, Union
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from typing import Dict, Any
 import os
 from splunk_add_on_ucc_framework import data_ui_generator
 import logging
@@ -22,7 +22,7 @@ import logging
 logger = logging.getLogger("ucc_gen")
 
 
-class DefaultXml(XMLGenerator):
+class DefaultXml(FileGenerator):
     __description__ = (
         "Generates default.xml file based on configs present in globalConfig,"
         " in `default/data/ui/nav` folder."
@@ -49,9 +49,9 @@ class DefaultXml(XMLGenerator):
                     default_view=self._global_config.meta.get("default_view"),
                 )
 
-    def generate_xml(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
         if not self._global_config.has_pages():
-            return None
+            return {"": ""}
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "nav", "default.xml"]
         )

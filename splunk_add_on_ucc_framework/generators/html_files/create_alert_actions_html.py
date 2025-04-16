@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.generators.html_files import HTMLGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
     normalize,
 )
-from typing import Dict, Any, Union
+from typing import Dict, Any
 from os import linesep
 from re import search
 
 
-class AlertActionsHtml(HTMLGenerator):
+class AlertActionsHtml(FileGenerator):
     __description__ = (
         "Generates `alert_name.html` file based on alerts configuration present in globalConfig,"
         " in `default/data/ui/alerts` folder."
@@ -39,9 +39,9 @@ class AlertActionsHtml(HTMLGenerator):
             schema_content = envs["schema.content"]
             self._alert_settings = schema_content["modular_alerts"]
 
-    def generate_html(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
         if not self._global_config.has_alerts():
-            return None
+            return {"": ""}
 
         alert_details: Dict[str, str] = {}
         for self.alert in self._alert_settings:

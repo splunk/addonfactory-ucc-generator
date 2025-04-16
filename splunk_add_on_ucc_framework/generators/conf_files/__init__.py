@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .conf_generator import ConfGenerator
+from ..file_generator import FileGenerator
 from .create_alert_actions_conf import AlertActionsConf
 from .create_app_conf import AppConf
 from .create_eventtypes_conf import EventtypesConf
@@ -26,7 +26,7 @@ from .create_account_conf import AccountConf
 from .create_settings_conf import SettingsConf
 
 __all__ = [
-    "ConfGenerator",
+    "FileGenerator",
     "ServerConf",
     "RestMapConf",
     "WebConf",
