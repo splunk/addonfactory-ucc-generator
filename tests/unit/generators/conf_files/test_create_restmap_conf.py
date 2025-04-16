@@ -44,7 +44,7 @@ def test_generate_conf(
 
     restmap_conf.writer = MagicMock()
     restmap_conf._template = template_render
-    file_paths = restmap_conf.generate_conf()
+    file_paths = restmap_conf.generate()
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
 
@@ -69,8 +69,8 @@ def test_generate_conf_no_gc_schema(
         addon_name=ta_name,
     )
 
-    file_paths = restmap_conf.generate_conf()
-    assert file_paths is None
+    file_paths = restmap_conf.generate()
+    assert file_paths == {"": ""}
 
 
 def test_generate_conf_for_conf_only_TA(
@@ -84,8 +84,8 @@ def test_generate_conf_for_conf_only_TA(
         addon_name=ta_name,
     )
 
-    file_paths = restmap_conf.generate_conf()
-    assert file_paths is None
+    file_paths = restmap_conf.generate()
+    assert file_paths == {"": ""}
 
 
 def test_set_attributes(
@@ -157,7 +157,7 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
         addon_name=ta_name,
         ucc_dir=UCC_DIR,
     )
-    file_paths = restmap_conf.generate_conf()
+    file_paths = restmap_conf.generate()
 
     assert file_paths is not None
     assert file_paths.keys() == {"restmap.conf"}
@@ -199,7 +199,7 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
         addon_name=ta_name,
         ucc_dir=UCC_DIR,
     )
-    file_paths = restmap_conf.generate_conf()
+    file_paths = restmap_conf.generate()
 
     assert file_paths is not None
     assert file_paths.keys() == {"restmap.conf"}
