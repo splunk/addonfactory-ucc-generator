@@ -1,0 +1,54 @@
+name: Frontend Code Coverage
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'src/**'
+      - 'tests/**'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  compare-frontend-coverage:
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout develop branch
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate coverage for develop branch
+        run: |
+          npx jest --coverage --coverageReporters=json-summary
+          cp coverage/coverage-summary.json /tmp/develop-coverage.json
+
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Install dependencies again
+        run: npm ci
+
+      - name: Generate coverage for PR branch
+        run: |
+          npx jest --coverage --coverageReporters=json-summary
+          cp coverage/coverage-summary.json /tmp/pr-coverage.json
+
+      - name: Compare and comment coverage
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { default: compareDiff } = await import('${{ github.workspace }}/.github/scripts/ui-code-coverage.mjs')
+            await compareDiff({ github, context, core })
