@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .xml_generator import XMLGenerator
+from ..file_generator import FileGenerator
 from .create_default_xml import DefaultXml
 from .create_configuration_xml import ConfigurationXml
 from .create_dashboard_xml import DashboardXml
@@ -21,7 +21,7 @@ from .create_inputs_xml import InputsXml
 from .create_redirect_xml import RedirectXml
 
 __all__ = [
-    "XMLGenerator",
+    "FileGenerator",
     "DefaultXml",
     "ConfigurationXml",
     "DashboardXml",

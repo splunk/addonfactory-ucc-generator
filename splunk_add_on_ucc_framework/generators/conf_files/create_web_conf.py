@@ -21,10 +21,10 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     EndpointRegistrationEntry,
 )
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class WebConf(ConfGenerator):
+class WebConf(FileGenerator):
     __description__ = (
         "Generates `web.conf` to expose the endpoints generated in "
         "`restmap.conf` which is generated based on configurations from globalConfig."
@@ -40,9 +40,9 @@ class WebConf(ConfGenerator):
                 self._global_config.user_defined_handlers.endpoint_registration_entries
             )
 
-    def generate_conf(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
         if not self.endpoints:
-            return None
+            return {"": ""}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(

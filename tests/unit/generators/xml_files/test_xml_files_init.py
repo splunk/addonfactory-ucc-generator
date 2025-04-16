@@ -1,6 +1,6 @@
 def test___init__XML():
     expected_classes = [
-        "XMLGenerator",
+        "FileGenerator",
         "DefaultXml",
         "ConfigurationXml",
         "DashboardXml",
@@ -8,7 +8,7 @@ def test___init__XML():
         "RedirectXml",
     ]
     expected_modules = [
-        "xml_generator",
+        "file_generator",
         "create_default_xml",
         "create_configuration_xml",
         "create_dashboard_xml",
