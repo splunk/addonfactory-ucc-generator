@@ -235,10 +235,9 @@ describe('TableWrapper - Inputs Page', () => {
         renderTable(inputsProps);
 
         await waitFor(async () => {
-            const loading = screen.queryByText('Loading...');
-            if (loading) {
-                await waitFor(() => expect(loading).not.toHaveTextContent('Loading...'));
-            }
+    await waitFor(() => {
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
+    })
         });
     };
 
