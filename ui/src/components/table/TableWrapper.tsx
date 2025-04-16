@@ -276,6 +276,22 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
 
     const getRowData = () => {
         let allRowsData: RowDataFields[] = [];
+        services?.forEach((service) => {
+            const extractedServiceName = service?.name;
+            if (!extractedServiceName || !rowData?.[extractedServiceName]) {
+                return;
+            }
+
+            rowData[extractedServiceName] = Object.fromEntries(
+                Object.entries(rowData[extractedServiceName]).map(([key, row]) => [
+                    key,
+                    {
+                        ...row,
+                        serviceTitle: service.title || '',
+                    },
+                ])
+            );
+        });
         if (searchType === 'all') {
             Object.keys(rowData).forEach((key) => {
                 const newArr = searchText
