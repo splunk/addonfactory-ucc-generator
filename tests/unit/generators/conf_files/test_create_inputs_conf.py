@@ -29,8 +29,8 @@ def test_set_attributes_no_inputs_in_global_config(
 
     inputs_conf._set_attributes()
 
-    assert inputs_conf.generate_conf() is None
-    assert inputs_conf.generate_conf_spec() is None
+    assert not inputs_conf.generate_conf()
+    assert not inputs_conf.generate_conf_spec()
 
 
 @patch(
