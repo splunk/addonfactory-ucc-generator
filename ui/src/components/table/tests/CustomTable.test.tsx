@@ -11,6 +11,7 @@ import { TableContextProvider } from '../../../context/TableContext';
 import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
 import { getBuildDirPath } from '../../../util/script';
 import { MOCK_CONFIG } from './mocks';
+import { invariant } from '../../../util/invariant';
 
 const handleToggleActionClick = jest.fn();
 const handleOpenPageStyleDialog = jest.fn();
@@ -131,8 +132,14 @@ function setup() {
     render(<SimpleComponentToUpdateCustomTable />, { wrapper: BrowserRouter });
 }
 
-const getCollapsIcon = (inputRow: HTMLElement) =>
-    within(inputRow).getByRole('cell', { name: /expand/i });
+const getCollapsIcon = (inputRow: HTMLElement) => {
+    const expandableCell = within(inputRow).getByTestId('expand');
+    invariant(expandableCell, 'Expandable cell not found');
+    const expandable = within(expandableCell).getByRole('button');
+    invariant(expandable, 'Expandable button not found');
+
+    return expandable;
+};
 
 const expandRow = async (inputRow: HTMLElement) => {
     const expandable = getCollapsIcon(inputRow);
