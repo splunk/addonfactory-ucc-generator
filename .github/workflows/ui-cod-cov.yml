@@ -1,4 +1,4 @@
-name: Frontend Code Coverage
+name: UI Code Coverage
 
 on:
   pull_request:
