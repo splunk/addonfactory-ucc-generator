@@ -650,6 +650,11 @@
       ],
       "additionalProperties": false
     },
+    "delimiter": {
+      "type": "string",
+      "maxLength": 20,
+      "description": "It delimits each value of the field with a predefined character."
+    },
     "EmailValidator": {
       "type": "object",
       "properties": {
@@ -1327,6 +1332,9 @@
         "options": {
           "type": "object",
           "properties": {
+            "delimiter":{
+              "$ref": "#/definitions/delimiter"
+            },
             "groups": {
               "type": "array",
               "items": {
@@ -1473,6 +1481,9 @@
         "options": {
           "type": "object",
           "properties": {
+            "delimiter":{
+              "$ref": "#/definitions/delimiter"
+            },
             "groups": {
               "type": "array",
               "items": {
