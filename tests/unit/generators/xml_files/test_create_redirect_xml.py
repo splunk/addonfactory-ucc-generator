@@ -69,7 +69,7 @@ def test_generate_xml_with_oauth(
 
     mock_writer = MagicMock()
     with patch.object(redirect_xml, "writer", mock_writer):
-        file_paths = redirect_xml.generate_xml()
+        file_paths = redirect_xml.generate()
 
         # Assert that the writer function was called with the correct parameters
         mock_writer.assert_called_once_with(
@@ -102,7 +102,7 @@ def test_generate_xml_without_oauth(
 
     mock_writer = MagicMock()
     with patch.object(redirect_xml, "writer", mock_writer):
-        file_paths = redirect_xml.generate_xml()
+        file_paths = redirect_xml.generate()
 
         # Assert that no files are returned since no dashboard is configured
-        assert file_paths is None
+        assert file_paths == {"": ""}

@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
-from typing import Any, Dict, Union
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from typing import Any, Dict
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
-class InputsXml(XMLGenerator):
+class InputsXml(FileGenerator):
     __description__ = (
         "Generates inputs.xml based on inputs configuration present in globalConfig,"
         " in `default/data/ui/views/inputs.xml` folder"
@@ -30,9 +30,9 @@ class InputsXml(XMLGenerator):
                 self._addon_name,
             )
 
-    def generate_xml(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
         if not self._global_config.has_inputs():
-            return None
+            return {"": ""}
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "inputs.xml"]
         )

@@ -14,12 +14,12 @@
 # limitations under the License.
 #
 from collections import defaultdict
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class InputsConf(ConfGenerator):
+class InputsConf(FileGenerator):
     __description__ = (
         "Generates `inputs.conf` and `inputs.conf.spec` "
         "file for the services mentioned in globalConfig"
@@ -99,9 +99,15 @@ class InputsConf(ConfGenerator):
                 prop = f"{field_name} = {field_value}".rstrip()
                 spec_properties.append(prop)
 
-    def generate_conf(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
+        conf_files: Dict[str, str] = {}
+        conf_files.update(self.generate_conf())
+        conf_files.update(self.generate_conf_spec())
+        return conf_files
+
+    def generate_conf(self) -> Dict[str, str]:
         if not self.inputs_conf_names:
-            return None
+            return {"": ""}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
@@ -155,13 +161,13 @@ class InputsConf(ConfGenerator):
         )
         return {spec_file: file_path}
 
-    def generate_conf_spec(self) -> Union[Dict[str, str], None]:
+    def generate_conf_spec(self) -> Dict[str, str]:
         files = self._generate_spec_inputs()
 
         for name, params in self.other_spec_files.items():
             files.update(self._generate_spec_other(name, params))
 
         if not files:
-            return None
+            return {}
 
         return files
