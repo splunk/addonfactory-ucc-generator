@@ -5,8 +5,8 @@ on:
     branches:
       - develop
     paths:
-      - 'src/**'
-      - 'tests/**'
+      - 'ui/src/**'
+      - 'tests/ui/**'
     types: [opened, synchronize, reopened]
 
 jobs:
