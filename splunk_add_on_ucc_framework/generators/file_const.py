@@ -24,6 +24,7 @@ from splunk_add_on_ucc_framework.generators.xml_files import (
     RedirectXml,
 )
 from splunk_add_on_ucc_framework.generators.html_files import AlertActionsHtml
+from splunk_add_on_ucc_framework.generators.python_files import CustomCommandPy
 from splunk_add_on_ucc_framework.generators.conf_files import (
     AlertActionsConf,
     AppConf,
@@ -90,5 +91,10 @@ GEN_FILE_LIST: List[FileClass] = [
         "_.html",
         AlertActionsHtml,
         ["default", "data", "ui", "alerts"],
+    ),
+    FileClass(
+        "_.py",
+        CustomCommandPy,
+        ["bin"],
     ),
 ]
