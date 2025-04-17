@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
+
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { CustomMenuConstructor } from './CustomMenuBase';
 import { invariant } from '../../util/invariant';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
 
 type CustomMenuProps = {
     fileName: string;
     type: string;
     handleChange: (val: { service: string; input?: string }) => void;
+    customComponentContext?: CustomComponentContextType;
 };
 
 type CustomMenuState = {
@@ -16,6 +19,8 @@ type CustomMenuState = {
 };
 
 class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
+    customComponentContext?: CustomComponentContextType;
+
     shouldRender: boolean;
 
     el?: HTMLElement;
@@ -70,14 +75,17 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
         new Promise((resolve) => {
             if (this.customComponentContext?.[this.props.fileName]) {
                 const Control = this.customComponentContext?.[this.props.fileName];
-                resolve(Control);
+                resolve(Control as CustomMenuConstructor);
             } else if (this.props.type === 'external') {
-                import(
-                    /* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`
-                ).then((external) => {
-                    const Control = external.default;
-                    resolve(Control as CustomMenuConstructor);
-                });
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`)
+                    .then((external) => {
+                        const Control = external.default;
+                        resolve(Control as CustomMenuConstructor);
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.error(`[Custom Menu] Error loading custom menu ${error.message}`);
+                    });
             } else {
                 const globalConfig = getUnifiedConfigs();
                 const appName = globalConfig.meta.name;

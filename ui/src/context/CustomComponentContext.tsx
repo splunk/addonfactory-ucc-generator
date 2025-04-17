@@ -1,11 +1,7 @@
 import React, { createContext, ReactNode, useMemo } from 'react';
-import { CustomControlConstructor } from '../components/CustomControl/CustomControlBase';
-import { CustomTabConstructor } from '../components/CustomTab/CustomTabBase';
-import { CustomHookConstructor } from '../types/components/CustomHookClass';
+import { CustomElementsMap } from '../types/CustomTypes';
 
-export type CustomComponentContextType =
-    | Record<string, CustomHookConstructor | CustomControlConstructor | CustomTabConstructor>
-    | undefined;
+export type CustomComponentContextType = CustomElementsMap | undefined;
 
 const CustomComponentContext = createContext<CustomComponentContextType>(undefined);
 

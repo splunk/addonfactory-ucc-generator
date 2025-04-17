@@ -14,4 +14,6 @@ export { CustomMenuBase } from './components/CustomMenu/CustomMenuBase';
 
 export { CustomCellBase } from './components/table/CustomTableCellBase';
 
+export { CustomRowBase } from './components/table/CustomRowBase';
+
 export { init } from './pages/UccInit';

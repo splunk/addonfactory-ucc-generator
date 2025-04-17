@@ -1,9 +1,10 @@
-import { expect, it, vi } from 'vitest';
+import { vi } from 'vitest';
 import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
 import { BrowserRouter } from 'react-router-dom';
+
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
@@ -13,18 +14,11 @@ import { getBuildDirPath } from '../../../util/script';
 import mockCustomInputRowGetDLError from './mocks/CustomRowMockGetDLError';
 import mockCustomInputRowRenderError from './mocks/CustomRowMockRenderError';
 import mockCustomInputRowUnvalid from './mocks/CustomRowMockGetDLUnvalid';
-
-// Import the mock outside of the setup function
-import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
+import mockCustomInputRow from './mocks/CustomRowMock';
 import { invariant } from '../../../util/invariant';
 import { MOCK_CONFIG } from './mocks';
 import { GlobalConfig } from '../../../publicApi';
 import { consoleError } from '../../../../test.setup';
-
-// Set up the mock before any tests run, doMock is not hoisted to the top of the file
-vi.doMock(`${getBuildDirPath()}/custom/CustomInputRow.js`, () => ({
-    default: mockCustomInputRow,
-}));
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -169,9 +163,14 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
     if (loading) {
         await waitForElementToBeRemoved(loading);
     }
-    const allDefinitions = (await screen.findAllByRole('definition')).map((el) => el.textContent);
 
-    expect(allDefinitions).toContain(`${expectedInterval} sec`);
+    await waitFor(async () => {
+        const allDefinitions = (await screen.findAllByRole('definition')).map(
+            (el) => el.textContent
+        );
+
+        expect(allDefinitions).toContain(`${expectedInterval} sec`);
+    });
 }
 
 it('should update custom Expansion Row when Input has changed', async () => {
@@ -202,7 +201,6 @@ it('should update custom Expansion Row when Input has changed', async () => {
             }
         )
     );
-
     await expectIntervalInExpandedRow(
         await screen.findByRole('row', { name: `row-${inputName}` }),
         interval
@@ -210,15 +208,14 @@ it('should update custom Expansion Row when Input has changed', async () => {
 
     await userEvent.click(within(inputRow).getByRole('button', { name: /edit/i }));
     const dialog = await screen.findByRole('dialog');
-
     const textBoxes = within(dialog).getAllByRole('textbox');
     expect(textBoxes).toHaveLength(2);
     const intervalInput = textBoxes[1];
     expect(intervalInput).toHaveValue(interval.toString());
+
     await userEvent.clear(intervalInput);
     await userEvent.type(intervalInput, updatedInterval.toString());
     await userEvent.click(screen.getByRole('button', { name: /update/i }));
-
     await screen.findByRole('cell', { name: updatedInterval.toString() });
 
     await expectIntervalInExpandedRow(
