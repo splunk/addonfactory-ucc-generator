@@ -44,6 +44,17 @@ const verifyNotDisplayedElement = (group: string) => {
     expect(secondField).not.toBeInTheDocument();
 };
 
+const getControlGroupByDataName = (dataName: string) => {
+    const controlGroups = screen.getAllByTestId('control-group');
+    return controlGroups.find((el) => el.getAttribute('data-name') === dataName);
+};
+
+const getEntityTextBox = (entityField: string) => {
+    const controlGroup = getControlGroupByDataName(entityField);
+    invariant(controlGroup, `Control group with data-name="${entityField}" not found`);
+    return within(controlGroup as HTMLElement).getByRole('textbox');
+};
+
 it('should render base form correctly with name and File fields', async () => {
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
@@ -60,8 +71,7 @@ it('should render base form correctly with name and File fields', async () => {
     );
 
     screen.getByRole('textbox', { name: 'Name' });
-
-    const fileField = document.querySelector('[data-name="name"]');
+    const fileField = getControlGroupByDataName('name');
     expect(fileField).toBeInTheDocument();
 });
 
@@ -155,7 +165,7 @@ it.each([
 });
 
 describe('Verify if submiting BaseFormView works', () => {
-    const renderAndGetFormRef = (
+    const initializeFormRef = (
         mockConfig: GlobalConfig,
         mockContext?: TableContextDataTypes,
         serviceName = 'example_input_four'
@@ -193,14 +203,8 @@ describe('Verify if submiting BaseFormView works', () => {
         return formRef;
     };
 
-    const getEntityTextBox = (entityField: string) => {
-        const entityWrapper = document.querySelector(`[data-name="${entityField}"]`);
-        invariant(entityWrapper);
-        return within(entityWrapper as HTMLElement).getByRole('textbox');
-    };
-
     it('Correctly pass form data via post', async () => {
-        const formRef = renderAndGetFormRef(
+        const formRef = initializeFormRef(
             getGlobalConfigMockFourInputServices(),
             MOCK_CONTEXT_STATE_THREE_INPUTS
         );
@@ -247,7 +251,7 @@ describe('Verify if submiting BaseFormView works', () => {
     });
 
     it('should throw error as name already used', async () => {
-        const formRef = renderAndGetFormRef(
+        const formRef = initializeFormRef(
             getGlobalConfigMockFourInputServices(),
             MOCK_CONTEXT_STATE_THREE_INPUTS
         );
@@ -280,7 +284,7 @@ describe('Verify if submiting BaseFormView works', () => {
                 inputsUniqueAcrossSingleService;
         }
 
-        const formRef = renderAndGetFormRef(
+        const formRef = initializeFormRef(
             globalConfigMock,
             MOCK_CONTEXT_STATE_THREE_INPUTS,
             'example_input_two'

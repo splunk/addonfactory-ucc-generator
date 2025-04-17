@@ -44,7 +44,7 @@ it('render with all default dashboards', async () => {
     ];
 
     idsToBeInDocument.forEach((id) => {
-        const elementWithId = document.querySelector(`#${id}`);
+        const elementWithId = screen.getByTestId(id);
         expect(elementWithId).toBeInTheDocument();
     });
 
@@ -55,7 +55,10 @@ it('render with all default dashboards', async () => {
     ];
 
     dataInputIdsToBeInDocument.forEach((dataId) => {
-        const elementWithId = document.querySelector(`[data-input-id="${dataId}"]`);
+        const elementWithId = screen
+            .getAllByTestId('input-item')
+            .find((el) => el.getAttribute('data-input-id') === dataId);
+
         expect(elementWithId).toBeInTheDocument();
     });
 });

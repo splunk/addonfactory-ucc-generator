@@ -51,10 +51,11 @@ describe('render data ingestion modal inputs', () => {
 
         // Wait for dropdown to be rendered
         await waitFor(() => {
-            expect(document.querySelector('[data-test="input-title"]')).toBeInTheDocument();
+            expect(screen.getByTestId('input-title')).toBeInTheDocument();
         });
+
         await waitFor(() => {
-            expect(document.querySelector('#data_ingestion_modal_dropdown')).toBeInTheDocument();
+            expect(screen.getByTestId('data_ingestion_modal_dropdown')).toBeInTheDocument();
         });
 
         const idsToBeInDocument = [
@@ -66,8 +67,7 @@ describe('render data ingestion modal inputs', () => {
 
         await waitFor(() => {
             idsToBeInDocument.forEach((id) => {
-                const element = document.getElementById(id);
-                expect(element).toBeInTheDocument();
+                expect(screen.getByTestId(id)).toBeInTheDocument();
             });
         });
     });

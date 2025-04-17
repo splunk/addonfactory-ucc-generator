@@ -58,6 +58,12 @@ class FileGenerator(ABC):
         self._input_dir = input_dir
         self._output_dir = output_dir
         self._template_dir = [(sep.join([kwargs["ucc_dir"], "templates"]))]
+        self._template = Environment(
+            loader=FileSystemLoader(self._template_dir),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+        )
         self._addon_name: str = kwargs["addon_name"]
         self.writer = write_file
         self._gc_schema: GlobalConfigBuilderSchema = GlobalConfigBuilderSchema(
@@ -97,6 +103,11 @@ class FileGenerator(ABC):
             keep_trailing_newline=True,
         )
         self._template = self._template.get_template(file_name)
+
+    def _render(self, file_name: str, **kwargs: Any) -> str:
+        select_autoescape(disabled_extensions=("template",))
+        template = self._template.get_template(file_name)
+        return template.render(kwargs)
 
 
 def begin(

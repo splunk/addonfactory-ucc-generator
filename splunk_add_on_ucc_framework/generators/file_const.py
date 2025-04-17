@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List, NamedTuple, Type, Union
+from typing import List, NamedTuple, Type
 from .file_generator import FileGenerator
 
 from splunk_add_on_ucc_framework.generators.xml_files import (
@@ -43,62 +43,52 @@ __all__ = ["FileClass", "GEN_FILE_LIST"]
 class FileClass(NamedTuple):
     file_name: str
     file_class: Type[FileGenerator]
-    file_path: Union[str, List[str]]
-    file_description: str
+    file_path: List[str]
 
 
 GEN_FILE_LIST: List[FileClass] = [
-    FileClass("app.conf", AppConf, "default", AppConf.__description__),
-    FileClass("inputs.conf", InputsConf, "default", InputsConf.__description__),
-    FileClass("server.conf", ServerConf, "default", ServerConf.__description__),
-    FileClass("restmap.conf", RestMapConf, "default", RestMapConf.__description__),
-    FileClass("web.conf", WebConf, "default", WebConf.__description__),
+    FileClass("app.conf", AppConf, ["default"]),
+    FileClass("inputs.conf", InputsConf, ["default"]),
+    FileClass("server.conf", ServerConf, ["default"]),
+    FileClass("restmap.conf", RestMapConf, ["default"]),
+    FileClass("web.conf", WebConf, ["default"]),
     FileClass(
         "alert_actions.conf",
         AlertActionsConf,
-        "default",
-        AlertActionsConf.__description__,
+        ["default"],
     ),
-    FileClass(
-        "eventtypes.conf", EventtypesConf, "default", EventtypesConf.__description__
-    ),
-    FileClass("tags.conf", TagsConf, "default", TagsConf.__description__),
-    FileClass("_account.conf", AccountConf, "README", AccountConf.__description__),
-    FileClass("_settings.conf", SettingsConf, "README", SettingsConf.__description__),
+    FileClass("eventtypes.conf", EventtypesConf, ["default"]),
+    FileClass("tags.conf", TagsConf, ["default"]),
+    FileClass("_account.conf", AccountConf, ["README"]),
+    FileClass("_settings.conf", SettingsConf, ["README"]),
     FileClass(
         "configuration.xml",
         ConfigurationXml,
         ["default", "data", "ui", "views"],
-        ConfigurationXml.__description__,
     ),
     FileClass(
         "dashboard.xml",
         DashboardXml,
         ["default", "data", "ui", "views"],
-        DashboardXml.__description__,
     ),
     FileClass(
         "default.xml",
         DefaultXml,
         ["default", "data", "ui", "nav"],
-        DefaultXml.__description__,
     ),
     FileClass(
         "inputs.xml",
         InputsXml,
         ["default", "data", "ui", "views"],
-        InputsXml.__description__,
     ),
     FileClass(
         "_redirect.xml",
         RedirectXml,
         ["default", "data", "ui", "views"],
-        RedirectXml.__description__,
     ),
     FileClass(
         "_.html",
         AlertActionsHtml,
         ["default", "data", "ui", "alerts"],
-        AlertActionsHtml.__description__,
     ),
 ]

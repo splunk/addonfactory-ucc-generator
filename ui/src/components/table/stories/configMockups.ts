@@ -1,4 +1,4 @@
-import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
+import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
 
 export const SIMPLE_NAME_TABLE_MOCK_DATA = {
     pages: {
@@ -92,6 +92,10 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
                         label: 'Name',
                         field: 'name',
                     },
+                    {
+                        label: 'Input Type',
+                        field: 'serviceTitle',
+                    },
                 ],
                 moreInfo: [
                     {
@@ -112,8 +116,7 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
 } satisfies GlobalConfig;
 
 export const getSimpleConfig = () => {
-    const configCp = JSON.parse(JSON.stringify(SIMPLE_NAME_TABLE_MOCK_DATA));
-    return configCp as GlobalConfig;
+    return GlobalConfigSchema.parse(SIMPLE_NAME_TABLE_MOCK_DATA);
 };
 
 export const TABLE_CONFIG_WITH_MAPPING = {
@@ -252,8 +255,7 @@ export const TABLE_CONFIG_WITH_MAPPING = {
 } satisfies GlobalConfig;
 
 export const getSimpleConfigWithMapping = () => {
-    const configCp = JSON.parse(JSON.stringify(TABLE_CONFIG_WITH_MAPPING));
-    return configCp;
+    return GlobalConfigSchema.parse(TABLE_CONFIG_WITH_MAPPING);
 };
 
 export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
@@ -353,6 +355,30 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                         label: 'Input Status',
                         field: 'disabled',
                     },
+                    {
+                        label: 'Input Type',
+                        field: 'serviceTitle',
+                    },
+                    {
+                        label: 'Account radio',
+                        field: 'account_radio',
+                    },
+                    {
+                        label: 'Custom endpoint',
+                        field: 'custom_endpoint',
+                    },
+                    {
+                        label: 'Custom text',
+                        field: 'custom_text',
+                    },
+                    {
+                        label: 'Username',
+                        field: 'username',
+                    },
+                    {
+                        label: 'Account multiple select',
+                        field: 'account_multiple_select',
+                    },
                 ],
                 moreInfo: [
                     {
@@ -373,8 +399,7 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
 } satisfies GlobalConfig;
 
 export const getSimpleConfigStylePage = () => {
-    const configCp = JSON.parse(JSON.stringify(SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE));
-    return configCp;
+    return GlobalConfigSchema.parse(SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE);
 };
 
 export const SIMPLE_NAME_TABLE_MOCK_DATA_WITH_STATUS_TOGGLE_CONFIRMATION = {
@@ -606,6 +631,63 @@ export const CUSTOM_HEADER_FOR_MODAL_MOCK_DATA = {
 } satisfies GlobalConfig;
 
 export const getCustomModalHeaderData = () => {
-    const configCp = JSON.parse(JSON.stringify(CUSTOM_HEADER_FOR_MODAL_MOCK_DATA));
-    return configCp as GlobalConfig;
+    return GlobalConfigSchema.parse(CUSTOM_HEADER_FOR_MODAL_MOCK_DATA);
+};
+
+export const CONFIG_MANY_SERVICES = {
+    pages: {
+        configuration: SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE.pages.configuration,
+        inputs: {
+            services: [
+                {
+                    name: 'example_input_one',
+                    entity: [
+                        {
+                            type: 'text',
+                            label: 'Name',
+                            field: 'name',
+                            help: 'A unique name for the data input.',
+                        },
+                        {
+                            type: 'checkbox',
+                            label: 'Example Checkbox',
+                            field: 'input_one_checkbox',
+                        },
+                    ],
+                    title: 'Example Input One',
+                },
+                {
+                    name: 'example_input_two',
+                    entity: [
+                        {
+                            type: 'text',
+                            label: 'Name',
+                            field: 'name',
+                            help: 'A unique name for the data input.',
+                        },
+                        {
+                            type: 'checkbox',
+                            label: 'Example Checkbox',
+                            field: 'input_one_checkbox',
+                        },
+                    ],
+                    title: 'Example Input Two',
+                },
+            ],
+            title: 'Inputs',
+            description: 'Manage your data inputs',
+            table: SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE.pages.inputs.table,
+        },
+    },
+    meta: {
+        name: 'Splunk_TA_UCCExample',
+        restRoot: 'splunk_ta_uccexample',
+        version: '5.41.0R9c5fbfe0',
+        displayName: 'Splunk UCC test Add-on',
+        schemaVersion: '0.0.3',
+    },
+} satisfies GlobalConfig;
+
+export const getManyServicesConfig = () => {
+    return GlobalConfigSchema.parse(CONFIG_MANY_SERVICES);
 };

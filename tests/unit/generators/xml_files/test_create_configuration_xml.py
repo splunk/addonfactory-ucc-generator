@@ -58,10 +58,10 @@ def test_generate_xml_without_configuration(
 
     mock_writer = MagicMock()
     with patch.object(configuration_xml, "writer", mock_writer):
-        file_paths = configuration_xml.generate_xml()
+        file_paths = configuration_xml.generate()
 
         # Assert that no files are returned since no dashboard is configured
-        assert file_paths is None
+        assert file_paths == {"": ""}
 
 
 @patch(
@@ -94,7 +94,7 @@ def test_generate_xml(
 
     mock_writer = MagicMock()
     with patch.object(config_xml, "writer", mock_writer):
-        file_paths = config_xml.generate_xml()
+        file_paths = config_xml.generate()
         assert mock_op_path.call_count == 1
 
         mock_writer.assert_called_once_with(

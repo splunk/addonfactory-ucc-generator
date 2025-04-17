@@ -1528,6 +1528,7 @@
                             "field": "event_filters",
                             "required": true,
                             "options": {
+                                "delimiter": "|",
                                 "groups": [
                                     {
                                         "label": "Transactions",
@@ -2090,7 +2091,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.60.0+34ad0cb7a",
+        "version": "5.61.0+8593b0555",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [

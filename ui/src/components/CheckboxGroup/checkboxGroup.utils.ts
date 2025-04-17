@@ -14,14 +14,14 @@ export type ValueByField = Map<Field, Value>;
  *
  * @param collection string like collect_collaboration/1200,collect_file/1,collect_task/1
  */
-export function parseValue(collection?: string): ValueByField {
+export function parseValue(collection?: string, delimiter: string = ','): ValueByField {
     const resultMap = new Map<Field, Value>();
 
     if (!collection) {
         return resultMap;
     }
 
-    const splitValues = collection.split(',');
+    const splitValues = collection.split(delimiter);
     splitValues.forEach((rawValue) => {
         const [field, inputValue] = rawValue.trim().split('/');
         const parsedInputValue = inputValue === '' ? undefined : Number(inputValue);
@@ -38,11 +38,11 @@ export function parseValue(collection?: string): ValueByField {
     return resultMap;
 }
 
-export function packValue(map: ValueByField) {
+export function packValue(map: ValueByField, delimiter: string = ',') {
     return Array.from(map.entries())
         .filter(([, value]) => value.checkbox)
         .map(([field, { inputValue = '' }]) => `${field}/${inputValue}`)
-        .join(',');
+        .join(delimiter);
 }
 
 export interface Group {
@@ -73,6 +73,7 @@ export interface BaseCheckboxProps {
     field: string;
     value?: string;
     controlOptions: {
+        delimiter?: string;
         groups?: Group[];
         rows: Row[];
     };

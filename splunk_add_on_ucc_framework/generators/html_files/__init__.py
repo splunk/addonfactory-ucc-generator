@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .html_generator import HTMLGenerator
+from ..file_generator import FileGenerator
 from .create_alert_actions_html import AlertActionsHtml
 
-__all__ = ["HTMLGenerator", "AlertActionsHtml"]
+__all__ = ["FileGenerator", "AlertActionsHtml"]

@@ -58,7 +58,7 @@ def test_generate_conf_no_existing_conf(
 
     server_conf.writer = MagicMock()
     server_conf._template = template_render
-    file_paths = server_conf.generate_conf()
+    file_paths = server_conf.generate()
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
 
@@ -95,7 +95,7 @@ def test_generate_conf_existing_conf(
         addon_name=ta_name,
     )
 
-    output = server_conf.generate_conf()
+    output = server_conf.generate()
     assert output == {"": ""}
 
 
@@ -111,5 +111,5 @@ def test_generate_conf_no_custom_conf(
     )
     server_conf.custom_conf = []
 
-    file_paths = server_conf.generate_conf()
-    assert file_paths is None
+    file_paths = server_conf.generate()
+    assert file_paths == {"": ""}
