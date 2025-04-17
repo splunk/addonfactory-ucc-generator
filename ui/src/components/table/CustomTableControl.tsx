@@ -8,6 +8,7 @@ import { getBuildDirPath } from '../../util/script';
 import { getExpansionRowData } from './TableExpansionRowData';
 import { RowDataFields } from '../../context/TableContext';
 import { CustomRowBase, CustomRowConstructor } from './CustomRowBase';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
 
 type CustomControlError = {
     methodName: string;
@@ -27,6 +28,7 @@ type CustomTableControlProps = {
     fileName: string;
     type: string;
     moreInfo: Array<{ name: string; value: string; mapping?: Record<string, string> }>;
+    customComponentContext?: CustomComponentContextType;
 };
 
 type CustomTableControlState = {
@@ -38,6 +40,8 @@ type CustomTableControlState = {
 };
 
 class CustomTableControl extends Component<CustomTableControlProps, CustomTableControlState> {
+    customComponentContext?: CustomComponentContextType;
+
     customControl?: CustomRowBase; // Custom control instance
 
     el: HTMLSpanElement | null = null; // Reference to the DOM element for the custom control
@@ -54,6 +58,7 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
             rowUpdatedByControl: false, // Flag to track if the row was updated by custom control
         };
         this.shouldRender = true; // Flag to control rendering logic
+        this.customComponentContext = props.customComponentContext; // Store custom component context
     }
 
     // Lifecycle method that updates the component's state when props change
@@ -101,8 +106,10 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
             const globalConfig = getUnifiedConfigs();
-
-            if (type === 'external') {
+            if (this.customComponentContext?.[this.props.fileName]) {
+                const Control = this.customComponentContext?.[this.props.fileName];
+                resolve(Control as CustomRowConstructor);
+            } else if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))
                     .catch((error) => reject(error));
@@ -195,12 +202,14 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
                     this.handleNoGetDLRows();
                 }
             })
-            .catch(() =>
+            .catch((e) => {
                 this.setState({
                     loading: false,
                     methodNotPresentError: 'Error loading custom control',
-                })
-            );
+                });
+                // eslint-disable-next-line no-console
+                console.error(`[Custom Control] Error loading custom control ${e}`);
+            });
     }
 
     render() {

@@ -1116,8 +1116,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     this.props.groupName
                 );
                 resolve(Hook);
-            }
-            if (type === 'external') {
+            } else if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {
                         const Hook = external.default as CustomHookConstructor;

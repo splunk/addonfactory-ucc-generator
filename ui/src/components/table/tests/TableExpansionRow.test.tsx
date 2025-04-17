@@ -153,12 +153,12 @@ const getExpandable = (inputRow: HTMLElement) => {
 };
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    mockCustomRowInput();
     const expandable = getExpandable(inputRow);
     if (expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
     }
+
     const loading = screen.queryByText('Loading...');
     if (loading) {
         await waitForElementToBeRemoved(loading);
@@ -173,7 +173,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
     });
 }
 
-it('should update custom Expansion Row when Input has changed', async () => {
+it('should correctly display custom Expansion Row for Input', async () => {
     mockCustomRowInput();
     setup();
     const inputRow = await screen.findByRole('row', { name: `row-${inputName}` });
@@ -201,10 +201,6 @@ it('should update custom Expansion Row when Input has changed', async () => {
             }
         )
     );
-    await expectIntervalInExpandedRow(
-        await screen.findByRole('row', { name: `row-${inputName}` }),
-        interval
-    );
 
     await userEvent.click(within(inputRow).getByRole('button', { name: /edit/i }));
     const dialog = await screen.findByRole('dialog');
@@ -222,6 +218,18 @@ it('should update custom Expansion Row when Input has changed', async () => {
         await screen.findByRole('row', { name: `row-${inputName}` }),
         updatedInterval
     );
+});
+
+it('should update custom Expansion Row when Input has changed', async () => {
+    mockCustomRowInput();
+    setup();
+
+    expect(
+        await expectIntervalInExpandedRow(
+            await screen.findByRole('row', { name: `row-${inputName}` }),
+            interval
+        )
+    ).toBeUndefined();
 });
 
 it('Should display error message as getDLRows throws Error', async () => {

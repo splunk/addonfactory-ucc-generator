@@ -55,7 +55,7 @@ module.exports = {
                 'testing-library/await-async-queries': 'error', // Prevent missing awaits on async queries
                 'testing-library/no-await-sync-queries': 'error', // Prevent unnecessary await on sync queries
                 'testing-library/no-dom-import': 'error', // Prevent wrong imports; enforce @testing-library/react
-                'testing-library/prefer-presence-queries': 'error', // prefers getBy*/queryBy* over findBy* for presence/absence checks 
+                'testing-library/prefer-presence-queries': 'error', // prefers getBy*/queryBy* over findBy* for presence/absence checks
             },
         },
     ],
