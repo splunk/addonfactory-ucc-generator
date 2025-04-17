@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import DL from '@splunk/react-ui/DefinitionList';
 import { _ } from '@splunk/ui-utils/i18n';
 
@@ -7,16 +6,45 @@ import ExclamationTriangle from '@splunk/react-icons/ExclamationTriangle';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { getExpansionRowData } from './TableExpansionRowData';
+import { RowDataFields } from '../../context/TableContext';
+import { CustomRowBase, CustomRowConstructor } from './CustomRowBase';
 
-function onCustomControlError(params) {
+type CustomControlError = {
+    methodName: string;
+    error: Error | null;
+};
+
+function onCustomControlError(params: { methodName: string; error: Error | null }) {
     // eslint-disable-next-line no-console
     console.error(
         `[Custom Control] Something went wrong while calling ${params.methodName}. Error: ${params.error?.name} ${params.error?.message}`
     );
 }
 
-class CustomTableControl extends Component {
-    constructor(props) {
+type CustomTableControlProps = {
+    serviceName: string;
+    row: RowDataFields;
+    fileName: string;
+    type: string;
+    moreInfo: Array<{ name: string; value: string; mapping?: Record<string, string> }>;
+};
+
+type CustomTableControlState = {
+    loading: boolean;
+    row: RowDataFields;
+    methodNotPresentError: string;
+    rowUpdatedByControl: boolean;
+    checkMethodIsPresent: boolean;
+};
+
+class CustomTableControl extends Component<CustomTableControlProps, CustomTableControlState> {
+    customControl?: CustomRowBase; // Custom control instance
+
+    el: HTMLSpanElement | null = null; // Reference to the DOM element for the custom control
+
+    shouldRender: boolean; // Flag to control rendering logic
+
+    constructor(props: CustomTableControlProps) {
         super(props);
         this.state = {
             loading: true,
@@ -29,7 +57,10 @@ class CustomTableControl extends Component {
     }
 
     // Lifecycle method that updates the component's state when props change
-    static getDerivedStateFromProps(nextProps, prevState) {
+    static getDerivedStateFromProps(
+        nextProps: CustomTableControlProps,
+        prevState: CustomTableControlState
+    ) {
         // Update row data only if the row prop has changed and it wasn't updated by control itself
         if (!prevState.rowUpdatedByControl && nextProps.row !== prevState.row) {
             return {
@@ -45,7 +76,7 @@ class CustomTableControl extends Component {
         this.initializeCustomControl();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: CustomTableControlProps, nextState: CustomTableControlState) {
         // Trigger re-render if row prop or state has changed
         if (this.props.row !== nextProps.row || this.state.row !== nextState.row) {
             return true;
@@ -58,7 +89,7 @@ class CustomTableControl extends Component {
         return false;
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: CustomTableControlProps) {
         // If the row prop has changed, re-initialize the custom control
         if (prevProps.row !== this.props.row) {
             this.initializeCustomControl();
@@ -66,7 +97,7 @@ class CustomTableControl extends Component {
         }
     }
 
-    loadCustomControl = () =>
+    loadCustomControl = (): Promise<CustomRowConstructor> =>
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
             const globalConfig = getUnifiedConfigs();
@@ -77,10 +108,11 @@ class CustomTableControl extends Component {
                     .catch((error) => reject(error));
             } else {
                 const appName = globalConfig.meta.name;
+                // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
                 __non_webpack_require__(
                     [`app/${appName}/js/build/custom/${fileName}`],
-                    (Control) => resolve(Control),
-                    (error) => reject(error)
+                    (Control: CustomRowConstructor) => resolve(Control),
+                    (error: Error) => reject(error)
                 );
             }
         });
@@ -89,17 +121,17 @@ class CustomTableControl extends Component {
      * Calls a method on the customControl instance, if it exists, with the provided arguments.
      *
      * @param {string} methodName - The name of the method to call on the customControl class instance.
-     * @param  {...unknown} args - Any arguments that should be passed to the method.
+     * only possible is getDLRows or render
      * @returns {*} - The response from the custom control method, or null if the method does not exist or an error occurs.
      */
-    callCustomMethod = async (methodName, ...args) => {
+    callCustomMethod = async (methodName: 'getDLRows' | 'render') => {
         try {
-            if (typeof this.customControl[methodName] === 'function') {
-                return this.customControl[methodName](...args);
+            if (typeof this?.customControl?.[methodName] === 'function') {
+                return this.customControl[methodName]();
             }
             return null;
         } catch (error) {
-            onCustomControlError({ methodName, error });
+            onCustomControlError({ methodName, error } as CustomControlError);
             return null;
         }
     };
@@ -135,10 +167,8 @@ class CustomTableControl extends Component {
                     globalConfig,
                     this.props.serviceName,
                     this.el,
-                    this.state.row,
-                    this.props.field
+                    this.state.row
                 );
-
                 // Call the "getDLRows" method on the custom control instance
                 const result = await this.callCustomMethod('getDLRows');
                 try {
@@ -161,7 +191,7 @@ class CustomTableControl extends Component {
                         this.handleNoGetDLRows();
                     }
                 } catch (error) {
-                    onCustomControlError({ methodName: 'getDLRows', error });
+                    onCustomControlError({ methodName: 'getDLRows', error } as CustomControlError);
                     this.handleNoGetDLRows();
                 }
             })
@@ -184,9 +214,11 @@ class CustomTableControl extends Component {
             typeof this.customControl.render === 'function'
         ) {
             try {
+                // why render method is called with params?
+                // @ts-expect-error Expected 0 arguments, but got 2.
                 this.customControl.render(row, moreInfo);
             } catch (error) {
-                onCustomControlError({ methodName: 'render', error });
+                onCustomControlError({ methodName: 'render', error } as CustomControlError);
             }
         }
 
@@ -220,14 +252,5 @@ class CustomTableControl extends Component {
         );
     }
 }
-
-CustomTableControl.propTypes = {
-    serviceName: PropTypes.string.isRequired,
-    row: PropTypes.object.isRequired,
-    field: PropTypes.string,
-    fileName: PropTypes.string.isRequired,
-    type: PropTypes.string,
-    moreInfo: PropTypes.array, // more info not required when using for custom cell
-};
 
 export default CustomTableControl;

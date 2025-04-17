@@ -92,6 +92,10 @@ export const SIMPLE_NAME_TABLE_MOCK_DATA = {
                         label: 'Name',
                         field: 'name',
                     },
+                    {
+                        label: 'Input Type',
+                        field: 'serviceTitle',
+                    },
                 ],
                 moreInfo: [
                     {
@@ -350,6 +354,10 @@ export const SIMPLE_TABLE_MOCK_DATA_STYLE_PAGE = {
                     {
                         label: 'Input Status',
                         field: 'disabled',
+                    },
+                    {
+                        label: 'Input Type',
+                        field: 'serviceTitle',
                     },
                     {
                         label: 'Account radio',
