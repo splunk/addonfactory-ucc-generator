@@ -108,8 +108,11 @@ function setup() {
 }
 
 const getExpandable = (inputRow: HTMLElement) => {
-    const expandable = within(inputRow).queryByRole('cell', { name: /expand/i });
-    invariant(expandable, 'Expandable element not found');
+    const expandableCell = within(inputRow).getByTestId('expand');
+    invariant(expandableCell, 'Expandable cell not found');
+    const expandable = within(expandableCell).getByRole('button');
+    invariant(expandable, 'Expandable button not found');
+
     return expandable;
 };
 
