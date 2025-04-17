@@ -242,6 +242,15 @@ This is how it looks in the UI:
 
 ## `CheckboxGroup`
 
+### Options
+
+| Property                                      | Type  | Description                                                    | Default Value |
+| --------------------------------------------- | ----- | -------------------------------------------------------------- | ------------- |
+| rows<span class="required-asterisk">*</span> | array | rows defines each individual row within the checkboxGroup control. | - |
+| groups | array | groups logically organize related checkboxes under a common label within the checkboxGroup control. | - |
+| delimiter | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \ (backslash character), the combined value would look like: `rowUnderGroup1/1200\requiredField/10`| comma(`,`) |
+
+
 See the following example usage:
 
 ```json
@@ -322,7 +331,17 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
+
 ## `CheckboxTree`
+
+### Options
+
+| Property                                      | Type  | Description                                                    | Default Value |
+| --------------------------------------------- | ----- | -------------------------------------------------------------- | ------------- |
+| rows<span class="required-asterisk">*</span> | array | rows defines each individual row within the checkboxTree control. | - |
+| groups | array | groups logically organize related checkboxes under a common label within the checkboxTree control. | - |
+| delimiter | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \ (backslash character), the combined value would look like: `rowWithoutGroup\rowUnderGroup1\firstRowUnderGroup3` | comma(`,`) |
+
 
 See the following example usage:
 

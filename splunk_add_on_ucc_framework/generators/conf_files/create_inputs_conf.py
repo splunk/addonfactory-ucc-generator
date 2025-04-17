@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class InputsConf(ConfGenerator):
+class InputsConf(FileGenerator):
     __description__ = (
         "Generates `inputs.conf` and `inputs.conf.spec` "
         "file for the services mentioned in globalConfig"
@@ -66,9 +66,15 @@ class InputsConf(ConfGenerator):
 
                 self.input_names.append({service["name"]: properties})
 
-    def generate_conf(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
+        conf_files: Dict[str, str] = {}
+        conf_files.update(self.generate_conf())
+        conf_files.update(self.generate_conf_spec())
+        return conf_files
+
+    def generate_conf(self) -> Dict[str, str]:
         if not self.input_names:
-            return None
+            return {"": ""}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         stanzas: List[str] = []
@@ -91,9 +97,9 @@ class InputsConf(ConfGenerator):
         )
         return {self.conf_file: file_path}
 
-    def generate_conf_spec(self) -> Union[Dict[str, str], None]:
+    def generate_conf_spec(self) -> Dict[str, str]:
         if not self.input_names:
-            return None
+            return {"": ""}
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
