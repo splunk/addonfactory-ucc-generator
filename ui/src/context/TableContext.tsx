@@ -5,6 +5,7 @@ import { AcceptableFormRecord } from '../types/components/shareableTypes';
 export type RowDataFields = {
     name: string;
     serviceName: string;
+    serviceTitle: string;
     disabled?: boolean;
     id?: string;
     index?: string;

@@ -11,7 +11,7 @@ import { variables } from '@splunk/themes';
 
 import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
-import CustomMenu from '../CustomMenu';
+import CustomMenu from '../CustomMenu/CustomMenu';
 import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
@@ -85,7 +85,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
         setOpenDropDown(true);
     };
 
-    const handleChangeCustomMenu = (val: { service: string; input: string }) => {
+    const handleChangeCustomMenu = (val: { service: string; input?: string }) => {
         const { service, input } = val;
         handleRequestOpen({ serviceName: service, input });
     };
