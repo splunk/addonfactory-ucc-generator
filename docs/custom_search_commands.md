@@ -144,7 +144,7 @@ For example:
             "fileName": "generatetext.py",
             "commandType": "generating",
             "requiredSearchAssistant": true,
-            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "description": "This command generates COUNT occurrences of a TEXT string.",
             "syntax": "generatetextcommand count=<event_count> text=<string>",
             "usage": "public",
             "arguments": [
@@ -171,7 +171,7 @@ For example:
 Generated python file named `generatetextcommand.py`:
 
 ``` python
-mport sys
+import sys
 import import_declare_test
 
 from splunklib.searchcommands import \
@@ -186,7 +186,7 @@ class GeneratetextcommandCommand(GeneratingCommand):
     generatetextcommand count=<event_count> text=<string>
 
     ##Description
-     This command generates COUNT occurrences of a TEXT string.
+    This command generates COUNT occurrences of a TEXT string.
 
     """
     count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10))
