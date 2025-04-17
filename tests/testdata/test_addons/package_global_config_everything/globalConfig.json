@@ -1655,7 +1655,7 @@
                     ],
                     "title": "Example Input Four",
                     "disableNewInput": true,
-                    "subTitle": "Creates disabled input.",
+                    "subTitle": "Creates disabled input",
                     "hook": {
                         "src": "input_hook",
                         "type": "external"
@@ -2128,7 +2128,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.61.0+88d35d835",
+        "version": "5.61.0+8e45ad30d",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
