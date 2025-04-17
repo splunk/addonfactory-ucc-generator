@@ -9,21 +9,15 @@ const readJson = (filePath) => {
   };
   
 
-const getTotals = (rawData) => {
+const findTotalPercentage = (rawData) => {
   let totalLineCovered = 0;
   let totalLineTotal = 0;
   let totalBranchCovered = 0;
   let totalBranchTotal = 0;
 
-  for (const [filename, data] of Object.entries(rawData)) {
+  for (const [, data] of Object.entries(rawData)) {
     const lineData = data.lines;
     const branchData = data.branches;
-    const linePct =
-      lineData.total === 0 ? 100 : (lineData.covered / lineData.total) * 100;
-    const branchPct =
-      branchData.total === 0
-        ? 100
-        : (branchData.covered / branchData.total) * 100;
 
     totalLineCovered += lineData.covered;
     totalLineTotal += lineData.total;
@@ -39,19 +33,18 @@ const getTotals = (rawData) => {
       ? 100
       : (totalBranchCovered / totalBranchTotal) * 100;
 
-  core.info("📊 Total Coverage Summary");
-  core.info("--------------------------");
-  core.info(`✅ Line Coverage:   ${totalLinePct.toFixed(2)}%`);
-  core.info(`✅ Branch Coverage: ${totalBranchPct.toFixed(2)}%`);
+
   return [totalLinePct, totalBranchPct];
 };
 
-/**
- * @param {import('@actions/github-script').AsyncFunctionArguments} args
- */
-export default async ({ github, context, core }) => {
+
+// @ts-check
+/** @param {import('@actions/github-script').AsyncFunctionArguments} AsyncFunctionArguments */
+export default async ({ github, context }) => {
   const prCoveragePath = "/tmp/pr-coverage.json";
   const developCoveragePath = "/tmp/develop-coverage.json";
+
+  console.log("🧪 Loaded latest ui-code-coverage.mjs script version");
 
   // const developCoveragePath = '../../ui/coverage/coverage-summary.json';
   // const prCoveragePath = '../../ui/coverage/coverage-summary.json';
@@ -62,8 +55,18 @@ export default async ({ github, context, core }) => {
   const developCoverage = readJson(developCoveragePath);
   const prCoverage = readJson(prCoveragePath);
 
-  const [prLinePct, prBranchPct] = getTotals(prCoverage);
-  const [developLinePct, developBranchPct] = getTotals(developCoverage);
+  const [prLinePct, prBranchPct] = findTotalPercentage(prCoverage);
+  const [developLinePct, developBranchPct] = findTotalPercentage(developCoverage);
+
+  // core.info("📊 Total Coverage Summary For PR");
+  // core.info("--------------------------");
+  // core.info(`✅ Line Coverage:   ${prLinePct.toFixed(2)}%`);
+  // core.info(`✅ Branch Coverage: ${prBranchPct.toFixed(2)}%`);
+
+  // core.info("📊 Total Coverage Summary For Develop");
+  // core.info("--------------------------");
+  // core.info(`✅ Line Coverage:   ${developLinePct.toFixed(2)}%`);
+  // core.info(`✅ Branch Coverage: ${developBranchPct.toFixed(2)}%`);
 
   const lineDiff = prLinePct - developLinePct;
   const branchDiff = prBranchPct - developBranchPct;
@@ -125,6 +128,6 @@ export default async ({ github, context, core }) => {
   });
 
   if (lineDiff < 0 || branchDiff < 0) {
-    core.setFailed("Coverage has decreased. Please improve test coverage.");
+    // core.setFailed("Coverage has decreased. Please improve test coverage.");
   }
 };

@@ -17,14 +17,20 @@ jobs:
       contents: read
 
     steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
 
       - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
+      - name: install UI deps
+        uses: ./.github/actions/cached-ui-deps
+
       - name: Generate coverage for PR branch
         run: |
+          cd ui
           npx jest --coverage --coverageReporters=json-summary
           cp coverage/coverage-summary.json /tmp/pr-coverage.json
 
@@ -33,17 +39,22 @@ jobs:
         with:
           ref: develop
 
-      - name: Install dependencies
-        run: npm ci
+      - name: install UI deps
+        uses: ./.github/actions/cached-ui-deps
 
       - name: Generate coverage for develop branch
         run: |
+          cd ui
           npx jest --coverage --coverageReporters=json-summary
           cp coverage/coverage-summary.json /tmp/develop-coverage.json
+
+      - name: Bust import cache
+        run: cp .github/scripts/ui-code-coverage.mjs /tmp/ui-code-coverage-${{ github.run_id }}.mjs
 
       - name: Compare and comment coverage
         uses: actions/github-script@v7
         with:
           script: |
-            const { default: compareDiff } = await import('${{ github.workspace }}/.github/scripts/ui-code-coverage.mjs')
-            await compareDiff({ github, context, core })
+            const ts = Date.now();
+            const { default: compareDiff } = await import(`/tmp/ui-code-coverage-${process.env.GITHUB_RUN_ID}.mjs`);
+            await compareDiff({ github, context });
