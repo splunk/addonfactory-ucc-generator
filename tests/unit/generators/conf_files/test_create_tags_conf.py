@@ -48,7 +48,7 @@ def test_generate_conf(
 
     tags_conf.writer = MagicMock()
     tags_conf._template = template_render
-    file_paths = tags_conf.generate_conf()
+    file_paths = tags_conf.generate()
 
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
@@ -78,5 +78,5 @@ def test_generate_conf_no_alert_settings(
     )
 
     tags_conf.alert_settings = {}
-    file_paths = tags_conf.generate_conf()
-    assert file_paths is None
+    file_paths = tags_conf.generate()
+    assert file_paths == {"": ""}

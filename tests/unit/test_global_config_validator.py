@@ -27,7 +27,18 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib
 )
 def test_config_validation_when_valid(filename):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with does_not_raise():
+        validator.validate()
+
+
+def test_validation_when_created_from_app_manifest(app_manifest_correct):
+    global_config = global_config_lib.GlobalConfig.from_app_manifest(
+        app_manifest_correct
+    )
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 
@@ -40,7 +51,7 @@ def test_autocompletefields_support_integer_values():
     global_config_path = helpers.get_testdata_file_path(
         "invalid_config_configuration_autoCompleteFields_integer_values.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 
@@ -53,7 +64,7 @@ def test_autocompletefields_children_support_integer_values():
     global_config_path = helpers.get_testdata_file_path(
         "invalid_config_configuration_autoCompleteFields_children_integer_values.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 
@@ -334,7 +345,7 @@ def test_autocompletefields_children_support_integer_values():
 )
 def test_config_validation_when_error(filename, exception_message):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
     with pytest.raises(GlobalConfigValidatorException) as exc_info:
@@ -348,7 +359,7 @@ def test_config_validation_modifications_on_change():
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_modification_on_value_change.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 
@@ -375,7 +386,7 @@ def test_config_validation_modifications_on_change():
 )
 def test_invalid_config_modifications_correct_raises(filename, raise_message):
     global_config_path = helpers.get_testdata_file_path(filename)
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 
@@ -399,7 +410,7 @@ def test_validate_against_schema_regardless_of_the_default_encoding(
         return open._old(*args, **kwargs)
 
     global_config_path = helpers.get_testdata_file_path("valid_config.json")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
     validator._validate_config_against_schema()
@@ -609,7 +620,7 @@ def test_config_validation_status_toggle_confirmation():
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_input_status_confirmation.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 

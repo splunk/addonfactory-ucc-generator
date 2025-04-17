@@ -2,7 +2,6 @@ import json
 import os
 from pathlib import Path
 from textwrap import dedent
-from typing import Dict, List
 from unittest.mock import patch, MagicMock
 
 from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
@@ -12,24 +11,6 @@ from tests.unit.helpers import get_testdata_file_path
 
 
 UCC_DIR = os.path.dirname(ucc_framework_file)
-
-
-def test_set_attributes_no_global_config(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when _global_config is None."""
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf._global_config = None
-
-    inputs_conf._set_attributes()
-
-    assert inputs_conf.input_names == []
 
 
 def test_set_attributes_no_inputs_in_global_config(
@@ -48,87 +29,8 @@ def test_set_attributes_no_inputs_in_global_config(
 
     inputs_conf._set_attributes()
 
-    assert inputs_conf.input_names == []
-
-
-def test_set_attributes_with_conf_key(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when a service has a 'conf' key."""
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [{"name": "service1", "conf": "some_conf"}]
-
-    inputs_conf._set_attributes()
-
-    expected_output = [{"service1": ["placeholder = placeholder"]}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.conf_file == "inputs.conf"
-    assert inputs_conf.conf_spec_file == "inputs.conf.spec"
-
-
-def test_set_attributes_without_conf_key_and_name_field(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when a service does not have 'conf' key and 'entity' contains 'name' field."""
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {"name": "service1", "entity": [{"field": "name"}], "disableNewInput": True}
-    ]
-
-    inputs_conf._set_attributes()
-
-    expected_output: List[Dict[str, List[str]]] = [{"service1": []}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.disable is True
-    assert inputs_conf.service_name == "service1"
-
-
-def test_set_attributes_without_conf_key_and_other_fields(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    """Test when a service does not have 'conf' key and 'entity' contains fields other than 'name'."""
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = [
-        {
-            "name": "service1",
-            "entity": [
-                {
-                    "field": "other_field",
-                    "help": "help text",
-                    "defaultValue": "default_val",
-                }
-            ],
-        }
-    ]
-
-    inputs_conf._set_attributes()
-
-    expected_output = [{"service1": ["other_field = help text  Default: default_val"]}]
-    assert inputs_conf.input_names == expected_output
-    assert inputs_conf.default_value_info == {
-        "service1": {"other_field": "default_val"}
-    }
+    assert not inputs_conf.generate_conf()
+    assert not inputs_conf.generate_conf_spec()
 
 
 @patch(
@@ -176,25 +78,6 @@ def test_generate_conf(
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_spec_no_input_names(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf.input_names = []
-    result = inputs_conf.generate_conf()
-    assert result is None
-
-
-@patch(
     "splunk_add_on_ucc_framework.generators.conf_files.InputsConf.set_template_and_render"
 )
 @patch(
@@ -239,25 +122,6 @@ def test_generate_conf_spec(
     assert file_paths == {exp_fname: file_path}
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.InputsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_input_names(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
-):
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-    inputs_conf.input_names = []
-    result = inputs_conf.generate_conf_spec()
-    assert result is None
-
-
 def test_inputs_conf_content(global_config_all_json, input_dir, output_dir, ta_name):
     inputs_conf = InputsConf(
         global_config_all_json,
@@ -285,10 +149,101 @@ def test_inputs_conf_content(global_config_all_json, input_dir, output_dir, ta_n
             python.version = python3
             disabled = true
             index = default
+            input_two_checkbox_bool = true
             input_two_radio = yes
             use_existing_checkpoint = yes
             """
         ).lstrip()
+    )
+
+
+def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
+    config_content = json.loads(
+        Path(get_testdata_file_path("valid_config.json")).read_text()
+    )
+    services = config_content["pages"]["inputs"]["services"]
+    assert len(services) == 2
+    services[0]["disableNewInput"] = True
+    services[1]["disableNewInput"] = True
+    config = tmp_path / "valid_config_disable.json"
+    config.write_text(json.dumps(config_content))
+
+    inputs_conf = InputsConf(
+        GlobalConfig.from_file(str(config)),
+        input_dir,
+        output_dir,
+        ucc_dir=UCC_DIR,
+        addon_name=ta_name,
+    )
+    generated_files = inputs_conf.generate_conf()
+    assert generated_files is not None
+    assert generated_files.keys() == {"inputs.conf"}
+    assert (
+        Path(generated_files["inputs.conf"]).read_text()
+        == dedent(
+            """
+            [example_input_one]
+            python.version = python3
+            disabled = true
+            input_one_radio = yes
+            index = default
+            order_by = LastModifiedDate
+            use_existing_checkpoint = yes
+            limit = 1000
+
+            [example_input_two]
+            python.version = python3
+            disabled = true
+            index = default
+            input_two_checkbox_bool = true
+            input_two_radio = yes
+            use_existing_checkpoint = yes
+            """
+        ).lstrip()
+    )
+
+    specs = inputs_conf.generate_conf_spec()
+    assert specs is not None
+    assert specs.keys() == {"inputs.conf.spec"}
+    assert Path(specs["inputs.conf.spec"]).read_text() == "\n".join(
+        [
+            "[example_input_one://<name>]",
+            "account = ",
+            "example_help_link = ",
+            "index = (Default: default)",
+            "input_one_checkbox = This is an example checkbox for the input one entity",
+            "input_one_radio = This is an example radio button for the input one entity (Default: yes)",
+            "interval = Time interval of the data input, in seconds.",
+            "limit = The maximum number of results returned by the query. (Default: 1000)",
+            "multipleSelectTest = ",
+            "object = The name of the object to query for.",
+            "object_fields = Object fields from which to collect data. Delimit multiple fields using a comma.",
+            "order_by = The datetime field by which to query results in ascending order for indexing. (Default: "
+            "LastModifiedDate)",
+            "singleSelectTest = ",
+            "start_date = The datetime after which to query and index records, in this "
+            'format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
+            "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
+            "collection. (Default: yes)",
+            "",
+            "[example_input_two://<name>]",
+            "account = ",
+            "api1 = ",
+            "api2 = ",
+            "api3 = ",
+            "example_help_link = ",
+            "index = (Default: default)",
+            "input_two_checkbox = This is an example checkbox for the input two entity",
+            "input_two_checkbox_bool = This is an example checkbox for the input two entity with bool default "
+            "(Default: true)",
+            "input_two_multiple_select = This is an example multipleSelect for input two entity",
+            "input_two_radio = This is an example radio button for the input two entity (Default: yes)",
+            "interval = Time interval of the data input, in seconds .",
+            'start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after which to query and '
+            "index records.  The default is 90 days before today.",
+            "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
+            "collection. (Default: yes)\n",
+        ]
     )
 
 
@@ -304,14 +259,27 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
                 {
                     "type": "text",
                     "label": "Name",
-                    "validators": [
-                        {
-                            "type": "regex",
-                            "pattern": "^[a-zA-Z]\\w*$",
-                        },
-                    ],
                     "field": "name",
                     "required": True,
+                },
+                {
+                    "type": "text",
+                    "label": "Required field",
+                    "field": "required_field",
+                    "required": True,
+                },
+                {
+                    "type": "text",
+                    "label": "Optional field",
+                    "field": "optional_field",
+                    "required": False,
+                },
+                {
+                    "type": "text",
+                    "label": "Field with description",
+                    "field": "field_desc",
+                    "required": False,
+                    "help": "Some description",
                 },
             ],
             "title": "Example Input Three",
@@ -322,22 +290,27 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     config.write_text(json.dumps(config_content))
 
     inputs_conf = InputsConf(
-        GlobalConfig(str(config)),
+        GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
         ucc_dir=UCC_DIR,
         addon_name=ta_name,
     )
-    generated_files = inputs_conf.generate_conf()
-    assert generated_files is not None
-    assert generated_files.keys() == {"inputs.conf"}
-    assert (
-        Path(generated_files["inputs.conf"]).read_text()
-        == dedent(
-            """
-            [example_input_three]
-            python.version = python3
-            disabled = true
-            """
-        ).lstrip()
+
+    conf = inputs_conf.generate_conf()
+    assert conf is not None
+    assert Path(conf["inputs.conf"]).read_text() == (
+        "[example_input_three]\npython.version = python3\n"
+    )
+
+    specs = inputs_conf.generate_conf_spec()
+    assert specs is not None
+    assert specs.keys() == {"some_conf.conf.spec"}
+    assert Path(specs["some_conf.conf.spec"]).read_text() == "\n".join(
+        [
+            "[<name>]",
+            "required_field = ",
+            "optional_field = ",
+            "field_desc = Some description\n",
+        ]
     )

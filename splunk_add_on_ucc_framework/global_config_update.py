@@ -77,7 +77,9 @@ def _handle_dropping_api_version_update(
     global_config.update_schema_version("0.0.3")
 
 
-def _handle_alert_action_updates(global_config: global_config_lib.GlobalConfig) -> None:
+def _handle_alert_action_updates(
+    global_config: global_config_lib.GlobalConfig, global_config_path: str
+) -> None:
     if global_config.has_alerts():
         updated_alerts = []
         for alert in global_config.alerts:
@@ -98,11 +100,13 @@ def _handle_alert_action_updates(global_config: global_config_lib.GlobalConfig) 
             # in either case, we create a new list and fill it with updated alerts, if any
             updated_alerts.append(modified_alert)
         global_config._content["alerts"] = updated_alerts
-        global_config.dump(global_config.original_path)
+        global_config.dump(global_config_path)
     global_config.update_schema_version("0.0.4")
 
 
-def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) -> None:
+def _handle_xml_dashboard_update(
+    global_config: global_config_lib.GlobalConfig, global_config_path: str
+) -> None:
     panels_to_migrate = [
         "addon_version",
         "events_ingested_by_sourcetype",
@@ -117,11 +121,13 @@ def _handle_xml_dashboard_update(global_config: global_config_lib.GlobalConfig) 
                 f"Instead, use just one panel: \"'name': 'default'\""
             )
             global_config.dashboard["panels"] = [{"name": "default"}]
-            global_config.dump(global_config.original_path)
+            global_config.dump(global_config_path)
     global_config.update_schema_version("0.0.5")
 
 
-def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -> None:
+def handle_global_config_update(
+    global_config: global_config_lib.GlobalConfig, global_config_path: str
+) -> None:
     """Handle changes in globalConfig file."""
     version = global_config.schema_version or "0.0.0"
     logger.info(f"Current globalConfig schema version is {version}")
@@ -147,7 +153,7 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
 
     if _version_tuple(version) < _version_tuple("0.0.1"):
         _handle_biased_terms_update(global_config)
-        global_config.dump(global_config.original_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.1")
 
     if _version_tuple(version) < _version_tuple("0.0.2"):
@@ -213,44 +219,44 @@ def handle_global_config_update(global_config: global_config_lib.GlobalConfig) -
                     )
                     del service_options["onLoad"]
         global_config.update_schema_version("0.0.2")
-        global_config.dump(global_config.original_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.2")
 
     if _version_tuple(version) < _version_tuple("0.0.3"):
         _handle_dropping_api_version_update(global_config)
-        global_config.dump(global_config.original_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.3")
 
     if _version_tuple(version) < _version_tuple("0.0.4"):
-        _handle_alert_action_updates(global_config)
-        global_config.dump(global_config.original_path)
+        _handle_alert_action_updates(global_config, global_config_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.4")
 
     if _version_tuple(version) < _version_tuple("0.0.5"):
-        _handle_xml_dashboard_update(global_config)
-        global_config.dump(global_config.original_path)
+        _handle_xml_dashboard_update(global_config, global_config_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.5")
 
     if _version_tuple(version) < _version_tuple("0.0.6"):
         global_config.update_schema_version("0.0.6")
-        _dump_with_migrated_tabs(global_config, global_config.original_path)
+        _dump_with_migrated_tabs(global_config, global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.6")
 
     if _version_tuple(version) < _version_tuple("0.0.7"):
         global_config.update_schema_version("0.0.7")
         _dump_with_migrated_entities(
-            global_config, global_config.original_path, [IntervalEntity]
+            global_config, global_config_path, [IntervalEntity]
         )
         logger.info("Updated globalConfig schema to version 0.0.7")
 
     if _version_tuple(version) < _version_tuple("0.0.8"):
         _stop_build_on_placeholder_usage(global_config)
-        global_config.dump(global_config.original_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.8")
 
     if _version_tuple(version) < _version_tuple("0.0.9"):
         _dump_enable_from_global_config(global_config)
-        global_config.dump(global_config.original_path)
+        global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.9")
 
 
@@ -264,7 +270,7 @@ def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
             continue
         global_config.content["pages"]["configuration"]["tabs"][i] = _collapse_tab(tab)
 
-    _dump(global_config.content, path, global_config._is_global_config_yaml)
+    _dump(global_config.content, path, global_config.is_yaml)
 
 
 def _dump_with_migrated_entities(
@@ -282,7 +288,7 @@ def _dump_with_migrated_entities(
     )
     _collapse_entities(global_config.content.get("alerts"), entity_type)
 
-    _dump(global_config.content, path, global_config._is_global_config_yaml)
+    _dump(global_config.content, path, global_config.is_yaml)
 
 
 def _collapse_entities(

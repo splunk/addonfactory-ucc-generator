@@ -6,6 +6,7 @@ import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import {
+    getManyServicesConfig,
     getSimpleConfig,
     getSimpleConfigStylePage,
     getSimpleConfigWithMapping,
@@ -72,6 +73,21 @@ export const SimpleConfigWithStatusMapped: Story = {
         handleOpenPageStyleDialog: fn(),
         displayActionBtnAllRows: false,
         config: getSimpleConfigWithMapping() as GlobalConfig,
+    },
+    parameters: {
+        msw: {
+            handlers: ServerHandlers,
+        },
+    },
+};
+
+export const SimpleTableManyServices: Story = {
+    args: {
+        page: 'inputs',
+        handleRequestModalOpen: fn(),
+        handleOpenPageStyleDialog: fn(),
+        displayActionBtnAllRows: false,
+        config: getManyServicesConfig() as GlobalConfig,
     },
     parameters: {
         msw: {

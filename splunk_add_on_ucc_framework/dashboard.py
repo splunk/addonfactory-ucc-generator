@@ -333,6 +333,7 @@ def generate_dashboard_content(
 
 def generate_dashboard(
     global_config: global_config_lib.GlobalConfig,
+    global_config_path: str,
     addon_name: str,
     definition_json_path: str,
 ) -> None:
@@ -366,7 +367,7 @@ def generate_dashboard(
     if PANEL_CUSTOM in panel_names:
         dashboard_components_path = os.path.abspath(
             os.path.join(
-                global_config.original_path,
+                global_config_path,
                 os.pardir,
                 "custom_dashboard.json",
             )
@@ -438,7 +439,9 @@ def load_custom_json(json_path: str) -> Dict[Any, Any]:
             f"file {json_path} not found"
         )
         sys.exit(1)
-    except json.decoder.JSONDecodeError:
-        logger.error(f"{json_path} it's not a valid json file")
+    except json.decoder.JSONDecodeError as exc:
+        logger.error(
+            f"{json_path} it's not a valid json file. Error message: {str(exc)}"
+        )
         sys.exit(1)
     return custom_dashboard

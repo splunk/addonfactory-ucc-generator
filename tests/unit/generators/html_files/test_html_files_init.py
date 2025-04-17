@@ -1,6 +1,6 @@
 def test___init__html():
-    expected_classes = ["HTMLGenerator", "AlertActionsHtml"]
-    expected_modules = ["html_generator", "create_alert_actions_html"]
+    expected_classes = ["FileGenerator", "AlertActionsHtml"]
+    expected_modules = ["file_generator", "create_alert_actions_html"]
     import splunk_add_on_ucc_framework.generators.html_files as html
 
     assert html.__all__ == expected_classes

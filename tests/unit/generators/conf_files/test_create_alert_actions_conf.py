@@ -45,22 +45,6 @@ def mocked__set_attribute(this, **kwargs):
     this.conf_spec_file = f"{this.conf_file}.spec"
 
 
-def test_set_attributes_global_config_none(input_dir, output_dir, ucc_dir, ta_name):
-    """Test _set_attributes when _global_config is None."""
-    alert_action_conf = AlertActionsConf(
-        global_config=None,
-        input_dir=input_dir,
-        output_dir=output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-
-    alert_action_conf._set_attributes()
-
-    assert not hasattr(alert_action_conf, "alerts")
-    assert not hasattr(alert_action_conf, "alerts_spec")
-
-
 def test_set_attributes_global_config_with_empty_alerts(
     global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
 ):
@@ -139,7 +123,7 @@ def test_generate_conf_no_alerts(
     )
     alert_action_conf.alerts = {}
     result = alert_action_conf.generate_conf()
-    assert result is None
+    assert result == {"": ""}
 
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
@@ -201,4 +185,4 @@ def test_generate_conf_no_alerts_spec(
     )
     alert_action_conf.alerts_spec = {}
     result = alert_action_conf.generate_conf_spec()
-    assert result is None
+    assert result == {"": ""}

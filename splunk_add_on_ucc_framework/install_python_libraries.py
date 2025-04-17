@@ -84,7 +84,7 @@ def _pip_install(installer: str, command: str, command_desc: str) -> None:
         if return_code != 0:
             raise CouldNotInstallRequirements(subprocess_result.stderr.decode())
     except OSError as e:
-        raise CouldNotInstallRequirements from e
+        raise CouldNotInstallRequirements(e) from e
 
 
 def _pip_is_lib_installed(
@@ -110,6 +110,9 @@ def _pip_is_lib_installed(
 
         result = _subprocess_run(command=lib_installed_cmd, env=my_env)
         if result.returncode != 0 or "Version:" not in result.stdout.decode("utf-8"):
+            logger.error(
+                f"Command result: {result.stdout.decode()} {result.stderr.decode()}"
+            )
             return False
 
         if version:
@@ -117,13 +120,17 @@ def _pip_is_lib_installed(
             result_row = next(el for el in pip_show_result if el.startswith("Version:"))
             result_version = result_row.split("Version:")[1].strip()
             if allow_higher_version:
+                logger.info(
+                    f"Command result: {result.stdout.decode()} {result.stderr.decode()}"
+                )
                 return Version(result_version) >= Version(version)
             return Version(result_version) == Version(version)
         else:
             return result.returncode == 0
 
-    except OSError as e:
-        raise CouldNotInstallRequirements from e
+    except OSError as exc:
+        logger.error(f"Command execution failed with error message: {str(exc)}")
+        raise CouldNotInstallRequirements from exc
 
 
 def _check_libraries_required_for_oauth(

@@ -48,29 +48,22 @@ def mocked__set_attribute(this, **kwargs):
     this._html_home = "_html_home"
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml._set_attributes",
-    return_value=MagicMock(),
-)
 def test_alert_html_generate_html_no_global_config(
-    mock_set_attributes,
+    global_config_for_conf_only_TA,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
-    mocked_gc = MagicMock()
-    mocked_gc.return_value = None
-
     alert_html = AlertActionsHtml(
-        global_config=mocked_gc(),
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    output = alert_html.generate_html()
-    assert output is None
+    output = alert_html.generate()
+    assert output == {"": ""}
 
 
 @patch(
@@ -94,8 +87,8 @@ def test_alert_html_generate_html_no_alerts(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    output = alert_html.generate_html()
-    assert output is None
+    output = alert_html.generate()
+    assert output == {"": ""}
     assert not hasattr(alert_html, "_alert_settings")
 
 
@@ -139,7 +132,7 @@ def test_alert_html_generate_html_with_alerts(
     alert_html.writer = MagicMock()
     alert_html._template = template_render
 
-    assert alert_html.generate_html() == {exp_fname: file_path}
+    assert alert_html.generate() == {exp_fname: file_path}
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
     alert_html.writer.assert_called_once_with(
@@ -183,7 +176,7 @@ def test_alert_actions_html_set_attributes_and_generate(
     assert hasattr(alert_html, "_alert_settings")
     alert_html.writer = MagicMock()
     alert_html._template = template_render
-    output = alert_html.generate_html()
+    output = alert_html.generate()
 
     assert output is not None
     assert len(output) == 4, "4 alert action html file path should be provided"

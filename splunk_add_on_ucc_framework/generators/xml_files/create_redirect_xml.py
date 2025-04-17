@@ -13,27 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from splunk_add_on_ucc_framework.generators.xml_files import XMLGenerator
-from typing import Any, Dict, Union
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from typing import Any, Dict
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
-class RedirectXml(XMLGenerator):
+class RedirectXml(FileGenerator):
     __description__ = (
         "Generates ta_name_redirect.xml file, if oauth is mentioned in globalConfig,"
         " in `default/data/ui/views/` folder."
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        if self._global_config and self._global_config.has_oauth():
+        if self._global_config.has_oauth():
             self.redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
                 self._addon_name,
             )
             self.ta_name = self._addon_name.lower()
 
-    def generate_xml(self) -> Union[Dict[str, str], None]:
-        if self._global_config and not self._global_config.has_oauth():
-            return None
+    def generate(self) -> Dict[str, str]:
+        if not self._global_config.has_oauth():
+            return {"": ""}
         file_name = f"{self.ta_name}_redirect.xml"
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", file_name]

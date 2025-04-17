@@ -14,7 +14,7 @@ import { getSimpleConfigStylePage } from '../stories/configMockups';
 const handleRequestModalOpen = jest.fn();
 const handleOpenPageStyleDialog = jest.fn();
 
-beforeEach(() => {
+const renderTable = () => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
@@ -37,9 +37,11 @@ beforeEach(() => {
         </TableContextProvider>,
         { wrapper: BrowserRouter }
     );
-});
+};
 
 it('Render action icons correctly', async () => {
+    renderTable();
+
     const allEditButtons = await screen.findAllByRole('button', { name: /edit/i });
     expect(allEditButtons).toHaveLength(9);
     const allDeleteBtns = screen.getAllByRole('button', { name: /delete/i });
@@ -53,6 +55,8 @@ it('Render action icons correctly', async () => {
 });
 
 it('Correctly call action handlers for page dialog', async () => {
+    renderTable();
+
     const user = userEvent.setup();
     await user.click((await screen.findAllByRole('button', { name: /edit/i }))[0]);
 
@@ -68,6 +72,8 @@ it('Correctly call action handlers for page dialog', async () => {
 });
 
 it('Correctly render modal for delete action click', async () => {
+    renderTable();
+
     const user = userEvent.setup();
     // Clicking delete renders modal
     await user.click((await screen.findAllByRole('button', { name: /delete/i }))[0]);
@@ -76,6 +82,8 @@ it('Correctly render modal for delete action click', async () => {
 });
 
 it('Correctly render status labels with default values', async () => {
+    renderTable();
+
     const active = MockRowData.entry.find((entry) => entry.content.disabled === false);
     const activeRow = await screen.findByLabelText(`row-${active?.name}`);
     const statusCell = within(activeRow).getByTestId('status');
@@ -85,4 +93,29 @@ it('Correctly render status labels with default values', async () => {
     const inactiveRow = await screen.findByLabelText(`row-${inactive?.name}`);
     const inactiveStatusCell = within(inactiveRow).getByTestId('status');
     expect(inactiveStatusCell).toHaveTextContent('Inactive');
+});
+
+it('Correctly render number of table rows', async () => {
+    renderTable();
+    const rows = await screen.findAllByRole('row');
+    expect(rows).toHaveLength(10); // 9 data rows + 1 header row
+});
+
+it.each(MockRowData.entry)('Correctly render row with name %s', async (row) => {
+    renderTable();
+
+    const verifyCellExistance = (field: string, rowElem: HTMLElement) => {
+        const cell = within(rowElem).getByText(field);
+        expect(cell).toBeInTheDocument();
+    };
+    const { name, content } = row;
+    const firstRow = await screen.findByLabelText(`row-${name}`);
+    expect(firstRow).toBeInTheDocument();
+
+    verifyCellExistance(name, firstRow);
+    verifyCellExistance(content.account_radio, firstRow);
+    verifyCellExistance(content.custom_endpoint, firstRow);
+    verifyCellExistance(content.custom_text, firstRow);
+    verifyCellExistance(content.username, firstRow);
+    verifyCellExistance(content.account_multiple_select, firstRow);
 });

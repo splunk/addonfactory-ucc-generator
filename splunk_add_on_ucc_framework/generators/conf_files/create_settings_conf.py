@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Tuple, List, Dict, Union
+from typing import Any, Tuple, List, Dict
 
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class SettingsConf(ConfGenerator):
+class SettingsConf(FileGenerator):
     __description__ = (
         "Generates `<YOUR_ADDON_NAME>_settings.conf.spec` "
         "file for the Proxy, Logging or Custom Tab mentioned in globalConfig"
@@ -28,16 +28,12 @@ class SettingsConf(ConfGenerator):
         self.settings_stanzas: List[Tuple[str, List[str]]] = []
         self.default_content: str = ""
 
-        if (
-            self._global_config
-            and self._gc_schema
-            and self._global_config.has_configuration()
-        ):
+        if self._global_config.has_configuration():
             self.conf_file = self._global_config.namespace.lower() + "_settings.conf"
             self.conf_spec_file = f"{self.conf_file}.spec"
             for setting in self._global_config.settings:
                 content = self._gc_schema._get_oauth_enitities(setting["entity"])
-                fields, special_fields = self._gc_schema._parse_fields(content)
+                fields, _ = self._gc_schema._parse_fields(content)
                 self.settings_stanzas.append(
                     (setting["name"], [f"{f._name} = " for f in fields])
                 )
@@ -46,10 +42,15 @@ class SettingsConf(ConfGenerator):
                     "settings"
                 ].generate_conf_with_default_values()
 
-    def generate_conf(self) -> Union[Dict[str, str], None]:
-        if not self.default_content:
-            return None
+    def generate(self) -> Dict[str, str]:
+        conf_files: Dict[str, str] = {}
+        conf_files.update(self.generate_conf())
+        conf_files.update(self.generate_conf_spec())
+        return conf_files
 
+    def generate_conf(self) -> Dict[str, str]:
+        if not self.default_content:
+            return {"": ""}
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="settings_conf.template"
@@ -63,9 +64,9 @@ class SettingsConf(ConfGenerator):
         )
         return {self.conf_file: file_path}
 
-    def generate_conf_spec(self) -> Union[Dict[str, str], None]:
+    def generate_conf_spec(self) -> Dict[str, str]:
         if not self.settings_stanzas:
-            return None
+            return {"": ""}
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
