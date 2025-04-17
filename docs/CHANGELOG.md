@@ -1,5 +1,19 @@
 # Changelog
 
+# [5.62.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.61.0...v5.62.0) (2025-04-17)
+
+
+### Bug Fixes
+
+* show input type in inputs page ([#1688](https://github.com/splunk/addonfactory-ucc-generator/issues/1688)) ([5626536](https://github.com/splunk/addonfactory-ucc-generator/commit/5626536797a6b53d2f0a071e5912e397fb24b9b1))
+
+
+### Features
+
+* add delimiter for checkboxtree and checkboxgroup ([#1685](https://github.com/splunk/addonfactory-ucc-generator/issues/1685)) ([1bef9fa](https://github.com/splunk/addonfactory-ucc-generator/commit/1bef9fae6b8a2ca0e19fd3c5d41fbff21588833c))
+* generate another .conf-file when conf parameter is used ([#1608](https://github.com/splunk/addonfactory-ucc-generator/issues/1608)) ([849351f](https://github.com/splunk/addonfactory-ucc-generator/commit/849351fa4882a3dc2ed812cf530ddbe98668dfe0))
+* handle uncaught exception ([#1681](https://github.com/splunk/addonfactory-ucc-generator/issues/1681)) ([9a621be](https://github.com/splunk/addonfactory-ucc-generator/commit/9a621be583a93d24e69df09930c410d0f2fc98a3))
+
 # [5.61.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.60.0...v5.61.0) (2025-04-01)
 
 

@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
@@ -27,10 +27,10 @@ const props = {
     displayActionBtnAllRows: false,
 } satisfies ITableWrapperProps;
 
-const renderTable = () =>
+const renderTable = (additionalProps: ITableWrapperProps = props) =>
     render(
         <TableContextProvider>
-            <TableWrapper {...props} />
+            <TableWrapper {...additionalProps} />
         </TableContextProvider>,
         { wrapper: BrowserRouter }
     );
@@ -217,7 +217,7 @@ describe('TableWrapper - Configuration Page', () => {
 });
 
 describe('TableWrapper - Inputs Page', () => {
-    it('Check inputs count is visible', async () => {
+    const setup = async () => {
         const inputsProps = {
             ...props,
             page: 'inputs',
@@ -232,13 +232,55 @@ describe('TableWrapper - Inputs Page', () => {
 
         setUnifiedConfig(getSimpleConfigStylePage());
 
-        render(
-            <TableContextProvider>
-                <TableWrapper {...inputsProps} />
-            </TableContextProvider>,
-            { wrapper: BrowserRouter }
-        );
+        renderTable(inputsProps);
+
+        await waitFor(() => {
+            expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+        });
+    };
+
+    it('Check inputs count is visible', async () => {
+        await setup();
+
         const statusCount = await screen.findByText('11 Inputs (7 of 11 enabled)');
         expect(statusCount).toBeInTheDocument();
+    });
+
+    it('Check header columns in inputs page', async () => {
+        await setup();
+
+        const expectedHeaders = [
+            'Name',
+            'Input Status',
+            'Input Type',
+            'Account radio',
+            'Custom endpoint',
+            'Custom text',
+            'Username',
+            'Account multiple select',
+            'Actions',
+        ];
+
+        const table = screen.getByRole('table');
+        const headerCells = within(table).getAllByTestId('head-cell');
+
+        // Sanity check: Make sure we got the right number of headers
+        expect(headerCells).toHaveLength(expectedHeaders.length);
+
+        const actualLabels = headerCells.map((el) => el.getAttribute('data-test-label'));
+
+        // Check that every expected header label is present
+        expectedHeaders.forEach((expectedLabel) => {
+            expect(actualLabels).toContain(expectedLabel);
+        });
+
+        // Validate that each entity label is rendered
+        const inputService = SIMPLE_NAME_TABLE_MOCK_DATA.pages.inputs.services.find(
+            (svc) => svc.name === props.serviceName
+        );
+
+        inputService?.entity.forEach((inputEntity) => {
+            expect(screen.getByText(inputEntity.label)).toBeInTheDocument();
+        });
     });
 });
