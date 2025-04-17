@@ -52,5 +52,5 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const { default: compareDiff } = await import('${{ github.workspace }}/.github/scripts/ui-code-coverage.mjs')
+            const { default: compareDiff } = await import('.github/scripts/ui-code-coverage.mjs')
             await compareDiff({ github, context })
