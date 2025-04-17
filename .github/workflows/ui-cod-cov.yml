@@ -48,13 +48,9 @@ jobs:
           npx jest --coverage --coverageReporters=json-summary
           cp coverage/coverage-summary.json /tmp/develop-coverage.json
 
-      - name: Bust import cache
-        run: cp .github/scripts/ui-code-coverage.mjs /tmp/ui-code-coverage-${{ github.run_id }}.mjs
-
       - name: Compare and comment coverage
         uses: actions/github-script@v7
         with:
           script: |
-            const ts = Date.now();
-            const { default: compareDiff } = await import(`/tmp/ui-code-coverage-${process.env.GITHUB_RUN_ID}.mjs`);
-            await compareDiff({ github, context });
+            const { default: compareDiff } = await import('${{ github.workspace }}/.github/scripts/ui-code-coverage.mjs')
+            await compareDiff({ github, context })
