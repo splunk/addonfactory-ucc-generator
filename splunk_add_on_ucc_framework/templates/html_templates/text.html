@@ -1,6 +1,7 @@
 {% extends "basecontrol.html" %}
-{% from "helper.html" import expand_ctrl_props with context %}
 {% block control %}
-<splunk-input-text type="text" name="action.{{ mod_alert.short_name }}.param.{{ param.name }}"
-		id="{{ mod_alert.short_name }}_{{ param.name }}" {{ expand_ctrl_props(param) }}/>
+	<splunk-text-input
+		name="action.{{ mod_alert.short_name }}.param.{{ param.name }}"
+		id="{{ mod_alert.short_name }}_{{ param.name }}"
+	/>
 {% endblock %}
