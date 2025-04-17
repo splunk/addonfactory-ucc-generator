@@ -2510,29 +2510,6 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@4.44.1", "@splunk/react-ui@^4.44.0":
-  version "4.44.1"
-  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.44.1.tgz#ad2de2f72be0fb9a44eade2e471653d007188510"
-  integrity sha512-nSgBuJoQau7E7PAKp7Kn2hjuz73XyDR8wm+CyguRh0G72K30WCO6DnFYv+susorLgwitM4KKXWX/0AQ/RiQvSQ==
-  dependencies:
-    "@dnd-kit/core" "^6.1.0"
-    "@dnd-kit/modifiers" "^7.0.0"
-    "@dnd-kit/sortable" "^8.0.0"
-    "@dnd-kit/utilities" "^3.2.2"
-    "@splunk/react-icons" "^4.13.0"
-    "@splunk/themes" "^0.23.0"
-    "@splunk/ui-utils" "^1.8.0"
-    commonmark "^0.30.0"
-    commonmark-react-renderer "^4.3.2"
-    decimal.js-light "^2.2.3"
-    lodash "^4.17.14"
-    moment "^2.29.4"
-    prop-types "^15.6.2"
-    react-resize-detector "^3.2.1"
-    react-spring "9.2.4"
-    tinycolor2 "^1.4.1"
-    use-typed-event-listener "^3.0.0"
-
 "@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.39.0", "@splunk/react-ui@^4.41.0":
   version "4.42.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.42.0.tgz#9f430468fa026988e89d10a64743a0603fca5430"
@@ -2566,6 +2543,29 @@
     "@dnd-kit/sortable" "^8.0.0"
     "@dnd-kit/utilities" "^3.2.2"
     "@splunk/react-icons" "^4.12.0"
+    "@splunk/themes" "^0.23.0"
+    "@splunk/ui-utils" "^1.8.0"
+    commonmark "^0.30.0"
+    commonmark-react-renderer "^4.3.2"
+    decimal.js-light "^2.2.3"
+    lodash "^4.17.14"
+    moment "^2.29.4"
+    prop-types "^15.6.2"
+    react-resize-detector "^3.2.1"
+    react-spring "9.2.4"
+    tinycolor2 "^1.4.1"
+    use-typed-event-listener "^3.0.0"
+
+"@splunk/react-ui@^4.44.0", "@splunk/react-ui@^4.44.1":
+  version "4.44.1"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.44.1.tgz#ad2de2f72be0fb9a44eade2e471653d007188510"
+  integrity sha512-nSgBuJoQau7E7PAKp7Kn2hjuz73XyDR8wm+CyguRh0G72K30WCO6DnFYv+susorLgwitM4KKXWX/0AQ/RiQvSQ==
+  dependencies:
+    "@dnd-kit/core" "^6.1.0"
+    "@dnd-kit/modifiers" "^7.0.0"
+    "@dnd-kit/sortable" "^8.0.0"
+    "@dnd-kit/utilities" "^3.2.2"
+    "@splunk/react-icons" "^4.13.0"
     "@splunk/themes" "^0.23.0"
     "@splunk/ui-utils" "^1.8.0"
     commonmark "^0.30.0"
