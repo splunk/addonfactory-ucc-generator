@@ -134,7 +134,16 @@ class TestInputPage(UccTester):
     ):
         """Verifies headers of input table"""
         input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        header_list = ["Name", "Account", "Interval", "Index", "Status", "Actions"]
+        header_list = [
+            "Name",
+            "Account",
+            "Interval",
+            "Input Type",
+            "Input Service",
+            "Index",
+            "Status",
+            "Actions",
+        ]
         self.assert_util(input_page.table.get_headers, header_list)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -252,7 +261,7 @@ class TestInputPage(UccTester):
             "Example Input One",
             "Example Input Two",
             "Example Input Three",
-            "Example Input Four",
+            "Example Input Four Creates disabled input",
             "Service hidden for cloud",
             "Service with conf param",
             "Group One",
@@ -1123,6 +1132,8 @@ class TestInputPage(UccTester):
                 "name": "dummy_input",
                 "account": "test_input",
                 "interval": "90",
+                "input type": "Example Input One",
+                "input service": "example_input_one",
                 "index": "default",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
@@ -1196,6 +1207,8 @@ class TestInputPage(UccTester):
                 "name": "dummy_input_one",
                 "account": "test_input",
                 "interval": "3600",
+                "input type": "Example Input One",
+                "input service": "example_input_one",
                 "index": "main",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
@@ -1275,6 +1288,8 @@ class TestInputPage(UccTester):
                 "name": "dummy_input_one_Clone_Test",
                 "account": "test_input",
                 "interval": "180",
+                "input type": "Example Input One",
+                "input service": "example_input_one",
                 "index": "default",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
@@ -1935,6 +1950,8 @@ class TestInputPage(UccTester):
                 "account": "test_input",
                 "interval": "90",
                 "index": "main",
+                "input type": "Example Input Two",
+                "input service": "example_input_two",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
             },
@@ -1993,6 +2010,8 @@ class TestInputPage(UccTester):
                 "name": "dummy_input_two",
                 "account": "test_input",
                 "interval": "3600",
+                "input type": "Example Input Two",
+                "input service": "example_input_two",
                 "index": "main",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
@@ -2061,6 +2080,8 @@ class TestInputPage(UccTester):
                 "name": "dummy_input_two_Clone_Test",
                 "account": "test_input",
                 "interval": "180",
+                "input type": "Example Input Two",
+                "input service": "example_input_two",
                 "index": "main",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
@@ -2626,6 +2647,8 @@ class TestInputPage(UccTester):
                 "name": name,
                 "account": "test_input",
                 "interval": interval,
+                "input type": "Example Input One",
+                "input service": "example_input_one",
                 "index": "default",
                 "status": "Active",
                 "actions": "Edit | Clone | Search | Delete",
