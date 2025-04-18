@@ -31,29 +31,27 @@ class WebConf(FileGenerator):
     )
 
     def _set_attributes(self, **kwargs: Any) -> None:
-        self.conf_file = "web.conf"
-        self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
-
-        if self._global_config.has_pages():
-            self.endpoints.extend(self._gc_schema.endpoints)
-            self.endpoints.extend(
-                self._global_config.user_defined_handlers.endpoint_registration_entries
-            )
+        pass
 
     def generate(self) -> Dict[str, str]:
-        if not self.endpoints:
-            return {"": ""}
+        if not self._global_config.has_pages():
+            return {}
 
-        file_path = self.get_file_output_path(["default", self.conf_file])
-        self.set_template_and_render(
-            template_file_path=["conf_files"], file_name="web_conf.template"
+        endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        endpoints.extend(self._gc_schema.endpoints)
+        endpoints.extend(
+            self._global_config.user_defined_handlers.endpoint_registration_entries
         )
-        rendered_content = self._template.render(
-            endpoints=self.endpoints,
+        conf_file = "web.conf"
+
+        file_path = self.get_file_output_path(["default", conf_file])
+        rendered_content = self._render(
+            "web_conf.template",
+            endpoints=endpoints,
         )
         self.writer(
-            file_name=self.conf_file,
+            file_name=conf_file,
             file_path=file_path,
             content=rendered_content,
         )
-        return {self.conf_file: file_path}
+        return {conf_file: file_path}
