@@ -32,7 +32,7 @@ class CommandsConf(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self._global_config.has_custom_search_commands():
-            return {"": ""}
+            return {}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(

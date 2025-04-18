@@ -46,7 +46,7 @@ def test_generate_conf_without_custom_command(
     file_paths = commands_conf.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == {"": ""}
+    assert file_paths == {}
 
 
 def test_commands_conf_generation(
