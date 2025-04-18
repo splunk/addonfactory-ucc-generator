@@ -86,7 +86,7 @@ def test_generate_conf_without_custom_command(
     file_paths = searchbnf_conf.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == {"": ""}
+    assert file_paths == {}
 
 
 def test_generate_conf(global_config_all_json, input_dir, output_dir, ta_name):
