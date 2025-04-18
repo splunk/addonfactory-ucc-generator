@@ -489,7 +489,7 @@ def generate(
     global_config_update.handle_global_config_update(global_config, gc_path)
     try:
         validator = global_config_validator.GlobalConfigValidator(
-            internal_root_dir, global_config, source=source
+            internal_root_dir, global_config, source
         )
         validator.validate()
         logger.info("globalConfig file is valid")
