@@ -32,9 +32,9 @@ class CustomControl extends React.Component<Props, State> {
         context?: React.ContextType<typeof CustomComponentContext>
     ): Promise<CustomControlConstructor> =>
         new Promise((resolve) => {
-            if (context?.[module]) {
-                const Control = context[module];
-                resolve(Control as CustomControlConstructor);
+            if (context?.[module].type === 'control') {
+                const Control = context[module].component;
+                resolve(Control);
             } else if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     async (external) => {

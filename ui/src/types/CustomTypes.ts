@@ -5,12 +5,42 @@ import { CustomRowConstructor } from '../components/table/CustomRowBase';
 import { CustomCellConstructor } from '../components/table/CustomTableCellBase';
 import { CustomHookConstructor } from './components/CustomHookClass';
 
+type CustomMenuStructure = {
+    component: CustomMenuConstructor;
+    type: 'menu';
+};
+
+type CustomTabStructure = {
+    component: CustomTabConstructor;
+    type: 'tab';
+};
+
+type CustomControlStructure = {
+    component: CustomControlConstructor;
+    type: 'control';
+};
+
+type CustomRowStructure = {
+    component: CustomRowConstructor;
+    type: 'row';
+};
+
+type CustomCellStructure = {
+    component: CustomCellConstructor;
+    type: 'cell';
+};
+
+type CustomHookStructure = {
+    component: CustomHookConstructor;
+    type: 'hook';
+};
+
 export type CustomElementsMap = Record<
     string,
-    | CustomHookConstructor
-    | CustomControlConstructor
-    | CustomRowConstructor
-    | CustomCellConstructor
-    | CustomMenuConstructor
-    | CustomTabConstructor
+    | CustomHookStructure
+    | CustomControlStructure
+    | CustomRowStructure
+    | CustomCellStructure
+    | CustomMenuStructure
+    | CustomTabStructure
 >;

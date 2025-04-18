@@ -106,9 +106,10 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
             const globalConfig = getUnifiedConfigs();
-            if (this.customComponentContext?.[this.props.fileName]) {
-                const Control = this.customComponentContext?.[this.props.fileName];
-                resolve(Control as CustomRowConstructor);
+            const customComp = this.customComponentContext?.[this.props.fileName];
+            if (customComp?.type === 'row') {
+                const Control = customComp.component;
+                resolve(Control);
             } else if (type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))

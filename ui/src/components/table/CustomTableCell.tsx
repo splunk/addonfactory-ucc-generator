@@ -88,9 +88,10 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
             const globalConfig = getUnifiedConfigs();
-            if (this.customComponentContext?.[this.props.fileName]) {
-                const Control = this.customComponentContext?.[this.props.fileName];
-                resolve(Control as CustomCellConstructor);
+            const customComp = this.customComponentContext?.[this.props.fileName];
+            if (customComp?.type === 'cell') {
+                const Control = customComp.component;
+                resolve(Control);
             } else if (type === 'external') {
                 import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))

@@ -73,9 +73,10 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
 
     loadCustomMenu = (): Promise<CustomMenuConstructor> =>
         new Promise((resolve) => {
-            if (this.customComponentContext?.[this.props.fileName]) {
-                const Control = this.customComponentContext?.[this.props.fileName];
-                resolve(Control as CustomMenuConstructor);
+            const customComp = this.customComponentContext?.[this.props.fileName];
+            if (customComp?.type === 'menu') {
+                const Control = customComp.component;
+                resolve(Control);
             } else if (this.props.type === 'external') {
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`)
                     .then((external) => {
