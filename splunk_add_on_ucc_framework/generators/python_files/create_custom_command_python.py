@@ -17,8 +17,6 @@ from typing import Any, Dict, List
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
-GENERATED_FILES = {}
-
 
 class CustomCommandPy(FileGenerator):
     __description__ = "Generates Python files for custom search commands provided in the globalConfig."
@@ -68,7 +66,7 @@ class CustomCommandPy(FileGenerator):
         for command in self._global_config.custom_search_commands:
             argument_list: List[str] = []
             command["fileName"] = command["fileName"].replace(".py", "")
-            template = command["commandType"] + ".template"
+            template = command["commandType"].replace(" ", "_") + ".template"
             for argument in command["arguments"]:
                 argument_dict = {
                     "name": argument["name"],
@@ -91,8 +89,9 @@ class CustomCommandPy(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self.commands_info:
-            return {"": ""}
+            return {}
 
+        generated_files = {}
         for command_info in self.commands_info:
             file_name = command_info["file_name"] + ".py"
             file_path = self.get_file_output_path(["bin", file_name])
@@ -112,5 +111,5 @@ class CustomCommandPy(FileGenerator):
                 file_path=file_path,
                 content=rendered_content,
             )
-            GENERATED_FILES.update({file_name: file_path})
-        return GENERATED_FILES
+            generated_files.update({file_name: file_path})
+        return generated_files
