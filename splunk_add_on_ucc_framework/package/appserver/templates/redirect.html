@@ -35,6 +35,6 @@
 
         <% page_path = "/static/app/" + app_name + "/js/build/${ta.name}_redirect_page.${ta.version}.js" %>
 
-        <script src="${make_url(page_path)}"></script>
+        <script type="module" src="${make_url(page_path)}"></script>
     </body>
 </html>

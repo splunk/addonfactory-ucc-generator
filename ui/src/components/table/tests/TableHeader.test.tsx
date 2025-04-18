@@ -3,6 +3,7 @@ import React from 'react';
 import { http, HttpResponse } from 'msw';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
@@ -16,8 +17,8 @@ const inputName = 'example_input_one';
 
 const props = {
     page: 'inputs',
-    handleRequestModalOpen: jest.fn(),
-    handleOpenPageStyleDialog: jest.fn(),
+    handleRequestModalOpen: vi.fn(),
+    handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
 const headers = [

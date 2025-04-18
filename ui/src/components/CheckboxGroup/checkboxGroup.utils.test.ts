@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     getDefaultValues,
     getFlattenRowsWithGroups,
@@ -10,7 +11,7 @@ import {
     ValueByField,
 } from './checkboxGroup.utils';
 
-jest.mock('../../util/Validator');
+vi.mock('../../util/Validator');
 
 describe('parseValue', () => {
     it('should correctly parse a collection string into a Map', () => {

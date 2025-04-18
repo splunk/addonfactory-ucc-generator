@@ -12,7 +12,7 @@ export type CustomControlConstructor<
     T extends typeof CustomControlBase = typeof CustomControlBase
 > = new (...args: ConstructorParameters<T>) => CustomControlInstance<T>;
 
-export abstract class CustomControlBase {
+abstract class CustomControlBase {
     protected globalConfig: GlobalConfig;
 
     protected el: HTMLElement;
@@ -41,3 +41,5 @@ export abstract class CustomControlBase {
 
     validation?(field: string, value: ControlData['value']): string | undefined;
 }
+
+export { CustomControlBase };

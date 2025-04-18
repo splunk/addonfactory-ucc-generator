@@ -3,7 +3,7 @@ import { DashboardCore } from '@splunk/dashboard-core';
 import { DashboardContextProvider } from '@splunk/dashboard-context';
 import EnterpriseViewOnlyPreset from '@splunk/dashboard-presets/EnterpriseViewOnlyPreset';
 import Button from '@splunk/react-ui/Button';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import styled from 'styled-components';
 import SearchJob from '@splunk/search-job';
 import type { DashboardCoreApi } from '@splunk/dashboard-types';

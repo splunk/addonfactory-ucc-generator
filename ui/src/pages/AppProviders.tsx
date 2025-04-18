@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { SplunkThemeProvider } from '@splunk/themes';
+import SplunkThemeProvider from '@splunk/themes/SplunkThemeProvider';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { GlobalBodyStyle, StyledContainer } from './GlobalStyles';
 import ConfigManager from '../util/configManager';

@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -5,7 +6,7 @@ import CheckboxGroup from './CheckboxGroup';
 import { CheckboxGroupProps } from './checkboxGroup.utils';
 import { MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 const defaultCheckboxProps: CheckboxGroupProps = {
     mode: MODE_CREATE,
