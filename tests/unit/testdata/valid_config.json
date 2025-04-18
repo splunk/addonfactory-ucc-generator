@@ -806,6 +806,13 @@
                             "help": "This is an example checkbox for the input two entity"
                         },
                         {
+                            "type": "checkbox",
+                            "label": "Example Checkbox with bool",
+                            "field": "input_two_checkbox_bool",
+                            "help": "This is an example checkbox for the input two entity with bool default",
+                            "defaultValue": true
+                        },
+                        {
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
@@ -1363,8 +1370,8 @@
             "fileName": "generatetext.py",
             "commandType": "generating",
             "requiredSearchAssistant": true,
-            "description": " This command generates COUNT occurrences of a TEXT string.",
-            "syntax": "mycommand count=<event_count> text=<string>",
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
             "usage": "public",
             "arguments": [
                 {

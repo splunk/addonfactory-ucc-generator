@@ -11,7 +11,7 @@ import {
 import CheckboxSubTree from './CheckboxSubTree';
 import CheckboxRowWrapper from './CheckboxTreeRowWrapper';
 import { MODE_CREATE } from '../../constants/modes';
-import { CheckboxTreeProps, ValueByField } from './types';
+import { CheckboxTreeProps } from './types';
 import { packValue, parseValue } from './utils';
 
 const FullWidth = styled.div`
@@ -33,7 +33,10 @@ function CheckboxTree(props: CheckboxTreeProps) {
 
     const initialValues = useMemo(
         () =>
-            shouldUseDefaultValue ? getDefaultValues(controlOptions.rows) : parseValue(props.value),
+            shouldUseDefaultValue
+                ? getDefaultValues(controlOptions.rows)
+                : parseValue(props.value, controlOptions?.delimiter),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [shouldUseDefaultValue, controlOptions.rows, props.value]
     );
 
@@ -42,19 +45,28 @@ function CheckboxTree(props: CheckboxTreeProps) {
     // Propagate default values on mount if applicable
     useEffect(() => {
         if (shouldUseDefaultValue) {
-            handleChange(field, packValue(initialValues), 'checkboxTree');
+            handleChange(
+                field,
+                packValue(initialValues, controlOptions?.delimiter),
+                'checkboxTree'
+            );
         }
-    }, [field, handleChange, shouldUseDefaultValue, initialValues]);
+    }, [field, handleChange, shouldUseDefaultValue, initialValues, controlOptions?.delimiter]);
 
     const handleRowChange = useCallback(
         (newValue: { field: string; checkbox: boolean; text?: string }) => {
-            setValues((prevValues: ValueByField) => {
+            setValues((prevValues) => {
                 const updatedValues = getNewCheckboxValues(prevValues, newValue);
-                handleChange(field, packValue(updatedValues), 'checkboxTree');
+                handleChange(
+                    field,
+                    packValue(updatedValues, controlOptions?.delimiter),
+                    'checkboxTree'
+                );
                 return updatedValues;
             });
         },
-        [field, handleChange]
+
+        [controlOptions?.delimiter, field, handleChange]
     );
 
     const handleParentCheckboxForGroup = useCallback(
@@ -69,15 +81,20 @@ function CheckboxTree(props: CheckboxTreeProps) {
             }
 
             setValues((prevValues) => {
-                const updatedValues = new Map(prevValues);
-                group.fields.forEach((item) => {
-                    updatedValues.set(item, { checkbox: newCheckboxValue });
+                const updatedValues = getNewCheckboxValues(prevValues, {
+                    groupFields: group.fields,
+                    checkbox: newCheckboxValue,
                 });
-                handleChange(field, packValue(updatedValues), 'checkboxTree');
+                handleChange(
+                    field,
+                    packValue(updatedValues, controlOptions?.delimiter),
+                    'checkboxTree'
+                );
                 return updatedValues;
             });
         },
-        [controlOptions.groups, field, handleChange]
+
+        [controlOptions?.delimiter, controlOptions.groups, field, handleChange]
     );
 
     const handleCheckboxToggleAll = useCallback(
@@ -85,16 +102,22 @@ function CheckboxTree(props: CheckboxTreeProps) {
             if (disabled === true) {
                 return;
             }
+
             setValues((prevValues) => {
-                const updatedValues = new Map(prevValues);
-                controlOptions.rows.forEach((row) => {
-                    updatedValues.set(row.field, { checkbox: newCheckboxValue });
+                const updatedValues = getNewCheckboxValues(prevValues, {
+                    allRows: controlOptions.rows.map((r) => r.field),
+                    checkbox: newCheckboxValue,
                 });
-                handleChange(field, packValue(updatedValues), 'checkboxTree');
+                handleChange(
+                    field,
+                    packValue(updatedValues, controlOptions?.delimiter),
+                    'checkboxTree'
+                );
                 return updatedValues;
             });
         },
-        [controlOptions.rows, disabled, field, handleChange]
+
+        [controlOptions?.delimiter, controlOptions.rows, disabled, field, handleChange]
     );
 
     return (
