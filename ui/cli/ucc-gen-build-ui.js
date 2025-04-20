@@ -3,13 +3,13 @@ import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const fileName = fileURLToPath(import.meta.url);
+const dirName = dirname(fileName);
 
-const paramOutputDir = process.argv.find(arg => arg.startsWith('output='))?.slice(7);
-const viteUccGenConfigPath = `${__dirname}/vite.config_ucc-gen-ui.ts`;
+// eslint-disable-next-line no-undef
+const paramOutputDir = process.argv.find((arg) => arg.startsWith('output='))?.slice(7);
+const viteUccGenConfigPath = `${dirName}/vite.config_ucc-gen-ui.ts`;
 
-execSync(
-    `vite build --config ${viteUccGenConfigPath} output=${paramOutputDir}`,
-    { stdio: 'inherit' }
-);
+execSync(`vite build --config ${viteUccGenConfigPath} output=${paramOutputDir}`, {
+    stdio: 'inherit',
+});
