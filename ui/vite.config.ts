@@ -3,6 +3,7 @@ import { defineConfig, PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import license from 'rollup-plugin-license';
+import type { ViteUserConfig as VitestUserConfigInterface } from 'vitest/config';
 
 const proxyTargetUrl = 'http://localhost:8000';
 const devServerPort = 5173;
@@ -61,6 +62,55 @@ const reactHmrWorkaround = {
         return null;
     },
 } satisfies PluginOption;
+
+const vitestTestConfig: VitestUserConfigInterface = {
+    test: {
+        watch: false,
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: 'test.setup.ts',
+        server: {
+            deps: {
+                inline: ['jspdf'],
+            },
+        },
+        coverage: {
+            all: true,
+            provider: 'istanbul',
+            reporter: ['text'],
+            thresholds: {
+                statements: 78.04,
+                branches: 72.02,
+                functions: 76.07,
+                lines: 78.37,
+            },
+            include: ['src/**/*.{js,jsx,ts,tsx}'],
+            exclude: [
+                '**/node_modules/**',
+                '**/dist/**',
+                '**/cypress/**',
+                '**/.{idea,git,cache,output,temp}/**',
+                '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
+                '**/jest.polyfills.ts',
+                '**/vite.lib.config.ts',
+                '**/ucc-gen-build-ui.js',
+                '**/vite.config_ucc-gen-ui.ts',
+                '**/**.stories.**',
+                '**/mockServiceWorker.js',
+                '**/styleMock.js',
+                /*
+                 TYPES
+                 */
+                // *.d.ts files
+                '**/\\.d\\.ts$',
+                '**\\.types\\.ts$',
+                '**/.eslintrc.cjs',
+                '**/.storybook/**',
+                '**/stories/**',
+            ],
+        },
+    },
+};
 
 const splunkPathRewriter = {
     name: 'splunk-path-rewriter',
@@ -166,37 +216,6 @@ export default defineConfig(({ mode }) => {
                 },
             },
         },
-        test: {
-            globals: true,
-            environment: 'jsdom',
-            setupFiles: 'test.setup.ts',
-            server: {
-                deps: {
-                    inline: ['jspdf'],
-                },
-            },
-            coverage: {
-                provider: 'istanbul',
-                thresholdAutoUpdate: true,
-                reporter: ['text', 'text-summary'],
-                lines: 73.82,
-                functions: 69.62,
-                statements: 72.97,
-                branches: 74.15,
-                exclude: [
-                    '**/node_modules/**',
-                    '**/dist/**',
-                    '**/cypress/**',
-                    '**/.{idea,git,cache,output,temp}/**',
-                    '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
-                    '**/jest.polyfills.ts',
-                    '**/vite.lib.config.ts',
-                    '**/ucc-gen-build-ui.js',
-                    '**/vite.config_ucc-gen-ui.ts',
-                    '**/**.stories.**',
-                    '**/types/**',
-                ],
-            },
-        },
+        test: vitestTestConfig.test,
     };
 });
