@@ -175,6 +175,28 @@ export default defineConfig(({ mode }) => {
                     inline: ['jspdf'],
                 },
             },
+            coverage: {
+                provider: 'istanbul',
+                thresholdAutoUpdate: true,
+                reporter: ['text', 'text-summary'],
+                lines: 73.82,
+                functions: 69.62,
+                statements: 72.97,
+                branches: 74.15,
+                exclude: [
+                    '**/node_modules/**',
+                    '**/dist/**',
+                    '**/cypress/**',
+                    '**/.{idea,git,cache,output,temp}/**',
+                    '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
+                    '**/jest.polyfills.ts',
+                    '**/vite.lib.config.ts',
+                    '**/ucc-gen-build-ui.js',
+                    '**/vite.config_ucc-gen-ui.ts',
+                    '**/**.stories.**',
+                    '**/types/**',
+                ],
+            },
         },
     };
 });

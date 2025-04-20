@@ -234,7 +234,7 @@
   dependencies:
     "@babel/types" "^7.26.10"
 
-"@babel/parser@^7.25.3":
+"@babel/parser@^7.25.3", "@babel/parser@^7.25.4":
   version "7.27.0"
   resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.27.0.tgz#3d7d6ee268e41d2600091cbd4e145ffee85a44ec"
   integrity sha512-iaepho73/2Pz7w2eMS0Q5f83+0RKI7i4xmiYeBmDzfRVbQtTOG7Ts0S4HzJVsTMGI9keU8rNfuZr8DKfSt7Yyg==
@@ -1035,7 +1035,7 @@
     "@babel/helper-string-parser" "^7.25.9"
     "@babel/helper-validator-identifier" "^7.25.9"
 
-"@babel/types@^7.27.0":
+"@babel/types@^7.25.4", "@babel/types@^7.27.0":
   version "7.27.0"
   resolved "https://registry.npmjs.org/@babel/types/-/types-7.27.0.tgz#ef9acb6b06c3173f6632d993ecb6d4ae470b4559"
   integrity sha512-H45s8fVLYjbhFH62dIJ3WtmJ6RSPt/3DRO0ZcT2SUiYiQyz3BLVb9ADEnLl91m74aQPS3AzzeajZHYOalWe3bg==
@@ -1707,7 +1707,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@jridgewell/trace-mapping@^0.3.12", "@jridgewell/trace-mapping@^0.3.18", "@jridgewell/trace-mapping@^0.3.24", "@jridgewell/trace-mapping@^0.3.25":
+"@jridgewell/trace-mapping@^0.3.12", "@jridgewell/trace-mapping@^0.3.18", "@jridgewell/trace-mapping@^0.3.23", "@jridgewell/trace-mapping@^0.3.24", "@jridgewell/trace-mapping@^0.3.25":
   version "0.3.25"
   resolved "https://registry.npmjs.org/@jridgewell/trace-mapping/-/trace-mapping-0.3.25.tgz#15f190e98895f3fc23276ee14bc76b675c2e50f0"
   integrity sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==
@@ -4471,6 +4471,22 @@
     "@babel/plugin-transform-react-jsx-source" "^7.25.9"
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.14.2"
+
+"@vitest/coverage-istanbul@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.npmjs.org/@vitest/coverage-istanbul/-/coverage-istanbul-3.1.1.tgz#950edf782bbff0f7d6113d62728717eed338b00a"
+  integrity sha512-uSoMeVcF5fMGcjWJOeG28nBPO2OuCNMRr+BcpF71gc1r/+EQnU7EeRM1hihs3EsSAOcjgw9w+TCMv/2lVvB4RA==
+  dependencies:
+    "@istanbuljs/schema" "^0.1.3"
+    debug "^4.4.0"
+    istanbul-lib-coverage "^3.2.2"
+    istanbul-lib-instrument "^6.0.3"
+    istanbul-lib-report "^3.0.1"
+    istanbul-lib-source-maps "^5.0.6"
+    istanbul-reports "^3.1.7"
+    magicast "^0.3.5"
+    test-exclude "^7.0.1"
+    tinyrainbow "^2.0.0"
 
 "@vitest/expect@2.0.5":
   version "2.0.5"
@@ -7964,7 +7980,7 @@ glob-to-regexp@^0.4.1:
   resolved "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz#c75297087c851b9a578bd217dd59a92f59fe546e"
   integrity sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==
 
-glob@^10.0.0:
+glob@^10.0.0, glob@^10.4.1:
   version "10.4.5"
   resolved "https://registry.npmjs.org/glob/-/glob-10.4.5.tgz#f4d9f0b90ffdbab09c9d77f5f29b4262517b0956"
   integrity sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==
@@ -8896,7 +8912,7 @@ isobject@^3.0.1:
   resolved "https://registry.npmjs.org/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
-istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0:
+istanbul-lib-coverage@^3.0.0, istanbul-lib-coverage@^3.2.0, istanbul-lib-coverage@^3.2.2:
   version "3.2.2"
   resolved "https://registry.npmjs.org/istanbul-lib-coverage/-/istanbul-lib-coverage-3.2.2.tgz#2d166c4b0644d43a39f04bf6c2edd1e585f31756"
   integrity sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==
@@ -8929,7 +8945,7 @@ istanbul-lib-instrument@^5.0.4:
     istanbul-lib-coverage "^3.2.0"
     semver "^6.3.0"
 
-istanbul-lib-instrument@^6.0.0:
+istanbul-lib-instrument@^6.0.0, istanbul-lib-instrument@^6.0.3:
   version "6.0.3"
   resolved "https://registry.npmjs.org/istanbul-lib-instrument/-/istanbul-lib-instrument-6.0.3.tgz#fa15401df6c15874bcb2105f773325d78c666765"
   integrity sha512-Vtgk7L/R2JHyyGW07spoFlB8/lpjiOLTjMdms6AFMraYt3BaJauod/NGrfnVG/y4Ix1JEuMRPDPEj2ua+zz1/Q==
@@ -8952,7 +8968,7 @@ istanbul-lib-processinfo@^2.0.2:
     rimraf "^3.0.0"
     uuid "^8.3.2"
 
-istanbul-lib-report@^3.0.0:
+istanbul-lib-report@^3.0.0, istanbul-lib-report@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/istanbul-lib-report/-/istanbul-lib-report-3.0.1.tgz#908305bac9a5bd175ac6a74489eafd0fc2445a7d"
   integrity sha512-GCfE1mtsHGOELCU8e/Z7YWzpmybrx/+dSTfLrvY8qRmaY6zXTKWn6WQIjaAFw069icm6GVMNkgu0NzI4iPZUNw==
@@ -8970,7 +8986,16 @@ istanbul-lib-source-maps@^4.0.0:
     istanbul-lib-coverage "^3.0.0"
     source-map "^0.6.1"
 
-istanbul-reports@^3.0.2, istanbul-reports@^3.1.3:
+istanbul-lib-source-maps@^5.0.6:
+  version "5.0.6"
+  resolved "https://registry.npmjs.org/istanbul-lib-source-maps/-/istanbul-lib-source-maps-5.0.6.tgz#acaef948df7747c8eb5fbf1265cb980f6353a441"
+  integrity sha512-yg2d+Em4KizZC5niWhQaIomgf5WlL4vOOjZ5xGCmF8SnPE/mDWWXgvRExdcpCgh9lLRRa1/fSYp2ymmbJ1pI+A==
+  dependencies:
+    "@jridgewell/trace-mapping" "^0.3.23"
+    debug "^4.1.1"
+    istanbul-lib-coverage "^3.0.0"
+
+istanbul-reports@^3.0.2, istanbul-reports@^3.1.3, istanbul-reports@^3.1.7:
   version "3.1.7"
   resolved "https://registry.npmjs.org/istanbul-reports/-/istanbul-reports-3.1.7.tgz#daed12b9e1dca518e15c056e1e537e741280fa0b"
   integrity sha512-BewmUXImeuRk2YY0PVbxgKAysvhRPUQE0h5QRM++nVWyubKGV0l8qQ5op8+B2DOmwSe63Jivj0BjkPQVf8fP5g==
@@ -9921,6 +9946,15 @@ magic-string@^0.30.0, magic-string@^0.30.17, magic-string@^0.30.3, magic-string@
   integrity sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==
   dependencies:
     "@jridgewell/sourcemap-codec" "^1.5.0"
+
+magicast@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.npmjs.org/magicast/-/magicast-0.3.5.tgz#8301c3c7d66704a0771eb1bad74274f0ec036739"
+  integrity sha512-L0WhttDl+2BOsybvEOLK7fW3UA0OQ0IQ2d6Zl2x/a6vVRs3bAY0ECOSHHeL5jD+SbOpOCUEi0y1DgHEn9Qn1AQ==
+  dependencies:
+    "@babel/parser" "^7.25.4"
+    "@babel/types" "^7.25.4"
+    source-map-js "^1.2.0"
 
 make-dir@^3.0.0, make-dir@^3.0.2, make-dir@^3.1.0:
   version "3.1.0"
@@ -12812,6 +12846,15 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
+
+test-exclude@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/test-exclude/-/test-exclude-7.0.1.tgz#20b3ba4906ac20994e275bbcafd68d510264c2a2"
+  integrity sha512-pFYqmTw68LXVjeWJMST4+borgQP2AyMNbg1BpZh9LbyhUeNkeaPF9gzfPGUAnSMV3qPYdWUwDIjjCLiSDOl7vg==
+  dependencies:
+    "@istanbuljs/schema" "^0.1.2"
+    glob "^10.4.1"
+    minimatch "^9.0.4"
 
 text-segmentation@^1.0.3:
   version "1.0.3"
