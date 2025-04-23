@@ -57,10 +57,16 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
         if self.requestedAction == admin.ACTION_EDIT:
             # Add required args in supported args
             for arg in ('url', 'method',
-                        'grant_type', 'code',
-                        'client_id', 'client_secret',
-                        'redirect_uri'):
+                        'grant_type', 'client_id',
+                        'client_secret'):
                 self.supportedArgs.addReqArg(arg)
+
+            for arg in (
+                'scope',  # Optional for client_credentials
+                'code',  # Required for authorization_code
+                'redirect_uri',  # Required for authorization_code
+            ):
+                self.supportedArgs.addOptArg(arg)
         return
 
     """
@@ -80,14 +86,39 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
 
             http = Http(proxy_info=proxy_info)
             method = self.callerArgs.data['method'][0]
+
             # Create payload from the arguments received
+            grant_type = self.callerArgs.data['grant_type'][0]
+
             payload = {
                 'grant_type': self.callerArgs.data['grant_type'][0],
-                'code': self.callerArgs.data['code'][0],
                 'client_id': self.callerArgs.data['client_id'][0],
                 'client_secret': self.callerArgs.data['client_secret'][0],
-                'redirect_uri': self.callerArgs.data['redirect_uri'][0],
             }
+
+            if grant_type == "authorization_code":
+                # If grant_type is authorization_code then add code and redirect_uri in payload
+                code = self.callerArgs.data.get('code', [None])[0]
+
+                for param_name in ('code', 'redirect_uri'):
+                    param = self.callerArgs.data.get(param_name, [None])[0]
+
+                    if param is None:
+                        raise ValueError(
+                            "%s is required for authorization_code grant type" % param_name
+                        )
+
+                    payload[param_name] = param
+            elif grant_type == "client_credentials":
+                # If grant_type is client_credentials then add scope in payload
+                payload['scope'] = self.callerArgs.data['scope'][0]
+            else:
+                # Else raise an error
+                logger.error("Invalid grant_type %s", grant_type)
+                raise ValueError(
+                    "Invalid grant_type %s. Supported values are authorization_code and client_credentials" % grant_type
+                )
+
             headers = {"Content-Type": "application/x-www-form-urlencoded", }
             # Send http request to get the accesstoken
             resp, content = http.request(url,
@@ -107,13 +138,15 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
         except Exception as exc:
             logger.exception(
                 "Error occurred while getting accesstoken using auth code")
-            raise exc()
+            raise
 
     """
     This method is to get proxy details stored in settings conf file
     """
 
     def getProxyDetails(self):
+        proxy_config = None
+
         try: 
             proxy_config = conf_manager.get_proxy_dict(logger=logger,
             session_key=self.getSessionKey(),
@@ -130,7 +163,6 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
         # Handle invalid hostname case
         except InvalidHostnameError as e:
             logger.error(f"Proxy configuration error: {e}")
-
 
         if not proxy_config or not is_true(proxy_config.get('proxy_enabled')):
             logger.info('Proxy is not enabled')
@@ -177,3 +209,4 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
 
 if __name__ == "__main__":
     admin.init(splunk_ta_uccexample_rh_oauth2_token, admin.CONTEXT_APP_AND_USER)
+
