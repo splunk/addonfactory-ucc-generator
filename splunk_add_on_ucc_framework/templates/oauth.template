@@ -58,12 +58,13 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
             # Add required args in supported args
             for arg in ('url', 'method',
                         'grant_type', 'client_id',
-                        'client_secret', 'redirect_uri'):
+                        'client_secret'):
                 self.supportedArgs.addReqArg(arg)
 
             for arg in (
                 'scope',  # Optional for client_credentials
                 'code',  # Required for authorization_code
+                'redirect_uri',  # Required for authorization_code
             ):
                 self.supportedArgs.addOptArg(arg)
         return
@@ -99,18 +100,15 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
                 # If grant_type is authorization_code then add code and redirect_uri in payload
                 code = self.callerArgs.data.get('code', [None])[0]
 
-                if not code:
-                    # If code is not present in the payload then add error message in confInfo
-                    raise ValueError(
-                        "Code is required for authorization_code grant type"
-                    )
+                for param_name in ('code', 'redirect_uri'):
+                    param = self.callerArgs.data.get(param_name, [None])[0]
 
-                redirect_uri = self.callerArgs.data.get('redirect_uri', [None])[0]
+                    if not param:
+                        raise ValueError(
+                            "%s is required for authorization_code grant type" % param_name
+                        )
 
-                if redirect_uri is not None:
-                    payload['redirect_uri'] = redirect_uri
-
-                payload['code'] = code
+                    payload[param_name] = param
             elif grant_type == "client_credentials":
                 # If grant_type is client_credentials then add scope in payload
                 payload['scope'] = self.callerArgs.data['scope'][0]

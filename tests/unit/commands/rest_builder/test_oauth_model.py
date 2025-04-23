@@ -173,7 +173,7 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     with pytest.raises(ValueError) as ex:
         handler.call_with_params(auth_params)
 
-    assert str(ex.value) == "Code is required for authorization_code grant type"
+    assert str(ex.value) == "code is required for authorization_code grant type"
 
     # authorization_code request with "code"
     auth_params["code"] = "test_code"
