@@ -96,7 +96,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
             }
 
             if grant_type == "authorization_code":
-                # If grant_type is authorization_code then add code in payload
+                # If grant_type is authorization_code then add code and redirect_uri in payload
                 code = self.callerArgs.data.get('code', [None])[0]
 
                 if not code:
