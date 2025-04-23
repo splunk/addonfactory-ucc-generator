@@ -1,8 +1,8 @@
 {% extends "basecontrol.html" %}
+
 {% block control %}
-	<splunk-text-area
+	<textarea
 		name="action.{{ mod_alert.short_name }}.param.{{ param.name }}"
 		id="{{ mod_alert.short_name }}_{{ param.name }}"
-	>
-	</splunk-text-area>
+	></textarea>
 {% endblock %}

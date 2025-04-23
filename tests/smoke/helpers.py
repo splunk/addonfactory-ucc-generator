@@ -40,29 +40,46 @@ def _compare_xml(actual_file_path: str, expected_file_path: str) -> List[str]:
 def _compare_content(
     actual_file_path: str, expected_file_path: str, file_mode: str = "r"
 ) -> List[str]:
-    # we let Python pick the file mode (rb or rt) by specifying the default 'r'
+    """
+    Compare the contents of two files and return a list of differences.
+
+    Args:
+        actual_file_path (str): Path to the actual file .
+        expected_file_path (str): Path to the expected file.
+        file_mode (str): Mode for reading the file. Use 'rb' for binary and 'r' for text. Default is 'r'.
+
+    Returns:
+        List[str]: List of unified diff lines if differences are found, otherwise empty.
+    """
     diff_results = []
 
     with open(expected_file_path, file_mode) as expected_file:
         expected_file_lines = expected_file.readlines()
     with open(actual_file_path, file_mode) as actual_file:
         actual_file_lines = actual_file.readlines()
+
     if file_mode == "rb":
-        # custom implementation to compare files like icons, logos present in an
-        # add-on without using libraries like scipy and numpy
-        expected_file_lines_str = "".join([str(i) for i in expected_file_lines])
-        actual_file_lines_str = "".join([str(i) for i in expected_file_lines])
-        if expected_file_lines_str != actual_file_lines_str:
+        # Binary file comparison (e.g., images, icons)
+        # Direct byte-level comparison since structured diffing isn't meaningful
+        expected_file_content = b"".join(expected_file_lines) if expected_file_lines and isinstance(expected_file_lines[0], bytes) else b""
+        actual_file_content = b"".join(actual_file_lines) if actual_file_lines and isinstance(actual_file_lines[0], bytes) else b""
+
+        if expected_file_content != actual_file_content:
             diff_results.append(
-                f"Diff found, please check the files {actual_file_path} "
-                f"and {expected_file_path} manually for the difference."
+                f"Binary diff found. Please manually check: {actual_file_path} vs {expected_file_path}"
             )
     else:
-        # remove whitespaces at the end of every line
-        actual_file_lines = list(map(str.rstrip, actual_file_lines))
-        expected_file_lines = list(map(str.rstrip, expected_file_lines))
+        # Normalize line endings, expand tabs, and trim trailing whitespace
+        def normalize_lines(lines):
+            return [
+                line.expandtabs(4).rstrip().replace('\r\n', '\n').replace('\r', '\n')
+                for line in lines
+            ]
 
-        # for everything else, we use the library
+        actual_file_lines = normalize_lines(actual_file_lines)
+        expected_file_lines = normalize_lines(expected_file_lines)
+
+        # Generate unified diff for text files
         for line in difflib.unified_diff(
             actual_file_lines,
             expected_file_lines,

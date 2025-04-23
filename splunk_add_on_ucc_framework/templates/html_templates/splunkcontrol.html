@@ -1,0 +1,5 @@
+{% from "helper.html" import show_help with context %}
+
+<splunk-control-group label="{{ param.label }}" help="{{ param.help_string }}">
+    {% block control %} {% endblock %}
+</splunk-control-group>
