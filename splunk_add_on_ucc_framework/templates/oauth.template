@@ -103,7 +103,7 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
                 for param_name in ('code', 'redirect_uri'):
                     param = self.callerArgs.data.get(param_name, [None])[0]
 
-                    if not param:
+                    if param is None:
                         raise ValueError(
                             "%s is required for authorization_code grant type" % param_name
                         )
