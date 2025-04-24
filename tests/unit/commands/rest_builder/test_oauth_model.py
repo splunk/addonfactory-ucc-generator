@@ -179,7 +179,7 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     conf_info = handler.call_with_params(auth_params)
     assert conf_info["token"] == {"access_token": "test_token"}
     assert mocked_http.request.call_args[0][0] == "http://test_url.localhost"
-    assert mocked_http.request.call_args.kwargs == {
+    assert mocked_http.request.call_args[1] == {
         "body": "grant_type=authorization_code"
         "&client_id=test_client_id"
         "&client_secret=test_client_secret"
@@ -203,7 +203,7 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     assert conf_info["token"] == {"access_token": "test_token"}
 
     assert mocked_http.request.call_args[0][0] == "http://test_url.localhost"
-    assert mocked_http.request.call_args.kwargs == {
+    assert mocked_http.request.call_args[1] == {
         "body": "grant_type=client_credentials"
         "&client_id=test_client_id"
         "&client_secret=test_client_secret"
