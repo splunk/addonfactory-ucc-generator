@@ -5,7 +5,12 @@ import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/enterprise/Warning';
 import styled from 'styled-components';
 import { variables } from '@splunk/themes';
+import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
+import P from '@splunk/react-ui/Paragraph';
+import Link from '@splunk/react-ui/Link';
+
 import { parseErrorMsg } from '../../util/messageUtil';
+import { getSearchUrl } from '../../util/searchUtil';
 
 interface ErrorBoundaryProps {
     children: ReactElement | ReactElement[];
@@ -91,6 +96,32 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                             {parsedErrorMessage && (
                                 <StyledTypography as="p">{parsedErrorMessage}</StyledTypography>
                             )}
+                            <CollapsiblePanel title="Useful Links">
+                                <P>
+                                    <Link
+                                        to="https://splunk.github.io/addonfactory-ucc-generator/troubleshooting/"
+                                        target="_blank"
+                                        openInNewContext
+                                        rel="noopener noreferrer"
+                                    >
+                                        Troubleshooting
+                                    </Link>
+                                </P>
+
+                                <P>
+                                    <Link
+                                        // query from /troubleshooting/ section
+                                        to={getSearchUrl({
+                                            q: 'index = _internal source=*splunkd* ERROR',
+                                        }).toString()}
+                                        target="_blank"
+                                        openInNewContext
+                                        rel="noopener noreferrer"
+                                    >
+                                        Splunk Search
+                                    </Link>
+                                </P>
+                            </CollapsiblePanel>
                         </Card.Body>
                     </StyledCard>
                 </StyledContainer>
