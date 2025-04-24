@@ -1,12 +1,11 @@
 import importlib
 import sys
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 from typing import Dict, Any
 from unittest.mock import MagicMock
 
 import httplib2
 import pytest
-from black.trans import defaultdict
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.oauth_model import (
     OAuthModelEndpointBuilder,
@@ -68,7 +67,7 @@ class MConfigHandler:
             else:
                 self.callerArgs.data[key] = [value]
 
-        conf_info = defaultdict(dict)
+        conf_info: Dict[str, Dict[str, Any]] = defaultdict(dict)
         self.handleEdit(conf_info)
 
         return conf_info
@@ -148,7 +147,6 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     handler.setup()
 
     assert handler.supportedArgs.req_args == {
-        "redirect_uri",
         "client_id",
         "client_secret",
         "method",
@@ -158,6 +156,7 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     assert handler.supportedArgs.opt_args == {
         "code",
         "scope",
+        "redirect_uri",
     }
 
     # authorization_code request but without "code"
@@ -184,8 +183,8 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
         "body": "grant_type=authorization_code"
         "&client_id=test_client_id"
         "&client_secret=test_client_secret"
-        "&redirect_uri=test_redirect_uri"
-        "&code=test_code",
+        "&code=test_code"
+        "&redirect_uri=test_redirect_uri",
         "headers": {"Content-Type": "application/x-www-form-urlencoded"},
         "method": "POST",
     }
