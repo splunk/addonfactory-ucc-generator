@@ -1,27 +1,58 @@
 import pytest
-import sys
-import importlib
-from unittest.mock import patch
-
-from splunk_add_on_ucc_framework.commands.validate import validate
+import subprocess
 
 
-def test_validate_when_incorrect_path_provided(caplog):
-    with pytest.raises(SystemExit):
-        validate("invalid/file_path")
+def install_splunk_appinspect():
+    """
+    Functions to actually imitate that the splunk-appinspect library is present
+    """
+    subprocess.call("pip install splunk-appinspect", shell=True)
 
 
-@patch.dict(sys.modules, {"splunk_appinspect": None})
-def test_import_error(caplog):
-    caplog.set_level("ERROR", logger="ucc_gen")
+def uninstall_splunk_appinspect():
+    """
+    Functions to actually imitate that the splunk-appinspect library is absent
+    """
+    subprocess.call("pip uninstall -y splunk_appinspect", shell=True)
+
+
+def test_validate_when_splunk_appinspect_missing(caplog):
+    # Need to make sure appinspect is not installed on the system
+    uninstall_splunk_appinspect()
     error_msg = (
         "UCC validate dependencies are not installed. Please install them using the command ->"
         " `pip install splunk-add-on-ucc-framework[validate]`."
     )
 
-    with pytest.raises(SystemExit) as e:
-        import splunk_add_on_ucc_framework.commands.validate
+    from splunk_add_on_ucc_framework.commands.validate import validate
 
-        importlib.reload(splunk_add_on_ucc_framework.commands.validate)
+    with pytest.raises(SystemExit):
+        validate("some/path")
+
     assert error_msg in caplog.text
-    assert e.value.code == 1
+
+
+def test_validate_when_incorrect_path_provided():
+    # Test when incorrect addon-path is provided, for that system should exit with exit_code == 2
+    install_splunk_appinspect()
+
+    from splunk_add_on_ucc_framework.commands.validate import validate
+
+    with pytest.raises(SystemExit) as se:
+        validate("invalid/addon_path")
+
+    assert se.value.code == 2
+
+
+def test_validate_when_correct_path_provided():
+    # Test when correct addon-path is provided, for that system should exit with exit_code == 0
+    install_splunk_appinspect()
+
+    from splunk_add_on_ucc_framework.commands.validate import validate
+
+    with pytest.raises(SystemExit) as se:
+        validate(
+            "tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample"
+        )
+
+    assert se.value.code == 0
