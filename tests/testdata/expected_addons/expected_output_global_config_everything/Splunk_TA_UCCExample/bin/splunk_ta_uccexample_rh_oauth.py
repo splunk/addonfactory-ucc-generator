@@ -209,4 +209,3 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
 
 if __name__ == "__main__":
     admin.init(splunk_ta_uccexample_rh_oauth2_token, admin.CONTEXT_APP_AND_USER)
-
