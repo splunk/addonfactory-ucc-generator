@@ -32,8 +32,8 @@
                                 "field": "auth_type"
                             },
                             {
-                                "label": "Custom Cell",
-                                "field": "custom_cell",
+                                "label": "Test Custom Cell",
+                                "field": "test_custom_cell",
                                 "customCell": {
                                     "src": "CustomInputCell",
                                     "type": "external"
@@ -1068,6 +1068,19 @@
                             }
                         },
                         {
+                            "field": "dependent_dropdown",
+                            "label": "Dependent",
+                            "type": "singleSelect",
+                            "required": false,
+                            "options": {
+                                "dependencies": [
+                                    "input_one_radio"
+                                ],
+                                "disableonEdit": true,
+                                "endpointUrl": "splunk_ta_uccexample/dependent_dropdown"
+                            }
+                        },
+                        {
                             "field": "singleSelectTest",
                             "label": "Single Select Group Test",
                             "type": "singleSelect",
@@ -1161,7 +1174,7 @@
                             "label": "Example Account",
                             "options": {
                                 "referenceName": "account",
-                                "allowList": "^[a-zA-Z]+$"
+                                "allowList": "^[a-zA-Z]\\w*$"
                             },
                             "help": "",
                             "field": "account",
@@ -1346,7 +1359,7 @@
                             "type": "singleSelect",
                             "field": "index",
                             "label": "Index",
-                            "defaultValue": "main",
+                            "defaultValue": "default",
                             "options": {
                                 "endpointUrl": "data/indexes?search=isInternal=0+disabled=0",
                                 "denyList": "^_.*$",
@@ -1711,6 +1724,7 @@
                             "field": "event_filters",
                             "required": true,
                             "options": {
+                                "delimiter": "|",
                                 "groups": [
                                     {
                                         "label": "Transactions",
@@ -1823,7 +1837,7 @@
                     ],
                     "title": "Example Input Four",
                     "disableNewInput": true,
-                    "subTitle": "Creates disabled input.",
+                    "subTitle": "Creates disabled input",
                     "hook": {
                         "src": "input_hook",
                         "type": "external"
@@ -2345,7 +2359,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.61.0+63ec928d5",
+        "version": "5.62.0+a353bd0f1",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
@@ -2380,6 +2394,6 @@
                 "target": "3rdparty/linux"
             }
         ],
-        "_uccVersion": "5.61.0"
+        "_uccVersion": "5.62.0"
     }
 }
