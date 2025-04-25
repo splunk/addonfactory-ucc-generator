@@ -190,27 +190,30 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     }
 
     # client_credentials request
-    conf_info = handler.call_with_params(
-        {
+    for scope in (None, "test_scope"):
+        params = {
             "grant_type": "client_credentials",
             "client_id": "test_client_id",
             "client_secret": "test_client_secret",
             "method": "POST",
             "url": "http://test_url.localhost",
-            "scope": "test_scope",
         }
-    )
-    assert conf_info["token"] == {"access_token": "test_token"}
 
-    assert mocked_http.request.call_args[0][0] == "http://test_url.localhost"
-    assert mocked_http.request.call_args[1] == {
-        "body": "grant_type=client_credentials"
-        "&client_id=test_client_id"
-        "&client_secret=test_client_secret"
-        "&scope=test_scope",
-        "headers": {"Content-Type": "application/x-www-form-urlencoded"},
-        "method": "POST",
-    }
+        if scope is not None:
+            params["scope"] = scope
+
+        conf_info = handler.call_with_params(params)
+        assert conf_info["token"] == {"access_token": "test_token"}
+
+        assert mocked_http.request.call_args[0][0] == "http://test_url.localhost"
+        assert mocked_http.request.call_args[1] == {
+            "body": "grant_type=client_credentials"
+            "&client_id=test_client_id"
+            "&client_secret=test_client_secret"
+            f"{'&scope=' + scope if scope else ''}",
+            "headers": {"Content-Type": "application/x-www-form-urlencoded"},
+            "method": "POST",
+        }
 
     # unknown grant_type
     with pytest.raises(ValueError) as ex:

@@ -110,8 +110,11 @@ class {{app_name | lower}}_rh_oauth2_token(admin.MConfigHandler):
 
                     payload[param_name] = param
             elif grant_type == "client_credentials":
-                # If grant_type is client_credentials then add scope in payload
-                payload['scope'] = self.callerArgs.data['scope'][0]
+                # If grant_type is client_credentials add scope exists then add it in payload
+                scope = self.callerArgs.data.get('scope', [None])[0]
+
+                if scope:
+                    payload['scope'] = scope
             else:
                 # Else raise an error
                 logger.error("Invalid grant_type %s", grant_type)
