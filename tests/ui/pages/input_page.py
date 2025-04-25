@@ -94,6 +94,13 @@ class ExampleInputOne(Entity):
                 + ' [data-test="control-group"][data-name="input_one_radio"]'
             ),
         )
+        self.dependent_dropdown = SingleSelect(
+            browser,
+            Selector(
+                select=entity_container.select
+                + ' [data-test="control-group"][data-name="dependent_dropdown"]'
+            ),
+        )
         self.single_select_group_test = SingleSelect(
             browser,
             Selector(

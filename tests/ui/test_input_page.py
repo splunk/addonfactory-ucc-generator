@@ -517,6 +517,40 @@ class TestInputPage(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.input
+    def test_dependent_dropdown_when_radio_input_is_yes(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies values of dependent_dropdown in example input one when radio input is yes"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        dependent_dropdown_test_list = ["affirmation"]
+        input_page.create_new_input.select("Example Input One")
+        input_page.entity1.example_account.wait_for_values()
+        input_page.entity1.example_radio.select("Yes")
+        self.assert_util(
+            input_page.entity1.dependent_dropdown.list_of_values(),
+            dependent_dropdown_test_list,
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
+    def test_dependent_dropdown_when_radio_input_is_no(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies values of dependent_dropdown in example input one when radio input is no"""
+        input_page = InputPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        dependent_dropdown_test_list = ["denial"]
+        input_page.create_new_input.select("Example Input One")
+        input_page.entity1.example_account.wait_for_values()
+        input_page.entity1.example_radio.select("No")
+        self.assert_util(
+            input_page.entity1.dependent_dropdown.list_of_values(),
+            dependent_dropdown_test_list,
+        )
+
+    @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.input
     def test_example_input_one_select_value_single_select_group_test(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
