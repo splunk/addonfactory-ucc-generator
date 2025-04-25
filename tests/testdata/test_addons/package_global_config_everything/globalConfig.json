@@ -945,6 +945,19 @@
                             }
                         },
                         {
+                            "field": "dependent_dropdown",
+                            "label": "Dependent",
+                            "type": "singleSelect",
+                            "required": false,
+                            "options": {
+                                "dependencies": [
+                                    "input_one_radio"
+                                ],
+                                "disableonEdit": true,
+                                "endpointUrl": "splunk_ta_uccexample/dependent_dropdown"
+                            }
+                        },
+                        {
                             "field": "singleSelectTest",
                             "label": "Single Select Group Test",
                             "type": "singleSelect",
