@@ -162,6 +162,7 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "helper_one.py"),
             ("bin", "helper_two.py"),
             ("bin", "example_input_one.py"),
+            ("bin", "dependent_dropdown.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
             ("bin", "example_input_four.py"),
