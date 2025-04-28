@@ -17,6 +17,22 @@ const handleSelect = jest.fn();
 
 describe('render data ingestion modal inputs', () => {
     it('renders with all default modal dashboard elements', async () => {
+        const dimensions = {
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+            top: 0,
+            left: 0,
+            right: 100,
+            bottom: 100,
+        };
+        const mockBounding = jest.fn(() => ({
+            ...dimensions,
+            toJSON: jest.fn(() => dimensions),
+        }));
+
+        Element.prototype.getBoundingClientRect = mockBounding;
         consoleError.mockImplementation(() => {});
         server.use(
             http.get('/custom/data_ingestion_modal_definition.json', () =>
@@ -70,5 +86,6 @@ describe('render data ingestion modal inputs', () => {
                 expect(screen.getByTestId(id)).toBeInTheDocument();
             });
         });
+        mockBounding.mockClear();
     });
 });
