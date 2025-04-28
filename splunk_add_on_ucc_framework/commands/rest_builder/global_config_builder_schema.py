@@ -262,7 +262,7 @@ class GlobalConfigBuilderSchema:
                     content + entity_element["options"]["oauth_client_credentials"]
                 )
 
-            if auth_types:
+            if "oauth" in auth_types or "oauth_client_credentials" in auth_types:
                 # Append OAuth fields if there is at least one auth type
                 content = content + [
                     {"field": "access_token", "encrypted": True},
