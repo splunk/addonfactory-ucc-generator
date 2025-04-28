@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
-from textwrap import dedent
+import xmldiff.main
 
 
 @pytest.fixture
@@ -27,8 +27,7 @@ def test_set_attribute_with_error(
     [
         (
             "configuration",
-            """
-                <?xml version="1.0" ?>
+            """<?xml version="1.0" ?>
                 <nav>
                     <view name="inputs"/>
                     <view default="true" name="configuration"/>
@@ -39,8 +38,7 @@ def test_set_attribute_with_error(
         ),
         (
             "inputs",
-            """
-                <?xml version="1.0" ?>
+            """<?xml version="1.0" ?>
                 <nav>
                     <view default="true" name="inputs"/>
                     <view name="configuration"/>
@@ -51,8 +49,7 @@ def test_set_attribute_with_error(
         ),
         (
             "dashboard",
-            """
-                <?xml version="1.0" ?>
+            """<?xml version="1.0" ?>
                 <nav>
                     <view name="inputs"/>
                     <view name="configuration"/>
@@ -63,8 +60,7 @@ def test_set_attribute_with_error(
         ),
         (
             "search",
-            """
-                <?xml version="1.0" ?>
+            """<?xml version="1.0" ?>
                 <nav>
                     <view name="inputs"/>
                     <view name="configuration"/>
@@ -92,7 +88,9 @@ def test_set_attribute(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    assert dedent(expected_result).lstrip() == default_xml.default_xml_content
+    diff = xmldiff.main.diff_texts(default_xml.default_xml_content, expected_result)
+
+    assert " ".join([str(item) for item in diff]) == ""
 
 
 def test_set_attribute_with_no_pages(
