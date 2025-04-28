@@ -1,6 +1,6 @@
 # OAuth Support
 
-UCC allows you to add Auth support in the configuration page. In UCC, OAuth2.0 of the Authorization Code Flow `grant` type is used.
+UCC allows you to add Auth support in the configuration page. In UCC, OAuth2.0 of the Authorization Code Flow `grant` type is used by default.
 Also, the Client Credentials `grant` is supported by specifying `oauth_client_credentials`.
 It only supports the standard parameters specified in [RFC6749](https://www.rfc-editor.org/rfc/rfc6749) for obtaining an authorization code.
 
