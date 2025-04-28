@@ -59,45 +59,61 @@ const GroupsSchema = z
     )
     .optional();
 
-export const TabSchema = z.object({
-    entity: z.array(AnyOfEntity).optional(),
+const ServiceBasicSchema = z.object({
     name: z.string(),
     title: z.string(),
     options: HooksSchema,
-    table: TableSchema.extend({
-        actions: z.array(z.enum(['edit', 'delete', 'clone'])),
-    }).optional(),
+    groups: GroupsSchema,
     style: z.enum(['page', 'dialog']).optional(),
     hook: z.record(z.any()).optional(),
     conf: z.string().optional(),
     restHandlerName: z.string().optional(),
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
-    customTab: z.record(z.any()).optional(),
     warning: WarningSchema,
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
-    groups: GroupsSchema,
     formTitle: z.string().optional(),
 });
 
-export const TableLessServiceSchema = z.object({
-    name: z.string(),
-    title: z.string(),
+export const TabSchema = ServiceBasicSchema.extend({
+    entity: z.array(AnyOfEntity).optional(),
+    // name: z.string(),
+    // title: z.string(),
+    // options: HooksSchema,
+    table: TableSchema.extend({
+        actions: z.array(z.enum(['edit', 'delete', 'clone'])),
+    }).optional(),
+    // style: z.enum(['page', 'dialog']).optional(),
+    // hook: z.record(z.any()).optional(),
+    // conf: z.string().optional(),
+    // restHandlerName: z.string().optional(),
+    // restHandlerModule: z.string().optional(),
+    // restHandlerClass: z.string().optional(),
+    customTab: z.record(z.any()).optional(),
+    // warning: WarningSchema,
+    // hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    // groups: GroupsSchema,
+    // formTitle: z.string().optional(),
+});
+
+export const TableLessServiceSchema = ServiceBasicSchema.extend({
+    // name: z.string(),
+    // title: z.string(),
     subTitle: z.string().optional(),
     entity: z.array(AnyOfEntity),
-    options: HooksSchema,
-    groups: GroupsSchema,
-    style: z.enum(['page', 'dialog']).optional(),
-    hook: z.record(z.any()).optional(),
-    conf: z.string().optional(),
-    restHandlerName: z.string().optional(),
-    restHandlerModule: z.string().optional(),
-    restHandlerClass: z.string().optional(),
-    warning: WarningSchema,
+    // options: HooksSchema,
+    // groups: GroupsSchema,
+    // style: z.enum(['page', 'dialog']).optional(),
+    // hook: z.record(z.any()).optional(),
+    // conf: z.string().optional(),
+    // restHandlerName: z.string().optional(),
+    // restHandlerModule: z.string().optional(),
+    // restHandlerClass: z.string().optional(),
+    // warning: WarningSchema,
     inputHelperModule: z.string().optional(),
     disableNewInput: z.boolean().optional(),
-    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
-    formTitle: z.string().optional(),
+    // hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+    // formTitle: z.string().optional(),
 });
 
 export const TableFullServiceSchema = TableLessServiceSchema.extend({
