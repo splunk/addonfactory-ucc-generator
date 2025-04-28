@@ -70,6 +70,7 @@ def test_single_model_endpoint_builder_need_reload(need_reload):
         from None import None
         import logging
 
+
         util.remove_http_proxy_env_vars()
 
 
@@ -141,7 +142,7 @@ def test_single_model_with_oauth():
         )
 
         APP_NAME = import_declare_test.ta_name
-        OAUTH_ENDPOINT = 'test_rh_oauth'
+        OAUTH_ENDPOINT = 'test_oauth'
         TOKEN_ENDPOINT = '/token'
 
 
@@ -155,7 +156,8 @@ def test_single_model_with_oauth():
                 )
 
             def oauth_call_url(self):
-                host = self.callerArgs.data.get("endpoint_token", [None])[0]
+                host = self.callerArgs.data.get("endpoint_token_oauth_credentials", [None])[0]
+                host = host or self.callerArgs.data.get("endpoint_token", [None])[0]
                 host = host or self.callerArgs.data.get("endpoint", [None])[0]
 
                 return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
@@ -164,10 +166,16 @@ def test_single_model_with_oauth():
                 if self.callerArgs.data.get("auth_type", [""])[0] != "oauth_client_credentials":
                     return
 
+                client_id = self.callerArgs.data.get("client_id_oauth_credentials", [None])[0]
+                client_id = client_id or self.callerArgs.data.get("client_id", [None])[0]
+
+                client_secret = self.callerArgs.data.get("client_secret_oauth_credentials", [None])[0]
+                client_secret = client_secret or self.callerArgs.data.get("client_secret", [None])[0]
+
                 params = {
                     "grant_type": "client_credentials",
-                    "client_id": self.callerArgs.data["client_id"][0],
-                    "client_secret": self.callerArgs.data["client_secret"][0],
+                    "client_id": client_id,
+                    "client_secret": client_secret,
                     "url": self.oauth_call_url(),
                     "method": "POST",
                 }
