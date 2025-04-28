@@ -1,9 +1,10 @@
-from pytest import fixture, raises
+import pytest
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
+from textwrap import dedent
 
 
-@fixture
+@pytest.fixture
 def wrong_ta_name():
     return 123
 
@@ -11,7 +12,7 @@ def wrong_ta_name():
 def test_set_attribute_with_error(
     global_config_all_json, input_dir, output_dir, wrong_ta_name, ucc_dir
 ):
-    with raises(ValueError):
+    with pytest.raises(ValueError):
         DefaultXml(
             global_config_all_json,
             input_dir,
@@ -21,18 +22,69 @@ def test_set_attribute_with_error(
         )
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_nav_default_xml",
-    return_value="<xml></xml>",
+@pytest.mark.parametrize(
+    ("defaultView", "expected_result"),
+    [
+        (
+            "configuration",
+            """
+                <?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view default="true" name="configuration"/>
+                    <view name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "inputs",
+            """
+                <?xml version="1.0" ?>
+                <nav>
+                    <view default="true" name="inputs"/>
+                    <view name="configuration"/>
+                    <view name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "dashboard",
+            """
+                <?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view name="configuration"/>
+                    <view default="true" name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "search",
+            """
+                <?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view name="configuration"/>
+                    <view name="dashboard"/>
+                    <view default="true" name="search"/>
+                </nav>
+                """,
+        ),
+    ],
 )
 def test_set_attribute(
-    mock_data_ui_generator,
     global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
+    defaultView,
+    expected_result,
 ):
+    global_config_all_json.meta["defaultView"] = defaultView
     default_xml = DefaultXml(
         global_config_all_json,
         input_dir,
@@ -40,8 +92,7 @@ def test_set_attribute(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-
-    assert hasattr(default_xml, "default_xml_content")
+    assert dedent(expected_result).lstrip() == default_xml.default_xml_content
 
 
 def test_set_attribute_with_no_pages(
