@@ -2078,7 +2078,7 @@
   resolved "https://registry.npmjs.org/@splunk/charting-bundle/-/charting-bundle-27.3.0.tgz#990455e3730f1d4ecfa658de261e3282f92c0944"
   integrity sha512-1zPzGcI+q34PfFuvXdYY7ikh1c1U/sZzBXz5uVBMLD+4VZM3JHLVSU03vr7B0QKT+LadK17n5L6pTRUbU1Hl9Q==
 
-"@splunk/dashboard-action-buttons@28.3.0":
+"@splunk/dashboard-action-buttons@^28.3.0":
   version "28.3.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-action-buttons/-/dashboard-action-buttons-28.3.0.tgz#08e998fe5f72d435f0e3a65ca3551a03680c1598"
   integrity sha512-tDkooepomXag3ORKiv0BopJ2Je8ovGY4xpnl0YmGEz6W8nI49njVlVSb3m9reolMAlwze0L7NEHHxoNt3JyjbQ==
@@ -2094,7 +2094,7 @@
     lodash "^4.17.21"
     prop-types "^15.8.1"
 
-"@splunk/dashboard-context@28.3.0":
+"@splunk/dashboard-context@^28.3.0":
   version "28.3.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-context/-/dashboard-context-28.3.0.tgz#920ff044cc4a464d05872e7bb4d702e3d3143aae"
   integrity sha512-AKrX9DFV50flaEmweKfJ25yrTiJerlKdd0xMog35079l7hOXdGHLL5kF8zxiupEBuxa0vZRWDbfu3sVoJQCHZg==
@@ -2119,7 +2119,7 @@
     memoize-one "^6.0.0"
     prop-types "^15.8.1"
 
-"@splunk/dashboard-core@28.3.0":
+"@splunk/dashboard-core@^28.3.0":
   version "28.3.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-core/-/dashboard-core-28.3.0.tgz#c3bb97deb3119a2b41f81d5ac854b6510f04fdbe"
   integrity sha512-sX+QUZ9H1Qf6geq34zZjU5+Kq+fNm0LG55kp+JEMFbQSci4MRzgSnGCJN6L84fvaijSgBBcZmTt++q8MUw+mGg==
@@ -2224,7 +2224,7 @@
     prop-types "^15.8.1"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-presets@28.3.0":
+"@splunk/dashboard-presets@^28.3.0":
   version "28.3.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-presets/-/dashboard-presets-28.3.0.tgz#3c9ea336defd5aeabd03f6467efe6d5a88dadc45"
   integrity sha512-vhjUlvu9/7HpcxZrUhpWvo122wemtOY9Lq2D+0ELx963nxIsrfkGr5FaV1VJ56QxWg3Vr2katIkxfkW4aEexUg==
@@ -2254,7 +2254,7 @@
     lodash "^4.17.21"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-state@28.3.0", "@splunk/dashboard-state@^28.3.0":
+"@splunk/dashboard-state@^28.3.0":
   version "28.3.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-state/-/dashboard-state-28.3.0.tgz#4abfb48c1d0b06920935efa8a656d9aa25666062"
   integrity sha512-jGXowwTl37c/n77K7Loy7h8Z2NZ1MKvYRuL8BVGPLgYaXTHK1frnU2AlOuKVjkT7oy6NsNitf2mNq8aF1L2hLw==
@@ -2276,7 +2276,7 @@
     "@splunk/dashboard-utils" "^28.3.0"
     lodash "^4.17.21"
 
-"@splunk/dashboard-types@28.3.0":
+"@splunk/dashboard-types@^28.3.0":
   version "28.3.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-types/-/dashboard-types-28.3.0.tgz#93dda2388065d9c06b2fb2acfdcd3f17784cff7d"
   integrity sha512-lFx4sQoy3bh24sb5J5oH6Q0i5/J+JgsSdoHYre4TOC4TPyB9xzNrvxiKflycaFOMdz1OTcrOXGclcRw/QvLTMA==
