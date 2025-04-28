@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
 from typing import Dict, List, Any, Tuple
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -244,34 +243,39 @@ class GlobalConfigBuilderSchema:
     ) -> List[Dict[str, Any]]:
         for entity_element in content:
             # Check if we have oauth type
-            if entity_element["type"] == "oauth":
-                # Check if we have both basic and oauth type authentication is required
-                if (
-                    "basic" in entity_element["options"]["auth_type"]
-                    and "oauth" in entity_element["options"]["auth_type"]
-                ):
-                    # Append all the basic auth fields to the content
-                    content = content + entity_element["options"]["basic"]
-                    # Append oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-                    # Append auth_type, access_token, refresh_token & instance_url fields
-                    content = content + json.loads(
-                        '[{"field": "access_token","encrypted": true},'
-                        '{"field": "refresh_token","encrypted":true},'
-                        '{"field": "instance_url"},'
-                        '{"field": "auth_type"}]'
-                    )
-                # If only oauth type authentication is required
-                elif "oauth" in entity_element["options"]["auth_type"]:
-                    # Append all the oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-                    # Append access_token, refresh_token & instance_url fields
-                    content = content + json.loads(
-                        '[{"field": "access_token","encrypted": true},'
-                        '{"field": "refresh_token","encrypted":true},'
-                        '{"field": "instance_url"}]'
-                    )
-                # We will remove the oauth type entity as we have replaced it with all the entity fields
-                content.remove(entity_element)
-                break
+            if entity_element["type"] != "oauth":
+                continue
+
+            auth_types = entity_element["options"]["auth_type"]
+
+            if "basic" in auth_types:
+                # Append all the basic auth fields to the content
+                content = content + entity_element["options"]["basic"]
+
+            if "oauth" in auth_types:
+                # Append all the oauth auth fields to the content
+                content = content + entity_element["options"]["oauth"]
+
+            if "oauth_client_credentials" in auth_types:
+                # Append all the oauth client credentials auth fields to the content
+                content = (
+                    content + entity_element["options"]["oauth_client_credentials"]
+                )
+
+            if auth_types:
+                # Append OAuth fields if there is at least one auth type
+                content = content + [
+                    {"field": "access_token", "encrypted": True},
+                    {"field": "refresh_token", "encrypted": True},
+                    {"field": "instance_url"},
+                ]
+
+            if len(auth_types) > 1:
+                # Append auth_type field if there are multiple auth types
+                content = content + [{"field": "auth_type"}]
+
+            # We will remove the oauth type entity as we have replaced it with all the entity fields
+            content.remove(entity_element)
+            break
+
         return content
