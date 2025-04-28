@@ -1866,7 +1866,7 @@
             "access_token_endpoint": {
               "type": "string",
               "maxLength": 350,
-              "description": "Must be present and its value should be the endpoint value for getting the ccess_token using the auth_code received."
+              "description": "Must be present and its value should be the endpoint value for getting the access_token using the auth_code received."
             },
             "auth_endpoint_token_access_type": {
               "type": "string",
