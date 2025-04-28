@@ -119,7 +119,7 @@ class ${class_name}(${base_class}):
 
     def oauth_call_url(self):
         host = self.callerArgs.data.get("endpoint_token_oauth_credentials", [None])[0]
-        host = self.callerArgs.data.get("endpoint_token", [None])[0]
+        host = host or self.callerArgs.data.get("endpoint_token", [None])[0]
         host = host or self.callerArgs.data.get("endpoint", [None])[0]
 
         return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
