@@ -140,6 +140,34 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
                                 "help": "Enter Endpoint"
                             }
                         ],
+                        "oauth_client_credentials": [
+                            {
+                                "oauth_field": "client_id_oauth_credentials",
+                                "label": "Client Id",
+                                "field": "client_id_oauth_credentials",
+                                "help": "Enter Client Id."
+                            },
+                            {
+                                "oauth_field": "client_secret_oauth_credentials",
+                                "label": "Client Secret",
+                                "field": "client_secret_oauth_credentials",
+                                "encrypted": true,
+                                "help": "Enter Client Secret."
+                            },
+                            {
+                                "oauth_field": "scope",
+                                "label": "Scope",
+                                "field": "scope",
+                                "help": "Enter the scope for the authorization code with ',' separating each scope.",
+                                "required": false
+                            },
+                            {
+                                "oauth_field": "endpoint_token_oauth_credentials",
+                                "label": "Endpoint",
+                                "field": "endpoint_token_oauth_credentials",
+                                "help": "Enter Endpoint"
+                            }
+                        ],
                         "auth_label": "Auth Type",
                         "oauth_popup_width": 600,
                         "oauth_popup_height": 600,
