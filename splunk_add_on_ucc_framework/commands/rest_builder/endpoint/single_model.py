@@ -103,7 +103,7 @@ class SingleModelEndpointBuilderWithOauth(SingleModelEndpointBuilder):
         )
     )
     _cls_template = """
-APP_NAME = import_declare_test.ta_name
+APP_NAME = ${app_name}
 OAUTH_ENDPOINT = ${oauth_endpoint}
 TOKEN_ENDPOINT = ${token_endpoint}
 
@@ -166,10 +166,16 @@ class ${class_name}(${base_class}):
 """
 
     def __init__(
-        self, name: Optional[str], namespace: str, token_endpoint: str, **kwargs: Any
+        self,
+        name: Optional[str],
+        namespace: str,
+        app_name: str,
+        token_endpoint: str,
+        **kwargs: Any,
     ):
         super().__init__(name, namespace, **kwargs)
         self.token_endpoint = token_endpoint
+        self.app_name = app_name
 
     def generate_rh(self) -> str:
         entity = self._entities[0]
@@ -182,6 +188,7 @@ class ${class_name}(${base_class}):
             oauth_endpoint=repr(oauth_endpoint),
             class_name=class_name,
             token_endpoint=repr(self.token_endpoint),
+            app_name=repr(self.app_name),
         )
 
         return self._rh_template.format(

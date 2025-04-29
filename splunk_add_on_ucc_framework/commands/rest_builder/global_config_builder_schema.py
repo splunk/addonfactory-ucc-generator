@@ -138,6 +138,7 @@ class GlobalConfigBuilderSchema:
 
             if oauth_handler:
                 endpoint_params["token_endpoint"] = token_endpoint
+                endpoint_params["app_name"] = self.global_config.product
                 endpoint: SingleModelEndpointBuilder = (
                     SingleModelEndpointBuilderWithOauth(**endpoint_params)
                 )

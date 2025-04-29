@@ -274,7 +274,7 @@ endpoint = SingleModel(
     need_reload=False,
 )
 
-APP_NAME = import_declare_test.ta_name
+APP_NAME = 'Splunk_TA_UCCExample'
 OAUTH_ENDPOINT = 'splunk_ta_uccexample_oauth'
 TOKEN_ENDPOINT = '/services/oauth2/token'
 

@@ -102,6 +102,7 @@ def test_single_model_with_oauth():
     endpoint = SingleModelEndpointBuilderWithOauth(
         "test",
         "test",
+        "App",
         "/token",
         rest_handler_module="rest",
         rest_handler_class="Handler",
@@ -141,7 +142,7 @@ def test_single_model_with_oauth():
             need_reload=False,
         )
 
-        APP_NAME = import_declare_test.ta_name
+        APP_NAME = 'App'
         OAUTH_ENDPOINT = 'test_oauth'
         TOKEN_ENDPOINT = '/token'
 
