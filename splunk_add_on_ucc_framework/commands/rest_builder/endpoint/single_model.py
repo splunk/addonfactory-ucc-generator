@@ -125,7 +125,8 @@ class ${class_name}(${base_class}):
         return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
 
     def oauth_client_credentials_call(self):
-        if self.callerArgs.data.get("auth_type", [""])[0] != "oauth_client_credentials":
+        auth_type = ${auth_type}
+        if auth_type != "oauth_client_credentials":
             return
 
         client_id = self.callerArgs.data.get("client_id_oauth_credentials", [None])[0]
@@ -171,11 +172,13 @@ class ${class_name}(${base_class}):
         namespace: str,
         app_name: str,
         token_endpoint: str,
+        auth_condition: bool,
         **kwargs: Any,
     ):
         super().__init__(name, namespace, **kwargs)
         self.token_endpoint = token_endpoint
         self.app_name = app_name
+        self.auth_condition = auth_condition
 
     def generate_rh(self) -> str:
         entity = self._entities[0]
@@ -183,12 +186,18 @@ class ${class_name}(${base_class}):
         oauth_endpoint = f"{self._namespace}_oauth"
         class_name = "HandlerWithOauth"
 
+        if self.auth_condition:
+            auth_type = 'self.callerArgs.data.get("auth_type", [""])[0]'
+        else:
+            auth_type = '"oauth_client_credentials"'
+
         cls_content = Template(self._cls_template).substitute(
             base_class=self.rh_class,
             oauth_endpoint=repr(oauth_endpoint),
             class_name=class_name,
             token_endpoint=repr(self.token_endpoint),
             app_name=repr(self.app_name),
+            auth_type=auth_type,
         )
 
         return self._rh_template.format(

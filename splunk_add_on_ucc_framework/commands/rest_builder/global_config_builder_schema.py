@@ -96,6 +96,7 @@ class GlobalConfigBuilderSchema:
     def _builder_configs(self) -> None:
         oauth_handler = False
         token_endpoint = ""
+        auth_condition = True
 
         for config in self.global_config.configs:
             # If we have given oauth support then we have to add endpoint for access_token
@@ -121,6 +122,11 @@ class GlobalConfigBuilderSchema:
                             "access_token_endpoint"
                         ]
 
+                        if len(auth_types) == 1:
+                            # If we have only the oauth_client_credentials auth type and nothing else
+                            # we will not add the auth_type condition
+                            auth_condition = False
+
             name = config["name"]
 
             endpoint_params = dict(
@@ -139,6 +145,7 @@ class GlobalConfigBuilderSchema:
             if oauth_handler:
                 endpoint_params["token_endpoint"] = token_endpoint
                 endpoint_params["app_name"] = self.global_config.product
+                endpoint_params["auth_condition"] = auth_condition
                 endpoint: SingleModelEndpointBuilder = (
                     SingleModelEndpointBuilderWithOauth(**endpoint_params)
                 )

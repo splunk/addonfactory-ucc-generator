@@ -296,7 +296,8 @@ class HandlerWithOauth(CustomAccountValidator):
         return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
 
     def oauth_client_credentials_call(self):
-        if self.callerArgs.data.get("auth_type", [""])[0] != "oauth_client_credentials":
+        auth_type = self.callerArgs.data.get("auth_type", [""])[0]
+        if auth_type != "oauth_client_credentials":
             return
 
         client_id = self.callerArgs.data.get("client_id_oauth_credentials", [None])[0]

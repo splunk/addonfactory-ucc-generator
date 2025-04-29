@@ -104,6 +104,7 @@ def test_single_model_with_oauth():
         "test",
         "App",
         "/token",
+        True,
         rest_handler_module="rest",
         rest_handler_class="Handler",
     )
@@ -164,7 +165,8 @@ def test_single_model_with_oauth():
                 return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
 
             def oauth_client_credentials_call(self):
-                if self.callerArgs.data.get("auth_type", [""])[0] != "oauth_client_credentials":
+                auth_type = self.callerArgs.data.get("auth_type", [""])[0]
+                if auth_type != "oauth_client_credentials":
                     return
 
                 client_id = self.callerArgs.data.get("client_id_oauth_credentials", [None])[0]
