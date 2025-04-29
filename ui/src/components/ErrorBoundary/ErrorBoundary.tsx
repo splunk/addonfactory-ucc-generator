@@ -5,12 +5,12 @@ import Card from '@splunk/react-ui/Card';
 import WarningIcon from '@splunk/react-icons/enterprise/Warning';
 import styled from 'styled-components';
 import { variables } from '@splunk/themes';
-import CollapsiblePanel from '@splunk/react-ui/CollapsiblePanel';
 import P from '@splunk/react-ui/Paragraph';
 import Link from '@splunk/react-ui/Link';
 
 import { parseErrorMsg } from '../../util/messageUtil';
 import { getSearchUrl } from '../../util/searchUtil';
+import { getUnifiedConfigs } from '../../util/util';
 
 interface ErrorBoundaryProps {
     children: ReactElement | ReactElement[];
@@ -57,6 +57,16 @@ const StyledTypography = styled.details`
     word-break: break-word;
 `;
 
+const getRestrictQueryByAllServices = () => {
+    const globalConfig = getUnifiedConfigs();
+    const listOfServices = globalConfig.pages.inputs?.services.map((service) => service.name);
+    if (listOfServices?.length === 0) {
+        return gettext('');
+    }
+    const listOfServicesString = listOfServices?.join('*, ');
+    return `(scheme IN (${listOfServicesString})`;
+};
+
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
     constructor(props: ErrorBoundaryProps) {
         super(props);
@@ -96,7 +106,31 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                             {parsedErrorMessage && (
                                 <StyledTypography as="p">{parsedErrorMessage}</StyledTypography>
                             )}
-                            <CollapsiblePanel title="Useful Links">
+                            <>
+                                <P>Useful Links:</P>
+                                <P>
+                                    <Link
+                                        // detailed query from /troubleshooting/ section
+                                        to={getSearchUrl({
+                                            q: `index = _internal source=*splunkd* 
+(
+    (component=ModularInputs stderr)
+    OR component=ExecProcessor ${getRestrictQueryByAllServices()})
+) 
+OR component="PersistentScript"`,
+                                        }).toString()}
+                                        target="_blank"
+                                        openInNewContext
+                                        rel="noopener noreferrer"
+                                    >
+                                        Error Splunk Search
+                                    </Link>
+                                    <span>
+                                        {' '}
+                                        - Search for errors connected to inputs of current TA and
+                                        configuration
+                                    </span>
+                                </P>
                                 <P>
                                     <Link
                                         to="https://splunk.github.io/addonfactory-ucc-generator/troubleshooting/"
@@ -106,6 +140,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                                     >
                                         Troubleshooting
                                     </Link>
+                                    <span> - Documentation describing next steps </span>
                                 </P>
 
                                 <P>
@@ -118,10 +153,11 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                                         openInNewContext
                                         rel="noopener noreferrer"
                                     >
-                                        Splunk Search
+                                        General Error Splunk Search
                                     </Link>
+                                    <span> - Search for all errors in whole Splunk instance </span>
                                 </P>
-                            </CollapsiblePanel>
+                            </>
                         </Card.Body>
                     </StyledCard>
                 </StyledContainer>
