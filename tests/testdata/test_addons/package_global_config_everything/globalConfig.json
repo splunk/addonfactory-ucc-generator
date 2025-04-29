@@ -529,6 +529,14 @@
                     "restHandlerClass": "CustomAccountValidator"
                 },
                 {
+                    "name": "custom_tab",
+                    "title": "Customized Tab......",
+                    "customTab": {
+                        "src": "custom_tab",
+                        "type": "external"
+                    }
+                },
+                {
                     "type": "proxyTab",
                     "proxy_type": true,
                     "username": {
