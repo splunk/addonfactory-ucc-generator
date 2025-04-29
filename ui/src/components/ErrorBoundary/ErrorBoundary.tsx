@@ -57,10 +57,10 @@ const StyledTypography = styled.details`
     word-break: break-word;
 `;
 
-const getRestrictQueryByAllServices = () => {
+export const getRestrictQueryByAllServices = () => {
     const globalConfig = getUnifiedConfigs();
     const listOfServices = globalConfig.pages.inputs?.services.map((service) => service.name);
-    if (listOfServices?.length === 0) {
+    if (!listOfServices || listOfServices?.length === 0) {
         return gettext('');
     }
     const listOfServicesString = listOfServices?.join('*, ');

@@ -1,8 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundary, { getRestrictQueryByAllServices } from './ErrorBoundary';
 import { consoleError } from '../../../jest.setup';
+import { setUnifiedConfig } from '../../util/util';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 
 const ErrorComponent = () => {
     throw new Error('Throw error from component');
@@ -65,4 +67,29 @@ it('should render Error Boundary with useful links', async () => {
         'href',
         `${window.location.origin}/search?q=index+%3D+_internal+source%3D*splunkd*+ERROR`
     );
+});
+
+it('check query restriction for all services - services present', () => {
+    setUnifiedConfig(getGlobalConfigMock());
+
+    const restrictQuery = getRestrictQueryByAllServices();
+    expect(restrictQuery).toBe('(scheme IN (demo_input)');
+});
+
+it('check query restriction for all services returns correct string if no services', () => {
+    const tempConfig = getGlobalConfigMock();
+    tempConfig.pages.inputs!.services = [];
+    setUnifiedConfig(tempConfig);
+
+    const restrictQuery = getRestrictQueryByAllServices();
+    expect(restrictQuery).toBe('');
+});
+
+it('check query restriction for all services returns correct string if no inputs', () => {
+    const tempConfig = getGlobalConfigMock();
+    delete tempConfig.pages.inputs;
+    setUnifiedConfig(tempConfig);
+
+    const restrictQuery = getRestrictQueryByAllServices();
+    expect(restrictQuery).toBe('');
 });
