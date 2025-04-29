@@ -51,11 +51,14 @@ it('should render Error Boundary with useful links', async () => {
         </ErrorBoundary>
     );
 
-    const collapsiblePanel = screen.getByRole('button', {
-        name: 'Useful Links',
+    const detailedSearchLink = screen.getByRole('link', {
+        name: 'Error Splunk Search (Opens new window)',
     });
-    expect(collapsiblePanel).toBeInTheDocument();
-    await userEvent.click(collapsiblePanel);
+    expect(detailedSearchLink).toBeInTheDocument();
+    expect(detailedSearchLink).toHaveAttribute(
+        'href',
+        `${window.location.origin}/search?q=index+%3D+_internal+source%3D*splunkd*+%0A%28%0A++++%28component%3DModularInputs+stderr%29%0A++++OR+component%3DExecProcessor+%28scheme+IN+%28demo_input%29%29%0A%29+%0AOR+component%3D%22PersistentScript%22`
+    );
 
     const link = screen.getByRole('link', {
         name: 'Troubleshooting (Opens new window)',
@@ -67,7 +70,7 @@ it('should render Error Boundary with useful links', async () => {
     );
 
     const searchLink = screen.getByRole('link', {
-        name: 'Splunk Search (Opens new window)',
+        name: 'General Error Splunk Search (Opens new window)',
     });
     expect(searchLink).toBeInTheDocument();
     expect(searchLink).toHaveAttribute(
