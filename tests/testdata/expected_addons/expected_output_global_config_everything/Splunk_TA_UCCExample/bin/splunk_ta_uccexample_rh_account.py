@@ -314,7 +314,7 @@ class HandlerWithOauth(CustomAccountValidator):
         }
 
         if "scope" in self.callerArgs.data:
-            params["scope"] = scope
+            params["scope"] = self.callerArgs.data.get("scope", [None])[0]
 
         data = json.loads(
             self._rest_client.post(
@@ -334,9 +334,6 @@ class HandlerWithOauth(CustomAccountValidator):
     def handleCreate(self, confInfo):
         self.oauth_client_credentials_call()
         return super().handleCreate(confInfo)
-
-    def handleEdit(self, confInfo):
-        return super().handleEdit(confInfo)
 
 
 if __name__ == '__main__':
