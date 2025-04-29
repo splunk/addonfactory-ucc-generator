@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import ErrorBoundary, { getRestrictQueryByAllServices } from './ErrorBoundary';
 import { consoleError } from '../../../jest.setup';
 import { setUnifiedConfig } from '../../util/util';
