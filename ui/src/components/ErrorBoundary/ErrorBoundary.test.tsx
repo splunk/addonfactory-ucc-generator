@@ -10,7 +10,12 @@ const ErrorComponent = () => {
     throw new Error('Throw error from component');
 };
 
+const mockGlobalConfig = () => {
+    setUnifiedConfig(getGlobalConfigMock());
+};
+
 it('should render children when no error occurs', () => {
+    mockGlobalConfig();
     render(
         <ErrorBoundary>
             <div>Safe Component</div>
@@ -22,6 +27,7 @@ it('should render children when no error occurs', () => {
 });
 
 it('should render Error Boundary component when a child component throws an error', () => {
+    mockGlobalConfig();
     const consoleHandler = jest.fn();
     // Mock console.error to suppress error messages in the test output
     consoleError.mockImplementation(consoleHandler);
@@ -37,6 +43,7 @@ it('should render Error Boundary component when a child component throws an erro
 });
 
 it('should render Error Boundary with useful links', async () => {
+    mockGlobalConfig();
     consoleError.mockImplementation(() => {});
     render(
         <ErrorBoundary>
@@ -70,7 +77,7 @@ it('should render Error Boundary with useful links', async () => {
 });
 
 it('check query restriction for all services - services present', () => {
-    setUnifiedConfig(getGlobalConfigMock());
+    mockGlobalConfig();
 
     const restrictQuery = getRestrictQueryByAllServices();
     expect(restrictQuery).toBe('(scheme IN (demo_input)');
