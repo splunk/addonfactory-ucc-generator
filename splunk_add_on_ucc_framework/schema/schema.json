@@ -1870,6 +1870,28 @@
       ],
       "additionalProperties": false
     },
+    "DateEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "date",
+          "type": "string",
+          "description": "Exactly: date"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": true
+    },
     "FileEntity": {
       "type": "object",
       "properties": {
@@ -2268,6 +2290,9 @@
           },
           {
             "$ref": "#/definitions/CheckboxEntity"
+          },
+          {
+            "$ref": "#/definitions/DateEntity"
           },
           {
             "$ref": "#/definitions/RadioEntity"
