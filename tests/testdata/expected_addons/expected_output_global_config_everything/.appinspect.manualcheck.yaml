@@ -34,3 +34,5 @@ check_requires_access_to_files_outside_apps_dir:
   comment: 'Y'
 check_for_secret_disclosure:
   comment: 'Y'
+check_for_plain_text_credentials_in_python:
+  comment: 'Y'
