@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import json
 from typing import Dict, List, Any, Tuple
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
@@ -38,6 +37,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.oauth_model impo
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     SingleModelEndpointBuilder,
     SingleModelEntityBuilder,
+    SingleModelEndpointBuilderWithOauth,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.validator_builder import (
     ValidatorBuilder,
@@ -94,30 +94,11 @@ class GlobalConfigBuilderSchema:
         self._builder_inputs()
 
     def _builder_configs(self) -> None:
+        oauth_handler = False
+        token_endpoint = ""
+        auth_condition = True
+
         for config in self.global_config.configs:
-            name = config["name"]
-            endpoint = SingleModelEndpointBuilder(
-                name=name,
-                namespace=self.global_config.namespace,
-                rest_handler_name=config.get("restHandlerName"),
-                rest_handler_module=config.get(
-                    "restHandlerModule", REST_HANDLER_DEFAULT_MODULE
-                ),
-                rest_handler_class=config.get(
-                    "restHandlerClass", REST_HANDLER_DEFAULT_CLASS
-                ),
-                need_reload=self.need_reload,
-            )
-            self._endpoints[name] = endpoint
-            content = self._get_oauth_enitities(config["entity"])
-            fields, special_fields = self._parse_fields(content)
-            entity = SingleModelEntityBuilder(
-                None,
-                fields,
-                special_fields=special_fields,
-                conf_name=config.get("conf"),
-            )
-            endpoint.add_entity(entity)
             # If we have given oauth support then we have to add endpoint for access_token
             for entity_element in config["entity"]:
                 if entity_element["type"] == "oauth":
@@ -132,6 +113,55 @@ class GlobalConfigBuilderSchema:
                     self._endpoints["oauth"] = oauth_endpoint
                     if oauth_endpoint.conf_name not in self._oauth_conf_file_names:
                         self._oauth_conf_file_names.append(oauth_endpoint.conf_name)
+
+                    auth_types = entity_element["options"]["auth_type"]
+
+                    if "oauth_client_credentials" in auth_types:
+                        oauth_handler = True
+                        token_endpoint = entity_element["options"][
+                            "access_token_endpoint"
+                        ]
+
+                        if len(auth_types) == 1:
+                            # If we have only the oauth_client_credentials auth type and nothing else
+                            # we will not add the auth_type condition
+                            auth_condition = False
+
+            name = config["name"]
+
+            endpoint_params = dict(
+                name=name,
+                namespace=self.global_config.namespace,
+                rest_handler_name=config.get("restHandlerName"),
+                rest_handler_module=config.get(
+                    "restHandlerModule", REST_HANDLER_DEFAULT_MODULE
+                ),
+                rest_handler_class=config.get(
+                    "restHandlerClass", REST_HANDLER_DEFAULT_CLASS
+                ),
+                need_reload=self.need_reload,
+            )
+
+            if oauth_handler:
+                endpoint_params["token_endpoint"] = token_endpoint
+                endpoint_params["app_name"] = self.global_config.product
+                endpoint_params["auth_condition"] = auth_condition
+                endpoint: SingleModelEndpointBuilder = (
+                    SingleModelEndpointBuilderWithOauth(**endpoint_params)
+                )
+            else:
+                endpoint = SingleModelEndpointBuilder(**endpoint_params)
+
+            self._endpoints[name] = endpoint
+            content = self._get_oauth_enitities(config["entity"])
+            fields, special_fields = self._parse_fields(content)
+            entity = SingleModelEntityBuilder(
+                None,
+                fields,
+                special_fields=special_fields,
+                conf_name=config.get("conf"),
+            )
+            endpoint.add_entity(entity)
 
             if endpoint.conf_name not in self._configs_conf_file_names:
                 self._configs_conf_file_names.append(endpoint.conf_name)
@@ -244,34 +274,39 @@ class GlobalConfigBuilderSchema:
     ) -> List[Dict[str, Any]]:
         for entity_element in content:
             # Check if we have oauth type
-            if entity_element["type"] == "oauth":
-                # Check if we have both basic and oauth type authentication is required
-                if (
-                    "basic" in entity_element["options"]["auth_type"]
-                    and "oauth" in entity_element["options"]["auth_type"]
-                ):
-                    # Append all the basic auth fields to the content
-                    content = content + entity_element["options"]["basic"]
-                    # Append oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-                    # Append auth_type, access_token, refresh_token & instance_url fields
-                    content = content + json.loads(
-                        '[{"field": "access_token","encrypted": true},'
-                        '{"field": "refresh_token","encrypted":true},'
-                        '{"field": "instance_url"},'
-                        '{"field": "auth_type"}]'
-                    )
-                # If only oauth type authentication is required
-                elif "oauth" in entity_element["options"]["auth_type"]:
-                    # Append all the oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-                    # Append access_token, refresh_token & instance_url fields
-                    content = content + json.loads(
-                        '[{"field": "access_token","encrypted": true},'
-                        '{"field": "refresh_token","encrypted":true},'
-                        '{"field": "instance_url"}]'
-                    )
-                # We will remove the oauth type entity as we have replaced it with all the entity fields
-                content.remove(entity_element)
-                break
+            if entity_element["type"] != "oauth":
+                continue
+
+            auth_types = entity_element["options"]["auth_type"]
+
+            if "basic" in auth_types:
+                # Append all the basic auth fields to the content
+                content = content + entity_element["options"]["basic"]
+
+            if "oauth" in auth_types:
+                # Append all the oauth auth fields to the content
+                content = content + entity_element["options"]["oauth"]
+
+            if "oauth_client_credentials" in auth_types:
+                # Append all the oauth client credentials auth fields to the content
+                content = (
+                    content + entity_element["options"]["oauth_client_credentials"]
+                )
+
+            if "oauth" in auth_types or "oauth_client_credentials" in auth_types:
+                # Append OAuth fields if there is at least one auth type
+                content = content + [
+                    {"field": "access_token", "encrypted": True},
+                    {"field": "refresh_token", "encrypted": True},
+                    {"field": "instance_url"},
+                ]
+
+            if len(auth_types) > 1:
+                # Append auth_type field if there are multiple auth types
+                content = content + [{"field": "auth_type"}]
+
+            # We will remove the oauth type entity as we have replaced it with all the entity fields
+            content.remove(entity_element)
+            break
+
         return content

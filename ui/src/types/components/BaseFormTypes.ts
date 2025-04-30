@@ -12,6 +12,7 @@ import {
     CheckboxEntity,
     FileEntity,
     MultipleSelectEntity,
+    OAuthEntity,
     OAuthFields,
     RadioEntity,
     SingleSelectEntity,
@@ -94,7 +95,7 @@ export interface SingleSelectEntityType {
         hideClearBtn: boolean;
         autoCompleteFields: {
             label: string;
-            value: 'oauth' | 'basic';
+            value: AvaillableOAuthTypes;
         }[];
     };
     modifyFieldsOnValue?: ModifyFieldsOnValue;
@@ -141,6 +142,8 @@ export type EntitiesAllowingModifications =
     | z.TypeOf<typeof OAuthFields>;
 
 export type OAuthEntity = z.TypeOf<typeof OAuthFields>;
+
+export type AvaillableOAuthTypes = z.TypeOf<typeof OAuthEntity>['options']['auth_type'][number];
 
 export interface BasicEntity {
     disabled: boolean;
