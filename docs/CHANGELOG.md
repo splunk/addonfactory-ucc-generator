@@ -1,5 +1,21 @@
 # Changelog
 
+# [5.63.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.62.0...v5.63.0) (2025-04-30)
+
+
+### Bug Fixes
+
+* change sed backup extension ([#1710](https://github.com/splunk/addonfactory-ucc-generator/issues/1710)) ([2167622](https://github.com/splunk/addonfactory-ucc-generator/commit/21676220dc50878b66564d7bfdada116a13132fa))
+* fixed defaultView error ([#1714](https://github.com/splunk/addonfactory-ucc-generator/issues/1714)) ([cf793c9](https://github.com/splunk/addonfactory-ucc-generator/commit/cf793c9de0ae3d5b57e47cd9a492815ef34d0b02))
+
+
+### Features
+
+* add links to something went wrong ([#1709](https://github.com/splunk/addonfactory-ucc-generator/issues/1709)) ([0b33911](https://github.com/splunk/addonfactory-ucc-generator/commit/0b33911d29001a93745f5f29839782b3c5537bdc))
+* schema changes for OAuth 2.0 Client Credentials Grant ([#1708](https://github.com/splunk/addonfactory-ucc-generator/issues/1708)) ([c8c0fe3](https://github.com/splunk/addonfactory-ucc-generator/commit/c8c0fe330f095fa46a4b1e9e1b8ad23343b1254a))
+* Single Model handler with OAuth 2.0 Client Credentials support ([#1715](https://github.com/splunk/addonfactory-ucc-generator/issues/1715)) ([be70a87](https://github.com/splunk/addonfactory-ucc-generator/commit/be70a87b3b7048c790b07aa6cfba73e63b6da9ff))
+* support for OAuth2 Client Credentials Grant in RH template ([#1707](https://github.com/splunk/addonfactory-ucc-generator/issues/1707)) ([5fd7a6b](https://github.com/splunk/addonfactory-ucc-generator/commit/5fd7a6b94a167f040062bd767074a10f32b55919))
+
 # [5.62.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.61.0...v5.62.0) (2025-04-17)
 
 
