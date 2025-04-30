@@ -82,11 +82,25 @@ The example of a logged error:
 
 Schema logs the input name with a colon at the end, so use an asterisk after entering the name:
 
-`index = _internal source=*splunkd* (component=ModularInputs stderr) OR component=ExecProcessor (scheme IN (example_input_one*, example_input_two*, example_input_three_abc*))`
+```
+index = _internal source=*splunkd* 
+(
+   (component=ModularInputs stderr)
+   OR component=ExecProcessor (scheme IN (example_input_one*, example_input_two*, example_input_three_abc*))
+) ```Inputs scripts errors```
+OR component="PersistentScript" ```Configuration scripts errors```
+```
 
 Or you can use a shortened version, using the wildcard mechanic:
 
-`index = _internal source=*splunkd* (component=ModularInputs stderr) OR component=ExecProcessor (scheme IN (*example_input*))`
+```
+index = _internal source=*splunkd* 
+(
+   (component=ModularInputs stderr)
+   OR component=ExecProcessor (scheme IN (*example_input*))
+) ```Inputs scripts errors```
+OR component="PersistentScript" ```Configuration scripts errors```
+```
 
 Since in this example we are talking about errors coming from the modular input scripts,
 another filtering factor, the `ModularInputs` component, is added. The `ExecProcessor` component is also included. It is responsible for running and managing scripts.
