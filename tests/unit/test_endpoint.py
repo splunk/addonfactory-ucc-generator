@@ -1,3 +1,4 @@
+import string
 from textwrap import dedent
 
 import pytest
@@ -98,19 +99,25 @@ def test_single_model_endpoint_builder_need_reload(need_reload):
     )
 
 
-def test_single_model_with_oauth():
+@pytest.mark.parametrize("auth_condition", [True, False])
+def test_single_model_with_oauth(auth_condition):
     endpoint = SingleModelEndpointBuilderWithOauth(
         "test",
         "test",
         "App",
         "/token",
-        True,
+        auth_condition,
         rest_handler_module="rest",
         rest_handler_class="Handler",
     )
     endpoint.add_entity(SingleModelEntityBuilder("test_entity", []))
 
-    assert endpoint.generate_rh() == dedent(
+    if auth_condition:
+        auth_placeholder = 'self.callerArgs.data.get("auth_type", [""])[0]'
+    else:
+        auth_placeholder = '"oauth_client_credentials"'
+
+    expected = dedent(
         """
         import import_declare_test
 
@@ -165,7 +172,7 @@ def test_single_model_with_oauth():
                 return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
 
             def oauth_client_credentials_call(self):
-                auth_type = self.callerArgs.data.get("auth_type", [""])[0]
+                auth_type = ${auth_placeholder}
                 if auth_type != "oauth_client_credentials":
                     return
 
@@ -214,3 +221,6 @@ def test_single_model_with_oauth():
             )
         """
     )
+
+    expected = string.Template(expected).substitute(auth_placeholder=auth_placeholder)
+    assert endpoint.generate_rh() == expected
