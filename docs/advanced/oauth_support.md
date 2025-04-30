@@ -1,10 +1,20 @@
 # OAuth Support
 
-UCC allows you to add Auth support in the configuration page. In UCC, OAuth2.0 of the Authorization Code Flow `grant` type is used by default.
-Also, the Client Credentials `grant` is supported by specifying `oauth_client_credentials`.
-It only supports the standard parameters specified in [RFC6749](https://www.rfc-editor.org/rfc/rfc6749) for obtaining an authorization code.
+UCC allows you to add Auth support in the configuration page.
 
-Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list and specify the `options` next to the `type: "oauth"`.
+UCC supports two types of authentication:
+
+- Basic Authentication
+- OAuth2.0 Authentication
+
+The OAuth2.0 authentication is supported in two ways:
+
+- Authorization Code Flow - interactive mode, with `grant_type=authorization_code`. It is used by specifying `oauth` in the `auth_type` field.
+- Client Credentials Flow - non-interactive mode, with `grant_type=client_credentials`. It is used by specifying `oauth_client_credentials` in the `auth_type` field.
+
+More information about the OAuth2.0 authentication can be found in the [OAuth2.0 RFC6749](https://www.rfc-editor.org/rfc/rfc6749).
+
+OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list and specify the `options` next to the `type: "oauth"`.
 
 ### Properties
 
@@ -28,7 +38,7 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `client_id_oauth_credentials` is the client id for applying auth to your app or apps.
         - `client_secret_oauth_credentials` is the client secret for applying auth to your app or apps.
         - `endpoint_token_oauth_credentials` specifies the endpoint used for the token acquisition, for example, api.login.salesforce.com.
-        - `scope` optional parameter specifying the scope of the access request.
+    + Optional field is `scope` - the scope of the access request.
     + `auth_code_endpoint` must be present and its value should be the endpoint value for getting the auth_code using the app. If the url to get the auth_code is https://login.salesforce.com/services/oauth2/authorize, then this will have the value /services/oauth2/authorize.
     + `access_token_endpoint` must be present and its value should be the endpoint value for getting the ccess_token using the auth_code received. If the url to get the access token is https://login.salesforce.com/services/oauth2/token, then it will have the value /services/oauth2/token.
     + `auth_label` allows the user to have the custom label for the Auth Type dropdown.
