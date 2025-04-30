@@ -61,8 +61,16 @@ def _compare_content(
     if file_mode == "rb":
         # Binary file comparison (e.g., images, icons)
         # Direct byte-level comparison since structured diffing isn't meaningful
-        expected_file_content = b"".join(expected_file_lines) if expected_file_lines and isinstance(expected_file_lines[0], bytes) else b""
-        actual_file_content = b"".join(actual_file_lines) if actual_file_lines and isinstance(actual_file_lines[0], bytes) else b""
+        expected_file_content = (
+            b"".join(expected_file_lines)
+            if expected_file_lines and isinstance(expected_file_lines[0], bytes)
+            else b""
+        )
+        actual_file_content = (
+            b"".join(actual_file_lines)
+            if actual_file_lines and isinstance(actual_file_lines[0], bytes)
+            else b""
+        )
 
         if expected_file_content != actual_file_content:
             diff_results.append(
@@ -72,7 +80,7 @@ def _compare_content(
         # Normalize line endings, expand tabs, and trim trailing whitespace
         def normalize_lines(lines):
             return [
-                line.expandtabs(4).rstrip().replace('\r\n', '\n').replace('\r', '\n')
+                line.expandtabs(4).rstrip().replace("\r\n", "\n").replace("\r", "\n")
                 for line in lines
             ]
 
