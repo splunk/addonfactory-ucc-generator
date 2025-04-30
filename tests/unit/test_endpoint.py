@@ -165,9 +165,11 @@ def test_single_model_with_oauth(auth_condition):
                 )
 
             def oauth_call_url(self):
-                host = self.callerArgs.data.get("endpoint_token_oauth_credentials", [None])[0]
-                host = host or self.callerArgs.data.get("endpoint_token", [None])[0]
-                host = host or self.callerArgs.data.get("endpoint", [None])[0]
+                host = (
+                    self.callerArgs.data.get("endpoint_token_oauth_credentials", [None])[0]
+                    or self.callerArgs.data.get("endpoint_token", [None])[0]
+                    or self.callerArgs.data.get("endpoint", [None])[0]
+                )
 
                 return f"https://{host}/{TOKEN_ENDPOINT.lstrip('/')}"
 
@@ -176,11 +178,15 @@ def test_single_model_with_oauth(auth_condition):
                 if auth_type != "oauth_client_credentials":
                     return
 
-                client_id = self.callerArgs.data.get("client_id_oauth_credentials", [None])[0]
-                client_id = client_id or self.callerArgs.data.get("client_id", [None])[0]
+                client_id = (
+                    self.callerArgs.data.get("client_id_oauth_credentials", [None])[0]
+                    or self.callerArgs.data.get("client_id", [None])[0]
+                )
 
-                client_secret = self.callerArgs.data.get("client_secret_oauth_credentials", [None])[0]
-                client_secret = client_secret or self.callerArgs.data.get("client_secret", [None])[0]
+                client_secret = (
+                    self.callerArgs.data.get("client_secret_oauth_credentials", [None])[0]
+                    or self.callerArgs.data.get("client_secret", [None])[0]
+                )
 
                 params = {
                     "grant_type": "client_credentials",
