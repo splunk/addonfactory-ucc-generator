@@ -75,4 +75,4 @@ export default CustomTab;
 
 This is how it looks in the UI:
 
-![image](../images/custom_ui_extensions/Custom_tab_output.png)
+![image](../images/custom_ui_extensions/Custom_Tab_Output.png)
