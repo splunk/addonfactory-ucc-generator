@@ -79,32 +79,7 @@ def test_get_oauth_entities(global_config_all_json):
             "field": "oauth",
             "label": "Not used",
             "options": {
-                "auth_type": ["basic", "oauth", "oauth_client_credentials"],
-                "basic": [
-                    {
-                        "oauth_field": "username",
-                        "label": "Username",
-                        "field": "username",
-                    },
-                    {
-                        "oauth_field": "password",
-                        "label": "Password",
-                        "encrypted": True,
-                        "field": "password",
-                    },
-                    {
-                        "oauth_field": "security_token",
-                        "label": "Security Token",
-                        "encrypted": True,
-                        "field": "token",
-                    },
-                    {
-                        "oauth_field": "some_text",
-                        "label": "Disabled on edit for oauth",
-                        "field": "basic_oauth_text",
-                        "required": False,
-                    },
-                ],
+                "auth_type": ["oauth_client_credentials"],
                 "oauth_client_credentials": [
                     {
                         "oauth_field": "client_id_oauth_credentials",
@@ -123,41 +98,6 @@ def test_get_oauth_entities(global_config_all_json):
                         "field": "endpoint_token_oauth_credentials",
                     },
                 ],
-                "oauth": [
-                    {
-                        "oauth_field": "client_id",
-                        "label": "Client Id",
-                        "field": "client_id",
-                    },
-                    {
-                        "oauth_field": "client_secret",
-                        "label": "Client Secret",
-                        "field": "client_secret",
-                        "encrypted": True,
-                    },
-                    {
-                        "oauth_field": "redirect_url",
-                        "label": "Redirect url",
-                        "field": "redirect_url",
-                    },
-                    {
-                        "oauth_field": "endpoint_token",
-                        "label": "Token endpoint",
-                        "field": "endpoint_token",
-                    },
-                    {
-                        "oauth_field": "endpoint_authorize",
-                        "label": "Authorize endpoint",
-                        "field": "endpoint_authorize",
-                    },
-                    {
-                        "oauth_field": "oauth_some_text",
-                        "label": "Disabled on edit for oauth",
-                        "field": "oauth_oauth_text",
-                        "required": False,
-                        "options": {"disableonEdit": True, "enable": False},
-                    },
-                ],
                 "auth_code_endpoint": "/services/oauth2/authorize",
                 "access_token_endpoint": "/services/oauth2/token",
                 "oauth_timeout": 30,
@@ -165,58 +105,11 @@ def test_get_oauth_entities(global_config_all_json):
             },
         },
     ]
+    global_config_all_json.configuration[0]["entity"] = content
 
     global_config_builder_schema = GlobalConfigBuilderSchema(global_config_all_json)
     assert global_config_builder_schema._get_oauth_enitities(content) == [
         {"field": "name", "label": "Name", "required": True, "type": "text"},
-        {"field": "username", "label": "Username", "oauth_field": "username"},
-        {
-            "encrypted": True,
-            "field": "password",
-            "label": "Password",
-            "oauth_field": "password",
-        },
-        {
-            "encrypted": True,
-            "field": "token",
-            "label": "Security Token",
-            "oauth_field": "security_token",
-        },
-        {
-            "field": "basic_oauth_text",
-            "label": "Disabled on edit for oauth",
-            "oauth_field": "some_text",
-            "required": False,
-        },
-        {"field": "client_id", "label": "Client Id", "oauth_field": "client_id"},
-        {
-            "encrypted": True,
-            "field": "client_secret",
-            "label": "Client Secret",
-            "oauth_field": "client_secret",
-        },
-        {
-            "field": "redirect_url",
-            "label": "Redirect url",
-            "oauth_field": "redirect_url",
-        },
-        {
-            "field": "endpoint_token",
-            "label": "Token endpoint",
-            "oauth_field": "endpoint_token",
-        },
-        {
-            "field": "endpoint_authorize",
-            "label": "Authorize endpoint",
-            "oauth_field": "endpoint_authorize",
-        },
-        {
-            "field": "oauth_oauth_text",
-            "label": "Disabled on edit for oauth",
-            "oauth_field": "oauth_some_text",
-            "options": {"disableonEdit": True, "enable": False},
-            "required": False,
-        },
         {
             "field": "client_id_oauth_credentials",
             "label": "Client Id",
@@ -236,5 +129,4 @@ def test_get_oauth_entities(global_config_all_json):
         {"encrypted": True, "field": "access_token"},
         {"encrypted": True, "field": "refresh_token"},
         {"field": "instance_url"},
-        {"field": "auth_type"},
     ]
