@@ -530,7 +530,7 @@
                 },
                 {
                     "name": "custom_tab",
-                    "title": "Customized Tab......",
+                    "title": "Custom_tab without entity",
                     "customTab": {
                         "src": "custom_tab",
                         "type": "external"

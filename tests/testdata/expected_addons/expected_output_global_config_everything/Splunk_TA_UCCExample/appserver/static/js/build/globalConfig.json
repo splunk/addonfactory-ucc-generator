@@ -206,6 +206,14 @@
                     "title": "Account"
                 },
                 {
+                    "name": "custom_tab",
+                    "title": "Custom_tab without entity",
+                    "customTab": {
+                        "src": "custom_tab",
+                        "type": "external"
+                    }
+                },
+                {
                     "name": "proxy",
                     "entity": [
                         {
