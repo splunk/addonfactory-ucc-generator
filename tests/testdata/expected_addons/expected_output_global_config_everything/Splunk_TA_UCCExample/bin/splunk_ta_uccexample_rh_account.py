@@ -212,12 +212,33 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'client_id_oauth_credentials',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'client_secret_oauth_credentials',
+        required=False,
+        encrypted=True,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'endpoint_token_oauth_credentials',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'access_token',
         required=False,
         encrypted=True,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'refresh_token',
         required=False,

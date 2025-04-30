@@ -1808,6 +1808,11 @@
                     "const": "oauth",
                     "type": "string",
                     "description": "Exactly: oauth"
+                  },
+                  {
+                    "const": "oauth_client_credentials",
+                    "type": "string",
+                    "description": "Exactly: oauth_client_credentials"
                   }
                 ]
               }
@@ -1821,7 +1826,14 @@
             },
             "oauth": {
               "type": "array",
-              "description": "Will have a list of fields for you to add in the oauth authentication flow.",
+              "description": "OAuth 2.0 with Authorization Code Grant (interactive). Will have a list of fields for you to add in the oauth authentication flow.",
+              "items": {
+                "$ref": "#/definitions/OAuthFields"
+              }
+            },
+            "oauth_client_credentials": {
+              "type": "array",
+              "description": "OAuth 2.0 with Client Credentials Grant (non-interactive). Will have a list of fields for you to add in the oauth authentication flow.",
               "items": {
                 "$ref": "#/definitions/OAuthFields"
               }
