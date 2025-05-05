@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -24,7 +25,7 @@ import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
 import { Mode } from '../../../constants/modes';
 import { StandardPages } from '../../../types/components/shareableTypes';
 
-const handleFormSubmit = jest.fn();
+const handleFormSubmit = vi.fn();
 
 const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
@@ -125,13 +126,10 @@ it('should pass default values to custom component correctly', async () => {
     const mockConfig = getGlobalConfigMockCustomControl();
     setUnifiedConfig(mockConfig);
 
-    jest.mock(
-        `${getBuildDirPath()}/custom/${CUSTOM_MODULE}.js`,
-        () => mockCustomControlMockForTest,
-        {
-            virtual: true,
-        }
-    );
+    // doMock is not hoisted to the top of the file
+    vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_MODULE}.js`, () => ({
+        default: mockCustomControlMockForTest,
+    }));
 
     render(
         <BaseFormView

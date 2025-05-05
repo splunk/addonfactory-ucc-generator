@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 // --- START of unnecessary polyfills
 /**
  * @note The block below contains polyfills for Node.js globals
@@ -11,23 +12,6 @@
 
 // the most of the polyfills are applied with jest-fixed-jsdom package
 
-HTMLCanvasElement.prototype.getContext = jest.fn();
+HTMLCanvasElement.prototype.getContext = vi.fn();
 
 // --- END of unnecessary polyfills
-
-// required by @splunk/dashboards version greater than 28.1.0
-// but for now using the version 28.1.0 due to too many errors 
-// and work needed to make it work
-// Object.defineProperty(window, 'matchMedia', {
-//     writable: true,
-//     value: jest.fn().mockImplementation((query) => ({
-//         matches: false,
-//         media: query,
-//         onchange: null,
-//         addListener: jest.fn(), // deprecated
-//         removeListener: jest.fn(), // deprecated
-//         addEventListener: jest.fn(),
-//         removeEventListener: jest.fn(),
-//         dispatchEvent: jest.fn(),
-//     })),
-// });

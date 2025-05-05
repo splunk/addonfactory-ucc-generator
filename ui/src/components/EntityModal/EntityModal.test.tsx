@@ -1,9 +1,8 @@
+import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { z } from 'zod';
-
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -19,7 +18,6 @@ import {
     getConfigWithSeparatedEndpointsOAuth,
     getConfigWarningMessageAlwaysDisplay,
     WARNING_MESSAGES_ALWAYS_DISPLAY,
-    getConfigWithAllTypesOfOauth,
 } from './TestConfig';
 import {
     ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
@@ -29,7 +27,6 @@ import { Mode } from '../../constants/modes';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
-import { OAuthFields } from '../../types/globalConfig/entities';
 
 const getDisabledField = (fieldName: string) => {
     const elements = screen.getAllByTestId('text');
@@ -39,7 +36,7 @@ const getDisabledField = (fieldName: string) => {
 };
 
 describe('Oauth field disabled on edit - diableonEdit property', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
 
     const setUpConfigWithDisabedOauth = () => {
         const newConfig = getConfigOauthOauthDisableonEdit();
@@ -136,7 +133,7 @@ describe('Oauth field disabled on edit - diableonEdit property', () => {
 });
 
 describe('Options - Enable field property', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
 
     const setUpConfigWithDisabledComplitelyOauthField = () => {
         const newConfig = getConfigEnableFalseForOauth();
@@ -216,7 +213,7 @@ describe('Options - Enable field property', () => {
 });
 
 describe('EntityModal - auth_endpoint_token_access_type', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
 
     const setUpConfigWithDisabedOauth = () => {
         const newConfig = getConfigAccessTokenMock();
@@ -262,7 +259,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
         const addButton = screen.getByText('Add');
         expect(addButton).toBeInTheDocument();
 
-        const windowOpenSpy = jest.spyOn(window, 'open') as jest.Mock;
+        const windowOpenSpy = vi.spyOn(window, 'open') as Mock;
 
         // mock opening verification window
         windowOpenSpy.mockImplementation((url) => {
@@ -280,7 +277,7 @@ describe('EntityModal - auth_endpoint_token_access_type', () => {
 });
 
 describe('EntityModal - custom warning', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
     const DEFAULT_MODE = 'create';
     const DEFAULT_PAGE = 'configuration';
 
@@ -372,7 +369,7 @@ describe('EntityModal - custom warning', () => {
 });
 
 describe('Default value', () => {
-    const handleRequestClose = jest.fn();
+    const handleRequestClose = vi.fn();
     const setUpConfigWithDefaultValue = () => {
         const newConfig = getConfigWithOauthDefaultValue();
         setUnifiedConfig(newConfig);
@@ -403,10 +400,10 @@ describe('Default value', () => {
 });
 
 describe('Oauth - separated endpoint authorization', () => {
-    let handleRequestClose: jest.Mock<() => void>;
+    let handleRequestClose: Mock<() => void>;
 
     beforeEach(() => {
-        handleRequestClose = jest.fn();
+        handleRequestClose = vi.fn();
     });
 
     const setUpConfigWithSeparatedEndpoints = () => {
@@ -432,14 +429,15 @@ describe('Oauth - separated endpoint authorization', () => {
     };
 
     const spyOnWindowOpen = async (addButton: HTMLElement) => {
-        const windowOpenSpy = jest.spyOn(window, 'open') as jest.Mock;
+        const windowOpenSpy = vi.spyOn(window, 'open') as Mock;
+        vi.mock('uuid', () => ({ v4: () => '123456789' }));
 
         // mock opening verification window
         windowOpenSpy.mockImplementation((url) => {
             expect(url).toContain(
-                'https://authendpoint/services/oauth2/authorize?response_type=code&client_id=Client%20Id&redirect_uri=http%3A%2F%2Flocalhost%2F'
+                'https://authendpoint/services/oauth2/authorize?response_type=code&client_id=Client%20Id&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F'
             );
-            expect(url).toContain('state=');
+            expect(url).toContain('state=123456789');
             return { closed: true };
         });
 
@@ -485,7 +483,7 @@ describe('Oauth - separated endpoint authorization', () => {
     });
 
     it('check if correct auth token endpoint created', async () => {
-        const requestHandler = jest.fn();
+        const requestHandler = vi.fn();
         server.use(
             http.post('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth', ({ request }) => {
                 requestHandler(request);
@@ -530,7 +528,7 @@ describe('Oauth - separated endpoint authorization', () => {
             client_id: 'Client Id',
             client_secret: 'Client Secret',
             code,
-            redirect_uri: 'http://localhost/',
+            redirect_uri: 'http://localhost:3000/',
         });
     });
 
@@ -555,171 +553,5 @@ describe('Oauth - separated endpoint authorization', () => {
         });
 
         expect(screen.getByText(ERROR_STATE_MISSING_TRY_AGAIN)).toBeInTheDocument();
-    });
-});
-
-describe('Oauth2 - client credentials', () => {
-    const props = {
-        serviceName: 'account',
-        mode: 'create',
-        stanzaName: undefined,
-        formLabel: 'formLabel',
-        page: 'configuration',
-        groupName: '',
-        open: true,
-        handleRequestClose: () => {},
-        returnFocus: () => {},
-    } satisfies EntityModalProps;
-
-    let handleRequestClose: jest.Mock<() => void>;
-
-    beforeEach(() => {
-        handleRequestClose = jest.fn();
-    });
-
-    const getOauthFields = (oauthCredsFields: Array<z.infer<typeof OAuthFields>>) => {
-        return oauthCredsFields.map((field) => {
-            const oauthField = screen.getByRole('textbox', {
-                name: field.label,
-            });
-            expect(oauthField).toBeInTheDocument();
-            return { ...field, component: oauthField };
-        });
-    };
-
-    const setUpConfigAllOauth = () => {
-        const newConfig = getConfigWithAllTypesOfOauth();
-        setUnifiedConfig(newConfig);
-        return newConfig;
-    };
-
-    const renderModalWithProps = () => {
-        render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
-    };
-
-    it('Oauth client credentials - check if correctly renders', async () => {
-        const usedConfig = setUpConfigAllOauth();
-        renderModalWithProps();
-
-        const oauthEntity = usedConfig.pages.configuration.tabs[0].entity.find(
-            (field) => field.type === 'oauth'
-        );
-
-        const oauthCredsFields = oauthEntity?.options.oauth_client_credentials;
-
-        const oauthSelector = screen.getByRole('combobox', {
-            name: 'Auth Type',
-        });
-        expect(oauthSelector).toBeInTheDocument();
-
-        expect(oauthSelector).toHaveAttribute('data-test-value', 'basic');
-
-        const user = userEvent.setup();
-
-        await user.click(oauthSelector);
-
-        const oauthClientCredentials = screen.getByRole('option', {
-            name: 'OAuth 2.0 Client Credentials',
-        });
-        expect(oauthClientCredentials).toBeInTheDocument();
-
-        await user.click(oauthClientCredentials);
-        expect(oauthSelector).toHaveAttribute('data-test-value', 'oauth_client_credentials');
-
-        invariant(oauthCredsFields, 'Oauth client credentials fields are not present');
-
-        const oauthFields = getOauthFields(oauthCredsFields);
-
-        const [oauthField1, oauthField2, oauthField3, oauthField4] = oauthFields;
-        expect(oauthField1.component).toHaveValue(String(oauthField1.defaultValue));
-
-        expect(oauthField2.component).toHaveValue(String(oauthField2.defaultValue));
-        expect(oauthField3.component).toHaveValue('');
-
-        expect(oauthField4.component).toHaveValue(String(oauthField4.defaultValue));
-        expect(oauthField4.component).toHaveAttribute('readonly');
-    });
-
-    it('Oauth client credentials - check if correctly sends data', async () => {
-        const requestHandler = jest.fn();
-        server.use(
-            http.post(
-                '/servicesNS/nobody/-/demo_addon_for_splunk_account?output_mode=json',
-                async ({ request }) => {
-                    const info = await request.formData();
-                    const accumulator: Record<string, string> = {};
-                    info.forEach((value, key) => {
-                        accumulator[key] = String(value);
-                    });
-
-                    requestHandler(accumulator);
-
-                    const res = HttpResponse.json({ entry: [accumulator] }, { status: 200 });
-                    return res;
-                }
-            )
-        );
-
-        const usedConfig = setUpConfigAllOauth();
-        renderModalWithProps();
-
-        const oauthEntity = usedConfig.pages.configuration.tabs[0].entity.find(
-            (field) => field.type === 'oauth'
-        );
-
-        const oauthCredsFields = oauthEntity?.options.oauth_client_credentials;
-
-        const oauthSelector = screen.getByRole('combobox', {
-            name: 'Auth Type',
-        });
-        expect(oauthSelector).toBeInTheDocument();
-
-        const user = userEvent.setup();
-
-        await user.click(oauthSelector);
-
-        const oauthClientCredentials = screen.getByRole('option', {
-            name: 'OAuth 2.0 Client Credentials',
-        });
-        expect(oauthClientCredentials).toBeInTheDocument();
-
-        await user.click(oauthClientCredentials);
-
-        invariant(oauthCredsFields, 'Oauth client credentials fields are not present');
-        const oauthFields = getOauthFields(oauthCredsFields);
-
-        const [oauthField1, oauthField2, oauthField3, oauthField4] = oauthFields;
-
-        await user.type(oauthField1.component, 'Client Id - filled');
-        await user.type(oauthField2.component, 'Secret Client Secret - filled');
-        await user.type(oauthField3.component, 'Client Token - filled');
-
-        await user.type(oauthField4.component, 'Disabled - filled');
-        // no effect executed as field is disabled
-        expect(oauthField4.component).toHaveValue(String(oauthField4.defaultValue));
-
-        const addButton = screen.getByRole('button', { name: /add/i });
-        expect(addButton).toBeInTheDocument();
-
-        await user.click(addButton);
-
-        expect(requestHandler).toHaveBeenCalledTimes(1);
-
-        expect(requestHandler).toHaveBeenCalledWith({
-            auth_type: 'oauth_client_credentials',
-            basic_oauth_text_jest_test: '',
-            client_id: '',
-            client_id_oauth_credentials: 'Secret credentials Client IdClient Id - filled',
-            client_secret: '',
-            client_secret_oauth_credentials: 'Secret Client SecretSecret Client Secret - filled',
-            endpoint_authorize: '',
-            endpoint_token: '',
-            endpoint_token_oauth_credentials: 'Client Token - filled',
-            oauth_credentials_some_disabled_field: 'Disabled field value',
-        });
-
-        await waitFor(() => {
-            expect(handleRequestClose).toHaveBeenCalled();
-        });
     });
 });

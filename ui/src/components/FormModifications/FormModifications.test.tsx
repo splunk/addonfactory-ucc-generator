@@ -1,3 +1,4 @@
+import { beforeEach, expect, it, vi } from 'vitest';
 import React from 'react';
 import { screen, render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -17,7 +18,7 @@ import { EntitiesAllowingModifications } from '../../types/components/BaseFormTy
 import { invariant } from '../../util/invariant';
 import { StringOrTextWithLinks } from '../../types/globalConfig/entities';
 
-const handleRequestClose = jest.fn();
+const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
     const newConfig = getConfigWithModifications();
     setUnifiedConfig(newConfig);

@@ -1,8 +1,9 @@
+import { describe, expect, it, vi } from 'vitest';
 import * as React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 
 import { http, HttpResponse, RequestHandler } from 'msw';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup.ts';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
 import { server } from '../../../mocks/server';
@@ -12,29 +13,11 @@ import { DataIngestionModal } from '../DataIngestionModal';
 import { MOCK_DS_MODAL_DEFINITION } from './mockData';
 import { DASHBOARD_JSON_MOCKS } from './mockJs';
 
-const handleClose = jest.fn();
-const handleSelect = jest.fn();
+const handleClose = vi.fn();
+const handleSelect = vi.fn();
 
 describe('render data ingestion modal inputs', () => {
     it('renders with all default modal dashboard elements', async () => {
-        // needed for dashabord freater than 28.1.0
-        // commented as for now using the version 28.1.0
-        // const dimensions = {
-        //     x: 0,
-        //     y: 0,
-        //     width: 100,
-        //     height: 100,
-        //     top: 0,
-        //     left: 0,
-        //     right: 100,
-        //     bottom: 100,
-        // };
-        // const mockBounding = jest.fn(() => ({
-        //     ...dimensions,
-        //     toJSON: jest.fn(() => dimensions),
-        // }));
-
-        // Element.prototype.getBoundingClientRect = mockBounding;
         consoleError.mockImplementation(() => {});
         server.use(
             http.get('/custom/data_ingestion_modal_definition.json', () =>
