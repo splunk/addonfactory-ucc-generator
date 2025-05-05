@@ -1,7 +1,7 @@
+import { vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
 
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';

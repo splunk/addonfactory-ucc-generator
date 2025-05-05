@@ -28,26 +28,15 @@ const props = {
     handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
-const mockCustomCell = () => {
+const mockCustomCellModule = (variant: 'valid' | 'error' | 'noRender' | 'undefined') => {
+    const mod = {
+        valid: MockCustomCell,
+        error: MockCustomCellError,
+        noRender: MockCustomCellNoRender,
+        undefined,
+    }[variant];
     vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`, () => ({
-        default: MockCustomCell,
-    }));
-};
-
-const mockCustomCellError = () => {
-    vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`, () => ({
-        default: MockCustomCellError,
-    }));
-};
-
-const mockCustomCellWithoutRender = () => {
-    vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`, () => ({
-        default: MockCustomCellNoRender,
-    }));
-};
-const mockCustomCellToUndefined = () => {
-    vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_CELL_FILE_NAME}.js`, () => ({
-        default: undefined,
+        default: mod,
     }));
 };
 
@@ -94,7 +83,7 @@ test.each([
     { interval: 14, expected: '14' },
     { interval: 15, expected: '15' },
 ])('Render custom cell correctly for interval $interval', async ({ interval, expected }) => {
-    mockCustomCell();
+    mockCustomCellModule('valid');
     // render only one row as mock for custom cell work just for the first time
     // so we need to render only one row
     mocksAndRenderTable(interval);
@@ -109,7 +98,7 @@ test.each([
 });
 
 test('Render custom cell with Error message', async () => {
-    mockCustomCellError();
+    mockCustomCellModule('error');
     const mockConsoleError = vi.fn();
     consoleError.mockImplementation(mockConsoleError);
     mocksAndRenderTable(10);
@@ -130,7 +119,7 @@ test('Render custom cell with Error message', async () => {
 });
 
 test('Error as custom cell without render method', async () => {
-    mockCustomCellWithoutRender();
+    mockCustomCellModule('noRender');
     mocksAndRenderTable();
 
     const row = await waitForRow();
@@ -144,7 +133,8 @@ test('Error as custom cell without render method', async () => {
 
 test('Error as custom cell file is undefined', async () => {
     consoleError.mockImplementation(() => {});
-    mockCustomCellToUndefined();
+    // mockCustomCellToUndefined();
+    mockCustomCellModule('undefined');
     mocksAndRenderTable();
 
     const row = await waitForRow();
@@ -157,7 +147,7 @@ test('Error as custom cell file is undefined', async () => {
 });
 
 test('should update custom Cell Row when Input has changed', async () => {
-    mockCustomCell();
+    mockCustomCellModule('valid');
     // render only one row as mock for custom cell work just for the first time
     mocksAndRenderTable(11);
 
