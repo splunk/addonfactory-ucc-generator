@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from '@splunk/react-ui/Button';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import AcceptModal from './AcceptModal/AcceptModal';
 
 export interface InputRowData {
