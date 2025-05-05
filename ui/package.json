@@ -21,7 +21,7 @@
     "lint": "yarn run eslint && yarn run format:verify",
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "webpack serve --mode=development",
+    "start": "vite serve --config vite.config.ts",
     "setup": "yarn && yarn run build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
