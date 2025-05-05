@@ -39,8 +39,12 @@ class SettingsConf(FileGenerator):
                 self.settings_stanzas.append(
                     (setting["name"], [f"{f._name} = " for f in fields])
                 )
+                if setting.get("entity") is None:
+                    # When a tab doesn't have an entity, we add newlines as
+                    # done in `generate_conf_with_default_values()` function.
+                    self.default_content = f"[{setting['name']}]\n\n"
             if self._gc_schema._endpoints.get("settings") is not None:
-                self.default_content = self._gc_schema._endpoints[
+                self.default_content += self._gc_schema._endpoints[
                     "settings"
                 ].generate_conf_with_default_values()
 

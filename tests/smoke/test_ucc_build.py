@@ -146,7 +146,6 @@ def test_ucc_generate_with_everything(caplog):
             ("README.txt",),
             ("appserver", "static", "test icon.png"),
             ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
-            ("appserver", "static", "openapi.json"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),

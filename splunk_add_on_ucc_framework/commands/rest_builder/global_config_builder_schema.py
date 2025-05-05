@@ -149,14 +149,15 @@ class GlobalConfigBuilderSchema:
         )
         self._endpoints["settings"] = endpoint
         for setting in self.global_config.settings:
-            content = self._get_oauth_enitities(setting.get("entity", {}))
-            fields, special_fields = self._parse_fields(content)
-            entity = MultipleModelEntityBuilder(
-                setting["name"],
-                fields,
-                special_fields=special_fields,
-            )
-            endpoint.add_entity(entity)
+            if setting.get("entity") is not None:
+                content = self._get_oauth_enitities(setting["entity"])
+                fields, special_fields = self._parse_fields(content)
+                entity = MultipleModelEntityBuilder(
+                    setting["name"],
+                    fields,
+                    special_fields=special_fields,
+                )
+                endpoint.add_entity(entity)
             if endpoint.conf_name not in self._settings_conf_file_names:
                 self._settings_conf_file_names.append(endpoint.conf_name)
 

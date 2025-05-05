@@ -14,12 +14,6 @@ import logging
 util.remove_http_proxy_env_vars()
 
 
-fields_custom_tab = [
-
-]
-model_custom_tab = RestModel(fields_custom_tab, name='custom_tab')
-
-
 fields_proxy = [
     field.RestField(
         'proxy_enabled',
@@ -179,7 +173,6 @@ model_custom_abc = RestModel(fields_custom_abc, name='custom_abc')
 endpoint = MultipleModel(
     'splunk_ta_uccexample_settings',
     models=[
-        model_custom_tab,
         model_proxy, 
         model_logging, 
         model_custom_abc
