@@ -124,3 +124,18 @@ It accepts the following parameters:
 * `-o` / `--output` - [optional] output folder to store the packaged add-on.
     By default, it will be saved in the `current directory` folder.
     It accepts absolute paths as well.
+
+## `ucc-gen validate`
+
+
+The `ucc-gen validate` command is available starting from version `v5.63.0` and is used to validate
+Splunk apps and add-ons during development. It leverages `Splunk AppInspect` under the hood to ensure your add-on meets Splunk's standards and best practices.
+
+To use this command, you must have AppInspect installed on your system.
+You can install the required dependencies using the following command:
+
+* pip install splunk-add-on-ucc-framework[validate]
+
+It accepts the following parameters:
+
+* `--addon-path` - [required] Specifies the path to the built add-on that you want to validate.

@@ -646,7 +646,11 @@ class TestAccount(UccTester):
         account.entity.open()
         self.assert_util(
             account.entity.auth_key.list_of_values(),
-            ["Basic Authentication", "OAuth 2.0 Authentication"],
+            [
+                "Basic Authentication",
+                "OAuth 2.0 Authentication",
+                "OAuth 2.0 Client Credentials",
+            ],
         )
 
     @pytest.mark.execute_enterprise_cloud_true

@@ -229,7 +229,8 @@
                             "options": {
                                 "auth_type": [
                                     "basic",
-                                    "oauth"
+                                    "oauth",
+                                    "oauth_client_credentials"
                                 ],
                                 "basic": [
                                     {
@@ -366,6 +367,27 @@
                                                 "pattern": "^[a-zA-Z]\\w*$"
                                             }
                                         ]
+                                    }
+                                ],
+                                "oauth_client_credentials": [
+                                    {
+                                        "oauth_field": "client_id_oauth_credentials",
+                                        "label": "Client Id",
+                                        "field": "client_id_oauth_credentials",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret_oauth_credentials",
+                                        "label": "Client Secret",
+                                        "field": "client_secret_oauth_credentials",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_token_oauth_credentials",
+                                        "label": "Token endpoint",
+                                        "field": "endpoint_token_oauth_credentials",
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
                                     }
                                 ],
                                 "oauth": [
@@ -2141,7 +2163,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.62.0+a353bd0f1",
+        "version": "5.62.0+5f77e0cfd",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
