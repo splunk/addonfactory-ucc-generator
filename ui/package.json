@@ -6,7 +6,7 @@
     "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
     "directory": "ui"
   },
-  "version": "5.62.0",
+  "version": "5.63.0",
   "license": "Apache-2.0",
   "author": "Splunk Inc.",
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
@@ -38,7 +38,7 @@
     "@splunk/dashboard-presets": "28.1.0",
     "@splunk/dashboard-state": "28.1.0",
     "@splunk/dashboard-types": "28.1.0",
-    "@splunk/react-events-viewer": "^27.2.1",
+    "@splunk/react-events-viewer": "^27.3.0",
     "@splunk/react-icons": "^4.13.0",
     "@splunk/react-page": "^7.2.0",
     "@splunk/react-toast-notifications": "^0.11.3",
@@ -47,7 +47,7 @@
     "@splunk/splunk-utils": "^3.2.0",
     "@splunk/themes": "^0.23.0",
     "@splunk/ui-utils": "^1.8.0",
-    "@splunk/visualization-context": "^27.2.1",
+    "@splunk/visualization-context": "^27.3.0",
     "@storybook/test": "^8.6.12",
     "immutability-helper": "^3.1.1",
     "js-yaml": "^4.1.0",
@@ -59,7 +59,7 @@
     "react-router-dom": "6.27.0",
     "styled-components": "^5.3.11",
     "uuid": "^11.1.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
@@ -101,7 +101,7 @@
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^7.2.0",
-    "eslint-import-resolver-typescript": "^4.3.2",
+    "eslint-import-resolver-typescript": "^4.3.4",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -115,7 +115,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-fixed-jsdom": "^0.0.9",
     "jest-image-snapshot": "^6.4.0",
-    "msw": "2.7.4",
+    "msw": "2.7.5",
     "msw-storybook-addon": "^2.0.4",
     "license-webpack-plugin": "^4.0.2",
     "prettier": "^2.8.8",
@@ -127,7 +127,7 @@
     "typescript": "^5.8.3",
     "undici": "^5.29.0",
     "url": "^0.11.4",
-    "webpack": "^5.99.5",
+    "webpack": "^5.99.7",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1",
     "webpack-merge": "^6.0.1"
@@ -147,8 +147,8 @@
     "semver": "^7.7.1",
     "strip-ansi": "^6.0.1",
     "string-width": "^4.2.3",
-    "esbuild": "^0.25.2",
-    "axios": "^1.8.4",
+    "esbuild": "^0.25.3",
+    "axios": "^1.9.0",
     "jspdf": "^3.0.1",
     "http-proxy-middleware": "^2.0.9"
   },
