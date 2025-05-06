@@ -20,6 +20,12 @@ logger = logging.getLogger("ucc_gen")
 
 
 def validate(file_path: str) -> None:
+    if sys.version_info < (3, 9, 0):
+        logger.error(
+            "The `ucc-gen validate` command isn't supported for versions below Python 3.9. "
+            "Please update the Python interpreter to Python 3.9 or above."
+        )
+        sys.exit(1)
     try:
         from splunk_appinspect import main
     except ModuleNotFoundError:
