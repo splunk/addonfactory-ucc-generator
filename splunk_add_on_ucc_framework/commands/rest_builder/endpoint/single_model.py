@@ -170,6 +170,10 @@ class ${class_name}(${base_class}):
     def handleCreate(self, confInfo):
         self.oauth_client_credentials_call()
         return super().handleCreate(confInfo)
+
+    def handleEdit(self, confInfo):
+        self.oauth_client_credentials_call()
+        return super().handleEdit(confInfo)
 """
 
     def __init__(
