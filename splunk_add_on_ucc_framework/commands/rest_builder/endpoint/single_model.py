@@ -100,6 +100,7 @@ class SingleModelEndpointBuilderWithOauth(SingleModelEndpointBuilder):
         (
             "import json\n",
             "from solnlib import splunk_rest_client as rest_client\n",
+            "from splunk.admin import InternalException\n",
         )
     )
     _cls_template = """
@@ -160,6 +161,9 @@ class ${class_name}(${base_class}):
                 output_mode="json",
             ).body.read().decode("utf-8")
         )["entry"][0]["content"]
+
+        if "access_token" not in data or "error" in data:
+            raise InternalException("Error while trying to obtain OAuth token: %s" % data["error"])
 
         self.payload["access_token"] = data["access_token"]
 

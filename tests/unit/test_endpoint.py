@@ -132,6 +132,7 @@ def test_single_model_with_oauth(auth_condition):
         import logging
         import json
         from solnlib import splunk_rest_client as rest_client
+        from splunk.admin import InternalException
 
 
         util.remove_http_proxy_env_vars()
@@ -207,6 +208,9 @@ def test_single_model_with_oauth(auth_condition):
                         output_mode="json",
                     ).body.read().decode("utf-8")
                 )["entry"][0]["content"]
+
+                if "access_token" not in data or "error" in data:
+                    raise InternalException("Error while trying to obtain OAuth token: %s" % data["error"])
 
                 self.payload["access_token"] = data["access_token"]
 
