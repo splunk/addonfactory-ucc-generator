@@ -333,8 +333,10 @@ class HandlerWithOauth(CustomAccountValidator):
             ).body.read().decode("utf-8")
         )["entry"][0]["content"]
 
-        if "access_token" not in data or "error" in data:
-            raise InternalException("Error while trying to obtain OAuth token: %s" % data["error"])
+        if "access_token" not in data:
+            if "error" in data:
+                data = data["error"]
+            raise InternalException("Error while trying to obtain OAuth token: %s" % data)
 
         self.payload["access_token"] = data["access_token"]
 
