@@ -75,9 +75,28 @@ const meta = {
                 http.get('/servicesNS/nobody/-/:name/:tabName', () =>
                     HttpResponse.json(mockServerResponseWithContent)
                 ),
-                http.post('/servicesNS/nobody/-/:name', () =>
+                http.delete('/servicesNS/nobody/-/:ta_name_with_service_name/:stanza_name', () =>
                     HttpResponse.json(mockServerResponse)
                 ),
+                http.post('/servicesNS/nobody/-/:name', async ({ request }) => {
+                    const formData = await request.formData();
+                    const name = formData.get('name');
+                    const content: Record<string, FormDataEntryValue> = {};
+                    formData.forEach((value, key) => (content[key] = value));
+                    delete content.name;
+
+                    return HttpResponse.json(
+                        {
+                            entry: [
+                                {
+                                    name,
+                                    content: content,
+                                },
+                            ],
+                        },
+                        { status: 201 }
+                    );
+                }),
                 http.post('/servicesNS/nobody/-/:name/:tabName', () =>
                     HttpResponse.json(mockServerResponseWithContent)
                 ),
