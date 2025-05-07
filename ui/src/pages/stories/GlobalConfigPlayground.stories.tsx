@@ -82,7 +82,9 @@ const meta = {
                     const formData = await request.formData();
                     const name = formData.get('name');
                     const content: Record<string, FormDataEntryValue> = {};
-                    formData.forEach((value, key) => (content[key] = value));
+                    formData.forEach((value, key) => {
+                        content[key] = value;
+                    });
                     delete content.name;
 
                     return HttpResponse.json(
@@ -90,7 +92,7 @@ const meta = {
                             entry: [
                                 {
                                     name,
-                                    content: content,
+                                    content,
                                 },
                             ],
                         },
