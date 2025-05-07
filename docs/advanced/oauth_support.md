@@ -1,14 +1,26 @@
 # OAuth Support
 
-UCC allows you to add Auth support in the configuration page. In UCC, OAuth2.0 of the Authorization Code Flow `grant` type is used. It only supports the standard parameters specified in [RFCP749](https://www.rfc-editor.org/rfc/rfc6749) for obtaining an authorization code.
+UCC allows you to add Auth support in the configuration page.
 
-Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list and specify the `options` next to the `type: "oauth"`.
+UCC supports two types of authentication:
+
+- Basic Authentication
+- OAuth2.0 Authentication
+
+The OAuth2.0 authentication is supported in two ways:
+
+- Authorization Code Flow - interactive mode, with `grant_type=authorization_code`. It is used by specifying `oauth` in the `auth_type` field.
+- Client Credentials Flow - non-interactive mode, with `grant_type=client_credentials`. It is used by specifying `oauth_client_credentials` in the `auth_type` field.
+
+More information about the OAuth2.0 authentication can be found in the [OAuth2.0 RFC6749](https://www.rfc-editor.org/rfc/rfc6749).
+
+OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list and specify the `options` next to the `type: "oauth"`.
 
 ### Properties
 
 - `type` field value must be oauth.
 - `options`:
-    + `auth_type` must be present. It can have either ["basic", "oauth"] (If we want basic and oauth both support) or ["oauth"] (If we want oauth support only).
+    + `auth_type` must be present. The following values are available: ["basic", "oauth", "oauth_client_credentials"]
     + `basic` must be present only if the auth_type is ["basic"].
         - This will have a list of fields for you to add in the basic authentication flow. In the given example, it is username, password, and security_token.
         - **Note: As of now, if you are selecting basic as auth_type, then the username and password fields are mandatory.**
@@ -20,7 +32,13 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
         - `endpoint` will be the endpoint for you to build oauth support. For example, for salesforce, it will either  be "login.salesforce.com", "test.salesforce.com", or any other custom endpoint.
             + There is also the ability to specify separate endpoints for authorize and token. To do this, instead of the single 'endpoint' field, use two separate ones:
                 - `endpoint_authorize` specifies the endpoint used for authorization, for example, login.salesforce.com.
-                - `endpoint_token` specifies the endpoint used for the token acqusition, for example, api.login.salesforce.com.
+                - `endpoint_token` specifies the endpoint used for the token acquisition, for example, api.login.salesforce.com.
+    + `oauth_client_credentials` is a non-interactive flow with Client Credentials grant.
+    + For the `oauth_client_credentials` flow, the following fields are mandatory:
+        - `client_id_oauth_credentials` is the client id for applying auth to your app or apps.
+        - `client_secret_oauth_credentials` is the client secret for applying auth to your app or apps.
+        - `endpoint_token_oauth_credentials` specifies the endpoint used for the token acquisition, for example, api.login.salesforce.com.
+    + Optional field is `scope` - the scope of the access request.
     + `auth_code_endpoint` must be present and its value should be the endpoint value for getting the auth_code using the app. If the url to get the auth_code is https://login.salesforce.com/services/oauth2/authorize, then this will have the value /services/oauth2/authorize.
     + `access_token_endpoint` must be present and its value should be the endpoint value for getting the ccess_token using the auth_code received. If the url to get the access token is https://login.salesforce.com/services/oauth2/token, then it will have the value /services/oauth2/token.
     + `auth_label` allows the user to have the custom label for the Auth Type dropdown.
@@ -73,7 +91,8 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
                     "options": {
                         "auth_type": [
                             "basic",
-                            "oauth"
+                            "oauth",
+                            "oauth_client_credentials"
                         ],
                         "basic": [
                             {
@@ -128,6 +147,34 @@ Auth can be used inside the entity tag. Use `type: "oauth"` in the entity list a
                                 "oauth_field": "endpoint",
                                 "label": "Endpoint",
                                 "field": "endpoint",
+                                "help": "Enter Endpoint"
+                            }
+                        ],
+                        "oauth_client_credentials": [
+                            {
+                                "oauth_field": "client_id_oauth_credentials",
+                                "label": "Client Id",
+                                "field": "client_id_oauth_credentials",
+                                "help": "Enter Client Id."
+                            },
+                            {
+                                "oauth_field": "client_secret_oauth_credentials",
+                                "label": "Client Secret",
+                                "field": "client_secret_oauth_credentials",
+                                "encrypted": true,
+                                "help": "Enter Client Secret."
+                            },
+                            {
+                                "oauth_field": "scope",
+                                "label": "Scope",
+                                "field": "scope",
+                                "help": "Enter the scope for the authorization code with ',' separating each scope.",
+                                "required": false
+                            },
+                            {
+                                "oauth_field": "endpoint_token_oauth_credentials",
+                                "label": "Endpoint",
+                                "field": "endpoint_token_oauth_credentials",
                                 "help": "Enter Endpoint"
                             }
                         ],

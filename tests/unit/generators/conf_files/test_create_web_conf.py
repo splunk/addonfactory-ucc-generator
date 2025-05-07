@@ -45,20 +45,20 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
 
     expected_content = dedent(
         """
-        [expose:splunk_ta_uccexample_account]
-        pattern = splunk_ta_uccexample_account
-        methods = POST, GET
-
-        [expose:splunk_ta_uccexample_account_specified]
-        pattern = splunk_ta_uccexample_account/*
-        methods = POST, GET, DELETE
-
         [expose:splunk_ta_uccexample_oauth]
         pattern = splunk_ta_uccexample_oauth
         methods = POST, GET
 
         [expose:splunk_ta_uccexample_oauth_specified]
         pattern = splunk_ta_uccexample_oauth/*
+        methods = POST, GET, DELETE
+
+        [expose:splunk_ta_uccexample_account]
+        pattern = splunk_ta_uccexample_account
+        methods = POST, GET
+
+        [expose:splunk_ta_uccexample_account_specified]
+        pattern = splunk_ta_uccexample_account/*
         methods = POST, GET, DELETE
 
         [expose:splunk_ta_uccexample_settings]

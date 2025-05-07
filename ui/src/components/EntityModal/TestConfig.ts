@@ -450,3 +450,120 @@ export const getConfigWithSeparatedEndpointsOAuth = () => {
     };
     return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
 };
+
+const allEntityTypesConfig = [
+    {
+        type: 'oauth',
+        field: 'oauth_jest_test',
+        label: 'Not used',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['basic', 'oauth', 'oauth_client_credentials'],
+            oauth: [
+                {
+                    oauth_field: 'client_id',
+                    label: 'Client Id',
+                    field: 'client_id',
+                    help: 'Enter the Client Id for this account.',
+                    defaultValue: 'Client Id',
+                },
+                {
+                    oauth_field: 'client_secret',
+                    label: 'Client Secret',
+                    field: 'client_secret',
+                    encrypted: true,
+                    help: 'Enter the Client Secret key for this account.',
+                    defaultValue: 'Client Secret',
+                },
+                {
+                    oauth_field: 'redirect_url',
+                    label: 'Redirect url',
+                    field: 'redirect_url',
+                    help: 'Copy and paste this URL into your app.',
+                    defaultValue: 'Redirect url',
+                },
+                {
+                    oauth_field: 'endpoint_token',
+                    label: 'Token endpoint',
+                    field: 'endpoint_token',
+                    help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
+                },
+                {
+                    oauth_field: 'endpoint_authorize',
+                    label: 'Authorize endpoint',
+                    field: 'endpoint_authorize',
+                    help: 'Put here endpoint used for authorization ie. login.salesforce.com',
+                },
+            ],
+            basic: [
+                {
+                    oauth_field: 'some_text_jest_test',
+                    label: 'some_text Token',
+                    help: 'Enter some_text',
+                    field: 'basic_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: true,
+                        enable: true,
+                    },
+                },
+            ],
+            oauth_client_credentials: [
+                {
+                    oauth_field: 'client_id_oauth_credentials',
+                    defaultValue: 'Secret credentials Client Id',
+                    label: 'Client Id',
+                    field: 'client_id_oauth_credentials',
+                    help: 'Enter the Client Id for this account.',
+                },
+                {
+                    oauth_field: 'client_secret_oauth_credentials',
+                    label: 'Client Secret',
+                    field: 'client_secret_oauth_credentials',
+                    defaultValue: 'Secret Client Secret',
+                    encrypted: true,
+                    help: 'Enter the Client Secret key for this account.',
+                },
+                {
+                    oauth_field: 'endpoint_token_oauth_credentials',
+                    label: 'Token endpoint',
+                    field: 'endpoint_token_oauth_credentials',
+                    help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
+                },
+                {
+                    oauth_field: 'oauth_credentials_some_disabled_field',
+                    label: 'Disabled field',
+                    defaultValue: 'Disabled field value',
+                    field: 'oauth_credentials_some_disabled_field',
+                    help: 'Disabled field',
+                    options: {
+                        enable: false,
+                    },
+                },
+            ],
+            auth_code_endpoint: '/services/oauth2/authorize',
+            access_token_endpoint: '/services/oauth2/token',
+            oauth_timeout: 3000,
+            oauth_state_enabled: true,
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof OAuthEntity>,
+];
+
+export const getConfigWithAllTypesOfOauth = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
+                tabs: [{ entity: allEntityTypesConfig, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};

@@ -114,18 +114,18 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
 
     expected_content = dedent(
         """
-        [admin_external:splunk_ta_uccexample_account]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_account.py
-        handleractions = edit, list, remove, create
-        handlerpersistentmode = true
-
         [admin_external:splunk_ta_uccexample_oauth]
         handlertype = python
         python.version = python3
         handlerfile = splunk_ta_uccexample_rh_oauth.py
         handleractions = edit
+        handlerpersistentmode = true
+
+        [admin_external:splunk_ta_uccexample_account]
+        handlertype = python
+        python.version = python3
+        handlerfile = splunk_ta_uccexample_rh_account.py
+        handleractions = edit, list, remove, create
         handlerpersistentmode = true
 
         [admin_external:splunk_ta_uccexample_settings]
