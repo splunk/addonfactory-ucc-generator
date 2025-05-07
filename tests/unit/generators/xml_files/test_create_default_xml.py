@@ -1,9 +1,10 @@
-from pytest import fixture, raises
+import pytest
 from unittest.mock import patch
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
+import xmldiff.main
 
 
-@fixture
+@pytest.fixture
 def wrong_ta_name():
     return 123
 
@@ -11,7 +12,7 @@ def wrong_ta_name():
 def test_set_attribute_with_error(
     global_config_all_json, input_dir, output_dir, wrong_ta_name, ucc_dir
 ):
-    with raises(ValueError):
+    with pytest.raises(ValueError):
         DefaultXml(
             global_config_all_json,
             input_dir,
@@ -21,13 +22,65 @@ def test_set_attribute_with_error(
         )
 
 
+@pytest.mark.parametrize(
+    ("defaultView", "expected_result"),
+    [
+        (
+            "configuration",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view default="true" name="configuration"/>
+                    <view name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "inputs",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view default="true" name="inputs"/>
+                    <view name="configuration"/>
+                    <view name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "dashboard",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view name="configuration"/>
+                    <view default="true" name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "search",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view name="configuration"/>
+                    <view name="dashboard"/>
+                    <view default="true" name="search"/>
+                </nav>
+                """,
+        ),
+    ],
+)
 def test_set_attribute(
     global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
+    defaultView,
+    expected_result,
 ):
+    global_config_all_json.meta["defaultView"] = defaultView
     default_xml = DefaultXml(
         global_config_all_json,
         input_dir,
@@ -35,15 +88,8 @@ def test_set_attribute(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    expected_xml_content = """<?xml version="1.0" ?>
-<nav>
-    <view name="inputs"/>
-    <view name="configuration" default="true"/>
-    <view name="dashboard"/>
-    <view name="search"/>
-</nav>
-"""
-    assert default_xml.default_xml_content == expected_xml_content
+    diff = xmldiff.main.diff_texts(default_xml.default_xml_content, expected_result)
+    assert " ".join([str(item) for item in diff]) == ""
 
 
 @patch("os.path.exists", return_value=True)

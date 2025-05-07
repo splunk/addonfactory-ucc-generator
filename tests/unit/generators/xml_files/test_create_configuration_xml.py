@@ -11,7 +11,6 @@ def test_set_attributes(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    assert hasattr(config_xml, "configuration_xml_content")
     expected_xml_content = """<?xml version="1.0" ?>
 <view template="test_addon:/templates/base.html" type="html" isDashboard="False">
     <label>Configuration</label>
