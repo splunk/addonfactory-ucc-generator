@@ -52,10 +52,10 @@ class GlobalConfigValidator:
         self,
         internal_root_dir: str,
         global_config: global_config_lib.GlobalConfig,
-        **kwargs: Any,
+        source: str = "",
     ):
         self._internal_root_dir = internal_root_dir
-        self._source_dir = kwargs.get("source", "")
+        self._source_dir = source
         self._global_config = global_config
         self._config = global_config.content
         self.resolved_configuration = global_config.resolved_configuration

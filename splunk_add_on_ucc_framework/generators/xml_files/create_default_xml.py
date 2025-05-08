@@ -46,7 +46,7 @@ class DefaultXml(FileGenerator):
                     include_inputs=self._global_config.has_inputs(),
                     include_dashboard=self._global_config.has_dashboard(),
                     include_configuration=self._global_config.has_configuration(),
-                    default_view=self._global_config.meta.get("default_view"),
+                    default_view=self._global_config.meta.get("defaultView"),
                 )
 
     def generate(self) -> Dict[str, str]:

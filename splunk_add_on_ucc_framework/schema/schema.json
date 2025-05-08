@@ -429,13 +429,13 @@
     },
     "customSearchCommand": {
       "type": "object",
-      "description": "Support for custom Search Command",
+      "description": "Support for custom Search Command.",
       "properties": {
         "commandName": {
           "type": "string",
           "pattern": "^[a-z0-9]+$",
           "maxLength": 100,
-          "description": "Name of the custom Search Command"
+          "description": "Name of the custom Search Command."
         },
         "fileName": {
           "type": "string",
@@ -458,12 +458,12 @@
         },
         "description": {
           "type": "string",
-          "description": "description of the custom search command.It is an required attribute for searchbnf.conf."
+          "description": "Description of the custom search command. It is an required attribute for searchbnf.conf."
         },
         "syntax": {
           "type": "string",
           "maxLength": 100,
-          "description": "syntax for the custom search command, It is an required attribute for searchbnf.conf."
+          "description": "Syntax for the custom search command. It is an required attribute for searchbnf.conf."
         },
         "usage": {
           "type": "string",
@@ -2025,6 +2025,11 @@
                     "const": "oauth",
                     "type": "string",
                     "description": "Exactly: oauth"
+                  },
+                  {
+                    "const": "oauth_client_credentials",
+                    "type": "string",
+                    "description": "Exactly: oauth_client_credentials"
                   }
                 ]
               }
@@ -2038,7 +2043,14 @@
             },
             "oauth": {
               "type": "array",
-              "description": "Will have a list of fields for you to add in the oauth authentication flow.",
+              "description": "OAuth 2.0 with Authorization Code Grant (interactive). Will have a list of fields for you to add in the oauth authentication flow.",
+              "items": {
+                "$ref": "#/definitions/OAuthFields"
+              }
+            },
+            "oauth_client_credentials": {
+              "type": "array",
+              "description": "OAuth 2.0 with Client Credentials Grant (non-interactive). Will have a list of fields for you to add in the oauth authentication flow.",
               "items": {
                 "$ref": "#/definitions/OAuthFields"
               }

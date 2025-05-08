@@ -318,9 +318,12 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
     options: CommonEditableEntityOptions.omit({
         requiredWhenVisible: true,
     }).extend({
-        auth_type: z.array(z.union([z.literal('basic'), z.literal('oauth')])),
+        auth_type: z.array(
+            z.union([z.literal('basic'), z.literal('oauth'), z.literal('oauth_client_credentials')])
+        ),
         basic: z.array(OAuthFields).optional(),
         oauth: z.array(OAuthFields).optional(),
+        oauth_client_credentials: z.array(OAuthFields).optional(),
         auth_label: z.string().optional(),
         oauth_popup_width: z.number().optional(),
         oauth_popup_height: z.number().optional(),
