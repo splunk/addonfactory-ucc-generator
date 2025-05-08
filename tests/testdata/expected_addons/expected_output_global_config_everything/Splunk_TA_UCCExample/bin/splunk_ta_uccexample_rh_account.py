@@ -342,6 +342,10 @@ class HandlerWithOauth(CustomAccountValidator):
         self.oauth_client_credentials_call()
         return super().handleCreate(confInfo)
 
+    def handleEdit(self, confInfo):
+        self.oauth_client_credentials_call()
+        return super().handleEdit(confInfo)
+
 
 if __name__ == '__main__':
     logging.getLogger().addHandler(logging.NullHandler())

@@ -218,6 +218,10 @@ def test_single_model_with_oauth(auth_condition):
                 self.oauth_client_credentials_call()
                 return super().handleCreate(confInfo)
 
+            def handleEdit(self, confInfo):
+                self.oauth_client_credentials_call()
+                return super().handleEdit(confInfo)
+
 
         if __name__ == '__main__':
             logging.getLogger().addHandler(logging.NullHandler())
