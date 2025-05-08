@@ -163,8 +163,7 @@ class ${class_name}(${base_class}):
         )["entry"][0]["content"]
 
         if "access_token" not in data:
-            if "error" in data:
-                data = data["error"]
+            data = data.get("error", data)
             raise InternalException("Error while trying to obtain OAuth token: %s" % data)
 
         self.payload["access_token"] = data["access_token"]
