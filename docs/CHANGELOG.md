@@ -1,5 +1,24 @@
 # Changelog
 
+# [5.64.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.63.0...v5.64.0) (2025-05-08)
+
+
+### Bug Fixes
+
+* OAuth error messages ([#1727](https://github.com/splunk/addonfactory-ucc-generator/issues/1727)) ([dbfc0d4](https://github.com/splunk/addonfactory-ucc-generator/commit/dbfc0d43faec49bd2dcb60b8c573ed0745008c54))
+* **oauth_client_credentials:** reflects state correctly on edit/config  ([#1726](https://github.com/splunk/addonfactory-ucc-generator/issues/1726)) ([c1dfe62](https://github.com/splunk/addonfactory-ucc-generator/commit/c1dfe6213d7de30d9521860b39f385d445cc49af))
+* reauthenticate when an account is edited ([#1725](https://github.com/splunk/addonfactory-ucc-generator/issues/1725)) ([9cb9109](https://github.com/splunk/addonfactory-ucc-generator/commit/9cb9109dd269b806bf9263cf85d9cf0a9a720d4d))
+
+
+### Features
+
+* add ucc-gen validate command ([#1702](https://github.com/splunk/addonfactory-ucc-generator/issues/1702)) ([c756d7c](https://github.com/splunk/addonfactory-ucc-generator/commit/c756d7c1f31efcb45df31da73dee8bd63bef6492))
+
+
+### Reverts
+
+* remove ucc-gen validate command support ([#1728](https://github.com/splunk/addonfactory-ucc-generator/issues/1728)) ([1d350e4](https://github.com/splunk/addonfactory-ucc-generator/commit/1d350e4413e14022bf29512887deb2984d9d4747)), closes [#1702](https://github.com/splunk/addonfactory-ucc-generator/issues/1702)
+
 # [5.63.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.62.0...v5.63.0) (2025-04-30)
 
 
