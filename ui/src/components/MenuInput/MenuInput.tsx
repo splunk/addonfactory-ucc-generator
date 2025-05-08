@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import Dropdown from '@splunk/react-ui/Dropdown';
@@ -16,6 +16,7 @@ import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
@@ -42,6 +43,7 @@ interface MenuInputProps {
 }
 
 function MenuInput({ handleRequestOpen }: MenuInputProps) {
+    const customComponentContext = useContext(CustomComponentContext);
     const [activePanelId, setActivePanelId] = useState<string>(ROOT_GROUP_NAME);
     const [slidingPanelsTransition, setSlidingPanelsTransition] = useState<'forward' | 'backward'>(
         'forward'
@@ -232,6 +234,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                 fileName: menu.src,
                 type: menu.type,
                 handleChange: handleChangeCustomMenu,
+                customComponentContext,
             })}
         </>
     );
@@ -242,6 +245,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                 fileName: menu.src,
                 type: menu.type,
                 handleChange: handleChangeCustomMenu,
+                customComponentContext,
             })}
             {services.length === 1 ? makeInputButton() : makeSingleSelectDropDown()}
         </>
