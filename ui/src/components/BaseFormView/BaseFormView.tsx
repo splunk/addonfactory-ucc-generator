@@ -261,7 +261,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             display: true,
                             value:
                                 this.currentInput?.auth_type === 'oauth' ||
-                                this.currentInput?.auth_type === 'basic'
+                                this.currentInput?.auth_type === 'basic' ||
+                                this.currentInput?.auth_type === 'oauth_client_credentials'
                                     ? this.currentInput?.auth_type
                                     : authType[0],
                         };
