@@ -65,7 +65,7 @@ class CustomCommandPy(FileGenerator):
         self.commands_info = []
         for command in self._global_config.custom_search_commands:
             argument_list: List[str] = []
-            command["fileName"] = command["fileName"].replace(".py", "")
+            imported_file_name = command["fileName"].replace(".py", "")
             template = command["commandType"].replace(" ", "_") + ".template"
             for argument in command["arguments"]:
                 argument_dict = {
@@ -77,7 +77,7 @@ class CustomCommandPy(FileGenerator):
                 self.argument_generator(argument_list, argument_dict)
             self.commands_info.append(
                 {
-                    "imported_file_name": command["fileName"],
+                    "imported_file_name": imported_file_name,
                     "file_name": command["commandName"],
                     "class_name": command["commandName"].title(),
                     "description": command.get("description"),
