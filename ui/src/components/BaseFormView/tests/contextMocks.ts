@@ -34,3 +34,35 @@ export const MOCK_CONTEXT_STATE_THREE_INPUTS = {
     pageSize: 10,
     currentPage: 0,
 } satisfies TableContextDataTypes;
+
+export const MOCK_CONTEXT_STATE_ACCOUNT = {
+    rowData: {
+        account: {
+            test_basic_oauth: {
+                auth_type: 'basic',
+                disabled: false,
+                name: 'test_basic_oauth',
+                serviceName: 'account',
+                serviceTitle: 'Account',
+            },
+            test_oauth_oauth: {
+                auth_type: 'oauth',
+                disabled: false,
+                name: 'test_oauth_oauth',
+                serviceName: 'account',
+                serviceTitle: 'Account',
+            },
+            test_oauth_client_creds: {
+                auth_type: 'oauth_client_credentials',
+                disabled: false,
+                name: 'test_oauth_client_creds',
+                serviceName: 'account',
+                serviceTitle: 'Account',
+            },
+        },
+    },
+    searchText: '',
+    searchType: 'all',
+    pageSize: 10,
+    currentPage: 0,
+} satisfies TableContextDataTypes;
