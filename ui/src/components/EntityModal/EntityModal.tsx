@@ -9,6 +9,7 @@ import BaseFormView from '../BaseFormView/BaseFormView';
 import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
@@ -86,20 +87,25 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
                     onRequestClose={this.handleRequestClose}
                 />
                 <Modal.Body>
-                    <PageContext.Consumer>
-                        {(pageContext) => (
-                            <BaseFormView
-                                ref={this.form}
-                                page={this.props.page}
-                                serviceName={this.props.serviceName}
-                                mode={this.props.mode}
-                                stanzaName={this.props.stanzaName || 'unknownStanza'}
-                                handleFormSubmit={this.handleFormSubmit}
-                                groupName={this.props.groupName}
-                                pageContext={pageContext}
-                            />
+                    <CustomComponentContext.Consumer>
+                        {(customComponentContext) => (
+                            <PageContext.Consumer>
+                                {(pageContext) => (
+                                    <BaseFormView
+                                        ref={this.form}
+                                        page={this.props.page}
+                                        serviceName={this.props.serviceName}
+                                        mode={this.props.mode}
+                                        stanzaName={this.props.stanzaName || 'unknownStanza'}
+                                        handleFormSubmit={this.handleFormSubmit}
+                                        groupName={this.props.groupName}
+                                        pageContext={pageContext}
+                                        customComponentContext={customComponentContext}
+                                    />
+                                )}
+                            </PageContext.Consumer>
                         )}
-                    </PageContext.Consumer>
+                    </CustomComponentContext.Consumer>
                 </Modal.Body>
                 <Modal.Footer>
                     <UCCButton

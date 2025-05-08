@@ -1,3 +1,3 @@
-import { init } from './UccInit';
+import { uccInit } from './UccInit';
 
-init();
+uccInit();
