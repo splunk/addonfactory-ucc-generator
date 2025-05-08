@@ -1,7 +1,8 @@
 # Custom Search Command
 
 Custom search commands are user-defined [SPL](https://docs.splunk.com/Splexicon:SPL) (Splunk Search Processing Language) commands that enable users to add custom functionality to their Splunk searches.
-There are 4 types of Custom search commands that are:
+
+There are 4 types of Custom search commands:
 
 - Generating
 - Streaming
@@ -59,7 +60,7 @@ python.version = python3
 | commandName<span class="required-asterisk">\*</span>  | string  | Name of the custom search command |
 | fileName<span class="required-asterisk">\*</span>     | string  | Name of the Python file which contains logic of custom search command  |
 | commandType<span class="required-asterisk">\*</span>  | string  | Specify type of custom search command. Three types of commands are allowed, `streaming`,`generating` and `dataset processing`. |
-| arguments<span class="required-asterisk">\*</span>    | object  | Arguments which can be passed to custom search command. |
+| arguments<span class="required-asterisk">\*</span>    | array[objects]  | Arguments which can be passed to custom search command. |
 | requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command. Default: false. |
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
 | description                                           | string  | Provide description of the custom search command.   |
@@ -82,7 +83,7 @@ If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `u
 | --------------------------------------------------------------------- | ------ | ------------------------------------------------------- |
 | name<span class="required-asterisk">\*</span>                         | string | Name of the argument  |
 | defaultValue                                                          | string/number | Default value of the argument.  |
-| required                                                              | string |  Specify if the argument is required or not. |
+| required                                                              | boolean |  Specify if the argument is required or not. |
 | validate                                                              | object | Specify validation for the argument. It can be any of `Integer`, `Float`, `Boolean`, `RegularExpression` or `FieldName`. |
 
 UCC currently supports five types of validations provided by `splunklib` library:
