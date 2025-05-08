@@ -12,6 +12,7 @@ from splunk_ta_uccexample_validate_account_rh import CustomAccountValidator
 import logging
 import json
 from solnlib import splunk_rest_client as rest_client
+from splunk.admin import InternalException
 
 
 util.remove_http_proxy_env_vars()
@@ -63,7 +64,7 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'text_field_hidden_for_cloud',
         required=False,
@@ -84,79 +85,79 @@ fields = [
         encrypted=False,
         default=None,
         validator=validator.Pattern(
-            regex=r"""^(https://)[^/]+/?$""", 
+            regex=r"""^(https://)[^/]+/?$""",
         )
-    ), 
+    ),
     field.RestField(
         'account_checkbox',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'account_radio',
         required=True,
         encrypted=False,
         default='yes',
         validator=None
-    ), 
+    ),
     field.RestField(
         'account_multiple_select',
         required=True,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'example_help_link',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'config1_help_link',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'config2_help_link',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'config3_help_text_with_links',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'username',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'password',
         required=False,
         encrypted=True,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'token',
         required=False,
         encrypted=True,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'basic_oauth_text',
         required=False,
@@ -164,56 +165,56 @@ fields = [
         default=None,
         validator=validator.AllOf(
             validator.String(
-                max_len=4096, 
-                min_len=10, 
-            ), 
+                max_len=4096,
+                min_len=10,
+            ),
             validator.Pattern(
-                regex=r"""^[a-zA-Z]\w*$""", 
+                regex=r"""^[a-zA-Z]\w*$""",
             )
         )
-    ), 
+    ),
     field.RestField(
         'client_id',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'client_secret',
         required=False,
         encrypted=True,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'redirect_url',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'endpoint_token',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'endpoint_authorize',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'oauth_oauth_text',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'client_id_oauth_credentials',
         required=False,
@@ -248,14 +249,14 @@ fields = [
         encrypted=True,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'instance_url',
         required=False,
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
     field.RestField(
         'auth_type',
         required=False,
@@ -331,6 +332,10 @@ class HandlerWithOauth(CustomAccountValidator):
                 output_mode="json",
             ).body.read().decode("utf-8")
         )["entry"][0]["content"]
+
+        if "access_token" not in data:
+            data = data.get("error", data)
+            raise InternalException("Error while trying to obtain OAuth token: %s" % data)
 
         self.payload["access_token"] = data["access_token"]
 
