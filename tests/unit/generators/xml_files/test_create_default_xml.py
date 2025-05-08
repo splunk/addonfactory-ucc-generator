@@ -2,6 +2,11 @@ import pytest
 from unittest.mock import patch
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
 import xmldiff.main
+import os.path
+
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 @pytest.fixture
@@ -153,19 +158,33 @@ def test_generate_xml(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
     ta_name,
 ):
-    config_xml = DefaultXml(
+    default_xml = DefaultXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
+        ucc_dir=UCC_DIR,
         addon_name=ta_name,
     )
     exp_fname = "default.xml"
 
-    file_paths = config_xml.generate()
+    file_paths = default_xml.generate()
     assert file_paths == {
         exp_fname: f"{output_dir}/{ta_name}/default/data/ui/nav/{exp_fname}"
     }
+
+    with open(file_paths["default.xml"]) as fp:
+        content = fp.read()
+
+    expected_content = """<?xml version="1.0" ?>
+        <nav>
+            <view name="inputs"/>
+            <view default="true" name="configuration"/>
+            <view name="dashboard"/>
+            <view name="search"/>
+        </nav>
+        """
+
+    diff = xmldiff.main.diff_texts(expected_content, content)
+    assert " ".join([str(item) for item in diff]) == ""
