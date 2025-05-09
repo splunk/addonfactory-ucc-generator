@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Button from '@splunk/react-ui/Button';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
 export const ActionButtonComponent = styled(Button)`

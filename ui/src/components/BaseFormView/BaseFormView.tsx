@@ -64,7 +64,9 @@ function onCustomHookError(params: { methodName: string; error?: CustomHookError
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
-    context!: React.ContextType<typeof TableContext>;
+    // vite excepts declare context: ...
+    // @ts-expect-error declare can't be added due to jest error
+    context: React.ContextType<typeof TableContext>;
 
     flag: boolean;
 

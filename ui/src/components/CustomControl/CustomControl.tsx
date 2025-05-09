@@ -29,7 +29,7 @@ class CustomControl extends React.Component<Props, State> {
     ): Promise<CustomControlConstructor> =>
         new Promise((resolve) => {
             if (type === 'external') {
-                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     async (external) => {
                         const Control = external.default as CustomControlConstructor;
                         resolve(Control);

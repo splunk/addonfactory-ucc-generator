@@ -35,7 +35,10 @@ module.exports = {
                     '**/tests/**',
                     '**/mocks/**',
                     '**/*{.,_}{test,spec}.{ts,tsx}', // tests where the extension or filename suffix denotes that it is a test,
+                    '*.{ts,js}', // js configs from the root folder
                     '*.js', // js configs from the root folder
+                    '**/vite.config.*', // vite config
+                    '**/test.setup.ts', // jest config
                 ],
                 optionalDependencies: false,
             },
@@ -53,7 +56,7 @@ module.exports = {
                 'testing-library/await-async-queries': 'error', // Prevent missing awaits on async queries
                 'testing-library/no-await-sync-queries': 'error', // Prevent unnecessary await on sync queries
                 'testing-library/no-dom-import': 'error', // Prevent wrong imports; enforce @testing-library/react
-                'testing-library/prefer-presence-queries': 'error', // prefers getBy*/queryBy* over findBy* for presence/absence checks 
+                'testing-library/prefer-presence-queries': 'error', // prefers getBy*/queryBy* over findBy* for presence/absence checks
             },
         },
     ],
