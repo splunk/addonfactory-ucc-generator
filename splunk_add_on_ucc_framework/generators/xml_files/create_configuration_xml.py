@@ -34,7 +34,7 @@ class ConfigurationXml(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self._global_config.has_configuration():
-            return {"": ""}
+            return {}
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "configuration.xml"]
         )

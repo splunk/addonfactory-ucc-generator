@@ -135,7 +135,7 @@ class AlertActionsConf(FileGenerator):
 
     def generate_conf(self) -> Dict[str, str]:
         if not self.alerts:
-            return {"": ""}
+            return {}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
@@ -151,7 +151,7 @@ class AlertActionsConf(FileGenerator):
 
     def generate_conf_spec(self) -> Dict[str, str]:
         if not self.alerts_spec:
-            return {"": ""}
+            return {}
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(

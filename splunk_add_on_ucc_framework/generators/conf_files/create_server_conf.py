@@ -33,13 +33,13 @@ class ServerConf(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self.custom_conf:
-            return {"": ""}
+            return {}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         # For now, only create server.conf only if
         # no server.conf is present in the source package.
         if isfile(join(self._input_dir, "default", self.conf_file)):
-            return {"": ""}
+            return {}
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="server_conf.template"
         )
