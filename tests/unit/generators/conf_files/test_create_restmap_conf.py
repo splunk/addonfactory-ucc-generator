@@ -1,6 +1,5 @@
 import os.path
 from textwrap import dedent
-from unittest.mock import patch, MagicMock
 
 from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
@@ -10,52 +9,6 @@ from splunk_add_on_ucc_framework.generators.conf_files import RestMapConf
 
 
 UCC_DIR = os.path.dirname(ucc_framework_file)
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.RestMapConf.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.RestMapConf.get_file_output_path"
-)
-def test_generate_conf(
-    mock_op_path,
-    mock_template,
-    global_config_all_json,
-    input_dir,
-    output_dir,
-    ucc_dir,
-    ta_name,
-):
-    content = "content"
-    exp_fname = "restmap.conf"
-    file_path = "output_path/restmap.conf"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = content
-
-    restmap_conf = RestMapConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-
-    restmap_conf.writer = MagicMock()
-    restmap_conf._template = template_render
-    file_paths = restmap_conf.generate()
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-
-    # Ensure the writer function was called with the correct parameters
-    restmap_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-
-    assert file_paths == {exp_fname: file_path}
 
 
 def test_generate_conf_no_gc_schema(
@@ -98,7 +51,6 @@ def test_set_attributes(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    restmap_conf._set_attributes()
     assert hasattr(restmap_conf, "endpoints")
     assert hasattr(restmap_conf, "endpoint_names")
     assert hasattr(restmap_conf, "namespace")
@@ -150,6 +102,7 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
         handlerpersistentmode = true
         """
     ).lstrip()
+    exp_fname = "restmap.conf"
     restmap_conf = RestMapConf(
         global_config_all_json,
         input_dir,
@@ -159,8 +112,7 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
     )
     file_paths = restmap_conf.generate()
 
-    assert file_paths is not None
-    assert file_paths.keys() == {"restmap.conf"}
+    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/default/{exp_fname}"}
 
     with open(file_paths["restmap.conf"]) as fp:
         content = fp.read()
