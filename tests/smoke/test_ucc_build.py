@@ -154,6 +154,7 @@ def test_ucc_generate_with_everything(caplog):
             ("default", "web.conf"),
             ("default", "server.conf"),
             ("default", "commands.conf"),
+            ("default", "searchbnf.conf"),
             ("default", "data", "ui", "alerts", "test_alert.html"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),

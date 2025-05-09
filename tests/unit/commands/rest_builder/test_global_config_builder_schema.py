@@ -1,3 +1,4 @@
+from typing import List, Dict, Any
 from unittest.mock import patch
 
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
@@ -63,3 +64,69 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
         name="oauth",
         namespace="splunk_ta_uccexample",
     )
+
+
+def test_get_oauth_entities(global_config_all_json):
+    content: List[Dict[str, Any]] = [
+        {
+            "type": "text",
+            "label": "Name",
+            "field": "name",
+            "required": True,
+        },
+        {
+            "type": "oauth",
+            "field": "oauth",
+            "label": "Not used",
+            "options": {
+                "auth_type": ["oauth_client_credentials"],
+                "oauth_client_credentials": [
+                    {
+                        "oauth_field": "client_id_oauth_credentials",
+                        "label": "Client Id",
+                        "field": "client_id_oauth_credentials",
+                    },
+                    {
+                        "oauth_field": "client_secret_oauth_credentials",
+                        "label": "Client Secret",
+                        "field": "client_secret_oauth_credentials",
+                        "encrypted": True,
+                    },
+                    {
+                        "oauth_field": "endpoint_token_oauth_credentials",
+                        "label": "Token endpoint",
+                        "field": "endpoint_token_oauth_credentials",
+                    },
+                ],
+                "auth_code_endpoint": "/services/oauth2/authorize",
+                "access_token_endpoint": "/services/oauth2/token",
+                "oauth_timeout": 30,
+                "oauth_state_enabled": False,
+            },
+        },
+    ]
+    global_config_all_json.configuration[0]["entity"] = content
+
+    global_config_builder_schema = GlobalConfigBuilderSchema(global_config_all_json)
+    assert global_config_builder_schema._get_oauth_enitities(content) == [
+        {"field": "name", "label": "Name", "required": True, "type": "text"},
+        {
+            "field": "client_id_oauth_credentials",
+            "label": "Client Id",
+            "oauth_field": "client_id_oauth_credentials",
+        },
+        {
+            "encrypted": True,
+            "field": "client_secret_oauth_credentials",
+            "label": "Client Secret",
+            "oauth_field": "client_secret_oauth_credentials",
+        },
+        {
+            "field": "endpoint_token_oauth_credentials",
+            "label": "Token endpoint",
+            "oauth_field": "endpoint_token_oauth_credentials",
+        },
+        {"encrypted": True, "field": "access_token"},
+        {"encrypted": True, "field": "refresh_token"},
+        {"field": "instance_url"},
+    ]

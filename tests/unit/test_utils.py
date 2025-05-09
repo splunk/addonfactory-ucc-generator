@@ -34,6 +34,7 @@ def test_get_j2_env():
         "conf_files/tags_conf.template",
         "web_conf.template",
         "conf_files/commands_conf.template",
+        "conf_files/searchbnf_conf.template",
     ]
     assert sorted(expected_list_of_templates) == sorted(list_of_templates)
 

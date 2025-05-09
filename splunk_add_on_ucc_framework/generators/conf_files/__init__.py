@@ -25,6 +25,7 @@ from .create_web_conf import WebConf
 from .create_account_conf import AccountConf
 from .create_settings_conf import SettingsConf
 from .create_commands_conf import CommandsConf
+from .create_searchbnf_conf import SearchbnfConf
 
 __all__ = [
     "FileGenerator",
@@ -39,4 +40,5 @@ __all__ = [
     "AccountConf",
     "SettingsConf",
     "CommandsConf",
+    "SearchbnfConf",
 ]

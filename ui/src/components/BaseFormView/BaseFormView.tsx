@@ -44,6 +44,7 @@ import {
     ChangeRecord,
     EntitiesAllowingModifications,
     CustomValidatorFunc,
+    AvaillableOAuthTypes,
 } from '../../types/components/BaseFormTypes';
 import {
     getAllFieldsWithModifications,
@@ -245,7 +246,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             if (e.type === 'oauth') {
                 this.isOAuth = true;
                 if (props.page === PAGE_CONF && props.serviceName === 'account') {
-                    const authType: ('basic' | 'oauth')[] = e?.options?.auth_type;
+                    const authType: Array<AvaillableOAuthTypes> = e?.options?.auth_type;
                     this.isoauthState =
                         typeof e?.options?.oauth_state_enabled !== 'undefined'
                             ? e?.options?.oauth_state_enabled
@@ -270,6 +271,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         const content = {
                             basic: 'Basic Authentication',
                             oauth: 'OAuth 2.0 Authentication',
+                            oauth_client_credentials: 'OAuth 2.0 Client Credentials',
                         };
 
                         // Defining Entity for auth_type in entitylist of globalConfig
