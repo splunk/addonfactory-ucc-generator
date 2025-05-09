@@ -35,6 +35,7 @@ from splunk_add_on_ucc_framework.generators.conf_files import (
     WebConf,
     AccountConf,
     SettingsConf,
+    CommandsConf,
     SearchbnfConf,
 )
 
@@ -60,6 +61,7 @@ GEN_FILE_LIST: List[FileClass] = [
     ),
     FileClass("eventtypes.conf", EventtypesConf, ["default"]),
     FileClass("tags.conf", TagsConf, ["default"]),
+    FileClass("commands.conf", CommandsConf, ["default"]),
     FileClass("searchbnf.conf", SearchbnfConf, ["default"]),
     FileClass("_account.conf", AccountConf, ["README"]),
     FileClass("_settings.conf", SettingsConf, ["README"]),

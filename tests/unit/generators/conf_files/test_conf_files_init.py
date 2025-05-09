@@ -11,6 +11,7 @@ def test___init__conf():
         "InputsConf",
         "AccountConf",
         "SettingsConf",
+        "CommandsConf",
         "SearchbnfConf",
     ]
     expected_modules = [
@@ -25,6 +26,7 @@ def test___init__conf():
         "create_web_conf",
         "create_account_conf",
         "create_settings_conf",
+        "create_commands_conf",
         "create_searchbnf_conf",
     ]
     import splunk_add_on_ucc_framework.generators.conf_files as conf
