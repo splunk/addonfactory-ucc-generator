@@ -36,6 +36,8 @@ def test_get_j2_env():
         "custom_command/dataset_processing.template",
         "custom_command/generating.template",
         "custom_command/streaming.template",
+        "conf_files/commands_conf.template",
+        "conf_files/searchbnf_conf.template",
     ]
     assert sorted(expected_list_of_templates) == sorted(list_of_templates)
 
