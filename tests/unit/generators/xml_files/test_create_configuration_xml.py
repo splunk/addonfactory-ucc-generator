@@ -61,7 +61,7 @@ def test_generate_xml_without_configuration(
         file_paths = configuration_xml.generate()
 
         # Assert that no files are returned since no dashboard is configured
-        assert file_paths == {"": ""}
+        assert file_paths == {}
 
 
 @patch(
