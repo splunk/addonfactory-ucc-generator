@@ -40,8 +40,8 @@ const mockCustomCellModule = (variant: 'valid' | 'error' | 'noRender' | 'undefin
     }));
 };
 
-const waitForRow = async () => {
-    const nameRegexp = new RegExp(`example_input_one${intervalBase}0`, 'i');
+const waitForRow = async (interval = 10) => {
+    const nameRegexp = new RegExp(`example_input_one${interval}`, 'i');
     // wait for the first row to be rendered
     const row = await screen.findByRole('row', { name: nameRegexp });
 
@@ -87,8 +87,7 @@ test.each([
     // render only one row as mock for custom cell work just for the first time
     // so we need to render only one row
     mocksAndRenderTable(interval);
-    const nameRegexp = new RegExp(`example_input_one${interval}`, 'i');
-    const row = await screen.findByRole('row', { name: nameRegexp });
+    const row = await waitForRow(interval);
 
     const customCell = await within(row).findByText(expected);
     expect(customCell).toBeInTheDocument();

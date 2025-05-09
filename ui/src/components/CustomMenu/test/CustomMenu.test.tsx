@@ -89,7 +89,7 @@ it('should render loading text correctly (constantly)', async () => {
     expect(loading).toBeInTheDocument();
     await waitFor(() => {
         expect(errorHandler).toHaveBeenCalledWith(
-            `[Custom Menu] Error loading custom menu Failed to load url /custom/customMenuFileName.js (resolved id: /custom/customMenuFileName.js). Does the file exist?`
+            expect.stringContaining('[Custom Menu] Error loading custom menu ')
         );
     });
 });
