@@ -15,7 +15,7 @@ export function loadDashboardJsonDefinition(
     fileName: string,
     dataHandler: (data: Record<string, unknown>) => void
 ) {
-    fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
+    fetch(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}`)
         .then((res) => res.json())
         .then((external) => {
             dataHandler(external);
