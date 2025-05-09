@@ -1,5 +1,6 @@
 [example_input_one://<name>]
 account = 
+dependent_dropdown = 
 example_help_link = 
 example_textarea_field = Help message
 hard_disabled = 
@@ -23,7 +24,7 @@ apis =
 example_help_link = 
 hard_disabled = 
 hide_in_ui = 
-index = (Default: default)
+index = An index is a type of data repository. Select the index in which you want to collect the events. (Default: default)
 input_two_checkbox = This is an example checkbox for the input two entity
 input_two_multiple_select = This is an example multipleSelect for input two entity
 input_two_radio = This is an example radio button for the input two entity

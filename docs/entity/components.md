@@ -107,7 +107,8 @@ A clear button is visible to the right of the dropdown when this field is marked
     "type": "singleSelect",
     "label": "Example Account",
     "options": {
-        "referenceName": "account"
+        "referenceName": "account",
+        "allowList": "^[a-zA-Z]\\w*$"
     },
     "help": "",
     "field": "account",

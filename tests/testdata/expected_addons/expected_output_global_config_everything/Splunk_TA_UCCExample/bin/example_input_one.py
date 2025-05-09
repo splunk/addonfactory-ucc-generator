@@ -39,6 +39,12 @@ class EXAMPLE_INPUT_ONE(smi.Script):
         )
         scheme.add_argument(
             smi.Argument(
+                'dependent_dropdown',
+                required_on_create=False,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
                 'singleSelectTest',
                 required_on_create=False,
             )

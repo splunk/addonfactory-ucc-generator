@@ -48,6 +48,13 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'dependent_dropdown',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
         'singleSelectTest',
         required=False,
         encrypted=False,
