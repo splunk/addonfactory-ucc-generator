@@ -16,8 +16,11 @@ import {
 } from '../stories/rowDataMockup';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { invariant } from '../../../util/invariant';
-// eslint-disable-next-line jest/no-mocks-import
-import { doMockPostRequestBodyToString } from '../../../util/__mocks__/mockApi';
+
+vi.mock('../../../util/api', async () => ({
+    ...(await vi.importActual('../../../util/api')),
+    postRequest: (await vi.importActual('../../../util/__mocks__/mockApi')).postRequest,
+}));
 
 const renderTable = () => {
     const props = {
@@ -52,7 +55,6 @@ const getRowData = (isDisabled: boolean) => {
 };
 
 const serverUseDisabledForEntity = (entity: string, isDisabledTrue: boolean) => {
-    doMockPostRequestBodyToString();
     server.use(
         http.post(`/servicesNS/nobody/-/splunk_ta_uccexample_example_input_one/${entity}`, () =>
             HttpResponse.json(

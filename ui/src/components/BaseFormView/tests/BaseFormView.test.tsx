@@ -34,30 +34,6 @@ const SERVICE_NAME = 'account';
 const STANZA_NAME = 'stanzaName';
 const CUSTOM_MODULE = 'CustomControl';
 
-export async function mockPostRequest<TData>({
-    endpointUrl,
-    params = {},
-    body,
-    signal,
-    handleError,
-    callbackOnError,
-}: RequestParams) {
-    const url = createUrl(endpointUrl, params);
-    const defaultInit = getDefaultFetchInit();
-    const headers = {
-        ...defaultInit.headers,
-        'Content-Type': 'application/x-www-form-urlencoded',
-    } satisfies HeadersInit;
-
-    const options = {
-        method: 'POST',
-        headers,
-        signal,
-        body: body?.toString(),
-    } satisfies RequestInit;
-    return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
-}
-
 vi.mock('../../../util/api', async () => ({
     ...(await vi.importActual('../../../util/api')),
     postRequest: vi.fn(
@@ -75,7 +51,7 @@ vi.mock('../../../util/api', async () => ({
                 ...defaultInit.headers,
                 'Content-Type': 'application/x-www-form-urlencoded',
             } satisfies HeadersInit;
-
+            console.log('direct mock body', body);
             const options = {
                 method: 'POST',
                 headers,

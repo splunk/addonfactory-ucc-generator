@@ -1,10 +1,10 @@
-import { vi } from 'vitest';
+// import { vi } from 'vitest';
 
 /* eslint-disable no-console */
 import { getDefaultFetchInit } from '@splunk/splunk-utils/fetch';
 import { createUrl, fetchWithErrorHandling, RequestParams } from '../api';
 
-export async function mockPostRequest<TData>({
+export async function postRequest<TData>({
     endpointUrl,
     params = {},
     body,
@@ -19,9 +19,6 @@ export async function mockPostRequest<TData>({
         'Content-Type': 'application/x-www-form-urlencoded',
     } satisfies HeadersInit;
 
-    console.log('body', body);
-    console.log('body?.toString()', body?.toString());
-
     const options = {
         method: 'POST',
         headers,
@@ -30,14 +27,3 @@ export async function mockPostRequest<TData>({
     } satisfies RequestInit;
     return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
 }
-
-export const doMockPostRequestBodyToString = () => {
-    vi.doMock('../../../util/api', async () => {
-        const originalModule = await vi.importActual('../../../util/api');
-
-        return {
-            ...originalModule,
-            postRequest: vi.fn(mockPostRequest), // Redirect `postRequest` to `mockPostRequest`
-        };
-    });
-};

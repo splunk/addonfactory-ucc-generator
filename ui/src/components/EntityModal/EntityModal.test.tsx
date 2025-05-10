@@ -3,6 +3,8 @@ import React from 'react';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
+import { getDefaultFetchInit } from '@splunk/splunk-utils/fetch';
+
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -27,8 +29,11 @@ import { Mode } from '../../constants/modes';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
-// eslint-disable-next-line jest/no-mocks-import
-import { doMockPostRequestBodyToString } from '../../util/__mocks__/mockApi';
+
+vi.mock('../../util/api', async () => ({
+    ...(await vi.importActual('../../util/api')),
+    postRequest: (await vi.importActual('../../util/__mocks__/mockApi')).postRequest,
+}));
 
 const getDisabledField = (fieldName: string) => {
     const elements = screen.getAllByTestId('text');
@@ -487,7 +492,6 @@ describe('Oauth - separated endpoint authorization', () => {
     it('check if correct auth token endpoint created', async () => {
         const requestHandler = vi.fn();
 
-        doMockPostRequestBodyToString();
         server.use(
             http.post('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth', ({ request }) => {
                 requestHandler(request);
