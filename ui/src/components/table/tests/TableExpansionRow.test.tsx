@@ -251,7 +251,7 @@ it('Should display error message as getDLRows throws Error', async () => {
     await waitFor(() => {
         expect(mockConsoleError).toHaveBeenCalledWith(
             '[Custom Control] Something went wrong while calling getDLRows. Error: Error getDLRows method Error during execution'
-        ); // to be changed to Custom Cell
+        );
     });
 
     await waitFor(() => {
@@ -276,7 +276,7 @@ it('Should display error message as render throws Error', async () => {
     await waitFor(() => {
         expect(mockConsoleError).toHaveBeenCalledWith(
             '[Custom Control] Something went wrong while calling render. Error: Error render method Error during execution'
-        ); // to be changed to Custom Cell
+        );
     });
 
     const expandedRow = (await screen.findAllByRole('row')).find((row) => {

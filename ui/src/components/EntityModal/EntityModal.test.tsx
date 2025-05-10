@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi, Mock } from 'vitest';
 import React from 'react';
-import { act, render, screen, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
+import { z } from 'zod';
 
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
@@ -19,6 +20,7 @@ import {
     getConfigWithSeparatedEndpointsOAuth,
     getConfigWarningMessageAlwaysDisplay,
     WARNING_MESSAGES_ALWAYS_DISPLAY,
+    getConfigWithAllTypesOfOauth,
 } from './TestConfig';
 import {
     ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
@@ -28,6 +30,7 @@ import { Mode } from '../../constants/modes';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
+import { OAuthFields } from '../../types/globalConfig/entities';
 
 vi.mock('../../util/api', async () => ({
     ...(await vi.importActual('../../util/api')),
@@ -560,5 +563,171 @@ describe('Oauth - separated endpoint authorization', () => {
         });
 
         expect(screen.getByText(ERROR_STATE_MISSING_TRY_AGAIN)).toBeInTheDocument();
+    });
+});
+
+describe('Oauth2 - client credentials', () => {
+    const props = {
+        serviceName: 'account',
+        mode: 'create',
+        stanzaName: undefined,
+        formLabel: 'formLabel',
+        page: 'configuration',
+        groupName: '',
+        open: true,
+        handleRequestClose: () => {},
+        returnFocus: () => {},
+    } satisfies EntityModalProps;
+
+    let handleRequestClose: Mock<() => void>;
+
+    beforeEach(() => {
+        handleRequestClose = vi.fn();
+    });
+
+    const getOauthFields = (oauthCredsFields: Array<z.infer<typeof OAuthFields>>) => {
+        return oauthCredsFields.map((field) => {
+            const oauthField = screen.getByRole('textbox', {
+                name: field.label,
+            });
+            expect(oauthField).toBeInTheDocument();
+            return { ...field, component: oauthField };
+        });
+    };
+
+    const setUpConfigAllOauth = () => {
+        const newConfig = getConfigWithAllTypesOfOauth();
+        setUnifiedConfig(newConfig);
+        return newConfig;
+    };
+
+    const renderModalWithProps = () => {
+        render(<EntityModal {...props} handleRequestClose={handleRequestClose} />);
+    };
+
+    it('Oauth client credentials - check if correctly renders', async () => {
+        const usedConfig = setUpConfigAllOauth();
+        renderModalWithProps();
+
+        const oauthEntity = usedConfig.pages.configuration.tabs[0].entity.find(
+            (field) => field.type === 'oauth'
+        );
+
+        const oauthCredsFields = oauthEntity?.options.oauth_client_credentials;
+
+        const oauthSelector = screen.getByRole('combobox', {
+            name: 'Auth Type',
+        });
+        expect(oauthSelector).toBeInTheDocument();
+
+        expect(oauthSelector).toHaveAttribute('data-test-value', 'basic');
+
+        const user = userEvent.setup();
+
+        await user.click(oauthSelector);
+
+        const oauthClientCredentials = screen.getByRole('option', {
+            name: 'OAuth 2.0 Client Credentials',
+        });
+        expect(oauthClientCredentials).toBeInTheDocument();
+
+        await user.click(oauthClientCredentials);
+        expect(oauthSelector).toHaveAttribute('data-test-value', 'oauth_client_credentials');
+
+        invariant(oauthCredsFields, 'Oauth client credentials fields are not present');
+
+        const oauthFields = getOauthFields(oauthCredsFields);
+
+        const [oauthField1, oauthField2, oauthField3, oauthField4] = oauthFields;
+        expect(oauthField1.component).toHaveValue(String(oauthField1.defaultValue));
+
+        expect(oauthField2.component).toHaveValue(String(oauthField2.defaultValue));
+        expect(oauthField3.component).toHaveValue('');
+
+        expect(oauthField4.component).toHaveValue(String(oauthField4.defaultValue));
+        expect(oauthField4.component).toHaveAttribute('readonly');
+    });
+
+    it('Oauth client credentials - check if correctly sends data', async () => {
+        const requestHandler = vi.fn();
+        server.use(
+            http.post(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_account?output_mode=json',
+                async ({ request }) => {
+                    const info = await request.formData();
+                    const accumulator: Record<string, string> = {};
+                    info.forEach((value, key) => {
+                        accumulator[key] = String(value);
+                    });
+
+                    requestHandler(accumulator);
+
+                    const res = HttpResponse.json({ entry: [accumulator] }, { status: 200 });
+                    return res;
+                }
+            )
+        );
+
+        const usedConfig = setUpConfigAllOauth();
+        renderModalWithProps();
+
+        const oauthEntity = usedConfig.pages.configuration.tabs[0].entity.find(
+            (field) => field.type === 'oauth'
+        );
+
+        const oauthCredsFields = oauthEntity?.options.oauth_client_credentials;
+
+        const oauthSelector = screen.getByRole('combobox', {
+            name: 'Auth Type',
+        });
+        expect(oauthSelector).toBeInTheDocument();
+
+        const user = userEvent.setup();
+
+        await user.click(oauthSelector);
+
+        const oauthClientCredentials = screen.getByRole('option', {
+            name: 'OAuth 2.0 Client Credentials',
+        });
+        expect(oauthClientCredentials).toBeInTheDocument();
+
+        await user.click(oauthClientCredentials);
+
+        invariant(oauthCredsFields, 'Oauth client credentials fields are not present');
+        const oauthFields = getOauthFields(oauthCredsFields);
+
+        const [oauthField1, oauthField2, oauthField3, oauthField4] = oauthFields;
+
+        await user.type(oauthField1.component, 'Client Id - filled');
+        await user.type(oauthField2.component, 'Secret Client Secret - filled');
+        await user.type(oauthField3.component, 'Client Token - filled');
+
+        await user.type(oauthField4.component, 'Disabled - filled');
+        // no effect executed as field is disabled
+        expect(oauthField4.component).toHaveValue(String(oauthField4.defaultValue));
+
+        const addButton = screen.getByRole('button', { name: /add/i });
+        expect(addButton).toBeInTheDocument();
+
+        await user.click(addButton);
+
+        expect(requestHandler).toHaveBeenCalledTimes(1);
+
+        expect(requestHandler).toHaveBeenCalledWith({
+            auth_type: 'oauth_client_credentials',
+            basic_oauth_text_jest_test: '',
+            client_id: '',
+            client_id_oauth_credentials: 'Secret credentials Client IdClient Id - filled',
+            client_secret: '',
+            client_secret_oauth_credentials: 'Secret Client SecretSecret Client Secret - filled',
+            endpoint_authorize: '',
+            endpoint_token: '',
+            endpoint_token_oauth_credentials: 'Client Token - filled',
+            oauth_credentials_some_disabled_field: 'Disabled field value',
+        });
+
+        await waitFor(() => {
+            expect(handleRequestClose).toHaveBeenCalled();
+        });
     });
 });
