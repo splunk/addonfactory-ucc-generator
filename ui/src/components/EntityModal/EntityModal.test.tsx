@@ -3,7 +3,6 @@ import React from 'react';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { getDefaultFetchInit } from '@splunk/splunk-utils/fetch';
 
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';

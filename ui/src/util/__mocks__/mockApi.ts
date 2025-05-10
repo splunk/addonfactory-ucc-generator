@@ -1,6 +1,3 @@
-// import { vi } from 'vitest';
-
-/* eslint-disable no-console */
 import { getDefaultFetchInit } from '@splunk/splunk-utils/fetch';
 import { createUrl, fetchWithErrorHandling, RequestParams } from '../api';
 
