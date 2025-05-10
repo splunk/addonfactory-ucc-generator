@@ -125,7 +125,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-fixed-jsdom": "^0.0.9",
     "jest-image-snapshot": "^6.4.0",
-    "msw": "2.7.5",
+    "msw": "^2.8.2",
     "jsdom": "^26.0.0",
     "license-webpack-plugin": "^4.0.2",
     "msw-storybook-addon": "^2.0.4",
