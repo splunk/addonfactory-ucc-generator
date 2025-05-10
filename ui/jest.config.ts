@@ -11,6 +11,7 @@ export default {
     restoreMocks: true,
     // Coverage
     collectCoverage: true,
+    coverageReporters: ['json', 'text', 'lcov', 'json-summary'],
     collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
     coveragePathIgnorePatterns: [
         '/node_modules/',
