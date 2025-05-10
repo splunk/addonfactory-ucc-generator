@@ -16,6 +16,8 @@ import { CustomCellMock as MockCustomCell } from './mocks/CustomCellMock';
 import { CustomCellMockError as MockCustomCellError } from './mocks/CustomCellMockError';
 import { CustomCellMockNoRender as MockCustomCellNoRender } from './mocks/CustomCellMockNoRender';
 import { consoleError } from '../../../../test.setup';
+// eslint-disable-next-line jest/no-mocks-import
+import { doMockPostRequestBodyToString } from '../../../util/__mocks__/mockApi';
 
 const inputName = 'example_input_one';
 const intervalBase = 1;
@@ -153,6 +155,7 @@ test('should update custom Cell Row when Input has changed', async () => {
     // get first and only row
     const inputRow = await screen.findByRole('row', { name: /example_input_one11/i });
 
+    doMockPostRequestBodyToString();
     // simulate the server response for the post request
     server.use(
         http.post(

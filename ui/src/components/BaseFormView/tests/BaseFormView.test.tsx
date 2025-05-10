@@ -24,6 +24,8 @@ import { server } from '../../../mocks/server';
 import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
 import { Mode } from '../../../constants/modes';
 import { StandardPages } from '../../../types/components/shareableTypes';
+// eslint-disable-next-line jest/no-mocks-import
+import { doMockPostRequestBodyToString } from '../../../util/__mocks__/mockApi';
 
 const handleFormSubmit = vi.fn();
 
@@ -224,6 +226,8 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, INTERVAL_INPUT);
 
+        doMockPostRequestBodyToString();
+
         server.use(
             http.post(
                 '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_four',
@@ -301,6 +305,8 @@ describe('Verify if submiting BaseFormView works', () => {
 
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, intervalInputValue);
+
+        doMockPostRequestBodyToString();
 
         server.use(
             http.post(

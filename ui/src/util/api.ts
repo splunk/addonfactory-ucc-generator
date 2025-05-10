@@ -23,7 +23,7 @@ export function generateEndPointUrl(name: string) {
 
 const DEFAULT_PARAMS = { output_mode: 'json' };
 
-function createUrl(endpointUrl: string, params: ParamsRecord): URL {
+export function createUrl(endpointUrl: string, params: ParamsRecord): URL {
     const url = new URL(
         createRESTURL(endpointUrl, { app, owner: 'nobody' }),
         window.location.origin
@@ -40,7 +40,7 @@ async function handleErrorResponse(response: Response): Promise<never> {
     throw new ResponseError({ response, message });
 }
 
-async function fetchWithErrorHandling<TData>(
+export async function fetchWithErrorHandling<TData>(
     url: URL,
     options: RequestInit,
     handleError: boolean,

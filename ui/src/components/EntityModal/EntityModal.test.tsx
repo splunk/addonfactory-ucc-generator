@@ -27,6 +27,8 @@ import { Mode } from '../../constants/modes';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
+// eslint-disable-next-line jest/no-mocks-import
+import { doMockPostRequestBodyToString } from '../../util/__mocks__/mockApi';
 
 const getDisabledField = (fieldName: string) => {
     const elements = screen.getAllByTestId('text');
@@ -484,6 +486,8 @@ describe('Oauth - separated endpoint authorization', () => {
 
     it('check if correct auth token endpoint created', async () => {
         const requestHandler = vi.fn();
+
+        doMockPostRequestBodyToString();
         server.use(
             http.post('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth', ({ request }) => {
                 requestHandler(request);

@@ -19,6 +19,8 @@ import { invariant } from '../../../util/invariant';
 import { MOCK_CONFIG } from './mocks';
 import { GlobalConfig } from '../../../publicApi';
 import { consoleError } from '../../../../test.setup';
+// eslint-disable-next-line jest/no-mocks-import
+import { doMockPostRequestBodyToString } from '../../../util/__mocks__/mockApi';
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -178,6 +180,9 @@ it('should correctly display custom Expansion Row for Input', async () => {
     setup();
     const inputRow = await screen.findByRole('row', { name: `row-${inputName}` });
     consoleError.mockImplementation(() => {});
+
+    doMockPostRequestBodyToString();
+
     // simulate the server response for the post request
     server.use(
         http.post(
