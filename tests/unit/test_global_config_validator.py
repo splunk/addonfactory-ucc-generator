@@ -15,6 +15,7 @@ from splunk_add_on_ucc_framework.global_config_validator import (
     should_warn_on_empty_validators,
 )
 from splunk_add_on_ucc_framework import global_config as global_config_lib
+from unittest.mock import patch
 
 
 @pytest.mark.parametrize(
@@ -25,7 +26,8 @@ from splunk_add_on_ucc_framework import global_config as global_config_lib
         "valid_config_only_logging.json",
     ],
 )
-def test_config_validation_when_valid(filename):
+@patch("os.path.isfile", return_value=True)
+def test_config_validation_when_valid(mock_isFile, filename):
     global_config_path = helpers.get_testdata_file_path(filename)
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
@@ -75,6 +77,10 @@ def test_autocompletefields_children_support_integer_values():
 @pytest.mark.parametrize(
     "filename,exception_message",
     [
+        (
+            "invalid_config_for_custom_search_command.json",
+            "generatetext.py is not present in `bin` directory. Please ensure the file exists.",
+        ),
         (
             "invalid_config_no_configuration_tabs.json",
             "[] is too short",
@@ -353,6 +359,118 @@ def test_config_validation_when_error(filename, exception_message):
 
     (msg,) = exc_info.value.args
     assert msg == exception_message
+
+
+@pytest.mark.parametrize(
+    "filename,invalid_custom_search_command,exception_message",
+    [
+        (
+            "invalid_config_for_custom_search_command.json",
+            [
+                {
+                    "commandName": "generatetextcommand",
+                    "fileName": "generatetext.py",
+                    "commandType": "generating",
+                    "requiredSearchAssistant": True,
+                    "description": " This command generates COUNT occurrences of a TEXT string.",
+                    "arguments": [
+                        {
+                            "name": "text",
+                        }
+                    ],
+                }
+            ],
+            "One of the attributes among `description`, `usage`, `syntax` "
+            "is not been defined in globalConfig. Define them as requiredSearchAssistant is set to True.",
+        ),
+        (
+            "invalid_config_for_custom_search_command.json",
+            [
+                {
+                    "commandName": "generatetext",
+                    "fileName": "generatetext.py",
+                    "commandType": "generating",
+                    "requiredSearchAssistant": False,
+                    "arguments": [
+                        {
+                            "name": "text",
+                        }
+                    ],
+                }
+            ],
+            "Filename: generatetext and CommandName: generatetext should not be same for custom search command.",
+        ),
+        (
+            "invalid_config_for_custom_search_command.json",
+            [
+                {
+                    "commandName": "abstract",
+                    "fileName": "generatetext.py",
+                    "commandType": "generating",
+                    "requiredSearchAssistant": False,
+                    "arguments": [
+                        {
+                            "name": "text",
+                        }
+                    ],
+                }
+            ],
+            "CommandName: abstract cannot have the same name as Splunk built-in command.",
+        ),
+    ],
+)
+@patch("os.path.isfile", return_value=True)
+def test_validate_custom_search_command(
+    mock_isFile, filename, invalid_custom_search_command, exception_message
+):
+    global_config_path = helpers.get_testdata_file_path(filename)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+    global_config._content["customSearchCommand"] = invalid_custom_search_command
+    with pytest.raises(GlobalConfigValidatorException) as exc_info:
+        validator.validate()
+
+    (msg,) = exc_info.value.args
+    assert msg == exception_message
+
+
+@pytest.mark.parametrize(
+    "filename,valid_custom_search_command,warning_message",
+    [
+        (
+            "invalid_config_for_custom_search_command.json",
+            [
+                {
+                    "commandName": "generatetextcommand",
+                    "fileName": "generatetext.py",
+                    "commandType": "generating",
+                    "requiredSearchAssistant": False,
+                    "description": " This command generates COUNT occurrences of a TEXT string.",
+                    "arguments": [
+                        {
+                            "name": "text",
+                        }
+                    ],
+                }
+            ],
+            "requiredSearchAssistant is set to false "
+            "but attributes required for 'searchbnf.conf' is defined which is not required.",
+        ),
+    ],
+)
+@patch("os.path.isfile", return_value=True)
+def test_validate_custom_search_command_warning_msg(
+    mock_isFile, filename, valid_custom_search_command, warning_message, caplog
+):
+    global_config_path = helpers.get_testdata_file_path(filename)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
+
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+    global_config._content["customSearchCommand"] = valid_custom_search_command
+    validator.validate()
+
+    assert warning_message in caplog.text
 
 
 def test_config_validation_modifications_on_change():
