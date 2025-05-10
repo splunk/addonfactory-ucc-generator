@@ -39,7 +39,7 @@ The input script `example_input_one` will import this module and call its method
 The file must contain the following two functions:
 
 - `validate_input(definition: smi.ValidationDefinition)`
-- `stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter)`
+- `stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter, modular_input: smi.Script)`
 
 ```python
 from splunklib import modularinput as smi
@@ -49,7 +49,7 @@ def validate_input(definition: smi.ValidationDefinition):
     ...
 
 
-def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
+def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter, modular_input: smi.Script):
     ...
 ```
 
