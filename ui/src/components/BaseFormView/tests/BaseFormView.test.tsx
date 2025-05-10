@@ -24,8 +24,6 @@ import { server } from '../../../mocks/server';
 import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
 import { Mode } from '../../../constants/modes';
 import { StandardPages } from '../../../types/components/shareableTypes';
-// eslint-disable-next-line jest/no-mocks-import
-import { doMockPostRequestBodyToString } from '../../../util/__mocks__/mockApi';
 
 const handleFormSubmit = vi.fn();
 
@@ -226,7 +224,15 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, INTERVAL_INPUT);
 
-        doMockPostRequestBodyToString();
+        vi.doMock('../../../util/api', async () => {
+            const originalModule = await vi.importActual('../../../util/api');
+            const { mockPostRequest } = await import('../../../util/__mocks__/mockApi');
+
+            return {
+                ...originalModule,
+                postRequest: vi.fn(mockPostRequest), // Redirect `postRequest` to `mockPostRequest`
+            };
+        });
 
         server.use(
             http.post(
@@ -306,8 +312,15 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, intervalInputValue);
 
-        doMockPostRequestBodyToString();
+        vi.doMock('../../../util/api', async () => {
+            const originalModule = await vi.importActual('../../../util/api');
+            const { mockPostRequest } = await import('../../../util/__mocks__/mockApi');
 
+            return {
+                ...originalModule,
+                postRequest: vi.fn(mockPostRequest), // Redirect `postRequest` to `mockPostRequest`
+            };
+        });
         server.use(
             http.post(
                 '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_two',
