@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
+import { getDefaultFetchInit } from '@splunk/splunk-utils/fetch';
 
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { getBuildDirPath } from '../../../util/script';
@@ -24,6 +25,7 @@ import { server } from '../../../mocks/server';
 import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
 import { Mode } from '../../../constants/modes';
 import { StandardPages } from '../../../types/components/shareableTypes';
+import { createUrl, fetchWithErrorHandling, RequestParams } from '../../../util/api.ts';
 
 const handleFormSubmit = vi.fn();
 
@@ -31,6 +33,59 @@ const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
 const STANZA_NAME = 'stanzaName';
 const CUSTOM_MODULE = 'CustomControl';
+
+export async function mockPostRequest<TData>({
+    endpointUrl,
+    params = {},
+    body,
+    signal,
+    handleError,
+    callbackOnError,
+}: RequestParams) {
+    const url = createUrl(endpointUrl, params);
+    const defaultInit = getDefaultFetchInit();
+    const headers = {
+        ...defaultInit.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+    } satisfies HeadersInit;
+
+    const options = {
+        method: 'POST',
+        headers,
+        signal,
+        body: body?.toString(),
+    } satisfies RequestInit;
+    return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
+}
+
+vi.mock('../../../util/api', async () => ({
+    ...(await vi.importActual('../../../util/api')),
+    postRequest: vi.fn(
+        async ({
+            endpointUrl,
+            params = {},
+            body,
+            signal,
+            handleError,
+            callbackOnError,
+        }: RequestParams) => {
+            const url = createUrl(endpointUrl, params);
+            const defaultInit = getDefaultFetchInit();
+            const headers = {
+                ...defaultInit.headers,
+                'Content-Type': 'application/x-www-form-urlencoded',
+            } satisfies HeadersInit;
+
+            const options = {
+                method: 'POST',
+                headers,
+                signal,
+                body: body?.toString(),
+            } satisfies RequestInit;
+            return fetchWithErrorHandling(url, options, handleError, callbackOnError);
+        }
+    ),
+}));
 
 const getElementsByGroup = (group: string) => {
     const firstField = screen.queryByText(`Text 1 Group ${group}`);
@@ -224,16 +279,6 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, INTERVAL_INPUT);
 
-        vi.doMock('../../../util/api', async () => {
-            const originalModule = await vi.importActual('../../../util/api');
-            const { mockPostRequest } = await import('../../../util/__mocks__/mockApi');
-
-            return {
-                ...originalModule,
-                postRequest: vi.fn(mockPostRequest), // Redirect `postRequest` to `mockPostRequest`
-            };
-        });
-
         server.use(
             http.post(
                 '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_four',
@@ -312,15 +357,6 @@ describe('Verify if submiting BaseFormView works', () => {
         const intervalInput = getEntityTextBox('interval');
         await userEvent.type(intervalInput, intervalInputValue);
 
-        vi.doMock('../../../util/api', async () => {
-            const originalModule = await vi.importActual('../../../util/api');
-            const { mockPostRequest } = await import('../../../util/__mocks__/mockApi');
-
-            return {
-                ...originalModule,
-                postRequest: vi.fn(mockPostRequest), // Redirect `postRequest` to `mockPostRequest`
-            };
-        });
         server.use(
             http.post(
                 '/servicesNS/nobody/-/demo_addon_for_splunk_example_input_two',
