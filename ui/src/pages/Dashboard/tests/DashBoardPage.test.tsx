@@ -1,16 +1,17 @@
+import { expect, it } from 'vitest';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { http, HttpResponse, RequestHandler } from 'msw';
 
 import DashboardPage from '../DashboardPage';
 import { server } from '../../../mocks/server';
-
 import { DASHBOARD_JSON_MOCKS } from './mockJs';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup';
 
 it('dashboard page renders waiting spinner', async () => {
+    consoleError.mockImplementation(() => {});
     server.use(http.get('/custom/panels_to_display.json', () => HttpResponse.json({})));
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);

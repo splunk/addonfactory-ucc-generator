@@ -1,9 +1,10 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ErrorBoundary, { getRestrictQueryByAllServices } from './ErrorBoundary';
-import { consoleError } from '../../../jest.setup';
 import { setUnifiedConfig } from '../../util/util';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
+import { consoleError } from '../../../test.setup';
 
 const ErrorComponent = () => {
     throw new Error('Throw error from component');
@@ -27,7 +28,7 @@ it('should render children when no error occurs', () => {
 
 it('should render Error Boundary component when a child component throws an error', () => {
     mockGlobalConfig();
-    const consoleHandler = jest.fn();
+    const consoleHandler = vi.fn();
     // Mock console.error to suppress error messages in the test output
     consoleError.mockImplementation(consoleHandler);
 

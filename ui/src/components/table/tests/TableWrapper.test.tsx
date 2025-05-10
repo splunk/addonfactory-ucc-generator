@@ -1,4 +1,5 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
@@ -16,8 +17,8 @@ import {
     SIMPLE_NAME_TABLE_MOCK_DATA,
 } from '../stories/configMockups';
 
-const handleRequestModalOpen = jest.fn();
-const handleOpenPageStyleDialog = jest.fn();
+const handleRequestModalOpen = vi.fn();
+const handleOpenPageStyleDialog = vi.fn();
 
 const props = {
     page: 'configuration',

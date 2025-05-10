@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -7,49 +8,45 @@ import { setUnifiedConfig } from '../../../util/util';
 import CustomMenu from '../CustomMenu';
 import mockCustomMenu from './mocks/CustomMenuMock';
 import { getGlobalConfigMockCustomMenu, GroupsMenuType } from './mocks/globalConfigMock';
+import { consoleError } from '../../../../test.setup';
 
 const MODULE = 'customMenuFileName';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
-const waitForCustomElementLoad = async () => {
-    await waitFor(async () => {
+const waitForLoadingDisappear = async () => {
+    return waitFor(async () => {
         const loading = screen.queryByText('Loading...');
-        if (loading) {
-            await waitFor(() => expect(loading).not.toHaveTextContent('Loading...'));
-        }
+        expect(loading).not.toBeInTheDocument();
     });
+};
+
+const doCustomMenuMock = () => {
+    vi.doMock(`${getBuildDirPath()}/custom/${MODULE}.js`, () => ({
+        default: mockCustomMenu,
+    }));
+};
+
+const doCustomMenuUnMock = () => {
+    vi.doUnmock(`${getBuildDirPath()}/custom/${MODULE}.js`);
 };
 
 const setup = (groupsMenu?: GroupsMenuType) => {
     const mockConfig = getGlobalConfigMockCustomMenu(MODULE, groupsMenu);
     setUnifiedConfig(mockConfig);
 
-    jest.mock(`${getBuildDirPath()}/custom/${MODULE}.js`, () => mockCustomMenu, {
-        virtual: true,
-    });
-
     render(<CustomMenu fileName={MODULE} type="external" handleChange={handleChange} />);
 };
 
-it('should render loading text correctly (constantly)', () => {
+it('should render component and call handler correctly', async () => {
+    doCustomMenuMock();
     setup();
-    const loading = screen.getByText('Loading...');
-    expect(loading).toBeInTheDocument();
-});
-
-it('should render component Correctly', async () => {
-    setup();
-    await waitForCustomElementLoad();
-    const customMenuText = screen.getByText('Click Me! I am a button for custom menu');
-    expect(customMenuText).toBeInTheDocument();
-});
-
-it('should call handler correctly', async () => {
-    setup();
-    await waitForCustomElementLoad();
-    const customMenuText = screen.getByText('Click Me! I am a button for custom menu');
-
+    await waitForLoadingDisappear();
+    const customMenuText = await waitFor(() => {
+        const menuText = screen.getByText('Click Me! I am a button for custom menu');
+        expect(menuText).toBeInTheDocument();
+        return menuText;
+    });
     await userEvent.click(customMenuText);
     expect(handleChange).toHaveBeenCalledWith({
         service: 'example_input_one',
@@ -73,8 +70,26 @@ it('Do not render custom if group menu provided + loading disappears', async () 
             groupServices: ['example_input_two', 'example_input_four'],
         },
     ];
+    doCustomMenuMock();
+
     setup(groupsMenu);
-    await waitForCustomElementLoad();
-    const customMenuText = screen.queryByText('Click Me! I am a button for custom menu');
-    expect(customMenuText).not.toBeInTheDocument();
+    await waitForLoadingDisappear();
+    await waitFor(() => {
+        const customMenuText = screen.queryByText('Click Me! I am a button for custom menu');
+        expect(customMenuText).not.toBeInTheDocument();
+    });
+});
+
+it('should render loading text correctly (constantly)', async () => {
+    const errorHandler = vi.fn();
+    consoleError.mockImplementation(errorHandler);
+    doCustomMenuUnMock();
+    setup();
+    const loading = screen.getByText('Loading...');
+    expect(loading).toBeInTheDocument();
+    await waitFor(() => {
+        expect(errorHandler).toHaveBeenCalledWith(
+            expect.stringContaining('[Custom Menu] Error loading custom menu ')
+        );
+    });
 });

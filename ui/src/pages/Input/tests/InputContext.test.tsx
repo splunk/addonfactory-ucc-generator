@@ -2,22 +2,25 @@ import * as React from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import InputPage from '../InputPage';
 import { setUnifiedConfig } from '../../../util/util';
 import { INPUT_PAGE_CONFIG_WITH_HIDDEN_ELEMENTS_FOR_PLATFORM } from './mockConfigs';
 
-jest.mock('@splunk/search-job', () => ({
-    create: () => ({
-        getResults: () => ({
-            subscribe: (
-                callbackFunction: (params: { results: { instance_type: string }[] }) => void
-            ) => {
-                callbackFunction({ results: [{ instance_type: 'cloud' }] });
-                return { unsubscribe: () => {} };
-            },
+vi.mock('@splunk/search-job', () => ({
+    default: {
+        create: () => ({
+            getResults: () => ({
+                subscribe: (
+                    callbackFunction: (params: { results: { instance_type: string }[] }) => void
+                ) => {
+                    callbackFunction({ results: [{ instance_type: 'cloud' }] });
+                    return { unsubscribe: () => {} };
+                },
+            }),
         }),
-    }),
+    },
 }));
 
 function setup() {

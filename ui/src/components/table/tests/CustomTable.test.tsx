@@ -3,19 +3,20 @@ import { render, screen, waitForElementToBeRemoved, within } from '@testing-libr
 import Button from '@splunk/react-ui/Button';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import CustomTable from '../CustomTable';
 import { setUnifiedConfig } from '../../../util/util';
 import { ITableConfig } from '../../../types/globalConfig/pages';
 import { TableContextProvider } from '../../../context/TableContext';
-import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
 import { getBuildDirPath } from '../../../util/script';
 import { MOCK_CONFIG } from './mocks';
 import { invariant } from '../../../util/invariant';
+import mockCustomControlMockForTest from './mocks/CustomInputRowMock';
 
-const handleToggleActionClick = jest.fn();
-const handleOpenPageStyleDialog = jest.fn();
-const handleSort = jest.fn();
+const handleToggleActionClick = vi.fn();
+const handleOpenPageStyleDialog = vi.fn();
+const handleSort = vi.fn();
 
 const customRowFileName = 'CustomInputRow';
 
@@ -129,9 +130,9 @@ const SimpleComponentToUpdateCustomTable = () => {
 };
 
 function setup() {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
-        virtual: true,
-    });
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomControlMockForTest,
+    }));
 
     setUnifiedConfig(MOCK_CONFIG);
 
@@ -165,7 +166,7 @@ const moreInfoToContainName = async (inputRow: HTMLElement, name: string) => {
     if (loading) {
         await waitForElementToBeRemoved(loading);
     }
-    const allDefinitions = screen.getAllByRole('definition').map((el) => el.textContent);
+    const allDefinitions = (await screen.findAllByRole('definition')).map((el) => el.textContent);
     expect(allDefinitions).toContain(name);
     await collapseRow(inputRow);
 };
