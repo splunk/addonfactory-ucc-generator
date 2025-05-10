@@ -105,7 +105,7 @@ export async function postRequest<TData>({
         method: 'POST',
         headers,
         signal,
-        body: body?.toString(),
+        body,
     } satisfies RequestInit;
     return fetchWithErrorHandling<TData>(url, options, handleError, callbackOnError);
 }
