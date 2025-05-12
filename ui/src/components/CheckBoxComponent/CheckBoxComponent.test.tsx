@@ -1,9 +1,10 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import CheckBoxComponent from './CheckBoxComponent';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 it('should render checkbox correctly with default value', async () => {
     render(<CheckBoxComponent value handleChange={handleChange} field="fieldId" />);

@@ -1,4 +1,5 @@
 import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react';
+import { expect, it, vi } from 'vitest';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -16,12 +17,17 @@ import {
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { invariant } from '../../../util/invariant';
 
+vi.mock('../../../util/api', async () => ({
+    ...(await vi.importActual('../../../util/api')),
+    postRequest: (await vi.importActual('../../../util/__mocks__/mockApi')).postRequest,
+}));
+
 const renderTable = () => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
-        handleRequestModalOpen: jest.fn(),
-        handleOpenPageStyleDialog: jest.fn(),
+        handleRequestModalOpen: vi.fn(),
+        handleOpenPageStyleDialog: vi.fn(),
         displayActionBtnAllRows: false,
     } satisfies ITableWrapperProps;
 
