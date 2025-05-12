@@ -1,9 +1,10 @@
+import { describe, expect, it, vi } from 'vitest';
 import Validator from '../../util/Validator';
 import { validateCheckboxGroup } from './checkboxGroupValidation';
 
 describe('validateCheckboxGroup', () => {
     it('should handle required validation', () => {
-        const mockRequiredValidator = jest.fn().mockReturnValue(false);
+        const mockRequiredValidator = vi.fn().mockReturnValue(false);
         Validator.RequiredValidator = mockRequiredValidator;
 
         const result = validateCheckboxGroup('field1', 'field1/', {
@@ -21,7 +22,7 @@ describe('validateCheckboxGroup', () => {
     });
 
     it('should handle number validation', () => {
-        const mockNumberValidator = jest.fn().mockReturnValue(false);
+        const mockNumberValidator = vi.fn().mockReturnValue(false);
         Validator.NumberValidator = mockNumberValidator;
 
         const result = validateCheckboxGroup('field1', 'field1/123', {
@@ -68,7 +69,7 @@ describe('validateCheckboxGroup', () => {
     });
 
     it('should skip validation if no value provided', () => {
-        const mockNumberValidator = jest.fn().mockReturnValue(false);
+        const mockNumberValidator = vi.fn().mockReturnValue(false);
         Validator.NumberValidator = mockNumberValidator;
         const result = validateCheckboxGroup('field1', '', {
             rows: [

@@ -72,10 +72,15 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
                     /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
                         this.props.fileName
                     }.js`
-                ).then((external) => {
-                    const Control = external.default;
-                    resolve(Control as CustomMenuConstructor);
-                });
+                )
+                    .then((external) => {
+                        const Control = external.default;
+                        resolve(Control as CustomMenuConstructor);
+                    })
+                    .catch((error) => {
+                        // eslint-disable-next-line no-console
+                        console.error(`[Custom Menu] Error loading custom menu ${error.message}`);
+                    });
             } else {
                 const globalConfig = getUnifiedConfigs();
                 const appName = globalConfig.meta.name;

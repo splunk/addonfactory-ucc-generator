@@ -34,6 +34,7 @@ module.exports = {
                     '**/stories/**', // storybook stories
                     '**/tests/**',
                     '**/mocks/**',
+                    '**/__mocks__/**',
                     '**/*{.,_}{test,spec}.{ts,tsx}', // tests where the extension or filename suffix denotes that it is a test,
                     '*.{ts,js}', // js configs from the root folder
                     '*.js', // js configs from the root folder
