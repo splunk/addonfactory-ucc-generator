@@ -250,116 +250,50 @@ export function getGlobalConfigMock() {
     return GlobalConfigSchema.parse(globalConfigMock);
 }
 
-const globalConfigMockWithCustomMenu = {
-    pages: {
-        configuration: {
-            tabs: [
-                {
-                    name: 'account',
-                    table: {
-                        actions: ['edit', 'delete', 'clone'],
-                        header: [
-                            {
-                                label: 'Name',
-                                field: 'name',
-                            },
-                        ],
-                    },
-                    entity: [
-                        {
-                            type: 'text',
-                            label: 'Name',
-                            validators: [
-                                {
-                                    type: 'regex',
-                                    errorMsg:
-                                        'Account Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
-                                    pattern: '^[a-zA-Z]\\w*$',
-                                },
-                                {
-                                    type: 'string',
-                                    errorMsg: 'Length of input name should be between 1 and 100',
-                                    minLength: 1,
-                                    maxLength: 100,
-                                },
-                            ],
-                            field: 'name',
-                            help: 'A unique name for the account.',
-                            required: true,
-                        },
-                        {
-                            type: 'file',
-                            label: 'Upload File',
-                            help: "Upload service account's certificate",
-                            field: 'service_account',
-                            options: {
-                                fileSupportMessage: 'Here is the support message',
-                                supportedFileTypes: ['json'],
-                            },
-                            encrypted: true,
-                            required: true,
-                        },
-                    ],
-                    title: 'Accounts',
+export function getGlobalConfigMockWithCustomMenuStylePage() {
+    const confWithCustomMenu = {
+        ...globalConfigMock,
+        pages: {
+            ...globalConfigMock.pages,
+            inputs: {
+                ...globalConfigMock.pages.inputs,
+                menu: {
+                    src: 'CustomMenu',
+                    type: 'external',
                 },
-            ],
-            title: 'Configuration',
-            description: 'Set up your add-on',
-        },
-        inputs: {
-            services: [
-                {
-                    name: 'demo_input',
-                    entity: [
-                        {
-                            type: 'text',
-                            label: 'Name',
-                            field: 'name',
-                            help: 'A unique name for the data input.',
-                            required: true,
-                            encrypted: false,
-                        },
-                        {
-                            type: 'text',
-                            label: 'Interval',
-                            defaultValue: '300',
-                            field: 'interval',
-                            help: 'Time interval of the data input, in seconds.',
-                            required: true,
-                        },
-                    ],
-                    title: 'demo_input',
-                    style: 'page',
-                },
-            ],
-            title: 'Inputs',
-            description: 'Manage your data inputs',
-            table: {
-                actions: ['edit', 'delete', 'clone'],
-                header: [
+                services: [
                     {
-                        label: 'Name',
-                        field: 'name',
+                        ...globalConfigMock.pages.inputs.services[0],
+                        style: 'page',
                     },
                 ],
             },
-            menu: {
-                src: 'CustomMenu',
-                type: 'external',
+        },
+    };
+
+    return GlobalConfigSchema.parse(confWithCustomMenu);
+}
+
+export function getGlobalConfigMockWithCustomMenuStyleDialog() {
+    const confWithCustomMenu = {
+        ...globalConfigMock,
+        pages: {
+            ...globalConfigMock.pages,
+            inputs: {
+                ...globalConfigMock.pages.inputs,
+                menu: {
+                    src: 'CustomMenu',
+                    type: 'external',
+                },
+                services: [
+                    {
+                        ...globalConfigMock.pages.inputs.services[0],
+                        style: 'dialog',
+                    },
+                ],
             },
         },
-    },
-    meta: {
-        name: 'demo_addon_for_splunk',
-        restRoot: 'demo_addon_for_splunk',
-        version: '5.31.1R85f0e18e',
-        displayName: 'Demo Add-on for Splunk',
-        schemaVersion: '0.0.3',
-        checkForUpdates: false,
-        searchViewDefault: false,
-    },
-} satisfies z.input<typeof GlobalConfigSchema>;
+    };
 
-export function getGlobalConfigMockWithCustomMenu() {
-    return GlobalConfigSchema.parse(globalConfigMockWithCustomMenu);
+    return GlobalConfigSchema.parse(confWithCustomMenu);
 }
