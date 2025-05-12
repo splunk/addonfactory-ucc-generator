@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { getSearchUrl } from './searchUtil';
 
 describe('getSearchUrl', () => {
@@ -19,7 +20,7 @@ describe('getSearchUrl', () => {
 
     it('should handle special characters in search parameters', () => {
         const searchParams = { key1: 'value with spaces', key2: 'value&with&special=chars' };
-        const locationSpy = jest.spyOn(window, 'location', 'get');
+        const locationSpy = vi.spyOn(window, 'location', 'get');
         locationSpy.mockImplementation(
             () =>
                 ({
