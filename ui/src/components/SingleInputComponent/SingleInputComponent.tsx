@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse, FilterResponseParams } from '../../util/util';

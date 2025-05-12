@@ -63,7 +63,7 @@ def test_alert_html_generate_html_no_global_config(
         addon_name=ta_name,
     )
     output = alert_html.generate()
-    assert output == {"": ""}
+    assert output == {}
 
 
 @patch(
@@ -88,7 +88,7 @@ def test_alert_html_generate_html_no_alerts(
         addon_name=ta_name,
     )
     output = alert_html.generate()
-    assert output == {"": ""}
+    assert output == {}
     assert not hasattr(alert_html, "_alert_settings")
 
 
