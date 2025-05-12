@@ -151,7 +151,7 @@ def test_generate_xml_without_pages(
     )
 
     file_paths = default_xml.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}
 
 
 def test_generate_xml(
