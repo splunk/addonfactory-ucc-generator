@@ -43,7 +43,7 @@ class AccountConf(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self.account_fields:
-            return {"": ""}
+            return {}
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(

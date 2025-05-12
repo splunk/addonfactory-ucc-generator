@@ -79,7 +79,7 @@ def test_generate_conf_existing_conf(
     )
 
     output = server_conf.generate()
-    assert output == {"": ""}
+    assert output == {}
 
 
 def test_generate_conf_no_custom_conf(
@@ -94,4 +94,4 @@ def test_generate_conf_no_custom_conf(
     )
 
     file_paths = server_conf.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}

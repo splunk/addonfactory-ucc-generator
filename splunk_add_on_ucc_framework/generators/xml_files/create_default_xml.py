@@ -51,7 +51,7 @@ class DefaultXml(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self._global_config.has_pages():
-            return {"": ""}
+            return {}
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "nav", "default.xml"]
         )

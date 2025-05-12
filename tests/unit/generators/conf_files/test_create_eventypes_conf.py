@@ -66,4 +66,4 @@ def test_generate_conf_no_alert_settings(
         addon_name=ta_name,
     )
     file_paths = eventtypes_conf.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}

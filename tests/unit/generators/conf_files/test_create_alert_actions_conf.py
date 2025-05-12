@@ -123,7 +123,7 @@ def test_generate_conf_no_alerts(
     )
     alert_action_conf.alerts = {}
     result = alert_action_conf.generate_conf()
-    assert result == {"": ""}
+    assert result == {}
 
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
@@ -185,4 +185,4 @@ def test_generate_conf_no_alerts_spec(
     )
     alert_action_conf.alerts_spec = {}
     result = alert_action_conf.generate_conf_spec()
-    assert result == {"": ""}
+    assert result == {}
