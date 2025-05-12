@@ -37,7 +37,7 @@ const paramOutputDir = process.argv.find((arg) => arg.startsWith('output='))?.sl
 
 const outputDir =
     paramOutputDir !== undefined && paramOutputDir !== 'undefined' && paramOutputDir
-        ? resolve(paramOutputDir, './output', TA_NAME, 'appserver/static/js/build')
+        ? resolve(paramOutputDir, TA_NAME, 'appserver/static/js/build')
         : resolve(uiDir, '../output', TA_NAME, 'appserver/static/js/build');
 
 export default defineConfig({
