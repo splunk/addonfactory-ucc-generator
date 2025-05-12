@@ -80,4 +80,4 @@ def test_generate_conf_no_alert_settings(
 
     eventtypes_conf.alert_settings = {}
     file_paths = eventtypes_conf.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}
