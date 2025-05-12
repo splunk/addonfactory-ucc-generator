@@ -56,7 +56,7 @@ class SettingsConf(FileGenerator):
 
     def generate_conf(self) -> Dict[str, str]:
         if not self.default_content:
-            return {"": ""}
+            return {}
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="settings_conf.template"
@@ -72,7 +72,7 @@ class SettingsConf(FileGenerator):
 
     def generate_conf_spec(self) -> Dict[str, str]:
         if not self.settings_stanzas:
-            return {"": ""}
+            return {}
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(

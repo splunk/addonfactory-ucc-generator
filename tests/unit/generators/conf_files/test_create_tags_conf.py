@@ -79,4 +79,4 @@ def test_generate_conf_no_alert_settings(
 
     tags_conf.alert_settings = {}
     file_paths = tags_conf.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}

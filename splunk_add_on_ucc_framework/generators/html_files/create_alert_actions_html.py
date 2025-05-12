@@ -41,7 +41,7 @@ class AlertActionsHtml(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self._global_config.has_alerts():
-            return {"": ""}
+            return {}
 
         alert_details: Dict[str, str] = {}
         for self.alert in self._alert_settings:

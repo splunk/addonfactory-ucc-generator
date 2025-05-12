@@ -123,4 +123,4 @@ def test_generate_conf_spec_no_configuration(
     )
 
     file_paths = account_spec.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}
