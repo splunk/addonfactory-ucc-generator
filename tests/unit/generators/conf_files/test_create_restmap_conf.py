@@ -70,7 +70,7 @@ def test_generate_conf_no_gc_schema(
     )
 
     file_paths = restmap_conf.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}
 
 
 def test_generate_conf_for_conf_only_TA(
@@ -85,7 +85,7 @@ def test_generate_conf_for_conf_only_TA(
     )
 
     file_paths = restmap_conf.generate()
-    assert file_paths == {"": ""}
+    assert file_paths == {}
 
 
 def test_set_attributes(

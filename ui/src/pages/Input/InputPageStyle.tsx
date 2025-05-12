@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 
 export const TitleComponent = styled.div.attrs({
     className: 'pageTitle',
