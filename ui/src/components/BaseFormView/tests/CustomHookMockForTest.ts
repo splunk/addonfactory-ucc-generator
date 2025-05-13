@@ -6,9 +6,9 @@ import {
     Mode,
     NullishFormRecord,
     UtilBaseForm,
-} from '../../publicApi';
-import { BaseFormStateData } from '../../types/components/BaseFormTypes';
-import { StandardPages } from '../../types/components/shareableTypes';
+} from '../../../publicApi';
+import { BaseFormStateData } from '../../../types/components/BaseFormTypes';
+import { StandardPages } from '../../../types/components/shareableTypes';
 
 const debounce = (func: { (state: BaseFormState): void }, wait: number) => {
     let timeout: NodeJS.Timeout | undefined;
@@ -37,15 +37,6 @@ const debounce = (func: { (state: BaseFormState): void }, wait: number) => {
 class Hook extends CustomHookClass {
     debouncedNameChange: (dataDict: BaseFormState) => void;
 
-    /**
-     * Form hook
-     * @constructor
-     * @param {Object} globalConfig - Global configuration.
-     * @param {string} serviceName - Service name
-     * @param {object} state - object with state of the components on the servcice/page
-     * @param {string} mode - edit,create or clone
-     * @param {object} util - the utility object
-     */
     constructor(
         globalConfig: GlobalConfig,
         serviceName: string,

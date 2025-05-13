@@ -9,7 +9,8 @@ import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
-import mockCustomHookMockForTest from '../../CustomControl/CustomHookMockForTest';
+import mockCustomHookMockForTest from './CustomHookMockForTest';
+import mockCustomHookMockForTestError from './CustomHookMockForTestError';
 import BaseFormView from '../BaseFormView';
 import {
     getGlobalConfigMockCustomControl,
@@ -30,6 +31,8 @@ import {
     CustomComponentContextProvider,
     CustomComponentContextType,
 } from '../../../context/CustomComponentContext';
+import { CustomHookConstructor } from '../../../types/components/CustomHookClass';
+import { consoleError } from '../../../../test.setup';
 
 const handleFormSubmit = vi.fn();
 
@@ -443,7 +446,13 @@ describe('Verify if oauth loads correctly', () => {
 });
 
 describe('Verify if custom hook works correctly', () => {
+    const doConfigMockup = () => {
+        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
+        setUnifiedConfig(mockConfig);
+    };
+
     const setupViaCustomFile = () => {
+        doConfigMockup();
         // doMock is not hoisted to the top of the file
         vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_HOOK}.js`, () => ({
             default: mockCustomHookMockForTest,
@@ -464,10 +473,17 @@ describe('Verify if custom hook works correctly', () => {
         );
     };
 
-    const setupHookViaContext = () => {
+    const setupHookViaContext = (withErorrs: boolean = false, mode: Mode = 'create') => {
+        doConfigMockup();
+        let component: CustomHookConstructor = mockCustomHookMockForTest;
+
+        if (withErorrs) {
+            // @ts-expect-error type error as this mock has only errors
+            component = mockCustomHookMockForTestError;
+        }
         const compContext: CustomComponentContextType = {
             [CUSTOM_HOOK]: {
-                component: mockCustomHookMockForTest,
+                component,
                 type: 'hook',
             },
         };
@@ -477,7 +493,7 @@ describe('Verify if custom hook works correctly', () => {
                     page={PAGE_CONF}
                     stanzaName={STANZA_NAME}
                     serviceName={SERVICE_NAME}
-                    mode="create"
+                    mode={mode}
                     currentServiceState={{
                         custom_control_field: 'input_three',
                         name: 'some_unique_name',
@@ -489,8 +505,6 @@ describe('Verify if custom hook works correctly', () => {
         );
     };
     it('custom hook via file in custom dir, loads name value from hook', async () => {
-        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
-        setUnifiedConfig(mockConfig);
         setupViaCustomFile();
         const nameInput = await screen.findByRole('textbox', { name: 'Name' });
         expect(nameInput).toBeInTheDocument();
@@ -501,8 +515,6 @@ describe('Verify if custom hook works correctly', () => {
     });
 
     it('custom hook via file in custom dir, loads name markdown message via hook', async () => {
-        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
-        setUnifiedConfig(mockConfig);
         setupViaCustomFile();
 
         await waitFor(() => {
@@ -511,8 +523,6 @@ describe('Verify if custom hook works correctly', () => {
     });
 
     it('custom hook via context, loads name value from hook', async () => {
-        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
-        setUnifiedConfig(mockConfig);
         setupHookViaContext();
 
         const nameInput = await screen.findByRole('textbox', { name: 'Name' });
@@ -524,8 +534,6 @@ describe('Verify if custom hook works correctly', () => {
     });
 
     it('custom hook via context, modifies name value correctly', async () => {
-        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
-        setUnifiedConfig(mockConfig);
         setupHookViaContext();
         const user = userEvent.setup();
 
@@ -537,6 +545,50 @@ describe('Verify if custom hook works correctly', () => {
 
         await waitFor(() => {
             expect(nameInput).toHaveValue(`${newNameValue}321`);
+        });
+    });
+
+    it('custom hook via context, error handling on create', async () => {
+        const consoleHandler = vi.fn();
+        consoleError.mockImplementation(consoleHandler);
+        setupHookViaContext(true);
+
+        await waitFor(() => {
+            expect(consoleHandler).toHaveBeenCalledWith(
+                '[Custom Hook] Something went wrong while calling onCreate. Error: Error Error handling test in Hook onCreate method'
+            );
+        });
+
+        await waitFor(() => {
+            expect(consoleHandler).toHaveBeenCalledWith(
+                '[Custom Hook] Something went wrong while calling onRender. Error: Error Error handling test in Hook onRender method'
+            );
+        });
+
+        // to be added
+        // const nameInput = screen.getByRole('textbox', { name: 'Name' });
+
+        // const user = userEvent.setup();
+
+        // await user.clear(nameInput);
+        // await user.type(nameInput, 'newNameValue');
+
+        // await waitFor(() => {
+        //     expect(consoleHandler).toHaveBeenCalledWith(
+        //         '[Custom Hook] Something went wrong while calling onChange. Error: Error Error handling test in Hook onChange method'
+        //     );
+        // });
+    });
+
+    it('custom hook via context, error handling on edit', async () => {
+        const consoleHandler = vi.fn();
+        consoleError.mockImplementation(consoleHandler);
+        setupHookViaContext(true, 'edit');
+
+        await waitFor(() => {
+            expect(consoleHandler).toHaveBeenCalledWith(
+                '[Custom Hook] Something went wrong while calling onEditLoad. Error: Error Error handling test in Hook onEditLoad method'
+            );
         });
     });
 });
