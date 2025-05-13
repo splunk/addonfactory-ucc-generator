@@ -2,9 +2,6 @@ import os.path
 from textwrap import dedent
 
 from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
-from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
-    RestHandlerConfig,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import WebConf
 
 
