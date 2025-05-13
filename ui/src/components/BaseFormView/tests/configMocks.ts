@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { AnyOfEntity } from '../../../types/globalConfig/entities';
 import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
+import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 
 const globalConfigMockCustomControl = {
     pages: {
@@ -862,4 +863,30 @@ const CONFIG_MOCK_MANY_INPUTS_TYPE_CONFIG = {
 
 export function getGlobalConfigMockFourInputServices() {
     return GlobalConfigSchema.parse(CONFIG_MOCK_MANY_INPUTS_TYPE_CONFIG);
+}
+
+export function getGlobalConfigMockCustomHook(hookFileName: string) {
+    const basicConfig = getGlobalConfigMock();
+
+    const configWithHook = {
+        ...basicConfig,
+        pages: {
+            ...basicConfig.pages,
+            configuration: {
+                ...basicConfig.pages.configuration,
+                tabs: [
+                    {
+                        ...basicConfig!.pages!.configuration!.tabs[0],
+                        name: 'account',
+                        hook: {
+                            src: hookFileName,
+                            type: 'external',
+                        },
+                    },
+                ],
+            },
+        },
+    };
+
+    return GlobalConfigSchema.parse(configWithHook);
 }

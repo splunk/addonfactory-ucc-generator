@@ -9,9 +9,11 @@ import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
+import mockCustomHookMockForTest from '../../CustomControl/CustomHookMockForTest';
 import BaseFormView from '../BaseFormView';
 import {
     getGlobalConfigMockCustomControl,
+    getGlobalConfigMockCustomHook,
     getGlobalConfigMockFourInputServices,
     getGlobalConfigMockGroupsForConfigPage,
     getGlobalConfigMockGroupsForInputPage,
@@ -35,6 +37,7 @@ const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
 const STANZA_NAME = 'stanzaName';
 const CUSTOM_MODULE = 'CustomControl';
+const CUSTOM_HOOK = 'CustomHook';
 
 vi.mock('../../../util/api', async () => ({
     ...(await vi.importActual('../../../util/api')),
@@ -436,5 +439,104 @@ describe('Verify if oauth loads correctly', () => {
 
         expect(oauthSelector).toBeInTheDocument();
         expect(oauthSelector).toHaveTextContent(content[authData.auth_type]);
+    });
+});
+
+describe('Verify if custom hook works correctly', () => {
+    const setupViaCustomFile = () => {
+        // doMock is not hoisted to the top of the file
+        vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_HOOK}.js`, () => ({
+            default: mockCustomHookMockForTest,
+        }));
+
+        render(
+            <BaseFormView
+                page={PAGE_CONF}
+                stanzaName={STANZA_NAME}
+                serviceName={SERVICE_NAME}
+                mode="create"
+                currentServiceState={{
+                    custom_control_field: 'input_three',
+                    name: 'some_unique_name',
+                }}
+                handleFormSubmit={handleFormSubmit}
+            />
+        );
+    };
+
+    const setupHookViaContext = () => {
+        const compContext: CustomComponentContextType = {
+            [CUSTOM_HOOK]: {
+                component: mockCustomHookMockForTest,
+                type: 'hook',
+            },
+        };
+        render(
+            <CustomComponentContextProvider customComponents={compContext}>
+                <BaseFormView
+                    page={PAGE_CONF}
+                    stanzaName={STANZA_NAME}
+                    serviceName={SERVICE_NAME}
+                    mode="create"
+                    currentServiceState={{
+                        custom_control_field: 'input_three',
+                        name: 'some_unique_name',
+                    }}
+                    handleFormSubmit={handleFormSubmit}
+                    customComponentContext={compContext}
+                />
+            </CustomComponentContextProvider>
+        );
+    };
+    it('custom hook via file in custom dir, loads name value from hook', async () => {
+        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
+        setUnifiedConfig(mockConfig);
+        setupViaCustomFile();
+        const nameInput = await screen.findByRole('textbox', { name: 'Name' });
+        expect(nameInput).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(nameInput).toHaveValue('basic value for name loaded from hook');
+        });
+    });
+
+    it('custom hook via file in custom dir, loads name markdown message via hook', async () => {
+        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
+        setUnifiedConfig(mockConfig);
+        setupViaCustomFile();
+
+        await waitFor(() => {
+            expect(screen.getByText('This is a markdown message added from hook'));
+        });
+    });
+
+    it('custom hook via context, loads name value from hook', async () => {
+        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
+        setUnifiedConfig(mockConfig);
+        setupHookViaContext();
+
+        const nameInput = await screen.findByRole('textbox', { name: 'Name' });
+        expect(nameInput).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(nameInput).toHaveValue('basic value for name loaded from hook');
+        });
+    });
+
+    it('custom hook via context, modifies name value correctly', async () => {
+        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
+        setUnifiedConfig(mockConfig);
+        setupHookViaContext();
+        const user = userEvent.setup();
+
+        const nameInput = await screen.findByRole('textbox', { name: 'Name' });
+        expect(nameInput).toBeInTheDocument();
+        const newNameValue = 'addNumberAtEndInHook';
+        await user.clear(nameInput);
+        await user.type(nameInput, newNameValue);
+
+        await waitFor(() => {
+            expect(nameInput).toHaveValue(`${newNameValue}321`);
+        });
     });
 });
