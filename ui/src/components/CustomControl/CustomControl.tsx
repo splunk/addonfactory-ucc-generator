@@ -32,7 +32,7 @@ class CustomControl extends React.Component<Props, State> {
         context?: React.ContextType<typeof CustomComponentContext>
     ): Promise<CustomControlConstructor> =>
         new Promise((resolve) => {
-            const customComp = context?.[module]
+            const customComp = context?.[module];
             if (customComp?.type === 'control') {
                 const Control = customComp.component;
                 resolve(Control);
