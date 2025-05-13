@@ -3,7 +3,7 @@ import { expect, it, vi } from 'vitest';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import CustomControl from './CustomControl';
-import mockCustomControlMockForTest from './CustomControlMockForTest';
+import mockCustomControlMockForTest from './mockCustomControlMockForTest';
 import { getBuildDirPath } from '../../util/script';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../util/util';

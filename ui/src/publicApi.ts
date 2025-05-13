@@ -24,3 +24,5 @@ export { CustomCellBase } from './components/table/CustomTableCellBase';
 export { CustomRowBase } from './components/table/CustomRowBase';
 
 export { uccInit } from './pages/UccInit';
+
+export type { Tab } from './components/CustomTab/CustomTab.types';

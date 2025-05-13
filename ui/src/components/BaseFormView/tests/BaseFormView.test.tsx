@@ -8,7 +8,7 @@ import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
-import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
+import mockCustomControlMockForTest from '../../CustomControl/mockCustomControlMockForTest';
 import mockCustomHookMockForTest from './CustomHookMockForTest';
 import mockCustomHookMockForTestError from './CustomHookMockForTestError';
 import BaseFormView from '../BaseFormView';
