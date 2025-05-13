@@ -178,7 +178,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
     });
 }
 
-it('should update custom Expansion Row when Input has changed', async () => {
+it('should correctly display custom Expansion Row for Input', async () => {
     consoleError.mockImplementation(() => {});
     mockCustomRowInput();
     setup();
