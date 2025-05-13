@@ -183,6 +183,9 @@
     "cli/vite.config_ucc-gen-ui.ts"
   ],
   "type": "module",
+  "bin": {
+    "ucc-gen-ui": "cli/ucc-gen-build-ui.js"
+  },
   "types": "./dist/lib/publicApi.d.ts",
   "module": "./dist/lib/index.js",
   "exports": {
