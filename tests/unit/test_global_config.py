@@ -66,6 +66,31 @@ def test_global_config_equal():
     assert global_config_1 == global_config_2
 
 
+def test_global_config_custom_search_commands(global_config_all_json):
+    custom_search_commands = global_config_all_json.custom_search_commands
+    expected_result = [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requiredSearchAssistant": True,
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": True,
+                    "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
+                },
+                {"name": "text", "required": True},
+            ],
+        }
+    ]
+    assert expected_result == custom_search_commands
+    assert global_config_all_json.has_custom_search_commands() is True
+
+
 def test_global_config_when_no_equal():
     global_config_1 = global_config_lib.GlobalConfig.from_file(
         helpers.get_testdata_file_path("valid_config.json")

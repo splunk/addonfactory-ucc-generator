@@ -2198,5 +2198,70 @@
                 "target": "3rdparty/linux"
             }
         ]
-    }
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requiredSearchAssistant": true,
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "filtercommand",
+            "fileName": "filter.py",
+            "commandType": "dataset processing",
+            "requiredSearchAssistant": true,
+            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
+            "syntax": "| filtercommand contains='value1' replace='value to be replaced,value to replace with'",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "contains"
+                },
+                {
+                    "name": "replace_array"
+                }
+            ]
+        },
+        {
+            "commandName": "countmatchescommand",
+            "fileName": "countmatches.py",
+            "commandType": "streaming",
+            "requiredSearchAssistant": false,
+            "arguments": [
+                {
+                    "name": "fieldname",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                },
+                {
+                    "name": "pattern",
+                    "validate": {
+                        "type": "RegularExpression"
+                    },
+                    "required": true
+                }
+            ]
+        }
+    ]
 }
