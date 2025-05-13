@@ -1110,8 +1110,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     // generatesubmitMessage
     loadHook = (module: string, type: string, globalConfig: GlobalConfig) => {
         const myPromise = new Promise((resolve) => {
-            if (this.customComponentContext?.[module].type === 'hook') {
-                const Hook = this.customComponentContext?.[module].component;
+            const customHook = this.customComponentContext?.[module];
+            if (customHook?.type === 'hook') {
+                const Hook = customHook.component;
                 this.hook = new Hook(
                     globalConfig,
                     this.props.serviceName,
