@@ -1,16 +1,17 @@
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { UtilControlWrapper } from '../../types/components/BaseFormTypes';
+import { UtilBaseForm } from '../../types/components/BaseFormTypes';
+import { CustomControlBase } from './CustomControlBase';
 
-export class CustomControlMockForTest {
+export class CustomControlMockForTest extends CustomControlBase {
     globalConfig: GlobalConfig;
 
-    el?: Element;
+    el: HTMLElement;
 
     data: { mode: Mode; serviceName: string; value: AcceptableFormValueOrNullish };
 
-    util: UtilControlWrapper;
+    util: UtilBaseForm;
 
     setValue: (newValue: AcceptableFormValueOrNullish) => void;
 
@@ -25,11 +26,12 @@ export class CustomControlMockForTest {
      */
     constructor(
         globalConfig: GlobalConfig,
-        el: Element | undefined,
+        el: HTMLElement,
         data: { mode: Mode; serviceName: string; value: AcceptableFormValueOrNullish },
         setValue: (newValue: AcceptableFormValueOrNullish) => void,
-        util: UtilControlWrapper
+        util: UtilBaseForm
     ) {
+        super(globalConfig, el as HTMLElement, data, setValue, util);
         this.globalConfig = globalConfig;
         this.el = el;
         this.data = data;

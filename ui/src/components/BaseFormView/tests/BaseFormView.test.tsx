@@ -24,6 +24,10 @@ import { server } from '../../../mocks/server';
 import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
 import { Mode } from '../../../constants/modes';
 import { StandardPages } from '../../../types/components/shareableTypes';
+import {
+    CustomComponentContextProvider,
+    CustomComponentContextType,
+} from '../../../context/CustomComponentContext';
 
 const handleFormSubmit = vi.fn();
 
@@ -148,6 +152,39 @@ it('should pass default values to custom component correctly', async () => {
             }}
             handleFormSubmit={handleFormSubmit}
         />
+    );
+    const customModal = await screen.findByTestId('customSelect');
+    expect(customModal).toBeInTheDocument();
+
+    expect((customModal as HTMLSelectElement)?.value).toEqual('input_three');
+});
+
+it('should pass default values to custom component correctly - component via context', async () => {
+    const mockConfig = getGlobalConfigMockCustomControl();
+    setUnifiedConfig(mockConfig);
+
+    const compContext: CustomComponentContextType = {
+        [CUSTOM_MODULE]: {
+            component: mockCustomControlMockForTest,
+            type: 'control',
+        },
+    };
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <BaseFormView
+                page={PAGE_CONF}
+                stanzaName={STANZA_NAME}
+                serviceName={SERVICE_NAME}
+                mode="config"
+                currentServiceState={{
+                    custom_control_field: 'input_three',
+                    name: 'some_unique_name',
+                }}
+                handleFormSubmit={handleFormSubmit}
+                customComponentContext={compContext}
+            />
+        </CustomComponentContextProvider>
     );
     const customModal = await screen.findByTestId('customSelect');
     expect(customModal).toBeInTheDocument();

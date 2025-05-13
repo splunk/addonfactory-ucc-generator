@@ -13,6 +13,11 @@ import { getBuildDirPath } from '../../../util/script';
 import { MOCK_CONFIG } from './mocks';
 import { invariant } from '../../../util/invariant';
 import mockCustomControlMockForTest from './mocks/CustomInputRowMock';
+import {
+    CustomComponentContextType,
+    CustomComponentContextProvider,
+} from '../../../context/CustomComponentContext';
+import { CustomRowConstructor } from '../CustomRowBase';
 
 const handleToggleActionClick = vi.fn();
 const handleOpenPageStyleDialog = vi.fn();
@@ -139,6 +144,24 @@ function setup() {
     render(<SimpleComponentToUpdateCustomTable />, { wrapper: BrowserRouter });
 }
 
+function setupComponentContext() {
+    const compContext: CustomComponentContextType = {
+        [customRowFileName]: {
+            component: mockCustomControlMockForTest as CustomRowConstructor,
+            type: 'row',
+        },
+    };
+
+    setUnifiedConfig(MOCK_CONFIG);
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <SimpleComponentToUpdateCustomTable />
+        </CustomComponentContextProvider>,
+        { wrapper: BrowserRouter }
+    );
+}
+
 const getCollapsIcon = (inputRow: HTMLElement) => {
     const expandableCell = within(inputRow).getByTestId('expand');
     invariant(expandableCell, 'Expandable cell not found');
@@ -173,6 +196,20 @@ const moreInfoToContainName = async (inputRow: HTMLElement, name: string) => {
 
 it('should correctly display expanded row section for freshly added row', async () => {
     setup();
+    const allRows = screen.getAllByRole('row');
+    // 3 rows + header
+    expect(allRows.length).toBe(exampleProps.data.length + 1);
+    await moreInfoToContainName(allRows[1], exampleProps.data[0].name); // first row after header
+    await moreInfoToContainName(allRows[3], exampleProps.data[2].name); // last row
+    const btnAddRow = screen.getByTestId(buttonTestId);
+    await userEvent.click(btnAddRow);
+    const updatedAllRows = screen.getAllByRole('row');
+    expect(updatedAllRows.length).toBe(exampleProps.data.length + 2); // 3 rows + header + added row
+    await moreInfoToContainName(updatedAllRows[4], `Additional Name 3`); // added row
+});
+
+it('should correctly display expanded row section for freshly added row - component context', async () => {
+    setupComponentContext();
     const allRows = screen.getAllByRole('row');
     // 3 rows + header
     expect(allRows.length).toBe(exampleProps.data.length + 1);

@@ -7,6 +7,10 @@ import mockCustomControlMockForTest from './CustomControlMockForTest';
 import { getBuildDirPath } from '../../util/script';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../util/util';
+import {
+    CustomComponentContextType,
+    CustomComponentContextProvider,
+} from '../../context/CustomComponentContext';
 
 const MODULE = 'CustomControlForTest';
 
@@ -58,8 +62,58 @@ const setup = async () => {
     });
 };
 
+const setupComponentContext = async () => {
+    const mockConfig = getGlobalConfigMock();
+    setUnifiedConfig(mockConfig);
+
+    const compContext: CustomComponentContextType = {
+        [MODULE]: {
+            component: mockCustomControlMockForTest,
+            type: 'control',
+        },
+    };
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <CustomControl
+                data={{
+                    value: 'input_default',
+                    mode: 'create',
+                    serviceName: 'serviceName',
+                }}
+                field={FIELD_NAME}
+                handleChange={handleChange}
+                controlOptions={{
+                    src: MODULE,
+                    type: 'external',
+                }}
+                addCustomValidator={addingCustomValidation}
+                utilCustomFunctions={{
+                    setState: mockSetState,
+                    setErrorFieldMsg: mockSetErrorFieldMsg,
+                    clearAllErrorMsg: mockClearErrorMsg,
+                    setErrorMsg: mockSetErrorMsg,
+                }}
+            />
+        </CustomComponentContextProvider>
+    );
+
+    await waitFor(async () => {
+        const loading = screen.queryByText('Loading...');
+        if (loading) {
+            await waitFor(() => expect(loading).not.toHaveTextContent('Loading...'));
+        }
+    });
+};
+
 it('should render custom component correctly', async () => {
     await setup();
+    const renderedModal = await screen.findByTestId('customSelect');
+    expect(renderedModal).toBeInTheDocument();
+});
+
+it('should render custom component correctly - context component', async () => {
+    await setupComponentContext();
     const renderedModal = await screen.findByTestId('customSelect');
     expect(renderedModal).toBeInTheDocument();
 });

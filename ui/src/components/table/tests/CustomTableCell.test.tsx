@@ -16,6 +16,10 @@ import { CustomCellMock as MockCustomCell } from './mocks/CustomCellMock';
 import { CustomCellMockError as MockCustomCellError } from './mocks/CustomCellMockError';
 import { CustomCellMockNoRender as MockCustomCellNoRender } from './mocks/CustomCellMockNoRender';
 import { consoleError } from '../../../../test.setup';
+import {
+    CustomComponentContextProvider,
+    CustomComponentContextType,
+} from '../../../context/CustomComponentContext';
 
 vi.mock('../../../util/api', async () => ({
     ...(await vi.importActual('../../../util/api')),
@@ -80,6 +84,42 @@ function mocksAndRenderTable(useOnlyThisInterval?: number) {
     );
 }
 
+function mocksAndRenderTableWithContextComponent(useOnlyThisInterval?: number) {
+    const compContext: CustomComponentContextType = {
+        [CUSTOM_CELL_FILE_NAME]: {
+            component: MockCustomCell,
+            type: 'cell',
+        },
+    };
+
+    setUnifiedConfig(MOCK_CONFIG_CUSTOM_CELL);
+
+    const data = dataIterators.map((iter) => ({
+        name: `${inputName}${intervalBase}${iter}`,
+        content: {
+            interval: Number(`${intervalBase}${iter}`),
+        },
+    }));
+
+    const filteredData = useOnlyThisInterval
+        ? data.filter((item) => item.content.interval === useOnlyThisInterval)
+        : data;
+    server.use(
+        http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_${inputName}`, () =>
+            HttpResponse.json(getMockServerResponseForInput(filteredData))
+        )
+    );
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <TableContextProvider>
+                <TableWrapper {...props} />
+            </TableContextProvider>
+        </CustomComponentContextProvider>,
+        { wrapper: BrowserRouter }
+    );
+}
+
 test.each([
     { interval: 10, expected: 'Ten seconds' },
     { interval: 11, expected: 'Eleven seconds' },
@@ -100,6 +140,30 @@ test.each([
     const nameCell = screen.getByText(`example_input_one${interval}`);
     expect(nameCell).toBeInTheDocument();
 });
+
+test.each([
+    { interval: 10, expected: 'Ten seconds' },
+    { interval: 11, expected: 'Eleven seconds' },
+    { interval: 12, expected: 'Twelve seconds' },
+    { interval: 13, expected: '13' },
+    { interval: 14, expected: '14' },
+    { interval: 15, expected: '15' },
+])(
+    'Render custom cell correctly for interval $interval - context component',
+    async ({ interval, expected }) => {
+        // render only one row as mock for custom cell work just for the first time
+        // so we need to render only one row
+        mocksAndRenderTableWithContextComponent(interval);
+
+        const row = await waitForRow(interval);
+
+        const customCell = await within(row).findByText(expected);
+        expect(customCell).toBeInTheDocument();
+
+        const nameCell = screen.getByText(`example_input_one${interval}`);
+        expect(nameCell).toBeInTheDocument();
+    }
+);
 
 test('Render custom cell with Error message', async () => {
     mockCustomCellModule('error');

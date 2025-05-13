@@ -1,11 +1,11 @@
 import { RowDataFields } from '../../../../context/TableContext';
-import { GlobalConfig } from '../../../../publicApi';
+import { CustomCellBase, GlobalConfig } from '../../../../publicApi';
 import { invariant } from '../../../../util/invariant';
 
-export class CustomCellMock {
+export class CustomCellMock extends CustomCellBase {
     globalConfig: GlobalConfig;
 
-    el?: HTMLElement;
+    el: HTMLElement;
 
     row: RowDataFields;
 
@@ -29,6 +29,7 @@ export class CustomCellMock {
         row: RowDataFields,
         field: string
     ) {
+        super(globalConfig, serviceName, el, row, field);
         this.globalConfig = globalConfig;
         this.serviceName = serviceName;
         this.el = el;
