@@ -142,6 +142,7 @@ jobs:
           
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
+            echo "Installing UCC package $UCC_WHL"
             poetry add $UCC_WHL --group dev && break
             RETRY_COUNT=$((RETRY_COUNT+1))
             echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
@@ -169,7 +170,7 @@ jobs:
           
           # Add to commit
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
-            echo "Addinng UCC, pyproject.toml and poetry.lock to commit"
+            echo "Adding UCC, pyproject.toml and poetry.lock to commit"
             git add pyproject.toml poetry.lock $UCC_WHL
           fi
       - name: Run ucc-gen build in Target Add-on
