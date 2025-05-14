@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
@@ -9,7 +10,7 @@ import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { server } from '../../mocks/server';
 import { getMockServerResponseForInput } from '../../mocks/server-response';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 const defaultInputProps = {
     field: 'defaultFieldName',

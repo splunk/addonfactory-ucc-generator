@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -7,7 +8,7 @@ import BaseFormView from '../BaseFormView';
 import { getGlobalConfigMockModificationToFieldItself } from './configMocks';
 import { invariant } from '../../../util/invariant';
 
-const handleFormSubmit = jest.fn();
+const handleFormSubmit = vi.fn();
 
 const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
