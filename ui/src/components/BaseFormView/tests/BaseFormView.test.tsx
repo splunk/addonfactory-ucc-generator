@@ -473,11 +473,11 @@ describe('Verify if custom hook works correctly', () => {
         );
     };
 
-    const setupHookViaContext = (withErorrs: boolean = false, mode: Mode = 'create') => {
+    const setupHookViaContext = (withErrors: boolean = false, mode: Mode = 'create') => {
         doConfigMockup();
         let component: CustomHookConstructor = mockCustomHookMockForTest;
 
-        if (withErorrs) {
+        if (withErrors) {
             // @ts-expect-error type error as this mock has only errors
             component = mockCustomHookMockForTestError;
         }
