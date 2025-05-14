@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -15,18 +16,26 @@ import {
     getGlobalConfigMockGroupsForConfigPage,
     getGlobalConfigMockGroupsForInputPage,
 } from './configMocks';
-import { MOCK_CONTEXT_STATE_THREE_INPUTS } from './contextMocks';
+import { MOCK_CONTEXT_STATE_ACCOUNT, MOCK_CONTEXT_STATE_THREE_INPUTS } from './contextMocks';
 import { PAGE_INPUT } from '../../../constants/pages';
 import { invariant } from '../../../util/invariant';
 import TableContext, { TableContextDataTypes } from '../../../context/TableContext';
 import { server } from '../../../mocks/server';
+import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
+import { Mode } from '../../../constants/modes';
+import { StandardPages } from '../../../types/components/shareableTypes';
 
-const handleFormSubmit = jest.fn();
+const handleFormSubmit = vi.fn();
 
 const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
 const STANZA_NAME = 'stanzaName';
 const CUSTOM_MODULE = 'CustomControl';
+
+vi.mock('../../../util/api', async () => ({
+    ...(await vi.importActual('../../../util/api')),
+    postRequest: (await vi.importActual('../../../util/__mocks__/mockApi')).postRequest,
+}));
 
 const getElementsByGroup = (group: string) => {
     const firstField = screen.queryByText(`Text 1 Group ${group}`);
@@ -55,6 +64,49 @@ const getEntityTextBox = (entityField: string) => {
     return within(controlGroup as HTMLElement).getByRole('textbox');
 };
 
+const initializeFormRef = (
+    mockConfig: GlobalConfig,
+    mockContext?: TableContextDataTypes,
+    serviceName = 'example_input_four',
+    mode: Mode = 'create',
+    stanzaName = 'stanzaName',
+    page: StandardPages = PAGE_INPUT,
+    currentServiceState = {}
+) => {
+    setUnifiedConfig(mockConfig);
+
+    const formRef = React.createRef<BaseFormView>();
+
+    render(
+        <TableContext.Provider
+            value={{
+                rowData: {},
+                setRowData: () => {},
+                setSearchText: () => {},
+                setSearchType: () => {},
+                pageSize: 10,
+                setPageSize: () => {},
+                setCurrentPage: () => {},
+                currentPage: 0,
+                searchText: '',
+                searchType: 'all',
+                ...mockContext,
+            }}
+        >
+            <BaseFormView
+                ref={formRef}
+                page={page}
+                stanzaName={stanzaName}
+                serviceName={serviceName}
+                mode={mode}
+                handleFormSubmit={handleFormSubmit}
+                currentServiceState={currentServiceState}
+            />
+        </TableContext.Provider>
+    );
+    return formRef;
+};
+
 it('should render base form correctly with name and File fields', async () => {
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
@@ -79,13 +131,10 @@ it('should pass default values to custom component correctly', async () => {
     const mockConfig = getGlobalConfigMockCustomControl();
     setUnifiedConfig(mockConfig);
 
-    jest.mock(
-        `${getBuildDirPath()}/custom/${CUSTOM_MODULE}.js`,
-        () => mockCustomControlMockForTest,
-        {
-            virtual: true,
-        }
-    );
+    // doMock is not hoisted to the top of the file
+    vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_MODULE}.js`, () => ({
+        default: mockCustomControlMockForTest,
+    }));
 
     render(
         <BaseFormView
@@ -165,44 +214,6 @@ it.each([
 });
 
 describe('Verify if submiting BaseFormView works', () => {
-    const initializeFormRef = (
-        mockConfig: GlobalConfig,
-        mockContext?: TableContextDataTypes,
-        serviceName = 'example_input_four'
-    ) => {
-        setUnifiedConfig(mockConfig);
-
-        const formRef = React.createRef<BaseFormView>();
-
-        render(
-            <TableContext.Provider
-                value={{
-                    rowData: {},
-                    setRowData: () => {},
-                    setSearchText: () => {},
-                    setSearchType: () => {},
-                    pageSize: 10,
-                    setPageSize: () => {},
-                    setCurrentPage: () => {},
-                    currentPage: 0,
-                    searchText: '',
-                    searchType: 'all',
-                    ...mockContext,
-                }}
-            >
-                <BaseFormView
-                    ref={formRef}
-                    page={PAGE_INPUT}
-                    stanzaName={STANZA_NAME}
-                    serviceName={serviceName}
-                    mode="create"
-                    handleFormSubmit={handleFormSubmit}
-                />
-            </TableContext.Provider>
-        );
-        return formRef;
-    };
-
     it('Correctly pass form data via post', async () => {
         const formRef = initializeFormRef(
             getGlobalConfigMockFourInputServices(),
@@ -341,5 +352,52 @@ describe('Verify if submiting BaseFormView works', () => {
 
         const errorMessage = screen.getByText(`Name ${NAME_INPUT} is already in use`);
         expect(errorMessage).toBeInTheDocument();
+    });
+});
+
+describe('Verify if oauth loads correctly', () => {
+    const content: Record<string, string> = {
+        basic: 'Basic Authentication',
+        oauth: 'OAuth 2.0 Authentication',
+        oauth_client_credentials: 'OAuth 2.0 Client Credentials',
+    };
+
+    it.each<{
+        auth_type: string;
+        stanza: string;
+        mode: Mode;
+    }>([
+        { auth_type: 'basic', stanza: 'test_basic_oauth', mode: 'config' },
+        { auth_type: 'oauth', stanza: 'test_oauth_oauth', mode: 'config' },
+        {
+            auth_type: 'oauth_client_credentials',
+            stanza: 'test_oauth_client_creds',
+            mode: 'config',
+        },
+        { auth_type: 'basic', stanza: 'test_basic_oauth', mode: 'edit' },
+        { auth_type: 'oauth', stanza: 'test_oauth_oauth', mode: 'edit' },
+        { auth_type: 'oauth_client_credentials', stanza: 'test_oauth_client_creds', mode: 'edit' },
+    ])('load correctly oauth labels for - %s', async (authData) => {
+        const mockConfig = getConfigWithAllTypesOfOauth();
+
+        initializeFormRef(
+            mockConfig,
+            MOCK_CONTEXT_STATE_ACCOUNT,
+            'account',
+            authData.mode,
+            authData.stanza,
+            PAGE_CONF,
+            {
+                auth_type: authData.auth_type,
+                name: 'some_unique_name',
+            }
+        );
+
+        const oauthSelector = await screen.findByRole('combobox', {
+            name: 'Auth Type',
+        });
+
+        expect(oauthSelector).toBeInTheDocument();
+        expect(oauthSelector).toHaveTextContent(content[authData.auth_type]);
     });
 });

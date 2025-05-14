@@ -19,7 +19,7 @@ with openapi_client.ApiClient(configuration) as api_client:
     assert not api_response.entry
 
     # Add account some_name
-    api_instance.splunk_ta_uccexample_account_post(output_mode, "some_name", account_multiple_select="aaa", account_radio="bbb", custom_endpoint="login.example.com")
+    api_instance.splunk_ta_uccexample_account_post(output_mode, name = "some_name", account_multiple_select="aaa", account_radio="bbb", custom_endpoint="login.example.com")
 
     # List accounts (should be 1)
     api_response = api_instance.splunk_ta_uccexample_account_get(output_mode)

@@ -64,7 +64,9 @@ function onCustomHookError(params: { methodName: string; error?: CustomHookError
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
-    context!: React.ContextType<typeof TableContext>;
+    // vite excepts declare context: ...
+    // @ts-expect-error declare can't be added due to jest error
+    context: React.ContextType<typeof TableContext>;
 
     flag: boolean;
 
@@ -261,7 +263,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             display: true,
                             value:
                                 this.currentInput?.auth_type === 'oauth' ||
-                                this.currentInput?.auth_type === 'basic'
+                                this.currentInput?.auth_type === 'basic' ||
+                                this.currentInput?.auth_type === 'oauth_client_credentials'
                                     ? this.currentInput?.auth_type
                                     : authType[0],
                         };

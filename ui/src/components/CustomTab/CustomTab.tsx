@@ -20,7 +20,7 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
         new Promise((resolve) => {
             if (tab.customTab?.type === 'external') {
                 import(
-                    /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${tab.customTab.src}.js`
+                    /* @vite-ignore */ `${getBuildDirPath()}/custom/${tab.customTab.src}.js`
                 ).then((external) => {
                     const Control = external.default;
                     resolve(Control);

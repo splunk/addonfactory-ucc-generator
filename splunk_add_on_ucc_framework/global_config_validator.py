@@ -20,6 +20,7 @@ import re
 from typing import Any, Dict, List
 import logging
 import itertools
+from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 
 import jsonschema
 
@@ -47,8 +48,14 @@ class GlobalConfigValidator:
     Custom validation should be implemented here.
     """
 
-    def __init__(self, source_dir: str, global_config: global_config_lib.GlobalConfig):
-        self._source_dir = source_dir
+    def __init__(
+        self,
+        internal_root_dir: str,
+        global_config: global_config_lib.GlobalConfig,
+        source: str = "",
+    ):
+        self._internal_root_dir = internal_root_dir
+        self._source_dir = source
         self._global_config = global_config
         self._config = global_config.content
         self.resolved_configuration = global_config.resolved_configuration
@@ -58,7 +65,7 @@ class GlobalConfigValidator:
         Validates config against JSON schema.
         Raises jsonschema.ValidationError if config is not valid.
         """
-        schema_path = os.path.join(self._source_dir, "schema", "schema.json")
+        schema_path = os.path.join(self._internal_root_dir, "schema", "schema.json")
         with open(schema_path, encoding="utf-8") as f_schema:
             schema_raw = f_schema.read()
             schema = json.loads(schema_raw)
@@ -710,6 +717,49 @@ class GlobalConfigValidator:
                 'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
             )
 
+    def _validate_custom_search_commands(self) -> None:
+        for command in self._global_config.custom_search_commands:
+            file_path = os.path.join(self._source_dir, "bin", command["fileName"])
+            if not os.path.isfile(file_path):
+                raise GlobalConfigValidatorException(
+                    f"{command['fileName']} is not present in `{os.path.join(self._source_dir, 'bin')}` directory. "
+                    "Please ensure the file exists."
+                )
+
+            if (command.get("requiredSearchAssistant", False) is False) and (
+                command.get("description")
+                or command.get("usage")
+                or command.get("syntax")
+            ):
+                logger.warning(
+                    "requiredSearchAssistant is set to false "
+                    "but attributes required for 'searchbnf.conf' is defined which is not required."
+                )
+            if (command.get("requiredSearchAssistant", False) is True) and not (
+                command.get("description")
+                and command.get("usage")
+                and command.get("syntax")
+            ):
+                raise GlobalConfigValidatorException(
+                    "One of the attributes among `description`, `usage`, `syntax`"
+                    " is not been defined in globalConfig. Define them as requiredSearchAssistant is set to True."
+                )
+
+            if command["commandName"] in SPLUNK_COMMANDS:
+                raise GlobalConfigValidatorException(
+                    f"CommandName: {command['commandName']}"
+                    " cannot have the same name as Splunk built-in command."
+                )
+
+            fileName_without_extension = command["fileName"].replace(".py", "")
+            if command["commandName"] == fileName_without_extension:
+                # Here we are generating file based on commandName therefore
+                # the core logic should not have the same name as commandName
+                raise GlobalConfigValidatorException(
+                    f"Filename: {fileName_without_extension} and CommandName: {command['commandName']}"
+                    " should not be same for custom search command."
+                )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         if self._global_config.has_pages():
@@ -723,6 +773,7 @@ class GlobalConfigValidator:
             self._validate_checkbox_group()
             self._validate_groups()
             self._validate_field_modifications()
+            self._validate_custom_search_commands()
         self._validate_alerts()
         self._validate_meta_default_view()
 

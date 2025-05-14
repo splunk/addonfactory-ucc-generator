@@ -1,52 +1,84 @@
 import * as React from 'react';
-import { render, screen, waitForElementToBeRemoved, act } from '@testing-library/react';
+import { render, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { vi } from 'vitest';
 
 import userEvent from '@testing-library/user-event';
 import InputPage from '../InputPage';
-import { mockCustomMenu, MockCustomRenderable } from '../../../tests/helpers';
+import {
+    getGlobalConfigMockWithCustomMenuStyleDialog,
+    getGlobalConfigMockWithCustomMenuStylePage,
+} from '../../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../../util/util';
+import { getBuildDirPath } from '../../../util/script';
+import mockCustomMenu from './mockCustomMenu';
 
-const mockNavigateFn = jest.fn();
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
+// it is just configuration not a mock to be changed
+// eslint-disable-next-line jest/no-mocks-import
+import { mockUnifiedConfig } from '../../../util/__mocks__/mockUnifiedConfig';
+import { GlobalConfig } from '../../../publicApi';
+
+const mockNavigateFn = vi.fn();
+vi.mock('react-router-dom', async () => ({
+    ...(await vi.importActual('react-router-dom')),
     useNavigate: () => mockNavigateFn,
 }));
 
-jest.mock('../../../util/util');
-
-let mockCustomMenuInstance: MockCustomRenderable;
-
 beforeEach(() => {
-    mockCustomMenuInstance = mockCustomMenu().mockCustomMenuInstance;
+    vi.doMock(`${getBuildDirPath()}/custom/Hook.js`, () => ({
+        default: vi.fn(),
+    }));
+    setUnifiedConfig(mockUnifiedConfig);
 });
 
-it('custom menu should redirect user on menu click', async () => {
+const renderMockAndOpenCustomMenu = async (globalConfigMock: GlobalConfig) => {
+    setUnifiedConfig(globalConfigMock);
+    vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
+        default: mockCustomMenu,
+    }));
+
     render(<InputPage />, { wrapper: BrowserRouter });
 
-    await waitForElementToBeRemoved(() => screen.queryByTestId('wait-spinner'));
+    await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
 
     expect(mockNavigateFn).not.toHaveBeenCalled();
 
-    const service = 'aws_billing_cur';
-    const action = 'create';
-    const input = 'test-input';
-    act(() =>
-        // emulate user click on third-party menu component
-        mockCustomMenuInstance.navigator({
-            service,
-            action,
-            input,
-        })
-    );
-    await screen.findByTestId('wait-spinner');
+    const menu = screen.getByText('Click Me! I am a button for custom menu');
+    await userEvent.click(menu);
+
+    return {
+        service: 'demo_input',
+        action: 'create',
+        input: 'demo_input',
+    };
+};
+
+it('custom menu should redirect user on menu click - mock menu page style', async () => {
+    const globalConfigMock = getGlobalConfigMockWithCustomMenuStylePage();
+
+    const { service, action, input } = await renderMockAndOpenCustomMenu(globalConfigMock);
 
     // check that InputPage redirects to correct URL according to callback
-    expect(mockNavigateFn).toHaveBeenCalledWith({
-        search: `service=${service}&action=${action}&input=${input}`,
+    await waitFor(() => {
+        expect(mockNavigateFn).toHaveBeenCalledWith({
+            search: `service=${service}&action=${action}&input=${input}`,
+        });
     });
 });
 
+it('custom menu should open input modal on menu click - mock menu page dialog', async () => {
+    const globalConfigMock = getGlobalConfigMockWithCustomMenuStyleDialog();
+    const { service } = await renderMockAndOpenCustomMenu(globalConfigMock);
+
+    // check if custom menu correctly opens modal
+    expect(screen.getByText(`Add ${service}`)).toBeInTheDocument();
+    expect(screen.getByText('Cancel')).toBeInTheDocument();
+    expect(screen.getByText('Add')).toBeInTheDocument();
+});
+
 it('click on menu item inside group should add input query to URL', async () => {
+    setUnifiedConfig(mockUnifiedConfig);
+
     render(<InputPage />, { wrapper: BrowserRouter });
 
     await waitForElementToBeRemoved(() => screen.queryByTestId('wait-spinner'));
@@ -65,6 +97,8 @@ it('click on menu item inside group should add input query to URL', async () => 
 });
 
 it('click on root menu item should add input query to URL', async () => {
+    setUnifiedConfig(mockUnifiedConfig);
+
     render(<InputPage />, { wrapper: BrowserRouter });
 
     await waitForElementToBeRemoved(() => screen.queryByTestId('wait-spinner'));
