@@ -170,8 +170,10 @@ jobs:
           poetry run ucc-gen build
       - name: Push changes to a temporary branch in order to trigger the pipeline
         if: ${{ github.event.inputs.run_pipelines == 'true' }}
+        working-directory: TA
         run: |
           git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
-          git commit -am "CI: UCC build for ${{ github.event_name }} event"
+          git add pyproject.toml poetry.lock
+          git commit -m "CI: UCC build for ${{ github.event_name }} event"
           git push -u origin $GIT_BRANCH
