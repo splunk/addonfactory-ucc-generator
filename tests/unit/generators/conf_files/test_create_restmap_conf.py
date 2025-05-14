@@ -102,15 +102,12 @@ def test_set_attributes(
 
 
 def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_name):
-    expected_top = (
-        "[admin:splunk_ta_uccexample]\n"
-        "match = /\n"
-        "members = splunk_ta_uccexample_account, splunk_ta_uccexample_example_input_one, "
-        "splunk_ta_uccexample_example_input_two, splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings\n\n"
-    )
-
     expected_content = dedent(
         """
+        [admin:splunk_ta_uccexample]
+        match = /
+        members = splunk_ta_uccexample_account, splunk_ta_uccexample_example_input_one, splunk_ta_uccexample_example_input_two, splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings
+
         [admin_external:splunk_ta_uccexample_oauth]
         handlertype = python
         python.version = python3
@@ -162,20 +159,18 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
     with open(file_paths["restmap.conf"]) as fp:
         content = fp.read()
 
-    assert content == (expected_top + expected_content)
+    assert content == expected_content
 
 
 def test_restmap_endpoints_with_user_defined_handlers(
     global_config_logging_with_user_defined_handlers, input_dir, output_dir, ta_name
 ):
-    expected_top = (
-        "[admin:splunk_ta_uccexample]\n"
-        "match = /\n"
-        "members = endpoint1, endpoint2, splunk_ta_uccexample_settings\n\n"
-    )
-
     expected_content = dedent(
         """
+        [admin:splunk_ta_uccexample]
+        match = /
+        members = endpoint1, endpoint2, splunk_ta_uccexample_settings
+
         [admin_external:splunk_ta_uccexample_settings]
         handlertype = python
         python.version = python3
@@ -214,4 +209,4 @@ def test_restmap_endpoints_with_user_defined_handlers(
     with open(file_paths["restmap.conf"]) as fp:
         content = fp.read()
 
-    assert content == expected_top + expected_content
+    assert content == expected_content
