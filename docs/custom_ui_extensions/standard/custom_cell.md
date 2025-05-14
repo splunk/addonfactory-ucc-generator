@@ -90,4 +90,4 @@ export default CustomInputCell;
 
 This is how it looks in the UI:
 
-![image](../../images/custom_ui_extensions/standard/custom_Cell_Output.png)
+![image](../../images/custom_ui_extensions/custom_Cell_Output.png)

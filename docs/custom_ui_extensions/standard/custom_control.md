@@ -109,7 +109,7 @@ export default CustomControl;
 
 This is how it looks in the UI:
 
-![image](../../images/custom_ui_extensions/standard/custom_Control_Output.png)
+![image](../../images/custom_ui_extensions/custom_Control_Output.png)
 
 ### Properties usage
 
