@@ -556,87 +556,81 @@ def test_rest_handler_config_registration():
 
 
 def test_user_defined_rest_handlers_paths():
-    # 1 path
-    cfg1 = RestHandlerConfig(
-        name="test_name_1",
-        endpoint="test_endpoint_1",
-        handlerType="EAI",
-        requestParameters={
-            "create": {
-                "param1": {"schema": {"type": "string"}},
-            }
-        },
-    )
-    # 2 paths
-    cfg2 = RestHandlerConfig(
-        name="test_name_2",
-        endpoint="test_endpoint_2",
-        handlerType="EAI",
-        requestParameters={
-            "list": {
-                "param2": {"schema": {"type": "string"}},
-            }
-        },
-    )
-    # 1 path
-    cfg3 = RestHandlerConfig(
-        name="test_name_3",
-        endpoint="test_endpoint_3",
-        handlerType="EAI",
-        requestParameters={
-            "edit": {
-                "param3": {"schema": {"type": "string"}},
-            }
-        },
+    hnds = UserDefinedRestHandlers(
+        [
+            {
+                "name": "test_name_1",
+                "endpoint": "test_endpoint_1",
+                "handlerType": "EAI",
+                "requestParameters": {
+                    "create": {
+                        "param1": {"schema": {"type": "string"}},
+                    }
+                },
+            },
+            {
+                "name": "test_name_2",
+                "endpoint": "test_endpoint_2",
+                "handlerType": "EAI",
+                "requestParameters": {
+                    "list": {
+                        "param2": {"schema": {"type": "string"}},
+                    }
+                },
+            },
+            {
+                "name": "test_name_3",
+                "endpoint": "test_endpoint_3",
+                "handlerType": "EAI",
+                "requestParameters": {
+                    "edit": {
+                        "param3": {"schema": {"type": "string"}},
+                    }
+                },
+            },
+        ]
     )
 
-    assert len(cfg1.oas_paths) == 1
-    assert len(cfg2.oas_paths) == 2
-    assert len(cfg3.oas_paths) == 1
-
-    hnds = UserDefinedRestHandlers()
-    hnds.add_definitions([cfg1, cfg2])
-    hnds.add_definition(cfg3)
-
-    assert hnds.oas_paths == {
-        "/test_endpoint_1": cfg1.oas_paths["/test_endpoint_1"],
-        "/test_endpoint_2": cfg2.oas_paths["/test_endpoint_2"],
-        "/test_endpoint_2/{name}": cfg2.oas_paths["/test_endpoint_2/{name}"],
-        "/test_endpoint_3/{name}": cfg3.oas_paths["/test_endpoint_3/{name}"],
-    }
+    assert list(hnds.oas_paths.keys()) == [
+        "/test_endpoint_1",
+        "/test_endpoint_2",
+        "/test_endpoint_2/{name}",
+        "/test_endpoint_3/{name}",
+    ]
 
 
 def test_user_defined_rest_handlers_registration_entries():
-    cfg1 = RestHandlerConfig(
-        name="test_name_1",
-        endpoint="test_endpoint_1",
-        handlerType="EAI",
-        registerHandler={
-            "file": "test_handler_1",
-            "actions": ["create", "list"],
-        },
+    hnds = UserDefinedRestHandlers(
+        [
+            {
+                "name": "test_name_1",
+                "endpoint": "test_endpoint_1",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "test_handler_1",
+                    "actions": ["create", "list"],
+                },
+            },
+            {
+                "name": "test_name_2",
+                "endpoint": "test_endpoint_2",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "test_handler_2",
+                    "actions": ["edit"],
+                },
+            },
+            {
+                "name": "test_name_3",
+                "endpoint": "test_endpoint_3",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "test_handler_3",
+                    "actions": ["remove"],
+                },
+            },
+        ]
     )
-    cfg2 = RestHandlerConfig(
-        name="test_name_2",
-        endpoint="test_endpoint_2",
-        handlerType="EAI",
-        registerHandler={
-            "file": "test_handler_2",
-            "actions": ["edit"],
-        },
-    )
-    cfg3 = RestHandlerConfig(
-        name="test_name_3",
-        endpoint="test_endpoint_3",
-        handlerType="EAI",
-        registerHandler={
-            "file": "test_handler_3",
-            "actions": ["remove"],
-        },
-    )
-
-    hnds = UserDefinedRestHandlers()
-    hnds.add_definitions([cfg1, cfg2, cfg3])
 
     assert hnds.endpoint_registration_entries == [
         EndpointRegistrationEntry(
@@ -655,28 +649,35 @@ def test_user_defined_rest_handlers_registration_entries():
     ]
 
 
-def test_user_defined_rest_handlers_duplicates():
-    normal = RestHandlerConfig(
-        name="test_name",
-        endpoint="test_endpoint",
-        handlerType="EAI",
-    )
-    duplicated_name = RestHandlerConfig(
-        name="test_name",
-        endpoint="test_endpoint_other",
-        handlerType="EAI",
-    )
-    duplicated_endpoint = RestHandlerConfig(
-        name="test_name_other",
-        endpoint="test_endpoint",
-        handlerType="EAI",
-    )
-
-    hnds = UserDefinedRestHandlers()
-    hnds.add_definition(normal)
-
+@pytest.mark.parametrize(
+    "user_defined_rest_handlers",
+    [
+        [
+            {
+                "name": "test_name",
+                "endpoint": "test_endpoint",
+                "handlerType": "EAI",
+            },
+            {
+                "name": "test_name",
+                "endpoint": "test_endpoint_other",
+                "handlerType": "EAI",
+            },
+        ],
+        [
+            {
+                "name": "test_name",
+                "endpoint": "test_endpoint_other",
+                "handlerType": "EAI",
+            },
+            {
+                "name": "test_name_other",
+                "endpoint": "test_endpoint_other",
+                "handlerType": "EAI",
+            },
+        ],
+    ],
+)
+def test_user_defined_rest_handlers_duplicates(user_defined_rest_handlers):
     with pytest.raises(ValueError):
-        hnds.add_definition(duplicated_name)
-
-    with pytest.raises(ValueError):
-        hnds.add_definition(duplicated_endpoint)
+        _ = UserDefinedRestHandlers(user_defined_rest_handlers)
