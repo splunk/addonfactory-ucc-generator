@@ -682,7 +682,7 @@ def generate(
         # clean-up sys.path manipulation
         sys.path.pop(0)
 
-    if global_config:
+    if global_config.has_configuration() or global_config.has_inputs():
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
 
