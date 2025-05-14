@@ -95,7 +95,7 @@ class Hook extends CustomHookClass {
 
     /* 
         Put form validation logic here.
-        Return ture if validation pass, false otherwise.
+        Return true if validation pass, false otherwise.
         Call displayErrorMsg when validation failed.
     */
     onSave(dataDict?: NullishFormRecord) {
