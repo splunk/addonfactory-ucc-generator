@@ -22,6 +22,10 @@ on:
         description: "Branch of splunk/addonfactory-ucc-library to use (leave empty to use latest from PyPI)"
         required: false
         default: ""
+      run_pipelines:
+        description: "Run pipelines for all TAs (true/false)"
+        required: false
+        default: "false"
 
 jobs:
   build-ucc:
@@ -116,6 +120,11 @@ jobs:
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
+          
+          # Create a new branch
+          GIT_BRANCH="ucc/ci_test"
+          git checkout -b $GIT_BRANCH
+          echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
           
           # Retry logic for poetry install
           MAX_RETRIES=3
