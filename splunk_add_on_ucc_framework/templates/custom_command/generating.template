@@ -1,0 +1,32 @@
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \
+    dispatch, GeneratingCommand, Configuration, Option, validators
+from {{imported_file_name}} import generate
+
+@Configuration()
+class {{class_name}}Command(GeneratingCommand):
+    {% if syntax or description%}
+    """
+
+    {% if syntax %}
+    ##Syntax
+    {{syntax}}
+    {% endif %}
+
+    {% if description %}
+    ##Description
+    {{description}}
+    {% endif %}
+
+    """
+    {% endif %}
+    {% for arg in list_arg %}
+    {{arg}}
+    {% endfor %}
+
+    def generate(self):
+       return generate(self)
+
+dispatch({{class_name}}Command, sys.argv, sys.stdin, sys.stdout, __name__)

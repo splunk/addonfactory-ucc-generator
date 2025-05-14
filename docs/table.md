@@ -45,6 +45,10 @@ If your add-on has multiple modular inputs and you want to show the input type o
             "field": "serviceTitle"
         },
         {
+            "label": "Input Service",
+            "field": "serviceName"
+        },
+        {
             "label": "Status",
             "field": "disabled"
         }
