@@ -138,9 +138,11 @@ jobs:
           MAX_RETRIES=3
           RETRY_COUNT=0
           
+          cp ../UCC/$UCC_WHL ./
+          
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
-            poetry add ../UCC/$UCC_WHL --group dev && break
+            poetry add $UCC_WHL --group dev && break
             RETRY_COUNT=$((RETRY_COUNT+1))
             echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
@@ -164,16 +166,21 @@ jobs:
           
           mkdir -p package/lib
           poetry export --without-hashes -o package/lib/requirements.txt
+          
+          # Add to commit
+          if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
+            echo "Addinng UCC, pyproject.toml and poetry.lock to commit"
+            git add pyproject.toml poetry.lock $UCC_WHL
+          fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
           poetry run ucc-gen build
       - name: Push changes to a temporary branch in order to trigger the pipeline
-        if: ${{ github.event.inputs.run_pipelines == 'true' }}
+        if: success() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
         run: |
           git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
-          git add pyproject.toml poetry.lock
           git commit -m "CI: UCC build for ${{ github.event_name }} event"
           git push -u origin $GIT_BRANCH
