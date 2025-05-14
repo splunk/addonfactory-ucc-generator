@@ -51,9 +51,7 @@ export abstract class CustomHookClass {
 
     onEditLoad?(): void;
 
-    onSave?(datadict?: NullishFormRecord): Promise<boolean>;
-
-    onSave?(datadict?: NullishFormRecord): boolean;
+    onSave?(datadict?: NullishFormRecord): Promise<boolean> | boolean;
 
     onSaveSuccess?(): void;
 

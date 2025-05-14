@@ -179,6 +179,7 @@ async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterv
 }
 
 it('should correctly display custom Expansion Row for Input', async () => {
+    consoleError.mockImplementation(() => {});
     mockCustomRowInput();
     setup();
     const inputRow = await screen.findByRole('row', { name: `row-${inputName}` });

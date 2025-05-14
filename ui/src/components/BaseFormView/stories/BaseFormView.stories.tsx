@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn, userEvent, within } from '@storybook/test';
 
-import BaseFormView from '../BaseFormView';
+import BaseFormView, { BaseFormProps } from '../BaseFormView';
 import {
     PAGE_CONFIG_BOTH_OAUTH,
     getConfigOauthBasic,
@@ -19,7 +19,6 @@ import {
     getGlobalConfigMockModificationToGroupsConfig,
 } from '../tests/configMocks';
 import { invariant } from '../../../util/invariant';
-import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
@@ -38,6 +37,7 @@ const meta = {
                 stanzaName={props.stanzaName}
                 handleFormSubmit={props.handleFormSubmit}
                 pageContext={{ platform: props.platform }}
+                customComponentContext={undefined}
             />
         );
     },
@@ -48,6 +48,7 @@ type Story = StoryObj<typeof meta>;
 
 export const OuathBasic: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -60,6 +61,7 @@ export const OuathBasic: Story = {
 
 export const OauthOauth: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -71,6 +73,7 @@ export const OauthOauth: Story = {
 
 export const BothOauth: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -82,6 +85,7 @@ export const BothOauth: Story = {
 
 export const OuathBasicEnterprise: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -93,6 +97,7 @@ export const OuathBasicEnterprise: Story = {
 };
 export const OuathBasicCloud: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -105,6 +110,7 @@ export const OuathBasicCloud: Story = {
 
 export const ConfigPageGroups: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -117,6 +123,7 @@ export const ConfigPageGroups: Story = {
 
 export const InputPageGroups: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'demo_input',
         mode: 'create' as Mode,
         page: 'inputs',
@@ -129,6 +136,7 @@ export const InputPageGroups: Story = {
 
 export const GroupModificationsConfig: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',
@@ -141,6 +149,7 @@ export const GroupModificationsConfig: Story = {
 
 export const FieldModifyItself: Story = {
     args: {
+        currentServiceState: {},
         serviceName: 'account',
         mode: 'create' as Mode,
         page: 'configuration',

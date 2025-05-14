@@ -8,10 +8,13 @@ import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { getBuildDirPath } from '../../../util/script';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
-import mockCustomControlMockForTest from '../../CustomControl/CustomControlMockForTest';
+import mockCustomControlMockForTest from '../../CustomControl/mockCustomControlMockForTest';
+import mockCustomHookMockForTest from './CustomHookMockForTest';
+import mockCustomHookMockForTestError from './CustomHookMockForTestError';
 import BaseFormView from '../BaseFormView';
 import {
     getGlobalConfigMockCustomControl,
+    getGlobalConfigMockCustomHook,
     getGlobalConfigMockFourInputServices,
     getGlobalConfigMockGroupsForConfigPage,
     getGlobalConfigMockGroupsForInputPage,
@@ -24,6 +27,12 @@ import { server } from '../../../mocks/server';
 import { getConfigWithAllTypesOfOauth } from '../../EntityModal/TestConfig';
 import { Mode } from '../../../constants/modes';
 import { StandardPages } from '../../../types/components/shareableTypes';
+import {
+    CustomComponentContextProvider,
+    CustomComponentContextType,
+} from '../../../context/CustomComponentContext';
+import { CustomHookConstructor } from '../../../types/components/CustomHookClass';
+import { consoleError } from '../../../../test.setup';
 
 const handleFormSubmit = vi.fn();
 
@@ -31,6 +40,7 @@ const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
 const STANZA_NAME = 'stanzaName';
 const CUSTOM_MODULE = 'CustomControl';
+const CUSTOM_HOOK = 'CustomHook';
 
 vi.mock('../../../util/api', async () => ({
     ...(await vi.importActual('../../../util/api')),
@@ -148,6 +158,39 @@ it('should pass default values to custom component correctly', async () => {
             }}
             handleFormSubmit={handleFormSubmit}
         />
+    );
+    const customModal = await screen.findByTestId('customSelect');
+    expect(customModal).toBeInTheDocument();
+
+    expect((customModal as HTMLSelectElement)?.value).toEqual('input_three');
+});
+
+it('should pass default values to custom component correctly - component via context', async () => {
+    const mockConfig = getGlobalConfigMockCustomControl();
+    setUnifiedConfig(mockConfig);
+
+    const compContext: CustomComponentContextType = {
+        [CUSTOM_MODULE]: {
+            component: mockCustomControlMockForTest,
+            type: 'control',
+        },
+    };
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <BaseFormView
+                page={PAGE_CONF}
+                stanzaName={STANZA_NAME}
+                serviceName={SERVICE_NAME}
+                mode="config"
+                currentServiceState={{
+                    custom_control_field: 'input_three',
+                    name: 'some_unique_name',
+                }}
+                handleFormSubmit={handleFormSubmit}
+                customComponentContext={compContext}
+            />
+        </CustomComponentContextProvider>
     );
     const customModal = await screen.findByTestId('customSelect');
     expect(customModal).toBeInTheDocument();
@@ -399,5 +442,153 @@ describe('Verify if oauth loads correctly', () => {
 
         expect(oauthSelector).toBeInTheDocument();
         expect(oauthSelector).toHaveTextContent(content[authData.auth_type]);
+    });
+});
+
+describe('Verify if custom hook works correctly', () => {
+    const doConfigMockup = () => {
+        const mockConfig = getGlobalConfigMockCustomHook(CUSTOM_HOOK);
+        setUnifiedConfig(mockConfig);
+    };
+
+    const setupViaCustomFile = () => {
+        doConfigMockup();
+        // doMock is not hoisted to the top of the file
+        vi.doMock(`${getBuildDirPath()}/custom/${CUSTOM_HOOK}.js`, () => ({
+            default: mockCustomHookMockForTest,
+        }));
+
+        render(
+            <BaseFormView
+                page={PAGE_CONF}
+                stanzaName={STANZA_NAME}
+                serviceName={SERVICE_NAME}
+                mode="create"
+                currentServiceState={{
+                    custom_control_field: 'input_three',
+                    name: 'some_unique_name',
+                }}
+                handleFormSubmit={handleFormSubmit}
+            />
+        );
+    };
+
+    const setupHookViaContext = (withErrors: boolean = false, mode: Mode = 'create') => {
+        doConfigMockup();
+        let component: CustomHookConstructor = mockCustomHookMockForTest;
+
+        if (withErrors) {
+            // @ts-expect-error type error as this mock has only errors
+            component = mockCustomHookMockForTestError;
+        }
+        const compContext: CustomComponentContextType = {
+            [CUSTOM_HOOK]: {
+                component,
+                type: 'hook',
+            },
+        };
+        render(
+            <CustomComponentContextProvider customComponents={compContext}>
+                <BaseFormView
+                    page={PAGE_CONF}
+                    stanzaName={STANZA_NAME}
+                    serviceName={SERVICE_NAME}
+                    mode={mode}
+                    currentServiceState={{
+                        custom_control_field: 'input_three',
+                        name: 'some_unique_name',
+                    }}
+                    handleFormSubmit={handleFormSubmit}
+                    customComponentContext={compContext}
+                />
+            </CustomComponentContextProvider>
+        );
+    };
+    it('custom hook via file in custom dir, loads name value from hook', async () => {
+        setupViaCustomFile();
+        const nameInput = await screen.findByRole('textbox', { name: 'Name' });
+        expect(nameInput).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(nameInput).toHaveValue('basic value for name loaded from hook');
+        });
+    });
+
+    it('custom hook via file in custom dir, loads name markdown message via hook', async () => {
+        setupViaCustomFile();
+
+        await waitFor(() => {
+            expect(screen.getByText('This is a markdown message added from hook'));
+        });
+    });
+
+    it('custom hook via context, loads name value from hook', async () => {
+        setupHookViaContext();
+
+        const nameInput = await screen.findByRole('textbox', { name: 'Name' });
+        expect(nameInput).toBeInTheDocument();
+
+        await waitFor(() => {
+            expect(nameInput).toHaveValue('basic value for name loaded from hook');
+        });
+    });
+
+    it('custom hook via context, modifies name value correctly', async () => {
+        setupHookViaContext();
+        const user = userEvent.setup();
+
+        const nameInput = await screen.findByRole('textbox', { name: 'Name' });
+        expect(nameInput).toBeInTheDocument();
+        const newNameValue = 'addNumberAtEndInHook';
+        await user.clear(nameInput);
+        await user.type(nameInput, newNameValue);
+
+        await waitFor(() => {
+            expect(nameInput).toHaveValue(`${newNameValue}321`);
+        });
+    });
+
+    it('custom hook via context, error handling on create', async () => {
+        const consoleHandler = vi.fn();
+        consoleError.mockImplementation(consoleHandler);
+        setupHookViaContext(true);
+
+        await waitFor(() => {
+            expect(consoleHandler).toHaveBeenCalledWith(
+                '[Custom Hook] Something went wrong while calling onCreate. Error: Error Error handling test in Hook onCreate method'
+            );
+        });
+
+        await waitFor(() => {
+            expect(consoleHandler).toHaveBeenCalledWith(
+                '[Custom Hook] Something went wrong while calling onRender. Error: Error Error handling test in Hook onRender method'
+            );
+        });
+
+        // to be added
+        // const nameInput = screen.getByRole('textbox', { name: 'Name' });
+
+        // const user = userEvent.setup();
+
+        // await user.clear(nameInput);
+        // await user.type(nameInput, 'newNameValue');
+
+        // await waitFor(() => {
+        //     expect(consoleHandler).toHaveBeenCalledWith(
+        //         '[Custom Hook] Something went wrong while calling onChange. Error: Error Error handling test in Hook onChange method'
+        //     );
+        // });
+    });
+
+    it('custom hook via context, error handling on edit', async () => {
+        const consoleHandler = vi.fn();
+        consoleError.mockImplementation(consoleHandler);
+        setupHookViaContext(true, 'edit');
+
+        await waitFor(() => {
+            expect(consoleHandler).toHaveBeenCalledWith(
+                '[Custom Hook] Something went wrong while calling onEditLoad. Error: Error Error handling test in Hook onEditLoad method'
+            );
+        });
     });
 });
