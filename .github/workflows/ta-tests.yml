@@ -143,7 +143,7 @@ jobs:
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
             echo "Installing UCC package $UCC_WHL"
-            poetry add $UCC_WHL --group dev && break
+            poetry add "./$UCC_WHL" --group dev && break
             RETRY_COUNT=$((RETRY_COUNT+1))
             echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
