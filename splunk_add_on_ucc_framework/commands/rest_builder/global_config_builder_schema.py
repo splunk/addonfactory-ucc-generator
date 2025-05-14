@@ -248,19 +248,20 @@ class GlobalConfigBuilderSchema:
     ) -> Tuple[List[RestFieldBuilder], List[RestFieldBuilder]]:
         fields = []
         special_fields = []
-        for field in fields_content:
-            rest_field = RestFieldBuilder(
-                field["field"],
-                _is_true(field.get("required")),
-                _is_true(field.get("encrypted")),
-                field.get("defaultValue"),
-                ValidatorBuilder().build(field.get("validators")),
-            )
+        if not all([not fc for fc in fields_content]):
+            for field in fields_content:
+                rest_field = RestFieldBuilder(
+                    field["field"],
+                    _is_true(field.get("required")),
+                    _is_true(field.get("encrypted")),
+                    field.get("defaultValue"),
+                    ValidatorBuilder().build(field.get("validators")),
+                )
 
-            if field["field"] != "name":
-                fields.append(rest_field)
-            else:
-                special_fields.append(rest_field)
+                if field["field"] != "name":
+                    fields.append(rest_field)
+                else:
+                    special_fields.append(rest_field)
         return fields, special_fields
 
     """
@@ -273,41 +274,42 @@ class GlobalConfigBuilderSchema:
     def _get_oauth_enitities(
         self, content: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
-        for entity_element in content:
-            # Check if we have oauth type
-            if entity_element["type"] != "oauth":
-                continue
+        if not all([not fc for fc in content]):
+            for entity_element in content:
+                # Check if we have oauth type
+                if entity_element["type"] != "oauth":
+                    continue
 
-            auth_types = entity_element["options"]["auth_type"]
+                auth_types = entity_element["options"]["auth_type"]
 
-            if "basic" in auth_types:
-                # Append all the basic auth fields to the content
-                content = content + entity_element["options"]["basic"]
+                if "basic" in auth_types:
+                    # Append all the basic auth fields to the content
+                    content = content + entity_element["options"]["basic"]
 
-            if "oauth" in auth_types:
-                # Append all the oauth auth fields to the content
-                content = content + entity_element["options"]["oauth"]
+                if "oauth" in auth_types:
+                    # Append all the oauth auth fields to the content
+                    content = content + entity_element["options"]["oauth"]
 
-            if "oauth_client_credentials" in auth_types:
-                # Append all the oauth client credentials auth fields to the content
-                content = (
-                    content + entity_element["options"]["oauth_client_credentials"]
-                )
+                if "oauth_client_credentials" in auth_types:
+                    # Append all the oauth client credentials auth fields to the content
+                    content = (
+                        content + entity_element["options"]["oauth_client_credentials"]
+                    )
 
-            if "oauth" in auth_types or "oauth_client_credentials" in auth_types:
-                # Append OAuth fields if there is at least one auth type
-                content = content + [
-                    {"field": "access_token", "encrypted": True},
-                    {"field": "refresh_token", "encrypted": True},
-                    {"field": "instance_url"},
-                ]
+                if "oauth" in auth_types or "oauth_client_credentials" in auth_types:
+                    # Append OAuth fields if there is at least one auth type
+                    content = content + [
+                        {"field": "access_token", "encrypted": True},
+                        {"field": "refresh_token", "encrypted": True},
+                        {"field": "instance_url"},
+                    ]
 
-            if len(auth_types) > 1:
-                # Append auth_type field if there are multiple auth types
-                content = content + [{"field": "auth_type"}]
+                if len(auth_types) > 1:
+                    # Append auth_type field if there are multiple auth types
+                    content = content + [{"field": "auth_type"}]
 
-            # We will remove the oauth type entity as we have replaced it with all the entity fields
-            content.remove(entity_element)
-            break
+                # We will remove the oauth type entity as we have replaced it with all the entity fields
+                content.remove(entity_element)
+                break
 
         return content

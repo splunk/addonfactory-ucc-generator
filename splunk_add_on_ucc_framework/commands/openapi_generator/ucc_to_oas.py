@@ -170,7 +170,7 @@ def __add_schemas_object(
                         schema_name, schema_object = __get_schema_object(
                             name=tab.name, entities=tab.entity, without=["name"]
                         )
-                    open_api_object.components.schemas[schema_name] = schema_object
+                        open_api_object.components.schemas[schema_name] = schema_object
             if hasattr(global_config.pages, "inputs") and hasattr(
                 global_config.pages.inputs, "services"
             ):
