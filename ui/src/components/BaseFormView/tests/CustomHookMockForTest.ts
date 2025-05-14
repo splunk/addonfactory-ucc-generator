@@ -11,9 +11,8 @@ import { BaseFormStateData } from '../../../types/components/BaseFormTypes';
 import { StandardPages } from '../../../types/components/shareableTypes';
 
 const debounce = (func: { (state: BaseFormState): void }, wait: number) => {
-    let timeout: NodeJS.Timeout | undefined;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
     // This is the function that is returned and will be executed many times
-    // We spread (...args) to capture any number of parameters we want to pass
     return function executedFunction(state: BaseFormState) {
         // The callback function to be executed after
         // the debounce time has elapsed
@@ -27,9 +26,6 @@ const debounce = (func: { (state: BaseFormState): void }, wait: number) => {
         // setTimeout returns a truthy value
         timeout = setTimeout(() => {
             func(state);
-            // console.log('in Hook: debouncedNameChange', {
-            //     state,
-            // });
         }, wait);
     };
 };
@@ -53,13 +49,10 @@ class Hook extends CustomHookClass {
         this.util = util;
         this.groupName = groupName;
         this.debouncedNameChange = debounce(this.nameChange.bind(this), 200);
-
-        // console.log('Inside Hook mode: ', mode);
     }
 
     onCreate() {
         if (this.mode === 'create') {
-            // // console.log('in Hook: onCreate');
             // This is an example of how to store groupName value for a particular form field.
             this.util.setState((prevState) => {
                 const data = { ...prevState.data };
@@ -83,16 +76,12 @@ class Hook extends CustomHookClass {
             stateModified?: boolean;
         }
     ) {
-        // console.log('in Hook: onChange ', field, ' value : ', value);
-        // console.log('in Hook: onChange state: ', this.state);
         if (field === 'name') {
             this.debouncedNameChange(state);
         }
     }
 
     onRender() {
-        // console.log('in Hook: onRender', this.serviceName);
-
         this.util.setState((prevState) => {
             const data = { ...prevState.data };
             data.name.markdownMessage = {
@@ -107,10 +96,9 @@ class Hook extends CustomHookClass {
     /* 
         Put form validation logic here.
         Return ture if validation pass, false otherwise.
-        Call displayErrorMsg when validtion failed.
+        Call displayErrorMsg when validation failed.
     */
     onSave(dataDict?: NullishFormRecord) {
-        // console.log('in Hook: onSave with data: ', dataDict);
         const accountname = dataDict?.name;
         const { auth_type: authType }: { auth_type?: AvaillableOAuthTypes } = dataDict || {};
         let endpoint = dataDict?.url;
@@ -173,10 +161,6 @@ class Hook extends CustomHookClass {
     }
 
     nameChange(state: BaseFormState) {
-        // console.log('in Hook: nameChange this.serviceName', {
-        //     serviceName: this.serviceName,
-        //     state,
-        // });
         if (state?.data?.name.value === 'addNumberAtEndInHook') {
             this.util.setState((prevState) => {
                 const data = { ...prevState.data };

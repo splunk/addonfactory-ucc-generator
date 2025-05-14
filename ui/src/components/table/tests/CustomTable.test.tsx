@@ -194,30 +194,20 @@ const moreInfoToContainName = async (inputRow: HTMLElement, name: string) => {
     await collapseRow(inputRow);
 };
 
-it('should correctly display expanded row section for freshly added row', async () => {
-    setup();
-    const allRows = screen.getAllByRole('row');
-    // 3 rows + header
-    expect(allRows.length).toBe(exampleProps.data.length + 1);
-    await moreInfoToContainName(allRows[1], exampleProps.data[0].name); // first row after header
-    await moreInfoToContainName(allRows[3], exampleProps.data[2].name); // last row
-    const btnAddRow = screen.getByTestId(buttonTestId);
-    await userEvent.click(btnAddRow);
-    const updatedAllRows = screen.getAllByRole('row');
-    expect(updatedAllRows.length).toBe(exampleProps.data.length + 2); // 3 rows + header + added row
-    await moreInfoToContainName(updatedAllRows[4], `Additional Name 3`); // added row
-});
+it.each([setup, setupComponentContext])(
+    'should correctly display expanded row section for freshly added row',
+    async (setupFnc) => {
+        setupFnc();
+        const allRows = screen.getAllByRole('row');
 
-it('should correctly display expanded row section for freshly added row - component context', async () => {
-    setupComponentContext();
-    const allRows = screen.getAllByRole('row');
-    // 3 rows + header
-    expect(allRows.length).toBe(exampleProps.data.length + 1);
-    await moreInfoToContainName(allRows[1], exampleProps.data[0].name); // first row after header
-    await moreInfoToContainName(allRows[3], exampleProps.data[2].name); // last row
-    const btnAddRow = screen.getByTestId(buttonTestId);
-    await userEvent.click(btnAddRow);
-    const updatedAllRows = screen.getAllByRole('row');
-    expect(updatedAllRows.length).toBe(exampleProps.data.length + 2); // 3 rows + header + added row
-    await moreInfoToContainName(updatedAllRows[4], `Additional Name 3`); // added row
-});
+        // 3 rows + header
+        expect(allRows.length).toBe(exampleProps.data.length + 1);
+        await moreInfoToContainName(allRows[1], exampleProps.data[0].name); // first row after header
+        await moreInfoToContainName(allRows[3], exampleProps.data[2].name); // last row
+        const btnAddRow = screen.getByTestId(buttonTestId);
+        await userEvent.click(btnAddRow);
+        const updatedAllRows = screen.getAllByRole('row');
+        expect(updatedAllRows.length).toBe(exampleProps.data.length + 2); // 3 rows + header + added row
+        await moreInfoToContainName(updatedAllRows[4], `Additional Name 3`); // added row
+    }
+);
