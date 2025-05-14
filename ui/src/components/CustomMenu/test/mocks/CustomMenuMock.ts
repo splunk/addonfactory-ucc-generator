@@ -1,9 +1,10 @@
 import { GlobalConfig } from '../../../../publicApi';
+import { CustomMenuBase } from '../../CustomMenuBase';
 
-class CustomMenuMock {
+class CustomMenuMock extends CustomMenuBase {
     globalConfig: GlobalConfig;
 
-    el?: HTMLElement;
+    el: HTMLElement;
 
     setValue: (val: { service: string; input?: string }) => void;
 
@@ -19,6 +20,7 @@ class CustomMenuMock {
         el: HTMLElement,
         setValue: (val: { service: string; input?: string }) => void
     ) {
+        super(globalConfig, el, setValue);
         this.globalConfig = globalConfig;
         this.el = el;
         this.setValue = setValue;
