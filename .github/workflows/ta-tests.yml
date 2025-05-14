@@ -122,9 +122,17 @@ jobs:
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
           
           # Create a new branch
-          GIT_BRANCH="ucc/ci_test"
-          git checkout -b $GIT_BRANCH
-          echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
+          if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
+            GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
+          
+            echo "Deleting existing branch $GIT_BRANCH if it exists"
+            git push origin --delete $GIT_BRANCH 2>/dev/null || true
+          
+            echo "Creating new branch $GIT_BRANCH"
+            git checkout -b $GIT_BRANCH
+          
+            echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
+          fi
           
           # Retry logic for poetry install
           MAX_RETRIES=3
@@ -160,3 +168,11 @@ jobs:
         working-directory: TA
         run: |
           poetry run ucc-gen build
+      - name: Push changes to a temporary branch in order to trigger the pipeline
+        if: ${{ github.event.inputs.run_pipelines == 'true' }}
+        run: |
+          git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
+          git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
+          git add .
+          git commit -m "CI: UCC build for ${{ github.event_name }} event"
+          git push -u origin $GIT_BRANCH
