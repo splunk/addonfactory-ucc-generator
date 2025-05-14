@@ -41,5 +41,5 @@ UCC now provides support for `.conf-only-TA's`, ensuring the following elements 
 
 You can extend your add-ons with the following files:
 
-* to extend the UI, use custom codes. For more information, see [Custom hook](custom_ui_extensions/custom_hook.md).
+* to extend the UI, use custom codes. For more information, see [Custom hook](custom_ui_extensions/standard/custom_hook.md).
 * to extend the build process, use the `additional_packaging.py` file. For more information, see [additional_packaging.py file](additional_packaging.md).
