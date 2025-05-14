@@ -116,7 +116,9 @@ jobs:
       - name: Install Dependencies in Target Add-on
         working-directory: TA
         run: |
-          UCC_WHL=$(ls ../UCC/*.whl)
+          cp ../UCC/*.whl ./
+          UCC_WHL=$(ls *.whl)
+          
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
@@ -137,8 +139,6 @@ jobs:
           # Retry logic for poetry install
           MAX_RETRIES=3
           RETRY_COUNT=0
-          
-          cp ../UCC/$UCC_WHL ./
           
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
