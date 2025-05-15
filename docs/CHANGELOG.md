@@ -1,5 +1,20 @@
 # Changelog
 
+# [5.65.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.64.0...v5.65.0) (2025-05-15)
+
+
+### Bug Fixes
+
+* **Oauth Client Credentials:** OpenAPI fix ([#1748](https://github.com/splunk/addonfactory-ucc-generator/issues/1748)) ([fe2eb86](https://github.com/splunk/addonfactory-ucc-generator/commit/fe2eb86c37985bc78890871f0ebe6867622b6fac))
+
+
+### Features
+
+* add ucc-gen-ui cli command ([#1705](https://github.com/splunk/addonfactory-ucc-generator/issues/1705)) ([d9c3210](https://github.com/splunk/addonfactory-ucc-generator/commit/d9c3210eee083cd527c33e6595bd98e259d53e92))
+* base code for supporting custom search command  ([#1693](https://github.com/splunk/addonfactory-ucc-generator/issues/1693)) ([03cb0d2](https://github.com/splunk/addonfactory-ucc-generator/commit/03cb0d2602cd4a63e98a7fcb3c1525d501d4d26c)), closes [#1694](https://github.com/splunk/addonfactory-ucc-generator/issues/1694) [#1695](https://github.com/splunk/addonfactory-ucc-generator/issues/1695) [#1697](https://github.com/splunk/addonfactory-ucc-generator/issues/1697)
+* custom react component via context ([#1706](https://github.com/splunk/addonfactory-ucc-generator/issues/1706)) ([1a65cf0](https://github.com/splunk/addonfactory-ucc-generator/commit/1a65cf0f0a06e2633660cc83f6aa4ef04dffa8fd))
+* update base.html if it is incorrect ([#1750](https://github.com/splunk/addonfactory-ucc-generator/issues/1750)) ([05066ca](https://github.com/splunk/addonfactory-ucc-generator/commit/05066ca8ba5284c8ec120c8731817d67a2edf9c0))
+
 # [5.64.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.63.0...v5.64.0) (2025-05-08)
 
 
