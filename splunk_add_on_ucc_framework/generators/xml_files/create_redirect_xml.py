@@ -33,7 +33,7 @@ class RedirectXml(FileGenerator):
 
     def generate(self) -> Dict[str, str]:
         if not self._global_config.has_oauth():
-            return {"": ""}
+            return {}
         file_name = f"{self.ta_name}_redirect.xml"
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", file_name]

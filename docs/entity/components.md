@@ -107,7 +107,8 @@ A clear button is visible to the right of the dropdown when this field is marked
     "type": "singleSelect",
     "label": "Example Account",
     "options": {
-        "referenceName": "account"
+        "referenceName": "account",
+        "allowList": "^[a-zA-Z]\\w*$"
     },
     "help": "",
     "field": "account",
@@ -560,7 +561,7 @@ It only sends file content to the server by reading it using the [readAsArrayBuf
 
 If `options` property contains useBase64Encoding is set up as true, then readAsArrayBuffer method is replaced with [readAsDataURL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) and obtained data are correctly proceeded to store only file content (beggining of result is removed, as it contains unwanted informations and pure encoded file content is saved). With that approach any file is stored in **Base64** format.
 
-The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
+The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/standard/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
 
 This feature allows you to upload a single file.
 
@@ -694,4 +695,4 @@ During the build process, new index field will be converted to a full [definitio
 
 ## `Custom`
 
-Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/custom_control.md) page to learn more.
+Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/standard/custom_control.md) page to learn more.

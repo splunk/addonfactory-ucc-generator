@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
@@ -11,8 +12,8 @@ import { MockRowData } from '../stories/rowDataMockup';
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { getSimpleConfigStylePage } from '../stories/configMockups';
 
-const handleRequestModalOpen = jest.fn();
-const handleOpenPageStyleDialog = jest.fn();
+const handleRequestModalOpen = vi.fn();
+const handleOpenPageStyleDialog = vi.fn();
 
 const renderTable = () => {
     const props = {

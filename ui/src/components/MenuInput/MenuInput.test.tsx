@@ -1,11 +1,11 @@
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import userEvent, { UserEvent } from '@testing-library/user-event';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { z } from 'zod';
 import MenuInput from './MenuInput';
-import { mockCustomMenu, MockCustomRenderable } from '../../tests/helpers';
-import { getUnifiedConfigs } from '../../util/util';
+import { setUnifiedConfig } from '../../util/util';
 import {
     InputsPageTableSchema,
     pages,
@@ -14,33 +14,142 @@ import {
 } from '../../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { PageContextProvider } from '../../context/PageContext';
+import { getBuildDirPath } from '../../util/script';
+import {
+    CustomComponentContextType,
+    CustomComponentContextProvider,
+} from '../../context/CustomComponentContext';
+import { CustomMenuBase } from '../CustomMenu/CustomMenuBase';
 
-jest.mock('../../util/util');
+const mockRenderFunction = vi.fn().mockReturnValue(undefined);
 
-const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
-let mockCustomMenuInstance: MockCustomRenderable;
+class MockCustomRenderableCustomMenu extends CustomMenuBase {
+    navigator = vi.fn<(arg0: unknown) => void>();
 
-beforeEach(() => {
-    mockCustomMenuInstance = mockCustomMenu().mockCustomMenuInstance;
-});
+    render = mockRenderFunction;
+}
 
 function setup(inputs: z.infer<typeof pages.shape.inputs>) {
-    const mockHandleRequestOpen = jest.fn();
+    const mockHandleRequestOpen = vi.fn();
     const globalConfigMock = getGlobalConfigMock();
 
-    getUnifiedConfigsMock.mockImplementation(() => ({
+    setUnifiedConfig({
         ...globalConfigMock,
         pages: {
             ...globalConfigMock.pages,
             inputs,
         },
-    }));
+    });
+
     render(
         <PageContextProvider platform="cloud">
             <AnimationToggleProvider enabled={false}>
                 <MenuInput handleRequestOpen={mockHandleRequestOpen} />
             </AnimationToggleProvider>
         </PageContextProvider>
+    );
+    return { mockHandleRequestOpen };
+}
+
+const BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU = {
+    services: [
+        {
+            name: 'test-service-name1',
+            title: 'test-service-title1',
+            entity: [],
+        },
+    ],
+    menu: {
+        src: 'CustomMenu',
+        type: 'external',
+    },
+    title: '',
+    table: {
+        actions: [],
+        header: [
+            {
+                field: '',
+                label: '',
+            },
+        ],
+        customRow: {},
+    },
+} satisfies z.infer<typeof pages.shape.inputs>;
+
+const BASIC_INPUTS_CONFIG_GROUPED_SERVICES = {
+    services: [
+        {
+            name: 'test-service-name1',
+            title: 'test-service-title1',
+            subTitle: 'test-service-subTitle1',
+            entity: [],
+        },
+        {
+            name: 'test-subservice1-name1',
+            title: 'test-subservice1-title1',
+            subTitle: 'test-subservice-subTitle1',
+            entity: [],
+        },
+        {
+            name: 'test-subservice1-name2',
+            title: 'test-subservice1-title2',
+            subTitle: 'test-subservice-subTitle2',
+            entity: [],
+        },
+        {
+            name: 'test-service-name2',
+            title: 'test-service-title2',
+            subTitle: 'test-service-subTitle2',
+            entity: [],
+        },
+    ],
+    groupsMenu: [
+        {
+            groupName: 'test-group-name1',
+            groupTitle: 'test-group-title1',
+            groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+        },
+    ],
+    title: '',
+    table: {
+        actions: [],
+        header: [
+            {
+                field: '',
+                label: '',
+            },
+        ],
+        customRow: {},
+    },
+};
+
+function setupComponentContext(inputs: z.infer<typeof pages.shape.inputs>) {
+    const mockHandleRequestOpen = vi.fn();
+    const globalConfigMock = getGlobalConfigMock();
+
+    const compContext: CustomComponentContextType = {
+        CustomMenu: {
+            component: MockCustomRenderableCustomMenu,
+            type: 'menu',
+        },
+    };
+
+    setUnifiedConfig({
+        ...globalConfigMock,
+        pages: {
+            ...globalConfigMock.pages,
+            inputs,
+        },
+    });
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <PageContextProvider platform="cloud">
+                <AnimationToggleProvider enabled={false}>
+                    <MenuInput handleRequestOpen={mockHandleRequestOpen} />
+                </AnimationToggleProvider>
+            </PageContextProvider>
+        </CustomComponentContextProvider>
     );
     return { mockHandleRequestOpen };
 }
@@ -149,52 +258,7 @@ describe('multiple services', () => {
 
     describe('groups', () => {
         function getGroupedServices(): z.infer<typeof InputsPageTableSchema> {
-            return {
-                services: [
-                    {
-                        name: 'test-service-name1',
-                        title: 'test-service-title1',
-                        subTitle: 'test-service-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name1',
-                        title: 'test-subservice1-title1',
-                        subTitle: 'test-subservice-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name2',
-                        title: 'test-subservice1-title2',
-                        subTitle: 'test-subservice-subTitle2',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-service-name2',
-                        title: 'test-service-title2',
-                        subTitle: 'test-service-subTitle2',
-                        entity: [],
-                    },
-                ],
-                groupsMenu: [
-                    {
-                        groupName: 'test-group-name1',
-                        groupTitle: 'test-group-title1',
-                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
-                    },
-                ],
-                title: '',
-                table: {
-                    actions: [],
-                    header: [
-                        {
-                            field: '',
-                            label: '',
-                        },
-                    ],
-                    customRow: {},
-                },
-            };
+            return BASIC_INPUTS_CONFIG_GROUPED_SERVICES;
         }
 
         it('should render group title', async () => {
@@ -462,100 +526,52 @@ describe('multiple services', () => {
 
     describe('menu', () => {
         it('should render CustomMenu wrapper with groupsMenu without rendering underlying custom component', async () => {
+            vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
+                default: MockCustomRenderableCustomMenu,
+            }));
             setup({
-                services: [
-                    {
-                        name: 'test-service-name1',
-                        title: 'test-service-title1',
-                        subTitle: 'test-service-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name1',
-                        title: 'test-subservice1-title1',
-                        subTitle: 'test-subservice-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name2',
-                        title: 'test-subservice1-title2',
-                        subTitle: 'test-subservice-subTitle2',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-service-name2',
-                        title: 'test-service-title2',
-                        subTitle: 'test-service-subTitle2',
-                        entity: [],
-                    },
-                ],
+                ...BASIC_INPUTS_CONFIG_GROUPED_SERVICES,
                 menu: {
                     src: 'CustomMenu',
                     type: 'external',
-                },
-                groupsMenu: [
-                    {
-                        groupName: 'test-group-name1',
-                        groupTitle: 'test-group-title1',
-                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
-                    },
-                ],
-                title: '',
-                table: {
-                    actions: [],
-                    header: [
-                        {
-                            field: '',
-                            label: '',
-                        },
-                    ],
-                    customRow: {},
                 },
             });
             // the loading indicator from CustomMenu component
             const loadingEl = screen.getByText('Loading...');
             expect(loadingEl).toBeInTheDocument();
-            await waitFor(() => expect(loadingEl).not.toHaveTextContent('Loading...'));
+            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
 
             const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
 
             expect(createNewInputBtn).toBeInTheDocument();
             // that's weird
-            expect(mockCustomMenuInstance.render).not.toHaveBeenCalled();
+            expect(mockRenderFunction).not.toHaveBeenCalled();
         });
 
         it('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component', async () => {
-            setup({
-                services: [
-                    {
-                        name: 'test-service-name1',
-                        title: 'test-service-title1',
-                        entity: [],
-                    },
-                ],
-                menu: {
-                    src: 'CustomMenu',
-                    type: 'external',
-                },
-                title: '',
-                table: {
-                    actions: [],
-                    header: [
-                        {
-                            field: '',
-                            label: '',
-                        },
-                    ],
-                    customRow: {},
-                },
-            });
+            vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
+                default: MockCustomRenderableCustomMenu,
+            }));
+
+            setup(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
 
             // the loading indicator is from CustomMenu component
             const loadingEl = screen.getByText('Loading...');
             expect(loadingEl).toBeInTheDocument();
-            await waitFor(() => expect(loadingEl).not.toHaveTextContent('Loading...'));
+            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
+            expect(mockRenderFunction).toHaveBeenCalled();
+            const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
+            expect(createNewInputBtn).not.toBeInTheDocument();
+        });
 
-            expect(mockCustomMenuInstance.render).toHaveBeenCalled();
+        it('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component - contex components', async () => {
+            setupComponentContext(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
+
+            // the loading indicator is from CustomMenu component
+            const loadingEl = screen.getByText('Loading...');
+            expect(loadingEl).toBeInTheDocument();
+            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
+            expect(mockRenderFunction).toHaveBeenCalled();
             const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
             expect(createNewInputBtn).not.toBeInTheDocument();
         });

@@ -58,7 +58,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
-
+from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
 
@@ -489,7 +489,7 @@ def generate(
     global_config_update.handle_global_config_update(global_config, gc_path)
     try:
         validator = global_config_validator.GlobalConfigValidator(
-            internal_root_dir, global_config
+            internal_root_dir, global_config, source
         )
         validator.validate()
         logger.info("globalConfig file is valid")
@@ -606,6 +606,10 @@ def generate(
     if removed_list:
         logger.info("Removed:\n{}".format("\n".join(removed_list)))
     utils.check_author_name(source, app_manifest)
+
+    # Update files before overwriting
+    handle_package_files_update(source)
+
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 

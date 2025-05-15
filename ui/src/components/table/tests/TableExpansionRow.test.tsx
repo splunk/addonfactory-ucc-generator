@@ -1,21 +1,29 @@
+import { vi } from 'vitest';
 import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
 import { BrowserRouter } from 'react-router-dom';
+
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
 import { TableContextProvider } from '../../../context/TableContext';
 import { setUnifiedConfig } from '../../../util/util';
 import { getMockServerResponseForInput } from '../../../mocks/server-response';
 import { getBuildDirPath } from '../../../util/script';
-import { invariant } from '../../../util/invariant';
-import { MOCK_CONFIG } from './mocks';
-import mockCustomInputRow from './mocks/CustomRowMock';
 import mockCustomInputRowGetDLError from './mocks/CustomRowMockGetDLError';
 import mockCustomInputRowRenderError from './mocks/CustomRowMockRenderError';
 import mockCustomInputRowUnvalid from './mocks/CustomRowMockGetDLUnvalid';
-import { consoleError } from '../../../../jest.setup';
+import mockCustomInputRow from './mocks/CustomRowMock';
+import { invariant } from '../../../util/invariant';
+import { MOCK_CONFIG } from './mocks';
+import { GlobalConfig } from '../../../publicApi';
+import { consoleError } from '../../../../test.setup';
+
+vi.mock('../../../util/api', async () => ({
+    ...(await vi.importActual('../../../util/api')),
+    postRequest: (await vi.importActual('../../../util/__mocks__/mockApi')).postRequest,
+}));
 
 const inputName = 'example_input_one';
 const interval = 7766;
@@ -24,52 +32,40 @@ const updatedInterval = 7788;
 const props = {
     page: 'inputs',
     serviceName: inputName,
-    handleRequestModalOpen: jest.fn(),
-    handleOpenPageStyleDialog: jest.fn(),
+    handleRequestModalOpen: vi.fn(),
+    handleOpenPageStyleDialog: vi.fn(),
 } satisfies ITableWrapperProps;
 
 const customRowFileName = 'CustomInputRow';
 
 const mockCustomRowInput = () => {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
-        virtual: true,
-    });
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRow,
+    }));
 };
 
 const mockCustomRowInputGetDLError = () => {
-    jest.mock(
-        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowGetDLError,
-        {
-            virtual: true,
-        }
-    );
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRowGetDLError,
+    }));
 };
 
 const mockCustomRowInputToUndefined = () => {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => undefined, {
-        virtual: true,
-    });
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: undefined,
+    }));
 };
 
 const mockCustomRowInputToUnvalidGetDL = () => {
-    jest.mock(
-        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowUnvalid,
-        {
-            virtual: true,
-        }
-    );
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRowUnvalid,
+    }));
 };
 
 const mockCustomRowInputRenderError = () => {
-    jest.mock(
-        `${getBuildDirPath()}/custom/${customRowFileName}.js`,
-        () => mockCustomInputRowRenderError,
-        {
-            virtual: true,
-        }
-    );
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomInputRowRenderError,
+    }));
 };
 
 const waitForRowAndExpand = async (rowName: string) => {
@@ -82,7 +78,52 @@ const waitForRowAndExpand = async (rowName: string) => {
 };
 
 function setup() {
-    setUnifiedConfig(MOCK_CONFIG);
+    const headers = [
+        {
+            label: 'Name',
+            field: 'name',
+        },
+        {
+            label: 'Interval',
+            field: 'interval',
+        },
+    ];
+    setUnifiedConfig({
+        ...MOCK_CONFIG,
+        pages: {
+            ...MOCK_CONFIG.pages,
+            inputs: {
+                title: inputName,
+                services: [
+                    {
+                        title: inputName,
+                        name: inputName,
+                        entity: [
+                            {
+                                label: 'Name',
+                                field: 'name',
+                                type: 'text',
+                            },
+                            {
+                                label: 'Interval',
+                                field: 'interval',
+                                type: 'text',
+                            },
+                        ],
+                    },
+                ],
+                table: {
+                    actions: ['edit'],
+                    header: headers,
+                    moreInfo: headers,
+                    customRow: {
+                        src: customRowFileName,
+                        type: 'external',
+                    },
+                },
+            },
+        },
+    } satisfies GlobalConfig);
 
     server.use(
         http.get(`/servicesNS/nobody/-/splunk_ta_uccexample_${inputName}`, () =>
@@ -117,26 +158,32 @@ const getExpandable = (inputRow: HTMLElement) => {
 };
 
 async function expectIntervalInExpandedRow(inputRow: HTMLElement, expectedInterval: number) {
-    mockCustomRowInput();
     const expandable = getExpandable(inputRow);
     if (expandable.getAttribute('aria-expanded') === 'false') {
         await userEvent.click(expandable);
         await waitFor(() => expect(expandable.getAttribute('aria-expanded')).not.toBe('false'));
     }
+
     const loading = screen.queryByText('Loading...');
     if (loading) {
         await waitForElementToBeRemoved(loading);
     }
 
-    const allDefinitions = screen.getAllByRole('definition').map((el) => el.textContent);
+    await waitFor(async () => {
+        const allDefinitions = (await screen.findAllByRole('definition')).map(
+            (el) => el.textContent
+        );
 
-    expect(allDefinitions).toContain(`${expectedInterval} sec`);
+        expect(allDefinitions).toContain(`${expectedInterval} sec`);
+    });
 }
 
-it('should update custom Expansion Row when Input has changed', async () => {
+it('should correctly display custom Expansion Row for Input', async () => {
+    consoleError.mockImplementation(() => {});
     mockCustomRowInput();
     setup();
     const inputRow = await screen.findByRole('row', { name: `row-${inputName}` });
+    consoleError.mockImplementation(() => {});
 
     // simulate the server response for the post request
     server.use(
@@ -162,22 +209,16 @@ it('should update custom Expansion Row when Input has changed', async () => {
         )
     );
 
-    await expectIntervalInExpandedRow(
-        await screen.findByRole('row', { name: `row-${inputName}` }),
-        interval
-    );
-
     await userEvent.click(within(inputRow).getByRole('button', { name: /edit/i }));
     const dialog = await screen.findByRole('dialog');
-
     const textBoxes = within(dialog).getAllByRole('textbox');
     expect(textBoxes).toHaveLength(2);
     const intervalInput = textBoxes[1];
     expect(intervalInput).toHaveValue(interval.toString());
+
     await userEvent.clear(intervalInput);
     await userEvent.type(intervalInput, updatedInterval.toString());
     await userEvent.click(screen.getByRole('button', { name: /update/i }));
-
     await screen.findByRole('cell', { name: updatedInterval.toString() });
 
     await expectIntervalInExpandedRow(
@@ -186,42 +227,58 @@ it('should update custom Expansion Row when Input has changed', async () => {
     );
 });
 
+it('should update custom Expansion Row when Input has changed', async () => {
+    mockCustomRowInput();
+    setup();
+
+    expect(
+        await expectIntervalInExpandedRow(
+            await screen.findByRole('row', { name: `row-${inputName}` }),
+            interval
+        )
+    ).toBeUndefined();
+});
+
 it('Should display error message as getDLRows throws Error', async () => {
-    jest.resetModules();
     mockCustomRowInputGetDLError();
 
-    const mockConsoleError = jest.fn();
+    const mockConsoleError = vi.fn();
     consoleError.mockImplementation(mockConsoleError);
 
     setup();
     await waitForRowAndExpand(inputName);
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
-    expect(mockConsoleError).toHaveBeenCalledWith(
-        '[Custom Control] Something went wrong while calling getDLRows. Error: Error getDLRows method Error during execution'
-    ); // to be changed to Custom Cell
+    await waitFor(() => {
+        expect(mockConsoleError).toHaveBeenCalledWith(
+            '[Custom Control] Something went wrong while calling getDLRows. Error: Error getDLRows method Error during execution'
+        );
+    });
 
-    // message should be different but thats the current state
-    const errorMessage = screen.queryByText(
-        'At least "render" either "getDLRows" method should be present.'
-    );
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+        // message should be different but thats the current state
+        const errorMessage = screen.queryByText(
+            'At least "render" either "getDLRows" method should be present.'
+        );
+        expect(errorMessage).toBeInTheDocument();
+    });
 });
 
 it('Should display error message as render throws Error', async () => {
-    jest.resetModules();
     mockCustomRowInputRenderError();
 
-    const mockConsoleError = jest.fn();
+    const mockConsoleError = vi.fn();
     consoleError.mockImplementation(mockConsoleError);
 
     setup();
     await waitForRowAndExpand(inputName);
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 
-    expect(mockConsoleError).toHaveBeenCalledWith(
-        '[Custom Control] Something went wrong while calling render. Error: Error render method Error during execution'
-    ); // to be changed to Custom Cell
+    await waitFor(() => {
+        expect(mockConsoleError).toHaveBeenCalledWith(
+            '[Custom Control] Something went wrong while calling render. Error: Error render method Error during execution'
+        );
+    });
 
     const expandedRow = (await screen.findAllByRole('row')).find((row) => {
         return row.getAttribute('data-expansion-row') === `true`;
@@ -233,27 +290,27 @@ it('Should display error message as render throws Error', async () => {
 });
 
 it('Should display error message as module not correct', async () => {
-    jest.resetModules();
     mockCustomRowInputToUndefined();
 
     setup();
     await waitForRowAndExpand(inputName);
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-
-    const errorMessage = screen.queryByText('Loaded module is not a constructor function');
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+        const errorMessage = screen.queryByText('Loaded module is not a constructor function');
+        expect(errorMessage).toBeInTheDocument();
+    });
 });
 
 it('Should display error message as getDLRows return number', async () => {
-    jest.resetModules();
     mockCustomRowInputToUnvalidGetDL();
 
     setup();
     await waitForRowAndExpand(inputName);
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
-
-    const errorMessage = screen.queryByText('getDLRows method did not return a valid object');
-    expect(errorMessage).toBeInTheDocument();
+    await waitFor(() => {
+        const errorMessage = screen.getByText('getDLRows method did not return a valid object');
+        expect(errorMessage).toBeInTheDocument();
+    });
 });

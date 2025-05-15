@@ -3,19 +3,25 @@ import { render, screen, waitForElementToBeRemoved, within } from '@testing-libr
 import Button from '@splunk/react-ui/Button';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 
 import CustomTable from '../CustomTable';
 import { setUnifiedConfig } from '../../../util/util';
 import { ITableConfig } from '../../../types/globalConfig/pages';
 import { TableContextProvider } from '../../../context/TableContext';
-import mockCustomInputRow from '../../../../../tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row';
 import { getBuildDirPath } from '../../../util/script';
 import { MOCK_CONFIG } from './mocks';
 import { invariant } from '../../../util/invariant';
+import mockCustomControlMockForTest from './mocks/CustomInputRowMock';
+import {
+    CustomComponentContextType,
+    CustomComponentContextProvider,
+} from '../../../context/CustomComponentContext';
+import { CustomRowConstructor } from '../CustomRowBase';
 
-const handleToggleActionClick = jest.fn();
-const handleOpenPageStyleDialog = jest.fn();
-const handleSort = jest.fn();
+const handleToggleActionClick = vi.fn();
+const handleOpenPageStyleDialog = vi.fn();
+const handleSort = vi.fn();
 
 const customRowFileName = 'CustomInputRow';
 
@@ -129,13 +135,31 @@ const SimpleComponentToUpdateCustomTable = () => {
 };
 
 function setup() {
-    jest.mock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => mockCustomInputRow, {
-        virtual: true,
-    });
+    vi.doMock(`${getBuildDirPath()}/custom/${customRowFileName}.js`, () => ({
+        default: mockCustomControlMockForTest,
+    }));
 
     setUnifiedConfig(MOCK_CONFIG);
 
     render(<SimpleComponentToUpdateCustomTable />, { wrapper: BrowserRouter });
+}
+
+function setupComponentContext() {
+    const compContext: CustomComponentContextType = {
+        [customRowFileName]: {
+            component: mockCustomControlMockForTest as CustomRowConstructor,
+            type: 'row',
+        },
+    };
+
+    setUnifiedConfig(MOCK_CONFIG);
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <SimpleComponentToUpdateCustomTable />
+        </CustomComponentContextProvider>,
+        { wrapper: BrowserRouter }
+    );
 }
 
 const getCollapsIcon = (inputRow: HTMLElement) => {
@@ -165,21 +189,25 @@ const moreInfoToContainName = async (inputRow: HTMLElement, name: string) => {
     if (loading) {
         await waitForElementToBeRemoved(loading);
     }
-    const allDefinitions = screen.getAllByRole('definition').map((el) => el.textContent);
+    const allDefinitions = (await screen.findAllByRole('definition')).map((el) => el.textContent);
     expect(allDefinitions).toContain(name);
     await collapseRow(inputRow);
 };
 
-it('should correctly display expanded row section for freshly added row', async () => {
-    setup();
-    const allRows = screen.getAllByRole('row');
-    // 3 rows + header
-    expect(allRows.length).toBe(exampleProps.data.length + 1);
-    await moreInfoToContainName(allRows[1], exampleProps.data[0].name); // first row after header
-    await moreInfoToContainName(allRows[3], exampleProps.data[2].name); // last row
-    const btnAddRow = screen.getByTestId(buttonTestId);
-    await userEvent.click(btnAddRow);
-    const updatedAllRows = screen.getAllByRole('row');
-    expect(updatedAllRows.length).toBe(exampleProps.data.length + 2); // 3 rows + header + added row
-    await moreInfoToContainName(updatedAllRows[4], `Additional Name 3`); // added row
-});
+it.each([setup, setupComponentContext])(
+    'should correctly display expanded row section for freshly added row',
+    async (setupFnc) => {
+        setupFnc();
+        const allRows = screen.getAllByRole('row');
+
+        // 3 rows + header
+        expect(allRows.length).toBe(exampleProps.data.length + 1);
+        await moreInfoToContainName(allRows[1], exampleProps.data[0].name); // first row after header
+        await moreInfoToContainName(allRows[3], exampleProps.data[2].name); // last row
+        const btnAddRow = screen.getByTestId(buttonTestId);
+        await userEvent.click(btnAddRow);
+        const updatedAllRows = screen.getAllByRole('row');
+        expect(updatedAllRows.length).toBe(exampleProps.data.length + 2); // 3 rows + header + added row
+        await moreInfoToContainName(updatedAllRows[4], `Additional Name 3`); // added row
+    }
+);

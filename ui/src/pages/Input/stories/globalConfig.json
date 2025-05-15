@@ -14,6 +14,7 @@
       "services": [
         {
           "name": "demo_input",
+          "conf": "some_conf",
           "entity": [
             {
               "type": "text",
@@ -234,7 +235,8 @@
               }
             }
           ],
-          "title": "demo_input"
+          "title": "demo_input",
+          "subTitle": " This is a demo input"
         },
         {
           "name": "demo_input_page",

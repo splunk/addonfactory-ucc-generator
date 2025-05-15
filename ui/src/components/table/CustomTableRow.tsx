@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useContext, useState } from 'react';
 
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import Switch from '@splunk/react-ui/Switch';
@@ -17,6 +17,7 @@ import { getTableCellValue } from './table.utils';
 import AcceptModal from '../AcceptModal/AcceptModal';
 import { RowDataFields } from '../../context/TableContext';
 import CustomTableCell from './CustomTableCell';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 const TableCellWrapper = styled(Table.Cell)`
     padding: 2px;
@@ -63,6 +64,7 @@ function CustomTableRow(props: CustomTableRowProps) {
     } = props;
 
     const [displayAcceptToggling, setDisplayAcceptToggling] = useState(false);
+    const componentContext = useContext(CustomComponentContext);
 
     const toggleRef = React.createRef<HTMLDivElement>();
 
@@ -75,6 +77,7 @@ function CustomTableRow(props: CustomTableRowProps) {
             row: customRow,
             fileName: header.customCell.src,
             type: header.customCell.type,
+            customComponentContext: componentContext,
         });
 
     const rowActionsPrimaryButton = useCallback(
