@@ -264,6 +264,16 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
+        base_html_testdata = (
+            Path(package_folder) / "appserver" / "templates" / "base.html"
+        )
+        base_html_original = base_html_testdata.read_text()
+
+        assert (
+            '<script type="module" src="${make_url(page_path)}"></script>'
+            not in base_html_original
+        )
+
         build.generate(
             source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
         )
@@ -316,6 +326,13 @@ def test_ucc_generate_with_configuration():
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
             assert path.exists(actual_file_path)
+
+        # Assert that base.html in package changed, and revert it
+        assert (
+            '<script type="module" src="${make_url(page_path)}"></script>'
+            in base_html_testdata.read_text()
+        )
+        base_html_testdata.write_text(base_html_original)
 
 
 def test_ucc_generate_for_conf_only_TA():
