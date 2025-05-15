@@ -7,21 +7,21 @@ from splunk_add_on_ucc_framework.package_files_update import (
 
 base_html_template = """
     <%! app_name = cherrypy.request.path_info.split('/')[3] %>\\
-        <!DOCTYPE html>
-        <html class="no-js" lang="">
-            <head>
-            </head>
+    <!DOCTYPE html>
+    <html class="no-js" lang="">
+        <head>
+        </head>
 
-            <body>
-                <script>
-                    __splunkd_partials__ = $${json_decode(splunkd)};
-                </script>
+        <body>
+            <script>
+                __splunkd_partials__ = $${json_decode(splunkd)};
+            </script>
 
-                <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
+            <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
 
-                $value
-            </body>
-        </html>
+            $value
+        </body>
+    </html>
 """
 
 
