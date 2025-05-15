@@ -1,0 +1,1 @@
+function r(n){return n==null||["0","FALSE","F","N","NO","NONE",""].includes(n.toString().toUpperCase())}function i(n){return n!=null&&["1","TRUE","T","Y","YES"].includes(n.toString().toUpperCase())}function o(n,t){return t==="configuration"&&(r(n)&&"0"||i(n)&&"1")||n}export{i as a,o as g,r as i};
