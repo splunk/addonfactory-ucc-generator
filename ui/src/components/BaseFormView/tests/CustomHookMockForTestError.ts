@@ -1,13 +1,13 @@
 /* eslint-disable class-methods-use-this */
 import {
     BaseFormState,
-    CustomHookClass,
+    CustomHookBase,
     GlobalConfig,
     Mode,
     UtilBaseForm,
 } from '../../../publicApi';
 
-class Hook extends CustomHookClass {
+class Hook extends CustomHookBase {
     constructor(
         globalConfig: GlobalConfig,
         serviceName: string,

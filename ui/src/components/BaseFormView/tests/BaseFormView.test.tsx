@@ -31,7 +31,7 @@ import {
     CustomComponentContextProvider,
     CustomComponentContextType,
 } from '../../../context/CustomComponentContext';
-import { CustomHookConstructor } from '../../../types/components/CustomHookClass';
+import { CustomHookConstructor } from '../../../types/components/CustomHookBase';
 import { consoleError } from '../../../../test.setup';
 
 const handleFormSubmit = vi.fn();

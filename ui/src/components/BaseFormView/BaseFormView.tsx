@@ -52,7 +52,7 @@ import {
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { shouldHideForPlatform } from '../../util/pageContext';
-import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
+import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { CustomComponentContextType } from '../../context/CustomComponentContext';
 import { PageContextProviderType } from '../../context/PageContext';

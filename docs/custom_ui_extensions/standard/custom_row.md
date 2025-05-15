@@ -56,4 +56,4 @@ When a row is expanded on the Inputs table or Configuration Table, Custom Row is
 
 This is how it looks in the UI:
 
-![image](../images/custom_ui_extensions/Custom_Row_Output.png)
+![image](../../images/custom_ui_extensions/Custom_Row_Output.png)

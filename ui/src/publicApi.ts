@@ -11,7 +11,7 @@ export type {
 
 export type { NullishFormRecord } from './types/components/shareableTypes';
 
-export { CustomHookClass } from './types/components/CustomHookClass';
+export { CustomHookBase } from './types/components/CustomHookBase';
 
 export { CustomControlBase } from './components/CustomControl/CustomControlBase';
 

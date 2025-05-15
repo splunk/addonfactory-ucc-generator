@@ -3,14 +3,14 @@ import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish, NullishFormRecord } from './shareableTypes';
 import { BaseFormState, UtilBaseForm } from './BaseFormTypes';
 
-export type CustomHookInstance<T extends typeof CustomHookClass = typeof CustomHookClass> =
+export type CustomHookInstance<T extends typeof CustomHookBase = typeof CustomHookBase> =
     InstanceType<T>;
 
-export type CustomHookConstructor<T extends typeof CustomHookClass = typeof CustomHookClass> = new (
+export type CustomHookConstructor<T extends typeof CustomHookBase = typeof CustomHookBase> = new (
     ...args: ConstructorParameters<T>
 ) => CustomHookInstance<T>;
 
-export abstract class CustomHookClass {
+export abstract class CustomHookBase {
     protected globalConfig: GlobalConfig;
 
     protected serviceName: string;
