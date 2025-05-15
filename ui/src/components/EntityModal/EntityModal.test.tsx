@@ -627,7 +627,7 @@ describe('Oauth2 - client credentials', () => {
         await user.click(oauthSelector);
 
         const oauthClientCredentials = screen.getByRole('option', {
-            name: 'OAuth 2.0 Client Credentials',
+            name: 'OAuth 2.0 - Client Credentials Grant Type',
         });
         expect(oauthClientCredentials).toBeInTheDocument();
 
@@ -687,7 +687,7 @@ describe('Oauth2 - client credentials', () => {
         await user.click(oauthSelector);
 
         const oauthClientCredentials = screen.getByRole('option', {
-            name: 'OAuth 2.0 Client Credentials',
+            name: 'OAuth 2.0 - Client Credentials Grant Type',
         });
         expect(oauthClientCredentials).toBeInTheDocument();
 

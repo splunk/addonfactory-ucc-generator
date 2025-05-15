@@ -424,7 +424,7 @@ class TestAccount(UccTester):
         """Verifies oauth account field label"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
-        account.entity.auth_key.select("OAuth 2.0 Authentication")
+        account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
         self.assert_util(account.entity.name.get_input_label, "Name")
         self.assert_util(
             account.entity.environment.get_input_label, "Example Environment"
@@ -510,7 +510,7 @@ class TestAccount(UccTester):
         account.entity.environment.select("Value2")
         account.entity.account_radio.select("No")
         account.entity.multiple_select.select("Option Two")
-        account.entity.auth_key.select("OAuth 2.0 Authentication")
+        account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
         self.assert_util(
             account.entity.save,
             "Field Client Id is required",
@@ -526,7 +526,7 @@ class TestAccount(UccTester):
         """Verifies required field client secret"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
-        account.entity.auth_key.select("OAuth 2.0 Authentication")
+        account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
         account.entity.name.set_value(_ACCOUNT_CONFIG["name"])
         account.entity.multiple_select.select("Option One")
         account.entity.account_radio.select("No")
@@ -546,7 +546,7 @@ class TestAccount(UccTester):
         """Verifies if the password field is masked or not in the Textbox"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
-        account.entity.auth_key.select("OAuth 2.0 Authentication")
+        account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
         textbox_type = account.entity.client_secret.get_type()
         self.assert_util(textbox_type, "password")
 
@@ -648,8 +648,8 @@ class TestAccount(UccTester):
             account.entity.auth_key.list_of_values(),
             [
                 "Basic Authentication",
-                "OAuth 2.0 Authentication",
-                "OAuth 2.0 Client Credentials",
+                "OAuth 2.0 - Authorization Code Grant Type",
+                "OAuth 2.0 - Client Credentials Grant Type",
             ],
         )
 
@@ -1157,7 +1157,7 @@ class TestAccount(UccTester):
         account.entity.open()
         auth_value_dict = {
             "basic": "Basic Authentication",
-            "oauth": "OAuth 2.0 Authentication",
+            "oauth": "OAuth 2.0 - Authorization Code Grant Type",
         }
         for auth_type_value, auth_type_name in auth_value_dict.items():
             if account.entity.auth_type.get_value() != auth_type_value:
