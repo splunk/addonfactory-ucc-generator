@@ -292,8 +292,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
                         const content = {
                             basic: 'Basic Authentication',
-                            oauth: 'OAuth 2.0 Authentication',
-                            oauth_client_credentials: 'OAuth 2.0 Client Credentials',
+                            oauth: 'OAuth 2.0 - Authorization Code Grant Type',
+                            oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
                         };
 
                         // Defining Entity for auth_type in entitylist of globalConfig
