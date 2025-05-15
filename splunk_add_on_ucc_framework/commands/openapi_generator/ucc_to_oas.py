@@ -109,12 +109,14 @@ def __get_schema_object(
             continue
 
         if entity.field == "oauth":
+            # Currently there are 3 auth types we support
             types = [
                 "basic",
                 "oauth",
                 "oauth_client_credentials",
             ]
 
+            # For each auth type, we need to add the fields to the schema
             for auth_type in types:
                 if auth_type not in entity.options.auth_type:
                     continue
@@ -126,8 +128,8 @@ def __get_schema_object(
                     if hasattr(fields, "encrypted") and (fields.encrypted is True):
                         schema_object.properties[fields.field]["format"] = "password"
 
+            # If there is only one auth_type, we can remove the auth_type field
             if len(entity.options.auth_type) > 1:
-                # As per documentation we can have 3 types of authentication defined in `auth_type`
                 schema_object.properties["auth_type"] = {
                     "type": "string",
                     "enum": entity.options.auth_type,
