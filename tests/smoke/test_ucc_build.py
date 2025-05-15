@@ -300,6 +300,7 @@ def test_ucc_generate_with_configuration():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
             ("appserver", "static", "openapi.json"),
+            ("appserver", "templates", "base.html"),
         ]
         helpers.compare_file_content(
             files_to_be_equal,
