@@ -23,6 +23,18 @@ def test_transform_no_configuration(
     assert json.loads(expected_open_api_json) == openapi_object.json
 
 
+def test_transform_custom_tab_without_entity(
+    global_config_only_custom_tab, app_manifest_correct
+):
+    openapi_object = ucc_to_oas.transform(
+        global_config_only_custom_tab, app_manifest_correct
+    )
+    expected_open_api_json = get_testdata_file(
+        "openapi.json.custom_tab_without_entity.generated"
+    )
+    assert json.loads(expected_open_api_json) == openapi_object.json
+
+
 def test_transform_multiple_account(
     global_config_multiple_account, app_manifest_correct
 ):
