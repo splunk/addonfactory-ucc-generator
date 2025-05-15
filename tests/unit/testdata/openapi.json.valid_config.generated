@@ -62,7 +62,8 @@
                                                 "type": "string",
                                                 "enum": [
                                                         "basic",
-                                                        "oauth"
+                                                        "oauth",
+                                                        "oauth_client_credentials"
                                                 ]
                                         },
                                         "username": {
@@ -79,7 +80,14 @@
                                         "client_id": {
                                                 "type": "string"
                                         },
+                                        "client_id_oauth_credentials": {
+                                                "type": "string"
+                                        },
                                         "client_secret": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "client_secret_oauth_credentials": {
                                                 "type": "string",
                                                 "format": "password"
                                         },
@@ -125,7 +133,8 @@
                                                 "type": "string",
                                                 "enum": [
                                                         "basic",
-                                                        "oauth"
+                                                        "oauth",
+                                                        "oauth_client_credentials"
                                                 ]
                                         },
                                         "username": {
@@ -142,7 +151,14 @@
                                         "client_id": {
                                                 "type": "string"
                                         },
+                                        "client_id_oauth_credentials": {
+                                                "type": "string"
+                                        },
                                         "client_secret": {
+                                                "type": "string",
+                                                "format": "password"
+                                        },
+                                        "client_secret_oauth_credentials": {
                                                 "type": "string",
                                                 "format": "password"
                                         },

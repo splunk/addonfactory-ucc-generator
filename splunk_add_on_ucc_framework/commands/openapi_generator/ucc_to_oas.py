@@ -105,51 +105,52 @@ def __get_schema_object(
             and entity.field in without
         ):
             continue
-        if schema_object.properties is not None:
-            if entity.field == "oauth":
-                # check for oauth as basic authentication is also mentioned in oauth
-                if "basic" in entity.options.auth_type:
-                    for fields in entity.options.basic:
-                        schema_object.properties[fields.field] = {"type": "string"}
-                        if hasattr(fields, "encrypted") and (fields.encrypted is True):
-                            schema_object.properties[fields.field][
-                                "format"
-                            ] = "password"
-                if "oauth" in entity.options.auth_type:
-                    for fields in entity.options.oauth:
-                        schema_object.properties[fields.field] = {"type": "string"}
-                        if hasattr(fields, "encrypted") and (fields.encrypted is True):
-                            schema_object.properties[fields.field][
-                                "format"
-                            ] = "password"
-                if len(entity.options.auth_type) == 2:
-                    # As per documentation we can have 2 types of authentication defined in `auth_type`
-                    schema_object.properties["auth_type"] = {
-                        "type": "string",
-                        "enum": ["basic", "oauth"],
-                    }
-                continue
-            schema_object.properties[entity.field] = {"type": "string"}
-            if hasattr(entity, "options") and hasattr(
-                entity.options, "autoCompleteFields"
-            ):
-                field_values = [
-                    autoCompleteField.value
-                    if hasattr(autoCompleteField, "value")
-                    else None
-                    for autoCompleteField in entity.options.autoCompleteFields
-                ]
-                from_children = [
-                    child.value
-                    for autocomplete_field in entity.options.autoCompleteFields
-                    if hasattr(autocomplete_field, "children")
-                    for child in autocomplete_field.children
-                ]
-                schema_object.properties[entity.field]["enum"] = (
-                    field_values + from_children
-                )
-            if hasattr(entity, "encrypted") and entity.encrypted:
-                schema_object.properties[entity.field]["format"] = "password"
+        if schema_object.properties is None:
+            continue
+
+        if entity.field == "oauth":
+            types = [
+                "basic",
+                "oauth",
+                "oauth_client_credentials",
+            ]
+
+            for auth_type in types:
+                if auth_type not in entity.options.auth_type:
+                    continue
+
+                options = getattr(entity.options, auth_type)
+
+                for fields in options:
+                    schema_object.properties[fields.field] = {"type": "string"}
+                    if hasattr(fields, "encrypted") and (fields.encrypted is True):
+                        schema_object.properties[fields.field]["format"] = "password"
+
+            if len(entity.options.auth_type) > 1:
+                # As per documentation we can have 3 types of authentication defined in `auth_type`
+                schema_object.properties["auth_type"] = {
+                    "type": "string",
+                    "enum": entity.options.auth_type,
+                }
+            continue
+
+        schema_object.properties[entity.field] = {"type": "string"}
+        if hasattr(entity, "options") and hasattr(entity.options, "autoCompleteFields"):
+            field_values = [
+                autoCompleteField.value if hasattr(autoCompleteField, "value") else None
+                for autoCompleteField in entity.options.autoCompleteFields
+            ]
+            from_children = [
+                child.value
+                for autocomplete_field in entity.options.autoCompleteFields
+                if hasattr(autocomplete_field, "children")
+                for child in autocomplete_field.children
+            ]
+            schema_object.properties[entity.field]["enum"] = (
+                field_values + from_children
+            )
+        if hasattr(entity, "encrypted") and entity.encrypted:
+            schema_object.properties[entity.field]["format"] = "password"
     return (name, schema_object)
 
 
