@@ -97,15 +97,15 @@ def __get_schema_object(
     *, name: str, entities: List[Any], without: Optional[List[str]] = None
 ) -> Tuple[str, oas.SchemaObject]:
     name = __create_schema_name(name=name, without=without)
-    schema_object = oas.SchemaObject(type="object", properties={})
+    schema_object = oas.SchemaObject(type="object")
+    schema_object.properties = {}
+
     for entity in entities:
         if "helpLink" == entity.type or (
             isinstance(without, list)
             and hasattr(entity, "field")
             and entity.field in without
         ):
-            continue
-        if schema_object.properties is None:
             continue
 
         if entity.field == "oauth":
