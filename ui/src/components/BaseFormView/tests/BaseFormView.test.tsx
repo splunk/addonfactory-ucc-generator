@@ -401,8 +401,8 @@ describe('Verify if submiting BaseFormView works', () => {
 describe('Verify if oauth loads correctly', () => {
     const content: Record<string, string> = {
         basic: 'Basic Authentication',
-        oauth: 'OAuth 2.0 Authentication',
-        oauth_client_credentials: 'OAuth 2.0 Client Credentials',
+        oauth: 'OAuth 2.0 - Authorization Code Grant Type',
+        oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
     };
 
     it.each<{
