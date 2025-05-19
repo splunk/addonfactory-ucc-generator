@@ -127,9 +127,6 @@ jobs:
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
             GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
           
-            echo "Deleting existing branch $GIT_BRANCH if it exists"
-            git push origin --delete $GIT_BRANCH 2>/dev/null || true
-          
             echo "Creating new branch $GIT_BRANCH"
             git checkout -b $GIT_BRANCH
           
