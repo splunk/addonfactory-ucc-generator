@@ -8,6 +8,22 @@ import {
     StringValidator,
     UrlValidator,
 } from './validators';
+import {
+    CheckboxEntityInterface,
+    CheckboxGroupEntityInterface,
+    CheckboxTreeEntityInterface,
+    CustomEntityInterface,
+    FileEntityInterface,
+    LinkEntityInterface,
+    MultipleSelectEntityInterface,
+    OAuthEntityInterface,
+    OAuthFieldInterface,
+    RadioEntityInterface,
+    SingleSelectEntityInterface,
+    SingleSelectSplunkSearchEntityInterface,
+    TextAreaEntityInterface,
+    TextEntityInterface,
+} from './interface';
 
 const ValueLabelPair = z.object({
     value: z.union([z.number(), z.string(), z.boolean()]),
@@ -120,26 +136,28 @@ const AllValidators = z.array(
     ])
 );
 
-export const LinkEntity = CommonEntityFields.extend({
+export const LinkEntitySchema = CommonEntityFields.extend({
     type: z.literal('helpLink'),
-    label: z.string().optional(),
+    label: z.string(),
     options: TextElementWithLinksSchema.extend({
         hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     }).optional(),
     required: z.literal(false).default(false).optional(),
-});
+}).strict();
 
-export type LinkEntity = z.infer<typeof LinkEntity>;
+export const LinkEntity = LinkEntitySchema satisfies z.ZodType<LinkEntityInterface>;
 
-export const TextEntity = CommonEditableEntityFields.extend({
+export const TextEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('text'),
     validators: AllValidators.optional(),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
     options: CommonEditableEntityOptions.optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
 
-export const TextAreaEntity = CommonEditableEntityFields.extend({
+export const TextEntity = TextEntitySchema satisfies z.ZodType<TextEntityInterface>;
+
+export const TextAreaEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('textarea'),
     validators: AllValidators.optional(),
     defaultValue: z.string().optional(),
@@ -148,7 +166,9 @@ export const TextAreaEntity = CommonEditableEntityFields.extend({
         rowsMax: z.number().optional(),
     }).optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
+
+export const TextAreaEntity = TextAreaEntitySchema satisfies z.ZodType<TextAreaEntityInterface>;
 
 const AutoCompleteFields = z.array(
     z.union([
@@ -173,34 +193,42 @@ export const SelectCommonOptions = CommonEditableEntityOptions.extend({
     dependencies: z.array(z.string()).optional(),
     items: ValueLabelPair.array().optional(),
 });
-export const SingleSelectEntity = CommonEditableEntityFields.extend({
+export const SingleSelectEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('singleSelect'),
     validators: AllValidators.optional(),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
     options: SelectCommonOptions,
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
+
+export const SingleSelectEntity =
+    SingleSelectEntitySchema satisfies z.ZodType<SingleSelectEntityInterface>;
 
 export const MultipleSelectCommonOptions = SelectCommonOptions.extend({
     delimiter: z.string().length(1).optional(),
 });
 
-export const MultipleSelectEntity = CommonEditableEntityFields.extend({
+export const MultipleSelectEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('multipleSelect'),
     validators: AllValidators.optional(),
     defaultValue: z.string().optional(),
     options: MultipleSelectCommonOptions,
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
 
-export const CheckboxEntity = CommonEditableEntityFields.extend({
+export const MultipleSelectEntity =
+    MultipleSelectEntitySchema satisfies z.ZodType<MultipleSelectEntityInterface>;
+
+export const CheckboxEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('checkbox'),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
     options: CommonEditableEntityOptions.optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
 
-export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
+export const CheckboxEntity = CheckboxEntitySchema satisfies z.ZodType<CheckboxEntityInterface>;
+
+export const CheckboxGroupEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('checkboxGroup'),
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
@@ -239,9 +267,12 @@ export const CheckboxGroupEntity = CommonEditableEntityFields.extend({
             })
         ),
     }),
-});
+}).strict();
 
-export const CheckboxTreeEntity = CommonEditableEntityFields.extend({
+export const CheckboxGroupEntity =
+    CheckboxGroupEntitySchema satisfies z.ZodType<CheckboxGroupEntityInterface>;
+
+export const CheckboxTreeEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('checkboxTree'),
     validators: z.tuple([RegexValidator]).optional(),
     defaultValue: z.union([z.number(), z.boolean()]).optional(),
@@ -273,18 +304,23 @@ export const CheckboxTreeEntity = CommonEditableEntityFields.extend({
             })
         ),
     }),
-});
+}).strict();
 
-export const RadioEntity = CommonEditableEntityFields.extend({
+export const CheckboxTreeEntity =
+    CheckboxTreeEntitySchema satisfies z.ZodType<CheckboxTreeEntityInterface>;
+
+export const RadioEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('radio'),
     defaultValue: z.string().optional(),
     options: CommonEditableEntityOptions.extend({
         items: z.array(ValueLabelPair),
     }),
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
 
-export const FileEntity = CommonEditableEntityFields.extend({
+export const RadioEntity = RadioEntitySchema satisfies z.ZodType<RadioEntityInterface>;
+
+export const FileEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('file'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
@@ -295,9 +331,11 @@ export const FileEntity = CommonEditableEntityFields.extend({
         useBase64Encoding: z.boolean().default(false).optional(),
     }).optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
-});
+}).strict();
 
-export const OAuthFields = z.object({
+export const FileEntity = FileEntitySchema satisfies z.ZodType<FileEntityInterface>;
+
+export const OAuthFieldsSchema = z.object({
     oauth_field: z.string(),
     label: z.string(),
     field: z.string(),
@@ -311,7 +349,9 @@ export const OAuthFields = z.object({
     validators: AllValidators.optional(),
 });
 
-export const OAuthEntity = CommonEditableEntityFields.extend({
+export const OAuthFields = OAuthFieldsSchema satisfies z.ZodType<OAuthFieldInterface>;
+
+export const OAuthEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('oauth'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
@@ -333,19 +373,23 @@ export const OAuthEntity = CommonEditableEntityFields.extend({
         oauth_state_enabled: z.boolean().optional(),
         auth_endpoint_token_access_type: z.string().optional(),
     }),
-});
+}).strict();
 
-export const CustomEntity = CommonEditableEntityFields.extend({
+export const OAuthEntity = OAuthEntitySchema satisfies z.ZodType<OAuthEntityInterface>;
+
+export const CustomEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('custom'),
     options: z.object({
         type: z.literal('external'),
         src: z.string(),
         hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     }),
-});
+}).strict();
+
+export const CustomEntity = CustomEntitySchema satisfies z.ZodType<CustomEntityInterface>;
 
 // somewhat exceptional and used only in alerts
-export const SingleSelectSplunkSearchEntity = CommonEntityFields.extend({
+export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
     type: z.literal('singleSelectSplunkSearch'),
     defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
     search: z.string().optional(),
@@ -358,7 +402,37 @@ export const SingleSelectSplunkSearchEntity = CommonEntityFields.extend({
         .optional(),
 });
 
-export const AnyOfEntity = z.discriminatedUnion('type', [
+export const SingleSelectSplunkSearchEntity =
+    SingleSelectSplunkSearchEntitySchema satisfies z.ZodType<SingleSelectSplunkSearchEntityInterface>;
+
+export interface LinkEntitySchema extends z.infer<typeof LinkEntity> {}
+export interface TextEntitySchema extends z.infer<typeof TextEntity> {}
+export interface TextAreaEntitySchema extends z.infer<typeof TextAreaEntity> {}
+export interface SingleSelectEntitySchema extends z.infer<typeof SingleSelectEntity> {}
+export interface MultipleSelectEntitySchema extends z.infer<typeof MultipleSelectEntity> {}
+export interface CheckboxEntitySchema extends z.infer<typeof CheckboxEntity> {}
+export interface CheckboxGroupEntitySchema extends z.infer<typeof CheckboxGroupEntity> {}
+export interface CheckboxTreeEntitySchema extends z.infer<typeof CheckboxTreeEntity> {}
+export interface RadioEntitySchema extends z.infer<typeof RadioEntity> {}
+export interface FileEntitySchema extends z.infer<typeof FileEntity> {}
+export interface OAuthEntitySchema extends z.infer<typeof OAuthEntity> {}
+export interface CustomEntitySchema extends z.infer<typeof CustomEntity> {}
+
+export type AnyOfEntity =
+    | LinkEntitySchema
+    | TextEntitySchema
+    | TextAreaEntitySchema
+    | SingleSelectEntitySchema
+    | MultipleSelectEntitySchema
+    | CheckboxEntitySchema
+    | CheckboxGroupEntitySchema
+    | CheckboxTreeEntitySchema
+    | RadioEntitySchema
+    | FileEntitySchema
+    | OAuthEntitySchema
+    | CustomEntitySchema;
+
+export const AnyOfEntitySchema = z.discriminatedUnion('type', [
     LinkEntity,
     TextEntity,
     TextAreaEntity,

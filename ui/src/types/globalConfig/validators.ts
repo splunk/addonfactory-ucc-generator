@@ -34,6 +34,15 @@ export const DateValidator = z.object({
     type: z.literal('date'),
 });
 
+// Infer types from Zod validators
+export type NumberValidatorType = z.infer<typeof NumberValidator>;
+export type StringValidatorType = z.infer<typeof StringValidator>;
+export type RegexValidatorType = z.infer<typeof RegexValidator>;
+export type EmailValidatorType = z.infer<typeof EmailValidator>;
+export type Ipv4ValidatorType = z.infer<typeof Ipv4Validator>;
+export type UrlValidatorType = z.infer<typeof UrlValidator>;
+export type DateValidatorType = z.infer<typeof DateValidator>;
+
 export const AnyOfValidators = z.discriminatedUnion('type', [
     NumberValidator,
     StringValidator,
