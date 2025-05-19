@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, memo, useState, useMemo, useContext } from 'react';
 import Table, { HeadCellSortHandler } from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 import { useSearchParams } from 'react-router-dom';
@@ -19,6 +19,7 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { ITableConfig } from '../../types/globalConfig/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { invariant } from '../../util/invariant';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 interface CustomTableProps {
     page: StandardPages;
@@ -71,6 +72,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
     const [entityModal, setEntityModal] = useState<IEntityModal>({ open: false });
     const [deleteModal, setDeleteModal] = useState<IEntityModal>({ open: false });
+    const componentContext = useContext(CustomComponentContext);
 
     const { rowData } = useTableContext();
     const inputsPage = unifiedConfigs.pages.inputs;
@@ -308,7 +310,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
                                       columns.length,
                                       row,
                                       moreInfo,
-                                      tableConfig?.customRow
+                                      tableConfig?.customRow,
+                                      componentContext
                                   ),
                               }
                             : {})}

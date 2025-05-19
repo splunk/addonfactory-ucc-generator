@@ -9,8 +9,7 @@ import { getExpansionRowData } from './TableExpansionRowData';
 const TableCellWrapper = styled(Table.Cell)`
     border-top: none;
 `;
-
-export function getExpansionRow(colSpan, row, moreInfo, customRow) {
+export function getExpansionRow(colSpan, row, moreInfo, customRow, customComponentContext) {
     return (
         <Table.Row key={`${row.id}-expansion`} style={{ wordBreak: 'break-word' }}>
             <TableCellWrapper colSpan={colSpan}>
@@ -22,6 +21,7 @@ export function getExpansionRow(colSpan, row, moreInfo, customRow) {
                             fileName: customRow.src,
                             type: customRow.type,
                             moreInfo,
+                            customComponentContext,
                         })}
                     </>
                 ) : (
