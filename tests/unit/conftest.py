@@ -100,6 +100,17 @@ def global_config_only_logging() -> global_config_lib.GlobalConfig:
 
 
 @pytest.fixture
+def global_config_logging_with_user_defined_handlers() -> (
+    global_config_lib.GlobalConfig
+):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_logging_with_user_defined_handlers.json"
+    )
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
+    return global_config
+
+
+@pytest.fixture
 def global_config_multiple_account() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_multiple_account.json"

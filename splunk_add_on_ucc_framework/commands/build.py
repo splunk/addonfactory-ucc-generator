@@ -509,7 +509,6 @@ def generate(
             "please unify them to build the add-on."
         )
         sys.exit(1)
-    global_config.parse_user_defined_handlers()
     scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
     if global_config.has_pages():
         utils.recursive_overwrite(

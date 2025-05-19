@@ -1,4 +1,4 @@
 [flake8]
 max-line-length = 120
 per-file-ignores =
-    tests/unit/generators/test_doc_generator.py: E501
+    tests/unit/*: E501
