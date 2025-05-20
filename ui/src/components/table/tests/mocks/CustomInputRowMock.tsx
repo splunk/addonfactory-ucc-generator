@@ -1,8 +1,9 @@
 import { RowDataFields } from '../../../../context/TableContext';
 import { GlobalConfig } from '../../../../publicApi';
+import { CustomRowBase } from '../../CustomRowBase';
 
-class CustomInputRowMock {
-    el: HTMLElement;
+class CustomInputRowMock extends CustomRowBase {
+    el: HTMLElement | null;
 
     globalConfig: GlobalConfig;
 
@@ -25,22 +26,26 @@ class CustomInputRowMock {
         el: HTMLElement,
         row: RowDataFields
     ) {
+        super(globalConfig, serviceName, el, row);
         this.globalConfig = globalConfig;
         this.serviceName = serviceName;
         this.el = el;
         this.row = row;
     }
 
-    getDLRows() {
+    getDLRows(): RowDataFields {
         return Object.fromEntries(
             Object.entries(this.row).map(([key, value]) => [
                 key,
                 key === 'interval' ? `${value} sec` : value,
             ])
-        );
+        ) as RowDataFields;
     }
 
     render() {
+        if (!this.el) {
+            throw new Error('Element is not defined');
+        }
         const content = 'Custom Input Row';
         this.el.innerHTML = content;
         return this;

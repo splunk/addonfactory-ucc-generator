@@ -15,10 +15,15 @@ import {
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { PageContextProvider } from '../../context/PageContext';
 import { getBuildDirPath } from '../../util/script';
+import {
+    CustomComponentContextType,
+    CustomComponentContextProvider,
+} from '../../context/CustomComponentContext';
+import { CustomMenuBase } from '../CustomMenu/CustomMenuBase';
 
 const mockRenderFunction = vi.fn().mockReturnValue(undefined);
 
-class MockCustomRenderableCustomMenu {
+class MockCustomRenderableCustomMenu extends CustomMenuBase {
     navigator = vi.fn<(arg0: unknown) => void>();
 
     render = mockRenderFunction;
@@ -42,6 +47,109 @@ function setup(inputs: z.infer<typeof pages.shape.inputs>) {
                 <MenuInput handleRequestOpen={mockHandleRequestOpen} />
             </AnimationToggleProvider>
         </PageContextProvider>
+    );
+    return { mockHandleRequestOpen };
+}
+
+const BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU = {
+    services: [
+        {
+            name: 'test-service-name1',
+            title: 'test-service-title1',
+            entity: [],
+        },
+    ],
+    menu: {
+        src: 'CustomMenu',
+        type: 'external',
+    },
+    title: '',
+    table: {
+        actions: [],
+        header: [
+            {
+                field: '',
+                label: '',
+            },
+        ],
+        customRow: {},
+    },
+} satisfies z.infer<typeof pages.shape.inputs>;
+
+const BASIC_INPUTS_CONFIG_GROUPED_SERVICES = {
+    services: [
+        {
+            name: 'test-service-name1',
+            title: 'test-service-title1',
+            subTitle: 'test-service-subTitle1',
+            entity: [],
+        },
+        {
+            name: 'test-subservice1-name1',
+            title: 'test-subservice1-title1',
+            subTitle: 'test-subservice-subTitle1',
+            entity: [],
+        },
+        {
+            name: 'test-subservice1-name2',
+            title: 'test-subservice1-title2',
+            subTitle: 'test-subservice-subTitle2',
+            entity: [],
+        },
+        {
+            name: 'test-service-name2',
+            title: 'test-service-title2',
+            subTitle: 'test-service-subTitle2',
+            entity: [],
+        },
+    ],
+    groupsMenu: [
+        {
+            groupName: 'test-group-name1',
+            groupTitle: 'test-group-title1',
+            groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
+        },
+    ],
+    title: '',
+    table: {
+        actions: [],
+        header: [
+            {
+                field: '',
+                label: '',
+            },
+        ],
+        customRow: {},
+    },
+};
+
+function setupComponentContext(inputs: z.infer<typeof pages.shape.inputs>) {
+    const mockHandleRequestOpen = vi.fn();
+    const globalConfigMock = getGlobalConfigMock();
+
+    const compContext: CustomComponentContextType = {
+        CustomMenu: {
+            component: MockCustomRenderableCustomMenu,
+            type: 'menu',
+        },
+    };
+
+    setUnifiedConfig({
+        ...globalConfigMock,
+        pages: {
+            ...globalConfigMock.pages,
+            inputs,
+        },
+    });
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <PageContextProvider platform="cloud">
+                <AnimationToggleProvider enabled={false}>
+                    <MenuInput handleRequestOpen={mockHandleRequestOpen} />
+                </AnimationToggleProvider>
+            </PageContextProvider>
+        </CustomComponentContextProvider>
     );
     return { mockHandleRequestOpen };
 }
@@ -150,52 +258,7 @@ describe('multiple services', () => {
 
     describe('groups', () => {
         function getGroupedServices(): z.infer<typeof InputsPageTableSchema> {
-            return {
-                services: [
-                    {
-                        name: 'test-service-name1',
-                        title: 'test-service-title1',
-                        subTitle: 'test-service-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name1',
-                        title: 'test-subservice1-title1',
-                        subTitle: 'test-subservice-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name2',
-                        title: 'test-subservice1-title2',
-                        subTitle: 'test-subservice-subTitle2',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-service-name2',
-                        title: 'test-service-title2',
-                        subTitle: 'test-service-subTitle2',
-                        entity: [],
-                    },
-                ],
-                groupsMenu: [
-                    {
-                        groupName: 'test-group-name1',
-                        groupTitle: 'test-group-title1',
-                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
-                    },
-                ],
-                title: '',
-                table: {
-                    actions: [],
-                    header: [
-                        {
-                            field: '',
-                            label: '',
-                        },
-                    ],
-                    customRow: {},
-                },
-            };
+            return BASIC_INPUTS_CONFIG_GROUPED_SERVICES;
         }
 
         it('should render group title', async () => {
@@ -467,53 +530,10 @@ describe('multiple services', () => {
                 default: MockCustomRenderableCustomMenu,
             }));
             setup({
-                services: [
-                    {
-                        name: 'test-service-name1',
-                        title: 'test-service-title1',
-                        subTitle: 'test-service-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name1',
-                        title: 'test-subservice1-title1',
-                        subTitle: 'test-subservice-subTitle1',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-subservice1-name2',
-                        title: 'test-subservice1-title2',
-                        subTitle: 'test-subservice-subTitle2',
-                        entity: [],
-                    },
-                    {
-                        name: 'test-service-name2',
-                        title: 'test-service-title2',
-                        subTitle: 'test-service-subTitle2',
-                        entity: [],
-                    },
-                ],
+                ...BASIC_INPUTS_CONFIG_GROUPED_SERVICES,
                 menu: {
                     src: 'CustomMenu',
                     type: 'external',
-                },
-                groupsMenu: [
-                    {
-                        groupName: 'test-group-name1',
-                        groupTitle: 'test-group-title1',
-                        groupServices: ['test-subservice1-name1', 'test-subservice1-name2'],
-                    },
-                ],
-                title: '',
-                table: {
-                    actions: [],
-                    header: [
-                        {
-                            field: '',
-                            label: '',
-                        },
-                    ],
-                    customRow: {},
                 },
             });
             // the loading indicator from CustomMenu component
@@ -533,30 +553,19 @@ describe('multiple services', () => {
                 default: MockCustomRenderableCustomMenu,
             }));
 
-            setup({
-                services: [
-                    {
-                        name: 'test-service-name1',
-                        title: 'test-service-title1',
-                        entity: [],
-                    },
-                ],
-                menu: {
-                    src: 'CustomMenu',
-                    type: 'external',
-                },
-                title: '',
-                table: {
-                    actions: [],
-                    header: [
-                        {
-                            field: '',
-                            label: '',
-                        },
-                    ],
-                    customRow: {},
-                },
-            });
+            setup(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
+
+            // the loading indicator is from CustomMenu component
+            const loadingEl = screen.getByText('Loading...');
+            expect(loadingEl).toBeInTheDocument();
+            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
+            expect(mockRenderFunction).toHaveBeenCalled();
+            const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
+            expect(createNewInputBtn).not.toBeInTheDocument();
+        });
+
+        it('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component - contex components', async () => {
+            setupComponentContext(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
 
             // the loading indicator is from CustomMenu component
             const loadingEl = screen.getByText('Loading...');

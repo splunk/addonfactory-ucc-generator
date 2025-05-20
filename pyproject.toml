@@ -16,7 +16,7 @@
 
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
-version = "5.64.0"
+version = "5.65.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 license = "Apache-2.0"
 authors = ["Splunk <addonfactory@splunk.com>"]
@@ -60,7 +60,7 @@ packaging = ">=23.0"
 mkdocs = "^1.4.2"
 importlib-metadata = {version="*", python="<3.8"}
 pytest = "^7.2.1"
-pytest-splunk-addon = "^5.4.0"
+pytest-splunk-addon = "^6.0.0"
 pytest-splunk-addon-ui-smartx = "^5.3.2"
 pytest-rerunfailures = "^11.1.1"
 mkdocs-material = "^9.1.3"
