@@ -128,7 +128,7 @@ jobs:
             GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
           
             echo "Creating new branch $GIT_BRANCH"
-            git checkout -b $GIT_BRANCH
+            git checkout -B $GIT_BRANCH
           
             echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
           fi
