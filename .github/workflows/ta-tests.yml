@@ -113,7 +113,8 @@ jobs:
           name: ucc-package-whl
           path: UCC
 
-      - name: Install Dependencies in Target Add-on
+      - name: Prepare the Target Add-on
+        id: prepare
         working-directory: TA
         run: |
           cp ../UCC/*.whl ./
@@ -123,12 +124,22 @@ jobs:
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
           
-          # Create a new branch
+          # Use the special branch
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
             GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
           
-            echo "Creating new branch $GIT_BRANCH"
-            git checkout -B $GIT_BRANCH
+            git fetch origin
+          
+            if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
+              echo "Branch $GIT_BRANCH already exists, checking it out"
+              git checkout "$GIT_BRANCH"
+              git pull origin main --no-ff --no-edit  # Merge main into the branch
+              echo "branch-created=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "Branch $GIT_BRANCH does not exist, creating it"
+              git checkout -b "$GIT_BRANCH" "origin/main"
+              echo "branch-created=true" >> "$GITHUB_OUTPUT"
+            fi
           
             echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
           fi
@@ -181,4 +192,12 @@ jobs:
           git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
           git commit -m "CI: UCC build for ${{ github.event_name }} event"
-          git push --force -u origin $GIT_BRANCH
+          git push origin $GIT_BRANCH
+      - name: Create PR to trigger tests
+        if: success() && github.event.inputs.run_pipelines == 'true' && steps.prepare.outputs.branch-created == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: ${{ env.GIT_BRANCH }}
+          title: "UCC: Trigger CI tests"
+          body: "This PR is automatically created to trigger CI tests for the UCC framework."
+          draft: true
