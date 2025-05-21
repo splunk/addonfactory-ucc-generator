@@ -210,6 +210,7 @@ jobs:
         if: success() && github.event.inputs.run_pipelines == 'true' && steps.prepare.outputs.branch-created == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
+          token: ${{ secrets.GH_TOKEN_ADMIN }}
           branch: ${{ env.GIT_BRANCH }}
           base: ${{ github.event.inputs.target_branch }}
           title: "UCC: Trigger CI tests"
