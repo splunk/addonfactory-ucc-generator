@@ -246,9 +246,9 @@ class GlobalConfigBuilderSchema:
     def _parse_fields(
         self, fields_content: List[Dict[str, Any]]
     ) -> Tuple[List[RestFieldBuilder], List[RestFieldBuilder]]:
-        fields = []
-        special_fields = []
-        if not all([not fc for fc in fields_content]):
+        fields: List[RestFieldBuilder] = []
+        special_fields: List[RestFieldBuilder] = []
+        if fields_content:
             for field in fields_content:
                 rest_field = RestFieldBuilder(
                     field["field"],
@@ -274,7 +274,7 @@ class GlobalConfigBuilderSchema:
     def _get_oauth_enitities(
         self, content: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
-        if not all([not fc for fc in content]):
+        if content:
             for entity_element in content:
                 # Check if we have oauth type
                 if entity_element["type"] != "oauth":

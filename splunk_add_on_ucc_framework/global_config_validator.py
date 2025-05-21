@@ -81,7 +81,7 @@ class GlobalConfigValidator:
         """
         for tab in self.resolved_configuration:
             if "table" in tab:
-                entities = tab.get("entity", {})
+                entities = tab.get("entity", [])
                 has_name_field = False
                 for entity in entities:
                     if entity["field"] == "name":
@@ -142,7 +142,7 @@ class GlobalConfigValidator:
         """
         for tab in self.resolved_configuration:
             # For customTab entity is optional
-            entities = tab.get("entity", {})
+            entities = tab.get("entity", [])
             for entity in entities:
                 if entity["type"] == "file":
                     is_required = entity.get("required", False)
@@ -252,7 +252,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
         for tab in self.resolved_configuration:
-            entities = tab.get("entity", {})
+            entities = tab.get("entity", [])
             for entity in entities:
                 self._validate_entity_validators(entity)
 
@@ -396,7 +396,7 @@ class GlobalConfigValidator:
             if tab.tab_type is not None:
                 types.append(tab.tab_type.lower())
 
-            self._validate_entity_duplicates(tab.get("entity", {}))
+            self._validate_entity_duplicates(tab.get("entity", []))
         if (
             self._find_duplicates_in_list(names)
             or self._find_duplicates_in_list(titles)

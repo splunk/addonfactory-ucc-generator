@@ -33,7 +33,7 @@ class SettingsConf(FileGenerator):
             self.conf_spec_file = f"{self.conf_file}.spec"
             for setting in self._global_config.settings:
                 content = self._gc_schema._get_oauth_enitities(
-                    setting.get("entity", [{}])
+                    setting.get("entity", [])
                 )
                 fields, _ = self._gc_schema._parse_fields(content)
                 self.settings_stanzas.append(
