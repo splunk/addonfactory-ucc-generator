@@ -74,6 +74,11 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
     """
     # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
     if isdir(src):
+        # do not copy the static/js/lib directory
+        # it is used for UI node library
+        if src.endswith("appserver/static/js/lib"):
+            return
+
         if not isdir(dest):
             makedirs(dest)
         files = listdir(src)
