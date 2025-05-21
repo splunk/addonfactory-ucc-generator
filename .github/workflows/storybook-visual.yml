@@ -24,7 +24,8 @@ jobs:
         run: yarn build-storybook --quiet
       - name: Serve Storybook and update screenshots
         run: |
-          npx concurrently --kill-others --success first -n "SB,TEST" \
+          # for LC_ALL see https://github.com/microsoft/playwright/issues/34046
+          LC_ALL=en_US npx concurrently --kill-others --success first -n "SB,TEST" \
             "npx http-server storybook-static --port 6006 --silent" \
             "npx wait-on tcp:6006 && yarn test-storybook ${{ env.isPR && '-u' || ''}}"
       - name: Import GPG key
