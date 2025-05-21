@@ -215,6 +215,7 @@ jobs:
           base: ${{ github.event.inputs.target_branch }}
           title: "UCC: Trigger CI tests"
           body: "This PR is automatically created to trigger CI tests for the UCC framework."
+          add-paths: pyproject.toml
           draft: true
           sign-commits: true
           path: TA
