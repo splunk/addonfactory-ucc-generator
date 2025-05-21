@@ -130,7 +130,6 @@ jobs:
           
             git fetch origin
           
-            git branch -d origin "$GIT_BRANCH" || true
             if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
               echo "Branch $GIT_BRANCH already exists, checking it out"
               git checkout "$GIT_BRANCH"
@@ -196,6 +195,7 @@ jobs:
           passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
           git_user_signingkey: true
           git_commit_gpgsign: true
+          workdir: TA
       - name: Push changes to a temporary branch in order to trigger the pipeline
         if: success() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
