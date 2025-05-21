@@ -208,7 +208,7 @@ jobs:
           git push origin $GIT_BRANCH
       - name: Create PR to trigger tests
         if: success() && github.event.inputs.run_pipelines == 'true' && steps.prepare.outputs.branch-created == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GH_TOKEN_ADMIN }}
           branch: ${{ env.GIT_BRANCH }}
@@ -216,4 +216,5 @@ jobs:
           title: "UCC: Trigger CI tests"
           body: "This PR is automatically created to trigger CI tests for the UCC framework."
           draft: true
+          sign-commits: true
           path: TA
