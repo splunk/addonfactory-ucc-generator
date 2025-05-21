@@ -127,6 +127,8 @@ jobs:
           # Use the special branch
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
             GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
+            # delete the branch from remote
+            git push origin --delete "$GIT_BRANCH" || true
           
             git fetch origin
           
@@ -212,3 +214,4 @@ jobs:
           title: "UCC: Trigger CI tests"
           body: "This PR is automatically created to trigger CI tests for the UCC framework."
           draft: true
+          path: TA
