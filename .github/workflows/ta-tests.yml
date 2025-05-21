@@ -211,6 +211,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           branch: ${{ env.GIT_BRANCH }}
+          base: ${{ github.event.inputs.target_branch }}
           title: "UCC: Trigger CI tests"
           body: "This PR is automatically created to trigger CI tests for the UCC framework."
           draft: true
