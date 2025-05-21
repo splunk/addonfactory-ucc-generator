@@ -130,6 +130,7 @@ jobs:
           
             git fetch origin
           
+            git branch -d origin/"$GIT_BRANCH" || true
             if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
               echo "Branch $GIT_BRANCH already exists, checking it out"
               git checkout "$GIT_BRANCH"
