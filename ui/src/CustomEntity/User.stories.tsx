@@ -21,49 +21,57 @@ import {
 /**
  * Union of supported entity types that can be visualized using the StoryWrapper.
  */
-type StoryInputEntity = IndexEntity | AnyOfEntity | IntervalEntity;
+type EntityType = AnyOfEntity | IndexEntity | IntervalEntity;
+
+/**
+ * Args passed into the story.
+ */
+type StoryArgs = {
+    entity: EntityType[];
+};
 
 /**
  * StoryWrapper component renders a single BaseFormView instance based on the provided input entity.
  * It performs schema migration, validation, and config injection for accurate preview and behavior.
  */
-const StoryWrapper: React.FC<StoryInputEntity> = (args) => {
-    const [debouncedArgs, setDebouncedArgs] = useState<StoryInputEntity>(args);
+const StoryWrapper: React.FC<StoryArgs> = ({ entity }) => {
+    const [debouncedEntity, setDebouncedEntity] = useState<EntityType[]>(entity);
 
     /**
-     * Debounces the input args to prevent excessive rerenders or config changes during live editing.
+     * Debounce to avoid excessive rerenders during arg editing.
      */
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setDebouncedArgs(args);
-        }, 300);
+            setDebouncedEntity(entity);
+        }, 500);
         return () => clearTimeout(timeout);
-    }, [args]);
+    }, [entity]);
 
-    // Perform schema migration and validation based on the input type
-    let result;
-    if (debouncedArgs.type === 'index') {
-        const migrated = migrateIndexTypeEntity(debouncedArgs as IndexEntity);
-        result = SingleSelectEntitySchema.safeParse(migrated);
-    } else if (debouncedArgs.type === 'interval') {
-        const migrated = migrateIntervalTypeEntity(debouncedArgs as IntervalEntity);
-        result = TextEntitySchema.safeParse(migrated);
-    } else {
-        result = AnyOfEntitySchema.safeParse(debouncedArgs);
-    }
+    const validatedEntities = debouncedEntity?.map((item, idx) => {
+        let result;
+        if (item.type === 'index') {
+            const migrated = migrateIndexTypeEntity(item as IndexEntity);
+            result = SingleSelectEntitySchema.safeParse(migrated);
+        } else if (item.type === 'interval') {
+            const migrated = migrateIntervalTypeEntity(item as IntervalEntity);
+            result = TextEntitySchema.safeParse(migrated);
+        } else {
+            result = AnyOfEntitySchema.safeParse(item);
+        }
 
-    // Throw error if validation fails, so Storybook shows it clearly
-    if (!result.success) {
-        const formattedErrors = result.error.issues
-            .map((issue) => `${issue.path.join('.')} - ${issue.message}`)
-            .join('\n');
-        throw new Error(`Entity validation failed:\n${formattedErrors}`);
-    }
+        if (!result.success) {
+            const formattedErrors = result.error.issues
+                .map((issue) => `${idx} → ${issue.path.join('.')} - ${issue.message}`)
+                .join('\n');
+            throw new Error(`Entity validation failed:\n${formattedErrors}`);
+        }
 
-    // Generate a full config and inject the validated entity into the global tab structure
+        return result.data;
+    });
+
     const testconfig = generateGlobalConfig();
     if (testconfig.config.pages?.configuration?.tabs?.[0]) {
-        testconfig.config.pages.configuration.tabs[0].entity = [result.data];
+        testconfig.config.pages.configuration.tabs[0].entity = validatedEntities;
     }
 
     setUnifiedConfig(testconfig.config);
@@ -82,52 +90,169 @@ const StoryWrapper: React.FC<StoryInputEntity> = (args) => {
     );
 };
 
-// Storybook metadata: tells Storybook how to render and type-check this story collection
-const meta: Meta<StoryInputEntity> = {
+const meta: Meta<StoryArgs> = {
     title: 'Custom Entity',
     render: (args) => <StoryWrapper {...args} />,
 };
 
 export default meta;
 
-type Story = StoryObj<StoryInputEntity>;
+type Story = StoryObj<StoryArgs>;
 
 /**
  * Renders a validated TextEntity schema using `BaseFormView`.
  */
 export const TextField: Story = {
     args: {
-        type: 'text',
-        label: 'Username',
-        field: 'username',
-        help: 'Enter your username',
-        required: true,
+        entity: [
+            {
+                type: 'text',
+                label: 'Username',
+                field: 'username',
+                help: 'Enter your username',
+                required: true,
+            },
+        ],
     },
 };
 
 /**
- * Renders a migrated IndexEntity as a `singleSelect` component.
+ * Example with multiple fields at once
  */
-export const IndexField: Story = {
+export const MultiEntityField: Story = {
     args: {
-        type: 'index',
-        label: 'Index',
-        field: 'index',
-        help: 'An index is a type of data repository. Select the index in which you want to collect the events.',
-        required: true,
-        defaultValue: 'default',
-    },
-};
-
-/**
- * Renders a migrated IntervalEntity as a validated text field (with CRON/number support).
- */
-export const IntervalField: Story = {
-    args: {
-        type: 'interval',
-        field: 'interval',
-        label: 'Interval',
-        help: 'Time interval of the data input, in seconds.',
-        required: true,
+        entity: [
+            {
+                type: 'text',
+                label: 'Name',
+                validators: [
+                    {
+                        type: 'regex',
+                        errorMsg:
+                            'Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.',
+                        pattern: '^[a-zA-Z]\\w*$',
+                    },
+                    {
+                        type: 'string',
+                        errorMsg: 'Length of input name should be between 1 and 100',
+                        minLength: 1,
+                        maxLength: 100,
+                    },
+                ],
+                field: 'name',
+                help: 'A unique name for the data input.',
+                required: true,
+            },
+            {
+                type: 'checkbox',
+                label: 'Example Checkbox',
+                field: 'input_one_checkbox',
+                help: 'This is an example checkbox for the input one entity',
+                defaultValue: true,
+            },
+            {
+                type: 'radio',
+                label: 'Example Radio',
+                field: 'input_one_radio',
+                defaultValue: 'yes',
+                help: 'This is an example radio button for the input one entity',
+                required: false,
+                options: {
+                    items: [
+                        {
+                            value: 'yes',
+                            label: 'Yes',
+                        },
+                        {
+                            value: 'no',
+                            label: 'No',
+                        },
+                    ],
+                    display: true,
+                },
+            },
+            {
+                field: 'dependent_dropdown',
+                label: 'Dependent',
+                type: 'singleSelect',
+                required: false,
+                options: {
+                    dependencies: ['input_one_radio'],
+                    disableonEdit: true,
+                    endpointUrl: 'splunk_ta_uccexample/dependent_dropdown',
+                },
+            },
+            {
+                field: 'singleSelectTest',
+                label: 'Single Select Group Test',
+                type: 'singleSelect',
+                options: {
+                    createSearchChoice: true,
+                    autoCompleteFields: [
+                        {
+                            label: 'Group1',
+                            children: [
+                                {
+                                    value: 'one',
+                                    label: 'One',
+                                },
+                                {
+                                    value: 'two',
+                                    label: 'Two',
+                                },
+                            ],
+                        },
+                        {
+                            label: 'Group2',
+                            children: [
+                                {
+                                    value: 'three',
+                                    label: 'Three',
+                                },
+                                {
+                                    value: 'four',
+                                    label: 'Four',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            {
+                field: 'multipleSelectTest',
+                label: 'Multiple Select Test',
+                type: 'multipleSelect',
+                defaultValue: 'a|b',
+                options: {
+                    delimiter: '|',
+                    items: [
+                        {
+                            value: 'a',
+                            label: 'A',
+                        },
+                        {
+                            value: 'b',
+                            label: 'B',
+                        },
+                    ],
+                },
+            },
+            {
+                type: 'interval',
+                field: 'interval',
+                label: 'Interval',
+                help: 'Time interval of the data input, in seconds.',
+                required: true,
+            },
+            {
+                type: 'helpLink',
+                field: 'example_help_link',
+                label: '',
+                options: {
+                    text: 'Help Link',
+                    link: 'https://docs.splunk.com/Documentation',
+                },
+            },
+        ],
     },
 };

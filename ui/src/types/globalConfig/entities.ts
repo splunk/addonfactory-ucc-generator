@@ -402,6 +402,34 @@ export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
         .optional(),
 });
 
+export const StrictIndexEntitySchema = z
+    .object({
+        type: z.literal('index'),
+        field: z.string(),
+        label: z.string(),
+        defaultValue: z.string().optional(),
+        help: z.any().optional(),
+        required: z.boolean().optional(),
+    })
+    .strict();
+
+export const StrictIntervalEntitySchema = z
+    .object({
+        type: z.literal('interval'),
+        field: z.string(),
+        label: z.string(),
+        defaultValue: z.union([z.number(), z.string()]).optional(),
+        options: z
+            .object({
+                range: z.array(z.union([z.string(), z.number()])),
+            })
+            .optional(),
+        help: z.string().optional(),
+        tooltip: z.string().optional(),
+        required: z.boolean().optional(),
+    })
+    .strict();
+
 export const SingleSelectSplunkSearchEntity =
     SingleSelectSplunkSearchEntitySchema satisfies z.ZodType<SingleSelectSplunkSearchEntityInterface>;
 
