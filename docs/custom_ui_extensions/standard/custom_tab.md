@@ -29,22 +29,18 @@ Custom Tab feature can be used to render any customized UI component in the Conf
             "table": {}
         },
         {
-            "name": "logging",
-            "title": "Logging",
-            "entity": []
-        },
-        {
-            "name": "proxy",
-            "title": "Proxy",
-            "entity": []
-        },
-        {
             "name": "custom_tab",
-            "title": "Customized Tab",
+            "title": "Custom_tab without entity",
             "customTab": {
                 "src": "custom_tab",
                 "type": "external"
             }
+        },
+        {
+            "type": "proxyTab"
+        },
+        {
+            "type": "loggingTab"
         }
     ]
 }

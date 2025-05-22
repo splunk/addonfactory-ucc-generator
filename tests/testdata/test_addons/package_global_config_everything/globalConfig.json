@@ -569,6 +569,14 @@
                     "restHandlerClass": "CustomAccountValidator"
                 },
                 {
+                    "name": "custom_tab",
+                    "title": "Custom_tab without entity",
+                    "customTab": {
+                        "src": "custom_tab",
+                        "type": "external"
+                    }
+                },
+                {
                     "type": "proxyTab",
                     "proxy_type": true,
                     "username": {
