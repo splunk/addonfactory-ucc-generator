@@ -142,8 +142,8 @@ jobs:
           fi
           
           rm splunk_add_on_ucc_framework-*.whl || true
-          UCC_WHL=$(ls *.whl)
           cp ../UCC/*.whl ./
+          UCC_WHL=$(ls *.whl)
           
           # Retry logic for poetry install
           MAX_RETRIES=3
