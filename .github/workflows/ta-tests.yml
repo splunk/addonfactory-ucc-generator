@@ -206,6 +206,14 @@ jobs:
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
           git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
           git push origin $GIT_BRANCH
+          
+          gh pr create \
+            --base "${{ github.event.inputs.target_branch }}" \
+            --head "$GIT_BRANCH" \
+            --title "UCC: Trigger CI tests (do not merge)" \
+            --body "This PR is automatically created to trigger CI tests for the UCC framework." \
+            --draft \
+            --token "${{ secrets.GH_TOKEN_ADMIN }}"
       - name: Create PR to trigger tests
         if: success() && github.event.inputs.run_pipelines == 'true' && steps.prepare.outputs.branch-created == 'true'
         uses: peter-evans/create-pull-request@v7
