@@ -127,8 +127,6 @@ jobs:
           # Use the special branch
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
             GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
-            # delete the branch from remote
-            git push origin --delete "$GIT_BRANCH" || true
           
             git fetch origin
           
@@ -206,24 +204,3 @@ jobs:
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
           git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
           git push origin $GIT_BRANCH
-          
-          gh pr create \
-            --base "${{ github.event.inputs.target_branch }}" \
-            --head "$GIT_BRANCH" \
-            --title "UCC: Trigger CI tests (do not merge)" \
-            --body "This PR is automatically created to trigger CI tests for the UCC framework." \
-            --draft \
-            --token "${{ secrets.GH_TOKEN_ADMIN }}"
-      - name: Create PR to trigger tests
-        if: success() && github.event.inputs.run_pipelines == 'true' && steps.prepare.outputs.branch-created == 'true'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GH_TOKEN_ADMIN }}
-          branch: ${{ env.GIT_BRANCH }}
-          base: ${{ github.event.inputs.target_branch }}
-          title: "UCC: Trigger CI tests"
-          body: "This PR is automatically created to trigger CI tests for the UCC framework."
-          add-paths: pyproject.toml
-          draft: true
-          sign-commits: true
-          path: TA
