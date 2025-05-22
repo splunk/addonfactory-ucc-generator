@@ -162,12 +162,10 @@ def test_entity_migration(tmp_path):
 
     input_entity = gc_json["pages"]["inputs"]["services"][0]["entity"][0]
     config_entity = gc_json["pages"]["configuration"]["tabs"][0]["entity"][0]
-    alerts_entity = gc_json["alerts"][0]["entity"][0]
 
     assert (
         input_entity
         == config_entity
-        == alerts_entity
         == {
             "type": "interval",
             "field": "interval",

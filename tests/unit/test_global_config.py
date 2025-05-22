@@ -181,7 +181,7 @@ def test_global_config_expand(tmp_path):
 
     assert {"type": "loggingTab"} in global_config.configuration
     assert count_tabs(global_config, name="logging") == 0
-    assert count_entities(global_config, type="interval") == 3
+    assert count_entities(global_config, type="interval") == 2
     assert count_entities(global_config, type="text", field="interval") == 0
 
     global_config.expand()
@@ -189,7 +189,7 @@ def test_global_config_expand(tmp_path):
     assert {"type": "loggingTab"} not in global_config.configuration
     assert count_tabs(global_config, name="logging") == 1
     assert count_entities(global_config, type="interval") == 0
-    assert count_entities(global_config, type="text", field="interval") == 3
+    assert count_entities(global_config, type="text", field="interval") == 2
 
 
 def test_global_config_cleanup_unwanted_params(global_config_only_logging, tmp_path):
