@@ -117,9 +117,6 @@ jobs:
         id: prepare
         working-directory: TA
         run: |
-          cp ../UCC/*.whl ./
-          UCC_WHL=$(ls *.whl)
-          
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
@@ -143,6 +140,10 @@ jobs:
           
             echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
           fi
+          
+          rm splunk_add_on_ucc_framework-*.whl || true
+          UCC_WHL=$(ls *.whl)
+          cp ../UCC/*.whl ./
           
           # Retry logic for poetry install
           MAX_RETRIES=3
