@@ -616,7 +616,7 @@
                                 {
                                     "type": "string",
                                     "errorMsg": "Max host length is 4096",
-                                    "minLength": 0,
+                                    "minLength": 1,
                                     "maxLength": 4096
                                 },
                                 {
@@ -625,7 +625,8 @@
                                     "pattern": "^[a-zA-Z]\\w*$"
                                 }
                             ],
-                            "field": "proxy_url"
+                            "field": "proxy_url",
+                            "required": true
                         },
                         {
                             "type": "text",
@@ -640,7 +641,8 @@
                                     "isInteger": true
                                 }
                             ],
-                            "field": "proxy_port"
+                            "field": "proxy_port",
+                            "required": true
                         },
                         {
                             "type": "text",

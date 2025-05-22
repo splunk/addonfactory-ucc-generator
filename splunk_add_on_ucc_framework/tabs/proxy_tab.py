@@ -51,7 +51,7 @@ DEFAULT_HOST = {
         {
             "type": "string",
             "errorMsg": "Max host length is 4096",
-            "minLength": 0,
+            "minLength": 1,
             "maxLength": 4096,
         },
         {
@@ -61,6 +61,7 @@ DEFAULT_HOST = {
         },
     ],
     "field": "proxy_url",
+    "required": True,
 }
 
 DEFAULT_PORT = {
@@ -68,6 +69,7 @@ DEFAULT_PORT = {
     "label": "Port",
     "validators": [{"type": "number", "range": [1, 65535], "isInteger": True}],
     "field": "proxy_port",
+    "required": True,
 }
 
 DEFAULT_USERNAME = {
