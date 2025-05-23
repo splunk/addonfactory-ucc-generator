@@ -52,7 +52,7 @@ import {
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { shouldHideForPlatform } from '../../util/pageContext';
-import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
+import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { CustomComponentContextType } from '../../context/CustomComponentContext';
 import { PageContextProviderType } from '../../context/PageContext';
@@ -292,8 +292,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
                         const content = {
                             basic: 'Basic Authentication',
-                            oauth: 'OAuth 2.0 Authentication',
-                            oauth_client_credentials: 'OAuth 2.0 Client Credentials',
+                            oauth: 'OAuth 2.0 - Authorization Code Grant Type',
+                            oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
                         };
 
                         // Defining Entity for auth_type in entitylist of globalConfig

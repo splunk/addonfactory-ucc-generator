@@ -97,13 +97,17 @@ nav:
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI extensions:
-      - Overview: "custom_ui_extensions/overview.md"
-      - Custom hook: "custom_ui_extensions/custom_hook.md"
-      - Custom control: "custom_ui_extensions/custom_control.md"
-      - Custom row: "custom_ui_extensions/custom_row.md"
-      - Custom cell: "custom_ui_extensions/custom_cell.md"
-      - Custom menu: "custom_ui_extensions/custom_menu.md"
-      - Custom tab: "custom_ui_extensions/custom_tab.md"
+      - Standard:
+        - Overview: "custom_ui_extensions/standard/overview.md"
+        - Custom hook: "custom_ui_extensions/standard/custom_hook.md"
+        - Custom control: "custom_ui_extensions/standard/custom_control.md"
+        - Custom row: "custom_ui_extensions/standard/custom_row.md"
+        - Custom cell: "custom_ui_extensions/standard/custom_cell.md"
+        - Custom menu: "custom_ui_extensions/standard/custom_menu.md"
+        - Custom tab: "custom_ui_extensions/standard/custom_tab.md"
+      - Context:
+        - Overview: "custom_ui_extensions/context/overview.md"
+
   - Advanced:
       - Custom mapping: "advanced/custom_mapping.md"
       - Dependent dropdown: "advanced/dependent_dropdown.md"

@@ -1,7 +1,7 @@
 import {
     AvaillableOAuthTypes,
     BaseFormState,
-    CustomHookClass,
+    CustomHookBase,
     GlobalConfig,
     Mode,
     NullishFormRecord,
@@ -30,7 +30,7 @@ const debounce = (func: { (state: BaseFormState): void }, wait: number) => {
     };
 };
 
-class Hook extends CustomHookClass {
+class Hook extends CustomHookBase {
     debouncedNameChange: (dataDict: BaseFormState) => void;
 
     constructor(
