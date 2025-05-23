@@ -1,13 +1,5 @@
 import { z } from 'zod';
-import {
-    DateValidator,
-    EmailValidator,
-    Ipv4Validator,
-    NumberValidator,
-    RegexValidator,
-    StringValidator,
-    UrlValidator,
-} from './validators';
+import { NumberValidator, RegexValidator, StringValidator } from './validators';
 import {
     CheckboxEntityInterface,
     CheckboxGroupEntityInterface,
@@ -16,125 +8,22 @@ import {
     FileEntityInterface,
     LinkEntityInterface,
     MultipleSelectEntityInterface,
-    OAuthEntityInterface,
-    OAuthFieldInterface,
     RadioEntityInterface,
     SingleSelectEntityInterface,
     SingleSelectSplunkSearchEntityInterface,
     TextAreaEntityInterface,
     TextEntityInterface,
 } from './interface';
-
-const ValueLabelPair = z.object({
-    value: z.union([z.number(), z.string(), z.boolean()]),
-    label: z.string(),
-});
-
-/**
- *
- * @param text - Text to be used for convertion into link
- * @param links - Links object to be mapped into the text
- * @param link - Link to be used for the whole text
- */
-export const TextElementWithLinksSchema = z.object({
-    text: z.string(),
-    links: z
-        .array(
-            z.object({
-                slug: z.string(),
-                link: z.string(),
-                linkText: z.string(),
-            })
-        )
-        .optional(),
-    link: z.string().optional(),
-});
-
-export const StringOrTextWithLinks = z.union([z.string(), TextElementWithLinksSchema]);
-
-export const MarkdownMessageText = z.object({
-    markdownType: z.literal('text'),
-    text: z.string(),
-    color: z.string().optional(),
-});
-
-export const MarkdownMessageHybrid = z.object({
-    markdownType: z.literal('hybrid'),
-    text: z.string(),
-    token: z.string(),
-    linkText: z.string(),
-    link: z.string(),
-});
-
-export const MarkdownMessageLink = z.object({
-    markdownType: z.literal('link'),
-    text: z.string(),
-    link: z.string(),
-});
-
-export const MarkdownMessagePlaintext = z.object({
-    markdownType: z.undefined().optional(),
-    text: z.string(),
-});
-
-const CommonEntityFields = z.object({
-    type: z.string(),
-    field: z.string(),
-    label: z.string(),
-    help: StringOrTextWithLinks.optional(),
-    tooltip: z.string().optional(),
-});
-
-const CommonEditableEntityFields = CommonEntityFields.extend({
-    required: z.boolean().default(false).optional(),
-    encrypted: z.boolean().default(false).optional(),
-});
-
-const CommonEditableEntityOptions = z.object({
-    display: z.boolean().default(true).optional(),
-    disableonEdit: z.boolean().default(false).optional(),
-    enable: z.boolean().default(true).optional(),
-    requiredWhenVisible: z.boolean().default(false).optional(),
-    hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
-});
-
-export const MarkdownMessageType = z.union([
-    MarkdownMessageText,
-    MarkdownMessageHybrid,
-    MarkdownMessageLink,
-    MarkdownMessagePlaintext,
-]);
-
-const FieldToModify = z.object({
-    fieldValue: z.union([z.number(), z.string(), z.boolean()]),
-    mode: z.enum(['create', 'edit', 'config', 'clone']).optional(),
-    fieldsToModify: z.array(
-        z.object({
-            fieldId: z.string(),
-            display: z.boolean().optional(),
-            value: z.union([z.number(), z.string(), z.boolean()]).optional(),
-            disabled: z.boolean().optional(),
-            required: z.boolean().optional(),
-            help: StringOrTextWithLinks.optional(),
-            label: z.string().optional(),
-            markdownMessage: MarkdownMessageType.optional(),
-        })
-    ),
-});
-
-const ModifyFieldsOnValue = z.array(FieldToModify).optional();
-
-const AllValidators = z.array(
-    z.union([
-        NumberValidator,
-        StringValidator,
-        RegexValidator,
-        EmailValidator,
-        Ipv4Validator,
-        UrlValidator,
-        DateValidator,
-    ])
-);
+import { OAuthEntity, OAuthEntitySchema } from './oAuth';
+import {
+    AllValidators,
+    CommonEditableEntityFields,
+    CommonEditableEntityOptions,
+    CommonEntityFields,
+    ModifyFieldsOnValue,
+    TextElementWithLinksSchema,
+    ValueLabelPair,
+} from './baseSchemas';
 
 export const LinkEntitySchema = CommonEntityFields.extend({
     type: z.literal('helpLink'),
@@ -335,48 +224,6 @@ export const FileEntitySchema = CommonEditableEntityFields.extend({
 
 export const FileEntity = FileEntitySchema satisfies z.ZodType<FileEntityInterface>;
 
-export const OAuthFieldsSchema = z.object({
-    oauth_field: z.string(),
-    label: z.string(),
-    field: z.string(),
-    type: z.literal('text').default('text').optional(),
-    help: StringOrTextWithLinks.optional(),
-    encrypted: z.boolean().default(false).optional(),
-    required: z.boolean().default(false).optional(),
-    defaultValue: z.union([z.string(), z.number(), z.boolean()]).optional(),
-    options: CommonEditableEntityOptions.optional(),
-    modifyFieldsOnValue: ModifyFieldsOnValue,
-    validators: AllValidators.optional(),
-});
-
-export const OAuthFields = OAuthFieldsSchema satisfies z.ZodType<OAuthFieldInterface>;
-
-export const OAuthEntitySchema = CommonEditableEntityFields.extend({
-    type: z.literal('oauth'),
-    defaultValue: z.string().optional(),
-    validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: CommonEditableEntityOptions.omit({
-        requiredWhenVisible: true,
-    }).extend({
-        auth_type: z.array(
-            z.union([z.literal('basic'), z.literal('oauth'), z.literal('oauth_client_credentials')])
-        ),
-        basic: z.array(OAuthFields).optional(),
-        oauth: z.array(OAuthFields).optional(),
-        oauth_client_credentials: z.array(OAuthFields).optional(),
-        auth_label: z.string().optional(),
-        oauth_popup_width: z.number().optional(),
-        oauth_popup_height: z.number().optional(),
-        oauth_timeout: z.number().optional(),
-        auth_code_endpoint: z.string().optional(),
-        access_token_endpoint: z.string().optional(),
-        oauth_state_enabled: z.boolean().optional(),
-        auth_endpoint_token_access_type: z.string().optional(),
-    }),
-}).strict();
-
-export const OAuthEntity = OAuthEntitySchema satisfies z.ZodType<OAuthEntityInterface>;
-
 export const CustomEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('custom'),
     options: z.object({
@@ -443,7 +290,7 @@ export interface CheckboxGroupEntitySchema extends z.infer<typeof CheckboxGroupE
 export interface CheckboxTreeEntitySchema extends z.infer<typeof CheckboxTreeEntity> {}
 export interface RadioEntitySchema extends z.infer<typeof RadioEntity> {}
 export interface FileEntitySchema extends z.infer<typeof FileEntity> {}
-export interface OAuthEntitySchema extends z.infer<typeof OAuthEntity> {}
+
 export interface CustomEntitySchema extends z.infer<typeof CustomEntity> {}
 
 export type AnyOfEntity =

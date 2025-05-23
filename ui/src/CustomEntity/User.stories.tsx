@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import BaseFormView from '../components/BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../util/util';
-
+import schema from '../../../splunk_add_on_ucc_framework/schema/schema.json';
 import { generateGlobalConfig } from './generateGlobalConfig';
 import {
     AnyOfEntity,
@@ -93,6 +93,21 @@ const StoryWrapper: React.FC<StoryArgs> = ({ entity }) => {
 const meta: Meta<StoryArgs> = {
     title: 'Custom Entity',
     render: (args) => <StoryWrapper {...args} />,
+
+    parameters: {
+        jsonschema: {
+            schema: {
+                type: 'object',
+                description: 'Any Entity array',
+                properties: {
+                    entity: {
+                        $ref: '#/definitions/AnyOfEntity',
+                    },
+                },
+                definitions: schema.definitions,
+            },
+        },
+    },
 };
 
 export default meta;
