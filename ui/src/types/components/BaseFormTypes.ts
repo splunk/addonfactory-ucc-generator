@@ -8,18 +8,17 @@ import {
 } from './shareableTypes';
 import { MarkdownMessageProps } from '../../components/MarkdownMessage/MarkdownMessage';
 import {
-    AnyOfEntity,
+    AnyOfEntitySchema,
     CheckboxEntity,
     FileEntity,
     MultipleSelectEntity,
-    OAuthEntity,
-    OAuthFields,
     RadioEntity,
     SingleSelectEntity,
     TextAreaEntity,
     TextEntity,
 } from '../globalConfig/entities';
 import { PageContextProviderType } from '../../context/PageContext';
+import { OAuthEntity, OAuthFields } from '../globalConfig/oAuth';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -129,7 +128,7 @@ export interface OauthConfiguration {
     authEndpointAccessTokenType: string | null;
 }
 
-export type AnyEntity = z.TypeOf<typeof AnyOfEntity> | z.TypeOf<typeof OAuthFields>;
+export type AnyEntity = z.TypeOf<typeof AnyOfEntitySchema> | z.TypeOf<typeof OAuthFields>;
 
 export type EntitiesAllowingModifications =
     | z.TypeOf<typeof TextEntity>

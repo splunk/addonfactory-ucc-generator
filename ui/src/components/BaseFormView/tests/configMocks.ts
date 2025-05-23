@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AnyOfEntity } from '../../../types/globalConfig/entities';
+import { AnyOfEntitySchema } from '../../../types/globalConfig/entities';
 import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 
@@ -183,9 +183,9 @@ const getGlobalConfigMockGroups = ({
     entitiesInputs,
     entityGroupsInputs,
 }: {
-    entitiesConfig?: z.input<typeof AnyOfEntity>[];
+    entitiesConfig?: z.input<typeof AnyOfEntitySchema>[];
     entityGroupsConfig?: typeof GROUPS_FOR_EXAMPLE_ENTITIES;
-    entitiesInputs?: z.input<typeof AnyOfEntity>[];
+    entitiesInputs?: z.input<typeof AnyOfEntitySchema>[];
     entityGroupsInputs?: typeof GROUPS_FOR_EXAMPLE_ENTITIES;
 }) =>
     ({
@@ -323,7 +323,7 @@ const EXAMPLE_GROUPS_ENTITIES = [
         field: 'text_field_2_group_3',
         required: false,
     },
-] satisfies z.input<typeof AnyOfEntity>[];
+] satisfies z.input<typeof AnyOfEntitySchema>[];
 
 const GROUPS_FOR_EXAMPLE_ENTITIES = [
     {
@@ -440,7 +440,7 @@ const GROUP_ENTITIES_MODIFICATIONS = [
         field: 'text_field_2_group_3',
         required: false,
     },
-] satisfies z.input<typeof AnyOfEntity>[];
+] satisfies z.input<typeof AnyOfEntitySchema>[];
 
 export function getGlobalConfigMockModificationToGroupsConfig(): GlobalConfig {
     return GlobalConfigSchema.parse(

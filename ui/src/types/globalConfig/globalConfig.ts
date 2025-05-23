@@ -13,7 +13,7 @@ type IPages = z.output<typeof pages>;
 type IPagesIn = z.input<typeof pages>;
 
 // Explicit type for the runtime schema of Department
-interface IPagesRT extends z.ZodType<IPages, z.ZodTypeDef, IPagesIn> {}
+export interface IPagesRT extends z.ZodType<IPages, z.ZodTypeDef, IPagesIn> {}
 
 type IAlerts = z.output<typeof alerts>;
 type IAlertsIn = z.input<typeof alerts>;
