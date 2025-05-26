@@ -39,7 +39,6 @@ import {
     ServiceGroup,
     OauthConfiguration,
     AnyEntity,
-    OAuthEntity,
     BasicEntity,
     ChangeRecord,
     EntitiesAllowingModifications,
@@ -56,6 +55,7 @@ import { CustomHookConstructor, CustomHookInstance } from '../../types/component
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { CustomComponentContextType } from '../../context/CustomComponentContext';
 import { PageContextProviderType } from '../../context/PageContext';
+import { OAuthFieldInterface } from '../../types/globalConfig/interface';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -322,7 +322,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         const fields = e?.options[type];
                         if (fields) {
                             // For Particaular type iterating over fields
-                            fields.forEach((field: OAuthEntity) => {
+                            fields.forEach((field: OAuthFieldInterface) => {
                                 if (!field) {
                                     return;
                                 }

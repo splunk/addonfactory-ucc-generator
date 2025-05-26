@@ -1,10 +1,11 @@
 import { z } from 'zod';
-import { StringOrTextWithLinks } from '../types/globalConfig/interface';
+import { StringOrTextWithLinksType } from '../types/globalConfig/interface';
 import {
-    SingleSelectEntitySchema,
+    SingleSelectEntityType,
     StrictIndexEntitySchema,
     StrictIntervalEntitySchema,
     TextEntitySchema,
+    TextEntityType,
 } from '../types/globalConfig/entities';
 
 /**
@@ -15,7 +16,7 @@ export interface IndexEntity {
     field: string;
     label: string;
     defaultValue?: string;
-    help?: StringOrTextWithLinks;
+    help?: StringOrTextWithLinksType;
     required?: boolean;
 }
 
@@ -43,8 +44,8 @@ const CRON_REGEX =
  * Text entity schema extended with required validators.
  * Used as the result of interval-to-text migration.
  */
-export interface MigratedIntervalTextEntity extends Omit<TextEntitySchema, 'validators'> {
-    validators: NonNullable<TextEntitySchema['validators']>;
+export interface MigratedIntervalTextEntity extends Omit<TextEntityType, 'validators'> {
+    validators: NonNullable<TextEntityType['validators']>;
 }
 
 /**
@@ -67,7 +68,7 @@ export const migrateIntervalTypeEntity = (
 
     const validatedInput = result.data;
 
-    const validators: NonNullable<TextEntitySchema['validators']> = [
+    const validators: NonNullable<TextEntityType['validators']> = [
         {
             type: 'regex',
             pattern: CRON_REGEX,
@@ -115,7 +116,7 @@ export const migrateIntervalTypeEntity = (
  * Converts an IndexEntity to a validated SingleSelectEntitySchema.
  * Includes regex and string length validation.
  */
-export const migrateIndexTypeEntity = (input: IndexEntity): SingleSelectEntitySchema => {
+export const migrateIndexTypeEntity = (input: IndexEntity): SingleSelectEntityType => {
     const result = StrictIndexEntitySchema.safeParse(input);
     if (!result.success) {
         throw new Error(

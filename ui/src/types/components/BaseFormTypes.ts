@@ -18,7 +18,7 @@ import {
     TextEntity,
 } from '../globalConfig/entities';
 import { PageContextProviderType } from '../../context/PageContext';
-import { OAuthEntity, OAuthFields } from '../globalConfig/oAuth';
+import { oAuthEntitySchema, oAuthFieldSchema } from '../globalConfig/oAuth';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -128,7 +128,7 @@ export interface OauthConfiguration {
     authEndpointAccessTokenType: string | null;
 }
 
-export type AnyEntity = z.TypeOf<typeof AnyOfEntitySchema> | z.TypeOf<typeof OAuthFields>;
+export type AnyEntity = z.TypeOf<typeof AnyOfEntitySchema> | z.TypeOf<typeof oAuthFieldSchema>;
 
 export type EntitiesAllowingModifications =
     | z.TypeOf<typeof TextEntity>
@@ -138,11 +138,11 @@ export type EntitiesAllowingModifications =
     | z.TypeOf<typeof CheckboxEntity>
     | z.TypeOf<typeof RadioEntity>
     | z.TypeOf<typeof FileEntity>
-    | z.TypeOf<typeof OAuthFields>;
+    | z.TypeOf<typeof oAuthFieldSchema>;
 
-export type OAuthEntity = z.TypeOf<typeof OAuthFields>;
-
-export type AvaillableOAuthTypes = z.TypeOf<typeof OAuthEntity>['options']['auth_type'][number];
+export type AvaillableOAuthTypes = z.TypeOf<
+    typeof oAuthEntitySchema
+>['options']['auth_type'][number];
 
 export interface BasicEntity {
     disabled: boolean;

@@ -19,7 +19,7 @@ export interface TextElementWithLinksInterface {
     link?: string;
 }
 
-export type StringOrTextWithLinks = string | TextElementWithLinksInterface;
+export type StringOrTextWithLinksType = string | TextElementWithLinksInterface;
 
 export interface MarkdownMessageTextInterface {
     markdownType: 'text';
@@ -61,7 +61,7 @@ export interface FieldToModifyInterface {
         value?: string | number | boolean;
         disabled?: boolean;
         required?: boolean;
-        help?: StringOrTextWithLinks;
+        help?: StringOrTextWithLinksType;
         label?: string;
         markdownMessage?: MarkdownMessageType;
     }[];
@@ -84,7 +84,7 @@ export interface CommonEntityFieldsInterface {
     type: string;
     field: string;
     label: string;
-    help?: StringOrTextWithLinks;
+    help?: StringOrTextWithLinksType;
     tooltip?: string;
 }
 
@@ -254,7 +254,7 @@ export interface OAuthFieldInterface {
     label: string;
     field: string;
     type?: 'text';
-    help?: StringOrTextWithLinks;
+    help?: StringOrTextWithLinksType;
     encrypted?: boolean;
     required?: boolean;
     defaultValue?: string | number | boolean;

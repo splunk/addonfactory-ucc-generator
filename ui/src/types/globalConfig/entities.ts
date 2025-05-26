@@ -14,7 +14,7 @@ import {
     TextAreaEntityInterface,
     TextEntityInterface,
 } from './interface';
-import { OAuthEntity, OAuthEntitySchema } from './oAuth';
+import { OAuthEntity, OAuthEntityType } from './oAuth';
 import {
     AllValidators,
     CommonEditableEntityFields,
@@ -280,32 +280,32 @@ export const StrictIntervalEntitySchema = z
 export const SingleSelectSplunkSearchEntity =
     SingleSelectSplunkSearchEntitySchema satisfies z.ZodType<SingleSelectSplunkSearchEntityInterface>;
 
-export interface LinkEntitySchema extends z.infer<typeof LinkEntity> {}
-export interface TextEntitySchema extends z.infer<typeof TextEntity> {}
-export interface TextAreaEntitySchema extends z.infer<typeof TextAreaEntity> {}
-export interface SingleSelectEntitySchema extends z.infer<typeof SingleSelectEntity> {}
-export interface MultipleSelectEntitySchema extends z.infer<typeof MultipleSelectEntity> {}
-export interface CheckboxEntitySchema extends z.infer<typeof CheckboxEntity> {}
-export interface CheckboxGroupEntitySchema extends z.infer<typeof CheckboxGroupEntity> {}
-export interface CheckboxTreeEntitySchema extends z.infer<typeof CheckboxTreeEntity> {}
-export interface RadioEntitySchema extends z.infer<typeof RadioEntity> {}
-export interface FileEntitySchema extends z.infer<typeof FileEntity> {}
+export type LinkEntityType = z.infer<typeof LinkEntity>;
+export type TextEntityType = z.infer<typeof TextEntity>;
+export type TextAreaEntityType = z.infer<typeof TextAreaEntity>;
+export type SingleSelectEntityType = z.infer<typeof SingleSelectEntity>;
+export type MultipleSelectEntityType = z.infer<typeof MultipleSelectEntity>;
+export type CheckboxEntityType = z.infer<typeof CheckboxEntity>;
+export type CheckboxGroupEntityType = z.infer<typeof CheckboxGroupEntity>;
+export type CheckboxTreeEntityType = z.infer<typeof CheckboxTreeEntity>;
+export type RadioEntityType = z.infer<typeof RadioEntity>;
+export type FileEntityType = z.infer<typeof FileEntity>;
 
-export interface CustomEntitySchema extends z.infer<typeof CustomEntity> {}
+export type CustomEntityType = z.infer<typeof CustomEntity>;
 
 export type AnyOfEntity =
-    | LinkEntitySchema
-    | TextEntitySchema
-    | TextAreaEntitySchema
-    | SingleSelectEntitySchema
-    | MultipleSelectEntitySchema
-    | CheckboxEntitySchema
-    | CheckboxGroupEntitySchema
-    | CheckboxTreeEntitySchema
-    | RadioEntitySchema
-    | FileEntitySchema
-    | OAuthEntitySchema
-    | CustomEntitySchema;
+    | LinkEntityType
+    | TextEntityType
+    | TextAreaEntityType
+    | SingleSelectEntityType
+    | MultipleSelectEntityType
+    | CheckboxEntityType
+    | CheckboxGroupEntityType
+    | CheckboxTreeEntityType
+    | RadioEntityType
+    | FileEntityType
+    | OAuthEntityType
+    | CustomEntityType;
 
 export const AnyOfEntitySchema = z.discriminatedUnion('type', [
     LinkEntity,
