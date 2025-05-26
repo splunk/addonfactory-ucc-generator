@@ -579,10 +579,8 @@ def test_ucc_build_verbose_mode(caplog):
             for full_path, dir, files in os.walk(app_server_lib_path):
                 if files:
                     relative_path = full_path[path_len:]
-                    print("relative_path:", relative_path)
 
                     if relative_path == "appserver/static/js/lib":
-                        print("continuing as relative_path:", relative_path)
                         # skip appserver/static/js/lib as it contains UI lib not used in final build
                         continue
 
@@ -651,9 +649,6 @@ def test_ucc_build_verbose_mode(caplog):
     summary_logs = extract_summary_logs()
 
     expected_logs = generate_expected_log()
-
-    print("Summary logs:", summary_logs)
-    print("Expected logs:", expected_logs)
 
     assert len(summary_logs) == len(expected_logs)
 
