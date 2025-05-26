@@ -18,7 +18,7 @@ import {
     TextEntity,
 } from '../globalConfig/entities';
 import { PageContextProviderType } from '../../context/PageContext';
-import { oAuthEntitySchema, oAuthFieldSchema } from '../globalConfig/oAuth';
+import { oAuthEntitySchema, OAuthField, oAuthFieldSchema } from '../globalConfig/oAuth';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -138,7 +138,7 @@ export type EntitiesAllowingModifications =
     | z.TypeOf<typeof CheckboxEntity>
     | z.TypeOf<typeof RadioEntity>
     | z.TypeOf<typeof FileEntity>
-    | z.TypeOf<typeof oAuthFieldSchema>;
+    | z.TypeOf<typeof OAuthField>;
 
 export type AvaillableOAuthTypes = z.TypeOf<
     typeof oAuthEntitySchema
