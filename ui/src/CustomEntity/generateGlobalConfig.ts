@@ -41,16 +41,6 @@ const config = {
             ],
             title: 'Inputs',
             description: 'Manage your data inputs',
-            subDescription: {
-                text: "Input page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
-                links: [
-                    {
-                        slug: 'blogPost',
-                        link: 'https://splk.it/31oy2b2',
-                        linkText: 'blog post',
-                    },
-                ],
-            },
             table: {
                 actions: ['edit', 'delete', 'search', 'clone'],
                 header: [
@@ -74,7 +64,6 @@ const config = {
         version: '5.63.0+c756d7c1f',
         displayName: 'Splunk UCC test Add-on',
         schemaVersion: '0.0.9',
-        // rohan: 'rohan',
     },
 } satisfies GlobalConfig;
 
