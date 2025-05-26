@@ -79,11 +79,12 @@ def _subprocess_run(
 def _pip_install(installer: str, command: str, command_desc: str) -> None:
     cmd = f"{installer} -m pip install {command}"
     try:
-        return_code = _subprocess_run(command=cmd, command_desc=command_desc).returncode
+        subprocess_result = _subprocess_run(command=cmd, command_desc=command_desc)
+        return_code = subprocess_result.returncode
         if return_code != 0:
-            raise CouldNotInstallRequirements
+            raise CouldNotInstallRequirements(subprocess_result.stderr.decode())
     except OSError as e:
-        raise CouldNotInstallRequirements from e
+        raise CouldNotInstallRequirements(e) from e
 
 
 def _pip_is_lib_installed(
@@ -109,6 +110,9 @@ def _pip_is_lib_installed(
 
         result = _subprocess_run(command=lib_installed_cmd, env=my_env)
         if result.returncode != 0 or "Version:" not in result.stdout.decode("utf-8"):
+            logger.error(
+                f"Command result: {result.stdout.decode()} {result.stderr.decode()}"
+            )
             return False
 
         if version:
@@ -116,13 +120,17 @@ def _pip_is_lib_installed(
             result_row = next(el for el in pip_show_result if el.startswith("Version:"))
             result_version = result_row.split("Version:")[1].strip()
             if allow_higher_version:
+                logger.info(
+                    f"Command result: {result.stdout.decode()} {result.stderr.decode()}"
+                )
                 return Version(result_version) >= Version(version)
             return Version(result_version) == Version(version)
         else:
             return result.returncode == 0
 
-    except OSError as e:
-        raise CouldNotInstallRequirements from e
+    except OSError as exc:
+        logger.error(f"Command execution failed with error message: {str(exc)}")
+        raise CouldNotInstallRequirements from exc
 
 
 def _check_libraries_required_for_oauth(
@@ -265,13 +273,17 @@ def install_libraries(
         f'--target "{installation_path}" '
         f"{custom_flag}"
     )
-    _pip_install(
-        installer=installer, command=pip_update_command, command_desc="pip upgrade"
-    )
+    try:
+        _pip_install(
+            installer=installer, command=pip_update_command, command_desc="pip upgrade"
+        )
 
-    _pip_install(
-        installer=installer, command=pip_install_command, command_desc="pip install"
-    )
+        _pip_install(
+            installer=installer, command=pip_install_command, command_desc="pip install"
+        )
+    except CouldNotInstallRequirements as exc:
+        logger.error(f"Command execution failed with error message: {str(exc)}")
+        sys.exit(1)
 
 
 def remove_packages(installation_path: str, package_names: Iterable[str]) -> None:
@@ -349,11 +361,11 @@ Possible solutions, either:
                 command=pip_download_command,
                 command_desc="pip download",
             )
-        except CouldNotInstallRequirements:
+        except CouldNotInstallRequirements as exc:
             logger.error(
                 "Downloading process failed. Please verify parameters in the globalConfig.json file."
             )
-            sys.exit("Package building process interrupted.")
+            sys.exit(f"Package build aborted with error message: {str(exc)}")
         cleanup_libraries.add(os_lib.name)
     return cleanup_libraries
 

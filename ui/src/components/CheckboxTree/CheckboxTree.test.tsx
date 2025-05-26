@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -5,7 +6,7 @@ import CheckboxTree from './CheckboxTree';
 import { MODE_CREATE } from '../../constants/modes';
 import { CheckboxTreeProps } from './types';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 // Default props for the CheckboxTree component
 const defaultCheckboxTreeProps: CheckboxTreeProps = {
@@ -111,6 +112,52 @@ describe('CheckboxTree Component', () => {
         allCheckboxes.forEach((checkbox) => expect(checkbox).not.toBeChecked());
         expect(handleChange).toHaveBeenCalledTimes(2);
         expect(handleChange).toHaveBeenLastCalledWith('checkbox_field', '', 'checkboxTree');
+    });
+
+    it('correctly handles select all action with delimiter in Checkboxtree', async () => {
+        const user = userEvent.setup();
+        const controlOptionsWithDelimiter = {
+            ...defaultCheckboxTreeProps.controlOptions,
+            delimiter: '|',
+        };
+
+        renderCheckboxTree({
+            value: 'rowUnderGroup1|firstRowUnderGroup3',
+            controlOptions: controlOptionsWithDelimiter,
+        });
+
+        const selectAllButton = screen.getByRole('button', { name: 'Select All' });
+        await user.click(selectAllButton);
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        checkboxes.forEach((checkbox) => expect(checkbox).toBeChecked());
+
+        const expectedValue =
+            'rowUnderGroup1|firstRowUnderGroup3|rowWithoutGroup|secondRowUnderGroup3';
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith('checkbox_field', expectedValue, 'checkboxTree');
+    });
+
+    it('updates value correctly for single checkbox toggle with custom delimiter', async () => {
+        const user = userEvent.setup();
+        const controlOptionsWithDelimiter = {
+            ...defaultCheckboxTreeProps.controlOptions,
+            delimiter: '|',
+        };
+
+        renderCheckboxTree({
+            value: 'rowUnderGroup1|firstRowUnderGroup3',
+            controlOptions: controlOptionsWithDelimiter,
+        });
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        await user.click(checkboxes[0]);
+
+        const expectedValue = 'rowUnderGroup1|firstRowUnderGroup3|rowWithoutGroup';
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith('checkbox_field', expectedValue, 'checkboxTree');
     });
 });
 

@@ -1,11 +1,12 @@
+import { expect, it, vi } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CheckboxGroup from './CheckboxGroup';
 import { CheckboxGroupProps } from './checkboxGroup.utils';
-import { MODE_CREATE } from '../../constants/modes';
+import { MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
 const defaultCheckboxProps: CheckboxGroupProps = {
     mode: MODE_CREATE,
@@ -173,4 +174,97 @@ it('mixed incrementing and decrementing value correctly', async () => {
         defaultCheckboxProps.value,
         'checkboxGroup'
     );
+});
+
+describe('CheckboxGroup behavior when disableOnEdit is enabled', () => {
+    const verifyCheckboxesState = (expectedChecked: boolean) => {
+        defaultCheckboxProps.controlOptions.rows.forEach((row) => {
+            const checkbox = screen.getByLabelText(row?.checkbox?.label || 'unexisting string');
+            expect(checkbox).toBeInTheDocument();
+            expect(checkbox).toBeDisabled();
+
+            if (expectedChecked) {
+                expect(checkbox).toBeChecked();
+            } else {
+                expect(checkbox).not.toBeChecked();
+            }
+        });
+    };
+
+    it('should keep checkboxes checked after clicking "Clear All"', async () => {
+        renderFeature({
+            disabled: true,
+            mode: MODE_EDIT,
+            value: 'collect_collaboration/1200,collect_file/1,collect_task/1',
+        });
+
+        // Ensures Jest detects assertions inside verifyCheckboxesState and assertions are executed
+        expect(() => verifyCheckboxesState(true)).not.toThrow();
+
+        // Click "Clear All" button
+        await userEvent.click(await screen.findByRole('button', { name: /clear all/i }));
+
+        // Ensure assertions are executed
+        expect(() => verifyCheckboxesState(true)).not.toThrow();
+    });
+
+    it('should keep checkboxes unchecked after clicking "Select All"', async () => {
+        renderFeature({ disabled: true, mode: MODE_EDIT, value: '' });
+
+        // Ensures Jest detects assertions inside verifyCheckboxesState and assertions are executed
+        expect(() => verifyCheckboxesState(false)).not.toThrow();
+
+        // Click "Select All" button
+        await userEvent.click(await screen.findByRole('button', { name: /select all/i }));
+
+        // Ensure assertions are executed
+        expect(() => verifyCheckboxesState(false)).not.toThrow();
+    });
+});
+
+describe('checkboxgroup behaviour when custom delimiter is added', () => {
+    it('correctly handles select all action with delimiter in CheckboxGroup', async () => {
+        const user = userEvent.setup();
+        const controlOptionsWithDelimiter = {
+            ...defaultCheckboxProps.controlOptions,
+            delimiter: '|',
+        };
+
+        renderFeature({
+            value: 'collect_collaboration/1200',
+            controlOptions: controlOptionsWithDelimiter,
+        });
+
+        const selectAllButton = screen.getByRole('button', { name: 'Select All' });
+        await user.click(selectAllButton);
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        checkboxes.forEach((checkbox) => expect(checkbox).toBeChecked());
+
+        const expectedValue = 'collect_collaboration/1200|collect_file/1|collect_task/1';
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith('api', expectedValue, 'checkboxGroup');
+    });
+
+    it('updates value correctly for single checkbox toggle with custom delimiter', async () => {
+        const user = userEvent.setup();
+        const controlOptionsWithDelimiter = {
+            ...defaultCheckboxProps.controlOptions,
+            delimiter: '|',
+        };
+
+        renderFeature({
+            value: 'collect_file/1',
+            controlOptions: controlOptionsWithDelimiter,
+        });
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        await user.click(checkboxes[0]);
+
+        const expectedValue = 'collect_file/1|collect_collaboration/1200';
+
+        expect(handleChange).toHaveBeenCalledTimes(1);
+        expect(handleChange).toHaveBeenCalledWith('api', expectedValue, 'checkboxGroup');
+    });
 });

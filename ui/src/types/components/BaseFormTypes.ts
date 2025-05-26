@@ -12,6 +12,7 @@ import {
     CheckboxEntity,
     FileEntity,
     MultipleSelectEntity,
+    OAuthEntity,
     OAuthFields,
     RadioEntity,
     SingleSelectEntity,
@@ -94,7 +95,7 @@ export interface SingleSelectEntityType {
         hideClearBtn: boolean;
         autoCompleteFields: {
             label: string;
-            value: 'oauth' | 'basic';
+            value: AvaillableOAuthTypes;
         }[];
     };
     modifyFieldsOnValue?: ModifyFieldsOnValue;
@@ -109,10 +110,7 @@ export interface UtilBaseForm {
 
 export interface UtilControlWrapper {
     handleChange: (field: string, targetValue: AcceptableFormValueOrNullish) => void;
-    addCustomValidator: (
-        field: string,
-        validatorFunc: (submittedField: string, submittedValue: string) => void
-    ) => void;
+    addCustomValidator: (field: string, validatorFunc: CustomValidatorFunc) => void;
     utilCustomFunctions: UtilBaseForm;
 }
 
@@ -145,6 +143,8 @@ export type EntitiesAllowingModifications =
 
 export type OAuthEntity = z.TypeOf<typeof OAuthFields>;
 
+export type AvaillableOAuthTypes = z.TypeOf<typeof OAuthEntity>['options']['auth_type'][number];
+
 export interface BasicEntity {
     disabled: boolean;
     error: boolean;
@@ -158,3 +158,14 @@ export interface ChangeRecord {
     value?: { $set: AcceptableFormValueOrNullish };
     dependencyValues?: { $set: NullishFormRecord };
 }
+
+/**
+ * Custom validator function.
+ * @param submittedField  the field name of the form field.
+ * @param submittedValue  the value of the form field.
+ * @returns  a string if the validation fails, otherwise undefined.
+ */
+export type CustomValidatorFunc = (
+    submittedField: string,
+    submittedValue: AcceptableFormValueOrNullish
+) => string | boolean | undefined;

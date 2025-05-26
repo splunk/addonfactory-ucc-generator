@@ -1,7 +1,5 @@
 import os.path
 from textwrap import dedent
-
-from pytest import fixture
 from unittest.mock import patch, MagicMock
 
 from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
@@ -9,41 +7,9 @@ from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handler
     RestHandlerConfig,
 )
 from splunk_add_on_ucc_framework.generators.conf_files import RestMapConf
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
 
 
 UCC_DIR = os.path.dirname(ucc_framework_file)
-
-
-@fixture
-def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config.json"))
-
-
-@fixture
-def global_config_for_conf_only_TA():
-    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return "test_addon"
 
 
 @patch(
@@ -53,7 +19,13 @@ def ta_name():
     "splunk_add_on_ucc_framework.generators.conf_files.RestMapConf.get_file_output_path"
 )
 def test_generate_conf(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    mock_template,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
 ):
     content = "content"
     exp_fname = "restmap.conf"
@@ -63,12 +35,16 @@ def test_generate_conf(
     template_render.render.return_value = content
 
     restmap_conf = RestMapConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
 
     restmap_conf.writer = MagicMock()
     restmap_conf._template = template_render
-    file_paths = restmap_conf.generate_conf()
+    file_paths = restmap_conf.generate()
     assert mock_op_path.call_count == 1
     assert mock_template.call_count == 1
 
@@ -83,15 +59,18 @@ def test_generate_conf(
 
 
 def test_generate_conf_no_gc_schema(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
 ):
     restmap_conf = RestMapConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_for_conf_only_TA,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
-    restmap_conf._gc_schema = None
 
-    file_paths = restmap_conf.generate_conf()
-    assert file_paths is None
+    file_paths = restmap_conf.generate()
+    assert file_paths == {}
 
 
 def test_generate_conf_for_conf_only_TA(
@@ -105,13 +84,19 @@ def test_generate_conf_for_conf_only_TA(
         addon_name=ta_name,
     )
 
-    file_paths = restmap_conf.generate_conf()
-    assert file_paths is None
+    file_paths = restmap_conf.generate()
+    assert file_paths == {}
 
 
-def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
+def test_set_attributes(
+    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+):
     restmap_conf = RestMapConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        ucc_dir=ucc_dir,
+        addon_name=ta_name,
     )
     restmap_conf._set_attributes()
     assert hasattr(restmap_conf, "endpoints")
@@ -119,7 +104,7 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
     assert hasattr(restmap_conf, "namespace")
 
 
-def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
+def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_name):
     expected_top = (
         "[admin:splunk_ta_uccexample]\n"
         "match = /\n"
@@ -129,18 +114,18 @@ def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
 
     expected_content = dedent(
         """
-        [admin_external:splunk_ta_uccexample_account]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_account.py
-        handleractions = edit, list, remove, create
-        handlerpersistentmode = true
-
         [admin_external:splunk_ta_uccexample_oauth]
         handlertype = python
         python.version = python3
         handlerfile = splunk_ta_uccexample_rh_oauth.py
         handleractions = edit
+        handlerpersistentmode = true
+
+        [admin_external:splunk_ta_uccexample_account]
+        handlertype = python
+        python.version = python3
+        handlerfile = splunk_ta_uccexample_rh_account.py
+        handleractions = edit, list, remove, create
         handlerpersistentmode = true
 
         [admin_external:splunk_ta_uccexample_settings]
@@ -166,9 +151,13 @@ def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
         """
     ).lstrip()
     restmap_conf = RestMapConf(
-        global_config, input_dir, output_dir, addon_name=ta_name, ucc_dir=UCC_DIR
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        addon_name=ta_name,
+        ucc_dir=UCC_DIR,
     )
-    file_paths = restmap_conf.generate_conf()
+    file_paths = restmap_conf.generate()
 
     assert file_paths is not None
     assert file_paths.keys() == {"restmap.conf"}
@@ -178,7 +167,7 @@ def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
 
     assert content == (expected_top + expected_content)
 
-    global_config.user_defined_handlers.add_definitions(
+    global_config_all_json.user_defined_handlers.add_definitions(
         [
             RestHandlerConfig(
                 name="name1",
@@ -204,9 +193,13 @@ def test_restmap_endpoints(global_config, input_dir, output_dir, ta_name):
     )
 
     restmap_conf = RestMapConf(
-        global_config, input_dir, output_dir, addon_name=ta_name, ucc_dir=UCC_DIR
+        global_config_all_json,
+        input_dir,
+        output_dir,
+        addon_name=ta_name,
+        ucc_dir=UCC_DIR,
     )
-    file_paths = restmap_conf.generate_conf()
+    file_paths = restmap_conf.generate()
 
     assert file_paths is not None
     assert file_paths.keys() == {"restmap.conf"}

@@ -94,8 +94,12 @@ export const InputPageView: Story = {
 export const InputPageExpandedRow: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
+        const expandableCell = (await canvas.findAllByRole('cell')).filter(
+            (cell) => cell.dataset.test === 'expand'
+        )[0];
+        const expandable = within(expandableCell).getByRole('button');
 
-        await userEvent.click((await canvas.findAllByRole('button', { name: /expand/i }))[0]);
+        await userEvent.click(expandable);
         await expect((await canvas.findAllByRole('definition')).length).toBeGreaterThan(0);
     },
 };

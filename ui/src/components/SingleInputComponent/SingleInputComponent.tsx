@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import { z } from 'zod';
 
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import { RequestParams, generateEndPointUrl, getRequest } from '../../util/api';
 import { SelectCommonOptions } from '../../types/globalConfig/entities';
 import { filterResponse, FilterResponseParams } from '../../util/util';
@@ -169,7 +169,6 @@ function SingleInputComponent(props: SingleInputComponentProps) {
         <>
             <ComboBox
                 {...restSuiProps}
-                // @ts-expect-error SUI does not declare inputId, but it is there
                 inputId={id}
                 value={
                     // if value is empty use empty string as ComboBox accepts only string

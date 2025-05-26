@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ComponentProps } from 'react';
 import Modal from '@splunk/react-ui/Modal';
 import styled from 'styled-components';
 import { _ } from '@splunk/ui-utils/i18n';
@@ -9,6 +9,7 @@ import BaseFormView from '../BaseFormView/BaseFormView';
 import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 const ModalWrapper = styled(Modal)`
     width: 800px;
@@ -19,6 +20,7 @@ export interface EntityModalProps {
     mode: Mode;
     serviceName: string;
     handleRequestClose: () => void;
+    returnFocus: ComponentProps<typeof Modal>['returnFocus'];
     stanzaName?: string;
     open?: boolean;
     formLabel?: string;
@@ -75,26 +77,35 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
 
     render() {
         return (
-            <ModalWrapper open={this.props.open}>
+            <ModalWrapper
+                returnFocus={this.props.returnFocus}
+                open={this.props.open}
+                onRequestClose={this.handleRequestClose}
+            >
                 <Modal.Header
                     title={this.props.formLabel}
                     onRequestClose={this.handleRequestClose}
                 />
                 <Modal.Body>
-                    <PageContext.Consumer>
-                        {(pageContext) => (
-                            <BaseFormView
-                                ref={this.form}
-                                page={this.props.page}
-                                serviceName={this.props.serviceName}
-                                mode={this.props.mode}
-                                stanzaName={this.props.stanzaName || 'unknownStanza'}
-                                handleFormSubmit={this.handleFormSubmit}
-                                groupName={this.props.groupName}
-                                pageContext={pageContext}
-                            />
+                    <CustomComponentContext.Consumer>
+                        {(customComponentContext) => (
+                            <PageContext.Consumer>
+                                {(pageContext) => (
+                                    <BaseFormView
+                                        ref={this.form}
+                                        page={this.props.page}
+                                        serviceName={this.props.serviceName}
+                                        mode={this.props.mode}
+                                        stanzaName={this.props.stanzaName || 'unknownStanza'}
+                                        handleFormSubmit={this.handleFormSubmit}
+                                        groupName={this.props.groupName}
+                                        pageContext={pageContext}
+                                        customComponentContext={customComponentContext}
+                                    />
+                                )}
+                            </PageContext.Consumer>
                         )}
-                    </PageContext.Consumer>
+                    </CustomComponentContext.Consumer>
                 </Modal.Body>
                 <Modal.Footer>
                     <UCCButton

@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { parseValue, packValue } from './utils';
 import { ValueByField } from './types';
 
@@ -28,6 +29,16 @@ describe('parseValue', () => {
     test('should trim whitespace from field names', () => {
         const collection = '  field1  ,  field2 ,field3  ';
         const result = parseValue(collection);
+
+        expect(result.size).toBe(3);
+        expect(result.has('field1')).toBe(true);
+        expect(result.has('field2')).toBe(true);
+        expect(result.has('field3')).toBe(true);
+    });
+
+    test('should split string using custom delimiter', () => {
+        const collection = 'field1|field2|field3';
+        const result = parseValue(collection, '|');
 
         expect(result.size).toBe(3);
         expect(result.has('field1')).toBe(true);
@@ -70,5 +81,14 @@ describe('packValue', () => {
         ]);
         const result = packValue(map);
         expect(result).toBe('');
+    });
+
+    test('should create string using custom delimiter', () => {
+        const map: ValueByField = new Map([
+            ['field1', { checkbox: true }],
+            ['field2', { checkbox: true }],
+        ]);
+        const result = packValue(map, '|');
+        expect(result).toBe('field1|field2');
     });
 });

@@ -51,9 +51,11 @@ def test_transform_one_auth_type(
     assert json.loads(expected_open_api_json) == openapi_object.json
 
 
-def test_transform_for_conf_only_TA(global_config_conf_only_TA, app_manifest_correct):
+def test_transform_for_conf_only_TA(
+    global_config_for_conf_only_TA, app_manifest_correct
+):
     openapi_object = ucc_to_oas.transform(
-        global_config_conf_only_TA, app_manifest_correct
+        global_config_for_conf_only_TA, app_manifest_correct
     )
 
     expected_open_api_json = get_testdata_file("openapi.json.conf_only_TA.generated")

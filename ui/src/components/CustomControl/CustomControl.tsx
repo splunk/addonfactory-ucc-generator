@@ -3,20 +3,18 @@ import { _ } from '@splunk/ui-utils/i18n';
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
-import { UtilBaseForm } from '../../types/components/BaseFormTypes';
+import { CustomValidatorFunc, UtilBaseForm } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 import { CustomControlConstructor } from './CustomControlBase';
 import { ControlData } from './CustomControl.types';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 interface Props {
     data: ControlData;
     field: string;
     handleChange: (field: string, newValue: AcceptableFormValueOrNullish) => void;
     controlOptions: { src: string; type: string };
-    addCustomValidator: (
-        field: string,
-        validatorFunc: (submittedField: string, submittedValue: string) => void
-    ) => void;
+    addCustomValidator: (field: string, validatorFunc: CustomValidatorFunc) => void;
     utilCustomFunctions: UtilBaseForm;
 }
 
@@ -25,14 +23,21 @@ interface State {
 }
 
 class CustomControl extends React.Component<Props, State> {
+    static contextType = CustomComponentContext;
+
     static loadCustomControl = (
         module: string,
         type: string,
-        appName: string
+        appName: string,
+        context?: React.ContextType<typeof CustomComponentContext>
     ): Promise<CustomControlConstructor> =>
         new Promise((resolve) => {
-            if (type === 'external') {
-                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+            const customComp = context?.[module];
+            if (customComp?.type === 'control') {
+                const Control = customComp.component;
+                resolve(Control);
+            } else if (type === 'external') {
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     async (external) => {
                         const Control = external.default as CustomControlConstructor;
                         resolve(Control);
@@ -68,7 +73,8 @@ class CustomControl extends React.Component<Props, State> {
         CustomControl.loadCustomControl(
             this.props.controlOptions.src,
             this.props.controlOptions.type,
-            appName
+            appName,
+            this.context
         ).then((Control) => {
             invariant(this.el !== undefined, 'Element should be defined');
             const customControl = new Control(

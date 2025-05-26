@@ -1,51 +1,20 @@
-from pytest import fixture, raises
+import pytest
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
+import xmldiff.main
 
 
-@fixture
-def global_config():
-    return GlobalConfig(get_testdata_file_path("valid_config.json"))
-
-
-@fixture
-def global_config_for_conf_only_TA():
-    return GlobalConfig(get_testdata_file_path("valid_global_config_conf_only_TA.json"))
-
-
-@fixture
-def input_dir(tmp_path):
-    return str(tmp_path / "input_dir")
-
-
-@fixture
-def output_dir(tmp_path):
-    return str(tmp_path / "output_dir")
-
-
-@fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@fixture
-def ta_name():
-    return "test_addon"
-
-
-@fixture
+@pytest.fixture
 def wrong_ta_name():
     return 123
 
 
 def test_set_attribute_with_error(
-    global_config, input_dir, output_dir, wrong_ta_name, ucc_dir
+    global_config_all_json, input_dir, output_dir, wrong_ta_name, ucc_dir
 ):
-    with raises(ValueError):
+    with pytest.raises(ValueError):
         DefaultXml(
-            global_config,
+            global_config_all_json,
             input_dir,
             output_dir,
             ucc_dir=ucc_dir,
@@ -53,22 +22,75 @@ def test_set_attribute_with_error(
         )
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_nav_default_xml",
-    return_value="<xml></xml>",
+@pytest.mark.parametrize(
+    ("defaultView", "expected_result"),
+    [
+        (
+            "configuration",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view default="true" name="configuration"/>
+                    <view name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "inputs",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view default="true" name="inputs"/>
+                    <view name="configuration"/>
+                    <view name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "dashboard",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view name="configuration"/>
+                    <view default="true" name="dashboard"/>
+                    <view name="search"/>
+                </nav>
+                """,
+        ),
+        (
+            "search",
+            """<?xml version="1.0" ?>
+                <nav>
+                    <view name="inputs"/>
+                    <view name="configuration"/>
+                    <view name="dashboard"/>
+                    <view default="true" name="search"/>
+                </nav>
+                """,
+        ),
+    ],
 )
 def test_set_attribute(
-    mock_data_ui_generator, global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    ucc_dir,
+    ta_name,
+    defaultView,
+    expected_result,
 ):
+    global_config_all_json.meta["defaultView"] = defaultView
     default_xml = DefaultXml(
-        global_config,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_all_json,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
+    diff = xmldiff.main.diff_texts(default_xml.default_xml_content, expected_result)
 
-    assert hasattr(default_xml, "default_xml_content")
+    assert " ".join([str(item) for item in diff]) == ""
 
 
 def test_set_attribute_with_no_pages(
@@ -76,8 +98,8 @@ def test_set_attribute_with_no_pages(
 ):
     default_xml = DefaultXml(
         global_config_for_conf_only_TA,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -95,16 +117,16 @@ def test_set_attribute_with_no_pages(
 def test_generate_xml(
     mock_op_path,
     mock_set_attributes,
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
     ucc_dir,
     ta_name,
 ):
     config_xml = DefaultXml(
-        global_config=global_config,
-        input_dir=input_dir,
-        output_dir=output_dir,
+        global_config_all_json,
+        input_dir,
+        output_dir,
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
@@ -115,7 +137,7 @@ def test_generate_xml(
 
     mock_writer = MagicMock()
     with patch.object(config_xml, "writer", mock_writer):
-        file_paths = config_xml.generate_xml()
+        file_paths = config_xml.generate()
 
         mock_writer.assert_called_once_with(
             file_name=exp_fname,

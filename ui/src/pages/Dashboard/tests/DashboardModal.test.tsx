@@ -1,8 +1,10 @@
+import './mockMatchMediaForDashboardPage.ts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 
 import { http, HttpResponse, RequestHandler } from 'msw';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup.ts';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
 import { setUnifiedConfig } from '../../../util/util';
 import { server } from '../../../mocks/server';
@@ -12,10 +14,32 @@ import { DataIngestionModal } from '../DataIngestionModal';
 import { MOCK_DS_MODAL_DEFINITION } from './mockData';
 import { DASHBOARD_JSON_MOCKS } from './mockJs';
 
-const handleClose = jest.fn();
-const handleSelect = jest.fn();
-
+const handleClose = vi.fn();
+const handleSelect = vi.fn();
 describe('render data ingestion modal inputs', () => {
+    beforeEach(() => {
+        // not needed as for now there is onlt one test
+        // but adding it for future tests
+
+        // needed for dashabord greater than 28.1.0
+        // type error is thrown if that one is not defined
+        // it can be done via test.setup.ts but then it is applied to all tests
+        // and it is causing issues with other tests
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: vi.fn().mockImplementation((query) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(), // deprecated
+                removeListener: vi.fn(), // deprecated
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            })),
+        });
+    });
+
     it('renders with all default modal dashboard elements', async () => {
         consoleError.mockImplementation(() => {});
         server.use(
@@ -51,10 +75,11 @@ describe('render data ingestion modal inputs', () => {
 
         // Wait for dropdown to be rendered
         await waitFor(() => {
-            expect(document.querySelector('[data-test="input-title"]')).toBeInTheDocument();
+            expect(screen.getByTestId('input-title')).toBeInTheDocument();
         });
+
         await waitFor(() => {
-            expect(document.querySelector('#data_ingestion_modal_dropdown')).toBeInTheDocument();
+            expect(screen.getByTestId('data_ingestion_modal_dropdown')).toBeInTheDocument();
         });
 
         const idsToBeInDocument = [
@@ -66,8 +91,7 @@ describe('render data ingestion modal inputs', () => {
 
         await waitFor(() => {
             idsToBeInDocument.forEach((id) => {
-                const element = document.getElementById(id);
-                expect(element).toBeInTheDocument();
+                expect(screen.getByTestId(id)).toBeInTheDocument();
             });
         });
     });

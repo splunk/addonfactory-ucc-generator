@@ -27,14 +27,14 @@ function CheckboxGroup(props: CheckboxGroupProps) {
         props.mode === MODE_CREATE && (props.value === null || props.value === undefined);
     const value = shouldUseDefaultValue
         ? getDefaultValues(controlOptions.rows)
-        : parseValue(props.value);
+        : parseValue(props.value, controlOptions?.delimiter);
 
     // propagate defaults up if the component is not touched
     useEffect(() => {
         if (shouldUseDefaultValue) {
-            handleChange(field, packValue(value), 'checkboxGroup');
+            handleChange(field, packValue(value, controlOptions?.delimiter), 'checkboxGroup');
         }
-    }, [field, handleChange, shouldUseDefaultValue, value]);
+    }, [controlOptions?.delimiter, field, handleChange, shouldUseDefaultValue, value]);
 
     const [values, setValues] = useState(value);
 
@@ -43,12 +43,14 @@ function CheckboxGroup(props: CheckboxGroupProps) {
         const newValues = getNewCheckboxValues(values, newValue);
 
         setValues(newValues);
-        handleChange(field, packValue(newValues), 'checkboxGroup');
+        handleChange(field, packValue(newValues, controlOptions?.delimiter), 'checkboxGroup');
     };
 
     const handleCheckboxToggleAll = (newCheckboxValue: boolean) => {
+        if (disabled === true) {
+            return;
+        }
         const newValues = new Map(values);
-
         controlOptions.rows.forEach((row) => {
             const oldValue = values.get(row.field);
             if (!!oldValue?.checkbox === newCheckboxValue) {
@@ -60,7 +62,7 @@ function CheckboxGroup(props: CheckboxGroupProps) {
             });
         });
         setValues(newValues);
-        handleChange(field, packValue(newValues), 'checkboxGroup');
+        handleChange(field, packValue(newValues, controlOptions?.delimiter), 'checkboxGroup');
     };
 
     return (
@@ -96,12 +98,12 @@ function CheckboxGroup(props: CheckboxGroupProps) {
             <div>
                 <Button
                     label="Select All"
-                    appearance="pill"
+                    appearance="subtle"
                     onClick={() => handleCheckboxToggleAll(true)}
                 />
                 <Button
                     label="Clear All"
-                    appearance="pill"
+                    appearance="subtle"
                     onClick={() => handleCheckboxToggleAll(false)}
                 />
             </div>

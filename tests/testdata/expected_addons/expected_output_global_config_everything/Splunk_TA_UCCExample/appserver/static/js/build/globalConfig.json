@@ -4,6 +4,18 @@
             "tabs": [
                 {
                     "name": "account",
+                    "warning": {
+                        "create": {
+                            "message": "Some warning for account text create",
+                            "alwaysDisplay": true
+                        },
+                        "edit": {
+                            "message": "Some warning for account text edit"
+                        },
+                        "clone": {
+                            "message": "Some warning for account text clone"
+                        }
+                    },
                     "table": {
                         "actions": [
                             "edit",
@@ -18,10 +30,28 @@
                             {
                                 "label": "Auth Type",
                                 "field": "auth_type"
+                            },
+                            {
+                                "label": "Test Custom Cell",
+                                "field": "test_custom_cell",
+                                "customCell": {
+                                    "src": "CustomInputCell",
+                                    "type": "external"
+                                }
                             }
                         ]
                     },
                     "entity": [
+                        {
+                            "type": "custom",
+                            "label": "Example Custom Control",
+                            "field": "custom_control_field",
+                            "help": "This is an example multipleSelect for account entity",
+                            "options": {
+                                "src": "custom_control",
+                                "type": "external"
+                            }
+                        },
                         {
                             "type": "text",
                             "label": "Name",
@@ -41,6 +71,33 @@
                             "field": "name",
                             "help": "Enter a unique name for this account.",
                             "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Field no validators",
+                            "field": "field_no_validators",
+                            "help": {
+                                "text": "Some field with description\nin separated line",
+                                "link": "https://splunk.github.io/addonfactory-ucc-generator/"
+                            },
+                            "required": false
+                        },
+                        {
+                            "type": "text",
+                            "label": "Field no validators (suppressed)",
+                            "field": "field_no_validators_suppressed",
+                            "help": {
+                                "text": "Description with link as individual word [[link]]",
+                                "links": [
+                                    {
+                                        "slug": "link",
+                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            },
+                            "required": false,
+                            "validators": []
                         },
                         {
                             "type": "singleSelect",
@@ -74,8 +131,41 @@
                             "help": "Enter the endpoint URL.",
                             "field": "endpoint",
                             "options": {
-                                "display": false
+                                "display": false,
+                                "requiredWhenVisible": true
                             }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Example text hidden for cloud",
+                            "help": "Enter text for field hidden for cloud",
+                            "field": "text_field_hidden_for_cloud",
+                            "options": {
+                                "hideForPlatform": "cloud"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Example text hidden for enterprise",
+                            "help": "Enter text for field hidden for enterprise",
+                            "field": "text_field_hidden_for_enterprise",
+                            "options": {
+                                "hideForPlatform": "enterprise"
+                            }
+                        },
+                        {
+                            "field": "url",
+                            "label": "URL",
+                            "type": "text",
+                            "help": "Enter the URL, for example",
+                            "required": false,
+                            "validators": [
+                                {
+                                    "errorMsg": "Invalid URL provided. URL should start with 'https' as only secure URLs are supported. Provide URL in this format",
+                                    "type": "regex",
+                                    "pattern": "^(https://)[^/]+/?$"
+                                }
+                            ]
                         },
                         {
                             "type": "checkbox",
@@ -88,7 +178,16 @@
                             "label": "Example Radio",
                             "field": "account_radio",
                             "defaultValue": "yes",
-                            "help": "This is an example radio button for the account entity",
+                            "help": {
+                                "text": "This is an example radio button for the account entity. \nRead more about it [[radio_docs]]",
+                                "links": [
+                                    {
+                                        "slug": "radio_docs",
+                                        "link": "http://localhost:8001/addonfactory-ucc-generator/entity/components/#radio-bar",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            },
                             "required": true,
                             "options": {
                                 "items": [
@@ -130,14 +229,107 @@
                             "options": {
                                 "auth_type": [
                                     "basic",
-                                    "oauth"
+                                    "oauth",
+                                    "oauth_client_credentials"
                                 ],
                                 "basic": [
                                     {
                                         "oauth_field": "username",
                                         "label": "Username",
                                         "help": "Enter the username for this account.",
-                                        "field": "username"
+                                        "field": "username",
+                                        "modifyFieldsOnValue": [
+                                            {
+                                                "fieldValue": "[[any_other_value]]",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "display": true,
+                                                        "label": "Disabled on edit for oauth 1111",
+                                                        "value": "test",
+                                                        "help": "Disabled on edit for test 1",
+                                                        "markdownMessage": {
+                                                            "markdownType": "text",
+                                                            "text": "markdown message test",
+                                                            "color": "red"
+                                                        },
+                                                        "required": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "a",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "display": true,
+                                                        "disabled": true,
+                                                        "label": "Disabled on edit for oauth 2222",
+                                                        "value": "test 2",
+                                                        "help": "Disabled on edit for test 2",
+                                                        "markdownMessage": {
+                                                            "markdownType": "link",
+                                                            "text": "markdown message test conf page",
+                                                            "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration"
+                                                        },
+                                                        "required": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "aa",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "display": false,
+                                                        "label": "Disabled on edit for oauth 3333",
+                                                        "value": "test 3",
+                                                        "help": "Disabled on edit for test 3",
+                                                        "required": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "aaa",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": true,
+                                                        "display": true,
+                                                        "label": "Disabled on edit for oauth 4444",
+                                                        "value": "test 4",
+                                                        "help": "Disabled on edit for test 4",
+                                                        "markdownMessage": {
+                                                            "markdownType": "hybrid",
+                                                            "text": "markdown message to open token and explain sth",
+                                                            "link": "http://localhost:8000/en-GB/app/Splunk_TA_UCCExample/configuration",
+                                                            "token": "token",
+                                                            "linkText": "conf page"
+                                                        },
+                                                        "required": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "aaaa",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "display": false,
+                                                        "label": "Disabled on edit for oauth 44444",
+                                                        "value": "test 5",
+                                                        "help": "Disabled on edit for test 5",
+                                                        "markdownMessage": {
+                                                            "text": "markdown message plain text"
+                                                        },
+                                                        "required": true
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     },
                                     {
                                         "oauth_field": "password",
@@ -152,6 +344,29 @@
                                         "encrypted": true,
                                         "help": "Enter the security token.",
                                         "field": "token"
+                                    },
+                                    {
+                                        "oauth_field": "some_text",
+                                        "label": "Disabled on edit for oauth",
+                                        "help": "Enter text for field disabled on edit, no special characters allowed",
+                                        "field": "basic_oauth_text",
+                                        "required": false,
+                                        "options": {
+                                            "disableonEdit": true
+                                        },
+                                        "validators": [
+                                            {
+                                                "type": "string",
+                                                "errorMsg": "Length should be between 10 and 4096",
+                                                "minLength": 10,
+                                                "maxLength": 4096
+                                            },
+                                            {
+                                                "type": "regex",
+                                                "errorMsg": "Do not use special characters",
+                                                "pattern": "^[a-zA-Z]\\w*$"
+                                            }
+                                        ]
                                     }
                                 ],
                                 "oauth": [
@@ -178,13 +393,114 @@
                                         "oauth_field": "endpoint_token",
                                         "label": "Token endpoint",
                                         "field": "endpoint_token",
-                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com",
+                                        "modifyFieldsOnValue": [
+                                            {
+                                                "fieldValue": "[[any_other_value]]",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "label": "Disabled on edit for oauth 55555"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "aaaaaa",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "label": "Disabled on edit for oauth 1111"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "bbbbb",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": true,
+                                                        "label": "Disabled on edit for oauth 2222"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "ccccc",
+                                                "mode": "edit",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": false,
+                                                        "label": "Disabled on edit for oauth 3333"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": false
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "fieldValue": "dddddd",
+                                                "mode": "create",
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": true,
+                                                        "label": "Disabled on edit for oauth 44444"
+                                                    },
+                                                    {
+                                                        "fieldId": "endpoint_authorize",
+                                                        "display": false
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     },
                                     {
                                         "oauth_field": "endpoint_authorize",
                                         "label": "Authorize endpoint",
                                         "field": "endpoint_authorize",
                                         "help": "Put here endpoint used for authorization ie. login.salesforce.com"
+                                    },
+                                    {
+                                        "oauth_field": "oauth_some_text",
+                                        "label": "Disabled on edit for oauth",
+                                        "help": "Enter text for field disabled on edit",
+                                        "field": "oauth_oauth_text",
+                                        "required": false,
+                                        "options": {
+                                            "disableonEdit": true,
+                                            "enable": false
+                                        }
+                                    }
+                                ],
+                                "oauth_client_credentials": [
+                                    {
+                                        "oauth_field": "client_id_oauth_credentials",
+                                        "label": "Client Id",
+                                        "field": "client_id_oauth_credentials",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret_oauth_credentials",
+                                        "label": "Client Secret",
+                                        "field": "client_secret_oauth_credentials",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_token_oauth_credentials",
+                                        "label": "Token endpoint",
+                                        "field": "endpoint_token_oauth_credentials",
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
@@ -201,12 +517,60 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "field": "config1_help_link",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Add-on configuration documentation",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "field": "config2_help_link",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "SSL configuration \ndocumentation",
+                                "link": "https://docs.splunk.com/Documentation"
+                            }
+                        },
+                        {
+                            "field": "config3_help_text_with_links",
+                            "type": "helpLink",
+                            "options": {
+                                "text": "Check out our new documentation [[here]]. \nIt is super awesome",
+                                "links": [
+                                    {
+                                        "slug": "here",
+                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
+                                        "linkText": "here"
+                                    }
+                                ]
+                            }
                         }
                     ],
-                    "title": "Account"
+                    "groups": [
+                        {
+                            "label": "Hidden entities",
+                            "fields": [
+                                "text_field_hidden_for_cloud",
+                                "text_field_hidden_for_enterprise",
+                                "field_no_validators",
+                                "field_no_validators_suppressed"
+                            ],
+                            "options": {
+                                "isExpandable": true,
+                                "expand": false
+                            }
+                        }
+                    ],
+                    "title": "Account",
+                    "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
+                    "restHandlerClass": "CustomAccountValidator"
                 },
                 {
                     "name": "proxy",
+                    "title": "Proxy",
                     "entity": [
                         {
                             "type": "checkbox",
@@ -216,6 +580,7 @@
                         {
                             "type": "singleSelect",
                             "label": "Proxy Type",
+                            "required": false,
                             "options": {
                                 "disableSearch": true,
                                 "autoCompleteFields": [
@@ -243,11 +608,17 @@
                                 {
                                     "type": "string",
                                     "errorMsg": "Max host length is 4096",
-                                    "minLength": 0,
+                                    "minLength": 1,
                                     "maxLength": 4096
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Proxy Host should not have special characters",
+                                    "pattern": "^[a-zA-Z]\\w*$"
                                 }
                             ],
-                            "field": "proxy_url"
+                            "field": "proxy_url",
+                            "required": true
                         },
                         {
                             "type": "text",
@@ -258,10 +629,12 @@
                                     "range": [
                                         1,
                                         65535
-                                    ]
+                                    ],
+                                    "isInteger": true
                                 }
                             ],
-                            "field": "proxy_port"
+                            "field": "proxy_port",
+                            "required": true
                         },
                         {
                             "type": "text",
@@ -298,11 +671,11 @@
                     ],
                     "options": {
                         "saveValidator": "function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } if(!formData.proxy_url) { return 'Proxy Host can not be empty'; } if(!formData.proxy_port) { return 'Proxy Port can not be empty'; } return true; }"
-                    },
-                    "title": "Proxy"
+                    }
                 },
                 {
                     "name": "logging",
+                    "title": "Logging",
                     "entity": [
                         {
                             "type": "singleSelect",
@@ -333,10 +706,17 @@
                                 ]
                             },
                             "defaultValue": "INFO",
-                            "field": "loglevel"
+                            "field": "loglevel",
+                            "required": true,
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Log level must be one of: DEBUG, INFO, WARNING, ERROR, CRITICAL",
+                                    "pattern": "^DEBUG|INFO|WARNING|ERROR|CRITICAL$"
+                                }
+                            ]
                         }
-                    ],
-                    "title": "Logging"
+                    ]
                 },
                 {
                     "name": "custom_abc",
@@ -356,7 +736,7 @@
                         },
                         {
                             "field": "testNumber",
-                            "label": "Test number",
+                            "label": "Test Number",
                             "type": "text",
                             "validators": [
                                 {
@@ -370,7 +750,7 @@
                         },
                         {
                             "field": "testRegex",
-                            "label": "Test regex",
+                            "label": "Test Regex",
                             "type": "text",
                             "validators": [
                                 {
@@ -392,7 +772,7 @@
                         },
                         {
                             "field": "testIpv4",
-                            "label": "Test ipv4",
+                            "label": "Test Ipv4",
                             "type": "text",
                             "validators": [
                                 {
@@ -402,7 +782,7 @@
                         },
                         {
                             "field": "testDate",
-                            "label": "Test date",
+                            "label": "Test Date",
                             "type": "text",
                             "validators": [
                                 {
@@ -412,7 +792,7 @@
                         },
                         {
                             "field": "testUrl",
-                            "label": "Test url",
+                            "label": "Test Url",
                             "type": "text",
                             "validators": [
                                 {
@@ -421,15 +801,247 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "custom_row_tab",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ],
+                        "customRow": {
+                            "src": "custom_input_row_replace",
+                            "type": "external"
+                        }
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "Custom table row"
+                },
+                {
+                    "name": "tab_hidden_for_cloud",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "Tab hidden for cloud",
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "tab_hidden_for_enterprise",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "Tab hidden for enterprise",
+                    "hideForPlatform": "enterprise"
                 }
             ],
             "title": "Configuration",
-            "description": "Set up your add-on"
+            "description": "Set up your add-on",
+            "subDescription": {
+                "text": "Configuration page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                "links": [
+                    {
+                        "slug": "blogPost",
+                        "link": "https://splk.it/31oy2b2",
+                        "linkText": "blog post"
+                    }
+                ]
+            }
         },
         "inputs": {
             "services": [
                 {
                     "name": "example_input_one",
+                    "inputHelperModule": "helper_one",
+                    "warning": {
+                        "create": {
+                            "message": "Some warning for account text create"
+                        },
+                        "edit": {
+                            "message": "Some warning for account text edit"
+                        },
+                        "clone": {
+                            "message": "Some warning for account text clone"
+                        },
+                        "delete": {
+                            "message": "Some warning for account text delete"
+                        }
+                    },
                     "entity": [
                         {
                             "type": "text",
@@ -455,7 +1067,8 @@
                             "type": "checkbox",
                             "label": "Example Checkbox",
                             "field": "input_one_checkbox",
-                            "help": "This is an example checkbox for the input one entity"
+                            "help": "This is an example checkbox for the input one entity",
+                            "defaultValue": true
                         },
                         {
                             "type": "radio",
@@ -476,6 +1089,19 @@
                                     }
                                 ],
                                 "display": true
+                            }
+                        },
+                        {
+                            "field": "dependent_dropdown",
+                            "label": "Dependent",
+                            "type": "singleSelect",
+                            "required": false,
+                            "options": {
+                                "dependencies": [
+                                    "input_one_radio"
+                                ],
+                                "disableonEdit": true,
+                                "endpointUrl": "splunk_ta_uccexample/dependent_dropdown"
                             }
                         },
                         {
@@ -518,6 +1144,7 @@
                             "field": "multipleSelectTest",
                             "label": "Multiple Select Test",
                             "type": "multipleSelect",
+                            "defaultValue": "a|b",
                             "options": {
                                 "delimiter": "|",
                                 "items": [
@@ -534,15 +1161,15 @@
                         },
                         {
                             "type": "text",
+                            "field": "interval",
                             "label": "Interval",
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
                                 }
                             ],
-                            "field": "interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
                         },
@@ -570,7 +1197,8 @@
                             "type": "singleSelect",
                             "label": "Example Account",
                             "options": {
-                                "referenceName": "account"
+                                "referenceName": "account",
+                                "allowList": "^[a-zA-Z]\\w*$"
                             },
                             "help": "",
                             "field": "account",
@@ -675,6 +1303,17 @@
                             "required": false
                         },
                         {
+                            "type": "textarea",
+                            "label": "Example Textarea Field",
+                            "field": "example_textarea_field",
+                            "help": "Help message",
+                            "options": {
+                                "rowsMin": 3,
+                                "rowsMax": 15
+                            },
+                            "required": true
+                        },
+                        {
                             "field": "example_help_link",
                             "label": "",
                             "type": "helpLink",
@@ -682,12 +1321,29 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input One"
                 },
                 {
                     "name": "example_input_two",
+                    "inputHelperModule": "helper_two",
                     "entity": [
                         {
                             "type": "text",
@@ -711,22 +1367,34 @@
                         },
                         {
                             "type": "text",
+                            "field": "interval",
                             "label": "Interval",
                             "validators": [
                                 {
                                     "type": "regex",
-                                    "errorMsg": "Interval must be an integer.",
-                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
                                 }
                             ],
-                            "field": "interval",
-                            "help": "Time interval of the data input, in seconds .",
+                            "help": "Time interval of the data input, in seconds.",
                             "required": true
                         },
                         {
                             "type": "singleSelect",
+                            "field": "index",
                             "label": "Index",
+                            "defaultValue": "default",
+                            "options": {
+                                "endpointUrl": "data/indexes?search=isInternal=0+disabled=0",
+                                "denyList": "^_.*$",
+                                "createSearchChoice": true
+                            },
                             "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Index names must begin with a letter or a number and must contain only letters, numbers, underscores or hyphens.",
+                                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\\\_\\\\-]*$"
+                                },
                                 {
                                     "type": "string",
                                     "errorMsg": "Length of index name should be between 1 and 80.",
@@ -734,13 +1402,7 @@
                                     "maxLength": 80
                                 }
                             ],
-                            "defaultValue": "default",
-                            "options": {
-                                "endpointUrl": "data/indexes",
-                                "denyList": "^_.*$",
-                                "createSearchChoice": true
-                            },
-                            "field": "index",
+                            "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
                             "required": true
                         },
                         {
@@ -752,6 +1414,28 @@
                             "help": "",
                             "field": "account",
                             "required": true
+                        },
+                        {
+                            "type": "text",
+                            "label": "Text input hidden for cloud",
+                            "field": "input_two_text_hidden_for_cloud",
+                            "help": "Should be hidden for cloud",
+                            "tooltip": "Should be hidden for cloud",
+                            "required": false,
+                            "options": {
+                                "hideForPlatform": "cloud"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "label": "Text input hidden for enterprise",
+                            "field": "input_two_text_hidden_for_enterprise",
+                            "help": "Should be hidden for enterprise",
+                            "tooltip": "Should be hidden for enterprise",
+                            "required": false,
+                            "options": {
+                                "hideForPlatform": "enterprise"
+                            }
                         },
                         {
                             "type": "multipleSelect",
@@ -782,9 +1466,8 @@
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
-                            "defaultValue": "yes",
                             "help": "This is an example radio button for the input two entity",
-                            "required": false,
+                            "required": true,
                             "options": {
                                 "items": [
                                     {
@@ -843,18 +1526,593 @@
                                 "text": "Help Link",
                                 "link": "https://docs.splunk.com/Documentation"
                             }
+                        },
+                        {
+                            "field": "apis",
+                            "label": "APIs/Interval (in seconds)",
+                            "type": "checkboxGroup",
+                            "options": {
+                                "groups": [
+                                    {
+                                        "label": "EC2",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "ec2_volumes",
+                                            "ec2_instances",
+                                            "ec2_reserved_instances",
+                                            "ebs_snapshots",
+                                            "rds_instances",
+                                            "rds_reserved_instances",
+                                            "ec2_key_pairs",
+                                            "ec2_security_groups",
+                                            "ec2_images",
+                                            "ec2_addresses"
+                                        ]
+                                    },
+                                    {
+                                        "label": "ELB",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "classic_load_balancers",
+                                            "application_load_balancers"
+                                        ]
+                                    },
+                                    {
+                                        "label": "VPC",
+                                        "options": {
+                                            "isExpandable": true
+                                        },
+                                        "fields": [
+                                            "vpcs",
+                                            "vpc_network_acls",
+                                            "vpc_subnets"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "ec2_volumes",
+                                        "checkbox": {
+                                            "defaultValue": true
+                                        },
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_instances",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_reserved_instances",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ebs_snapshots",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "rds_instances",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "rds_reserved_instances",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_key_pairs",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_security_groups",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_images",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "ec2_addresses",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "classic_load_balancers",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "application_load_balancers",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "vpcs",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "vpc_network_acls",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    },
+                                    {
+                                        "field": "vpc_subnets",
+                                        "input": {
+                                            "defaultValue": 3600,
+                                            "required": true
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Hide in UI boolean value",
+                            "field": "hide_in_ui",
+                            "options": {
+                                "display": false
+                            }
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "Is input readonly?",
+                            "field": "hard_disabled",
+                            "options": {
+                                "display": false
+                            }
                         }
                     ],
                     "title": "Example Input Two"
+                },
+                {
+                    "name": "example_input_three",
+                    "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        },
+                        {
+                            "type": "checkboxTree",
+                            "label": "Event Filters",
+                            "field": "event_filters",
+                            "required": true,
+                            "options": {
+                                "delimiter": "|",
+                                "groups": [
+                                    {
+                                        "label": "Transactions",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "slow_request",
+                                            "transaction_stall"
+                                        ]
+                                    },
+                                    {
+                                        "label": "others",
+                                        "options": {
+                                            "isExpandable": true,
+                                            "expand": true
+                                        },
+                                        "fields": [
+                                            "custom_events",
+                                            "cluster_events",
+                                            "network_events"
+                                        ]
+                                    }
+                                ],
+                                "rows": [
+                                    {
+                                        "field": "code_problems",
+                                        "checkbox": {
+                                            "label": "Code Problems",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "slow_request",
+                                        "checkbox": {
+                                            "label": "Slow Request",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "transaction_stall",
+                                        "checkbox": {
+                                            "label": "Transactions Stall",
+                                            "defaultValue": false
+                                        }
+                                    },
+                                    {
+                                        "field": "custom_events",
+                                        "checkbox": {
+                                            "label": "Custom Events",
+                                            "defaultValue": true
+                                        }
+                                    },
+                                    {
+                                        "field": "cluster_events",
+                                        "checkbox": {
+                                            "label": "Cluster Events"
+                                        }
+                                    },
+                                    {
+                                        "field": "network_events",
+                                        "checkbox": {
+                                            "label": "Network Events"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "title": "Example Input Three"
+                },
+                {
+                    "name": "example_input_four",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Example Input Four",
+                    "disableNewInput": true,
+                    "subTitle": "Creates disabled input",
+                    "hook": {
+                        "src": "input_hook",
+                        "type": "external"
+                    }
+                },
+                {
+                    "name": "service_hidden_for_cloud",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service hidden for cloud",
+                    "hideForPlatform": "cloud"
+                },
+                {
+                    "name": "service_hidden_for_enterprise",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Input Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                },
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of input name should be between 1 and 100",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "field": "name",
+                            "help": "A unique name for the data input.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service hidden for enterprise",
+                    "hideForPlatform": "enterprise"
+                },
+                {
+                    "name": "service_with_conf_param",
+                    "conf": "some_conf",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service with conf param"
+                },
+                {
+                    "name": "service_inside_menu_one",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "text_with_validators",
+                            "label": "Text with validators",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 2,
+                                    "maxLength": 8192,
+                                    "errorMsg": "Length of Query parameters should be between 2 and 8192"
+                                },
+                                {
+                                    "type": "regex",
+                                    "pattern": "^\\$",
+                                    "errorMsg": "Query parameters should start with '$'"
+                                }
+                            ]
+                        }
+                    ],
+                    "title": "Service 1 Inside Menu"
+                },
+                {
+                    "name": "service_inside_menu_two",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service 2 Inside Menu "
+                },
+                {
+                    "name": "service_inside_menu_three",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service 3 Inside Menu - style Dialog",
+                    "style": "dialog"
+                },
+                {
+                    "name": "service_inside_menu_four",
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "required": true
+                        },
+                        {
+                            "type": "text",
+                            "field": "interval",
+                            "label": "Interval",
+                            "validators": [
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Interval must be either a non-negative number, CRON interval or -1.",
+                                    "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+                                }
+                            ],
+                            "help": "Time interval of the data input, in seconds.",
+                            "required": true
+                        }
+                    ],
+                    "title": "Service 4 Inside Menu - style page",
+                    "style": "page"
                 }
             ],
             "title": "Inputs",
             "description": "Manage your data inputs",
+            "subDescription": {
+                "text": "Input page - Ingesting data from to Splunk Cloud? Have you tried the new Splunk Data Manager yet?\nData Manager makes AWS data ingestion simpler, more automated and centrally managed for you, while co-existing with AWS and/or Kinesis TAs.\nRead our [[blogPost]] to learn more about Data Manager and it's availability on your Splunk Cloud instance.",
+                "links": [
+                    {
+                        "slug": "blogPost",
+                        "link": "https://splk.it/31oy2b2",
+                        "linkText": "blog post"
+                    }
+                ]
+            },
             "table": {
                 "actions": [
                     "edit",
                     "delete",
-                    "clone"
+                    "clone",
+                    "search"
                 ],
                 "header": [
                     {
@@ -862,12 +2120,20 @@
                         "field": "name"
                     },
                     {
-                        "label": "Account Name",
+                        "label": "Account",
                         "field": "account"
                     },
                     {
                         "label": "Interval",
                         "field": "interval"
+                    },
+                    {
+                        "label": "Input Type",
+                        "field": "serviceTitle"
+                    },
+                    {
+                        "label": "Input Service",
+                        "field": "serviceName"
                     },
                     {
                         "label": "Index",
@@ -878,6 +2144,10 @@
                         "field": "disabled"
                     }
                 ],
+                "customRow": {
+                    "src": "custom_input_row",
+                    "type": "external"
+                },
                 "moreInfo": [
                     {
                         "label": "Name",
@@ -895,8 +2165,8 @@
                         "label": "Status",
                         "field": "disabled",
                         "mapping": {
-                            "true": "Disabled",
-                            "false": "Enabled"
+                            "true": "Inactive",
+                            "false": "Active"
                         }
                     },
                     {
@@ -924,7 +2194,67 @@
                         "field": "limit"
                     }
                 ]
-            }
+            },
+            "hideFieldId": "hide_in_ui",
+            "readonlyFieldId": "hard_disabled",
+            "inputsUniqueAcrossSingleService": false,
+            "groupsMenu": [
+                {
+                    "groupName": "example_input_one",
+                    "groupTitle": "Example Input One"
+                },
+                {
+                    "groupName": "example_input_two",
+                    "groupTitle": "Example Input Two"
+                },
+                {
+                    "groupName": "example_input_three",
+                    "groupTitle": "Example Input Three"
+                },
+                {
+                    "groupName": "example_input_four",
+                    "groupTitle": "Example Input Four"
+                },
+                {
+                    "groupName": "service_hidden_for_cloud",
+                    "groupTitle": "Service hidden for cloud"
+                },
+                {
+                    "groupName": "service_hidden_for_enterprise",
+                    "groupTitle": "Service hidden for enterprise"
+                },
+                {
+                    "groupName": "service_with_conf_param",
+                    "groupTitle": "Service with conf param"
+                },
+                {
+                    "groupName": "group_one",
+                    "groupTitle": "Group One",
+                    "groupServices": [
+                        "service_inside_menu_one",
+                        "service_inside_menu_two"
+                    ]
+                },
+                {
+                    "groupName": "group_two",
+                    "groupTitle": "Group Two",
+                    "groupServices": [
+                        "service_inside_menu_two",
+                        "service_inside_menu_four",
+                        "service_inside_menu_three"
+                    ]
+                }
+            ]
+        },
+        "dashboard": {
+            "panels": [
+                {
+                    "name": "default"
+                },
+                {
+                    "name": "custom"
+                }
+            ]
         }
     },
     "alerts": [
@@ -932,12 +2262,14 @@
             "name": "test_alert",
             "label": "Test Alert",
             "description": "Description for test Alert Action",
-            "activeResponse": {
+            "iconFileName": "test icon.png",
+            "adaptiveResponse": {
                 "task": [
                     "Create",
                     "Update"
                 ],
                 "supportsAdhoc": true,
+                "supportsCloud": true,
                 "subject": [
                     "endpoint"
                 ],
@@ -967,6 +2299,14 @@
                     "help": "Please enter your name"
                 },
                 {
+                    "type": "textarea",
+                    "label": "Description",
+                    "field": "description",
+                    "defaultValue": "some sample description",
+                    "required": true,
+                    "help": "Please enter the description for the alert"
+                },
+                {
                     "type": "checkbox",
                     "label": "All Incidents",
                     "field": "all_incidents",
@@ -981,12 +2321,12 @@
                     "options": {
                         "items": [
                             {
-                                "value": "Incident",
-                                "label": "incident"
+                                "value": "incident",
+                                "label": "Incident"
                             },
                             {
-                                "value": "Problem",
-                                "label": "problem"
+                                "value": "problem",
+                                "label": "Problem"
                             }
                         ]
                     },
@@ -1001,38 +2341,83 @@
                     "options": {
                         "items": [
                             {
-                                "value": "Update",
-                                "label": "update"
+                                "value": "update",
+                                "label": "Update"
                             },
                             {
-                                "value": "Delete",
-                                "label": "delete"
+                                "value": "delete",
+                                "label": "Delete"
                             }
                         ]
                     },
                     "help": "Select the action you want to perform",
                     "required": true,
-                    "defaultValue": "two"
+                    "defaultValue": "update"
                 },
                 {
                     "type": "singleSelectSplunkSearch",
                     "label": "Select Account",
                     "field": "account",
-                    "search": "| rest /servicesNS/nobody/TA-SNOW/admin/TA_SNOW_account | dedup title",
+                    "search": "| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title",
+                    "options": {
+                        "items": [
+                            {
+                                "label": "earliest",
+                                "value": "-4@h"
+                            },
+                            {
+                                "label": "latest",
+                                "value": "now"
+                            }
+                        ]
+                    },
                     "valueField": "title",
                     "labelField": "title",
                     "help": "Select the account from the dropdown",
                     "required": true
                 }
-            ]
+            ],
+            "customScript": "myAlertLogic"
         }
     ],
     "meta": {
-        "apiVersion": "3.2.0",
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.5.8+5fd76615",
+        "version": "5.62.0+a353bd0f1",
         "displayName": "Splunk UCC test Add-on",
-        "schemaVersion": "0.0.2"
+        "schemaVersion": "0.0.9",
+        "supportedThemes": [
+            "light",
+            "dark"
+        ],
+        "isVisible": true,
+        "os-dependentLibraries": [
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "win_amd64",
+                "python_version": "37",
+                "os": "windows",
+                "target": "3rdparty/windows"
+            },
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "macosx_10_12_universal2",
+                "python_version": "37",
+                "os": "darwin",
+                "target": "3rdparty/darwin"
+            },
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "dependencies": true,
+                "platform": "manylinux2014_x86_64",
+                "python_version": "37",
+                "os": "linux",
+                "target": "3rdparty/linux"
+            }
+        ],
+        "_uccVersion": "5.62.0"
     }
 }

@@ -3,7 +3,7 @@ import React, { memo, useRef, useState } from 'react';
 import Link from '@splunk/react-ui/Link';
 import ColumnLayout from '@splunk/react-ui/ColumnLayout';
 import { _ } from '@splunk/ui-utils/i18n';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 
 import Heading from '@splunk/react-ui/Heading';
 import styled from 'styled-components';
@@ -16,6 +16,7 @@ import { PAGE_INPUT } from '../../constants/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import PageContext from '../../context/PageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 export interface EntityPageProps {
     handleRequestClose: () => void;
@@ -91,21 +92,25 @@ function EntityPage({
                         <Heading style={{ paddingLeft: '30px' }} level={3}>
                             {_(formLabel)}
                         </Heading>
-
-                        <PageContext.Consumer>
-                            {(pageContext) => (
-                                <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
-                                    ref={form}
-                                    page={page}
-                                    serviceName={serviceName}
-                                    mode={mode}
-                                    stanzaName={stanzaName || ''}
-                                    handleFormSubmit={handleFormSubmit}
-                                    groupName={groupName}
-                                    pageContext={pageContext}
-                                />
+                        <CustomComponentContext.Consumer>
+                            {(customComponentContext) => (
+                                <PageContext.Consumer>
+                                    {(pageContext) => (
+                                        <BaseFormView // nosemgrep: typescript.react.security.audit.react-no-refs.react-no-refs
+                                            ref={form}
+                                            page={page}
+                                            serviceName={serviceName}
+                                            mode={mode}
+                                            stanzaName={stanzaName || ''}
+                                            handleFormSubmit={handleFormSubmit}
+                                            groupName={groupName}
+                                            pageContext={pageContext}
+                                            customComponentContext={customComponentContext}
+                                        />
+                                    )}
+                                </PageContext.Consumer>
                             )}
-                        </PageContext.Consumer>
+                        </CustomComponentContext.Consumer>
                     </ShadowedDiv>
                     <ButtonRow>
                         <UCCButton

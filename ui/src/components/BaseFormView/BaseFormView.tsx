@@ -7,7 +7,7 @@ import Message from '@splunk/react-ui/Message';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG, Mode } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
 import { generateEndPointUrl, postRequest } from '../../util/api';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
@@ -26,10 +26,10 @@ import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
     NullishFormRecord,
+    StandardPages,
 } from '../../types/components/shareableTypes';
 import {
     CustomHookError,
-    BaseFormProps,
     BaseFormState,
     SingleSelectEntityType,
     BaseFormStateData,
@@ -43,6 +43,8 @@ import {
     BasicEntity,
     ChangeRecord,
     EntitiesAllowingModifications,
+    CustomValidatorFunc,
+    AvaillableOAuthTypes,
 } from '../../types/components/BaseFormTypes';
 import {
     getAllFieldsWithModifications,
@@ -50,7 +52,10 @@ import {
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { shouldHideForPlatform } from '../../util/pageContext';
-import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookClass';
+import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
+import { CustomElementsMap } from '../../types/CustomTypes';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
+import { PageContextProviderType } from '../../context/PageContext';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -59,10 +64,24 @@ function onCustomHookError(params: { methodName: string; error?: CustomHookError
     );
 }
 
+export interface BaseFormProps {
+    currentServiceState?: Record<string, AcceptableFormValueOrNull>;
+    serviceName: string;
+    mode: Mode;
+    page: StandardPages;
+    stanzaName: string;
+    groupName?: string;
+    handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
+    pageContext?: PageContextProviderType;
+    customComponentContext?: CustomComponentContextType;
+}
+
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     static contextType = TableContext;
 
-    context!: React.ContextType<typeof TableContext>;
+    // vite excepts declare context: ...
+    // @ts-expect-error declare can't be added due to jest error
+    context: React.ContextType<typeof TableContext>;
 
     flag: boolean;
 
@@ -129,6 +148,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     inputsUniqueAcrossSingleService?: boolean;
 
+    customComponentContext?: CustomElementsMap;
+
     constructor(props: BaseFormProps, context: React.ContextType<typeof TableContext>) {
         super(props);
         // flag for to render hook method for once
@@ -166,6 +187,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             utilCustomFunctions: this.util,
         };
         this.customWarningMessage = { message: '' };
+
+        this.customComponentContext = this.props.customComponentContext;
 
         if (props.page === PAGE_INPUT) {
             this.inputsUniqueAcrossSingleService =
@@ -244,7 +267,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             if (e.type === 'oauth') {
                 this.isOAuth = true;
                 if (props.page === PAGE_CONF && props.serviceName === 'account') {
-                    const authType: ('basic' | 'oauth')[] = e?.options?.auth_type;
+                    const authType: Array<AvaillableOAuthTypes> = e?.options?.auth_type;
                     this.isoauthState =
                         typeof e?.options?.oauth_state_enabled !== 'undefined'
                             ? e?.options?.oauth_state_enabled
@@ -259,7 +282,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             display: true,
                             value:
                                 this.currentInput?.auth_type === 'oauth' ||
-                                this.currentInput?.auth_type === 'basic'
+                                this.currentInput?.auth_type === 'basic' ||
+                                this.currentInput?.auth_type === 'oauth_client_credentials'
                                     ? this.currentInput?.auth_type
                                     : authType[0],
                         };
@@ -268,7 +292,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
                         const content = {
                             basic: 'Basic Authentication',
-                            oauth: 'OAuth 2.0 Authentication',
+                            oauth: 'OAuth 2.0 - Authorization Code Grant Type',
+                            oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
                         };
 
                         // Defining Entity for auth_type in entitylist of globalConfig
@@ -648,7 +673,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
 
             // validation condition of required fields in O-Auth
-            let temEntities;
+            let temEntities: AnyEntity[] | undefined;
             if (this.isOAuth) {
                 let reqFields: string[] = [];
                 Object.keys(this.authMap).forEach((type) => {
@@ -657,8 +682,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         reqFields = [...reqFields, ...this.authMap[type]];
                     }
                 });
+
                 temEntities = this.entities?.map((e) => {
-                    if (reqFields.includes(e.field)) {
+                    // helpLink do not have required field
+                    if (e.type !== 'helpLink' && reqFields.includes(e.field)) {
                         // All oauth fields are required except if explicitely `required` is set to `false`
                         return { required: true, ...e };
                     }
@@ -672,11 +699,15 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             // or if data modification is applicable
             // modification takes precedence over requiredWhenVisible
             temEntities = temEntities?.map((entity) => {
+                // helpLink do not have required field
+                if (entity.type === 'helpLink') {
+                    return entity;
+                }
+
                 const requiredModification =
                     this.state?.data?.[entity.field].modifiedEntitiesData?.required;
 
                 if (
-                    entity?.type !== 'helpLink' &&
                     entity?.type !== 'oauth' &&
                     entity?.type !== 'custom' &&
                     entity?.options?.requiredWhenVisible &&
@@ -1002,10 +1033,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         });
     };
 
-    addCustomValidator = (
-        field: string,
-        validatorFunc: (submittedField: string, submittedValue: string) => void
-    ) => {
+    addCustomValidator = (field: string, validatorFunc: CustomValidatorFunc) => {
         const index = this.entities?.findIndex((x) => x.field === field);
         const validator = [{ type: 'custom', validatorFunc }];
         if (index !== undefined && this.entities?.[index]) {
@@ -1082,8 +1110,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     // generatesubmitMessage
     loadHook = (module: string, type: string, globalConfig: GlobalConfig) => {
         const myPromise = new Promise((resolve) => {
-            if (type === 'external') {
-                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${module}.js`).then(
+            const customHook = this.customComponentContext?.[module];
+            if (customHook?.type === 'hook') {
+                const Hook = customHook.component;
+                this.hook = new Hook(
+                    globalConfig,
+                    this.props.serviceName,
+                    this.state,
+                    this.props.mode,
+                    this.util,
+                    this.props.groupName
+                );
+                resolve(Hook);
+            } else if (type === 'external') {
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${module}.js`).then(
                     (external) => {
                         const Hook = external.default as CustomHookConstructor;
                         this.hook = new Hook(

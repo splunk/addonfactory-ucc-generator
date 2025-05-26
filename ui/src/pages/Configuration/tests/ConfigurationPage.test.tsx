@@ -1,5 +1,6 @@
+import { beforeEach, expect, it, MockInstance, vi } from 'vitest';
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { http, HttpResponse } from 'msw';
@@ -9,11 +10,13 @@ import { mockServerResponseWithContent } from '../../../mocks/server-response';
 import { getUnifiedConfigs } from '../../../util/util';
 import ConfigurationPage from '../ConfigurationPage';
 import { type meta as metaType } from '../../../types/globalConfig/meta';
-import { consoleError } from '../../../../jest.setup';
+import { consoleError } from '../../../../test.setup.ts';
 
-jest.mock('../../../util/util');
+vi.mock('../../../util/util');
 
-const getUnifiedConfigsMock = getUnifiedConfigs as jest.Mock;
+const getUnifiedConfigsMock = getUnifiedConfigs as unknown as MockInstance<
+    typeof getUnifiedConfigs
+>;
 
 beforeEach(() => {
     server.use(
@@ -38,31 +41,25 @@ function setup(meta: Partial<metaType>) {
 }
 
 it('should show UCC label', async () => {
-    const page = setup({
-        _uccVersion: undefined,
-    });
+    setup({ _uccVersion: undefined });
 
-    const uccLink = await page.findByRole('link', { name: /ucc/i });
+    const uccLink = await screen.findByRole('link', { name: /ucc/i });
     expect(uccLink).toBeInTheDocument();
-    expect(uccLink.getAttribute('href')).toContain('github.io');
+    expect(uccLink).toHaveAttribute('href', 'https://splunk.github.io/addonfactory-ucc-generator/');
 });
 
 it('should not show UCC label', async () => {
-    const page = setup({
-        hideUCCVersion: true,
-    });
+    setup({ hideUCCVersion: true });
 
-    const uccLink = page.queryByRole('link', { name: /ucc/i });
-    expect(uccLink).toBeNull();
+    const uccLink = screen.queryByRole('link', { name: /ucc/i });
+    expect(uccLink).not.toBeInTheDocument();
 });
 
 it('should show UCC version', async () => {
     const expectedUccVersion = '5.2221.2341';
-    const page = setup({
-        _uccVersion: expectedUccVersion,
-    });
+    setup({ _uccVersion: expectedUccVersion });
 
-    const uccVersion = await page.findByTestId('ucc-credit');
+    const uccVersion = await screen.findByTestId('ucc-credit');
     expect(uccVersion).toHaveTextContent(expectedUccVersion);
 });
 
@@ -84,10 +81,8 @@ it('should display error when server returns error', async () => {
         )
     );
 
-    const page = setup({
-        _uccVersion: undefined,
-    });
+    setup({ _uccVersion: undefined });
 
-    const errorText = await page.findByText(errorMessage);
+    const errorText = await screen.findByText(errorMessage);
     expect(errorText).toBeInTheDocument();
 });

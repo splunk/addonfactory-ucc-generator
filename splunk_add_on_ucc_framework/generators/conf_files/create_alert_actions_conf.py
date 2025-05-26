@@ -16,13 +16,13 @@
 import json
 import shutil
 from os import path
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class AlertActionsConf(ConfGenerator):
+class AlertActionsConf(FileGenerator):
     __description__ = (
         "Generates `alert_actions.conf` and `alert_actions.conf.spec` file "
         "for the custom alert actions defined in globalConfig"
@@ -127,9 +127,15 @@ class AlertActionsConf(ConfGenerator):
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
 
-    def generate_conf(self) -> Union[Dict[str, str], None]:
+    def generate(self) -> Dict[str, str]:
+        conf_files: Dict[str, str] = {}
+        conf_files.update(self.generate_conf())
+        conf_files.update(self.generate_conf_spec())
+        return conf_files
+
+    def generate_conf(self) -> Dict[str, str]:
         if not self.alerts:
-            return None
+            return {}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
@@ -143,9 +149,9 @@ class AlertActionsConf(ConfGenerator):
         )
         return {self.conf_file: file_path}
 
-    def generate_conf_spec(self) -> Union[Dict[str, str], None]:
+    def generate_conf_spec(self) -> Dict[str, str]:
         if not self.alerts_spec:
-            return None
+            return {}
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(

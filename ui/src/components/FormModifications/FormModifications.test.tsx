@@ -1,3 +1,4 @@
+import { beforeEach, expect, it, vi } from 'vitest';
 import React from 'react';
 import { screen, render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -17,7 +18,7 @@ import { EntitiesAllowingModifications } from '../../types/components/BaseFormTy
 import { invariant } from '../../util/invariant';
 import { StringOrTextWithLinks } from '../../types/globalConfig/entities';
 
-const handleRequestClose = jest.fn();
+const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
     const newConfig = getConfigWithModifications();
     setUnifiedConfig(newConfig);
@@ -38,6 +39,7 @@ const props = {
     groupName: '',
     open: true,
     handleRequestClose: () => {},
+    returnFocus: () => {},
 } satisfies EntityModalProps;
 
 const findMods = (
@@ -53,8 +55,16 @@ const findMods = (
 };
 
 const getTextElementForField = (field: string) => {
-    const componentParentElement = document.querySelector<HTMLElement>(`[data-name="${field}"]`)!;
+    const componentParentElement = screen
+        .getAllByTestId('control-group')
+        .find((el) => el.getAttribute('data-name') === field);
+
     expect(componentParentElement).toBeInTheDocument();
+
+    if (!componentParentElement) {
+        return [];
+    }
+
     const componentInput = within(componentParentElement).getByRole('textbox');
 
     return [componentParentElement, componentInput];
@@ -62,10 +72,11 @@ const getTextElementForField = (field: string) => {
 
 beforeEach(() => {
     setUpConfigWithDefaultValue();
-    renderModalWithProps(props);
 });
 
 it('render fields with modifications correctly', async () => {
+    renderModalWithProps(props);
+
     expect(screen.getByRole('textbox', { name: firstStandardTextField.label })).toBeInTheDocument();
     expect(
         screen.getByRole('textbox', { name: secondStandardTextField.label })
@@ -80,9 +91,10 @@ it('render fields with modifications correctly', async () => {
 });
 
 it('verify modification after text components change', async () => {
+    renderModalWithProps(props);
+
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
-
     const [componentParentElement, componentInput] = getTextElementForField(
         firstStandardTextField.field
     );
@@ -90,7 +102,7 @@ it('verify modification after text components change', async () => {
         secondStandardTextField.field
     );
 
-    const componentMakingModsTextBox1 = getTextElementForField(firstModificationField.field)[1];
+    const [, componentMakingModsTextBox1] = getTextElementForField(firstModificationField.field);
 
     const mods1Field1 = findMods(
         firstModificationField,
@@ -152,13 +164,15 @@ it('verify modification after text components change', async () => {
 });
 
 it('verify markdown modifications', async () => {
+    renderModalWithProps(props);
+
     const firstValueToInput = 'a';
     const secondValueToInput = 'aa';
 
     const [componentParentElement] = getTextElementForField(firstStandardTextField.field);
     const [component2ParentElement] = getTextElementForField(secondStandardTextField.field);
 
-    const componentMakingModsTextBox1 = getTextElementForField(secondModificationField.field)[1];
+    const [, componentMakingModsTextBox1] = getTextElementForField(secondModificationField.field);
 
     const firstElementOuterHTMLBeforeMods = componentParentElement.outerHTML;
 

@@ -1,18 +1,25 @@
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React, { createContext } from 'react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
 import DeleteModal from './DeleteModal';
 import { server } from '../../mocks/server';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
+import { setUnifiedConfig } from '../../util/util';
 
-jest.mock('../../util/util');
-
-const handleClose = jest.fn();
+const handleClose = vi.fn();
+const handleReturnFocus = vi.fn();
 
 const TableContext = createContext({
     rowData: { serviceName: { stanzaName: 1 } },
     setRowData: () => {},
 });
+
+const mockGlobalConfig = () => {
+    const mockConfig = getGlobalConfigMock();
+    setUnifiedConfig(mockConfig);
+};
 
 describe('Tests that require DeleteModal in beforeEach', () => {
     const setup = () =>
@@ -22,6 +29,7 @@ describe('Tests that require DeleteModal in beforeEach', () => {
             >
                 <DeleteModal
                     handleRequestClose={handleClose}
+                    returnFocus={handleReturnFocus}
                     serviceName="serviceName"
                     stanzaName="stanzaName"
                     page="inputs"
@@ -44,10 +52,12 @@ describe('Tests that require DeleteModal in beforeEach', () => {
     });
 
     it('correct delete request', async () => {
+        mockGlobalConfig();
         setup();
         server.use(
-            http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
-                HttpResponse.json({}, { status: 201 })
+            http.delete(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_serviceName/stanzaName?output_mode=json',
+                () => HttpResponse.json({}, { status: 201 })
             )
         );
         const deleteButton = screen.getByRole('button', { name: /delete/i });
@@ -56,20 +66,23 @@ describe('Tests that require DeleteModal in beforeEach', () => {
     });
 
     it('failed delete request', async () => {
+        mockGlobalConfig();
         setup();
         const errorMessage = 'Oopsy doopsy';
         server.use(
-            http.delete('/servicesNS/nobody/-/restRoot_serviceName/stanzaName', () =>
-                HttpResponse.json(
-                    {
-                        messages: [
-                            {
-                                text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
-                            },
-                        ],
-                    },
-                    { status: 500 }
-                )
+            http.delete(
+                '/servicesNS/nobody/-/demo_addon_for_splunk_serviceName/stanzaName?output_mode=json',
+                () =>
+                    HttpResponse.json(
+                        {
+                            messages: [
+                                {
+                                    text: `Unexpected error "<class 'splunktaucclib.rest_handler.error.RestError'>" from python handler: "REST Error [400]: Bad Request -- ${errorMessage}". See splunkd.log/python.log for more details.`,
+                                },
+                            ],
+                        },
+                        { status: 500 }
+                    )
             )
         );
         const deleteButton = screen.getByRole('button', { name: /delete/i });
@@ -87,6 +100,7 @@ describe('Tests with a custom DeleteModal render', () => {
             >
                 <DeleteModal
                     handleRequestClose={handleClose}
+                    returnFocus={handleReturnFocus}
                     serviceName="serviceName"
                     stanzaName="stanzaName"
                     page="inputs"
@@ -110,6 +124,7 @@ describe('Tests with a custom DeleteModal render', () => {
             >
                 <DeleteModal
                     handleRequestClose={handleClose}
+                    returnFocus={handleReturnFocus}
                     serviceName="serviceName"
                     stanzaName="stanzaName"
                     page="inputs"

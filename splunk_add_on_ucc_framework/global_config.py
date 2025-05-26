@@ -21,6 +21,7 @@ from dataclasses import dataclass, field, fields
 import yaml
 
 from splunk_add_on_ucc_framework import utils
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     UserDefinedRestHandlers,
 )
@@ -60,19 +61,52 @@ class OSDependentLibraryConfig:
 
 
 class GlobalConfig:
-    def __init__(self, global_config_path: str) -> None:
+    def __init__(
+        self,
+        content: Dict[str, Any],
+        is_yaml: bool,
+    ) -> None:
+        self._content = content
+        self._is_global_config_yaml = is_yaml
+        self.user_defined_handlers = UserDefinedRestHandlers()
+
+    @classmethod
+    def from_file(cls, global_config_path: str) -> "GlobalConfig":
         with open(global_config_path) as f_config:
             config_raw = f_config.read()
-        self._is_global_config_yaml = (
-            True if global_config_path.endswith(".yaml") else False
+        is_global_config_yaml = True if global_config_path.endswith(".yaml") else False
+        content = (
+            yaml_load(config_raw) if is_global_config_yaml else json.loads(config_raw)
         )
-        self._content = (
-            yaml_load(config_raw)
-            if self._is_global_config_yaml
-            else json.loads(config_raw)
+        return GlobalConfig(content, is_global_config_yaml)
+
+    @classmethod
+    def from_app_manifest(
+        cls, app_manifest: app_manifest_lib.AppManifest
+    ) -> "GlobalConfig":
+        content = {
+            "meta": {
+                "name": app_manifest.get_addon_name(),
+                # TODO(ADDON-79208): once `restRoot` is optional, this line can be removed
+                "restRoot": app_manifest.get_addon_name(),
+                "displayName": app_manifest.get_title(),
+                "version": app_manifest.get_addon_version(),
+            }
+        }
+        return GlobalConfig(
+            content,
+            False,
         )
-        self._original_path = global_config_path
-        self.user_defined_handlers = UserDefinedRestHandlers()
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, GlobalConfig):
+            raise NotImplementedError()
+        return all(
+            [
+                self.content == other.content,
+                self.is_yaml == other.is_yaml,
+            ]
+        )
 
     def parse_user_defined_handlers(self) -> None:
         """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
@@ -80,7 +114,7 @@ class GlobalConfig:
         self.user_defined_handlers.add_definitions(rest_handlers)
 
     def dump(self, path: str) -> None:
-        if self._is_global_config_yaml:
+        if self.is_yaml:
             utils.dump_yaml_config(self.content, path)
         else:
             utils.dump_json_config(self.content, path)
@@ -115,6 +149,10 @@ class GlobalConfig:
     @property
     def content(self) -> Any:
         return self._content
+
+    @property
+    def is_yaml(self) -> bool:
+        return self._is_global_config_yaml
 
     @property
     def inputs(self) -> List[Any]:
@@ -172,6 +210,10 @@ class GlobalConfig:
         return self._content.get("alerts", [])
 
     @property
+    def custom_search_commands(self) -> List[Dict[str, Any]]:
+        return self._content.get("customSearchCommand", [])
+
+    @property
     def meta(self) -> Dict[str, Any]:
         return self._content["meta"]
 
@@ -194,10 +236,6 @@ class GlobalConfig:
     @property
     def ucc_version(self) -> str:
         return self.meta["_uccVersion"]
-
-    @property
-    def original_path(self) -> str:
-        return self._original_path
 
     @property
     def schema_version(self) -> Optional[str]:
@@ -236,6 +274,9 @@ class GlobalConfig:
 
     def has_alerts(self) -> bool:
         return bool(self.alerts)
+
+    def has_custom_search_commands(self) -> bool:
+        return bool(self.custom_search_commands)
 
     def has_dashboard(self) -> bool:
         return self.dashboard is not None

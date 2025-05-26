@@ -107,7 +107,8 @@ A clear button is visible to the right of the dropdown when this field is marked
     "type": "singleSelect",
     "label": "Example Account",
     "options": {
-        "referenceName": "account"
+        "referenceName": "account",
+        "allowList": "^[a-zA-Z]\\w*$"
     },
     "help": "",
     "field": "account",
@@ -241,6 +242,15 @@ This is how it looks in the UI:
 
 ## `CheckboxGroup`
 
+### Options
+
+| Property                                     | Type   | Description                                                                                                                                                                                         | Default Value |
+| -------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| rows<span class="required-asterisk">*</span> | array  | rows defines each individual row within the checkboxGroup control.                                                                                                                                  | -             |
+| groups                                       | array  | groups logically organize related checkboxes under a common label within the checkboxGroup control.                                                                                                 | -             |
+| delimiter                                    | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \ (backslash character), the combined value would look like: `rowUnderGroup1/1200\requiredField/10` | comma(`,`)    |
+
+
 See the following example usage:
 
 ```json
@@ -321,7 +331,17 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1/fieldValue1,fieldName2/fieldValue2`, but only for checked rows. For the given example, it emits the following value: `rowUnderGroup1/1200,requiredField/10`.
 
+
 ## `CheckboxTree`
+
+### Options
+
+| Property                                     | Type   | Description                                                                                                                                                                                                       | Default Value |
+| -------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| rows<span class="required-asterisk">*</span> | array  | rows defines each individual row within the checkboxTree control.                                                                                                                                                 | -             |
+| groups                                       | array  | groups logically organize related checkboxes under a common label within the checkboxTree control.                                                                                                                | -             |
+| delimiter                                    | string | Values are combined into a single field using a predefined delimiter. Assuming the delimiter is \ (backslash character), the combined value would look like: `rowWithoutGroup\rowUnderGroup1\firstRowUnderGroup3` | comma(`,`)    |
+
 
 See the following example usage:
 
@@ -344,7 +364,7 @@ See the following example usage:
             "label": "Group 3",
             "options": {
                 "isExpandable": true,
-                "expand": true,
+                "expand": true
             },
             "fields": ["firstRowUnderGroup3", "secondRowUnderGroup3", "thirdRowUnderGroup3"]
         }
@@ -381,7 +401,7 @@ See the following example usage:
             "field": "thirdRowUnderGroup3",
             "checkbox": {
                 "label": "third row checked under group 3",
-                "defaultValue": true,
+                "defaultValue": true
             }
         }
     ]
@@ -559,7 +579,7 @@ It only sends file content to the server by reading it using the [readAsArrayBuf
 
 If `options` property contains useBase64Encoding is set up as true, then readAsArrayBuffer method is replaced with [readAsDataURL](https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsDataURL) and obtained data are correctly proceeded to store only file content (beggining of result is removed, as it contains unwanted informations and pure encoded file content is saved). With that approach any file is stored in **Base64** format.
 
-The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
+The file content can be validated using in-built validators such as [string](validators.md#string) and [regex](validators.md#regex), and a custom validator can also be implemented using a [custom hook](../custom_ui_extensions/standard/custom_hook.md) and [saveValidator](../advanced/save_validator.md).
 
 This feature allows you to upload a single file.
 
@@ -619,8 +639,8 @@ value, i.e. a number greater than or equal to 0, CRON interval or -1.
 
 Supported CRON schedule:
 
-* "<minute> <hour> <day of month> <month> <day of week>"
-* Cron special characters are acceptable.  ("*", ",", "/", "-" )
+* ```<minute> <hour> <day of month> <month> <day of week>```
+* Cron special characters are acceptable.  (```"*", ",", "/", "-"```)
 
 Names of months or days are not supported.
 
@@ -693,4 +713,4 @@ During the build process, new index field will be converted to a full [definitio
 
 ## `Custom`
 
-Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/custom_control.md) page to learn more.
+Custom type entity enables us to create our own custom inputs within the Form components. As a result, we may include our own custom input fields on the form. Visit the [Custom Control](../custom_ui_extensions/standard/custom_control.md) page to learn more.

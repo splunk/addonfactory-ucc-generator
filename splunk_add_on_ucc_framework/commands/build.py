@@ -19,11 +19,15 @@ import logging
 import os
 import shutil
 import sys
-from typing import Optional, List
+from typing import Optional, List, Any
 import subprocess
 import colorama as c
 import fnmatch
 import filecmp
+import platform
+import traceback
+
+from urllib.parse import quote
 
 from splunk_add_on_ucc_framework import (
     __version__,
@@ -45,6 +49,8 @@ from splunk_add_on_ucc_framework.commands.rest_builder import (
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework.install_python_libraries import (
     SplunktaucclibNotFound,
+    WrongSplunktaucclibVersion,
+    WrongSolnlibVersion,
     install_python_libraries,
 )
 from splunk_add_on_ucc_framework.commands.openapi_generator import (
@@ -52,7 +58,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
-
+from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
 
@@ -271,9 +277,9 @@ def _get_python_version_from_executable(python_binary_name: str) -> str:
         ).stdout.decode("utf-8")
 
         return python_binary_version.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except (subprocess.CalledProcessError, FileNotFoundError) as exc:
         raise exceptions.CouldNotIdentifyPythonVersionException(
-            f"Failed to identify python version for binary {python_binary_name}"
+            f"Failed to identify python version for binary {python_binary_name}. Error message: {exc}"
         )
 
 
@@ -404,6 +410,30 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
+def exception_handler(func: Any) -> Any:
+    def inner_function(*args: Any, **kwargs: Any) -> Any:
+        try:
+            func(*args, **kwargs)
+        except Exception as e:
+            system = platform.system()
+            exc_type, exc_value, exc_traceback = type(e), e, e.__traceback__
+            error = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            title = quote(f"[BUG] {str(exc_value)}")
+            trb = quote("".join(error))
+            url = (
+                f"https://github.com/splunk/addonfactory-ucc-generator/issues/new?template=bug_report.yml&title={title}"
+                f"&description={trb}&ucc_version={__version__}&system_info={system}"
+            )
+            logger.error(
+                f"Uncaught exception occurred. Exception details:\n"
+                f"{''.join(error)}\n"
+                f"You can report this issue using: {url}"
+            )
+
+    return inner_function
+
+
+@exception_handler
 def generate(
     source: str,
     config_path: Optional[str] = None,
@@ -418,7 +448,6 @@ def generate(
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
-
     try:
         python_binary_version = _get_python_version_from_executable(python_binary_name)
         logger.info(f"Python Version: {python_binary_version}")
@@ -433,7 +462,10 @@ def generate(
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):
-        raise NotADirectoryError(f"{os.path.abspath(source)} not found.")
+        logger.error(
+            f"Source directory: '{source}' does not exist. Please verify that given source exists."
+        )
+        sys.exit(1)
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
@@ -442,137 +474,127 @@ def generate(
     generated_files = []
 
     gc_path = _get_and_check_global_config_path(source, config_path)
-    if gc_path:
-        logger.info(f"Using globalConfig file located @ {gc_path}")
-        global_config = global_config_lib.GlobalConfig(gc_path)
-        global_config.cleanup_unwanted_params()
-        # handle the update of globalConfig before validating
-        global_config_update.handle_global_config_update(global_config)
-        try:
-            validator = global_config_validator.GlobalConfigValidator(
-                internal_root_dir, global_config
-            )
-            validator.validate()
-            logger.info("globalConfig file is valid")
-        except exceptions.GlobalConfigValidatorException as e:
-            logger.error(f"globalConfig file is not valid. Error: {e}")
-            sys.exit(1)
-        global_config.update_addon_version(addon_version)
-        global_config.dump(global_config.original_path)
-        logger.info(
-            f"Updated and saved add-on version in the globalConfig file to {addon_version}"
+    if not gc_path:
+        # create one in source directory if it doesn't exist
+        gc_path = os.path.sep.join(
+            [os.path.abspath(os.path.dirname(source)), "globalConfig.json"]
         )
-        global_config.add_ucc_version(__version__)
-        global_config.expand()
-        if ta_name != global_config.product:
-            logger.error(
-                "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
-                "please unify them to build the add-on."
-            )
-            sys.exit(1)
-        global_config.parse_user_defined_handlers()
-        scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
-        if global_config.has_pages():
-            utils.recursive_overwrite(
-                os.path.join(internal_root_dir, "package"),
-                os.path.join(output_directory, ta_name),
-                ui_source_map,
-            )
-        global_config_file = (
-            "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
-        )
-        output_build_path = os.path.join(
-            output_directory, ta_name, "appserver", "static", "js", "build"
-        )
-        if not os.path.isdir(output_build_path):
-            # this path may not exist for the .conf-only add-ons
-            os.makedirs(output_build_path)
-        global_config.dump(os.path.join(output_build_path, global_config_file))
-        logger.info("Copied globalConfig to output")
-        ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
-        try:
-            install_python_libraries(
-                source,
-                ucc_lib_target,
-                python_binary_name,
-                includes_ui=True,
-                os_libraries=global_config.os_libraries,
-                pip_version=pip_version,
-                pip_legacy_resolver=pip_legacy_resolver,
-                pip_custom_flag=pip_custom_flag,
-                includes_oauth=global_config.has_oauth(),
-            )
-        except SplunktaucclibNotFound as e:
-            logger.error(str(e))
-            sys.exit(1)
-        logger.info(
-            f"Installed add-on requirements into {ucc_lib_target} from {source}"
-        )
-        generated_files.extend(
-            begin(
-                global_config=global_config,
-                input_dir=source,
-                output_dir=output_directory,
-                ucc_dir=internal_root_dir,
-                addon_name=ta_name,
-                app_manifest=app_manifest,
-                addon_version=addon_version,
-                has_ui=global_config.meta.get("isVisible", True),
-            )
-        )
-        # TODO: all FILES GENERATED object: generated_files, use it for comparison
-        if global_config.has_pages():
-            builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
-            builder_obj.build()
-            _modify_and_replace_token_for_oauth_templates(
-                ta_name,
-                global_config,
-                output_directory,
-            )
-        if global_config.has_inputs():
-            logger.info("Generating inputs code")
-            _add_modular_input(ta_name, global_config, output_directory)
-        if global_config.has_alerts():
-            logger.info("Generating alerts code")
-            alert_builder.generate_alerts(global_config, ta_name, output_directory)
+        global_config_lib.GlobalConfig.from_app_manifest(app_manifest).dump(gc_path)
 
-        conf_file_names = []
-        conf_file_names.extend(list(scheme.settings_conf_file_names))
-        conf_file_names.extend(list(scheme.configs_conf_file_names))
-        conf_file_names.extend(list(scheme.oauth_conf_file_names))
-
-        if global_config.has_dashboard():
-            logger.info("Including dashboard")
-            dashboard_definition_json_path = os.path.join(
-                output_directory,
-                ta_name,
-                "appserver",
-                "static",
-                "js",
-                "build",
-                "custom",
-            )
-            dashboard.generate_dashboard(
-                global_config, ta_name, dashboard_definition_json_path
-            )
-
-    else:
-        global_config = None
-        conf_file_names = []
-        logger.warning(
-            "Skipped generating UI components as globalConfig file does not exist"
+    # no need of the condition as globalConfig would always exist
+    logger.info(f"Using globalConfig file located @ {gc_path}")
+    global_config = global_config_lib.GlobalConfig.from_file(gc_path)
+    global_config.cleanup_unwanted_params()
+    # handle the update of globalConfig before validating
+    global_config_update.handle_global_config_update(global_config, gc_path)
+    try:
+        validator = global_config_validator.GlobalConfigValidator(
+            internal_root_dir, global_config, source
         )
-        ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
+        validator.validate()
+        logger.info("globalConfig file is valid")
+    except exceptions.GlobalConfigValidatorException as e:
+        logger.error(f"globalConfig file is not valid. Error: {e}")
+        sys.exit(1)
+    global_config.update_addon_version(addon_version)
+    global_config.dump(gc_path)
+    logger.info(
+        f"Updated and saved add-on version in the globalConfig file to {addon_version}"
+    )
+    global_config.add_ucc_version(__version__)
+    global_config.expand()
+    if ta_name != global_config.product:
+        logger.error(
+            "Add-on name mentioned in globalConfig meta tag and that app.manifest are not same,"
+            "please unify them to build the add-on."
+        )
+        sys.exit(1)
+    global_config.parse_user_defined_handlers()
+    scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
+    if global_config.has_pages():
+        utils.recursive_overwrite(
+            os.path.join(internal_root_dir, "package"),
+            os.path.join(output_directory, ta_name),
+            ui_source_map,
+        )
+    global_config_file = (
+        "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
+    )
+    output_build_path = os.path.join(
+        output_directory, ta_name, "appserver", "static", "js", "build"
+    )
+    if not os.path.isdir(output_build_path):
+        # this path may not exist for the .conf-only add-ons
+        os.makedirs(output_build_path)
+    global_config.dump(os.path.join(output_build_path, global_config_file))
+    logger.info("Copied globalConfig to output")
+    ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
+    try:
         install_python_libraries(
             source,
             ucc_lib_target,
             python_binary_name,
+            includes_ui=True,
+            os_libraries=global_config.os_libraries,
             pip_version=pip_version,
             pip_legacy_resolver=pip_legacy_resolver,
             pip_custom_flag=pip_custom_flag,
+            includes_oauth=global_config.has_oauth(),
         )
-        logger.info(
-            f"Installed add-on requirements into {ucc_lib_target} from {source}"
+    except (
+        SplunktaucclibNotFound,
+        WrongSplunktaucclibVersion,
+        WrongSolnlibVersion,
+    ) as e:
+        logger.error(str(e))
+        sys.exit(1)
+    logger.info(f"Installed add-on requirements into {ucc_lib_target} from {source}")
+    generated_files.extend(
+        begin(
+            global_config=global_config,
+            input_dir=source,
+            output_dir=output_directory,
+            ucc_dir=internal_root_dir,
+            addon_name=ta_name,
+            app_manifest=app_manifest,
+            addon_version=addon_version,
+            has_ui=global_config.meta.get("isVisible", True),
+        )
+    )
+    # TODO: all FILES GENERATED object: generated_files, use it for comparison
+    if global_config.has_pages():
+        builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
+        builder_obj.build()
+        _modify_and_replace_token_for_oauth_templates(
+            ta_name,
+            global_config,
+            output_directory,
+        )
+    if global_config.has_inputs():
+        logger.info("Generating inputs code")
+        _add_modular_input(ta_name, global_config, output_directory)
+    if global_config.has_alerts():
+        logger.info("Generating alerts code")
+        alert_builder.generate_alerts(global_config, ta_name, output_directory)
+
+    conf_file_names = []
+    conf_file_names.extend(list(scheme.settings_conf_file_names))
+    conf_file_names.extend(list(scheme.configs_conf_file_names))
+    conf_file_names.extend(list(scheme.oauth_conf_file_names))
+
+    if global_config.has_dashboard():
+        logger.info("Including dashboard")
+        dashboard_definition_json_path = os.path.join(
+            output_directory,
+            ta_name,
+            "appserver",
+            "static",
+            "js",
+            "build",
+            "custom",
+        )
+        dashboard.generate_dashboard(
+            global_config, gc_path, ta_name, dashboard_definition_json_path
         )
 
     ignore_list = _get_ignore_list(
@@ -584,6 +606,10 @@ def generate(
     if removed_list:
         logger.info("Removed:\n{}".format("\n".join(removed_list)))
     utils.check_author_name(source, app_manifest)
+
+    # Update files before overwriting
+    handle_package_files_update(source)
+
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 

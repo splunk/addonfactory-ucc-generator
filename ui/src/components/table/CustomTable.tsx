@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, memo, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, memo, useState, useMemo, useContext } from 'react';
 import Table, { HeadCellSortHandler } from '@splunk/react-ui/Table';
 import { _ } from '@splunk/ui-utils/i18n';
 import { useSearchParams } from 'react-router-dom';
@@ -19,6 +19,7 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { ITableConfig } from '../../types/globalConfig/pages';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { invariant } from '../../util/invariant';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 interface CustomTableProps {
     page: StandardPages;
@@ -71,6 +72,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
     const unifiedConfigs: GlobalConfig = getUnifiedConfigs();
     const [entityModal, setEntityModal] = useState<IEntityModal>({ open: false });
     const [deleteModal, setDeleteModal] = useState<IEntityModal>({ open: false });
+    const componentContext = useContext(CustomComponentContext);
 
     const { rowData } = useTableContext();
     const inputsPage = unifiedConfigs.pages.inputs;
@@ -207,11 +209,13 @@ const CustomTable: React.FC<CustomTableProps> = ({
         if (entityModal.open) {
             const label = getFormTitle(true, entityModal.serviceName);
 
+            // TODO: returnFocus ADDON-78884
             return entityModal.serviceName && entityModal.mode ? (
                 <EntityModal
                     page={page}
                     open={entityModal.open}
                     handleRequestClose={handleEntityClose}
+                    returnFocus={() => {}}
                     serviceName={entityModal.serviceName}
                     stanzaName={entityModal.stanzaName}
                     mode={entityModal.mode}
@@ -224,11 +228,13 @@ const CustomTable: React.FC<CustomTableProps> = ({
         return null;
     };
 
+    // TODO: returnFocus ADDON-78884
     const generateDeleteDialog = () =>
         deleteModal.serviceName && deleteModal.stanzaName ? (
             <DeleteModal
                 page={page}
                 open={deleteModal.open}
+                returnFocus={() => {}}
                 handleRequestClose={handleDeleteClose}
                 serviceName={deleteModal.serviceName}
                 stanzaName={deleteModal.stanzaName}
@@ -304,7 +310,8 @@ const CustomTable: React.FC<CustomTableProps> = ({
                                       columns.length,
                                       row,
                                       moreInfo,
-                                      tableConfig?.customRow
+                                      tableConfig?.customRow,
+                                      componentContext
                                   ),
                               }
                             : {})}

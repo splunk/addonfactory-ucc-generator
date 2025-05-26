@@ -21,10 +21,10 @@ from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     EndpointRegistrationEntry,
 )
-from splunk_add_on_ucc_framework.generators.conf_files import ConfGenerator
+from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
-class RestMapConf(ConfGenerator):
+class RestMapConf(FileGenerator):
     __description__ = (
         "Generates `restmap.conf` for the custom REST handlers that "
         "are generated based on configs from globalConfig"
@@ -34,7 +34,7 @@ class RestMapConf(ConfGenerator):
         self.conf_file = "restmap.conf"
         self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
 
-        if self._global_config and self._global_config.has_pages() and self._gc_schema:
+        if self._global_config.has_pages():
             self.endpoints.extend(self._gc_schema.endpoints)
             self.namespace = self._gc_schema.namespace
             self.endpoints.extend(
@@ -43,11 +43,9 @@ class RestMapConf(ConfGenerator):
 
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
 
-    def generate_conf(self) -> Union[Dict[str, str], None]:
-        if not (
-            self._global_config and self._global_config.has_pages() and self._gc_schema
-        ):
-            return None
+    def generate(self) -> Dict[str, str]:
+        if not self.endpoints:
+            return {}
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(

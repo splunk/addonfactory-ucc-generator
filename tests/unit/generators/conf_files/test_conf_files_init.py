@@ -1,6 +1,6 @@
 def test___init__conf():
     expected_classes = [
-        "ConfGenerator",
+        "FileGenerator",
         "ServerConf",
         "RestMapConf",
         "WebConf",
@@ -11,9 +11,11 @@ def test___init__conf():
         "InputsConf",
         "AccountConf",
         "SettingsConf",
+        "CommandsConf",
+        "SearchbnfConf",
     ]
     expected_modules = [
-        "conf_generator",
+        "file_generator",
         "create_alert_actions_conf",
         "create_app_conf",
         "create_eventtypes_conf",
@@ -24,6 +26,8 @@ def test___init__conf():
         "create_web_conf",
         "create_account_conf",
         "create_settings_conf",
+        "create_commands_conf",
+        "create_searchbnf_conf",
     ]
     import splunk_add_on_ucc_framework.generators.conf_files as conf
 

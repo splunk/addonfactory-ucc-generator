@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import Dropdown from '@splunk/react-ui/Dropdown';
@@ -7,15 +7,16 @@ import SlidingPanels from '@splunk/react-ui/SlidingPanels';
 import ChevronLeft from '@splunk/react-icons/ChevronLeft';
 import { _ as i18n } from '@splunk/ui-utils/i18n';
 import styled from 'styled-components';
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 
 import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
-import CustomMenu from '../CustomMenu';
+import CustomMenu from '../CustomMenu/CustomMenu';
 import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
+import CustomComponentContext from '../../context/CustomComponentContext';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
@@ -42,6 +43,7 @@ interface MenuInputProps {
 }
 
 function MenuInput({ handleRequestOpen }: MenuInputProps) {
+    const customComponentContext = useContext(CustomComponentContext);
     const [activePanelId, setActivePanelId] = useState<string>(ROOT_GROUP_NAME);
     const [slidingPanelsTransition, setSlidingPanelsTransition] = useState<'forward' | 'backward'>(
         'forward'
@@ -85,7 +87,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
         setOpenDropDown(true);
     };
 
-    const handleChangeCustomMenu = (val: { service: string; input: string }) => {
+    const handleChangeCustomMenu = (val: { service: string; input?: string }) => {
         const { service, input } = val;
         handleRequestOpen({ serviceName: service, input });
     };
@@ -120,7 +122,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const getBackButton = () => (
         <>
             <Menu.Item
-                icon={<ChevronLeft />}
+                startAdornment={<ChevronLeft />}
                 onClick={() => {
                     setActivePanelId(ROOT_GROUP_NAME);
                     setSlidingPanelsTransition('backward');
@@ -232,6 +234,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                 fileName: menu.src,
                 type: menu.type,
                 handleChange: handleChangeCustomMenu,
+                customComponentContext,
             })}
         </>
     );
@@ -242,6 +245,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
                 fileName: menu.src,
                 type: menu.type,
                 handleChange: handleChangeCustomMenu,
+                customComponentContext,
             })}
             {services.length === 1 ? makeInputButton() : makeSingleSelectDropDown()}
         </>

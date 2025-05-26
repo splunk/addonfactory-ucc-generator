@@ -1,5 +1,118 @@
 # Changelog
 
+# [5.65.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.64.0...v5.65.0) (2025-05-15)
+
+
+### Bug Fixes
+
+* **Oauth Client Credentials:** OpenAPI fix ([#1748](https://github.com/splunk/addonfactory-ucc-generator/issues/1748)) ([fe2eb86](https://github.com/splunk/addonfactory-ucc-generator/commit/fe2eb86c37985bc78890871f0ebe6867622b6fac))
+
+
+### Features
+
+* add ucc-gen-ui cli command ([#1705](https://github.com/splunk/addonfactory-ucc-generator/issues/1705)) ([d9c3210](https://github.com/splunk/addonfactory-ucc-generator/commit/d9c3210eee083cd527c33e6595bd98e259d53e92))
+* base code for supporting custom search command  ([#1693](https://github.com/splunk/addonfactory-ucc-generator/issues/1693)) ([03cb0d2](https://github.com/splunk/addonfactory-ucc-generator/commit/03cb0d2602cd4a63e98a7fcb3c1525d501d4d26c)), closes [#1694](https://github.com/splunk/addonfactory-ucc-generator/issues/1694) [#1695](https://github.com/splunk/addonfactory-ucc-generator/issues/1695) [#1697](https://github.com/splunk/addonfactory-ucc-generator/issues/1697)
+* custom react component via context ([#1706](https://github.com/splunk/addonfactory-ucc-generator/issues/1706)) ([1a65cf0](https://github.com/splunk/addonfactory-ucc-generator/commit/1a65cf0f0a06e2633660cc83f6aa4ef04dffa8fd))
+* update base.html if it is incorrect ([#1750](https://github.com/splunk/addonfactory-ucc-generator/issues/1750)) ([05066ca](https://github.com/splunk/addonfactory-ucc-generator/commit/05066ca8ba5284c8ec120c8731817d67a2edf9c0))
+
+# [5.64.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.63.0...v5.64.0) (2025-05-08)
+
+
+### Bug Fixes
+
+* OAuth error messages ([#1727](https://github.com/splunk/addonfactory-ucc-generator/issues/1727)) ([dbfc0d4](https://github.com/splunk/addonfactory-ucc-generator/commit/dbfc0d43faec49bd2dcb60b8c573ed0745008c54))
+* **oauth_client_credentials:** reflects state correctly on edit/config  ([#1726](https://github.com/splunk/addonfactory-ucc-generator/issues/1726)) ([c1dfe62](https://github.com/splunk/addonfactory-ucc-generator/commit/c1dfe6213d7de30d9521860b39f385d445cc49af))
+* reauthenticate when an account is edited ([#1725](https://github.com/splunk/addonfactory-ucc-generator/issues/1725)) ([9cb9109](https://github.com/splunk/addonfactory-ucc-generator/commit/9cb9109dd269b806bf9263cf85d9cf0a9a720d4d))
+
+
+### Features
+
+* add ucc-gen validate command ([#1702](https://github.com/splunk/addonfactory-ucc-generator/issues/1702)) ([c756d7c](https://github.com/splunk/addonfactory-ucc-generator/commit/c756d7c1f31efcb45df31da73dee8bd63bef6492))
+
+
+### Reverts
+
+* remove ucc-gen validate command support ([#1728](https://github.com/splunk/addonfactory-ucc-generator/issues/1728)) ([1d350e4](https://github.com/splunk/addonfactory-ucc-generator/commit/1d350e4413e14022bf29512887deb2984d9d4747)), closes [#1702](https://github.com/splunk/addonfactory-ucc-generator/issues/1702)
+
+# [5.63.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.62.0...v5.63.0) (2025-04-30)
+
+
+### Bug Fixes
+
+* change sed backup extension ([#1710](https://github.com/splunk/addonfactory-ucc-generator/issues/1710)) ([2167622](https://github.com/splunk/addonfactory-ucc-generator/commit/21676220dc50878b66564d7bfdada116a13132fa))
+* fixed defaultView error ([#1714](https://github.com/splunk/addonfactory-ucc-generator/issues/1714)) ([cf793c9](https://github.com/splunk/addonfactory-ucc-generator/commit/cf793c9de0ae3d5b57e47cd9a492815ef34d0b02))
+
+
+### Features
+
+* add links to something went wrong ([#1709](https://github.com/splunk/addonfactory-ucc-generator/issues/1709)) ([0b33911](https://github.com/splunk/addonfactory-ucc-generator/commit/0b33911d29001a93745f5f29839782b3c5537bdc))
+* schema changes for OAuth 2.0 Client Credentials Grant ([#1708](https://github.com/splunk/addonfactory-ucc-generator/issues/1708)) ([c8c0fe3](https://github.com/splunk/addonfactory-ucc-generator/commit/c8c0fe330f095fa46a4b1e9e1b8ad23343b1254a))
+* Single Model handler with OAuth 2.0 Client Credentials support ([#1715](https://github.com/splunk/addonfactory-ucc-generator/issues/1715)) ([be70a87](https://github.com/splunk/addonfactory-ucc-generator/commit/be70a87b3b7048c790b07aa6cfba73e63b6da9ff))
+* support for OAuth2 Client Credentials Grant in RH template ([#1707](https://github.com/splunk/addonfactory-ucc-generator/issues/1707)) ([5fd7a6b](https://github.com/splunk/addonfactory-ucc-generator/commit/5fd7a6b94a167f040062bd767074a10f32b55919))
+
+# [5.62.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.61.0...v5.62.0) (2025-04-17)
+
+
+### Bug Fixes
+
+* show input type in inputs page ([#1688](https://github.com/splunk/addonfactory-ucc-generator/issues/1688)) ([5626536](https://github.com/splunk/addonfactory-ucc-generator/commit/5626536797a6b53d2f0a071e5912e397fb24b9b1))
+
+
+### Features
+
+* add delimiter for checkboxtree and checkboxgroup ([#1685](https://github.com/splunk/addonfactory-ucc-generator/issues/1685)) ([1bef9fa](https://github.com/splunk/addonfactory-ucc-generator/commit/1bef9fae6b8a2ca0e19fd3c5d41fbff21588833c))
+* generate another .conf-file when conf parameter is used ([#1608](https://github.com/splunk/addonfactory-ucc-generator/issues/1608)) ([849351f](https://github.com/splunk/addonfactory-ucc-generator/commit/849351fa4882a3dc2ed812cf530ddbe98668dfe0))
+* handle uncaught exception ([#1681](https://github.com/splunk/addonfactory-ucc-generator/issues/1681)) ([9a621be](https://github.com/splunk/addonfactory-ucc-generator/commit/9a621be583a93d24e69df09930c410d0f2fc98a3))
+
+# [5.61.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.60.0...v5.61.0) (2025-04-01)
+
+
+### Bug Fixes
+
+* checkboxgroup select all button selects disabled fields ([#1636](https://github.com/splunk/addonfactory-ucc-generator/issues/1636)) ([3434a37](https://github.com/splunk/addonfactory-ucc-generator/commit/3434a378262f2608271d54f17f4d078d8e8fd929))
+* **import-from-aob:** fixed incorrect merging and added app.manifest validations ([#1670](https://github.com/splunk/addonfactory-ucc-generator/issues/1670)) ([2dba52b](https://github.com/splunk/addonfactory-ucc-generator/commit/2dba52b256be708c8655267cc4cee8b446603b39))
+
+
+### Features
+
+* **build:** --ui-source-map deprecation notice ([#1674](https://github.com/splunk/addonfactory-ucc-generator/issues/1674)) ([13efe91](https://github.com/splunk/addonfactory-ucc-generator/commit/13efe9126080a35d1e15e6be8aca4ef2eb22419b))
+* create globalConfig from app.manifest ([#1669](https://github.com/splunk/addonfactory-ucc-generator/issues/1669)) ([07a37c4](https://github.com/splunk/addonfactory-ucc-generator/commit/07a37c4405c9bc8aa45221bd065a44559f32cb22))
+* introduce GlobalConfig.from_app_manifest ([#1661](https://github.com/splunk/addonfactory-ucc-generator/issues/1661)) ([d5edd88](https://github.com/splunk/addonfactory-ucc-generator/commit/d5edd8803fd51e4ffbc6eba575e5116207228406))
+
+# [5.60.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.59.0...v5.60.0) (2025-03-18)
+
+
+### Bug Fixes
+
+* more info correctly expands ([#1628](https://github.com/splunk/addonfactory-ucc-generator/issues/1628)) ([6ead9b5](https://github.com/splunk/addonfactory-ucc-generator/commit/6ead9b5852497047e8fcd428874adf0b36c64d9f))
+* remove max length for checkboxgroup and checkboxtree label ([#1620](https://github.com/splunk/addonfactory-ucc-generator/issues/1620)) ([0e36a56](https://github.com/splunk/addonfactory-ucc-generator/commit/0e36a564ea731fe2168e96bd9b297e7118b05524))
+
+
+### Features
+
+* skip help links in inputs.conf.spec ([#1630](https://github.com/splunk/addonfactory-ucc-generator/issues/1630)) ([ca88890](https://github.com/splunk/addonfactory-ucc-generator/commit/ca88890babb727c47d5d0362a2357d71f742c1fa))
+* **TextArea:** remove clear button ([#1635](https://github.com/splunk/addonfactory-ucc-generator/issues/1635)) ([3abec93](https://github.com/splunk/addonfactory-ucc-generator/commit/3abec931f254260bd152bc7a8e27a043b6a1ead2))
+
+
+### Reverts
+
+* "feat: skip help links in inputs.conf.spec" ([#1632](https://github.com/splunk/addonfactory-ucc-generator/issues/1632)) ([c67de92](https://github.com/splunk/addonfactory-ucc-generator/commit/c67de92cbd035994341b1b033103396bde51a2fb))
+* remove stretched out icons ([#1647](https://github.com/splunk/addonfactory-ucc-generator/issues/1647)) ([7eb10df](https://github.com/splunk/addonfactory-ucc-generator/commit/7eb10df4a13b95cabf6b1925e40ff4518d670a44))
+
+# [5.59.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.58.1...v5.59.0) (2025-03-04)
+
+
+### Bug Fixes
+
+* **validation:** correct regexp validation for empty strings ([#1592](https://github.com/splunk/addonfactory-ucc-generator/issues/1592)) ([0759afe](https://github.com/splunk/addonfactory-ucc-generator/commit/0759afeb0f4b64b99f11f60a5cacf811e90b7e46))
+* **validation:** correctly display error in save validator fnc ([#1602](https://github.com/splunk/addonfactory-ucc-generator/issues/1602)) ([f1b1068](https://github.com/splunk/addonfactory-ucc-generator/commit/f1b106878624aa64005499f9d2b840c715f8c7de))
+* **validation:** correctly validate empty not required data ([#1606](https://github.com/splunk/addonfactory-ucc-generator/issues/1606)) ([7f8c08a](https://github.com/splunk/addonfactory-ucc-generator/commit/7f8c08a065ed9a6cd0d48457946f72b8cf73a3e1))
+
+
+### Features
+
+* **modals:** provide support for custom headers ([#1572](https://github.com/splunk/addonfactory-ucc-generator/issues/1572)) ([13aeae6](https://github.com/splunk/addonfactory-ucc-generator/commit/13aeae642c4fb376f26b35d91416ebaa06f3feea))
+
 ## [5.58.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.58.0...v5.58.1) (2025-02-20)
 
 

@@ -153,6 +153,8 @@ def test_ucc_generate_with_everything(caplog):
             ("default", "splunk_ta_uccexample_settings.conf"),
             ("default", "web.conf"),
             ("default", "server.conf"),
+            ("default", "commands.conf"),
+            ("default", "searchbnf.conf"),
             ("default", "data", "ui", "alerts", "test_alert.html"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
@@ -162,10 +164,17 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "helper_one.py"),
             ("bin", "helper_two.py"),
             ("bin", "example_input_one.py"),
+            ("bin", "dependent_dropdown.py"),
             ("bin", "example_input_two.py"),
             ("bin", "example_input_three.py"),
             ("bin", "example_input_four.py"),
             ("bin", "import_declare_test.py"),
+            ("bin", "countmatchescommand.py"),
+            ("bin", "countmatches.py"),
+            ("bin", "filter.py"),
+            ("bin", "filtercommand.py"),
+            ("bin", "generatetext.py"),
+            ("bin", "generatetextcommand.py"),
             ("bin", "splunk_ta_uccexample_rh_account.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
@@ -179,6 +188,7 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "test_alert.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),
+            ("README", "some_conf.conf.spec"),
             ("README", "splunk_ta_uccexample_account.conf.spec"),
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
@@ -254,6 +264,16 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
+        base_html_testdata = (
+            Path(package_folder) / "appserver" / "templates" / "base.html"
+        )
+        base_html_original = base_html_testdata.read_text()
+
+        assert (
+            '<script type="module" src="${make_url(page_path)}"></script>'
+            not in base_html_original
+        )
+
         build.generate(
             source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
         )
@@ -290,6 +310,7 @@ def test_ucc_generate_with_configuration():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
             ("appserver", "static", "openapi.json"),
+            ("appserver", "templates", "base.html"),
         ]
         helpers.compare_file_content(
             files_to_be_equal,
@@ -305,6 +326,13 @@ def test_ucc_generate_with_configuration():
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
             assert path.exists(actual_file_path)
+
+        # Assert that base.html in package changed, and revert it
+        assert (
+            '<script type="module" src="${make_url(page_path)}"></script>'
+            in base_html_testdata.read_text()
+        )
+        base_html_testdata.write_text(base_html_original)
 
 
 def test_ucc_generate_for_conf_only_TA():
@@ -445,6 +473,12 @@ def test_ucc_generate_with_configuration_files_only():
             "package_no_global_config",
             "package",
         )
+        global_config_path = path.join(
+            package_folder,
+            path.pardir,
+            "globalConfig.json",
+        )
+        assert not path.exists(global_config_path)
         build.generate(source=package_folder, output_directory=temp_dir)
 
         expected_folder = path.join(
@@ -474,6 +508,10 @@ def test_ucc_generate_with_configuration_files_only():
             expected_folder,
             actual_folder,
         )
+        # the globalConfig would now always exist
+        assert path.exists(global_config_path)
+        # clean-up for tests
+        os.remove(global_config_path)
 
 
 def test_ucc_generate_openapi_with_configuration_files_only():
@@ -491,7 +529,16 @@ def test_ucc_generate_openapi_with_configuration_files_only():
         actual_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        assert not path.exists(actual_file_path)
+        # the openapi.json would now exist as globalConfig.json would always exist
+        assert path.exists(actual_file_path)
+        # clean-up for tests
+        os.remove(
+            path.join(
+                package_folder,
+                path.pardir,
+                "globalConfig.json",
+            )
+        )
 
 
 def test_ucc_build_verbose_mode(caplog):

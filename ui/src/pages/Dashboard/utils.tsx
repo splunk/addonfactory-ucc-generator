@@ -4,6 +4,7 @@ import SearchJob from '@splunk/search-job';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../util/script';
 import { SearchResponse } from './DataIngestion.types';
+import { getSearchUrl } from '../../util/searchUtil';
 
 /**
  *
@@ -14,7 +15,7 @@ export function loadDashboardJsonDefinition(
     fileName: string,
     dataHandler: (data: Record<string, unknown>) => void
 ) {
-    fetch(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}`)
+    fetch(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}`)
         .then((res) => res.json())
         .then((external) => {
             dataHandler(external);
@@ -135,13 +136,8 @@ export const openSearchInNewTabWithQuery = (query: string | null, queryParams: o
         return;
     }
 
-    const dashboardUrl = window.location.origin + window.location.pathname;
-    const lastIndex = dashboardUrl.lastIndexOf('/');
-    const searchUrl = new URL(`${dashboardUrl.slice(0, lastIndex)}/search`);
-    searchUrl.searchParams.append('q', query);
-    Object.entries(queryParams || {}).forEach(([key, value]) => {
-        searchUrl.searchParams.append(key, value);
-    });
+    const searchUrl = getSearchUrl({ q: query, ...queryParams });
+
     window.open(searchUrl, '_blank')?.focus();
 };
 

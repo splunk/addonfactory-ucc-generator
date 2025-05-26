@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn, userEvent, within } from '@storybook/test';
 
-import BaseFormView from '../BaseFormView';
+import BaseFormView, { BaseFormProps } from '../BaseFormView';
 import {
     PAGE_CONFIG_BOTH_OAUTH,
     getConfigOauthBasic,
@@ -11,7 +11,6 @@ import {
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig } from '../../../types/globalConfig/globalConfig';
 import { Mode } from '../../../constants/modes';
-import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 import { Platforms } from '../../../types/globalConfig/pages';
 import {
     getGlobalConfigMockGroupsForConfigPage,
@@ -38,6 +37,7 @@ const meta = {
                 stanzaName={props.stanzaName}
                 handleFormSubmit={props.handleFormSubmit}
                 pageContext={{ platform: props.platform }}
+                customComponentContext={undefined}
             />
         );
     },

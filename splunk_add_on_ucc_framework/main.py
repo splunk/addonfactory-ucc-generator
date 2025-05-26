@@ -241,6 +241,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     args = parser.parse_args(argv)
     if args.command == "build":
+        if args.ui_source_map:
+            logger.warning(
+                "The '--ui-source-map' parameter is deprecated and is scheduled for removal on 3rd June 2025. "
+                "It is recommended to discontinue using this parameter."
+            )
+
         build.generate(
             source=args.source,
             config_path=args.config,

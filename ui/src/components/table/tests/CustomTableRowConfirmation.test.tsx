@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved, within } from '@testing-library/react';
+import { expect, it, vi } from 'vitest';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 
@@ -16,12 +17,17 @@ import {
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { invariant } from '../../../util/invariant';
 
-beforeEach(() => {
+vi.mock('../../../util/api', async () => ({
+    ...(await vi.importActual('../../../util/api')),
+    postRequest: (await vi.importActual('../../../util/__mocks__/mockApi')).postRequest,
+}));
+
+const renderTable = () => {
     const props = {
         page: 'inputs',
         serviceName: 'example_input_one',
-        handleRequestModalOpen: jest.fn(),
-        handleOpenPageStyleDialog: jest.fn(),
+        handleRequestModalOpen: vi.fn(),
+        handleOpenPageStyleDialog: vi.fn(),
         displayActionBtnAllRows: false,
     } satisfies ITableWrapperProps;
 
@@ -39,7 +45,7 @@ beforeEach(() => {
         </TableContextProvider>,
         { wrapper: BrowserRouter }
     );
-});
+};
 
 const getRowData = (isDisabled: boolean) => {
     const active = MockRowData.entry.find(
@@ -73,6 +79,8 @@ const getRowElements = async (isDisabled: boolean) => {
 };
 
 it('Status toggling with acceptance model - displayed correctly', async () => {
+    renderTable();
+
     const { activeRowData, statusToggle } = await getRowElements(false);
 
     await userEvent.click(statusToggle);
@@ -86,10 +94,13 @@ it('Status toggling with acceptance model - displayed correctly', async () => {
 
     await userEvent.click(noBtn);
 
+    await waitForElementToBeRemoved(acceptModal);
     expect(acceptModal).not.toBeInTheDocument();
 });
 
 it('Status toggling with acceptance model - toggles state', async () => {
+    renderTable();
+
     const { activeRowData, statusCell, statusToggle } = await getRowElements(false);
 
     expect(statusCell).toHaveTextContent('Active');
@@ -118,6 +129,8 @@ it('Status toggling with acceptance model - toggles state', async () => {
 });
 
 it('Status toggling with acceptance model - decline modal still Active', async () => {
+    renderTable();
+
     const { activeRowData, statusCell, statusToggle } = await getRowElements(false);
 
     expect(statusCell).toHaveTextContent('Active');
@@ -132,9 +145,12 @@ it('Status toggling with acceptance model - decline modal still Active', async (
     await userEvent.click(noBtn);
 
     expect(statusCell).toHaveTextContent('Active');
+    expect(statusToggle).toHaveFocus();
 });
 
 it('Status toggling with acceptance model - decline modal still Inactive', async () => {
+    renderTable();
+
     const { activeRowData, statusCell, statusToggle } = await getRowElements(true);
 
     expect(statusCell).toHaveTextContent('Inactive');
@@ -149,4 +165,5 @@ it('Status toggling with acceptance model - decline modal still Inactive', async
     await userEvent.click(noBtn);
 
     expect(statusCell).toHaveTextContent('Inactive');
+    expect(statusToggle).toHaveFocus();
 });

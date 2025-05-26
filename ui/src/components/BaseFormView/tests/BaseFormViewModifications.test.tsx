@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
@@ -7,7 +8,7 @@ import BaseFormView from '../BaseFormView';
 import { getGlobalConfigMockModificationToFieldItself } from './configMocks';
 import { invariant } from '../../../util/invariant';
 
-const handleFormSubmit = jest.fn();
+const handleFormSubmit = vi.fn();
 
 const PAGE_CONF = 'configuration';
 const SERVICE_NAME = 'account';
@@ -30,8 +31,9 @@ it('should modify correctly all properties of field, self modification', async (
 
     await screen.findByText('default label');
 
-    const modifyTextField = document.querySelector(
-        '[data-name="text_field_with_modifications"]'
+    const controlGroups = screen.getAllByTestId('control-group');
+    const modifyTextField = controlGroups.find(
+        (el) => el.getAttribute('data-name') === 'text_field_with_modifications'
     ) as HTMLElement;
 
     expect(modifyTextField).toBeInTheDocument();
@@ -58,5 +60,5 @@ it('should modify correctly all properties of field, self modification', async (
     expect(within(modifyTextField).getByTestId('msg-markdown')).toHaveTextContent(
         'markdown message after modification'
     );
-    expect(within(modifyTextField).queryByText('*')).toBeInTheDocument();
+    expect(within(modifyTextField).getByText('*')).toBeInTheDocument();
 });

@@ -57,7 +57,7 @@ class TestProxyPage(UccTester):
         proxy.username.set_value("test")
         proxy.password.set_value("test")
         self.assert_util(
-            proxy.save, "Proxy Host can not be empty", left_args={"expect_error": True}
+            proxy.save, "Field Host is required", left_args={"expect_error": True}
         )
         proxy.host.set_value("closeerror")
         self.assert_util(proxy.is_error_closed, True)
@@ -101,7 +101,7 @@ class TestProxyPage(UccTester):
         proxy.username.set_value("test")
         proxy.password.set_value("test")
         self.assert_util(
-            proxy.save, "Proxy Port can not be empty", left_args={"expect_error": True}
+            proxy.save, "Field Port is required", left_args={"expect_error": True}
         )
 
     @pytest.mark.execute_enterprise_cloud_false

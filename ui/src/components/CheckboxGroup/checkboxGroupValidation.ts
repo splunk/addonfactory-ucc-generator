@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import Validator from '../../util/Validator';
 import { CheckboxGroupProps, parseValue } from './checkboxGroup.utils';
+import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { invariant } from '../../util/invariant';
 
 type MaybeError =
     | {
@@ -11,11 +13,15 @@ type MaybeError =
 
 export function validateCheckboxGroup(
     field: string,
-    packedValue: string,
+    packedValue: AcceptableFormValueOrNullish,
     options: CheckboxGroupProps['controlOptions']
 ): MaybeError {
+    invariant(
+        typeof packedValue === 'string' || typeof packedValue === 'undefined',
+        `Error occurred while validating CheckboxGroup value for the field "${field}", value should be a string or undefined. Got: "${packedValue}"`
+    );
     let errorMessage: MaybeError = false;
-    const parsedValue = parseValue(packedValue);
+    const parsedValue = parseValue(packedValue, options?.delimiter);
     options.rows.some((row) => {
         const rowSubmittedValue = parsedValue.get(row.field);
         if (rowSubmittedValue) {

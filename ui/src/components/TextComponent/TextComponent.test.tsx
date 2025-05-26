@@ -1,15 +1,18 @@
+import { expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import TextComponent from './TextComponent';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
-beforeEach(() => {
+const renderTextComponent = () => {
     render(<TextComponent value="test" handleChange={handleChange} field="fieldId" />);
-});
+};
 
 it('should render text component correctly with value', async () => {
+    renderTextComponent();
+
     const textElement = screen.getByTestId('text');
     expect(textElement).toBeInTheDocument();
 
@@ -20,6 +23,8 @@ it('should render text component correctly with value', async () => {
 });
 
 it('should trigger callback correctly after typing', async () => {
+    renderTextComponent();
+
     const textBox = screen.getByTestId('textbox');
 
     await userEvent.type(textBox, 'f');
@@ -30,6 +35,8 @@ it('should trigger callback correctly after typing', async () => {
 });
 
 it('should use callback with empty string after clear', async () => {
+    renderTextComponent();
+
     const textBox = screen.getByTestId('textbox');
 
     await userEvent.clear(textBox);

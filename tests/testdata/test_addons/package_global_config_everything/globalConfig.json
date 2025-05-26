@@ -30,10 +30,28 @@
                             {
                                 "label": "Auth Type",
                                 "field": "auth_type"
+                            },
+                            {
+                                "label": "Test Custom Cell",
+                                "field": "test_custom_cell",
+                                "customCell": {
+                                    "src": "CustomInputCell",
+                                    "type": "external"
+                                }
                             }
                         ]
                     },
                     "entity": [
+                        {
+                            "type": "custom",
+                            "label": "Example Custom Control",
+                            "field": "custom_control_field",
+                            "help": "This is an example multipleSelect for account entity",
+                            "options": {
+                                "src": "custom_control",
+                                "type": "external"
+                            }
+                        },
                         {
                             "type": "text",
                             "label": "Name",
@@ -211,7 +229,8 @@
                             "options": {
                                 "auth_type": [
                                     "basic",
-                                    "oauth"
+                                    "oauth",
+                                    "oauth_client_credentials"
                                 ],
                                 "basic": [
                                     {
@@ -348,6 +367,27 @@
                                                 "pattern": "^[a-zA-Z]\\w*$"
                                             }
                                         ]
+                                    }
+                                ],
+                                "oauth_client_credentials": [
+                                    {
+                                        "oauth_field": "client_id_oauth_credentials",
+                                        "label": "Client Id",
+                                        "field": "client_id_oauth_credentials",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret_oauth_credentials",
+                                        "label": "Client Secret",
+                                        "field": "client_secret_oauth_credentials",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint_token_oauth_credentials",
+                                        "label": "Token endpoint",
+                                        "field": "endpoint_token_oauth_credentials",
+                                        "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
                                     }
                                 ],
                                 "oauth": [
@@ -927,6 +967,19 @@
                             }
                         },
                         {
+                            "field": "dependent_dropdown",
+                            "label": "Dependent",
+                            "type": "singleSelect",
+                            "required": false,
+                            "options": {
+                                "dependencies": [
+                                    "input_one_radio"
+                                ],
+                                "disableonEdit": true,
+                                "endpointUrl": "splunk_ta_uccexample/dependent_dropdown"
+                            }
+                        },
+                        {
                             "field": "singleSelectTest",
                             "label": "Single Select Group Test",
                             "type": "singleSelect",
@@ -1012,7 +1065,8 @@
                             "type": "singleSelect",
                             "label": "Example Account",
                             "options": {
-                                "referenceName": "account"
+                                "referenceName": "account",
+                                "allowList": "^[a-zA-Z]\\w*$"
                             },
                             "help": "",
                             "field": "account",
@@ -1188,8 +1242,10 @@
                         },
                         {
                             "type": "index",
-                            "label": "Index",
                             "field": "index",
+                            "label": "Index",
+                            "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
+                            "defaultValue": "default",
                             "required": true
                         },
                         {
@@ -1528,6 +1584,7 @@
                             "field": "event_filters",
                             "required": true,
                             "options": {
+                                "delimiter": "|",
                                 "groups": [
                                     {
                                         "label": "Transactions",
@@ -1632,7 +1689,12 @@
                         }
                     ],
                     "title": "Example Input Four",
-                    "disableNewInput": true
+                    "disableNewInput": true,
+                    "subTitle": "Creates disabled input",
+                    "hook": {
+                        "src": "input_hook",
+                        "type": "external"
+                    }
                 },
                 {
                     "name": "service_hidden_for_cloud",
@@ -1846,6 +1908,14 @@
                         "field": "interval"
                     },
                     {
+                        "label": "Input Type",
+                        "field": "serviceTitle"
+                    },
+                    {
+                        "label": "Input Service",
+                        "field": "serviceName"
+                    },
+                    {
                         "label": "Index",
                         "field": "index"
                     },
@@ -1960,6 +2030,9 @@
             "panels": [
                 {
                     "name": "default"
+                },
+                {
+                    "name": "custom"
                 }
             ]
         }
@@ -2090,13 +2163,105 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "0.0.0+ff0a28e2",
+        "version": "5.63.0+c756d7c1f",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
             "light",
             "dark"
         ],
-        "isVisible": true
-    }
+        "isVisible": true,
+        "os-dependentLibraries": [
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "win_amd64",
+                "python_version": "37",
+                "os": "windows",
+                "target": "3rdparty/windows"
+            },
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "macosx_10_12_universal2",
+                "python_version": "37",
+                "os": "darwin",
+                "target": "3rdparty/darwin"
+            },
+            {
+                "name": "cryptography",
+                "version": "41.0.5",
+                "dependencies": true,
+                "platform": "manylinux2014_x86_64",
+                "python_version": "37",
+                "os": "linux",
+                "target": "3rdparty/linux"
+            }
+        ]
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requiredSearchAssistant": true,
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "filtercommand",
+            "fileName": "filter.py",
+            "commandType": "dataset processing",
+            "requiredSearchAssistant": true,
+            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
+            "syntax": "| filtercommand contains='value1' replace='value to be replaced,value to replace with'",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "contains"
+                },
+                {
+                    "name": "replace_array"
+                }
+            ]
+        },
+        {
+            "commandName": "countmatchescommand",
+            "fileName": "countmatches.py",
+            "commandType": "streaming",
+            "requiredSearchAssistant": false,
+            "arguments": [
+                {
+                    "name": "fieldname",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                },
+                {
+                    "name": "pattern",
+                    "validate": {
+                        "type": "RegularExpression"
+                    },
+                    "required": true
+                }
+            ]
+        }
+    ]
 }

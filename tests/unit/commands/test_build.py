@@ -13,6 +13,8 @@ from splunk_add_on_ucc_framework.exceptions import (
     CouldNotIdentifyPythonVersionException,
 )
 
+from splunk_add_on_ucc_framework import __version__
+
 CURRENT_PATH = os.getcwd()
 
 
@@ -96,7 +98,7 @@ def test_add_modular_input(GlobalConfig, tmp_path):
     (tmp_path / ta_name / "bin").mkdir(parents=True)
     (tmp_path / ta_name / "default").mkdir(parents=True)
 
-    gc = GlobalConfig("", False)
+    gc = GlobalConfig.from_file("", False)
     gc.inputs = [
         {
             "name": "example_input_three",
@@ -192,3 +194,49 @@ def test_ta_name_mismatch(
             pip_legacy_resolver=False,
             ui_source_map=False,
         )
+
+
+@patch("splunk_add_on_ucc_framework.commands.build._get_build_output_path")
+def test_uncaught_exception(mock_get_build_output_path, caplog):
+    mock_get_build_output_path.side_effect = ValueError("Some exc msg")
+
+    expected_msg_1 = "Uncaught exception occurred. Exception details:"
+    expected_msg_2 = (
+        "You can report this issue using: https://github.com/splunk/"
+        "addonfactory-ucc-generator/issues/new?template=bug_report.yml&title=%5BBUG%5D%20Some%20"
+        "exc%20msg&description="
+    )
+    expected_params = f"&ucc_version={__version__}&system_info=Linux"
+
+    generate(
+        source="source/path",
+        addon_version="1.0.0",
+        python_binary_name="python3",
+        verbose_file_summary_report=False,
+        pip_version="latest",
+        pip_legacy_resolver=False,
+        ui_source_map=False,
+    )
+
+    whitespaces = [el for el in caplog.messages[-1].split("https")[1] if el.isspace()]
+
+    assert len(whitespaces) == 0
+    assert expected_msg_1 in caplog.text and expected_msg_2 in caplog.text
+    assert expected_params in caplog.text
+
+
+def test_source_directory_not_found(caplog):
+    expected_msg = "Source directory: 'some/unexisting/path' does not exist. Please verify that given source exists."
+
+    with pytest.raises(SystemExit):
+        generate(
+            source="some/unexisting/path",
+            addon_version="1.0.0",
+            python_binary_name="python3",
+            verbose_file_summary_report=False,
+            pip_version="latest",
+            pip_legacy_resolver=False,
+            ui_source_map=False,
+        )
+
+    assert expected_msg == caplog.messages[-1]

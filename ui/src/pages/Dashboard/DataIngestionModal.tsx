@@ -2,7 +2,7 @@ import Modal from '@splunk/react-ui/Modal';
 import React, { ReactElement, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { variables } from '@splunk/themes';
+import variables from '@splunk/themes/variables';
 import Button from '@splunk/react-ui/Button';
 import Dropdown from '@splunk/react-ui/Dropdown';
 import Menu from '@splunk/react-ui/Menu';
@@ -116,16 +116,23 @@ export const DataIngestionModal = ({
         makeVisualAdjustmentsOnDataIngestionModal();
     }, [open]);
 
+    // TODO: returnFocus ADDON-78884
     return (
-        <ModalWrapper open={open}>
+        <ModalWrapper returnFocus={() => {}} open={open} onRequestClose={handleRequestClose}>
             <ModalHeader
                 onRequestClose={handleRequestClose}
                 title={`Data ingestion details (By ${title})`}
             />
             <ModalBody>
                 {children}
-                <div id="data_ingestion_modal_dropdown" className="invisible_before_moving">
-                    <P id="data_ingestion_dropdown_label">{title}</P>
+                <div
+                    id="data_ingestion_modal_dropdown"
+                    data-test="data_ingestion_modal_dropdown"
+                    className="invisible_before_moving"
+                >
+                    <P id="data_ingestion_dropdown_label" data-test="data_ingestion_dropdown_label">
+                        {title}
+                    </P>
                     <Dropdown toggle={toggle}>
                         <Menu
                             stopScrollPropagation
@@ -146,6 +153,7 @@ export const DataIngestionModal = ({
                 <FooterButtonGroup>
                     <Button
                         id="open_search_on_visualization"
+                        data-test="open_search_on_visualization"
                         label="View ingested events in search"
                         openInNewContext
                         onClick={() => {
@@ -165,6 +173,7 @@ export const DataIngestionModal = ({
                     />
                     <UCCButton
                         id="done_button_footer"
+                        data-test="done_button_footer"
                         className="footerBtn"
                         onClick={handleRequestClose}
                         label={acceptBtnLabel}

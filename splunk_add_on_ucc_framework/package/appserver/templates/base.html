@@ -23,6 +23,7 @@
         <title>${_('Loading')}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <base  >
     </head>
 
     <body>
@@ -35,6 +36,6 @@
 
         <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
 
-        <script src="${make_url(page_path)}"></script>
+        <script type="module" src="${make_url(page_path)}"></script>
     </body>
 </html>

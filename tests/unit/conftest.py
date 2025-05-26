@@ -12,6 +12,33 @@ from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 
 @pytest.fixture
+def input_dir(tmp_path):
+    return str(tmp_path / "input_dir")
+
+
+@pytest.fixture
+def output_dir(tmp_path):
+    return str(tmp_path / "output_dir")
+
+
+@pytest.fixture
+def ucc_dir(tmp_path):
+    return str(tmp_path / "ucc_dir")
+
+
+@pytest.fixture
+def ta_name():
+    return "test_addon"
+
+
+@pytest.fixture
+def global_config_for_alerts():
+    return global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config_all_alerts.json")
+    )
+
+
+@pytest.fixture
 def app_manifest_correct() -> app_manifest_lib.AppManifest:
     content = helpers.get_testdata_file("app.manifest")
     app_manifest = app_manifest_lib.AppManifest(content)
@@ -27,23 +54,21 @@ def global_config_all_json_content():
 @pytest.fixture
 def global_config_all_json() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path("valid_config.json")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
 @pytest.fixture
 def global_config_no_configuration() -> global_config_lib.GlobalConfig:
-    global_config_path = helpers.get_testdata_file_path(
-        "global_config_no_configuration.json"
+    return global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("global_config_no_configuration.json")
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
-    return global_config
 
 
 @pytest.fixture
 def global_config_all_yaml() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path("valid_config.yaml")
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -52,16 +77,16 @@ def global_config_only_configuration() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_configuration.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
 @pytest.fixture
-def global_config_conf_only_TA() -> global_config_lib.GlobalConfig:
+def global_config_for_conf_only_TA() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_global_config_conf_only_TA.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -70,7 +95,7 @@ def global_config_only_logging() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_logging.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -79,7 +104,7 @@ def global_config_multiple_account() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_multiple_account.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 
@@ -88,7 +113,7 @@ def global_config_single_authentication() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_single_authentication_config.json"
     )
-    global_config = global_config_lib.GlobalConfig(global_config_path)
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
 
 

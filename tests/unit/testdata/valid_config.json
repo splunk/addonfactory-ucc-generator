@@ -141,7 +141,8 @@
                             "options": {
                                 "auth_type": [
                                     "basic",
-                                    "oauth"
+                                    "oauth",
+                                    "oauth_client_credentials"
                                 ],
                                 "basic": [
                                     {
@@ -184,6 +185,21 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
+                                    }
+                                ],
+                                "oauth_client_credentials": [
+                                    {
+                                        "oauth_field": "client_id_oauth_credentials",
+                                        "label": "Client Id",
+                                        "field": "client_id_oauth_credentials",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret_oauth_credentials",
+                                        "label": "Client Secret",
+                                        "field": "client_secret_oauth_credentials",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
@@ -806,6 +822,13 @@
                             "help": "This is an example checkbox for the input two entity"
                         },
                         {
+                            "type": "checkbox",
+                            "label": "Example Checkbox with bool",
+                            "field": "input_two_checkbox_bool",
+                            "help": "This is an example checkbox for the input two entity with bool default",
+                            "defaultValue": true
+                        },
+                        {
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
@@ -1356,5 +1379,31 @@
                 "target": "3rdparty/linux"
             }
         ]
-    }
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requiredSearchAssistant": true,
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        }
+    ]
 }

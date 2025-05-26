@@ -30,9 +30,10 @@ from splunk_add_on_ucc_framework import global_config as gc
 
 
 class MockSubprocessResult:
-    def __init__(self, returncode, stdout=b""):
+    def __init__(self, returncode, stdout=b"", stderr=b""):
         self.returncode = returncode
         self.stdout = stdout
+        self.stderr = stderr
 
 
 @mock.patch("subprocess.run", autospec=True)
@@ -64,13 +65,17 @@ def test_install_libraries(mock_subprocess_run):
 
 
 @mock.patch("subprocess.run", autospec=True)
-def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_run):
-    mock_subprocess_run.side_effect = OSError
+def test_install_libraries_when_subprocess_raises_os_error(mock_subprocess_run, caplog):
+    mock_subprocess_run.side_effect = OSError("Test error message")
+    expected_output1 = "Command execution failed with error message: Test error message"
+    expected_output2 = "Execution (pip upgrade) failed due to Test error message"
 
-    with pytest.raises(CouldNotInstallRequirements):
+    with pytest.raises(SystemExit):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )
+    assert expected_output1 in caplog.text
+    assert expected_output2 in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -89,13 +94,31 @@ def test_install_libraries_when_subprocess_returns_non_zero_codes(
     mock_subprocess_run,
     subprocess_status_codes,
 ):
-    statuses = (MockSubprocessResult(el) for el in subprocess_status_codes)
+    statuses = []
+    for el in subprocess_status_codes:
+        statuses.append(MockSubprocessResult(el))
     mock_subprocess_run.side_effect = statuses
 
-    with pytest.raises(CouldNotInstallRequirements):
+    with pytest.raises(SystemExit):
         install_libraries(
             "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
         )
+
+
+@mock.patch("subprocess.run", autospec=True)
+def test_install_libraries_failed_stderr_msg(mock_subprocess_run, caplog):
+    statuses = [
+        MockSubprocessResult(0),
+        MockSubprocessResult(-1, stderr=b"No matching distribution for python 3.7"),
+    ]
+    mock_subprocess_run.side_effect = statuses
+    expected_msg = "Command execution failed with error message: No matching distribution for python 3.7"
+
+    with pytest.raises(SystemExit):
+        install_libraries(
+            "package/lib/requirements.txt", "/path/to/output/addon_name/lib", "python3"
+        )
+    assert expected_msg in caplog.text
 
 
 def test_install_python_libraries(tmp_path):
@@ -151,7 +174,9 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_no_ui(
     )
 
 
-def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path):
+def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(
+    tmp_path, caplog
+):
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -163,17 +188,22 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(tmp_path
         f"Please add it there and make sure it is at least version 6.6.0."
     )
 
+    expected_caplog = "Command result:  WARNING: Package(s) not found: splunktaucclib"
+
     with pytest.raises(SplunktaucclibNotFound) as exc:
         install_python_libraries(
-            str(tmp_path),
-            str(tmp_ucc_lib_target),
+            source_path=str(tmp_path),
+            ucc_lib_target=str(tmp_ucc_lib_target),
             python_binary_name="python3",
             includes_ui=True,
         )
     assert expected_msg in str(exc.value)
+    assert expected_caplog in caplog.text
 
 
-def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_path):
+def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(
+    tmp_path, caplog
+):
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
@@ -181,6 +211,7 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
     tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
 
     expected_msg = "splunktaucclib found but has the wrong version. Please make sure it is at least version 6.6.0."
+    expected_caplog = "Command result: Name: splunktaucclib\nVersion: 6.3.0"
 
     with pytest.raises(WrongSplunktaucclibVersion) as exc:
         install_python_libraries(
@@ -190,6 +221,7 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(tmp_p
             includes_ui=True,
         )
     assert expected_msg in str(exc.value)
+    assert expected_caplog in caplog.text
 
 
 def test_install_libraries_when_wrong_solnlib_is_present_but_has_oauth(tmp_path):
@@ -274,7 +306,7 @@ def test_install_python_libraries_invalid_os_libraries(
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_invalid_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
 
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     tmp_lib_path = tmp_path / "lib"
@@ -291,6 +323,16 @@ def test_install_python_libraries_invalid_os_libraries(
         )
 
 
+@mock.patch(
+    "subprocess.run", autospec=True, side_effect=OSError("test oserror message")
+)
+def test_is_pip_lib_installed_oserror(sub_process_mock, caplog):
+    expected_msg = "Command execution failed with error message: test oserror message"
+    with pytest.raises(CouldNotInstallRequirements):
+        _pip_is_lib_installed("i", "t", "l")
+    assert expected_msg in caplog.text
+
+
 @mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
@@ -305,7 +347,7 @@ def test_install_libraries_valid_os_libraries(
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
     mock_subprocess_run.side_effect = [
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
@@ -400,7 +442,7 @@ def test_install_libraries_version_mismatch(
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_with_os_libraries.json"
     )
-    global_config = gc.GlobalConfig(global_config_path)
+    global_config = gc.GlobalConfig.from_file(global_config_path)
 
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
     ucc_lib_target = str(tmp_ucc_lib_target)
