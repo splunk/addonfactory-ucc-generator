@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+[project]
+requires-python = ">=3.7,<3.14"
 
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
