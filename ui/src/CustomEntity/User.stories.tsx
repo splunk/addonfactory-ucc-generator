@@ -60,10 +60,15 @@ const StoryWrapper: React.FC<StoryArgs> = ({ entity }) => {
         }
 
         if (!result.success) {
-            const formattedErrors = result.error.issues
-                .map((issue) => `${idx} → ${issue.path.join('.')} - ${issue.message}`)
+            const entityName = `type: ${item?.type} (Entity #${idx + 1})`;
+            const errors = result.error.issues
+                .map((issue) => {
+                    const path = issue.path.length > 0 ? issue.path.join('.') : 'root';
+                    return `• ${path}: ${issue.message}`;
+                })
                 .join('\n');
-            throw new Error(`Entity validation failed:\n${formattedErrors}`);
+
+            throw new Error(`"${entityName}" validation failed:\n${errors}`);
         }
 
         return result.data;

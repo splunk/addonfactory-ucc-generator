@@ -27,11 +27,13 @@ export const TextElementWithLinksSchema = z
         text: z.string(),
         links: z
             .array(
-                z.object({
-                    slug: z.string(),
-                    link: z.string(),
-                    linkText: z.string(),
-                })
+                z
+                    .object({
+                        slug: z.string(),
+                        link: z.string(),
+                        linkText: z.string(),
+                    })
+                    .strict()
             )
             .optional(),
         link: z.string().optional(),

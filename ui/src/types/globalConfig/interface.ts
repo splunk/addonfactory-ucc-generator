@@ -101,14 +101,16 @@ export interface CommonEditableEntityOptionsInterface {
     hideForPlatform?: 'cloud' | 'enterprise';
 }
 
-// to do make descion for label optional or not
-export interface LinkEntityInterface extends CommonEntityFieldsInterface {
+export interface LinkEntityInterface {
     type: 'helpLink';
-    label: string;
-    options?: TextElementWithLinksInterface & {
+    field: string;
+    label?: string;
+    help?: StringOrTextWithLinksType;
+    tooltip?: string;
+    options: TextElementWithLinksInterface & {
         hideForPlatform?: 'cloud' | 'enterprise';
+        display?: boolean;
     };
-    required?: false;
 }
 
 export interface TextEntityInterface extends CommonEditableEntityFieldsInterface {
