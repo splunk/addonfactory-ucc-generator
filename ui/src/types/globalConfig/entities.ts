@@ -61,6 +61,7 @@ export const LinkEntitySchema = z
         label: z.string().optional(),
         help: StringOrTextWithLinks.optional(),
         tooltip: z.string().optional(),
+        required: z.literal(false).default(false).optional(),
         options: TextElementWithLinksSchema.extend({
             hideForPlatform: PlatformEnum.optional(),
             display: z.boolean().default(true).optional(),
