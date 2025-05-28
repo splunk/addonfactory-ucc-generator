@@ -49,7 +49,7 @@
                         ]
                     },
                     "hook": {
-                        "src": "customHookOnlySrc"
+                        "src": "amdCustomHook"
                     },
                     "entity": [
                         {
