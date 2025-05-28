@@ -26,7 +26,7 @@ type CustomTableCellProps = {
     row: RowDataFields;
     field: string;
     fileName: string;
-    type: string;
+    type?: string;
     customComponentContext?: CustomComponentContextType;
 };
 

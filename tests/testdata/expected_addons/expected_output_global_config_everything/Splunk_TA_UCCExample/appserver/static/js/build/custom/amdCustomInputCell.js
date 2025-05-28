@@ -1,5 +1,5 @@
 define([], function () {
-  class CustomInputCell {
+  class amdCustomInputCell {
     /**
      * Custom Row Cell
      * @constructor
@@ -30,5 +30,5 @@ define([], function () {
       return this;
     }
   }
-  return CustomInputCell;
+  return amdCustomInputCell;
 });
