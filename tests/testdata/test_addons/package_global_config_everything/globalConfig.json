@@ -796,7 +796,7 @@
                             }
                         ],
                         "customRow": {
-                            "src": "amdCustom_input_row_replace.js"
+                            "src": "amdCustom_input_row_replace"
                         }
                     },
                     "entity": [
