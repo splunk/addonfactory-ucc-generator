@@ -116,6 +116,7 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
                     .catch((error) => reject(error));
             } else {
                 const appName = globalConfig.meta.name;
+                // eslint-disable-next-line import/no-dynamic-require, global-require
                 require([`app/${appName}/js/build/custom/${fileName}`], (
                     Row: CustomRowConstructor
                 ) => {

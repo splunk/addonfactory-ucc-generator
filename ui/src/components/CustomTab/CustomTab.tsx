@@ -33,8 +33,9 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
                     resolve(Control);
                 });
             } else {
-                require([`app/${appName}/js/build/custom/${tab.customTab!.src}`], function (Hook) {
-                    resolve(Hook);
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${appName}/js/build/custom/${tab.customTab!.src}`], (Tab) => {
+                    resolve(Tab);
                 });
             }
         });

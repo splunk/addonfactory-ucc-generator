@@ -99,6 +99,7 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
             } else {
                 const appName = globalConfig.meta.name;
 
+                // eslint-disable-next-line import/no-dynamic-require, global-require
                 require([`app/${appName}/js/build/custom/${fileName}`], (
                     Cell: CustomCellConstructor
                 ) => {
