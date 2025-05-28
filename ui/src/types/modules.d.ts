@@ -17,6 +17,9 @@ declare module '@splunk/splunk-utils/config' {
     export const versionLabel: string | undefined;
 }
 
+// https://requirejs.org/docs/whyamd.html#amd
+declare function require(modules: string[], callback: (...modules: any[]) => void): void;
+
 declare module '@splunk/splunk-utils/url' {
     export type Sharing = '' | 'app' | 'global' | 'system';
 

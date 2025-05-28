@@ -116,12 +116,11 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
                     .catch((error) => reject(error));
             } else {
                 const appName = globalConfig.meta.name;
-                // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${fileName}`],
-                    (Control: CustomRowConstructor) => resolve(Control),
-                    (error: Error) => reject(error)
-                );
+                require([`app/${appName}/js/build/custom/${fileName}`], (
+                    Row: CustomRowConstructor
+                ) => {
+                    resolve(Row);
+                });
             }
         });
 

@@ -99,12 +99,11 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
             } else {
                 const appName = globalConfig.meta.name;
 
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${fileName}`],
-                    (Cell: CustomCellConstructor) => resolve(Cell),
-                    (error: Error) => reject(error)
-                );
+                require([`app/${appName}/js/build/custom/${fileName}`], (
+                    Cell: CustomCellConstructor
+                ) => {
+                    resolve(Cell);
+                });
             }
         });
 

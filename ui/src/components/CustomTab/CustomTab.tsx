@@ -33,11 +33,9 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
                     resolve(Control);
                 });
             } else {
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${tab.customTab?.src}`],
-                    (Control: CustomTabConstructor) => resolve(Control)
-                );
+                require([`app/${appName}/js/build/custom/${tab.customTab!.src}`], function (Hook) {
+                    resolve(Hook);
+                });
             }
         });
 
