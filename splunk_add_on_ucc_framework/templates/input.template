@@ -4,6 +4,7 @@ import import_declare_test
 import json
 {% endif -%}
 import sys
+import inspect
 
 from splunklib import modularinput as smi
 {%- if input_helper_module %}
@@ -42,14 +43,14 @@ class {{class_name}}(smi.Script):
 
     def validate_input(self, definition: smi.ValidationDefinition):
         {%- if input_helper_module %}
-        return validate_input(definition)
+        return self.call_with_args(validate_input, definition)
         {%- else %}
         return
         {%- endif %}
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
         {%- if input_helper_module %}
-        return stream_events(inputs, ew)
+        return self.call_with_args(stream_events, inputs, ew)
         {%- else %}
         input_items = [{'count': len(inputs.inputs)}]
         for input_name, input_item in inputs.inputs.items():
@@ -61,6 +62,16 @@ class {{class_name}}(smi.Script):
         )
         ew.write_event(event)
         {%- endif %}
+
+    {%- if input_helper_module %}
+    def call_with_args(self, method, *args):
+        method_args_list = inspect.getfullargspec(method).args
+
+        if len(method_args_list) == len(args) + 1:
+            return method(self, *args)
+
+        return method(*args)
+    {%- endif %}
 
 
 if __name__ == '__main__':
