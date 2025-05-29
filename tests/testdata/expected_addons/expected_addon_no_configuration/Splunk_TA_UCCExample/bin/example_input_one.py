@@ -2,6 +2,7 @@ import import_declare_test
 
 import json
 import sys
+import inspect
 
 from splunklib import modularinput as smi
 
@@ -40,6 +41,8 @@ class EXAMPLE_INPUT_ONE(smi.Script):
             sourcetype='example_input_one',
         )
         ew.write_event(event)
+
+
 
 
 if __name__ == '__main__':
