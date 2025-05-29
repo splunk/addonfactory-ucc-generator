@@ -579,11 +579,6 @@ def test_ucc_build_verbose_mode(caplog):
             for full_path, dir, files in os.walk(app_server_lib_path):
                 if files:
                     relative_path = full_path[path_len:]
-
-                    if relative_path == "appserver/static/js/lib":
-                        # skip appserver/static/js/lib as it contains UI lib not used in final build
-                        continue
-
                     for file in files:
                         if file not in excluded_files:
                             relative_file_path = os.path.join(relative_path, file)
