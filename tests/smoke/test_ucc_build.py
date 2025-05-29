@@ -15,6 +15,7 @@ import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework import __version__
+import pytest
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
@@ -679,49 +680,17 @@ bin/wrong_pattern
 """
         )
         f.close()
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        expected_warning_msg = (
-            f"No files found for the specified pattern: "
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
-        )
-
-        edm_paths = {
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
-        }
-        removed = set(
-            caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
-        )
         exp_msg = (
-            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
+            "The `.uccignore` feature has been deprecated from UCC. "
             "To achieve the similar functionality use additional_packaging.py."
             "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
         )
-        exp_info_msg = (
-            "additional_packaging.py is present but does not have `additional_packaging`."
-            " Skipping additional packaging."
-        )
+        with pytest.raises(SystemExit):
+            build.generate(source=package_folder, output_directory=temp_dir)
 
         assert exp_msg in caplog.text
-        assert exp_info_msg in caplog.text
-        assert expected_warning_msg in caplog.text
-        assert edm_paths == removed
         # on successful assertion, we delete the file
         os.remove(ucc_file)
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-        # when custom files are provided, default files shouldn't be shipped
-        files_should_be_absent = [
-            ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
-            ("bin", "example_input_one.py"),
-            ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
-        ]
-        for af in files_should_be_absent:
-            actual_file_path = path.join(actual_folder, *af)
-            assert not path.exists(actual_file_path)
 
 
 def test_ucc_generate_with_everything_cleanup_output_files():

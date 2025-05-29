@@ -13,13 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import glob
 import json
 import logging
 import os
 import shutil
 import sys
-from typing import Optional, List, Any
+from typing import Optional, Any
 import subprocess
 import colorama as c
 import fnmatch
@@ -162,63 +161,6 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
-
-
-def _get_ignore_list(
-    addon_name: str, ucc_ignore_path: str, output_directory: str
-) -> List[str]:
-    """
-    Return path of files/folders to be removed.
-
-    Args:
-        addon_name: Add-on name.
-        ucc_ignore_path: Path to '.uccignore'.
-        output_directory: Output directory path.
-
-    Returns:
-        list: List of paths to be removed from output directory.
-    """
-    if not os.path.exists(ucc_ignore_path):
-        return []
-    else:
-        logger.warning(
-            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
-            "To achieve the similar functionality use additional_packaging.py."
-            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
-        )
-        with open(ucc_ignore_path) as ignore_file:
-            ignore_list = ignore_file.readlines()
-        ignore_list = [
-            (
-                os.path.join(output_directory, addon_name, utils.get_os_path(path))
-            ).strip()
-            for path in ignore_list
-            if path.strip()
-        ]
-        return ignore_list
-
-
-def _remove_listed_files(ignore_list: List[str]) -> List[str]:
-    """
-    Return path of files/folders to removed in output folder.
-
-    Args:
-        ignore_list (list): List of files/folder patterns to be removed in output directory.
-    """
-    removed_list = []
-    for pattern in ignore_list:
-        paths = glob.glob(pattern, recursive=True)
-        if not paths:
-            logger.warning(f"No files found for the specified pattern: {pattern}")
-            continue
-        for path in paths:
-            if os.path.exists(path):
-                if os.path.isfile(path):
-                    os.remove(path)
-                elif os.path.isdir(path):
-                    shutil.rmtree(path, ignore_errors=True)
-                removed_list.append(path)
-    return removed_list
 
 
 def _get_addon_version(addon_version: Optional[str]) -> str:
@@ -597,14 +539,14 @@ def generate(
             global_config, gc_path, ta_name, dashboard_definition_json_path
         )
 
-    ignore_list = _get_ignore_list(
-        ta_name,
-        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
-        output_directory,
-    )
-    removed_list = _remove_listed_files(ignore_list)
-    if removed_list:
-        logger.info("Removed:\n{}".format("\n".join(removed_list)))
+        # Exit the build process if `.uccignore` is being found in the source directory.
+        if os.path.exists(os.path.join(source, os.pardir, ".uccignore")):
+            logger.error(
+                "The `.uccignore` feature has been deprecated from UCC. "
+                "To achieve the similar functionality use additional_packaging.py."
+                "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
+            )
+            sys.exit(1)
     utils.check_author_name(source, app_manifest)
 
     # Update files before overwriting
