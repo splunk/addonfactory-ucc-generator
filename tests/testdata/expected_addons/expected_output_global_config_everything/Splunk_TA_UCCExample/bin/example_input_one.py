@@ -1,6 +1,7 @@
 import import_declare_test
 
 import sys
+import inspect
 
 from splunklib import modularinput as smi
 from helper_one import stream_events, validate_input
@@ -124,10 +125,18 @@ class EXAMPLE_INPUT_ONE(smi.Script):
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
-        return validate_input(definition)
+        return self.call_with_args(validate_input, definition)
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
-        return stream_events(inputs, ew)
+        return self.call_with_args(stream_events, inputs, ew)
+
+    def call_with_args(self, method, *args):
+        method_args_list = inspect.getfullargspec(method).args
+
+        if len(method_args_list) == len(args) + 1:
+            return method(self, *args)
+
+        return method(*args)
 
 
 if __name__ == '__main__':

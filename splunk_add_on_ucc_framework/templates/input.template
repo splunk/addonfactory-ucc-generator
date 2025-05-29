@@ -63,7 +63,7 @@ class {{class_name}}(smi.Script):
         ew.write_event(event)
         {%- endif %}
 
-    {%- if input_helper_module %}
+    {% if input_helper_module -%}
     def call_with_args(self, method, *args):
         method_args_list = inspect.getfullargspec(method).args
 
