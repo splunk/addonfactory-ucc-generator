@@ -26,12 +26,6 @@ define([], function () {
     onCreate() {
       if (this.mode == "create") {
         console.log("in Hook: onCreate");
-        // This is an example of how to store groupName value for a particular form field.
-        this.util.setState((prevState) => {
-          let data = { ...prevState.data };
-          data.name.value = this.groupName;
-          return { data };
-        });
       }
     }
 

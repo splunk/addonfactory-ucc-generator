@@ -20,11 +20,11 @@ define([], function () {
       let html = "";
       // Check for missing configuration in account
       if (this.row.account_multiple_select === "one") {
-        html = "Option One";
+        html = "AMD Option One";
       } else if (this.row.account_multiple_select === "two") {
-        html = "Option Two";
+        html = "AMD Option Two";
       } else {
-        html = "Option is not available";
+        html = "AMD Option is not available";
       }
       this.el.innerHTML = html;
       return this;

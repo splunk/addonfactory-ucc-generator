@@ -823,7 +823,7 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option One",
-                "amd test custom cell": "Option One",
+                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -852,7 +852,7 @@ class TestAccount(UccTester):
                 "name": "TestAccount",
                 "auth type": "basic",
                 "test custom cell": "Option is not available",
-                "amd test custom cell": "Option is not available",
+                "amd test custom cell": "AMD Option is not available",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -896,7 +896,7 @@ class TestAccount(UccTester):
                 "name": "TestAccount2",
                 "auth type": "basic",
                 "test custom cell": "Option One",
-                "amd test custom cell": "Option One",
+                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -1287,7 +1287,7 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option Two",
-                "amd test custom cell": "Option Two",
+                "amd test custom cell": "AMD Option Two",
                 "actions": "Edit | Clone | Delete",
             },
         )
