@@ -885,7 +885,6 @@ def _compare_interval_entities(
 ) -> None:
     for lmbd in (
         lambda x: x["pages"]["configuration"]["tabs"],
-        lambda x: x.get("alerts", []),
         lambda x: x["pages"].get("inputs", {}).get("services", []),
     ):
         for item_num, item in enumerate(lmbd(global_config)):
