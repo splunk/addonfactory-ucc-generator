@@ -66,6 +66,13 @@ def global_config_no_configuration() -> global_config_lib.GlobalConfig:
 
 
 @pytest.fixture
+def global_config_only_custom_tab() -> global_config_lib.GlobalConfig:
+    return global_config_lib.GlobalConfig.from_file(
+        helpers.get_testdata_file_path("valid_config_custom_tab_without_entity.json")
+    )
+
+
+@pytest.fixture
 def global_config_all_yaml() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path("valid_config.yaml")
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
