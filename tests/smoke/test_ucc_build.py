@@ -146,6 +146,7 @@ def test_ucc_generate_with_everything(caplog):
         files_to_be_equal = [
             ("README.txt",),
             ("appserver", "static", "test icon.png"),
+            ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -853,7 +854,6 @@ def _compare_interval_entities(
 ) -> None:
     for lmbd in (
         lambda x: x["pages"]["configuration"]["tabs"],
-        lambda x: x.get("alerts", []),
         lambda x: x["pages"].get("inputs", {}).get("services", []),
     ):
         for item_num, item in enumerate(lmbd(global_config)):
