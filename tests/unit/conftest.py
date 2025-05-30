@@ -61,7 +61,7 @@ def global_config_all_json() -> global_config_lib.GlobalConfig:
 @pytest.fixture
 def global_config_no_configuration() -> global_config_lib.GlobalConfig:
     return global_config_lib.GlobalConfig.from_file(
-        helpers.get_testdata_file_path("global_config_no_configuration.json")
+        helpers.get_testdata_file_path("valid_global_config_no_configuration.json")
     )
 
 

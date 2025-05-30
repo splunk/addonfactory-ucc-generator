@@ -34,8 +34,8 @@ def test_version_tuple(version, expected):
 @pytest.mark.parametrize(
     "filename",
     [
-        "config_with_biased_terms.json",
-        "config_with_biased_terms.yaml",
+        "valid_config_with_biased_terms.json",
+        "valid_config_with_biased_terms.yaml",
     ],
 )
 def test_handle_biased_terms_update(filename):
@@ -65,8 +65,8 @@ def test_handle_biased_terms_update(filename):
 @pytest.mark.parametrize(
     "filename",
     [
-        "config_with_biased_terms.json",
-        "config_with_biased_terms.yaml",
+        "valid_config_with_biased_terms.json",
+        "valid_config_with_biased_terms.yaml",
     ],
 )
 def test_handle_dropping_api_version_update(filename):
