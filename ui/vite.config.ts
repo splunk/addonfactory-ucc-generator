@@ -165,7 +165,11 @@ export default defineConfig(({ mode }) => {
                 apply: 'build',
             },
             splunkPathRewriter,
-            nodePolyfills(),
+            nodePolyfills(
+                {
+                    include: ['events'],
+                }
+            ),
         ],
         build: {
             outDir: 'dist/build',
