@@ -93,7 +93,7 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
                 const Control = customComp.component;
                 resolve(Control);
             } else if (type === 'external') {
-                import(/* webpackIgnore: true */ `${getBuildDirPath()}/custom/${fileName}.js`)
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))
                     .catch((error) => reject(error));
             } else {
