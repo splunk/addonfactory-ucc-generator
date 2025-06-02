@@ -17,6 +17,10 @@ declare module '@splunk/splunk-utils/config' {
     export const versionLabel: string | undefined;
 }
 
+// https://requirejs.org/docs/whyamd.html#amd
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+declare function require(modules: string[], callback: (...modulesContent: any[]) => void): void;
+
 declare module '@splunk/splunk-utils/url' {
     export type Sharing = '' | 'app' | 'global' | 'system';
 
