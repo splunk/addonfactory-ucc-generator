@@ -21,7 +21,7 @@ The `type` key needs to be set as external to webpack the custom extensions. UCC
 
 ### Methods
 
-We can use these methods to overirde existing methods according to the desired functionality:
+We can use these methods to override existing methods according to the desired functionality:
 
 | Property      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -145,8 +145,8 @@ export default class AdvancedHook extends CustomHookBase {
 
   /* 
         Put form validation logic here.
-        Return ture if validation pass, false otherwise.
-        Call displayErrorMsg when validtion failed.
+        Return true if validation pass, false otherwise.
+        Call displayErrorMsg when validation failed.
     */
   onSave(dataDict: NullishFormRecord) {
     console.log("in Hook: onSave with data: ", dataDict);
