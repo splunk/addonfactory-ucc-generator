@@ -117,7 +117,7 @@ jobs:
       - run: poetry install
       - name: Build UCC
         run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry build
       - uses: actions/upload-artifact@v4
         with:
@@ -182,7 +182,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
           poetry install
@@ -212,7 +212,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: ./scripts/include-rum.sh output/Splunk_TA_UCCExample/appserver/templates/base.html scripts/rum-script.html "$RUM_ACCESS_TOKEN"
@@ -370,7 +370,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
       - run: |
           poetry run ucc-gen init \
@@ -414,7 +414,7 @@ jobs:
           path: built-ui/
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package -o out_${{ matrix.splunk.version }}
       - run: |
@@ -500,7 +500,7 @@ jobs:
       - run: poetry install
       - name: Copy built UCC UI into UCC generator folder
         run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/
+          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
       - id: semantic
         uses: splunk/semantic-release-action@v1.3
         with:

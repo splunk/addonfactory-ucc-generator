@@ -45,6 +45,13 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'amd_custom_control_field',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'field_no_validators',
         required=False,
         encrypted=False,
