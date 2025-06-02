@@ -823,6 +823,7 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option One",
+                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -851,6 +852,7 @@ class TestAccount(UccTester):
                 "name": "TestAccount",
                 "auth type": "basic",
                 "test custom cell": "Option is not available",
+                "amd test custom cell": "AMD Option is not available",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -894,6 +896,7 @@ class TestAccount(UccTester):
                 "name": "TestAccount2",
                 "auth type": "basic",
                 "test custom cell": "Option One",
+                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -1070,7 +1073,13 @@ class TestAccount(UccTester):
     ):
         """Verifies headers of account table"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        expected_headers = ["Name", "Auth Type", "Test Custom Cell", "Actions"]
+        expected_headers = [
+            "Name",
+            "Auth Type",
+            "Test Custom Cell",
+            "AMD Test Custom Cell",
+            "Actions",
+        ]
         self.assert_util(list(account.table.get_headers()), expected_headers)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1278,6 +1287,7 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option Two",
+                "amd test custom cell": "AMD Option Two",
                 "actions": "Edit | Clone | Delete",
             },
         )

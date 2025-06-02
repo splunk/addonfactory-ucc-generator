@@ -26,7 +26,7 @@ type CustomTableCellProps = {
     row: RowDataFields;
     field: string;
     fileName: string;
-    type: string;
+    type?: string;
     customComponentContext?: CustomComponentContextType;
 };
 
@@ -99,12 +99,12 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
             } else {
                 const appName = globalConfig.meta.name;
 
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${fileName}`],
-                    (Cell: CustomCellConstructor) => resolve(Cell),
-                    (error: Error) => reject(error)
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${appName}/js/build/custom/${fileName}`], (
+                    Cell: CustomCellConstructor
+                ) => {
+                    resolve(Cell);
+                });
             }
         });
 
