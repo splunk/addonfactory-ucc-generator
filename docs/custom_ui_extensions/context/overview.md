@@ -164,11 +164,11 @@ module.exports = {
 
 The command accepts the following parameters:
 
-| Parameter     | Description                                                                                                                                                         | Default Value                                  |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `ta_name`     | The name of the current TA, used to locate the correct directory in the output folder.                                                                               | None                                           |
-| `init_file_dir` | The file containing the `uccInit` function. While `.ts` files are recommended, `.js` files can also be used for easier transitions.                                | `src/ucc-ui.ts`                                |
-| `output`      | The destination directory containing the TA output and all required files.                                                                                          | `../output` (relative to the UI code)          |
+| Parameter       | Description                                                                                                                         | Default Value                                                                                 |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `ta_name`       | The name of the current TA, used to locate the correct directory in the output folder.                                              | None                                                                                          |
+| `init_file_dir` | The file containing the `uccInit` function. While `.ts` files are recommended, `.js` files can also be used for easier transitions. | `src/ucc-ui.ts`                                                                               |
+| `output`        | The destination directory containing the TA output and all required files. That will be used with method `resolve(output, TA_NAME, 'appserver/static/js/build')`                                                          | `resolve(uiDir, '../output', TA_NAME, 'appserver/static/js/build')` (relative to the UI code) |
 
 ---
 
