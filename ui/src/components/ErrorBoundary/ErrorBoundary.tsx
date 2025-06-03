@@ -93,9 +93,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                         <StyledHeader>
                             <div>
                                 <StyledWarningIcon />
-                                <StyledHeading level={2}>
-                                    {gettext('Something went wrong')}
-                                </StyledHeading>
+                                <StyledHeading>{gettext('Something went wrong')}</StyledHeading>
                             </div>
                             <PStyled>
                                 {gettext(

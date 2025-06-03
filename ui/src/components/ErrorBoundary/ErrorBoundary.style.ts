@@ -37,7 +37,7 @@ export const StyledContainer = styled.div`
     justify-content: center; // Ensures horizontal centering of children
     align-items: center; // Ensures vertical centering
     width: 100%; // Takes up full width of its parent
-    padding: 2rem;
+    padding: 0.5rem;
     animation: ${fadeIn} 0.6s ease-out;
 `;
 
@@ -66,9 +66,9 @@ export const StyledHeader = styled(Card.Header)`
         },
     })};
     color: white;
-    padding: 2rem;
     text-align: center;
     border-bottom: none;
+    padding: 1.5vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -83,9 +83,9 @@ export const StyledHeading = styled(Heading)`
 `;
 
 export const StyledWarningIcon = styled(WarningIcon)`
-    font-size: 4rem;
+    font-size: 2.5rem;
     color: white;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     animation: ${pulse} 2s infinite;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 `;
@@ -123,14 +123,14 @@ export const ErrorDetailsContainer = styled.div`
 
 export const LinksSection = styled.div`
     margin-top: 2rem;
-    padding-top: 1.5rem;
+    padding-top: 1rem;
     border-top: 1px solid #e9ecef;
 `;
 
 export const LinkItem = styled.div`
     display: flex;
     align-items: flex-start;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 8px;
     border-left: 4px solid #007bff;
@@ -204,6 +204,5 @@ export const SectionTitle = styled.h3`
 
 export const PStyled = styled.p`
     color: 'rgba(255, 255, 255, 0.9)',
-    margin: '0.5rem 0 0 0',
     fontSize: '1rem',
 `;
