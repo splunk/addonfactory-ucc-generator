@@ -688,6 +688,8 @@ class TestAccount(UccTester):
         """Verifies example multiple select list dropdown"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
+        account.entity.multiple_select.wait_for("input")
+        account.entity.multiple_select.wait_for_values()
         self.assert_util(
             account.entity.multiple_select.list_of_values(),
             ["Option One", "Option Two"],
