@@ -64,6 +64,10 @@ export const StyledHeader = styled(Card.Header)`
             light: variables.errorColor,
             dark: variables.errorColor,
         },
+        prisma: {
+            light: variables.sequential4D7,
+            dark: variables.sequential4D7,
+        },
     })};
     color: white;
     text-align: center;
@@ -181,6 +185,16 @@ export const LinkDescription = styled.p`
 export const ToggleButton = styled(Button)`
     margin-top: 1rem;
     font-size: 0.875rem;
+    background: ${pick({
+        enterprise: {
+            light: variables.categorical1D7,
+            dark: variables.categorical1D7,
+        },
+        prisma: {
+            light: variables.borderColorWeak,
+            dark: variables.categorical1D7,
+        },
+    })} !important;
 `;
 
 export const SectionTitle = styled.h3`
@@ -203,6 +217,6 @@ export const SectionTitle = styled.h3`
 `;
 
 export const PStyled = styled.p`
-    color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: '1rem',
+    color: white;
+    fontsize: '1rem';
 `;
