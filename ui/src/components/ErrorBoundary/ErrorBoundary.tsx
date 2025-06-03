@@ -1,16 +1,29 @@
 import React, { ReactElement } from 'react';
-import Heading from '@splunk/react-ui/Heading';
 import { gettext } from '@splunk/ui-utils/i18n';
-import Card from '@splunk/react-ui/Card';
-import WarningIcon from '@splunk/react-icons/enterprise/Warning';
-import styled from 'styled-components';
-import P from '@splunk/react-ui/Paragraph';
-import Link from '@splunk/react-ui/Link';
-import variables from '@splunk/themes/variables';
-
+import InfoIcon from '@splunk/react-icons/enterprise/Info';
+import SearchIcon from '@splunk/react-icons/enterprise/Search';
+import File from '@splunk/react-icons/File';
 import { parseErrorMsg } from '../../util/messageUtil';
 import { getSearchUrl } from '../../util/searchUtil';
 import { getUnifiedConfigs } from '../../util/util';
+import {
+    ErrorDetailsContainer,
+    LinkContent,
+    LinkDescription,
+    LinkIcon,
+    LinkItem,
+    LinksSection,
+    PStyled,
+    SectionTitle,
+    StyledBody,
+    StyledCard,
+    StyledContainer,
+    StyledHeader,
+    StyledHeading,
+    StyledLink,
+    StyledWarningIcon,
+    ToggleButton,
+} from './ErrorBoundary.style';
 
 interface ErrorBoundaryProps {
     children: ReactElement | ReactElement[];
@@ -27,35 +40,8 @@ interface ErrorBoundaryState {
           }
         | null
         | unknown;
+    showDetails: boolean;
 }
-
-const StyledContainer = styled.div`
-    display: flex;
-    justify-content: center; // Ensures horizontal centering of children
-    align-items: center; // Ensures vertical centering
-    width: 100%; // Takes up full width of its parent
-`;
-
-const StyledCard = styled(Card)`
-    display: flex;
-    flex: 0;
-    box-shadow: ${variables.overlayShadow};
-    min-width: 30rem;
-`;
-
-const StyledHeading = styled(Heading)`
-    text-align: center;
-`;
-
-const StyledWarningIcon = styled(WarningIcon)`
-    font-size: 120px;
-    color: ${variables.alertColor};
-`;
-
-const StyledTypography = styled.details`
-    white-space: pre-wrap;
-    word-break: break-word;
-`;
 
 export const getRestrictQueryByAllServices = () => {
     const globalConfig = getUnifiedConfigs();
@@ -70,22 +56,32 @@ export const getRestrictQueryByAllServices = () => {
 class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
     constructor(props: ErrorBoundaryProps) {
         super(props);
-        this.state = { error: null };
+        this.state = {
+            error: null,
+            showDetails: false,
+        };
     }
 
     static getDerivedStateFromError(error: unknown) {
         // Update state so the next render will show the fallback UI.
-        return { error };
+        return { error, showDetails: false };
     }
 
     componentDidCatch(error: unknown) {
         // Catch errors in any components below and re-render with error message
         this.setState({
             error,
+            showDetails: false,
         });
         // eslint-disable-next-line no-console
         console.error(error);
     }
+
+    toggleDetails = () => {
+        this.setState((prevState) => ({
+            showDetails: !prevState.showDetails,
+        }));
+    };
 
     render() {
         if (this.state.error) {
@@ -94,75 +90,118 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
             return (
                 <StyledContainer>
                     <StyledCard>
-                        <Card.Header>
-                            <StyledHeading level={2}>
+                        <StyledHeader>
+                            <div>
                                 <StyledWarningIcon />
-                                <StyledTypography as="p">
-                                    {gettext('Something went wrong!')}
-                                </StyledTypography>
-                            </StyledHeading>
-                        </Card.Header>
-                        <Card.Body>
+                                <StyledHeading level={2}>
+                                    {gettext('Something went wrong')}
+                                </StyledHeading>
+                            </div>
+                            <PStyled>
+                                {gettext(
+                                    'An unexpected error occurred while loading this component'
+                                )}
+                            </PStyled>
+                        </StyledHeader>
+
+                        <StyledBody>
                             {parsedErrorMessage && (
-                                <StyledTypography as="p">{parsedErrorMessage}</StyledTypography>
+                                <>
+                                    <ToggleButton
+                                        appearance="secondary"
+                                        onClick={this.toggleDetails}
+                                        icon={<InfoIcon />}
+                                    >
+                                        {this.state.showDetails
+                                            ? 'Hide Error Details'
+                                            : 'Show Error Details'}
+                                    </ToggleButton>
+
+                                    {this.state.showDetails && (
+                                        <ErrorDetailsContainer>
+                                            {parsedErrorMessage}
+                                        </ErrorDetailsContainer>
+                                    )}
+                                </>
                             )}
-                            <>
-                                <P>Useful Links:</P>
-                                <P>
-                                    <Link
-                                        // detailed query from /troubleshooting/ section
-                                        to={getSearchUrl({
-                                            q: `index = _internal source=*splunkd* 
+
+                            <LinksSection>
+                                <SectionTitle>{gettext('Troubleshooting Resources')}</SectionTitle>
+                                <LinkItem>
+                                    <LinkIcon>
+                                        <SearchIcon />
+                                    </LinkIcon>
+                                    <LinkContent>
+                                        <StyledLink
+                                            // detailed query from /troubleshooting/ section
+                                            to={getSearchUrl({
+                                                q: `index = _internal source=*splunkd* 
 (
     (component=ModularInputs stderr)
     OR component=ExecProcessor ${getRestrictQueryByAllServices()})
 ) 
 OR component="PersistentScript"`,
-                                        }).toString()}
-                                        target="_blank"
-                                        openInNewContext
-                                        rel="noopener noreferrer"
-                                    >
-                                        Error Splunk Search
-                                    </Link>
-                                    <span>
-                                        {' '}
-                                        - Search for errors connected to inputs of current TA and
-                                        configuration
-                                    </span>
-                                </P>
-                                <P>
-                                    <Link
-                                        to="https://splunk.github.io/addonfactory-ucc-generator/troubleshooting/"
-                                        target="_blank"
-                                        openInNewContext
-                                        rel="noopener noreferrer"
-                                    >
-                                        Troubleshooting
-                                    </Link>
-                                    <span> - Documentation describing next steps </span>
-                                </P>
-
-                                <P>
-                                    <Link
-                                        // query from /troubleshooting/ section
-                                        to={getSearchUrl({
-                                            q: 'index = _internal source=*splunkd* ERROR',
-                                        }).toString()}
-                                        target="_blank"
-                                        openInNewContext
-                                        rel="noopener noreferrer"
-                                    >
-                                        General Error Splunk Search
-                                    </Link>
-                                    <span> - Search for all errors in whole Splunk instance </span>
-                                </P>
-                            </>
-                        </Card.Body>
+                                            }).toString()}
+                                            target="_blank"
+                                            openInNewContext
+                                            rel="noopener noreferrer"
+                                        >
+                                            Error Splunk Search
+                                        </StyledLink>
+                                        <LinkDescription>
+                                            Find errors related to your current Technical Add-on
+                                            inputs and configuration
+                                        </LinkDescription>
+                                    </LinkContent>
+                                </LinkItem>
+                                <LinkItem>
+                                    <LinkIcon>
+                                        <File />
+                                    </LinkIcon>
+                                    <LinkContent>
+                                        <StyledLink
+                                            to="https://splunk.github.io/addonfactory-ucc-generator/troubleshooting/"
+                                            target="_blank"
+                                            openInNewContext
+                                            rel="noopener noreferrer"
+                                        >
+                                            UCC Troubleshooting Guide
+                                        </StyledLink>
+                                        <LinkDescription>
+                                            Comprehensive documentation with step-by-step
+                                            troubleshooting instructions
+                                        </LinkDescription>
+                                    </LinkContent>
+                                </LinkItem>
+                                <LinkItem>
+                                    <LinkIcon>
+                                        <SearchIcon />
+                                    </LinkIcon>
+                                    <LinkContent>
+                                        <StyledLink
+                                            // query from /troubleshooting/ section
+                                            to={getSearchUrl({
+                                                q: 'index = _internal source=*splunkd* ERROR',
+                                            }).toString()}
+                                            target="_blank"
+                                            openInNewContext
+                                            rel="noopener noreferrer"
+                                        >
+                                            Search All Splunk Errors
+                                        </StyledLink>
+                                        <LinkDescription>
+                                            Search across your entire Splunk instance for related
+                                            issues
+                                        </LinkDescription>
+                                    </LinkContent>
+                                </LinkItem>
+                            </LinksSection>
+                        </StyledBody>
                     </StyledCard>
                 </StyledContainer>
             );
         }
+
         // Normally, just render children
         return this.props.children;
     }
