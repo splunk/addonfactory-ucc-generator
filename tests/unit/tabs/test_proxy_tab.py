@@ -17,7 +17,7 @@ def expected_generation():
                     {
                         "type": "string",
                         "errorMsg": "Max host length is 4096",
-                        "minLength": 0,
+                        "minLength": 1,
                         "maxLength": 4096,
                     },
                     {
@@ -27,6 +27,7 @@ def expected_generation():
                     },
                 ],
                 "field": "proxy_url",
+                "required": True,
             },
             {
                 "label": "Proxy port",
@@ -35,6 +36,7 @@ def expected_generation():
                 ],
                 "type": "text",
                 "field": "proxy_port",
+                "required": True,
             },
             {
                 "type": "text",

@@ -31,13 +31,13 @@ fields_proxy = [
     ), 
     field.RestField(
         'proxy_url',
-        required=False,
+        required=True,
         encrypted=False,
         default=None,
         validator=validator.AllOf(
             validator.String(
                 max_len=4096, 
-                min_len=0, 
+                min_len=1, 
             ), 
             validator.Pattern(
                 regex=r"""^[a-zA-Z]\w*$""", 
@@ -46,7 +46,7 @@ fields_proxy = [
     ), 
     field.RestField(
         'proxy_port',
-        required=False,
+        required=True,
         encrypted=False,
         default=None,
         validator=validator.Number(
