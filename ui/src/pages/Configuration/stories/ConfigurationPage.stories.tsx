@@ -74,3 +74,35 @@ export const ConfigurationCustomHeader: Story = {
         ).toBeInTheDocument();
     },
 };
+
+export const MultiTabsStory: Story = {
+    args: {
+        globalConfig: {
+            ...globalConfig,
+            pages: {
+                configuration: {
+                    ...globalConfig.pages.configuration,
+                    tabs: Array.from({ length: 12 }, (_, i) => ({
+                        name: `tab${i + 1}`,
+                        title: `this is tab ${i + 1}`,
+                        entity: [
+                            {
+                                type: 'text',
+                                label: `Name ${i + 1}`,
+                                field: 'name',
+                                help: 'Enter a unique name for this account.',
+                                required: true,
+                            },
+                        ],
+                    })),
+                },
+            },
+        },
+    },
+    parameters: {
+        snapshots: {
+            width: 1000,
+            height: 600,
+        },
+    },
+};
