@@ -55,13 +55,13 @@
     "prop-types": "^15.8.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-is": "^16.13.1",
+    "react-is": "^16.14.0",
     "react-router-dom": "6.27.0",
     "styled-components": "^5.3.11",
     "uuid": "^11.1.0",
-    "zod": "^3.25.28",
     "vite": "^6.3.5",
-    "vite-plugin-checker": "^0.9.3"
+    "vite-plugin-checker": "^0.9.3",
+    "zod": "^3.25.28"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
@@ -121,8 +121,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-fixed-jsdom": "^0.0.9",
     "jest-image-snapshot": "^6.5.1",
-    "msw": "^2.8.4",
     "jsdom": "^26.1.0",
+    "msw": "^2.8.4",
     "msw-storybook-addon": "^2.0.4",
     "prettier": "^2.8.8",
     "querystring-es3": "^0.2.1",
@@ -135,8 +135,8 @@
     "undici": "^5.29.0",
     "url": "^0.11.4",
     "vite-plugin-dts": "4.5.3",
-    "vitest": "^3.1.4",
-    "vite-plugin-node-polyfills": "^0.23.0"
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vitest": "^3.1.4"
   },
   "peerDependencies": {
     "react": "^16.14.0",
