@@ -29,7 +29,7 @@ export abstract class CustomRowBase {
         this.row = row;
     }
 
-    abstract render(): void;
+    abstract render?(): void;
 
-    abstract getDLRows(): RowDataFields;
+    abstract getDLRows?(): RowDataFields;
 }

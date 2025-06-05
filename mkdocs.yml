@@ -107,7 +107,12 @@ nav:
         - Custom tab: "custom_ui_extensions/standard/custom_tab.md"
       - Context:
         - Overview: "custom_ui_extensions/context/overview.md"
-
+        - UI project init: "custom_ui_extensions/context/custom_project_init.md"
+        - Custom cell : "custom_ui_extensions/context/custom_cell_context.md"
+        - Custom Tab : "custom_ui_extensions/context/custom_tab_context.md"
+        - Custom Control : "custom_ui_extensions/context/custom_control_context.md"
+        - Custom Hook : "custom_ui_extensions/context/custom_hook_context.md"
+        - Custom Row : "custom_ui_extensions/context/custom_row_context.md"
   - Advanced:
       - Custom mapping: "advanced/custom_mapping.md"
       - Dependent dropdown: "advanced/dependent_dropdown.md"
