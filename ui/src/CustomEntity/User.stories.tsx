@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { z } from 'zod';
 import BaseFormView from '../components/BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../util/util';
 import schema from '../../../splunk_add_on_ucc_framework/schema/schema.json';
 import { generateGlobalConfig } from './generateGlobalConfig';
 import {
-    AnyOfEntity,
     AnyOfEntitySchema,
     SingleSelectEntitySchema,
+    StrictIndexEntitySchema,
+    StrictIntervalEntitySchema,
     TextEntitySchema,
 } from '../types/globalConfig/entities';
-import {
-    migrateIndexTypeEntity,
-    IndexEntity,
-    IntervalEntity,
-    migrateIntervalTypeEntity,
-} from './helper';
+import { migrateIndexTypeEntity, migrateIntervalTypeEntity } from './helper';
 
 /**
  * Union of supported entity types that can be visualized using the StoryWrapper.
  */
-type EntityType = AnyOfEntity | IndexEntity | IntervalEntity;
+type EntityType =
+    | z.infer<typeof AnyOfEntitySchema>
+    | z.infer<typeof StrictIntervalEntitySchema>
+    | z.infer<typeof StrictIndexEntitySchema>;
 
 /**
  * Args passed into the story.
@@ -50,10 +50,10 @@ const StoryWrapper: React.FC<StoryArgs> = ({ entity }) => {
     const validatedEntities = debouncedEntity?.map((item, idx) => {
         let result;
         if (item.type === 'index') {
-            const migrated = migrateIndexTypeEntity(item as IndexEntity);
+            const migrated = migrateIndexTypeEntity(item, idx);
             result = SingleSelectEntitySchema.safeParse(migrated);
         } else if (item.type === 'interval') {
-            const migrated = migrateIntervalTypeEntity(item as IntervalEntity);
+            const migrated = migrateIntervalTypeEntity(item, idx);
             result = TextEntitySchema.safeParse(migrated);
         } else {
             result = AnyOfEntitySchema.safeParse(item);

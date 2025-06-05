@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { TabSchema } from '../../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { GlobalConfigSchema } from '../../types/globalConfig/globalConfig';
-import { OAuthEntityType } from '../../types/globalConfig/oAuth';
+import { oAuthEntitySchema } from '../../types/globalConfig/oAuth';
 
 const defaultTableProps = {
     name: 'account',
@@ -51,7 +51,7 @@ const entityBasicOauthDisableonEdit = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 const entityOauthOauthDisableonEdit = [
@@ -83,7 +83,7 @@ const entityOauthOauthDisableonEdit = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigBasicOauthDisableonEdit = () => {
@@ -159,7 +159,7 @@ const accessTokenMock = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigAccessTokenMock = () => {
@@ -207,7 +207,7 @@ const entityEnableFalseForOauthField = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigEnableFalseForOauth = () => {
@@ -309,7 +309,7 @@ const entityBasicOauthFullyEnabledField = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigFullyEnabledField = () => {
@@ -360,7 +360,7 @@ const entityBasicOauthDefaultValue = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigWithOauthDefaultValue = () => {
@@ -432,7 +432,7 @@ const entityOauthOauthSeparatedEndpoints = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigWithSeparatedEndpointsOAuth = () => {
@@ -549,7 +549,7 @@ const allEntityTypesConfig = [
             disableonEdit: false,
             enable: true,
         },
-    } satisfies OAuthEntityType,
+    } satisfies z.infer<typeof oAuthEntitySchema>,
 ];
 
 export const getConfigWithAllTypesOfOauth = () => {

@@ -1,40 +1,12 @@
 import { z } from 'zod';
-import { StringOrTextWithLinksType } from '../types/globalConfig/interface';
 import {
-    SingleSelectEntityType,
+    SingleSelectEntitySchema,
     StrictIndexEntitySchema,
     StrictIntervalEntitySchema,
     TextEntitySchema,
-    TextEntityType,
 } from '../types/globalConfig/entities';
 
-/**
- * Represents a special field that maps to an index selection component.
- */
-export interface IndexEntity {
-    type: 'index';
-    field: string;
-    label: string;
-    defaultValue?: string;
-    help?: StringOrTextWithLinksType;
-    required?: boolean;
-}
-
-/**
- * Represents an interval configuration field which accepts numeric or CRON values.
- */
-export interface IntervalEntity {
-    type: 'interval';
-    field: string;
-    label: string;
-    defaultValue?: number | string;
-    options?: {
-        range: Array<number | string>;
-    };
-    help?: string;
-    tooltip?: string;
-    required?: boolean;
-}
+export type TextEntityType = z.TypeOf<typeof TextEntitySchema>;
 
 // Regex for CRON expressions or numeric values including -1 (disabled interval)
 const CRON_REGEX =
@@ -53,17 +25,20 @@ export interface MigratedIntervalTextEntity extends Omit<TextEntityType, 'valida
  * Adds regex validation for CRON and optional range validation.
  */
 export const migrateIntervalTypeEntity = (
-    input: IntervalEntity
-): z.infer<typeof TextEntitySchema> => {
+    input: z.infer<typeof StrictIntervalEntitySchema>,
+    index: number
+): MigratedIntervalTextEntity => {
     const result = StrictIntervalEntitySchema.safeParse(input);
     if (!result.success) {
-        throw new Error(
-            `Strict validation failed in IntervalEntity:\n${JSON.stringify(
-                result.error.format(),
-                null,
-                2
-            )}`
-        );
+        const entityName = `type: ${input?.type} (Entity #${index + 1})`;
+        const errors = result.error.issues
+            .map((issue) => {
+                const path = issue.path.length > 0 ? issue.path.join('.') : 'root';
+                return `• ${path}: ${issue.message}`;
+            })
+            .join('\n');
+
+        throw new Error(`"${entityName}" validation failed:\n${errors}`);
     }
 
     const validatedInput = result.data;
@@ -87,7 +62,7 @@ export const migrateIntervalTypeEntity = (
         });
     }
 
-    const migrated = {
+    return {
         type: 'text',
         field: validatedInput.field,
         label: validatedInput.label,
@@ -97,35 +72,27 @@ export const migrateIntervalTypeEntity = (
         required: validatedInput.required,
         validators,
     };
-
-    const finalResult = TextEntitySchema.safeParse(migrated);
-    if (!finalResult.success) {
-        throw new Error(
-            `Strict validation failed on migrated TextEntity:\n${JSON.stringify(
-                finalResult.error.format(),
-                null,
-                2
-            )}`
-        );
-    }
-
-    return finalResult.data;
 };
 
 /**
  * Converts an IndexEntity to a validated SingleSelectEntitySchema.
  * Includes regex and string length validation.
  */
-export const migrateIndexTypeEntity = (input: IndexEntity): SingleSelectEntityType => {
+export const migrateIndexTypeEntity = (
+    input: z.TypeOf<typeof StrictIndexEntitySchema>,
+    index: number
+): z.TypeOf<typeof SingleSelectEntitySchema> => {
     const result = StrictIndexEntitySchema.safeParse(input);
     if (!result.success) {
-        throw new Error(
-            `Strict validation failed in IndexEntity:\n${JSON.stringify(
-                result.error.format(),
-                null,
-                2
-            )}`
-        );
+        const entityName = `type: ${input?.type} (Entity #${index + 1})`;
+        const errors = result.error.issues
+            .map((issue) => {
+                const path = issue.path.length > 0 ? issue.path.join('.') : 'root';
+                return `• ${path}: ${issue.message}`;
+            })
+            .join('\n');
+
+        throw new Error(`"${entityName}" validation failed:\n${errors}`);
     }
 
     const validatedInput = result.data;

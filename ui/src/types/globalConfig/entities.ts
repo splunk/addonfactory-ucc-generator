@@ -1,20 +1,7 @@
 import { z } from 'zod';
 import { NumberValidator, RegexValidator, StringValidator } from './validators';
-import {
-    CheckboxEntityInterface,
-    CheckboxGroupEntityInterface,
-    CheckboxTreeEntityInterface,
-    CustomEntityInterface,
-    FileEntityInterface,
-    LinkEntityInterface,
-    MultipleSelectEntityInterface,
-    RadioEntityInterface,
-    SingleSelectEntityInterface,
-    SingleSelectSplunkSearchEntityInterface,
-    TextAreaEntityInterface,
-    TextEntityInterface,
-} from './interface';
-import { OAuthEntity, OAuthEntityType } from './oAuth';
+
+import { oAuthEntitySchema } from './oAuth';
 import {
     AllValidators,
     CommonEditableEntityFields,
@@ -54,20 +41,18 @@ const BaseGroupSchema = z
     })
     .strict();
 
-export const LinkEntitySchema = z
-    .object({
-        type: z.literal('helpLink'),
-        field: z.string(),
-        label: z.string().optional(),
-        help: StringOrTextWithLinks.optional(),
-        tooltip: z.string().optional(),
-        required: z.literal(false).default(false).optional(),
-        options: TextElementWithLinksSchema.extend({
-            hideForPlatform: PlatformEnum.optional(),
-            display: z.boolean().default(true).optional(),
-        }),
-    })
-    .strict();
+export const LinkEntitySchema = z.object({
+    type: z.literal('helpLink'),
+    field: z.string(),
+    label: z.string().optional(),
+    help: StringOrTextWithLinks.optional(),
+    tooltip: z.string().optional(),
+    required: z.literal(false).default(false).optional(),
+    options: TextElementWithLinksSchema.extend({
+        hideForPlatform: PlatformEnum.optional(),
+        display: z.boolean().default(true).optional(),
+    }),
+});
 
 export const TextEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('text'),
@@ -128,6 +113,7 @@ export const SelectCommonOptions = CommonEditableEntityOptions.extend({
     autoCompleteFields: AutoCompleteFields.optional(),
     dependencies: z.array(z.string()).optional(),
     items: ValueLabelPair.array().optional(),
+    hideClearBtn: z.boolean().optional(),
 });
 
 export const SingleSelectEntitySchema = CommonEditableEntityFields.extend({
@@ -233,7 +219,7 @@ export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
             items: z.array(ValueLabelPair),
         })
         .optional(),
-});
+}).strict();
 
 export const StrictIndexEntitySchema = z
     .object({
@@ -263,73 +249,17 @@ export const StrictIntervalEntitySchema = z
     })
     .strict();
 
-// ============================================================================
-// ENTITY INSTANCES - Type-safe schema instances
-// ============================================================================
-
-export const LinkEntity = LinkEntitySchema satisfies z.ZodType<LinkEntityInterface>;
-export const TextEntity = TextEntitySchema satisfies z.ZodType<TextEntityInterface>;
-export const TextAreaEntity = TextAreaEntitySchema satisfies z.ZodType<TextAreaEntityInterface>;
-export const SingleSelectEntity =
-    SingleSelectEntitySchema satisfies z.ZodType<SingleSelectEntityInterface>;
-export const MultipleSelectEntity =
-    MultipleSelectEntitySchema satisfies z.ZodType<MultipleSelectEntityInterface>;
-export const CheckboxEntity = CheckboxEntitySchema satisfies z.ZodType<CheckboxEntityInterface>;
-export const CheckboxGroupEntity =
-    CheckboxGroupEntitySchema satisfies z.ZodType<CheckboxGroupEntityInterface>;
-export const CheckboxTreeEntity =
-    CheckboxTreeEntitySchema satisfies z.ZodType<CheckboxTreeEntityInterface>;
-export const RadioEntity = RadioEntitySchema satisfies z.ZodType<RadioEntityInterface>;
-export const FileEntity = FileEntitySchema satisfies z.ZodType<FileEntityInterface>;
-export const CustomEntity = CustomEntitySchema satisfies z.ZodType<CustomEntityInterface>;
-export const SingleSelectSplunkSearchEntity =
-    SingleSelectSplunkSearchEntitySchema satisfies z.ZodType<SingleSelectSplunkSearchEntityInterface>;
-
-// ============================================================================
-// TYPE DEFINITIONS - Improved organization
-// ============================================================================
-
-export type LinkEntityType = z.infer<typeof LinkEntity>;
-export type TextEntityType = z.infer<typeof TextEntity>;
-export type TextAreaEntityType = z.infer<typeof TextAreaEntity>;
-export type SingleSelectEntityType = z.infer<typeof SingleSelectEntity>;
-export type MultipleSelectEntityType = z.infer<typeof MultipleSelectEntity>;
-export type CheckboxEntityType = z.infer<typeof CheckboxEntity>;
-export type CheckboxGroupEntityType = z.infer<typeof CheckboxGroupEntity>;
-export type CheckboxTreeEntityType = z.infer<typeof CheckboxTreeEntity>;
-export type RadioEntityType = z.infer<typeof RadioEntity>;
-export type FileEntityType = z.infer<typeof FileEntity>;
-export type CustomEntityType = z.infer<typeof CustomEntity>;
-
-// ============================================================================
-// UNION TYPES - Performance optimized discriminated union
-// ============================================================================
-
-export type AnyOfEntity =
-    | LinkEntityType
-    | TextEntityType
-    | TextAreaEntityType
-    | SingleSelectEntityType
-    | MultipleSelectEntityType
-    | CheckboxEntityType
-    | CheckboxGroupEntityType
-    | CheckboxTreeEntityType
-    | RadioEntityType
-    | FileEntityType
-    | OAuthEntityType
-    | CustomEntityType;
-
 export const AnyOfEntitySchema = z.discriminatedUnion('type', [
-    LinkEntity,
-    TextEntity,
-    TextAreaEntity,
-    SingleSelectEntity,
-    MultipleSelectEntity,
-    CheckboxEntity,
-    CheckboxGroupEntity,
-    CheckboxTreeEntity,
-    RadioEntity,
-    FileEntity,
-    OAuthEntity,
-    CustomEntity,
+    LinkEntitySchema.strict(),
+    TextEntitySchema.strict(),
+    TextAreaEntitySchema.strict(),
+    SingleSelectEntitySchema.strict(),
+    MultipleSelectEntitySchema.strict(),
+    CheckboxEntitySchema.strict(),
+    CheckboxGroupEntitySchema.strict(),
+    CheckboxTreeEntitySchema.strict(),
+    RadioEntitySchema.strict(),
+    FileEntitySchema.strict(),
+    oAuthEntitySchema.strict(),
+    CustomEntitySchema.strict(),
 ]);

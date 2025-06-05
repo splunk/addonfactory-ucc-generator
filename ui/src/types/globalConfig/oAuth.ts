@@ -8,11 +8,7 @@ import {
 } from './baseSchemas';
 
 import { RegexValidator, StringValidator } from './validators';
-import { OAuthEntityInterface, OAuthFieldInterface } from './interface';
 
-// ----------------------------
-// Field Schema + Type
-// ----------------------------
 export const oAuthFieldSchema = z
     .object({
         oauth_field: z.string(),
@@ -28,12 +24,6 @@ export const oAuthFieldSchema = z
         validators: AllValidators.optional(),
     })
     .strict();
-export const OAuthField = oAuthFieldSchema satisfies z.ZodType<OAuthFieldInterface>;
-export type OAuthFieldType = z.infer<typeof oAuthFieldSchema>;
-
-// ----------------------------
-// Entity Schema + Type
-// ----------------------------
 
 const OAuthOptionsSchema = z
     .object({
@@ -44,7 +34,7 @@ const OAuthOptionsSchema = z
         auth_type: z.array(z.enum(['basic', 'oauth', 'oauth_client_credentials'])),
         basic: z.array(oAuthFieldSchema).optional(),
         oauth: z.array(oAuthFieldSchema).optional(),
-        oauth_client_credentials: z.array(OAuthField).optional(),
+        oauth_client_credentials: z.array(oAuthFieldSchema).optional(),
         auth_label: z.string().optional(),
         oauth_popup_width: z.number().optional(),
         oauth_popup_height: z.number().optional(),
@@ -63,5 +53,4 @@ export const oAuthEntitySchema = CommonEditableEntityFields.extend({
     options: OAuthOptionsSchema,
 }).strict();
 
-export const OAuthEntity = oAuthEntitySchema satisfies z.ZodType<OAuthEntityInterface>;
-export type OAuthEntityType = z.infer<typeof oAuthEntitySchema>;
+export type OAuthEntity = z.TypeOf<typeof oAuthFieldSchema>;

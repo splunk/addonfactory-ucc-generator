@@ -9,16 +9,16 @@ import {
 import { MarkdownMessageProps } from '../../components/MarkdownMessage/MarkdownMessage';
 import {
     AnyOfEntitySchema,
-    CheckboxEntity,
-    FileEntity,
-    MultipleSelectEntity,
-    RadioEntity,
-    SingleSelectEntity,
-    TextAreaEntity,
-    TextEntity,
+    CheckboxEntitySchema,
+    FileEntitySchema,
+    MultipleSelectEntitySchema,
+    RadioEntitySchema,
+    SingleSelectEntitySchema,
+    TextAreaEntitySchema,
+    TextEntitySchema,
 } from '../globalConfig/entities';
 import { PageContextProviderType } from '../../context/PageContext';
-import { oAuthEntitySchema, OAuthField, oAuthFieldSchema } from '../globalConfig/oAuth';
+import { oAuthEntitySchema, oAuthFieldSchema } from '../globalConfig/oAuth';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -86,20 +86,6 @@ export interface BaseFormState {
     stateModified?: boolean;
 }
 
-export interface SingleSelectEntityType {
-    field: string;
-    type: 'singleSelect';
-    label: string;
-    options: {
-        hideClearBtn: boolean;
-        autoCompleteFields: {
-            label: string;
-            value: AvaillableOAuthTypes;
-        }[];
-    };
-    modifyFieldsOnValue?: ModifyFieldsOnValue;
-}
-
 export interface UtilBaseForm {
     setState: (callback: (prevState: BaseFormState) => BaseFormState) => void;
     setErrorFieldMsg: (field: string, msg: string) => void;
@@ -131,14 +117,14 @@ export interface OauthConfiguration {
 export type AnyEntity = z.TypeOf<typeof AnyOfEntitySchema> | z.TypeOf<typeof oAuthFieldSchema>;
 
 export type EntitiesAllowingModifications =
-    | z.TypeOf<typeof TextEntity>
-    | z.TypeOf<typeof TextAreaEntity>
-    | z.TypeOf<typeof SingleSelectEntity>
-    | z.TypeOf<typeof MultipleSelectEntity>
-    | z.TypeOf<typeof CheckboxEntity>
-    | z.TypeOf<typeof RadioEntity>
-    | z.TypeOf<typeof FileEntity>
-    | z.TypeOf<typeof OAuthField>;
+    | z.TypeOf<typeof TextEntitySchema>
+    | z.TypeOf<typeof TextAreaEntitySchema>
+    | z.TypeOf<typeof SingleSelectEntitySchema>
+    | z.TypeOf<typeof MultipleSelectEntitySchema>
+    | z.TypeOf<typeof CheckboxEntitySchema>
+    | z.TypeOf<typeof RadioEntitySchema>
+    | z.TypeOf<typeof FileEntitySchema>
+    | z.TypeOf<typeof oAuthFieldSchema>;
 
 export type AvaillableOAuthTypes = z.TypeOf<
     typeof oAuthEntitySchema

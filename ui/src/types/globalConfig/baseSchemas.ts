@@ -101,10 +101,10 @@ export const CommonEditableEntityOptions = z
     .strict();
 
 export const MarkdownMessageType = z.union([
-    MarkdownMessageText,
-    MarkdownMessageHybrid,
-    MarkdownMessageLink,
-    MarkdownMessagePlaintext,
+    MarkdownMessageText.strict(),
+    MarkdownMessageHybrid.strict(),
+    MarkdownMessageLink.strict(),
+    MarkdownMessagePlaintext.strict(),
 ]);
 
 export const FieldToModify = z
@@ -130,12 +130,12 @@ export const ModifyFieldsOnValue = z.array(FieldToModify).optional();
 
 export const AllValidators = z.array(
     z.union([
-        NumberValidator,
-        StringValidator,
-        RegexValidator,
-        EmailValidator,
-        Ipv4Validator,
-        UrlValidator,
-        DateValidator,
+        NumberValidator.strict(),
+        StringValidator.strict(),
+        RegexValidator.strict(),
+        EmailValidator.strict(),
+        Ipv4Validator.strict(),
+        UrlValidator.strict(),
+        DateValidator.strict(),
     ])
 );
