@@ -1139,21 +1139,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     }
                 );
             } else {
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${this.appName}/js/build/custom/${module}`],
-                    (Hook: CustomHookConstructor) => {
-                        this.hook = new Hook(
-                            globalConfig,
-                            this.props.serviceName,
-                            this.state,
-                            this.props.mode,
-                            this.util,
-                            this.props.groupName
-                        );
-                        resolve(Hook);
-                    }
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${this.appName}/js/build/custom/${module}`], (
+                    Hook: CustomHookConstructor
+                ) => {
+                    this.hook = new Hook(
+                        globalConfig,
+                        this.props.serviceName,
+                        this.state,
+                        this.props.mode,
+                        this.util,
+                        this.props.groupName
+                    );
+                    resolve(Hook);
+                });
             }
         });
         return myPromise;

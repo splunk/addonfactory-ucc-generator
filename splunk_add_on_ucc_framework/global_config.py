@@ -135,7 +135,6 @@ class GlobalConfig:
         self._expand_entities(
             self._content.get("pages", {}).get("inputs", {}).get("services")
         )
-        self._expand_entities(self._content.get("alerts"))
 
     @staticmethod
     def _expand_entities(items: Optional[List[Dict[Any, Any]]]) -> None:

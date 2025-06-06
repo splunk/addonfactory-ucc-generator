@@ -43,46 +43,6 @@
             "description": "Manage your data inputs"
         }
     },
-    "alerts": [
-        {
-            "name": "test_alert",
-            "label": "Test Alert",
-            "description": "Description for test Alert Action",
-            "adaptiveResponse": {
-                "task": [
-                    "Create",
-                    "Update"
-                ],
-                "supportsAdhoc": true,
-                "supportsCloud": true,
-                "subject": [
-                    "endpoint"
-                ],
-                "category": [
-                    "Information Conveyance",
-                    "Information Portrayal"
-                ],
-                "technology": [
-                    {
-                        "version": [
-                            "1.0.0"
-                        ],
-                        "product": "Test Incident Update",
-                        "vendor": "Splunk"
-                    }
-                ],
-                "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
-                "sourcetype": "test:incident"
-            },
-            "entity": [
-                {
-                    "type": "interval",
-                    "field": "interval",
-                    "label": "Interval"
-                }
-            ]
-        }
-    ],
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
