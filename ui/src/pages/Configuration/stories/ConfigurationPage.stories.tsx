@@ -106,3 +106,63 @@ export const MultiTabsStory: Story = {
         },
     },
 };
+
+export const LongTabNameStory: Story = {
+    args: {
+        globalConfig: {
+            ...globalConfig,
+            pages: {
+                configuration: {
+                    ...globalConfig.pages.configuration,
+                    tabs: [
+                        {
+                            name: `tab1`,
+                            title: `This is tab with long name`,
+                            entity: [
+                                {
+                                    type: 'text',
+                                    label: `Name 1`,
+                                    field: 'name',
+                                    help: 'Enter a unique name for this account.',
+                                    required: true,
+                                },
+                            ],
+                        },
+                        {
+                            name: `tab2`,
+                            title: `Lorem Ipsum is simply dummy text of the printing and type setting industry`,
+                            entity: [
+                                {
+                                    type: 'text',
+                                    label: `Name 2`,
+                                    field: 'name',
+                                    help: 'Enter a unique name for this account.',
+                                    required: true,
+                                },
+                            ],
+                        },
+                        {
+                            name: `tab3`,
+                            title: `Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book`,
+                            entity: [
+                                {
+                                    type: 'text',
+                                    label: `Name 3`,
+                                    field: 'name',
+                                    help: 'Enter a unique name for this account.',
+                                    required: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        },
+    },
+    parameters: {
+        snapshots: {
+            width: 1000,
+            height: 600,
+        },
+    },
+};
