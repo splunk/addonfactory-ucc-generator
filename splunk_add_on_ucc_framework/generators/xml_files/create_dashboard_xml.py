@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Any, Dict
+from typing import Dict
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
@@ -24,7 +24,7 @@ class DashboardXml(FileGenerator):
         " in `default/data/ui/views` folder."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         if self._global_config.has_dashboard():
             self.dashboard_xml_content = data_ui_generator.generate_views_dashboard_xml(
                 self._addon_name
