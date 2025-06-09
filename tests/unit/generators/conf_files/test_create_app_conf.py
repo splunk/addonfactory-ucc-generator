@@ -4,11 +4,6 @@ from splunk_add_on_ucc_framework.generators.conf_files import AppConf
 
 
 @fixture
-def addon_version():
-    return "1.0.0"
-
-
-@fixture
 def has_ui():
     return True
 
@@ -30,28 +25,17 @@ def test_set_attributes_check_for_updates_false(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
-    addon_version,
-    has_ui,
     app_manifest,
 ):
     """Test _set_attributes when _global_config has checkForUpdates set to False."""
+
+    global_config_all_json.meta.update({"checkForUpdates": False})
+
     app_conf = AppConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-        addon_version=addon_version,
-        has_ui=has_ui,
         app_manifest=app_manifest,
-    )
-    app_conf._global_config = MagicMock()
-    app_conf._global_config.meta = {"checkForUpdates": False}
-
-    app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
     )
 
     assert app_conf.check_for_updates == "false"
@@ -61,28 +45,16 @@ def test_set_attributes_supported_themes(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
-    addon_version,
     has_ui,
     app_manifest,
 ):
     """Test _set_attributes when _global_config has supportedThemes."""
+    global_config_all_json.meta.update({"supportedThemes": ["dark", "light"]})
     app_conf = AppConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-        addon_version=addon_version,
-        has_ui=has_ui,
         app_manifest=app_manifest,
-    )
-    app_conf._global_config = MagicMock()
-    app_conf._global_config.meta = {"supportedThemes": ["dark", "light"]}
-
-    app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
     )
 
     assert app_conf.supported_themes == "dark, light"
@@ -92,35 +64,22 @@ def test_set_attributes_with_global_config_and_schema(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
-    addon_version,
-    has_ui,
     app_manifest,
 ):
     """Test _set_attributes when _global_config and _gc_schema provide config file names."""
+    expected_custom_conf = [
+        "splunk_ta_uccexample_settings",
+        "splunk_ta_uccexample_account",
+        "splunk_ta_uccexample_oauth",
+    ]
+
     app_conf = AppConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-        addon_version=addon_version,
-        has_ui=has_ui,
         app_manifest=app_manifest,
     )
-    app_conf._global_config = MagicMock()
-    app_conf._gc_schema = MagicMock()
 
-    app_conf._gc_schema.settings_conf_file_names = ["settings1.conf"]
-    app_conf._gc_schema.configs_conf_file_names = ["configs1.conf"]
-    app_conf._gc_schema.oauth_conf_file_names = ["oauth1.conf"]
-
-    app_conf._set_attributes(
-        addon_version=addon_version, has_ui=has_ui, app_manifest=app_manifest
-    )
-
-    expected_custom_conf = ["settings1.conf", "configs1.conf", "oauth1.conf"]
     assert app_conf.custom_conf == expected_custom_conf
 
 
@@ -134,10 +93,6 @@ def test_generate_conf(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
-    addon_version,
-    has_ui,
     app_manifest,
 ):
     content = "content"
@@ -151,10 +106,6 @@ def test_generate_conf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-        addon_version=addon_version,
-        has_ui=has_ui,
         app_manifest=app_manifest,
     )
     app_conf.writer = MagicMock()

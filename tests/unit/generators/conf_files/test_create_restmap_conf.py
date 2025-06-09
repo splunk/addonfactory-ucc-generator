@@ -1,15 +1,10 @@
-import os.path
 from textwrap import dedent
 from unittest.mock import patch, MagicMock
 
-from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
     RestHandlerConfig,
 )
 from splunk_add_on_ucc_framework.generators.conf_files import RestMapConf
-
-
-UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 @patch(
@@ -24,8 +19,6 @@ def test_generate_conf(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     content = "content"
     exp_fname = "restmap.conf"
@@ -38,8 +31,6 @@ def test_generate_conf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     restmap_conf.writer = MagicMock()
@@ -59,14 +50,14 @@ def test_generate_conf(
 
 
 def test_generate_conf_no_gc_schema(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     restmap_conf = RestMapConf(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     file_paths = restmap_conf.generate()
@@ -74,14 +65,14 @@ def test_generate_conf_no_gc_schema(
 
 
 def test_generate_conf_for_conf_only_TA(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     restmap_conf = RestMapConf(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     file_paths = restmap_conf.generate()
@@ -89,14 +80,14 @@ def test_generate_conf_for_conf_only_TA(
 
 
 def test_set_attributes(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     restmap_conf = RestMapConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     restmap_conf._set_attributes()
     assert hasattr(restmap_conf, "endpoints")
@@ -154,8 +145,6 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
         global_config_all_json,
         input_dir,
         output_dir,
-        addon_name=ta_name,
-        ucc_dir=UCC_DIR,
     )
     file_paths = restmap_conf.generate()
 
@@ -196,8 +185,6 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_nam
         global_config_all_json,
         input_dir,
         output_dir,
-        addon_name=ta_name,
-        ucc_dir=UCC_DIR,
     )
     file_paths = restmap_conf.generate()
 
