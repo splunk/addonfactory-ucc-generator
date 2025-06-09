@@ -154,7 +154,6 @@ function ConfigurationPage() {
                             </ColumnLayout.Column>
                         </Row>
                     </ColumnLayout>
-                    {/* todo: add maxTabWidth with compatible version and tooltip to see full tab name */}
                     <WrapBar activeTabId={activeTabId} onChange={handleChange}>
                         {filteredTabs.map((tab) => (
                             <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
