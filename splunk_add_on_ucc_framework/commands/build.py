@@ -554,11 +554,7 @@ def generate(
             global_config=global_config,
             input_dir=source,
             output_dir=output_directory,
-            ucc_dir=internal_root_dir,
-            addon_name=ta_name,
             app_manifest=app_manifest,
-            addon_version=addon_version,
-            has_ui=global_config.meta.get("isVisible", True),
         )
     )
     # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -640,19 +636,12 @@ def generate(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
 
-    ui_available = False
-    if global_config and global_config.has_pages():
-        ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(
         global_config=global_config,
         input_dir=source,
         output_dir=output_directory,
-        ucc_dir=internal_root_dir,
-        addon_name=ta_name,
         app_manifest=app_manifest,
-        addon_version=addon_version,
-        has_ui=ui_available,
     ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):

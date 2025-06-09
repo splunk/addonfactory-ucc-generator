@@ -22,11 +22,6 @@ def output_dir(tmp_path):
 
 
 @pytest.fixture
-def ucc_dir(tmp_path):
-    return str(tmp_path / "ucc_dir")
-
-
-@pytest.fixture
 def ta_name():
     return "test_addon"
 
