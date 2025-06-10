@@ -152,7 +152,7 @@ def test_add_modular_input(GlobalConfig, tmp_path):
 
 
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
-@patch("splunk_add_on_ucc_framework.commands.build._get_app_manifest")
+@patch("splunk_add_on_ucc_framework.commands.build.get_app_manifest")
 @patch("splunk_add_on_ucc_framework.commands.build._get_and_check_global_config_path")
 @patch("os.path.exists")
 @patch(

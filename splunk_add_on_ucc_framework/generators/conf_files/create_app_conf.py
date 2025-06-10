@@ -14,9 +14,10 @@
 # limitations under the License.
 #
 from time import time
-from typing import Dict, Any
+from typing import Dict
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.utils import get_app_manifest
 
 
 class AppConf(FileGenerator):
@@ -24,16 +25,11 @@ class AppConf(FileGenerator):
         "Generates `app.conf` with the details mentioned in globalConfig[meta]"
     )
 
-    def __init__(
-        self,
-        global_config: GlobalConfig,
-        input_dir: str,
-        output_dir: str,
-        **kwargs: Any
-    ):
-        self.description = kwargs["app_manifest"].get_description()
-        self.title = kwargs["app_manifest"].get_title()
-        self.author = kwargs["app_manifest"].get_authors()[0]["name"]
+    def __init__(self, global_config: GlobalConfig, input_dir: str, output_dir: str):
+        app_manifest = get_app_manifest(input_dir)
+        self.description = app_manifest.get_description()
+        self.title = app_manifest.get_title()
+        self.author = app_manifest.get_authors()[0]["name"]
         super().__init__(global_config, input_dir, output_dir)
 
     def _set_attributes(self) -> None:

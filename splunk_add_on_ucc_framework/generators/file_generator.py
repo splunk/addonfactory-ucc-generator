@@ -111,20 +111,12 @@ class FileGenerator(ABC):
 
 
 def begin(
-    global_config: GlobalConfig, input_dir: str, output_dir: str, **kwargs: Any
+    global_config: GlobalConfig, input_dir: str, output_dir: str
 ) -> List[Dict[str, str]]:
     generated_files: List[Dict[str, str]] = []
     for item in fc.GEN_FILE_LIST:
         file_details: Dict[str, str] = {}
-        if item.file_name == "app.conf":
-            # pass kwargs only for AppConf generator
-            file_details = item.file_class(
-                global_config, input_dir, output_dir, **kwargs
-            ).generate()
-        else:
-            file_details = item.file_class(
-                global_config, input_dir, output_dir
-            ).generate()
+        file_details = item.file_class(global_config, input_dir, output_dir).generate()
         for k, v in file_details.items():
             if not k:
                 continue
