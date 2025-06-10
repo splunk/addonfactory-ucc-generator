@@ -88,7 +88,7 @@ it('should display error when server returns error', async () => {
             await waitFor(() => expect(loading).not.toHaveTextContent('Waiting'));
         }
     });
-    const showButton = screen.getByText('Show Error Details');
+    const showButton = screen.getByText('Error Details');
     expect(showButton).toBeInTheDocument();
     showButton.click();
 
