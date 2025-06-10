@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
 import { gettext } from '@splunk/ui-utils/i18n';
-import InfoIcon from '@splunk/react-icons/enterprise/Info';
 import SearchIcon from '@splunk/react-icons/enterprise/Search';
 import File from '@splunk/react-icons/File';
 import { parseErrorMsg } from '../../util/messageUtil';
@@ -17,12 +16,12 @@ import {
     SectionTitle,
     StyledBody,
     StyledCard,
+    StyledCollapsiblePanel,
     StyledContainer,
     StyledHeader,
     StyledHeading,
     StyledLink,
     StyledWarningIcon,
-    ToggleButton,
 } from './ErrorBoundary.style';
 
 interface ErrorBoundaryProps {
@@ -40,7 +39,6 @@ interface ErrorBoundaryState {
           }
         | null
         | unknown;
-    showDetails: boolean;
 }
 
 export const getRestrictQueryByAllServices = () => {
@@ -58,30 +56,22 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
         super(props);
         this.state = {
             error: null,
-            showDetails: false,
         };
     }
 
     static getDerivedStateFromError(error: unknown) {
         // Update state so the next render will show the fallback UI.
-        return { error, showDetails: false };
+        return { error };
     }
 
     componentDidCatch(error: unknown) {
         // Catch errors in any components below and re-render with error message
         this.setState({
             error,
-            showDetails: false,
         });
         // eslint-disable-next-line no-console
         console.error(error);
     }
-
-    toggleDetails = () => {
-        this.setState((prevState) => ({
-            showDetails: !prevState.showDetails,
-        }));
-    };
 
     render() {
         if (this.state.error) {
@@ -104,23 +94,11 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
                         <StyledBody>
                             {parsedErrorMessage && (
-                                <>
-                                    <ToggleButton
-                                        appearance="secondary"
-                                        onClick={this.toggleDetails}
-                                        icon={<InfoIcon />}
-                                    >
-                                        {this.state.showDetails
-                                            ? 'Hide Error Details'
-                                            : 'Show Error Details'}
-                                    </ToggleButton>
-
-                                    {this.state.showDetails && (
-                                        <ErrorDetailsContainer>
-                                            {parsedErrorMessage}
-                                        </ErrorDetailsContainer>
-                                    )}
-                                </>
+                                <StyledCollapsiblePanel title={gettext('Error Details')}>
+                                    <ErrorDetailsContainer>
+                                        {parsedErrorMessage}
+                                    </ErrorDetailsContainer>
+                                </StyledCollapsiblePanel>
                             )}
 
                             <LinksSection>
