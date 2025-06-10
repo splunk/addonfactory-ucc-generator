@@ -39,6 +39,7 @@ from splunk_add_on_ucc_framework import (
 from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from splunk_add_on_ucc_framework.utils import get_app_manifest
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     builder as alert_builder,
@@ -240,25 +241,6 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
             )
             exit(1)
     return addon_version.strip()
-
-
-def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    try:
-        app_manifest = app_manifest_lib.AppManifest(app_manifest_content)
-        app_manifest.validate()
-        return app_manifest
-    except app_manifest_lib.AppManifestFormatException as e:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f"Error message: {e}.\n"
-        )
-        sys.exit(1)
 
 
 def _get_build_output_path(output_directory: Optional[str] = None) -> str:
@@ -469,7 +451,7 @@ def generate(
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
-    app_manifest = _get_app_manifest(source)
+    app_manifest = get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
 
@@ -551,10 +533,7 @@ def generate(
     logger.info(f"Installed add-on requirements into {ucc_lib_target} from {source}")
     generated_files.extend(
         begin(
-            global_config=global_config,
-            input_dir=source,
-            output_dir=output_directory,
-            app_manifest=app_manifest,
+            global_config=global_config, input_dir=source, output_dir=output_directory
         )
     )
     # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -638,10 +617,7 @@ def generate(
 
     # NOTE: merging source and generated 'app.conf' as per previous design
     AppConf(
-        global_config=global_config,
-        input_dir=source,
-        output_dir=output_directory,
-        app_manifest=app_manifest,
+        global_config=global_config, input_dir=source, output_dir=output_directory
     ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
