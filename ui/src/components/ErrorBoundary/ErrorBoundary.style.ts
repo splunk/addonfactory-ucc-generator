@@ -25,7 +25,6 @@ export const StyledContainer = styled.div`
     justify-content: center; // Ensures horizontal centering of children
     align-items: center; // Ensures vertical centering
     width: 100%; // Takes up full width of its parent
-    padding: ${variables.spacingMedium};
     animation: ${fadeIn} 0.6s ease-out;
 `;
 
@@ -80,6 +79,15 @@ export const StyledBody = styled(Card.Body)`
 
 export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
     margin-top: ${variables.spacingLarge};
+
+    button {
+        background: ${pick({
+            enterprise: {
+                light: variables.neutral200,
+                dark: variables.neutral300,
+            },
+        })};
+    }
 `;
 
 export const ErrorDetailsContainer = styled.div`

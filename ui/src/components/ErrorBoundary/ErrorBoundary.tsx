@@ -94,7 +94,10 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
                         <StyledBody>
                             {parsedErrorMessage && (
-                                <StyledCollapsiblePanel title={gettext('Error Details')}>
+                                <StyledCollapsiblePanel
+                                    defaultOpen
+                                    title={gettext('Error Details')}
+                                >
                                     <ErrorDetailsContainer>
                                         {parsedErrorMessage}
                                     </ErrorDetailsContainer>
