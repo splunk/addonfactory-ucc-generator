@@ -23,7 +23,7 @@ def test_generate_conf_for_conf_only_addon(
     )
 
     file_paths = web_conf.generate()
-    assert file_paths == {}
+    assert file_paths == [{}]
 
 
 def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_name):
@@ -34,14 +34,7 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         addon_name=ta_name,
         ucc_dir=UCC_DIR,
     )
-    file_paths = web_conf.generate()
-
-    assert file_paths is not None
-    assert file_paths.keys() == {"web.conf"}
-    assert file_paths["web.conf"].endswith("test_addon/default/web.conf")
-
-    with open(file_paths["web.conf"]) as fp:
-        content = fp.read()
+    output = web_conf.generate()
 
     expected_content = dedent(
         """
@@ -52,7 +45,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         [expose:splunk_ta_uccexample_oauth_specified]
         pattern = splunk_ta_uccexample_oauth/*
         methods = POST, GET, DELETE
-
         [expose:splunk_ta_uccexample_account]
         pattern = splunk_ta_uccexample_account
         methods = POST, GET
@@ -60,7 +52,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         [expose:splunk_ta_uccexample_account_specified]
         pattern = splunk_ta_uccexample_account/*
         methods = POST, GET, DELETE
-
         [expose:splunk_ta_uccexample_settings]
         pattern = splunk_ta_uccexample_settings
         methods = POST, GET
@@ -68,7 +59,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         [expose:splunk_ta_uccexample_settings_specified]
         pattern = splunk_ta_uccexample_settings/*
         methods = POST, GET, DELETE
-
         [expose:splunk_ta_uccexample_example_input_one]
         pattern = splunk_ta_uccexample_example_input_one
         methods = POST, GET
@@ -76,7 +66,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         [expose:splunk_ta_uccexample_example_input_one_specified]
         pattern = splunk_ta_uccexample_example_input_one/*
         methods = POST, GET, DELETE
-
         [expose:splunk_ta_uccexample_example_input_two]
         pattern = splunk_ta_uccexample_example_input_two
         methods = POST, GET
@@ -87,7 +76,13 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         """
     ).lstrip()
 
-    assert content == expected_content
+    assert output == [
+        {
+            "file_name": "web.conf",
+            "file_path": f"{output_dir}/{ta_name}/default/web.conf",
+            "content": expected_content,
+        }
+    ]
 
     global_config_all_json.user_defined_handlers.add_definitions(
         [
@@ -121,11 +116,7 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         addon_name=ta_name,
         ucc_dir=UCC_DIR,
     )
-    file_paths = web_conf.generate()
-
-    assert file_paths is not None
-    with open(file_paths["web.conf"]) as fp:
-        content = fp.read()
+    output_2 = web_conf.generate()
 
     expected_content += dedent(
         """
@@ -136,7 +127,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         [expose:endpoint1_specified]
         pattern = endpoint1/*
         methods = POST, GET, DELETE
-
         [expose:endpoint2]
         pattern = endpoint2
         methods = POST, GET
@@ -145,6 +135,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         pattern = endpoint2/*
         methods = POST, GET, DELETE
         """
-    )
+    ).lstrip()
 
-    assert content == expected_content
+    assert output_2[0]["content"] == expected_content

@@ -43,10 +43,10 @@ def test_generate_conf_without_custom_command(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    file_paths = commands_conf.generate()
+    output = commands_conf.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == {}
+    assert output == [{}]
 
 
 def test_commands_conf_generation(
@@ -59,14 +59,7 @@ def test_commands_conf_generation(
         addon_name=ta_name,
         ucc_dir=UCC_DIR,
     )
-    file_paths = commands_conf.generate()
-
-    assert file_paths is not None
-    assert file_paths.keys() == {"commands.conf"}
-    assert file_paths["commands.conf"].endswith("test_addon/default/commands.conf")
-
-    with open(file_paths["commands.conf"]) as fp:
-        content = fp.read()
+    output = commands_conf.generate()
 
     expected_content = dedent(
         """
@@ -76,4 +69,10 @@ def test_commands_conf_generation(
         python.version = python3
         """
     ).lstrip()
-    assert content == expected_content
+    assert output == [
+        {
+            "file_name": "commands.conf",
+            "file_path": f"{output_dir}/{ta_name}/default/commands.conf",
+            "content": expected_content,
+        }
+    ]

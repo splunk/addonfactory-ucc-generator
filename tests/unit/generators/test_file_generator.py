@@ -3,6 +3,30 @@ from splunk_add_on_ucc_framework.generators.file_generator import begin
 from unittest.mock import patch, MagicMock
 from pytest import raises, fixture
 from jinja2 import Template
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
+import os.path
+import shutil
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
+
+
+@fixture
+def addon_version():
+    return "1.0.0"
+
+
+@fixture
+def has_ui():
+    return True
+
+
+@fixture
+def app_manifest():
+    mock_manifest = MagicMock()
+    mock_manifest.get_description.return_value = "Test Description"
+    mock_manifest.get_authors.return_value = [{"name": "Test Author"}]
+    mock_manifest.get_title.return_value = "Test Addon"
+    return mock_manifest
 
 
 @fixture
@@ -108,39 +132,71 @@ def test_set_template_and_render_invalid_file_name(
         file_gen.set_template_and_render(["dir1"], "test.invalid")
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.file_generator.fc.GEN_FILE_LIST",
-    new_callable=list,
-)
-@patch("splunk_add_on_ucc_framework.generators.file_generator.logger")
+@patch.object(shutil, "copy")
 def test_begin(
-    mock_logger,
-    mock_gen_file_list,
+    mock_copy,
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
     ta_name,
+    addon_version,
+    has_ui,
+    app_manifest,
 ):
-    mock_item = MagicMock()
-    mock_item.file_class.return_value.generate.return_value = {
-        "file1": "/path/to/file1"
-    }
-
-    mock_gen_file_list.extend([mock_item])
-
     result = begin(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
+        ucc_dir=UCC_DIR,
         addon_name=ta_name,
+        addon_version=addon_version,
+        has_ui=has_ui,
+        app_manifest=app_manifest,
     )
-
-    assert result == [{"file1": "/path/to/file1"}]
-    mock_logger.info.assert_called_once_with(
-        "Successfully generated 'file1' at '/path/to/file1'."
-    )
+    assert result == [
+        {"app.conf": f"{output_dir}/{ta_name}/default/app.conf"},
+        {"inputs.conf": f"{output_dir}/{ta_name}/default/inputs.conf"},
+        {"inputs.conf.spec": f"{output_dir}/{ta_name}/README/inputs.conf.spec"},
+        {"server.conf": f"{output_dir}/{ta_name}/default/server.conf"},
+        {"restmap.conf": f"{output_dir}/{ta_name}/default/restmap.conf"},
+        {"web.conf": f"{output_dir}/{ta_name}/default/web.conf"},
+        {"alert_actions.conf": f"{output_dir}/{ta_name}/default/alert_actions.conf"},
+        {
+            "alert_actions.conf.spec": f"{output_dir}/{ta_name}/README/alert_actions.conf.spec"
+        },
+        {"eventtypes.conf": f"{output_dir}/{ta_name}/default/eventtypes.conf"},
+        {"tags.conf": f"{output_dir}/{ta_name}/default/tags.conf"},
+        {"commands.conf": f"{output_dir}/{ta_name}/default/commands.conf"},
+        {"searchbnf.conf": f"{output_dir}/{ta_name}/default/searchbnf.conf"},
+        {
+            "splunk_ta_uccexample_account.conf.spec": f"{output_dir}/{ta_name}/"
+            "README/splunk_ta_uccexample_account.conf.spec"
+        },
+        {
+            "splunk_ta_uccexample_settings.conf": f"{output_dir}/{ta_name}/default/splunk_ta_uccexample_settings.conf"
+        },
+        {
+            "splunk_ta_uccexample_settings.conf.spec": f"{output_dir}/{ta_name}/"
+            "README/splunk_ta_uccexample_settings.conf.spec"
+        },
+        {
+            "configuration.xml": f"{output_dir}/{ta_name}/default/data/ui/views/configuration.xml"
+        },
+        {
+            "dashboard.xml": f"{output_dir}/{ta_name}/default/data/ui/views/dashboard.xml"
+        },
+        {"default.xml": f"{output_dir}/{ta_name}/default/data/ui/nav/default.xml"},
+        {"inputs.xml": f"{output_dir}/{ta_name}/default/data/ui/views/inputs.xml"},
+        {
+            "test_addon_redirect.xml": f"{output_dir}/{ta_name}/default/data/ui/views/test_addon_redirect.xml"
+        },
+        {
+            "test_alert.html": f"{output_dir}/{ta_name}/default/data/ui/alerts/test_alert.html"
+        },
+        {
+            "generatetextcommand.py": f"{output_dir}/{ta_name}/bin/generatetextcommand.py"
+        },
+    ]
 
 
 def test__set_attributes_error(

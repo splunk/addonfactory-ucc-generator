@@ -1,5 +1,10 @@
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import ServerConf
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
+import os.path
+from textwrap import dedent
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 def test_set_attributes(
@@ -24,62 +29,45 @@ def test_set_attributes(
     assert server_conf.custom_conf == expected_custom_conf
 
 
-@patch("os.path.isfile", return_value=False)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.ServerConf.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.ServerConf.get_file_output_path"
-)
 def test_generate_conf_no_existing_conf(
-    mock_op_path,
-    mock_template,
-    mock_isfile,
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
     ta_name,
 ):
-    content = "content"
     exp_fname = "server.conf"
-    file_path = "output_path/server.conf"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = content
 
     server_conf = ServerConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
+        ucc_dir=UCC_DIR,
         addon_name=ta_name,
     )
+    expected_content = dedent(
+        """
+        [shclustering]
+        conf_replication_include.splunk_ta_uccexample_settings = true
+        conf_replication_include.splunk_ta_uccexample_account = true
+        conf_replication_include.splunk_ta_uccexample_oauth = true
+        """
+    ).lstrip()
+    output = server_conf.generate()
 
-    server_conf.writer = MagicMock()
-    server_conf._template = template_render
-    file_paths = server_conf.generate()
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-
-    server_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-
-    assert file_paths == {exp_fname: file_path}
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+            "content": expected_content,
+        }
+    ]
 
 
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.create_server_conf.isfile",
     return_value=True,
 )
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.ServerConf.get_file_output_path"
-)
 def test_generate_conf_existing_conf(
-    mock_op_path,
     mock_isfile,
     global_config_all_json,
     input_dir,
@@ -96,7 +84,7 @@ def test_generate_conf_existing_conf(
     )
 
     output = server_conf.generate()
-    assert output == {}
+    assert output == [{}]
 
 
 def test_generate_conf_no_custom_conf(
@@ -112,4 +100,4 @@ def test_generate_conf_no_custom_conf(
     server_conf.custom_conf = []
 
     file_paths = server_conf.generate()
-    assert file_paths == {}
+    assert file_paths == [{}]

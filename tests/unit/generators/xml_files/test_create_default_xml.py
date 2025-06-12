@@ -1,7 +1,7 @@
 import pytest
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
 import xmldiff.main
+from textwrap import dedent
 
 
 @pytest.fixture
@@ -107,16 +107,7 @@ def test_set_attribute_with_no_pages(
     assert not hasattr(default_xml, "default_xml_content")
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.xml_files.DefaultXml._set_attributes",
-    return_value=MagicMock(),
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.xml_files.DefaultXml.get_file_output_path"
-)
 def test_generate_xml(
-    mock_op_path,
-    mock_set_attributes,
     global_config_all_json,
     input_dir,
     output_dir,
@@ -130,18 +121,23 @@ def test_generate_xml(
         ucc_dir=ucc_dir,
         addon_name=ta_name,
     )
-    config_xml.default_xml_content = "<xml></xml>"
     exp_fname = "default.xml"
-    file_path = "output_path/default.xml"
-    mock_op_path.return_value = file_path
+    expected_content = dedent(
+        """<?xml version="1.0" ?>
+<nav>
+    <view name="inputs"/>
+    <view default="true" name="configuration"/>
+    <view name="dashboard"/>
+    <view name="search"/>
+</nav>
+    """
+    )
 
-    mock_writer = MagicMock()
-    with patch.object(config_xml, "writer", mock_writer):
-        file_paths = config_xml.generate()
-
-        mock_writer.assert_called_once_with(
-            file_name=exp_fname,
-            file_path=file_path,
-            content=config_xml.default_xml_content,
-        )
-        assert file_paths == {exp_fname: file_path}
+    file_paths = config_xml.generate()
+    assert file_paths == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/data/ui/nav/{exp_fname}",
+            "content": expected_content,
+        }
+    ]

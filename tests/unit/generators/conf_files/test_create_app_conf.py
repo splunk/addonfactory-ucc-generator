@@ -1,6 +1,12 @@
 from pytest import fixture
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AppConf
+from textwrap import dedent
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
+import os.path
+from time import time
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
 
 
 @fixture
@@ -23,6 +29,7 @@ def app_manifest():
     mock_manifest = MagicMock()
     mock_manifest.get_description.return_value = "Test Description"
     mock_manifest.get_authors.return_value = [{"name": "Test Author"}]
+    mock_manifest.get_title.return_value = "Test Addon"
     return mock_manifest
 
 
@@ -124,50 +131,65 @@ def test_set_attributes_with_global_config_and_schema(
     assert app_conf.custom_conf == expected_custom_conf
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.AppConf.set_template_and_render"
-)
-@patch("splunk_add_on_ucc_framework.generators.conf_files.AppConf.get_file_output_path")
 def test_generate_conf(
-    mock_op_path,
-    mock_template,
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
     ta_name,
     addon_version,
     has_ui,
     app_manifest,
 ):
-    content = "content"
     exp_fname = "app.conf"
-    file_path = "output_path/app.conf"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = content
 
     app_conf = AppConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
+        ucc_dir=UCC_DIR,
         addon_name=ta_name,
         addon_version=addon_version,
         has_ui=has_ui,
         app_manifest=app_manifest,
     )
-    app_conf.writer = MagicMock()
-    app_conf._template = template_render
-    file_paths = app_conf.generate()
+    output = app_conf.generate()
+    # Build is calculated dynamically, we can't pass static value.
+    build = str(int(time()))
+    expected_content = dedent(
+        f"""
+        [launcher]
+        version = 1.0.0
+        description = Test Description
+        author = Test Author
 
-    # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-    app_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-        merge_mode="item_overwrite",
-    )
-    assert file_paths == {exp_fname: file_path}
+        [id]
+        version = 1.0.0
+        name = test_addon
+
+        [install]
+        build = {build}
+        is_configured = false
+        state = enabled
+
+        [package]
+        id = test_addon
+        check_for_updates = true
+
+        [ui]
+        label = Test Addon
+        is_visible = true
+
+        [triggers]
+        reload.splunk_ta_uccexample_settings = simple
+        reload.splunk_ta_uccexample_account = simple
+        reload.splunk_ta_uccexample_oauth = simple
+        """
+    ).lstrip()
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+            "content": expected_content,
+            "merge_mode": "item_overwrite",
+        }
+    ]
