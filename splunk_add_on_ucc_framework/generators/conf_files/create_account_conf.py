@@ -41,9 +41,9 @@ class AccountConf(FileGenerator):
                     ("<name>", [f"{f._name} = " for f in fields])
                 )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self.account_fields:
-            return {}
+            return [{}]
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
@@ -51,9 +51,10 @@ class AccountConf(FileGenerator):
         )
 
         rendered_content = self._template.render(account_stanzas=self.account_fields)
-        self.writer(
-            file_name=self.conf_spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_spec_file: file_path}
+        return [
+            {
+                "file_name": self.conf_spec_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

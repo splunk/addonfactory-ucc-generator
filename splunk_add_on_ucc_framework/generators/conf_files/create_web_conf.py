@@ -33,9 +33,9 @@ class WebConf(FileGenerator):
     def _set_attributes(self, **kwargs: Any) -> None:
         pass
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self._global_config.has_pages():
-            return {}
+            return [{}]
 
         endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
         endpoints.extend(self._gc_schema.endpoints)
@@ -49,9 +49,10 @@ class WebConf(FileGenerator):
             "web_conf.template",
             endpoints=endpoints,
         )
-        self.writer(
-            file_name=conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {conf_file: file_path}
+        return [
+            {
+                "file_name": conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

@@ -58,6 +58,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
+from splunk_add_on_ucc_framework.utils import write_file
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
@@ -644,7 +645,7 @@ def generate(
     if global_config and global_config.has_pages():
         ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
-    AppConf(
+    output = AppConf(
         global_config=global_config,
         input_dir=source,
         output_dir=output_directory,
@@ -654,6 +655,12 @@ def generate(
         addon_version=addon_version,
         has_ui=ui_available,
     ).generate()
+    write_file(
+        file_name=output[0]["file_name"],
+        file_path=output[0]["file_path"],
+        content=output[0]["content"],
+        merge_mode=output[0]["merge_mode"],
+    )
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")

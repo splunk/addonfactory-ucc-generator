@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Dict, Any
+from typing import Dict, Any, List
 import os
 from splunk_add_on_ucc_framework import data_ui_generator
 import logging
@@ -49,15 +49,16 @@ class DefaultXml(FileGenerator):
                     default_view=self._global_config.meta.get("defaultView"),
                 )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self._global_config.has_pages():
-            return {}
+            return [{}]
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "nav", "default.xml"]
         )
-        self.writer(
-            file_name="default.xml",
-            file_path=file_path,
-            content=self.default_xml_content,
-        )
-        return {"default.xml": file_path}
+        return [
+            {
+                "file_name": "default.xml",
+                "file_path": file_path,
+                "content": self.default_xml_content,
+            }
+        ]

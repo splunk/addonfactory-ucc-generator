@@ -43,9 +43,9 @@ class RestMapConf(FileGenerator):
 
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self.endpoints:
-            return {}
+            return [{}]
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
@@ -56,9 +56,10 @@ class RestMapConf(FileGenerator):
             endpoint_names=self.endpoint_names,
             namespace=self.namespace,
         )
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return [
+            {
+                "file_name": self.conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

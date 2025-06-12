@@ -35,18 +35,19 @@ class EventtypesConf(FileGenerator):
         schema_content = envs["schema.content"]
         self.alert_settings = schema_content["modular_alerts"]
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self.alert_settings:
-            return {}
+            return [{}]
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="eventtypes_conf.template"
         )
         rendered_content = self._template.render(mod_alerts=self.alert_settings)
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return [
+            {
+                "file_name": self.conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

@@ -16,7 +16,7 @@
 import json
 import shutil
 from os import path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
@@ -127,10 +127,10 @@ class AlertActionsConf(FileGenerator):
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
 
-    def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_conf())
-        conf_files.update(self.generate_conf_spec())
+    def generate(self) -> List[Dict[str, str]]:
+        conf_files: List[Dict[str, str]] = []
+        conf_files.append(self.generate_conf())
+        conf_files.append(self.generate_conf_spec())
         return conf_files
 
     def generate_conf(self) -> Dict[str, str]:
@@ -142,12 +142,11 @@ class AlertActionsConf(FileGenerator):
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
         )
         rendered_content = self._template.render(alerts=self.alerts)
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
     def generate_conf_spec(self) -> Dict[str, str]:
         if not self.alerts_spec:
@@ -159,9 +158,8 @@ class AlertActionsConf(FileGenerator):
             file_name="alert_actions_conf_spec.template",
         )
         rendered_content = self._template.render(alerts=self.alerts_spec)
-        self.writer(
-            file_name=self.conf_spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_spec_file: file_path}
+        return {
+            "file_name": self.conf_spec_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }

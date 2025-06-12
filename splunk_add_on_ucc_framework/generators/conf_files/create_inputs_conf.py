@@ -99,10 +99,10 @@ class InputsConf(FileGenerator):
                 prop = f"{field_name} = {field_value}".rstrip()
                 spec_properties.append(prop)
 
-    def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_conf())
-        conf_files.update(self.generate_conf_spec())
+    def generate(self) -> List[Dict[str, str]]:
+        conf_files: List[Dict[str, str]] = []
+        conf_files.append(self.generate_conf())
+        conf_files.extend(self.generate_conf_spec())
         return conf_files
 
     def generate_conf(self) -> Dict[str, str]:
@@ -118,12 +118,11 @@ class InputsConf(FileGenerator):
             input_names=self.inputs_conf_names,
             default_values=self.inputs_conf_params,
         )
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
     def _generate_spec_inputs(self) -> Dict[str, str]:
         if not self.inputs_conf_spec:
@@ -140,12 +139,11 @@ class InputsConf(FileGenerator):
             input_names=self.inputs_conf_names,
             input_stanzas=self.inputs_conf_spec,
         )
-        self.writer(
-            file_name=spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {spec_file: file_path}
+        return {
+            "file_name": spec_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
     def _generate_spec_other(self, name: str, parameters: List[str]) -> Dict[str, str]:
         spec_file = self._spec_file_name(name)
@@ -154,20 +152,20 @@ class InputsConf(FileGenerator):
         content = ["[<name>]"]
         content.extend(parameters)
 
-        self.writer(
-            file_name=spec_file,
-            file_path=file_path,
-            content="\n".join(content),
-        )
-        return {spec_file: file_path}
+        return {
+            "file_name": spec_file,
+            "file_path": file_path,
+            "content": "\n".join(content),
+        }
 
-    def generate_conf_spec(self) -> Dict[str, str]:
-        files = self._generate_spec_inputs()
+    def generate_conf_spec(self) -> List[Dict[str, str]]:
+        files: List[Dict[str, str]] = []
+        if self._generate_spec_inputs():
+            files.append(self._generate_spec_inputs())
 
         for name, params in self.other_spec_files.items():
-            files.update(self._generate_spec_other(name, params))
+            files.append(self._generate_spec_other(name, params))
 
         if not files:
-            return {}
-
+            return []
         return files

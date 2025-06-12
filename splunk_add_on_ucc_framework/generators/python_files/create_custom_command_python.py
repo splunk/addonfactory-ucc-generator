@@ -87,11 +87,11 @@ class CustomCommandPy(FileGenerator):
                 }
             )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self.commands_info:
-            return {}
+            return [{}]
 
-        generated_files = {}
+        generated_files = []
         for command_info in self.commands_info:
             file_name = command_info["file_name"] + ".py"
             file_path = self.get_file_output_path(["bin", file_name])
@@ -106,10 +106,11 @@ class CustomCommandPy(FileGenerator):
                 syntax=command_info["syntax"],
                 list_arg=command_info["list_arg"],
             )
-            self.writer(
-                file_name=file_name,
-                file_path=file_path,
-                content=rendered_content,
+            generated_files.append(
+                {
+                    "file_name": file_name,
+                    "file_path": file_path,
+                    "content": rendered_content,
+                }
             )
-            generated_files.update({file_name: file_path})
         return generated_files

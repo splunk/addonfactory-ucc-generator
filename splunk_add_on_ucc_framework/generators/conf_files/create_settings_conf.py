@@ -48,10 +48,10 @@ class SettingsConf(FileGenerator):
                     "settings"
                 ].generate_conf_with_default_values()
 
-    def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_conf())
-        conf_files.update(self.generate_conf_spec())
+    def generate(self) -> List[Dict[str, str]]:
+        conf_files: List[Any] = []
+        conf_files.append(self.generate_conf())
+        conf_files.append(self.generate_conf_spec())
         return conf_files
 
     def generate_conf(self) -> Dict[str, str]:
@@ -63,12 +63,11 @@ class SettingsConf(FileGenerator):
         )
 
         rendered_content = self._template.render(default_content=self.default_content)
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
     def generate_conf_spec(self) -> Dict[str, str]:
         if not self.settings_stanzas:
@@ -80,9 +79,8 @@ class SettingsConf(FileGenerator):
         )
 
         rendered_content = self._template.render(settings_stanzas=self.settings_stanzas)
-        self.writer(
-            file_name=self.conf_spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_spec_file: file_path}
+        return {
+            "file_name": self.conf_spec_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }

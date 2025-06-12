@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Any, Dict
+from typing import Any, Dict, List
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
@@ -30,15 +30,16 @@ class InputsXml(FileGenerator):
                 self._addon_name,
             )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         if not self._global_config.has_inputs():
-            return {}
+            return [{}]
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "inputs.xml"]
         )
-        self.writer(
-            file_name="inputs.xml",
-            file_path=file_path,
-            content=self.inputs_xml_content,
-        )
-        return {"inputs.xml": file_path}
+        return [
+            {
+                "file_name": "inputs.xml",
+                "file_path": file_path,
+                "content": self.inputs_xml_content,
+            }
+        ]
