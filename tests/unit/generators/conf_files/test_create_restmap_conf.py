@@ -102,48 +102,53 @@ def test_set_attributes(
 
 
 def test_restmap_endpoints(global_config_all_json, input_dir, output_dir, ta_name):
-    expected_content = dedent(
-        """
-        [admin:splunk_ta_uccexample]
-        match = /
-        members = splunk_ta_uccexample_account, splunk_ta_uccexample_example_input_one, splunk_ta_uccexample_example_input_two, splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings
+    expected_content = "\n".join(
+        [
+            "[admin:splunk_ta_uccexample]",
+            "match = /",
+            "members = splunk_ta_uccexample_account, "
+            "splunk_ta_uccexample_example_input_one, "
+            "splunk_ta_uccexample_example_input_two, "
+            "splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings",
+            "",
+            "[admin_external:splunk_ta_uccexample_oauth]",
+            "handlertype = python",
+            "python.version = python3",
+            "handlerfile = splunk_ta_uccexample_rh_oauth.py",
+            "handleractions = edit",
+            "handlerpersistentmode = true",
+            "",
+            "[admin_external:splunk_ta_uccexample_account]",
+            "handlertype = python",
+            "python.version = python3",
+            "handlerfile = splunk_ta_uccexample_rh_account.py",
+            "handleractions = edit, list, remove, create",
+            "handlerpersistentmode = true",
+            "",
+            "[admin_external:splunk_ta_uccexample_settings]",
+            "handlertype = python",
+            "python.version = python3",
+            "handlerfile = splunk_ta_uccexample_rh_settings.py",
+            "handleractions = edit, list",
+            "handlerpersistentmode = true",
+            "",
+            "[admin_external:splunk_ta_uccexample_example_input_one]",
+            "handlertype = python",
+            "python.version = python3",
+            "handlerfile = splunk_ta_uccexample_rh_example_input_one.py",
+            "handleractions = edit, list, remove, create",
+            "handlerpersistentmode = true",
+            "",
+            "[admin_external:splunk_ta_uccexample_example_input_two]",
+            "handlertype = python",
+            "python.version = python3",
+            "handlerfile = splunk_ta_uccexample_rh_example_input_two.py",
+            "handleractions = edit, list, remove, create",
+            "handlerpersistentmode = true",
+            "",
+        ]
+    )
 
-        [admin_external:splunk_ta_uccexample_oauth]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_oauth.py
-        handleractions = edit
-        handlerpersistentmode = true
-
-        [admin_external:splunk_ta_uccexample_account]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_account.py
-        handleractions = edit, list, remove, create
-        handlerpersistentmode = true
-
-        [admin_external:splunk_ta_uccexample_settings]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_settings.py
-        handleractions = edit, list
-        handlerpersistentmode = true
-
-        [admin_external:splunk_ta_uccexample_example_input_one]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_example_input_one.py
-        handleractions = edit, list, remove, create
-        handlerpersistentmode = true
-
-        [admin_external:splunk_ta_uccexample_example_input_two]
-        handlertype = python
-        python.version = python3
-        handlerfile = splunk_ta_uccexample_rh_example_input_two.py
-        handleractions = edit, list, remove, create
-        handlerpersistentmode = true
-        """
-    ).lstrip()
     restmap_conf = RestMapConf(
         global_config_all_json,
         input_dir,
