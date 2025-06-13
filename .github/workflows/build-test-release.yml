@@ -67,7 +67,7 @@ jobs:
     secrets:
       SEMGREP_KEY: ${{ secrets.SEMGREP_PUBLISH_TOKEN }}
     with:
-      block_mode: "policy"
+      block_mode: "on"
 
   compliance-copyrights:
     runs-on: ubuntu-22.04
