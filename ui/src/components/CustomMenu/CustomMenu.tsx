@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
+
 import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { CustomMenuConstructor } from './CustomMenuBase';
 import { invariant } from '../../util/invariant';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
 
 type CustomMenuProps = {
     fileName: string;
     type: string;
     handleChange: (val: { service: string; input?: string }) => void;
+    customComponentContext?: CustomComponentContextType;
 };
 
 type CustomMenuState = {
@@ -16,6 +19,8 @@ type CustomMenuState = {
 };
 
 class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
+    customComponentContext?: CustomComponentContextType;
+
     shouldRender: boolean;
 
     el?: HTMLElement;
@@ -26,6 +31,7 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
             loading: true,
         };
         this.shouldRender = true;
+        this.customComponentContext = props.customComponentContext;
     }
 
     componentDidMount() {
@@ -67,12 +73,12 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
 
     loadCustomMenu = (): Promise<CustomMenuConstructor> =>
         new Promise((resolve) => {
-            if (this.props.type === 'external') {
-                import(
-                    /* webpackIgnore: true */ `${getBuildDirPath()}/custom/${
-                        this.props.fileName
-                    }.js`
-                )
+            const customComp = this.customComponentContext?.[this.props.fileName];
+            if (customComp?.type === 'menu') {
+                const Control = customComp.component;
+                resolve(Control);
+            } else if (this.props.type === 'external') {
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${this.props.fileName}.js`)
                     .then((external) => {
                         const Control = external.default;
                         resolve(Control as CustomMenuConstructor);
@@ -84,11 +90,12 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
             } else {
                 const globalConfig = getUnifiedConfigs();
                 const appName = globalConfig.meta.name;
-                // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${this.props.fileName}`],
-                    (Control: CustomMenuConstructor) => resolve(Control)
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${appName}/js/build/custom/${this.props.fileName}`], (
+                    Control: CustomMenuConstructor
+                ) => {
+                    resolve(Control);
+                });
             }
         });
 

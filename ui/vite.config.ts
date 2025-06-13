@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import license from 'rollup-plugin-license';
 import type { ViteUserConfig as VitestUserConfigInterface } from 'vitest/config';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 const proxyTargetUrl = 'http://localhost:8000';
 const devServerPort = 5173;
@@ -107,6 +108,10 @@ const vitestTestConfig: VitestUserConfigInterface = {
                 '**/.eslintrc.cjs',
                 '**/.storybook/**',
                 '**/stories/**',
+                '**/tests/**',
+                '**/test/**',
+                '**/mock*',
+                '**/__mocks__/**',
             ],
         },
     },
@@ -160,6 +165,11 @@ export default defineConfig(({ mode }) => {
                 apply: 'build',
             },
             splunkPathRewriter,
+            nodePolyfills(
+                {
+                    include: ['events'],
+                }
+            ),
         ],
         build: {
             outDir: 'dist/build',

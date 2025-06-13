@@ -38,8 +38,18 @@
                                     "src": "CustomInputCell",
                                     "type": "external"
                                 }
+                            },
+                            {
+                                "label": "AMD Test Custom Cell",
+                                "field": "amd_test_custom_cell",
+                                "customCell": {
+                                    "src": "amdCustomInputCell"
+                                }
                             }
                         ]
+                    },
+                    "hook": {
+                        "src": "amdCustomHook"
                     },
                     "entity": [
                         {
@@ -50,6 +60,15 @@
                             "options": {
                                 "src": "custom_control",
                                 "type": "external"
+                            }
+                        },
+                        {
+                            "type": "custom",
+                            "label": "Amd Example Custom Control",
+                            "field": "amd_custom_control_field",
+                            "help": " This is an example Amd multipleSelect for account entity",
+                            "options": {
+                                "src": "amdCustom_control"
                             }
                         },
                         {
@@ -569,6 +588,14 @@
                     "restHandlerClass": "CustomAccountValidator"
                 },
                 {
+                    "name": "custom_tab",
+                    "title": "Custom_tab without entity",
+                    "customTab": {
+                        "src": "custom_tab",
+                        "type": "external"
+                    }
+                },
+                {
                     "type": "proxyTab",
                     "proxy_type": true,
                     "username": {
@@ -747,6 +774,76 @@
                         }
                     ],
                     "title": "Custom table row"
+                },
+                {
+                    "name": "custom_amd_row_tab",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Text Test",
+                                "field": "text_test"
+                            }
+                        ],
+                        "moreInfo": [
+                            {
+                                "field": "name",
+                                "label": "Name"
+                            },
+                            {
+                                "field": "text_test",
+                                "label": "Text Test"
+                            }
+                        ],
+                        "customRow": {
+                            "src": "amdCustom_input_row_replace"
+                        }
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Length of ID should be between 1 and 50",
+                                    "minLength": 1,
+                                    "maxLength": 50
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "field": "text_test",
+                            "label": "Text Test",
+                            "help": "This is a text test",
+                            "type": "text",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 100
+                                }
+                            ],
+                            "required": true
+                        }
+                    ],
+                    "title": "AMD Custom table row"
                 },
                 {
                     "name": "tab_hidden_for_cloud",
@@ -2163,7 +2260,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.63.0+c756d7c1f",
+        "version": "5.65.0+62ed494cd",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
@@ -2198,5 +2295,70 @@
                 "target": "3rdparty/linux"
             }
         ]
-    }
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requiredSearchAssistant": true,
+            "description": " This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "filtercommand",
+            "fileName": "filter.py",
+            "commandType": "dataset processing",
+            "requiredSearchAssistant": true,
+            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
+            "syntax": "| filtercommand contains='value1' replace='value to be replaced,value to replace with'",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "contains"
+                },
+                {
+                    "name": "replace_array"
+                }
+            ]
+        },
+        {
+            "commandName": "countmatchescommand",
+            "fileName": "countmatches.py",
+            "commandType": "streaming",
+            "requiredSearchAssistant": false,
+            "arguments": [
+                {
+                    "name": "fieldname",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                },
+                {
+                    "name": "pattern",
+                    "validate": {
+                        "type": "RegularExpression"
+                    },
+                    "required": true
+                }
+            ]
+        }
+    ]
 }

@@ -71,7 +71,7 @@ Proxy
         {
             "type": "string",
             "errorMsg": "Max host length is 4096",
-            "minLength": 0,
+            "minLength": 1,
             "maxLength": 4096,
         },
         {
@@ -81,6 +81,7 @@ Proxy
         },
     ],
     "field": "proxy_url",
+    "required": true
 }
 ```
 
@@ -92,6 +93,7 @@ Proxy
     "label": "Port",
     "validators": [{"type": "number", "range": [1, 65535], "isInteger": true}],
     "field": "proxy_port",
+    "required": true
 }
 ```
 
@@ -201,7 +203,7 @@ To customize these default configurations, you can define them in JSON format by
     },
    "port": {
        "label": "Proxy port",
-       "validator": [
+       "validators": [
            {
                "type": "number",
                "range": [

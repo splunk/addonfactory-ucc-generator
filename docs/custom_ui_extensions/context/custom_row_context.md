@@ -25,7 +25,9 @@ When a row is expanded on the Inputs table or Configuration Table, Custom Row is
 
 ### Usage
 
-```
+globalConfig.json
+
+```json
 "inputs": {
     "title": "Inputs",
     "description": "Manage your data inputs",
@@ -41,19 +43,91 @@ When a row is expanded on the Inputs table or Configuration Table, Custom Row is
 }
 ```
 
+
 ### Example
 
-```js
---8<-- "tests/testdata/test_addons/package_global_config_everything/package/appserver/static/js/build/custom/custom_input_row.js"
+index.tsx
+
+```typescript
+import { CustomRowBase, RowDataFields } from "@splunk/add-on-ucc-framework";
+import React from "react";
+import ReactDOM from "react-dom";
+
+const AdvancedRow = React.lazy(() => import("./AdvancedRow"));
+
+export default class AdvancedRowClass extends CustomRowBase {
+  getDLRows(): RowDataFields {
+    return {
+      ...this.row,
+      ...Object.fromEntries(
+        Object.entries(this.row).map(([key, value]) => [
+          key,
+          key === "interval" ? `${value} sec` : value,
+        ])
+      ),
+    };
+  }
+
+  render(): void {
+    ReactDOM.render(
+      <React.Suspense fallback={<div></div>}>
+        <AdvancedRow row={this.row} />
+      </React.Suspense>,
+      this.el
+    );
+  }
+}
+
 ```
 
-> Note:
+AdvancedRow.tsx
 
-> - The content should be included in the JavaScript file named by customRow.src property in globalConfig (see usage for details).
-> - The Javascript file for the custom control should be saved in the custom folder at `appserver/static/js/build/custom/`.
+```typescript
+import React from "react";
+import { SplunkThemeProvider } from "@splunk/themes";
+import { RowDataFields } from "@splunk/add-on-ucc-framework";
+import Table from "@splunk/react-ui/Table";
 
-### Output
+export const AdvancedRow = ({ row }: { row: RowDataFields }) => {
+  return (
+    <SplunkThemeProvider>
+      <Table.Row>
+        {Object.entries(row).map(([key, value]) => {
+          // Skip the __toggleShowSpinner field
+          if (key === "__toggleShowSpinner") {
+            return null;
+          }
+          // Render each field in a Table.Cell
+          return (
+            <Table.Cell key={key} data-testid={`cell-${key}`}>
+              {typeof value === "object" && value !== null
+                ? JSON.stringify(value)
+                : String(value)}
+            </Table.Cell>
+          );
+        })}
+      </Table.Row>
+    </SplunkThemeProvider>
+  );
+};
 
-This is how it looks in the UI:
+export default AdvancedRow;
 
-![image](../images/custom_ui_extensions/Custom_Row_Output.png)
+```
+
+ucc-ui.tsx
+
+```typescript
+import { uccInit } from "@splunk/add-on-ucc-framework";
+import AdvancedRow from "./ucc-ui-extensions/AdvancedRow";
+
+uccInit({
+  AdvancedRow: {
+    component: AdvancedRow,
+    type: "row",
+  },
+}).catch((error) => {
+  console.error("Could not load UCC", error);
+});
+
+```

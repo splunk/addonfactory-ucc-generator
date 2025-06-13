@@ -9,6 +9,10 @@ import CustomMenu from '../CustomMenu';
 import mockCustomMenu from './mocks/CustomMenuMock';
 import { getGlobalConfigMockCustomMenu, GroupsMenuType } from './mocks/globalConfigMock';
 import { consoleError } from '../../../../test.setup';
+import {
+    CustomComponentContextProvider,
+    CustomComponentContextType,
+} from '../../../context/CustomComponentContext';
 
 const MODULE = 'customMenuFileName';
 
@@ -38,9 +42,46 @@ const setup = (groupsMenu?: GroupsMenuType) => {
     render(<CustomMenu fileName={MODULE} type="external" handleChange={handleChange} />);
 };
 
+const setupContextComponent = (groupsMenu?: GroupsMenuType) => {
+    const mockConfig = getGlobalConfigMockCustomMenu(MODULE, groupsMenu);
+    setUnifiedConfig(mockConfig);
+
+    const compContext: CustomComponentContextType = {
+        [MODULE]: {
+            component: mockCustomMenu,
+            type: 'menu',
+        },
+    };
+
+    render(
+        <CustomComponentContextProvider customComponents={compContext}>
+            <CustomMenu
+                fileName={MODULE}
+                type="external"
+                handleChange={handleChange}
+                customComponentContext={compContext}
+            />
+        </CustomComponentContextProvider>
+    );
+};
+
 it('should render component and call handler correctly', async () => {
     doCustomMenuMock();
     setup();
+    await waitForLoadingDisappear();
+    const customMenuText = await waitFor(() => {
+        const menuText = screen.getByText('Click Me! I am a button for custom menu');
+        expect(menuText).toBeInTheDocument();
+        return menuText;
+    });
+    await userEvent.click(customMenuText);
+    expect(handleChange).toHaveBeenCalledWith({
+        service: 'example_input_one',
+    });
+});
+
+it('should render component and call handler correctly - context component', async () => {
+    setupContextComponent();
     await waitForLoadingDisappear();
     const customMenuText = await waitFor(() => {
         const menuText = screen.getByText('Click Me! I am a button for custom menu');

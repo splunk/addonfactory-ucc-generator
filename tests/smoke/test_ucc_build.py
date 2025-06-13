@@ -145,6 +145,7 @@ def test_ucc_generate_with_everything(caplog):
         files_to_be_equal = [
             ("README.txt",),
             ("appserver", "static", "test icon.png"),
+            ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -153,6 +154,8 @@ def test_ucc_generate_with_everything(caplog):
             ("default", "splunk_ta_uccexample_settings.conf"),
             ("default", "web.conf"),
             ("default", "server.conf"),
+            ("default", "commands.conf"),
+            ("default", "searchbnf.conf"),
             ("default", "data", "ui", "alerts", "test_alert.html"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
@@ -167,6 +170,12 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "example_input_three.py"),
             ("bin", "example_input_four.py"),
             ("bin", "import_declare_test.py"),
+            ("bin", "countmatchescommand.py"),
+            ("bin", "countmatches.py"),
+            ("bin", "filter.py"),
+            ("bin", "filtercommand.py"),
+            ("bin", "generatetext.py"),
+            ("bin", "generatetextcommand.py"),
             ("bin", "splunk_ta_uccexample_rh_account.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
@@ -256,6 +265,16 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
+        base_html_testdata = (
+            Path(package_folder) / "appserver" / "templates" / "base.html"
+        )
+        base_html_original = base_html_testdata.read_text()
+
+        assert (
+            '<script type="module" src="${make_url(page_path)}"></script>'
+            not in base_html_original
+        )
+
         build.generate(
             source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
         )
@@ -292,6 +311,7 @@ def test_ucc_generate_with_configuration():
             ("README", "splunk_ta_uccexample_settings.conf.spec"),
             ("metadata", "default.meta"),
             ("appserver", "static", "openapi.json"),
+            ("appserver", "templates", "base.html"),
         ]
         helpers.compare_file_content(
             files_to_be_equal,
@@ -307,6 +327,13 @@ def test_ucc_generate_with_configuration():
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
             assert path.exists(actual_file_path)
+
+        # Assert that base.html in package changed, and revert it
+        assert (
+            '<script type="module" src="${make_url(page_path)}"></script>'
+            in base_html_testdata.read_text()
+        )
+        base_html_testdata.write_text(base_html_original)
 
 
 def test_ucc_generate_for_conf_only_TA():
@@ -838,7 +865,6 @@ def _compare_interval_entities(
 ) -> None:
     for lmbd in (
         lambda x: x["pages"]["configuration"]["tabs"],
-        lambda x: x.get("alerts", []),
         lambda x: x["pages"].get("inputs", {}).get("services", []),
     ):
         for item_num, item in enumerate(lmbd(global_config)):

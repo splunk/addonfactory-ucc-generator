@@ -50,13 +50,13 @@
       "custom_addon_version_ds": {
         "type": "ds.search",
         "options": {
-          "query": "| rest services/apps/local/demo_addon_for_splunk splunk_server=local | fields version"
+          "query": "| rest services/apps/local/Splunk_TA_UCCExample splunk_server=local | fields version"
         }
       },
       "custom_events_ingested_ds": {
         "type": "ds.search",
         "options": {
-          "query": "index=_internal source=*demo_addon* action=events_ingested\n| timechart sum(n_events) by sourcetype_ingested",
+          "query": "index=_internal source=*splunk_ta_uccexample* action=events_ingested\n| timechart sum(n_events) by sourcetype_ingested",
           "queryParameters": {
             "earliest": "$events_ingested_time.earliest$",
             "latest": "$events_ingested_time.latest$"
@@ -101,8 +101,8 @@
         {
           "item": "custom_addon_version",
           "position": {
-            "x": 80,
-            "y": 515,
+            "x": 98,
+            "y": 511,
             "w": 100,
             "h": 50
           }

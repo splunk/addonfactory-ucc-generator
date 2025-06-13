@@ -7,6 +7,7 @@ import { getBuildDirPath } from '../../util/script';
 import { RowDataFields } from '../../context/TableContext';
 import { CustomCellBase, CustomCellConstructor } from './CustomTableCellBase';
 import { invariant } from '../../util/invariant';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
 
 type CustomCellError = {
     methodName: string;
@@ -25,7 +26,8 @@ type CustomTableCellProps = {
     row: RowDataFields;
     field: string;
     fileName: string;
-    type: string;
+    type?: string;
+    customComponentContext?: CustomComponentContextType;
 };
 
 type CustomTableCellState = {
@@ -36,6 +38,8 @@ type CustomTableCellState = {
 };
 
 class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellState> {
+    customComponentContext?: CustomComponentContextType;
+
     customCell?: CustomCellBase;
 
     el: HTMLSpanElement | null = null;
@@ -48,6 +52,7 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
             methodNotPresentError: '', // Stores error message if a method is missing
             rowUpdatedByControl: false, // Flag to track if the row was updated by custom control
         };
+        this.customComponentContext = props.customComponentContext; // Store custom component context
     }
 
     // Lifecycle method that updates the component's state when props change
@@ -83,20 +88,23 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
             const globalConfig = getUnifiedConfigs();
-
-            if (type === 'external') {
-                import(/* @vite-ignore: true */ `${getBuildDirPath()}/custom/${fileName}.js`)
+            const customComp = this.customComponentContext?.[this.props.fileName];
+            if (customComp?.type === 'cell') {
+                const Control = customComp.component;
+                resolve(Control);
+            } else if (type === 'external') {
+                import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))
                     .catch((error) => reject(error));
             } else {
                 const appName = globalConfig.meta.name;
 
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${fileName}`],
-                    (Cell: CustomCellConstructor) => resolve(Cell),
-                    (error: Error) => reject(error)
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${appName}/js/build/custom/${fileName}`], (
+                    Cell: CustomCellConstructor
+                ) => {
+                    resolve(Cell);
+                });
             }
         });
 
@@ -137,12 +145,14 @@ class CustomTableCell extends Component<CustomTableCellProps, CustomTableCellSta
 
                 this.handleNoRender();
             })
-            .catch(() =>
+            .catch((e) => {
                 this.setState({
                     loading: false,
                     methodNotPresentError: 'Error loading custom Cell module',
-                })
-            );
+                });
+                // eslint-disable-next-line no-console
+                console.error(`[Custom Cell] Error loading custom control ${e}`);
+            });
     }
 
     render() {

@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
+import './mockMatchMediaForDashboardPage.ts';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as React from 'react';
 import { render, waitFor, screen } from '@testing-library/react';
 
@@ -15,27 +16,31 @@ import { DASHBOARD_JSON_MOCKS } from './mockJs';
 
 const handleClose = vi.fn();
 const handleSelect = vi.fn();
-
 describe('render data ingestion modal inputs', () => {
-    it('renders with all default modal dashboard elements', async () => {
-        // needed for dashabord freater than 28.1.0
-        // commented as for now using the version 28.1.0
-        // const dimensions = {
-        //     x: 0,
-        //     y: 0,
-        //     width: 100,
-        //     height: 100,
-        //     top: 0,
-        //     left: 0,
-        //     right: 100,
-        //     bottom: 100,
-        // };
-        // const mockBounding = jest.fn(() => ({
-        //     ...dimensions,
-        //     toJSON: jest.fn(() => dimensions),
-        // }));
+    beforeEach(() => {
+        // not needed as for now there is onlt one test
+        // but adding it for future tests
 
-        // Element.prototype.getBoundingClientRect = mockBounding;
+        // needed for dashabord greater than 28.1.0
+        // type error is thrown if that one is not defined
+        // it can be done via test.setup.ts but then it is applied to all tests
+        // and it is causing issues with other tests
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: vi.fn().mockImplementation((query) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(), // deprecated
+                removeListener: vi.fn(), // deprecated
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            })),
+        });
+    });
+
+    it('renders with all default modal dashboard elements', async () => {
         consoleError.mockImplementation(() => {});
         server.use(
             http.get('/custom/data_ingestion_modal_definition.json', () =>
