@@ -46,7 +46,6 @@ class AlertActionsPyGenerator:
             )
         space_replace = re.compile(r"[^\w]+")
         self._lib_dir = space_replace.sub("_", ta_name.lower())
-        # nosemgrep: splunk.autoescape-disabled, python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
         self._templates = Environment(
             loader=FileSystemLoader(
                 op.join(op.dirname(op.realpath(__file__)), "arf_template")
