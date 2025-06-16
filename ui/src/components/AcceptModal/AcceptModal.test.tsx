@@ -1,5 +1,6 @@
 import { expect, it, vi } from 'vitest';
 import React from 'react';
+import userEvent from '@testing-library/user-event';
 
 import { render, screen } from '@testing-library/react';
 import AcceptModal from './AcceptModal';
@@ -28,7 +29,7 @@ it('Return true on accept btn click', async () => {
     const acceptButton = screen.getByText('Yes');
     expect(acceptButton).toBeInTheDocument();
 
-    acceptButton.click();
+    await userEvent.click(acceptButton);
     expect(handleClose).toHaveBeenCalledWith(true);
 });
 
@@ -41,7 +42,7 @@ it('Return false on decline btn click', async () => {
     const declineButton = screen.getByText('No');
     expect(declineButton).toBeInTheDocument();
 
-    declineButton.click();
+    await userEvent.click(declineButton);
     expect(handleClose).toHaveBeenCalledWith(false);
 });
 
@@ -54,6 +55,6 @@ it('Return false on closing modal by X btn', async () => {
     const closeXBtn = screen.getByTestId('close');
     expect(closeXBtn).toBeInTheDocument();
 
-    closeXBtn.click();
+    await userEvent.click(closeXBtn);
     expect(handleClose).toHaveBeenCalledWith(false);
 });
