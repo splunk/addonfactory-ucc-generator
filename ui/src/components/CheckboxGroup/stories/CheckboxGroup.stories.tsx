@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react';
 import { fn } from '@storybook/test';
 import CheckboxGroup from '../CheckboxGroup';
 import { MODE_CREATE, MODE_EDIT } from '../../../constants/modes';
