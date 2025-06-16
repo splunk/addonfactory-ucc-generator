@@ -1,5 +1,21 @@
 # Changelog
 
+# [5.66.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.65.0...v5.66.0) (2025-06-03)
+
+
+### Bug Fixes
+
+* custom tab without entity error ([#1718](https://github.com/splunk/addonfactory-ucc-generator/issues/1718)) ([9c38fd4](https://github.com/splunk/addonfactory-ucc-generator/commit/9c38fd4a2f12e8bd35e7d87f5a5268938e78603b))
+* handling of non external custom elements ([#1766](https://github.com/splunk/addonfactory-ucc-generator/issues/1766)) ([2342a05](https://github.com/splunk/addonfactory-ucc-generator/commit/2342a050aeecca9a34f15ca3e0c0c30ad929f771))
+* remove support for interval and index type of entities for alerts ([#1757](https://github.com/splunk/addonfactory-ucc-generator/issues/1757)) ([49c04be](https://github.com/splunk/addonfactory-ucc-generator/commit/49c04be804bcd27f820d2bb8d77b0674499b513c))
+* set host and port for proxy as required ([#1755](https://github.com/splunk/addonfactory-ucc-generator/issues/1755)) ([4bafe79](https://github.com/splunk/addonfactory-ucc-generator/commit/4bafe79e8ffeebe0b10ed294157ec06b387cf0ce))
+* **ui lib:** do not copy files from lib while building ([#1756](https://github.com/splunk/addonfactory-ucc-generator/issues/1756)) ([3b433ee](https://github.com/splunk/addonfactory-ucc-generator/commit/3b433eebbb2c677c70009581389a3537423bc8a4))
+
+
+### Features
+
+* **playground:** api calls as success to enable internal data flow ([#1731](https://github.com/splunk/addonfactory-ucc-generator/issues/1731)) ([6170551](https://github.com/splunk/addonfactory-ucc-generator/commit/6170551f539c150b4a88e63b57d4ab3e7b2569ad))
+
 # [5.65.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.64.0...v5.65.0) (2025-05-15)
 
 
