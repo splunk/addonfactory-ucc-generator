@@ -45,6 +45,10 @@ const Row = styled(ColumnLayout.Row)`
 
 type Tab = z.infer<typeof TabSchema>;
 
+const WrapBar = styled(TabBar)`
+    flex-wrap: wrap;
+`;
+
 function ConfigurationPage() {
     const unifiedConfigs = getUnifiedConfigs();
     invariant(unifiedConfigs.pages.configuration, 'Configuration page not found in global config');
@@ -150,11 +154,11 @@ function ConfigurationPage() {
                             </ColumnLayout.Column>
                         </Row>
                     </ColumnLayout>
-                    <TabBar activeTabId={activeTabId} onChange={handleChange}>
+                    <WrapBar activeTabId={activeTabId} onChange={handleChange}>
                         {filteredTabs.map((tab) => (
                             <TabBar.Tab key={tab.name} label={_(tab.title)} tabId={tab.name} />
                         ))}
-                    </TabBar>
+                    </WrapBar>
                 </div>
                 {filteredTabs.map((tab) => getTabContent(tab))}
                 <ToastMessages position="top-right" />
