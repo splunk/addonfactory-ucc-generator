@@ -18,7 +18,7 @@ import re
 from os import path as op
 from typing import Any, Dict
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
@@ -46,6 +46,7 @@ class AlertActionsPyGenerator:
             )
         space_replace = re.compile(r"[^\w]+")
         self._lib_dir = space_replace.sub("_", ta_name.lower())
+        select_autoescape(disabled_extensions=("template"))
         self._templates = Environment(
             loader=FileSystemLoader(
                 op.join(op.dirname(op.realpath(__file__)), "arf_template")
