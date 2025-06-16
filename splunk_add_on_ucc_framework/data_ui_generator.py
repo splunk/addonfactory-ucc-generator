@@ -17,7 +17,7 @@
 # It proposed to replace `xml` with `defusedxml` and it does not have such
 # import.
 # nosemgrep: splunk.use-defused-xml
-from xml.etree import ElementTree as ET
+from defusedxml import ElementTree as ET
 from defusedxml import minidom
 from typing import Optional
 
