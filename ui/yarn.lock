@@ -3175,7 +3175,7 @@
     lodash "^4.17.14"
     tinycolor2 "^1.4.1"
 
-"@splunk/themes@^1.0.0", "@splunk/themes@^1.0.1":
+"@splunk/themes@^1.0.0":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@splunk/themes/-/themes-1.0.1.tgz#be552a0f112eeb603c246c14d0e88fef1cd94bea"
   integrity sha512-Ryv9zc/7VqHnPpvjIX22wJMyPFD3ch6WBUjyL5+/SW+9ZQD5KeC7F5adhD5IEIaYqPjsp0FqHyi1CGrnO3Y5Zg==

@@ -43,7 +43,7 @@
     "@splunk/react-ui": "^4.46.0",
     "@splunk/search-job": "^3.1.0",
     "@splunk/splunk-utils": "^3.2.0",
-    "@splunk/themes": "^1.0.1",
+    "@splunk/themes": "^0.24.0",
     "@splunk/ui-utils": "^1.8.0",
     "@splunk/visualization-context": "^27.3.0",
     "@storybook/test": "^8.6.14",
