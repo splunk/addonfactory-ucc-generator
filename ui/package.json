@@ -159,7 +159,19 @@
     "esbuild": "^0.25.4",
     "axios": "^1.9.0",
     "jspdf": "^3.0.1",
-    "http-proxy-middleware": "^2.0.9"
+    "http-proxy-middleware": "^2.0.9",
+    "@splunk/dashboard-definition": "28.3.0",
+    "@splunk/dashboard-icons": "28.3.0",
+    "@splunk/dashboard-state": "28.3.0",
+    "@splunk/dashboard-telemetry": "28.3.0",
+    "@splunk/dashboard-ui": "28.3.0",
+    "@splunk/dashboard-utils": "28.3.0",
+    "@splunk/datasources": "28.3.0",
+    "@splunk/dashboard-event-handlers": "28.3.0",
+    "@splunk/dashboard-inputs": "28.3.0",
+    "@splunk/dashboard-layouts": "28.3.0",
+    "@splunk/dashboard-search": "28.3.0",
+    "@splunk/dashboard-validation": "28.3.0"
   },
   "engines": {
     "node": ">=20.11.0",
