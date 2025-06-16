@@ -2704,7 +2704,7 @@
     react-full-screen "^1.1.1"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-definition@28.4.0", "@splunk/dashboard-definition@^28.4.0":
+"@splunk/dashboard-definition@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-definition/-/dashboard-definition-28.4.0.tgz#4755bef5ae6efed949ad7b3deeb185814112d805"
   integrity sha512-4QzTEvuUH14LLf4/MU09hI5Lr2GJelXTmfUfVd6NUKpp6T+Fd8meRseDPLUiQkBZD4NVAyZIqjVzEXC1hSsSvQ==
@@ -2716,14 +2716,14 @@
     hash-it "^5.0.2"
     lodash "^4.17.21"
 
-"@splunk/dashboard-event-handlers@28.4.0", "@splunk/dashboard-event-handlers@^28.4.0":
+"@splunk/dashboard-event-handlers@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-event-handlers/-/dashboard-event-handlers-28.4.0.tgz#bd813501ae65c8d2105d34337381f961f864cda2"
   integrity sha512-Wh0TfUWZaEK01Lg/InBKz8DuM7MFcV6JBxyE9bv5h4h4LjticupY3q5iPn7Gk30ZPDicz0CGlHI80cwq1o4wBQ==
   dependencies:
     "@splunk/dashboard-utils" "^28.4.0"
 
-"@splunk/dashboard-icons@28.4.0", "@splunk/dashboard-icons@^28.4.0":
+"@splunk/dashboard-icons@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-icons/-/dashboard-icons-28.4.0.tgz#a8c7d2fb1d51aa85d7d29742cfd7dd0ce0d31890"
   integrity sha512-GtVPA3VXqrBeaiXzV9SuUhC5/mDItRiq+Ax2KLJNno8VcfRcuz3VXHzc17MdM7SQt9vQKXRmQdV3FQ69R67z0A==
@@ -2732,7 +2732,7 @@
     "@splunk/react-icons" "^4.12.0"
     "@splunk/ui-utils" "^1.8.0"
 
-"@splunk/dashboard-inputs@28.4.0", "@splunk/dashboard-inputs@^28.4.0":
+"@splunk/dashboard-inputs@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-inputs/-/dashboard-inputs-28.4.0.tgz#375ac1a4679d6a7865c4adcf83376c56f8a696b5"
   integrity sha512-rbjPHXz+zkvkZc3scDsWNzsFEbW78PutQ2CfBQpYXhR5pM84C3rJW0GP7Z338IbVDYChiey8aQE+lE23iiBd5w==
@@ -2756,7 +2756,7 @@
     memoize-one "^6.0.0"
     prop-types "^15.8.1"
 
-"@splunk/dashboard-layouts@28.4.0", "@splunk/dashboard-layouts@^28.4.0":
+"@splunk/dashboard-layouts@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-layouts/-/dashboard-layouts-28.4.0.tgz#8ef6ffe5c32017e002e3bce922f0b495463a7f2e"
   integrity sha512-c3/OilFvwsMuQLqyLaCxV5mwKiLqGDmcfezJqHq2L3d3rVGXrxgwPgDCoAtqS2qLWTTqw9OKgkCLoiwS5t5n9A==
@@ -2799,7 +2799,7 @@
     "@splunk/visualizations" "^27.4.0"
     lodash "^4.17.21"
 
-"@splunk/dashboard-search@28.4.0", "@splunk/dashboard-search@^28.4.0":
+"@splunk/dashboard-search@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-search/-/dashboard-search-28.4.0.tgz#aa347785d7576b7eee16d7eca6da6a1c7fc3d17a"
   integrity sha512-GnRIRS2DLxS9TBv8sVKIio1TG4i2aTVt03upQsGn5NhTzF3Yp8DfsaQsd43++iH27mmyWkD8EzFK3e6ZhGtIkQ==
@@ -2826,7 +2826,7 @@
     lodash "^4.17.21"
     react-redux "^8.0.5"
 
-"@splunk/dashboard-telemetry@28.4.0", "@splunk/dashboard-telemetry@^28.4.0":
+"@splunk/dashboard-telemetry@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-telemetry/-/dashboard-telemetry-28.4.0.tgz#24a4023fda74a859b743a4fd81466048510c03cc"
   integrity sha512-bpYby3BVANq1lJlGS1JIw0MfgpiLWcvZn/MGc6jxYouaD21Z7500I9odNwR+gavoMrg+Y6IfYbTbdK45Ta/2XQ==
@@ -2845,7 +2845,7 @@
     redux "^4.2.1"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-ui@28.4.0", "@splunk/dashboard-ui@^28.4.0":
+"@splunk/dashboard-ui@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-ui/-/dashboard-ui-28.4.0.tgz#497571d546de835e5fc45ee4466f3ad9b9dc023c"
   integrity sha512-vrfRx8/K64CmhbeOQsP++a18XyVGE/Ds5xRiOh9u7MKwG4WI0PhOPeWVIgL2LvKejR1vNthxb1i1tvf3wwKKGA==
@@ -2871,7 +2871,7 @@
     resize-observer-polyfill "^1.5.1"
     tinycolor2 "^1.6.0"
 
-"@splunk/dashboard-utils@28.4.0", "@splunk/dashboard-utils@^28.4.0":
+"@splunk/dashboard-utils@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-utils/-/dashboard-utils-28.4.0.tgz#f2c4e410714fb02ffbf896e692837af5121002f2"
   integrity sha512-rAmB+ky+eQJTt5PRRzyMbwCmrz8WfYFLvQ1YJwhrnQLyYpJspC+xtfT1LmfrdyhtO1dzaPVpdgDe8Hhq0c+EaQ==
@@ -2888,7 +2888,7 @@
     lodash "^4.17.21"
     memoize-one "^6.0.0"
 
-"@splunk/dashboard-validation@28.4.0", "@splunk/dashboard-validation@^28.4.0":
+"@splunk/dashboard-validation@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/dashboard-validation/-/dashboard-validation-28.4.0.tgz#3d78c57f5a1fb893707b9214bb1cfaf3612cf417"
   integrity sha512-gIZoTI7A78bnkdsWEsVHn6Xdq9EzAleVTxH8MWHETmjrNt4rc6Md+U8gKEixjyMYHOhE6oRtPt7WvnELhkbRpw==
@@ -2905,7 +2905,7 @@
     "@splunk/dashboard-utils" "^28.4.0"
     lodash "^4.17.21"
 
-"@splunk/datasources@28.4.0", "@splunk/datasources@^28.4.0":
+"@splunk/datasources@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/datasources/-/datasources-28.4.0.tgz#8cd8ea8a8831effb350563201d004c8646b7bdd1"
   integrity sha512-mcn+rIOQN/BbZSPfI3uLnzcxGjMsFFH40SOKyFyXa1ZG/UgyKaYNXmuM9ohYe214qJuMQmceE0E7c/AQPkJsgA==
