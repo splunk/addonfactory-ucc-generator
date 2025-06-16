@@ -2,6 +2,7 @@ import { beforeEach, expect, it, MockInstance, vi } from 'vitest';
 import * as React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 import { http, HttpResponse } from 'msw';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
@@ -90,7 +91,7 @@ it('should display error when server returns error', async () => {
     });
     const showButton = screen.getByText('Error Details');
     expect(showButton).toBeInTheDocument();
-    showButton.click();
+    await userEvent.click(showButton);
 
     const errorText = await screen.findByText(errorMessage);
     expect(errorText).toBeInTheDocument();
