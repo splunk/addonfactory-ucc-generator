@@ -379,32 +379,34 @@ def test_install_libraries_valid_os_libraries(
     )
 
     log_message_expected_1 = (
-        f"python3 -m pip install "
-        f"--no-deps "
-        f"--no-compile "
-        f"--platform win_amd64 "
-        f"--python-version 37 "
+        "python3 -m pip install "
+        "--no-deps "
+        "--no-compile "
+        "--platform win_amd64 "
+        "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/windows "
-        f"--only-binary=:all: cryptography==41.0.5"
+        "--only-binary=:all: cryptography==41.0.5 "
+        "--ignore-requires-python \nINFO"
     )
 
     log_message_expected_2 = (
-        f"python3 -m pip install  "
-        f"--no-compile "
-        f"--platform manylinux2014_x86_64 "
-        f"--python-version 37 "
+        "python3 -m pip install  "
+        "--no-compile "
+        "--platform manylinux2014_x86_64 "
+        "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/linux "
-        f"--only-binary=:all: cryptography==41.0.5"
+        "--only-binary=:all: cryptography==41.0.5 "
+        "--ignore-requires-python "
     )
 
     log_message_expected_3 = (
-        f"python3 -m pip install "
-        f"--no-deps "
-        f"--no-compile "
-        f"--platform macosx_10_12_universal2 "
-        f"--python-version 37 "
+        "python3 -m pip install "
+        "--no-deps "
+        "--no-compile "
+        "--platform macosx_10_12_universal2 "
+        "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/darwin "
-        f"--only-binary=:all: cryptography==41.0.5"
+        "--only-binary=:all: cryptography==41.0.5  \nINFO"
     )
 
     assert log_message_expected_1 in caplog.text

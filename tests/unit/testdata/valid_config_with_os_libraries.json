@@ -65,6 +65,7 @@
         "platform": "macosx_10_12_universal2",
         "python_version": "37",
         "os": "darwin",
+        "ignore_requires_python": false,
         "target": "3rdparty/darwin"
       },
       {
@@ -79,6 +80,7 @@
         "name": "cryptography",
         "version": "41.0.5",
         "dependencies": true,
+        "ignore_requires_python": true,
         "platform": "manylinux2014_x86_64",
         "python_version": "37",
         "os": "linux",
