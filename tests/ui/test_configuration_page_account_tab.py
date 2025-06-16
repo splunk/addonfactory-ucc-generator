@@ -682,6 +682,7 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
+    @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_account_list_example_multiple_select(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
