@@ -8,12 +8,12 @@ import {
     CommonEditableEntityOptions,
     CommonEntityFields,
     ModifyFieldsOnValue,
+    PlatformEnum,
     StringOrTextWithLinks,
     TextElementWithLinksSchema,
     ValueLabelPair,
 } from './baseSchemas';
 
-const PlatformEnum = z.enum(['cloud', 'enterprise']);
 const DefaultValueUnion = z.union([z.string(), z.number(), z.boolean()]);
 
 // Reusable checkbox configuration schema
@@ -41,18 +41,20 @@ const BaseGroupSchema = z
     })
     .strict();
 
-export const LinkEntitySchema = z.object({
-    type: z.literal('helpLink'),
-    field: z.string(),
-    label: z.string().optional(),
-    help: StringOrTextWithLinks.optional(),
-    tooltip: z.string().optional(),
-    required: z.literal(false).default(false).optional(),
-    options: TextElementWithLinksSchema.extend({
-        hideForPlatform: PlatformEnum.optional(),
-        display: z.boolean().default(true).optional(),
-    }),
-});
+export const LinkEntitySchema = z
+    .object({
+        type: z.literal('helpLink'),
+        field: z.string(),
+        label: z.string().optional(),
+        help: StringOrTextWithLinks.optional(),
+        tooltip: z.string().optional(),
+        required: z.literal(false).default(false).optional(),
+        options: TextElementWithLinksSchema.extend({
+            hideForPlatform: PlatformEnum.optional(),
+            display: z.boolean().default(true).optional(),
+        }),
+    })
+    .strict();
 
 export const TextEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('text'),

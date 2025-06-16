@@ -9,6 +9,8 @@ import {
     UrlValidator,
 } from './validators';
 
+export const PlatformEnum = z.enum(['cloud', 'enterprise']);
+
 export const ValueLabelPair = z
     .object({
         value: z.union([z.number(), z.string(), z.boolean()]),
@@ -96,7 +98,7 @@ export const CommonEditableEntityOptions = z
         disableonEdit: z.boolean().default(false).optional(),
         enable: z.boolean().default(true).optional(),
         requiredWhenVisible: z.boolean().default(false).optional(),
-        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+        hideForPlatform: PlatformEnum.optional(),
     })
     .strict();
 

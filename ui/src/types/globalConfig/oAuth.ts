@@ -4,6 +4,7 @@ import {
     CommonEditableEntityFields,
     CommonEditableEntityOptions,
     ModifyFieldsOnValue,
+    PlatformEnum,
     StringOrTextWithLinks,
 } from './baseSchemas';
 
@@ -30,7 +31,7 @@ const OAuthOptionsSchema = z
         enable: z.boolean().optional(),
         display: z.boolean().optional(),
         disableonEdit: z.boolean().optional(),
-        hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
+        hideForPlatform: PlatformEnum.optional(),
         auth_type: z.array(z.enum(['basic', 'oauth', 'oauth_client_credentials'])),
         basic: z.array(oAuthFieldSchema).optional(),
         oauth: z.array(oAuthFieldSchema).optional(),
