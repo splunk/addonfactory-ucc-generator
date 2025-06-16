@@ -20,3 +20,5 @@ export const CustomDashboard = ({
             <DashboardCore width="100%" height="auto" />
         </DashboardContextProvider>
     ) : null;
+
+export default CustomDashboard;
