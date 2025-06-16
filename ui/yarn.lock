@@ -40,7 +40,7 @@
   resolved "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.27.5.tgz#7d0658ec1a8420fc866d1df1b03bea0e79934c82"
   integrity sha512-KiRAp/VoJaWkkte84TvUd9qjdbZAdiqyvMxrGl1N6vzFogKmaLgoM3L1kgtLicp2HP5fBJS8JrZKLVIZGVJAVg==
 
-"@babel/core@^7.11.6", "@babel/core@^7.12.3", "@babel/core@^7.18.9", "@babel/core@^7.22.5", "@babel/core@^7.23.9", "@babel/core@^7.27.1", "@babel/core@^7.27.4", "@babel/core@^7.7.5":
+"@babel/core@^7.11.6", "@babel/core@^7.12.3", "@babel/core@^7.18.9", "@babel/core@^7.22.5", "@babel/core@^7.23.9", "@babel/core@^7.27.4", "@babel/core@^7.7.5":
   version "7.27.4"
   resolved "https://registry.npmjs.org/@babel/core/-/core-7.27.4.tgz#cc1fc55d0ce140a1828d1dd2a2eba285adbfb3ce"
   integrity sha512-bXYxrXFubeYdvB0NhD/NBB3Qi6aZeV20GOWVI47t2dkecCEoneR4NPVcb7abpXDEvejgrUfFtG6vG/zxAKmg+g==
@@ -61,7 +61,7 @@
     json5 "^2.2.3"
     semver "^6.3.1"
 
-"@babel/eslint-parser@^7.27.1":
+"@babel/eslint-parser@^7.27.5":
   version "7.27.5"
   resolved "https://registry.npmjs.org/@babel/eslint-parser/-/eslint-parser-7.27.5.tgz#56577afa9d820e9936e986d3a3b79c422223dfc6"
   integrity sha512-HLkYQfRICudzcOtjGwkPvGc5nF1b4ljLZh1IRDj50lRZ718NAKVgQpIAUX8bfg6u/yuSKY3L7E0YzIV+OxrB8Q==
@@ -798,7 +798,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/plugin-transform-runtime@^7.27.1":
+"@babel/plugin-transform-runtime@^7.27.4":
   version "7.27.4"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.27.4.tgz#dee5c5db6543313d1ae1b4b1ec122ff1e77352b9"
   integrity sha512-D68nR5zxU64EUzV8i7T3R5XP0Xhrou/amNnddsRQssx6GrTLdZl1rLxyjtVZBd+v/NVX4AbTPOB5aU8thAZV1A==
@@ -2389,7 +2389,7 @@
   resolved "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.11.tgz#1e3e8044dd053c3dfa4bbbb3861f6e180ee78343"
   integrity sha512-L/gAA/hyCSuzTF1ftlzUSI/IKr2POHsv1Dd78GfqkR83KMNuswWD61JxGV2L7nRwBBBSDr6R1gCkdTmoN7W4ag==
 
-"@rollup/plugin-commonjs@^28.0.3":
+"@rollup/plugin-commonjs@^28.0.5":
   version "28.0.5"
   resolved "https://registry.npmjs.org/@rollup/plugin-commonjs/-/plugin-commonjs-28.0.5.tgz#9d88fbab1fb586accca5b4235813ac3d53078b3c"
   integrity sha512-lytLp2JgAMwqJY6ve3OSROXr2XuEYHjnsQN3hmnxC+w11dI91LuUw4Yc1kk2FqKXeMG8psoFejFgK+znoij0cg==
@@ -2636,15 +2636,15 @@
   resolved "https://registry.npmjs.org/@splunk/charting-bundle/-/charting-bundle-27.4.0.tgz#a0799207c1ad076db2f40bd2eef0adf2a0628af5"
   integrity sha512-f2br6I5K9Sl0U2p2RqtniNJhswJNIV4qf9xy0Pb+2DQxSuqmZ3Uk3RKGiSkiXrvvKPv714BciAlS2Yf1Y0s0ug==
 
-"@splunk/dashboard-action-buttons@28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-action-buttons/-/dashboard-action-buttons-28.3.0.tgz#08e998fe5f72d435f0e3a65ca3551a03680c1598"
-  integrity sha512-tDkooepomXag3ORKiv0BopJ2Je8ovGY4xpnl0YmGEz6W8nI49njVlVSb3m9reolMAlwze0L7NEHHxoNt3JyjbQ==
+"@splunk/dashboard-action-buttons@28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-action-buttons/-/dashboard-action-buttons-28.4.0.tgz#151f0fbec5a39a4b86e5ed47fb7756bc42b9cbcb"
+  integrity sha512-c7zMKEl88YN5NJL0K9Q4/MYnPPP8gwIYJa7I3IxCbsanu+2sqASJhXGdiXcFL2SgjRk/TXqbR2pEEovdbQ/bvg==
   dependencies:
-    "@splunk/dashboard-icons" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-ui" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
+    "@splunk/dashboard-icons" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-ui" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/react-ui" "^4.43.0"
     "@splunk/themes" "^0.23.0"
@@ -2652,22 +2652,22 @@
     lodash "^4.17.21"
     prop-types "^15.8.1"
 
-"@splunk/dashboard-context@28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-context/-/dashboard-context-28.3.0.tgz#920ff044cc4a464d05872e7bb4d702e3d3143aae"
-  integrity sha512-AKrX9DFV50flaEmweKfJ25yrTiJerlKdd0xMog35079l7hOXdGHLL5kF8zxiupEBuxa0vZRWDbfu3sVoJQCHZg==
+"@splunk/dashboard-context@28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-context/-/dashboard-context-28.4.0.tgz#f1b014efe6e776386f629ca6e060ecde7be609d4"
+  integrity sha512-VYp4W8q7taDegBmU5/X0EuRgzbP2HC8hygBpdksVJRzk5rzx41cVeh78Mvhf8D+ju5T6VIfkYKiffZAML1wMvQ==
   dependencies:
     "@dnd-kit/core" "^6.0.5"
     "@dnd-kit/sortable" "^7.0.1"
     "@dnd-kit/utilities" "^3.2.0"
-    "@splunk/dashboard-definition" "^28.3.0"
-    "@splunk/dashboard-icons" "^28.3.0"
-    "@splunk/dashboard-search" "^28.3.0"
-    "@splunk/dashboard-state" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
-    "@splunk/datasources" "^28.3.0"
+    "@splunk/dashboard-definition" "^28.4.0"
+    "@splunk/dashboard-icons" "^28.4.0"
+    "@splunk/dashboard-search" "^28.4.0"
+    "@splunk/dashboard-state" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
+    "@splunk/datasources" "^28.4.0"
     "@splunk/react-ui" "^4.43.0"
     "@splunk/splunk-utils" "^3.2.0"
     "@splunk/themes" "^0.23.0"
@@ -2677,23 +2677,23 @@
     memoize-one "^6.0.0"
     prop-types "^15.8.1"
 
-"@splunk/dashboard-core@28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-core/-/dashboard-core-28.3.0.tgz#c3bb97deb3119a2b41f81d5ac854b6510f04fdbe"
-  integrity sha512-sX+QUZ9H1Qf6geq34zZjU5+Kq+fNm0LG55kp+JEMFbQSci4MRzgSnGCJN6L84fvaijSgBBcZmTt++q8MUw+mGg==
+"@splunk/dashboard-core@28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-core/-/dashboard-core-28.4.0.tgz#e260e7f620adadc6a5c511761321194d19dd9b13"
+  integrity sha512-+A7LKP4dwwJCtZlfRfHUYD/KsmSIXwvs6ca1oO+lBnDPjVFkfhlv7SL+cH7QuUU/g23Fc2fpE9dECsK47e3jzw==
   dependencies:
     "@dnd-kit/core" "^6.0.5"
     "@dnd-kit/sortable" "^7.0.1"
     "@dnd-kit/utilities" "^3.2.0"
-    "@splunk/dashboard-definition" "^28.3.0"
-    "@splunk/dashboard-layouts" "^28.3.0"
-    "@splunk/dashboard-search" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-ui" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/dashboard-validation" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
-    "@splunk/datasources" "^28.3.0"
+    "@splunk/dashboard-definition" "^28.4.0"
+    "@splunk/dashboard-layouts" "^28.4.0"
+    "@splunk/dashboard-search" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-ui" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/dashboard-validation" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
+    "@splunk/datasources" "^28.4.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/react-ui" "^4.43.0"
     "@splunk/themes" "^0.23.0"
@@ -2704,44 +2704,44 @@
     react-full-screen "^1.1.1"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-definition@28.3.0", "@splunk/dashboard-definition@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-definition/-/dashboard-definition-28.3.0.tgz#6d55903300768674f597b591fcecc11264cc5bd7"
-  integrity sha512-qPOmjxl99ZQTdTvwfTxddFiRGvoRM7La5E+z6B4QFvB+l3xS/7Nh/o5Wa8tNsHqtYOw2u3Yr6u4N7o0mMTklQw==
+"@splunk/dashboard-definition@28.4.0", "@splunk/dashboard-definition@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-definition/-/dashboard-definition-28.4.0.tgz#4755bef5ae6efed949ad7b3deeb185814112d805"
+  integrity sha512-4QzTEvuUH14LLf4/MU09hI5Lr2GJelXTmfUfVd6NUKpp6T+Fd8meRseDPLUiQkBZD4NVAyZIqjVzEXC1hSsSvQ==
   dependencies:
-    "@splunk/dashboard-utils" "^28.3.0"
+    "@splunk/dashboard-utils" "^28.4.0"
     "@splunk/ui-utils" "^1.8.0"
     ajv "^8.5.0"
     fast-json-patch "^3.1.1"
     hash-it "^5.0.2"
     lodash "^4.17.21"
 
-"@splunk/dashboard-event-handlers@28.3.0", "@splunk/dashboard-event-handlers@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-event-handlers/-/dashboard-event-handlers-28.3.0.tgz#1d8d35fed32dffbd3ab46281f7d1c8bc1f80d102"
-  integrity sha512-79EBqt4E/ZxO2Ju4mzfGbMtat9PWeK6ksV3+b9iWmVCMIvVm1V0njSU7F9Q0YyNHXqMl2Hw2nHFVNMoNw4nHPw==
+"@splunk/dashboard-event-handlers@28.4.0", "@splunk/dashboard-event-handlers@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-event-handlers/-/dashboard-event-handlers-28.4.0.tgz#bd813501ae65c8d2105d34337381f961f864cda2"
+  integrity sha512-Wh0TfUWZaEK01Lg/InBKz8DuM7MFcV6JBxyE9bv5h4h4LjticupY3q5iPn7Gk30ZPDicz0CGlHI80cwq1o4wBQ==
   dependencies:
-    "@splunk/dashboard-utils" "^28.3.0"
+    "@splunk/dashboard-utils" "^28.4.0"
 
-"@splunk/dashboard-icons@28.3.0", "@splunk/dashboard-icons@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-icons/-/dashboard-icons-28.3.0.tgz#ae9c233b49bbd6c1b0763274d32cf66ceb64eef3"
-  integrity sha512-RoVEbgtHpW8Xa/FZr7tSlmzYI7GBFcmw0QiTLaz+W/yw/Ddg5LtUHF3x+dkxNSHiJsi1ND29U7ErAwWsWomThA==
+"@splunk/dashboard-icons@28.4.0", "@splunk/dashboard-icons@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-icons/-/dashboard-icons-28.4.0.tgz#a8c7d2fb1d51aa85d7d29742cfd7dd0ce0d31890"
+  integrity sha512-GtVPA3VXqrBeaiXzV9SuUhC5/mDItRiq+Ax2KLJNno8VcfRcuz3VXHzc17MdM7SQt9vQKXRmQdV3FQ69R67z0A==
   dependencies:
-    "@splunk/dashboard-utils" "^28.3.0"
+    "@splunk/dashboard-utils" "^28.4.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/ui-utils" "^1.8.0"
 
-"@splunk/dashboard-inputs@28.3.0", "@splunk/dashboard-inputs@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-inputs/-/dashboard-inputs-28.3.0.tgz#4901cdff2e4d607d4e8a60c5604395fd85b5ed56"
-  integrity sha512-Sk2G3yGCTaNcQms7tXcyDAksrHMyIfb0Ow/Vwf2QV4VjISPTv/cKO0LgGrUIXSFC868WlUqmKBC4c5ZKk4ukHw==
+"@splunk/dashboard-inputs@28.4.0", "@splunk/dashboard-inputs@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-inputs/-/dashboard-inputs-28.4.0.tgz#375ac1a4679d6a7865c4adcf83376c56f8a696b5"
+  integrity sha512-rbjPHXz+zkvkZc3scDsWNzsFEbW78PutQ2CfBQpYXhR5pM84C3rJW0GP7Z338IbVDYChiey8aQE+lE23iiBd5w==
   dependencies:
-    "@splunk/dashboard-icons" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-ui" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
+    "@splunk/dashboard-icons" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-ui" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
     "@splunk/moment" "^0.7.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/react-time-range" "^10.0.0"
@@ -2750,94 +2750,94 @@
     "@splunk/themes" "^0.23.0"
     "@splunk/time-range-utils" "^3.3.0"
     "@splunk/ui-utils" "^1.8.0"
-    "@splunk/visualization-encoding" "^27.3.0"
-    "@splunk/visualizations-shared" "^27.3.0"
+    "@splunk/visualization-encoding" "^27.4.0"
+    "@splunk/visualizations-shared" "^27.4.0"
     lodash "^4.17.21"
     memoize-one "^6.0.0"
     prop-types "^15.8.1"
 
-"@splunk/dashboard-layouts@28.3.0", "@splunk/dashboard-layouts@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-layouts/-/dashboard-layouts-28.3.0.tgz#cc8af436c6330eb11f0ab0999ea173e16d9bab33"
-  integrity sha512-R5VbiBVZvCTK6/MIFMD9+TZSQQBMFmnTCEPLBJM1ZtzHADffk/n46rjXBysFOkJ7wp2akQ+2fvFJndKwb/9xUA==
+"@splunk/dashboard-layouts@28.4.0", "@splunk/dashboard-layouts@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-layouts/-/dashboard-layouts-28.4.0.tgz#8ef6ffe5c32017e002e3bce922f0b495463a7f2e"
+  integrity sha512-c3/OilFvwsMuQLqyLaCxV5mwKiLqGDmcfezJqHq2L3d3rVGXrxgwPgDCoAtqS2qLWTTqw9OKgkCLoiwS5t5n9A==
   dependencies:
     "@dnd-kit/core" "^6.0.5"
     "@dnd-kit/sortable" "^7.0.1"
     "@dnd-kit/utilities" "^3.2.0"
-    "@splunk/dashboard-definition" "^28.3.0"
-    "@splunk/dashboard-state" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-ui" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
+    "@splunk/dashboard-definition" "^28.4.0"
+    "@splunk/dashboard-state" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-ui" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/themes" "^0.23.0"
     "@splunk/ui-utils" "^1.8.0"
-    "@splunk/visualization-color-palettes" "^27.3.0"
-    "@splunk/visualization-encoding" "^27.3.0"
-    "@splunk/visualizations" "^27.3.0"
-    "@splunk/visualizations-shared" "^27.3.0"
+    "@splunk/visualization-color-palettes" "^27.4.0"
+    "@splunk/visualization-encoding" "^27.4.0"
+    "@splunk/visualizations" "^27.4.0"
+    "@splunk/visualizations-shared" "^27.4.0"
     lodash "^4.17.21"
     memoize-one "^6.0.0"
     prop-types "^15.8.1"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-presets@28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-presets/-/dashboard-presets-28.3.0.tgz#3c9ea336defd5aeabd03f6467efe6d5a88dadc45"
-  integrity sha512-vhjUlvu9/7HpcxZrUhpWvo122wemtOY9Lq2D+0ELx963nxIsrfkGr5FaV1VJ56QxWg3Vr2katIkxfkW4aEexUg==
+"@splunk/dashboard-presets@28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-presets/-/dashboard-presets-28.4.0.tgz#ce2d2f63c7035f6236f9376f8e1d45c59ea4543a"
+  integrity sha512-cvwH9vdl2piaAIa6hm/31AbjaILC02tXNXArHLdlcPCkInq0iM/Kj7cnnK4PYEuF1IuZ1N3sfF9kIlcbvU7q9g==
   dependencies:
-    "@splunk/dashboard-event-handlers" "^28.3.0"
-    "@splunk/dashboard-icons" "^28.3.0"
-    "@splunk/dashboard-inputs" "^28.3.0"
-    "@splunk/dashboard-layouts" "^28.3.0"
-    "@splunk/dashboard-ui" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasources" "^28.3.0"
+    "@splunk/dashboard-event-handlers" "^28.4.0"
+    "@splunk/dashboard-icons" "^28.4.0"
+    "@splunk/dashboard-inputs" "^28.4.0"
+    "@splunk/dashboard-layouts" "^28.4.0"
+    "@splunk/dashboard-ui" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasources" "^28.4.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/ui-utils" "^1.8.0"
-    "@splunk/visualizations" "^27.3.0"
+    "@splunk/visualizations" "^27.4.0"
     lodash "^4.17.21"
 
-"@splunk/dashboard-search@28.3.0", "@splunk/dashboard-search@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-search/-/dashboard-search-28.3.0.tgz#2a8760afaaf67dc07dd4a3ed6d44af698b29f2cd"
-  integrity sha512-Cgh9f8HjxAV4MNv40ud5HvbyGDpQJJDgovDocRfjkgD+LYiWyOWQOp/WjukDOApUjZRIOQetLAzoZcgHf8A+GA==
+"@splunk/dashboard-search@28.4.0", "@splunk/dashboard-search@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-search/-/dashboard-search-28.4.0.tgz#aa347785d7576b7eee16d7eca6da6a1c7fc3d17a"
+  integrity sha512-GnRIRS2DLxS9TBv8sVKIio1TG4i2aTVt03upQsGn5NhTzF3Yp8DfsaQsd43++iH27mmyWkD8EzFK3e6ZhGtIkQ==
   dependencies:
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
-    "@splunk/datasources" "^28.3.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
+    "@splunk/datasources" "^28.4.0"
     "@splunk/ui-utils" "^1.8.0"
     hash-it "^5.0.2"
     lodash "^4.17.21"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-state@28.3.0", "@splunk/dashboard-state@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-state/-/dashboard-state-28.3.0.tgz#4abfb48c1d0b06920935efa8a656d9aa25666062"
-  integrity sha512-jGXowwTl37c/n77K7Loy7h8Z2NZ1MKvYRuL8BVGPLgYaXTHK1frnU2AlOuKVjkT7oy6NsNitf2mNq8aF1L2hLw==
+"@splunk/dashboard-state@28.4.0", "@splunk/dashboard-state@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-state/-/dashboard-state-28.4.0.tgz#187aab4b6fc2a195fc063fba0171093e588fc1d7"
+  integrity sha512-Let63RxGH3GkG+3mLGYFy+ZWY0Etdk8hJ2lI8ejsoZyruKNK8HU8uSmTr7shO/EAhIHN/pTqAscVP444w6zp6g==
   dependencies:
     "@reduxjs/toolkit" "^1.9.4"
-    "@splunk/dashboard-definition" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
+    "@splunk/dashboard-definition" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
     "@splunk/ui-utils" "^1.8.0"
     lodash "^4.17.21"
     react-redux "^8.0.5"
 
-"@splunk/dashboard-telemetry@28.3.0", "@splunk/dashboard-telemetry@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-telemetry/-/dashboard-telemetry-28.3.0.tgz#508e43c5da472820099a407f7af538202913879c"
-  integrity sha512-vCHvgbVgMJPmXDRxvXAjadBg+7QjuKpNKkV9bhprs8EqO1/QlZpVNx0EoKTcd2giSQ8Xy72wq67/32saJFCWig==
+"@splunk/dashboard-telemetry@28.4.0", "@splunk/dashboard-telemetry@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-telemetry/-/dashboard-telemetry-28.4.0.tgz#24a4023fda74a859b743a4fd81466048510c03cc"
+  integrity sha512-bpYby3BVANq1lJlGS1JIw0MfgpiLWcvZn/MGc6jxYouaD21Z7500I9odNwR+gavoMrg+Y6IfYbTbdK45Ta/2XQ==
   dependencies:
-    "@splunk/dashboard-utils" "^28.3.0"
+    "@splunk/dashboard-utils" "^28.4.0"
     lodash "^4.17.21"
 
-"@splunk/dashboard-types@28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-types/-/dashboard-types-28.3.0.tgz#93dda2388065d9c06b2fb2acfdcd3f17784cff7d"
-  integrity sha512-lFx4sQoy3bh24sb5J5oH6Q0i5/J+JgsSdoHYre4TOC4TPyB9xzNrvxiKflycaFOMdz1OTcrOXGclcRw/QvLTMA==
+"@splunk/dashboard-types@28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-types/-/dashboard-types-28.4.0.tgz#dbc6d6cb1f97b43d93407c01a212ccef18a77ebb"
+  integrity sha512-GB1c/ppvn5d3kEOFHBakONdAUaY6YNVJPtRvRIA8K772pZqfWiMlop3dvVekU19JBKjoYlTSnimWP++nz2qF8g==
   dependencies:
     "@reduxjs/toolkit" "^1.9.4"
     "@types/react" "^16.14.5"
@@ -2845,16 +2845,16 @@
     redux "^4.2.1"
     rxjs "^5.5.12"
 
-"@splunk/dashboard-ui@28.3.0", "@splunk/dashboard-ui@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-ui/-/dashboard-ui-28.3.0.tgz#84b6e646a430d522f597a623c2785d20e4fc2171"
-  integrity sha512-FXYlSg4N8j30sXLIgurgr0tbSgqLuwMFf/RJSgFWQxaKOHfWVHJ8M3xZwzx+Df5ZcijfoRbRHdKIsNfovs6I/Q==
+"@splunk/dashboard-ui@28.4.0", "@splunk/dashboard-ui@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-ui/-/dashboard-ui-28.4.0.tgz#497571d546de835e5fc45ee4466f3ad9b9dc023c"
+  integrity sha512-vrfRx8/K64CmhbeOQsP++a18XyVGE/Ds5xRiOh9u7MKwG4WI0PhOPeWVIgL2LvKejR1vNthxb1i1tvf3wwKKGA==
   dependencies:
-    "@splunk/dashboard-definition" "^28.3.0"
-    "@splunk/dashboard-icons" "^28.3.0"
-    "@splunk/dashboard-telemetry" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
+    "@splunk/dashboard-definition" "^28.4.0"
+    "@splunk/dashboard-icons" "^28.4.0"
+    "@splunk/dashboard-telemetry" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
     "@splunk/moment" "^0.7.0"
     "@splunk/react-icons" "^4.12.0"
     "@splunk/react-search" "^5.0.0"
@@ -2862,8 +2862,8 @@
     "@splunk/splunk-utils" "^3.2.0"
     "@splunk/themes" "^0.23.0"
     "@splunk/ui-utils" "^1.8.0"
-    "@splunk/visualization-icons" "^27.3.0"
-    "@splunk/visualizations-shared" "^27.3.0"
+    "@splunk/visualization-icons" "^27.4.0"
+    "@splunk/visualizations-shared" "^27.4.0"
     hoist-non-react-statics "^3.3.2"
     lodash "^4.17.21"
     memoize-one "^6.0.0"
@@ -2871,15 +2871,15 @@
     resize-observer-polyfill "^1.5.1"
     tinycolor2 "^1.6.0"
 
-"@splunk/dashboard-utils@28.3.0", "@splunk/dashboard-utils@^28.3.0", "@splunk/dashboard-utils@^28.4.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-utils/-/dashboard-utils-28.3.0.tgz#2867bcef75ebcd7541be0424e5b9ea15700fbb37"
-  integrity sha512-pvx9QcZJlWwdhOnuqjS3PsPZRPItzGggDFgigxhpEsezdn86HpSy7pXV4eXP3+3xmvX7g/vs1Lu6VLoRwcRm6A==
+"@splunk/dashboard-utils@28.4.0", "@splunk/dashboard-utils@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-utils/-/dashboard-utils-28.4.0.tgz#f2c4e410714fb02ffbf896e692837af5121002f2"
+  integrity sha512-rAmB+ky+eQJTt5PRRzyMbwCmrz8WfYFLvQ1YJwhrnQLyYpJspC+xtfT1LmfrdyhtO1dzaPVpdgDe8Hhq0c+EaQ==
   dependencies:
     "@splunk/moment" "^0.7.0"
     "@splunk/splunk-utils" "^3.2.0"
     "@splunk/ui-utils" "^1.8.0"
-    "@splunk/visualization-migrations" "^27.3.0"
+    "@splunk/visualization-migrations" "^27.4.0"
     ajv "^8.5.0"
     crypto-js "^4.0.0"
     fflate "^0.8.2"
@@ -2888,16 +2888,16 @@
     lodash "^4.17.21"
     memoize-one "^6.0.0"
 
-"@splunk/dashboard-validation@28.3.0", "@splunk/dashboard-validation@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/dashboard-validation/-/dashboard-validation-28.3.0.tgz#b24edc2e5860f3f50733bc60994b7b10942cd47e"
-  integrity sha512-AOmUxXG3Ze/5AVdXw48DoEk0HRm4KI1VjIuIGirEsmggSUyfT1hxCZ3AECoqw2Alph4cAki2WKZgaeqOW2AOlQ==
+"@splunk/dashboard-validation@28.4.0", "@splunk/dashboard-validation@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/dashboard-validation/-/dashboard-validation-28.4.0.tgz#3d78c57f5a1fb893707b9214bb1cfaf3612cf417"
+  integrity sha512-gIZoTI7A78bnkdsWEsVHn6Xdq9EzAleVTxH8MWHETmjrNt4rc6Md+U8gKEixjyMYHOhE6oRtPt7WvnELhkbRpw==
   dependencies:
     "@splunk/ui-utils" "^1.8.0"
     ajv "^8.5.0"
     ajv-errors "^3.0.0"
 
-"@splunk/datasource-utils@^28.3.0":
+"@splunk/datasource-utils@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/datasource-utils/-/datasource-utils-28.4.0.tgz#068e1fa36ea1b5c61ca098c3bf63fc9e5c6a2671"
   integrity sha512-SgjMFMo/GDOy+ekZctMHGNkw88HheMiX6y0xIiJsyYaPrqUrYxAVlVb7/fAdRJEKbcsxUpOFMxo4NzgAaq9CDw==
@@ -2905,14 +2905,14 @@
     "@splunk/dashboard-utils" "^28.4.0"
     lodash "^4.17.21"
 
-"@splunk/datasources@28.3.0", "@splunk/datasources@^28.3.0":
-  version "28.3.0"
-  resolved "https://registry.npmjs.org/@splunk/datasources/-/datasources-28.3.0.tgz#7e8bec0ee149421eb5319f3baeb709c91d04fbd6"
-  integrity sha512-/KCqJ+lyStOKztE50xjYoRz+DhN/YOj8FO2BGeBDABjvsHwXSSEHyiUjaOaXfpHMXaBKz/ELadW0VCHYntasDQ==
+"@splunk/datasources@28.4.0", "@splunk/datasources@^28.4.0":
+  version "28.4.0"
+  resolved "https://registry.npmjs.org/@splunk/datasources/-/datasources-28.4.0.tgz#8cd8ea8a8831effb350563201d004c8646b7bdd1"
+  integrity sha512-mcn+rIOQN/BbZSPfI3uLnzcxGjMsFFH40SOKyFyXa1ZG/UgyKaYNXmuM9ohYe214qJuMQmceE0E7c/AQPkJsgA==
   dependencies:
-    "@splunk/dashboard-definition" "^28.3.0"
-    "@splunk/dashboard-utils" "^28.3.0"
-    "@splunk/datasource-utils" "^28.3.0"
+    "@splunk/dashboard-definition" "^28.4.0"
+    "@splunk/dashboard-utils" "^28.4.0"
+    "@splunk/datasource-utils" "^28.4.0"
     "@splunk/moment" "^0.7.0"
     "@splunk/search-job" "^3.1.0"
     "@splunk/splunk-utils" "^3.2.0"
@@ -2947,7 +2947,7 @@
     "@splunk/ui-utils" "^1.6.0"
     lodash "^4.17.14"
 
-"@splunk/react-events-viewer@^27.3.0", "@splunk/react-events-viewer@^27.4.0":
+"@splunk/react-events-viewer@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/react-events-viewer/-/react-events-viewer-27.4.0.tgz#429f0e68b0593e0dd39420d2cfead59880ff383a"
   integrity sha512-e2ShiFXWH5jxMuj9cTBdjXszNMRvnSSCy/5spBKYvde7sdn06KVp57dDGjTAWuIpwpz3w8NNHkY4Gq8VIWPT8w==
@@ -2974,7 +2974,7 @@
     "@splunk/ui-utils" "^1.8.0"
     prop-types "^15.8.1"
 
-"@splunk/react-icons@^4.0.1", "@splunk/react-icons@^4.12.0", "@splunk/react-icons@^4.14.0", "@splunk/react-icons@^4.2.0":
+"@splunk/react-icons@^4.0.1", "@splunk/react-icons@^4.12.0", "@splunk/react-icons@^4.14.0":
   version "4.14.0"
   resolved "https://registry.npmjs.org/@splunk/react-icons/-/react-icons-4.14.0.tgz#f8b5d2b51b1b7768e5d4cc2b3f70f4f7411c809d"
   integrity sha512-+HjGJJ0A9HlgYsAz3/vGo50exfdXvnkyQtd8tyit7iTnSVKeuPlk3qrzXWsLNyVEJ3EdAhiep1Grko9PBpbe7g==
@@ -3048,20 +3048,20 @@
     lodash "^4.17.19"
     prop-types "^15.6.0"
 
-"@splunk/react-toast-notifications@^0.11.3":
-  version "0.11.3"
-  resolved "https://registry.npmjs.org/@splunk/react-toast-notifications/-/react-toast-notifications-0.11.3.tgz#8224d3614c0af8d63170274e4ef0edd9e67af50c"
-  integrity sha512-qXJr7kgJep7pyhspqyq+B7oDDKIHJDohsrZ01t+QLh/6gWhjCnmryROzuSdh/TwQvMvaERLRx3my2vpIavQ0KQ==
+"@splunk/react-toast-notifications@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.npmjs.org/@splunk/react-toast-notifications/-/react-toast-notifications-0.12.0.tgz#a79169134d271b7d5f490bd9732f28a054d6c240"
+  integrity sha512-J/8BnsxTxxvvqdJAVgIiCmLURYOgtIaeHy0zzH37LxgoR442gLfkuxuBq3ANUo9I5PSRSO4kB4YA43uy7mW3Kg==
   dependencies:
-    "@splunk/react-icons" "^4.2.0"
-    "@splunk/react-ui" "^4.23.0"
-    "@splunk/themes" "^0.16.4"
-    "@splunk/ui-utils" "^1.6.0"
+    "@splunk/react-icons" "^5.0.0"
+    "@splunk/react-ui" "^5.0.0"
+    "@splunk/themes" "^1.0.0"
+    "@splunk/ui-utils" "^1.9.0"
     lodash "^4.17.14"
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.23.0", "@splunk/react-ui@^4.43.0", "@splunk/react-ui@^4.44.0", "@splunk/react-ui@^4.45.0", "@splunk/react-ui@^4.46.0":
+"@splunk/react-ui@^4.19.0", "@splunk/react-ui@^4.43.0", "@splunk/react-ui@^4.44.0", "@splunk/react-ui@^4.45.0", "@splunk/react-ui@^4.46.0":
   version "4.46.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-4.46.0.tgz#a5cdc6bf3ee4040a79d9e38eaf5a1a54f022e6a6"
   integrity sha512-AXJIptFlI6OgHta48G+49y3BtN+PKgw2Ym7JAR1vdKMIo/AMTpJUSJ29EB+50r2jwaHWU4uFptdMNjtE08LeKw==
@@ -3135,7 +3135,7 @@
     querystring "^0.2.1"
     scriptjs "^2.5.8"
 
-"@splunk/themes@^0.16.1", "@splunk/themes@^0.16.4":
+"@splunk/themes@^0.16.1":
   version "0.16.4"
   resolved "https://registry.npmjs.org/@splunk/themes/-/themes-0.16.4.tgz#883ad2ebb2527e8a62d5ed97036906553b44144b"
   integrity sha512-S2QFI09ss2t8Q3tE0JBwszD1N+SmY55C72koymrI4l1sr9QYNtvGT6Nauka0AjYsLUx1QESwyIproor/muwjxA==
@@ -3203,14 +3203,14 @@
     keycode "^2.1.9"
     lodash "^4.17.21"
 
-"@splunk/visualization-color-palettes@^27.3.0", "@splunk/visualization-color-palettes@^27.4.0":
+"@splunk/visualization-color-palettes@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-color-palettes/-/visualization-color-palettes-27.4.0.tgz#ba37807e5e6bb857acb2f5fb6392d4e30a360c9b"
   integrity sha512-HuR5zRIBnYjduT3aFuI2b511qGiDn/J56hEHS/xxrEjt1qonVKHlRl5P7LwDxCZbSUVTfCdGnOJh7CaUlRq4Pw==
   dependencies:
     "@splunk/ui-utils" "^1.8.0"
 
-"@splunk/visualization-context@^27.3.0":
+"@splunk/visualization-context@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-context/-/visualization-context-27.4.0.tgz#5b72ddfc4537ee650982a6449a175af250fb6180"
   integrity sha512-1eTQc5eGsOF93SqkIS7yFkEUTrCakVNdChwnoQZmt4kcfafzZTd5KYuZowHmbKma/3jK82dbHKuDYc6RTTuFCw==
@@ -3218,7 +3218,7 @@
     "@splunk/ui-utils" "^1.8.0"
     uuid-v4 "^0.1.0"
 
-"@splunk/visualization-encoding@^27.3.0", "@splunk/visualization-encoding@^27.4.0":
+"@splunk/visualization-encoding@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-encoding/-/visualization-encoding-27.4.0.tgz#066fc747bc20ffedbbc0d36aa4b79a163cb32452"
   integrity sha512-1Rik4SGGRK+VEspfrS7CnUYUVvYwmRymwKdVoozZ2KWOUBsqk6astMuhvQZY14xzBsB39va/PTMkgEfSwvYp8w==
@@ -3230,7 +3230,7 @@
     nearley "^2.20.1"
     numbro "2.5.0"
 
-"@splunk/visualization-icons@^27.3.0", "@splunk/visualization-icons@^27.4.0":
+"@splunk/visualization-icons@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-icons/-/visualization-icons-27.4.0.tgz#baa6f130fa156b2863048f722ba61d15bb84293e"
   integrity sha512-tHKwElMErnmviIsDm3ZFE+MhubVVXTtlGpXqEJoTJGmJYyTyWTTOai+cm3Wm33vHq1mWf1HRVggcoVI63trurg==
@@ -3238,7 +3238,7 @@
     "@splunk/react-icons" "^4.14.0"
     "@splunk/ui-utils" "^1.8.0"
 
-"@splunk/visualization-migrations@^27.3.0":
+"@splunk/visualization-migrations@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-migrations/-/visualization-migrations-27.4.0.tgz#dfb0c1bf6f94fd6fa2bc4f5643b68a88cf62347e"
   integrity sha512-dt9QaVqg+HUJTpFw5+fO+EDVT+rXbt6QYsDYvSnZWHpQ6mY/BBsAqwVcP1bBTgwirTNmgIXLZeIWoi7ubiGk9A==
@@ -3262,7 +3262,7 @@
   dependencies:
     "@splunk/themes" "^0.24.0"
 
-"@splunk/visualizations-shared@^27.3.0", "@splunk/visualizations-shared@^27.4.0":
+"@splunk/visualizations-shared@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualizations-shared/-/visualizations-shared-27.4.0.tgz#684f8aff01676a9d03fdfd2d577d146df9648c28"
   integrity sha512-oa/M3Tz/Ym6j4FBrelCVMvjDh67MkGHkvgnhfoPVifiUSdYN/A++zIEiXnZv0Br6gNf6X0fH+VYfKF+RQJqGIQ==
@@ -3280,7 +3280,7 @@
     prop-types "^15.8.1"
     xmlserializer "^0.6.1"
 
-"@splunk/visualizations@^27.3.0":
+"@splunk/visualizations@^27.4.0":
   version "27.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualizations/-/visualizations-27.4.0.tgz#758a8b777b338b92bf4a69235cd7cce9acb9905e"
   integrity sha512-3ywoEyWK+S8hsesIdaeE5yl5fcRHSFaj8tEj3yp+GnQACVAc2ZDahLiXwpydBjVzqpN1huDMw43Aq606yor5hA==
@@ -3563,17 +3563,16 @@
     "@storybook/react-dom-shim" "8.6.14"
     "@storybook/theming" "8.6.14"
 
-"@storybook/test-runner@^0.22.0":
-  version "0.22.1"
-  resolved "https://registry.npmjs.org/@storybook/test-runner/-/test-runner-0.22.1.tgz#02243015d648a806316e5efec5887608ee2d8b95"
-  integrity sha512-F5omZH0Pj2Y0UXSqShl1RuPrnhLBbb/yPFnZbVWDSPWZHDSX+dfBuu1T2zVfJplNKd04RzJuMbWHPFtZ0mimSw==
+"@storybook/test-runner@^0.23.0":
+  version "0.23.0"
+  resolved "https://registry.npmjs.org/@storybook/test-runner/-/test-runner-0.23.0.tgz#8449006c44fbbdb832253754da957cdb2db0ed69"
+  integrity sha512-AVA6mSotfHAqsKjvWMNR7wcXIoCNQidU9P5GIGEdn+gArzkzTsLXZr6qNjH4XQRg8pSR+IUOuB1MMWZIHxhgoQ==
   dependencies:
     "@babel/core" "^7.22.5"
     "@babel/generator" "^7.22.5"
     "@babel/template" "^7.22.5"
     "@babel/types" "^7.22.5"
     "@jest/types" "^29.6.3"
-    "@storybook/csf" "^0.1.11"
     "@swc/core" "^1.5.22"
     "@swc/jest" "^0.2.23"
     expect-playwright "^0.8.0"
@@ -4077,7 +4076,7 @@
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-17.0.26.tgz#fa7891ba70fd39ddbaa7e85b6ff9175bb546bc1b"
   integrity sha512-Z+2VcYXJwOqQ79HreLU/1fyQ88eXSSFh6I3JdrEHQIfYSI0kCQpTGvOrbE6jFGGYXKsHuwY9tBa/w5Uo6KzrEg==
 
-"@types/react@*", "@types/react@^16.14.5", "@types/react@^16.14.64", "@types/react@^16.9.38":
+"@types/react@*", "@types/react@^16.14.5", "@types/react@^16.14.65", "@types/react@^16.9.38":
   version "16.14.65"
   resolved "https://registry.npmjs.org/@types/react/-/react-16.14.65.tgz#e7e4c1f7e90c3c615105c22e6e5cf43766663716"
   integrity sha512-Guc3kE+W8LrQB9I3bF3blvNH15dXFIVIHIJTqrF8cp5XI/3IJcHGo4C3sJNPb8Zx49aofXKnAGIKyonE4f7XWg==
@@ -4425,7 +4424,7 @@
   resolved "https://registry.npmjs.org/@unrs/resolver-binding-win32-x64-msvc/-/resolver-binding-win32-x64-msvc-1.9.0.tgz#708b957d5d66543c45240b4c6b45ee63ed59b6b7"
   integrity sha512-k59o9ZyeyS0hAlcaKFezYSH2agQeRFEB7KoQLXl3Nb3rgkqT1NY9Vwy+SqODiLmYnEjxWJVRE/yq2jFVqdIxZw==
 
-"@vitejs/plugin-react@^4.5.0":
+"@vitejs/plugin-react@^4.5.2":
   version "4.5.2"
   resolved "https://registry.npmjs.org/@vitejs/plugin-react/-/plugin-react-4.5.2.tgz#8b98a8fbcefff4aa4c946966fbec560dc66d2bd9"
   integrity sha512-QNVT3/Lxx99nMQWJWF7K4N6apUEuT0KlZA3mx/mVaoGj3smm/8rc8ezz15J1pcbcjDK0V15rpHetVfya08r76Q==
@@ -4437,7 +4436,7 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.17.0"
 
-"@vitest/coverage-istanbul@^3.1.4":
+"@vitest/coverage-istanbul@^3.2.3":
   version "3.2.3"
   resolved "https://registry.npmjs.org/@vitest/coverage-istanbul/-/coverage-istanbul-3.2.3.tgz#5f6fb160997e73f9d326aebb5362a7894798bd63"
   integrity sha512-kW1n4neEJbMYcAjzk+fS1nKReP+gURgaQ1/KzjAZsDyaUklnUjuWn38tLNbSwoobUBquuvdE6EzljSRxOuDXOQ==
@@ -5020,7 +5019,7 @@ axe-core@^4.10.0, axe-core@^4.2.0:
   resolved "https://registry.npmjs.org/axe-core/-/axe-core-4.10.3.tgz#04145965ac7894faddbac30861e5d8f11bfd14fc"
   integrity sha512-Xm7bpRXnDSX2YE2YFfBk2FnF0ep6tmG7xPh8iHee8MIcrgq762Nkce856dYtJYLkuIoYZvGfTs/PbZhideTcEg==
 
-axios@^1.6.1, axios@^1.9.0:
+axios@^1.10.0, axios@^1.6.1:
   version "1.10.0"
   resolved "https://registry.npmjs.org/axios/-/axios-1.10.0.tgz#af320aee8632eaf2a400b6a1979fa75856f38d54"
   integrity sha512-/1xYAC4MP/HEG+3duIhFr4ZQXR4sQXOIe+o6sdqzeykGLx6Upp/1p8MHqhINOvGeP7xyNHe7tsiJByc4SSVUxw==
@@ -6727,7 +6726,7 @@ esbuild-register@^3.5.0:
   dependencies:
     debug "^4.3.4"
 
-esbuild@^0.17.18, "esbuild@^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0", esbuild@^0.25.0, esbuild@^0.25.4:
+esbuild@^0.17.18, "esbuild@^0.18.0 || ^0.19.0 || ^0.20.0 || ^0.21.0 || ^0.22.0 || ^0.23.0 || ^0.24.0 || ^0.25.0", esbuild@^0.25.0, esbuild@^0.25.5:
   version "0.25.5"
   resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.25.5.tgz#71075054993fdfae76c66586f9b9c1f8d7edd430"
   integrity sha512-P8OtKZRv/5J5hhz0cUAdu/cLuPIKXpQl1R9pZtvmHWQvrAUVd0UNIPT4IB4W3rNOqVO0rlqHmCIbSwxh/c9yUQ==
@@ -6819,7 +6818,7 @@ eslint-import-resolver-node@^0.3.9:
     is-core-module "^2.13.0"
     resolve "^1.22.4"
 
-eslint-import-resolver-typescript@^4.4.1:
+eslint-import-resolver-typescript@^4.4.3:
   version "4.4.3"
   resolved "https://registry.npmjs.org/eslint-import-resolver-typescript/-/eslint-import-resolver-typescript-4.4.3.tgz#7fdd06f8fd7cdb05656980e3fe9d2c246365b2a2"
   integrity sha512-elVDn1eWKFrWlzxlWl9xMt8LltjKl161Ix50JFC50tHXI5/TRP32SNEqlJ/bo/HV+g7Rou/tlPQU2AcRtIhrOg==
@@ -6864,7 +6863,7 @@ eslint-plugin-import@^2.31.0:
     string.prototype.trimend "^1.0.8"
     tsconfig-paths "^3.15.0"
 
-eslint-plugin-jest@^28.11.0:
+eslint-plugin-jest@^28.14.0:
   version "28.14.0"
   resolved "https://registry.npmjs.org/eslint-plugin-jest/-/eslint-plugin-jest-28.14.0.tgz#02da77dc27d7b4c5480df3552ea26de056857b36"
   integrity sha512-P9s/qXSMTpRTerE2FQ0qJet2gKbcGyFTPAJipoKxmWqR6uuFqIqk8FuEfg5yBieOezVrEfAMZrEwJ6yEp+1MFQ==
@@ -6937,7 +6936,7 @@ eslint-plugin-storybook@^0.12.0:
     "@typescript-eslint/utils" "^8.8.1"
     ts-dedent "^2.2.0"
 
-eslint-plugin-testing-library@^7.2.2:
+eslint-plugin-testing-library@^7.5.3:
   version "7.5.3"
   resolved "https://registry.npmjs.org/eslint-plugin-testing-library/-/eslint-plugin-testing-library-7.5.3.tgz#d9d19acfccc1f5bae2ede05d1356587e68a3438a"
   integrity sha512-sZk5hIrx0p1ehvdS2qHefKwXHiEysiQN+FMGCzES6xRNUgwI3q4KdWMeAwpPDP9u0RDkNzJpebRUnNch1sJh+A==
@@ -7548,7 +7547,7 @@ glob@^10.0.0, glob@^10.3.10, glob@^10.4.1:
     package-json-from-dist "^1.0.0"
     path-scurry "^1.11.1"
 
-glob@^11.0.2:
+glob@^11.0.3:
   version "11.0.3"
   resolved "https://registry.npmjs.org/glob/-/glob-11.0.3.tgz#9d8087e6d72ddb3c4707b1d2778f80ea3eaefcd6"
   integrity sha512-2Nim7dha1KVkaiF4q6Dj+ngPPMdfvLJEOpZk/jKiUAkqKebpGAWQXAq9z1xu9HKu5lWfqw/FASuccEjyznjPaA==
@@ -10365,14 +10364,14 @@ ms@^2.1.1, ms@^2.1.3:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-msw-storybook-addon@^2.0.4:
+msw-storybook-addon@^2.0.5:
   version "2.0.5"
   resolved "https://registry.npmjs.org/msw-storybook-addon/-/msw-storybook-addon-2.0.5.tgz#93b3f6a18bb669d8e86474a7854e0f7a6ee2759d"
   integrity sha512-uum2gtprDBoUb8GV/rPMwPytHmB8+AUr25BQUY0MpjYey5/ujaew2Edt+4oHiXpLTd0ThyMqmEvGy/sRpDV4lg==
   dependencies:
     is-node-process "^1.0.1"
 
-msw@^2.8.4:
+msw@^2.10.2:
   version "2.10.2"
   resolved "https://registry.npmjs.org/msw/-/msw-2.10.2.tgz#e7a56ed0b6865b00a30b4c4a5b59e5388fd48315"
   integrity sha512-RCKM6IZseZQCWcSWlutdf590M8nVfRHG1ImwzOtwz8IYxgT4zhUO0rfTcTvDGiaFE0Rhcc+h43lcF3Jc9gFtwQ==
@@ -11143,10 +11142,10 @@ postcss-value-parser@^4.0.2, postcss-value-parser@^4.1.0, postcss-value-parser@^
   resolved "https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@^8.4.19, postcss@^8.4.33, postcss@^8.5.3:
-  version "8.5.5"
-  resolved "https://registry.npmjs.org/postcss/-/postcss-8.5.5.tgz#04de7797f6911fb1c96550e96616d08681537ef3"
-  integrity sha512-d/jtm+rdNT8tpXuHY5MMtcbJFBkhXE6593XVR9UoGCH8jSFGci7jGvMGH5RYd5PBJW+00NZQt6gf7CbagJCrhg==
+postcss@^8.4.19, postcss@^8.4.33, postcss@^8.5.3, postcss@^8.5.6:
+  version "8.5.6"
+  resolved "https://registry.npmjs.org/postcss/-/postcss-8.5.6.tgz#2825006615a619b4f62a9e7426cc120b349a8f3c"
+  integrity sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==
   dependencies:
     nanoid "^3.3.11"
     picocolors "^1.1.1"
@@ -13459,10 +13458,10 @@ vite-plugin-checker@^0.9.3:
     tinyglobby "^0.2.13"
     vscode-uri "^3.1.0"
 
-vite-plugin-dts@4.5.3:
-  version "4.5.3"
-  resolved "https://registry.npmjs.org/vite-plugin-dts/-/vite-plugin-dts-4.5.3.tgz#9d9e64c12e21e9389efd9f999e034cd5864b0027"
-  integrity sha512-P64VnD00dR+e8S26ESoFELqc17+w7pKkwlBpgXteOljFyT0zDwD8hH4zXp49M/kciy//7ZbVXIwQCekBJjfWzA==
+vite-plugin-dts@4.5.4:
+  version "4.5.4"
+  resolved "https://registry.npmjs.org/vite-plugin-dts/-/vite-plugin-dts-4.5.4.tgz#51b60aaaa760d9cf5c2bb3676c69d81910d6b08c"
+  integrity sha512-d4sOM8M/8z7vRXHHq/ebbblfaxENjogAAekcfcDCCwAyvGqnPrc7f4NZbvItS+g4WTgerW0xDwSz5qz11JT3vg==
   dependencies:
     "@microsoft/api-extractor" "^7.50.1"
     "@rollup/pluginutils" "^5.1.4"
@@ -13496,7 +13495,7 @@ vite-plugin-node-polyfills@^0.23.0:
   optionalDependencies:
     fsevents "~2.3.3"
 
-vitest@^3.1.4:
+vitest@^3.2.3:
   version "3.2.3"
   resolved "https://registry.npmjs.org/vitest/-/vitest-3.2.3.tgz#c2497733cf51f8ec2a3327f80789b269324edb1c"
   integrity sha512-E6U2ZFXe3N/t4f5BwUaVCKRLHqUpk1CBWeMh78UT4VaTPH/2dyvH6ALl29JTovEPu9dVKr/K/J4PkXgrMbw4Ww==
@@ -13903,10 +13902,10 @@ yoctocolors-cjs@^2.1.2:
   resolved "https://registry.npmjs.org/yoctocolors-cjs/-/yoctocolors-cjs-2.1.2.tgz#f4b905a840a37506813a7acaa28febe97767a242"
   integrity sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==
 
-zod@^3.25.28:
-  version "3.25.64"
-  resolved "https://registry.npmjs.org/zod/-/zod-3.25.64.tgz#57b5c7e76dd64e447f7e710285fcdb396b32f803"
-  integrity sha512-hbP9FpSZf7pkS7hRVUrOjhwKJNyampPgtXKc3AN6DsWtoHsg2Sb4SQaS4Tcay380zSwd2VPo9G9180emBACp5g==
+zod@^3.25.65:
+  version "3.25.65"
+  resolved "https://registry.npmjs.org/zod/-/zod-3.25.65.tgz#190cb604e1b45e0f789a315f65463953d4d4beee"
+  integrity sha512-kMyE2qsXK1p+TAvO7zsf5wMFiCejU3obrUDs9bR1q5CBKykfvp7QhhXrycUylMoOow0iEUSyjLlZZdCsHwSldQ==
 
 zwitch@^1.0.0:
   version "1.0.5"
