@@ -4,10 +4,12 @@ import mixins from '@splunk/themes/mixins';
 
 export const StyledContainer = styled.div`
     ${mixins.reset('inline')};
-    display: block;
+    display: flex;
+    flex-direction: column;
     font-size: ${variables.fontSizeLarge};
     line-height: 200%;
-    margin: calc(${variables.spacing} * 1) calc(${variables.spacing} * 1);
+    margin: calc(${variables.spacing} * 1);
+    min-height: calc(95vh - 80px);
 `;
 
 export const GlobalBodyStyle = createGlobalStyle`
@@ -22,4 +24,8 @@ export const GlobalBodyStyle = createGlobalStyle`
     select[disabled='disabled'] {
         -webkit-text-fill-color: #c3cbd4
     }
+`;
+
+export const MainContent = styled.div`
+    flex: 1;
 `;
