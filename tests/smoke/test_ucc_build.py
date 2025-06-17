@@ -4,6 +4,7 @@ import re
 import tempfile
 import logging
 import json
+import pytest
 from os import path
 from pathlib import Path
 from typing import Dict, Any
@@ -792,14 +793,27 @@ def test_ucc_generate_with_ui_source_map():
             assert path.exists(expected_file_path)
 
 
-def test_ucc_copies_dashboard_js_count():
+@pytest.mark.parametrize(
+    "config, expected_file_count",
+    [
+        (
+            "package_global_config_configuration",
+            0,
+        ),
+        (
+            "package_global_config_everything",
+            2,
+        ),
+    ],
+)
+def test_ucc_dashboard_js_copying(config, expected_file_count):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
             "..",
             "testdata",
             "test_addons",
-            "package_global_config_everything",
+            config,
             "package",
         )
         build.generate(
@@ -817,37 +831,10 @@ def test_ucc_copies_dashboard_js_count():
         for _ in js_build_dir.glob("DashboardPage.*"):
             dashbaord_files_counter += 1
 
-        assert dashbaord_files_counter > 0, (
-            f"No DashboardPage.js files found in {js_build_folder}, "
-            "but at least one DashboardPage.[hash].js file should be present."
+        assert dashbaord_files_counter == expected_file_count, (
+            f"Expected {expected_file_count} DashboardPage.[hash].js files in {js_build_folder}, for {config}"
+            f"but found {dashbaord_files_counter}."
         )
-
-
-def test_ucc_skipping_dashboard_js():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_configuration",
-            "package",
-        )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, ui_source_map=True
-        )
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-
-        js_build_folder = path.join(actual_folder, "appserver", "static", "js", "build")
-
-        js_build_dir = Path(js_build_folder)
-
-        for _ in js_build_dir.glob("DashboardPage.*"):
-            assert False, (
-                f"DashboardPage.js files found in {js_build_folder} should not be present, "
-                "but found DashboardPage.js files."
-            )
 
 
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
