@@ -63,7 +63,9 @@ def check_author_name(source: str, app_manifest: AppManifest) -> None:
             )
 
 
-def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> None:
+def recursive_overwrite(
+    src: str, dest: str, ui_source_map: bool = False, has_dashboard: bool = True
+) -> None:
     """
     Method to copy from src to dest recursively.
 
@@ -78,12 +80,18 @@ def recursive_overwrite(src: str, dest: str, ui_source_map: bool = False) -> Non
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            recursive_overwrite(join(src, f), join(dest, f), ui_source_map)
+            recursive_overwrite(
+                join(src, f), join(dest, f), ui_source_map, has_dashboard
+            )
     else:
         if exists(dest):
             remove(dest)
 
-        if (".js.map" not in dest) or ui_source_map:
+        # EnterpriseViewOnlyPreset is the biggest UI dashboard library file
+        # that is not used if dashbaord is not present.
+        if ((".js.map" not in dest) or ui_source_map) and (
+            has_dashboard or "DashboardPage." not in dest
+        ):
             shutil.copy(src, dest)
 
 
