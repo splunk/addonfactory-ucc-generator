@@ -957,7 +957,7 @@ def test_ucc_generate_os_lib_requires_python_39_ignore(tmp_path, caplog):
 
     #  this config has cffi for python version >= 3.8 but has --ignore-requires-python flag
     unit_helpers.copy_testdata_gc_to_tmp_file(
-        tmp_file_gc, "valid_config_with_os_libraries.json"
+        tmp_file_gc, "valid_config_with_os_libraries_ignore.json"
     )
 
     build.generate(source=package_folder, config_path=str(tmp_file_gc))
