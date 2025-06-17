@@ -792,6 +792,64 @@ def test_ucc_generate_with_ui_source_map():
             assert path.exists(expected_file_path)
 
 
+def test_ucc_copies_dashboard_js_count():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_everything",
+            "package",
+        )
+        build.generate(
+            source=package_folder, output_directory=temp_dir, ui_source_map=True
+        )
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        js_build_folder = path.join(actual_folder, "appserver", "static", "js", "build")
+
+        js_build_dir = Path(js_build_folder)
+
+        dashbaord_files_counter = 0
+
+        for _ in js_build_dir.glob("DashboardPage.*"):
+            dashbaord_files_counter += 1
+
+        assert dashbaord_files_counter > 0, (
+            f"No DashboardPage.js files found in {js_build_folder}, "
+            "but at least one DashboardPage.[hash].js file should be present."
+        )
+
+
+def test_ucc_skipping_dashboard_js():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            "package_global_config_configuration",
+            "package",
+        )
+        build.generate(
+            source=package_folder, output_directory=temp_dir, ui_source_map=True
+        )
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        js_build_folder = path.join(actual_folder, "appserver", "static", "js", "build")
+
+        js_build_dir = Path(js_build_folder)
+
+        for _ in js_build_dir.glob("DashboardPage.*"):
+            assert False, (
+                f"DashboardPage.js files found in {js_build_folder} should not be present, "
+                "but found DashboardPage.js files."
+            )
+
+
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
