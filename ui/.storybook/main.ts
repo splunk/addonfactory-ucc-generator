@@ -11,6 +11,10 @@ const config: StorybookConfig = {
             titlePrefix: 'Pages',
             directory: '../src/pages',
         },
+        {
+            titlePrefix: 'Users Playground',
+            directory: '../src/customentity/',
+        },
     ],
     addons: [
         '@storybook/addon-links',

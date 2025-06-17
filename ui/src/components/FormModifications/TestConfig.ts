@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { GlobalConfigSchema } from '../../types/globalConfig/globalConfig';
 import { TabSchema } from '../../types/globalConfig/pages';
-import { CheckboxEntity, TextEntity } from '../../types/globalConfig/entities';
+import { CheckboxEntitySchema, TextEntitySchema } from '../../types/globalConfig/entities';
 
 const defaultTableProps = {
     name: 'account',
@@ -27,14 +27,14 @@ export const firstStandardTextField = {
     label: 'Standard text label first field',
     field: 'standard_text1',
     help: 'Standard Text help first field',
-} satisfies z.infer<typeof TextEntity>;
+} satisfies z.infer<typeof TextEntitySchema>;
 
 export const secondStandardTextField = {
     type: 'text',
     label: 'Standard text label second field',
     field: 'standard_text2',
     help: 'Standard Text help second field',
-} satisfies z.infer<typeof TextEntity>;
+} satisfies z.infer<typeof TextEntitySchema>;
 
 export const firstModificationField = {
     type: 'text',
@@ -81,7 +81,7 @@ export const firstModificationField = {
             ],
         },
     ],
-} satisfies z.infer<typeof TextEntity>;
+} satisfies z.infer<typeof TextEntitySchema>;
 
 export const secondModificationField = {
     type: 'text',
@@ -129,14 +129,14 @@ export const secondModificationField = {
             ],
         },
     ],
-} satisfies z.infer<typeof TextEntity>;
+} satisfies z.infer<typeof TextEntitySchema>;
 
 export const thirdModificationField = {
     type: 'checkbox',
     label: 'Third Modification field - checkbox - label',
     field: 'modification_field3',
     help: 'Third Modification field - checkbox - help',
-} satisfies z.infer<typeof CheckboxEntity>;
+} satisfies z.infer<typeof CheckboxEntitySchema>;
 
 export const getConfigWithModifications = () => {
     const standardConfig = getGlobalConfigMock();
