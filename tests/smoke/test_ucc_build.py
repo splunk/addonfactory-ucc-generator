@@ -956,3 +956,52 @@ def _compare_interval_entities(
                             }
                         ],
                     }
+
+
+def test_ucc_generate_os_lib_requires_python_39_no_ignore(tmp_path, caplog):
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    #  this config has cffi for python version >= 3.8 and --ignore-requires-python flag is missing
+    unit_helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_with_os_libraries_no_ignore.json"
+    )
+
+    python_version = ".".join(str(x) for x in sys.version_info[:2])
+    from packaging.version import Version
+
+    if Version(python_version) < Version("3.8"):
+        with pytest.raises(SystemExit) as e:
+            build.generate(source=package_folder, config_path=str(tmp_file_gc))
+        assert (
+            "Package build aborted with error message: ERROR: Package 'cffi' requires a different "
+            "Python: 3.7.17 not in '>=3.8'" in e.value.args[0]
+        )
+    else:
+        build.generate(source=package_folder, config_path=str(tmp_file_gc))
+
+
+def test_ucc_generate_os_lib_requires_python_39_ignore(tmp_path, caplog):
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    #  this config has cffi for python version >= 3.8 but has --ignore-requires-python flag
+    unit_helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_with_os_libraries_ignore.json"
+    )
+
+    build.generate(source=package_folder, config_path=str(tmp_file_gc))
