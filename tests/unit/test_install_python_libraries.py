@@ -385,8 +385,7 @@ def test_install_libraries_valid_os_libraries(
         "--platform win_amd64 "
         "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/windows "
-        "--only-binary=:all: cryptography==41.0.5 "
-        "--ignore-requires-python \nINFO"
+        "--only-binary=:all: cryptography==41.0.5  \nINFO"
     )
 
     log_message_expected_2 = (

@@ -42,7 +42,7 @@ class OSDependentLibraryConfig:
     os: str
     deps_flag: str
     dependencies: bool = field(default=False)
-    ignore_requires_python: bool = field(default=True)
+    ignore_requires_python: bool = field(default=False)
 
     @classmethod
     def from_dict(cls, **kwargs: Any) -> "OSDependentLibraryConfig":
@@ -57,9 +57,7 @@ class OSDependentLibraryConfig:
         }
         deps_flag = "" if result.get("dependencies") else "--no-deps"
         ignore_python = (
-            "--ignore-requires-python"
-            if result.get("ignore_requires_python", True)
-            else ""
+            "--ignore-requires-python" if result.get("ignore_requires_python") else ""
         )
         result.update({"deps_flag": deps_flag})
         result.update({"ignore_requires_python": ignore_python})
