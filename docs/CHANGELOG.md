@@ -1,5 +1,19 @@
 # Changelog
 
+# [5.67.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.66.0...v5.67.0) (2025-06-17)
+
+
+### Bug Fixes
+
+* added --ignore-requires-python flag for os-dependent ([#1792](https://github.com/splunk/addonfactory-ucc-generator/issues/1792)) ([b9b7347](https://github.com/splunk/addonfactory-ucc-generator/commit/b9b7347dd990c41d0cf72ab15039af26b8f9f5a9))
+
+
+### Features
+
+* add multiline support for tabs ([#1778](https://github.com/splunk/addonfactory-ucc-generator/issues/1778)) ([7616bcb](https://github.com/splunk/addonfactory-ucc-generator/commit/7616bcb4b716116757416d37e108f8e5fee51710))
+* added user-friendly storybook component ([#1759](https://github.com/splunk/addonfactory-ucc-generator/issues/1759)) ([5d04783](https://github.com/splunk/addonfactory-ucc-generator/commit/5d047834c244843945befbf2eeda09e2b5a85684))
+* **dashbaord:** do not build dashboard files when no need ([#1795](https://github.com/splunk/addonfactory-ucc-generator/issues/1795)) ([fafac88](https://github.com/splunk/addonfactory-ucc-generator/commit/fafac88abe7aead8405b7aa4e16ba82405d5e7fb))
+
 # [5.66.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.65.0...v5.66.0) (2025-06-03)
 
 
