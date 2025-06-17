@@ -1,0 +1,9 @@
+import{j as r}from"./jsx-runtime-ClejQJRV.js";import{r as m}from"./index-BnZYiL63.js";import{M as o}from"./Modal-CKUr12g2.js";import{M as i}from"./Message-BhItrygt.js";import{q as u}from"./Clickable-wzamu0qE.js";import{g as c}from"./messageUtil-CXCS-b_z.js";import{U as d}from"./UCCButton-ETWJiCtC.js";import"./_commonjsHelpers-D6-XlEtG.js";import"./Box-9y-3oeI2.js";import"./Divider-BxwkhgHI.js";import"./Close-CPSltoSy.js";import"./IconProvider-D1bqsLqQ.js";import"./style-gy5-imeJ.js";import"./Warning-CEMYJjjT.js";import"./ScreenReaderContent-DTnCP1nJ.js";import"./Link-B3IMA5iK.js";import"./ArrowSquareTopRight-cE1IFp2S.js";import"./External-CaozYYRu.js";import"./index-C6Xwkj2v.js";import"./index-BAMY2Nnw.js";import"./index-BeaWwRds.js";import"./Button-BHr02HYf.js";import"./Button-JhicfZMm.js";import"./WaitSpinner-pc6awGU8.js";const l=u(o)`
+    width: 600px;
+`;function n(t){const[a,p]=m.useState(t.open),s=()=>{p(!1)};return r.jsxs(l,{returnFocus:t.returnFocus,open:a,onRequestClose:s,children:[r.jsx(o.Header,{onRequestClose:s,title:c(104)}),r.jsx(o.Body,{children:r.jsx(i,{appearance:"fill",type:"error",children:t.message})}),r.jsx(o.Footer,{children:r.jsx(d,{onClick:s,label:"OK"})})]})}n.__docgenInfo={description:"",methods:[],displayName:"ErrorModal",props:{message:{required:!0,tsType:{name:"string"},description:""},open:{required:!0,tsType:{name:"boolean"},description:""},returnFocus:{required:!0,tsType:{name:"ComponentProps['returnFocus']",raw:"ComponentProps<typeof Modal>['returnFocus']"},description:""}}};const K={component:n,title:"ErrorModal"},e={args:{message:"Error message",open:!0,returnFocus:()=>{}}};e.parameters={...e.parameters,docs:{...e.parameters?.docs,source:{originalSource:`{
+  args: {
+    message: 'Error message',
+    open: true,
+    returnFocus: () => {}
+  }
+}`,...e.parameters?.docs?.source}}};const N=["Base"];export{e as Base,N as __namedExportsOrder,K as default};
