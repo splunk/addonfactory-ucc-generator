@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AnyOfEntity } from './entities';
+import { AnyOfEntitySchema } from './entities';
 
 export const TableSchema = z.object({
     moreInfo: z
@@ -60,7 +60,7 @@ const GroupsSchema = z
     .optional();
 
 export const TabSchema = z.object({
-    entity: z.array(AnyOfEntity).optional(),
+    entity: z.array(AnyOfEntitySchema).optional(),
     name: z.string(),
     title: z.string(),
     options: HooksSchema,
@@ -84,7 +84,7 @@ export const TableLessServiceSchema = z.object({
     name: z.string(),
     title: z.string(),
     subTitle: z.string().optional(),
-    entity: z.array(AnyOfEntity),
+    entity: z.array(AnyOfEntitySchema),
     options: HooksSchema,
     groups: GroupsSchema,
     style: z.enum(['page', 'dialog']).optional(),
@@ -164,24 +164,27 @@ export const InputsPageTableSchema = z
 const InputsPageSchema = z.union([InputsPageRegular, InputsPageTableSchema]).optional();
 const ServiceTableSchema = z.union([TableFullServiceSchema, TableLessServiceSchema]);
 
-export const pages = z.object({
-    configuration: z
-        .object({
-            title: z.string(),
-            description: z.string().optional(),
-            subDescription: SubDescriptionSchema,
-            tabs: z.array(TabSchema).min(1),
-        })
-        .optional(),
-    inputs: InputsPageSchema,
-    dashboard: z
-        .object({
-            panels: z.array(z.object({ name: z.string() })).min(1),
-            troubleshooting_url: z.string().optional(),
-            settings: z.object({ custom_tab_name: z.string().optional() }).optional(),
-        })
-        .optional(),
-});
+export const pages = z
+    .object({
+        configuration: z
+            .object({
+                title: z.string(),
+                description: z.string().optional(),
+                subDescription: SubDescriptionSchema,
+                tabs: z.array(TabSchema).min(1),
+            })
+            .strict()
+            .optional(),
+        inputs: InputsPageSchema,
+        dashboard: z
+            .object({
+                panels: z.array(z.object({ name: z.string() })).min(1),
+                troubleshooting_url: z.string().optional(),
+                settings: z.object({ custom_tab_name: z.string().optional() }).optional(),
+            })
+            .optional(),
+    })
+    .strict();
 
 export type Platforms = 'enterprise' | 'cloud' | undefined;
 
