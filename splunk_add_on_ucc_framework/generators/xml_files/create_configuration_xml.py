@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Any, Dict
+from typing import Dict
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
@@ -24,7 +24,7 @@ class ConfigurationXml(FileGenerator):
         "configuration is defined in globalConfig."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         if self._global_config.has_configuration():
             self.configuration_xml_content = (
                 data_ui_generator.generate_views_configuration_xml(
