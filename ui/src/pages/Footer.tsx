@@ -10,10 +10,12 @@ const FooterWrapper = styled.footer`
     padding: ${variables.spacingXSmall} ${variables.fontSizeXXLarge};
     padding-bottom: 0px;
     display: flex;
-    align-items: center;
     font-size: ${variables.fontSizeSmall};
-    margin-top: auto;
     border-top: 1px solid ${variables.borderActiveColor};
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     align-items: end;
     justify-content: flex-end;
     flex-direction: column;
