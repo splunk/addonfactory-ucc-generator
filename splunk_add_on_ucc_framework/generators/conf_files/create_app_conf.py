@@ -52,7 +52,9 @@ class AppConf(FileGenerator):
             )
 
         self.addon_version = self._global_config.version
-        self.is_visible = str(self._global_config.has_pages()).lower()
+        self.is_visible = str(
+            self._global_config.meta.get("isVisible", self._global_config.has_pages())
+        ).lower()
         self.build = str(int(time()))
 
     def generate(self) -> Dict[str, str]:
