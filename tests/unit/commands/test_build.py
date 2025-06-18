@@ -1,6 +1,7 @@
 import os
 from unittest.mock import MagicMock, patch
 import pytest
+import platform
 
 from splunk_add_on_ucc_framework.commands.build import (
     _add_modular_input,
@@ -206,7 +207,7 @@ def test_uncaught_exception(mock_get_build_output_path, caplog):
         "addonfactory-ucc-generator/issues/new?template=bug_report.yml&title=%5BBUG%5D%20Some%20"
         "exc%20msg&description="
     )
-    expected_params = f"&ucc_version={__version__}&system_info=Linux"
+    expected_params = f"&ucc_version={__version__}&system_info={platform.system()}"
 
     generate(
         source="source/path",
