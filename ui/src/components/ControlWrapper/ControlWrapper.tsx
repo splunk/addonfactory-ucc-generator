@@ -10,7 +10,7 @@ import { AcceptableFormValueOrNullish } from '../../types/components/shareableTy
 import CustomControl from '../CustomControl/CustomControl';
 import { Mode } from '../../constants/modes';
 import { mapTextToElements } from '../../util/textutils/textUtils';
-import { StringOrTextWithLinks } from '../../types/globalConfig/entities';
+import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
 
 const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,

@@ -33,8 +33,6 @@ rm -rf output
 poetry install
 poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
 
-chmod -R 777 output/
-
 # running on ARM Mac
 if [[ $(uname -m) == 'arm64' ]]; then
   export DOCKER_DEFAULT_PLATFORM=linux/amd64
