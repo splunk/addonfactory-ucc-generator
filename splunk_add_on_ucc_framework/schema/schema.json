@@ -1537,7 +1537,7 @@
         "options": {
           "type": "object",
           "properties": {
-            "delimiter":{
+            "delimiter": {
               "$ref": "#/definitions/delimiter"
             },
             "groups": {
@@ -1686,7 +1686,7 @@
         "options": {
           "type": "object",
           "properties": {
-            "delimiter":{
+            "delimiter": {
               "$ref": "#/definitions/delimiter"
             },
             "groups": {
@@ -2524,6 +2524,10 @@
                     "description": "Exactly: darwin"
                   }
                 ]
+              },
+              "ignore_requires_python": {
+                "type": "boolean",
+                "description": "(Optional) Parameter which determines whether the --ignore-requires-python flag will be used when installing the package from pip."
               }
             },
             "required": [
