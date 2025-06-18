@@ -3,8 +3,8 @@ import React from 'react';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -30,7 +30,7 @@ import { Mode } from '../../constants/modes';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
-import { OAuthFields } from '../../types/globalConfig/entities';
+import { oAuthFieldSchema } from '../../types/globalConfig/oAuth';
 
 vi.mock('../../util/api', async () => ({
     ...(await vi.importActual('../../util/api')),
@@ -585,7 +585,7 @@ describe('Oauth2 - client credentials', () => {
         handleRequestClose = vi.fn();
     });
 
-    const getOauthFields = (oauthCredsFields: Array<z.infer<typeof OAuthFields>>) => {
+    const getOauthFields = (oauthCredsFields: Array<z.infer<typeof oAuthFieldSchema>>) => {
         return oauthCredsFields.map((field) => {
             const oauthField = screen.getByRole('textbox', {
                 name: field.label,
