@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import styled from 'styled-components';
 import Link from '@splunk/react-ui/Link';
 import { z } from 'zod';
-import { MarkdownMessageType } from '../../types/globalConfig/entities';
+import { MarkdownMessageType } from '../../types/globalConfig/baseSchemas';
 
 const MarkdownWrapper = styled.span`
     color: ${(props) => props.color};

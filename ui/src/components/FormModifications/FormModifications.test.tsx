@@ -16,7 +16,7 @@ import {
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
 import { EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
-import { StringOrTextWithLinks } from '../../types/globalConfig/entities';
+import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
 
 const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
