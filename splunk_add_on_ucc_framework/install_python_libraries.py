@@ -352,7 +352,8 @@ Possible solutions, either:
             f"--python-version {os_lib.python_version} "
             f"--target {target_path}"
             f" --only-binary=:all: "
-            f"{os_lib.name}=={os_lib.version}"
+            f"{os_lib.name}=={os_lib.version} "
+            f"{os_lib.ignore_requires_python} "
         )
 
         try:
