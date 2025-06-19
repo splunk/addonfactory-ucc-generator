@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, Union, List
+from typing import Dict, Union, List
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -30,7 +30,7 @@ class RestMapConf(FileGenerator):
         "are generated based on configs from globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = "restmap.conf"
         self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
 

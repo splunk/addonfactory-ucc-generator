@@ -25,7 +25,7 @@ class EventtypesConf(FileGenerator):
         " in Adaptive Response of custom alert action in globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = "eventtypes.conf"
         self.alert_settings: Dict[str, List[Dict[str, Any]]] = {}
         envs = normalize.normalize(

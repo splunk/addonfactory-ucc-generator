@@ -31,7 +31,7 @@ class InputsConf(FileGenerator):
     def _spec_file_name(self, conf_name: str) -> str:
         return f"{self._conf_file_name(conf_name)}.spec"
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = self._conf_file_name("inputs")
 
         # A list of service names from globalConfig that will be in inputs.conf

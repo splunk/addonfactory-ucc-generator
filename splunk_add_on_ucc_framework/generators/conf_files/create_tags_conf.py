@@ -24,7 +24,7 @@ class TagsConf(FileGenerator):
         "`eventtypes.conf` created for custom alert actions."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = "tags.conf"
         self.alert_settings: Dict[str, List[Dict[str, Any]]] = {}
 
