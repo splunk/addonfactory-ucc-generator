@@ -7,6 +7,7 @@ from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 def test_command_list_up_to_date():
     url = "https://docs.splunk.com/Documentation/Splunk/latest/SearchReference"
 
+    # passing an imitation of browser header to make this a request from web browser
     headers = {
         "User-Agent": (
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
