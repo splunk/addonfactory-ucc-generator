@@ -5,9 +5,19 @@ from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 
 
 def test_command_list_up_to_date():
-    with urllib.request.urlopen(
-        "https://docs.splunk.com/Documentation/Splunk/latest/SearchReference"
-    ) as resp:
+    url = "https://docs.splunk.com/Documentation/Splunk/latest/SearchReference"
+
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/115.0.0.0 Safari/537.36"
+        )
+    }
+
+    req = urllib.request.Request(url, headers=headers)
+
+    with urllib.request.urlopen(req) as resp:
         content = resp.read().decode()
 
     match = re.search(r"Search\s+Commands.+?<ul.+?>(.+?)</ul>", content, re.S)
