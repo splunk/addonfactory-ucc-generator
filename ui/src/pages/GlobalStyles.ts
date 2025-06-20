@@ -4,7 +4,7 @@ import mixins from '@splunk/themes/mixins';
 
 export const StyledContainer = styled.div`
     ${mixins.reset('inline')};
-    display: block;
+    display: flex;
     font-size: ${variables.fontSizeLarge};
     line-height: 200%;
     margin: calc(${variables.spacing} * 1);
