@@ -3,7 +3,7 @@
         "configuration": {
             "tabs": [
                 {
-                    "type": "LoggingTab"
+                    "type": "loggingTab"
                 }
             ],
             "title": "Configuration",

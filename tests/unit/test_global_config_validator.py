@@ -51,7 +51,7 @@ def test_validation_when_created_from_app_manifest(app_manifest_correct):
 def test_autocompletefields_support_integer_values():
     # Regression unit test: https://github.com/splunk/addonfactory-ucc-generator/issues/794
     global_config_path = helpers.get_testdata_file_path(
-        "invalid_config_configuration_autoCompleteFields_integer_values.json"
+        "valid_config_configuration_autoCompleteFields_integer_values.json"
     )
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
@@ -64,7 +64,7 @@ def test_autocompletefields_support_integer_values():
 def test_autocompletefields_children_support_integer_values():
     # Regression unit test: https://github.com/splunk/addonfactory-ucc-generator/issues/794
     global_config_path = helpers.get_testdata_file_path(
-        "invalid_config_configuration_autoCompleteFields_children_integer_values.json"
+        "valid_config_configuration_autoCompleteFields_children_integer_values.json"
     )
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
