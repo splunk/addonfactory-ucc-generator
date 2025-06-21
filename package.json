@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@splunk/add-on-ucc-framework": "^5.59.0"
+  }
+}

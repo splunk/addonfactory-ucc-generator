@@ -415,6 +415,24 @@ This is how it looks in the UI:
 
 The component maps and unmaps values into a single field in the format `fieldName1,fieldName2,fieldName3`, but only for checked rows. For the given example, it emits the following value: `rowWithoutGroup,rowUnderGroup1,firstRowUnderGroup3`.
 
+## `Date`
+
+See the underlying `@splunk/react-ui` component: [`Date`](https://splunkui.splunk.com/Packages/react-ui/Date).
+
+See the following example usage:
+```json
+{
+    "type": "date",
+    "field": "example_date",
+    "label": "Date",
+    "required": true
+}
+```
+
+This is how it looks in the UI:
+
+![image](../images/components/datepicker_component.png)
+
 ## `Multiple Select`
 
 See the underlying `@splunk/react-ui` component: [`Multiselect`](https://splunkui.splunk.com/Packages/react-ui/Multiselect).
