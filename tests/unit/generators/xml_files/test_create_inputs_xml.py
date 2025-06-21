@@ -11,15 +11,11 @@ def test_set_attributes_with_inputs(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     inputs_xml = InputsXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert hasattr(inputs_xml, "inputs_xml_content")
@@ -34,15 +30,11 @@ def test_set_attributes_without_inputs(
     global_config_only_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     inputs_xml = InputsXml(
         global_config_only_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert not hasattr(inputs_xml, "inputs_xml_content")
@@ -61,15 +53,11 @@ def test_generate_xml_with_inputs(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     inputs_xml = InputsXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     inputs_xml.inputs_xml_content = "<xml></xml>"
     exp_fname = "inputs.xml"
@@ -98,15 +86,11 @@ def test_generate_xml_without_inputs(
     global_config_only_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     inputs_xml = InputsXml(
         global_config_only_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     mock_writer = MagicMock()

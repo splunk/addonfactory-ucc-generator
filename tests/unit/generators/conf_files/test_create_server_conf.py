@@ -3,14 +3,14 @@ from splunk_add_on_ucc_framework.generators.conf_files import ServerConf
 
 
 def test_set_attributes(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     server_conf = ServerConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     server_conf._gc_schema = MagicMock()
@@ -38,8 +38,6 @@ def test_generate_conf_no_existing_conf(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     content = "content"
     exp_fname = "server.conf"
@@ -52,8 +50,6 @@ def test_generate_conf_no_existing_conf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     server_conf.writer = MagicMock()
@@ -84,15 +80,11 @@ def test_generate_conf_existing_conf(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     server_conf = ServerConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     output = server_conf.generate()
@@ -100,14 +92,14 @@ def test_generate_conf_existing_conf(
 
 
 def test_generate_conf_no_custom_conf(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     server_conf = ServerConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     server_conf.custom_conf = []
 

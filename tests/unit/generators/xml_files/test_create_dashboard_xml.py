@@ -11,15 +11,11 @@ def test_set_attributes_with_dashboard(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert hasattr(dashboard_xml, "dashboard_xml_content")
@@ -34,15 +30,11 @@ def test_set_attributes_without_dashboard(
     global_config_only_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_only_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     assert not hasattr(dashboard_xml, "dashboard_xml_content")
 
@@ -60,15 +52,11 @@ def test_generate_xml_with_dashboard(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     dashboard_xml.dashboard_xml_content = "<dashboard></dashboard>"
     exp_fname = "dashboard.xml"
@@ -97,15 +85,11 @@ def test_generate_xml_without_dashboard(
     global_config_only_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_only_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     mock_writer = MagicMock()
     with patch.object(dashboard_xml, "writer", mock_writer):

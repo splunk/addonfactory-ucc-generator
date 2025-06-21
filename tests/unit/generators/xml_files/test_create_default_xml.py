@@ -10,15 +10,17 @@ def wrong_ta_name():
 
 
 def test_set_attribute_with_error(
-    global_config_all_json, input_dir, output_dir, wrong_ta_name, ucc_dir
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    wrong_ta_name,
 ):
+    global_config_all_json.meta["name"] = wrong_ta_name
     with pytest.raises(ValueError):
         DefaultXml(
             global_config_all_json,
             input_dir,
             output_dir,
-            ucc_dir=ucc_dir,
-            addon_name=wrong_ta_name,
         )
 
 
@@ -75,8 +77,6 @@ def test_set_attribute(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
     defaultView,
     expected_result,
 ):
@@ -85,8 +85,6 @@ def test_set_attribute(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     diff = xmldiff.main.diff_texts(default_xml.default_xml_content, expected_result)
 
@@ -94,14 +92,14 @@ def test_set_attribute(
 
 
 def test_set_attribute_with_no_pages(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     default_xml = DefaultXml(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert not hasattr(default_xml, "default_xml_content")
@@ -120,15 +118,11 @@ def test_generate_xml(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     config_xml = DefaultXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     config_xml.default_xml_content = "<xml></xml>"
     exp_fname = "default.xml"

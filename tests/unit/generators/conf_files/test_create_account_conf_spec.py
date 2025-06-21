@@ -14,11 +14,13 @@ def global_config():
     return gc
 
 
-def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
+def test_set_attributes(
+    global_config,
+    input_dir,
+    output_dir,
+):
     """Test when _global_config has mixed accounts (some 'oauth', some not)."""
-    account_spec = AccountConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+    account_spec = AccountConf(global_config, input_dir, output_dir)
     account_spec._global_config = MagicMock()
     account_spec._gc_schema = MagicMock()
 
@@ -45,16 +47,12 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
 
 
 def test_set_attributes_conf_only_TA(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     """Test when _global_config is provided but it is a conf only TA, which implies it has no configuration."""
-    account_spec = AccountConf(
-        global_config_for_conf_only_TA,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
+    account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
     account_spec._set_attributes()
 
@@ -62,12 +60,12 @@ def test_set_attributes_conf_only_TA(
 
 
 def test_set_attributes_with_oauth_account(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config,
+    input_dir,
+    output_dir,
 ):
     """Test when _global_config has an account with name 'oauth'."""
-    account_spec = AccountConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+    account_spec = AccountConf(global_config, input_dir, output_dir)
     account_spec._global_config = MagicMock()
 
     account_spec._global_config.configs = [{"name": "oauth", "entity": "entity1"}]
@@ -85,18 +83,20 @@ def test_set_attributes_with_oauth_account(
     "splunk_add_on_ucc_framework.generators.conf_files.AccountConf.get_file_output_path"
 )
 def test_generate_conf_spec(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    mock_template,
+    global_config,
+    input_dir,
+    output_dir,
 ):
     content = "content"
-    exp_fname = f"{ta_name}_account.conf.spec"
+    exp_fname = f"{TA_NAME}_account.conf.spec"
     file_path = "output_path/ta_name_account.conf.spec"
     mock_op_path.return_value = file_path
     mock_template_render = MagicMock()
     mock_template_render.render.return_value = content
 
-    account_spec = AccountConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+    account_spec = AccountConf(global_config, input_dir, output_dir)
     account_spec.writer = MagicMock()
     account_spec._template = mock_template_render
 
@@ -112,15 +112,11 @@ def test_generate_conf_spec(
 
 
 def test_generate_conf_spec_no_configuration(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
-    account_spec = AccountConf(
-        global_config_for_conf_only_TA,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
+    account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
     file_paths = account_spec.generate()
     assert file_paths == {}

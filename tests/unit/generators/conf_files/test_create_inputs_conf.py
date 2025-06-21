@@ -1,28 +1,23 @@
 import json
-import os
 from pathlib import Path
 from textwrap import dedent
 from unittest.mock import patch, MagicMock
 
-from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from splunk_add_on_ucc_framework.generators.conf_files import InputsConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
 
 
-UCC_DIR = os.path.dirname(ucc_framework_file)
-
-
 def test_set_attributes_no_inputs_in_global_config(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """Test when _global_config is provided but has no inputs."""
     inputs_conf = InputsConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     inputs_conf._global_config = MagicMock()
     inputs_conf._global_config.inputs = []
@@ -45,8 +40,6 @@ def test_generate_conf(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     content = "content"
     exp_fname = "inputs.conf"
@@ -59,8 +52,6 @@ def test_generate_conf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     inputs_conf.writer = MagicMock()
     inputs_conf._template = template_render
@@ -89,8 +80,6 @@ def test_generate_conf_spec(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     content = "content"
     exp_fname = "inputs.conf.spec"
@@ -103,8 +92,6 @@ def test_generate_conf_spec(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     inputs_conf.writer = MagicMock()
     inputs_conf._template = mock_template_render
@@ -127,8 +114,6 @@ def test_inputs_conf_content(global_config_all_json, input_dir, output_dir, ta_n
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
     )
     generated_files = inputs_conf.generate_conf()
     assert generated_files is not None
@@ -172,8 +157,6 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
         GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
     )
     generated_files = inputs_conf.generate_conf()
     assert generated_files is not None
@@ -293,8 +276,6 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
         GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
     )
 
     conf = inputs_conf.generate_conf()
