@@ -54,3 +54,20 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
 ```
 
 The two methods' bodies should be filled by the developer.
+
+Alternatively, if you want to have access to the instance of the input script class,
+you can also add the `self` parameter to the methods:
+
+```python
+from splunklib import modularinput as smi
+
+
+def validate_input(self, definition: smi.ValidationDefinition):
+    ...
+
+
+def stream_events(self, inputs: smi.InputDefinition, event_writer: smi.EventWriter):
+    ...
+```
+
+Instead of `self`, you can also use any other name, but it must be the first parameter.
