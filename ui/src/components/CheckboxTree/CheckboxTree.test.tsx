@@ -84,6 +84,11 @@ describe('CheckboxTree Component', () => {
         expect(screen.getByLabelText('Row without group')).toBeInTheDocument();
         expect(screen.getByLabelText('Row under Group 1')).toBeInTheDocument();
         expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
+        expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();
         expect(screen.getByLabelText('Second row under Group 3')).toBeInTheDocument();
     });
 
