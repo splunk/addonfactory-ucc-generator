@@ -1,19 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { ReactChild, Suspense, useEffect, useRef, useState } from 'react';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import TabLayout from '@splunk/react-ui/TabLayout';
 import styled from 'styled-components';
 import variables from '@splunk/themes/variables';
 import pick from '@splunk/themes/pick';
 import ErrorBoundary from '../../components/ErrorBoundary/ErrorBoundary';
-import { OverviewDashboard } from './Overview';
-import { DataIngestionDashboard } from './DataIngestion';
-import { ErrorDashboard } from './Error';
-import { ResourceDashboard } from './Resource';
-import { CustomDashboard } from './Custom';
 
 import { getBuildDirPath } from '../../util/script';
 import { getUnifiedConfigs } from '../../util/util';
 import { GlobalDashboardStyle } from './dashboardStyle';
+import { WaitSpinnerWrapper } from '../../components/table/CustomTableStyle';
+
+const CustomDashboard = React.lazy(() => import('./Custom'));
+const DataIngestionDashboard = React.lazy(() => import('./DataIngestion'));
+const OverviewDashboard = React.lazy(() => import('./Overview'));
+const ErrorDashboard = React.lazy(() => import('./Error'));
+const ResourceDashboard = React.lazy(() => import('./Resource'));
 
 /**
  *
@@ -47,6 +49,20 @@ const DashboardStyles = styled.div`
         },
     })};
 `;
+
+const LazyPanel = ({
+    label,
+    panelId,
+    children,
+}: {
+    label: string;
+    panelId: string;
+    children: ReactChild;
+}) => (
+    <TabLayout.Panel label={label} panelId={panelId}>
+        <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>{children}</Suspense>
+    </TabLayout.Panel>
+);
 
 function DashboardPage() {
     const [overviewDef, setOverviewDef] = useState<Record<string, unknown> | null>(null);
@@ -106,25 +122,24 @@ function DashboardPage() {
                         style={{ minHeight: '98vh' }}
                     >
                         {dataIngestionDef && (
-                            <TabLayout.Panel label="Data ingestion" panelId="dataIngestionTabPanel">
+                            <LazyPanel label="Data ingestion" panelId="dataIngestionTabPanel">
                                 <DataIngestionDashboard dashboardDefinition={dataIngestionDef} />
-                            </TabLayout.Panel>
+                            </LazyPanel>
                         )}
                         {errorDef && (
-                            <TabLayout.Panel label="Errors" panelId="errorsTabPanel">
-                                <ErrorDashboard dashboardDefinition={errorDef} />
-                            </TabLayout.Panel>
+                            <LazyPanel label="Errors" panelId="errorsTabPanel">
+                                <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
+                                    <ErrorDashboard dashboardDefinition={errorDef} />
+                                </Suspense>
+                            </LazyPanel>
                         )}
                         {resourceDef && (
-                            <TabLayout.Panel
-                                label="Resource consumption"
-                                panelId="resourceTabPanel"
-                            >
+                            <LazyPanel label="Resource consumption" panelId="resourceTabPanel">
                                 <ResourceDashboard dashboardDefinition={resourceDef} />
-                            </TabLayout.Panel>
+                            </LazyPanel>
                         )}
                         {customDef && (
-                            <TabLayout.Panel
+                            <LazyPanel
                                 label={
                                     globalConfig.pages.dashboard?.settings?.custom_tab_name ||
                                     'Custom'
@@ -132,13 +147,15 @@ function DashboardPage() {
                                 panelId="customTabPanel"
                             >
                                 <CustomDashboard dashboardDefinition={customDef} />
-                            </TabLayout.Panel>
+                            </LazyPanel>
                         )}
                     </TabLayout>
                 ) : (
                     // if overview is null then custom tab is the only displayed component
                     // so no need to show table
-                    <CustomDashboard dashboardDefinition={customDef} />
+                    <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
+                        <CustomDashboard dashboardDefinition={customDef} />
+                    </Suspense>
                 )}
                 {!overviewDef && !customDef ? (
                     <WaitSpinner size="medium" data-testid="wait-spinner" />

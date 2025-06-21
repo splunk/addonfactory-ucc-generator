@@ -239,3 +239,5 @@ export const DataIngestionDashboard = ({
         </DashboardContextProvider>
     );
 };
+
+export default DataIngestionDashboard;

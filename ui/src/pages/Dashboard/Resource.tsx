@@ -84,3 +84,5 @@ export const ResourceDashboard = ({
         </DashboardContextProvider>
     ) : null;
 };
+
+export default ResourceDashboard;
