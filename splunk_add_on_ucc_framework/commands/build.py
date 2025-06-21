@@ -509,7 +509,6 @@ def generate(
             "please unify them to build the add-on."
         )
         sys.exit(1)
-    global_config.parse_user_defined_handlers()
     scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
     if global_config.has_pages():
         utils.recursive_overwrite(
@@ -687,7 +686,7 @@ def generate(
         # clean-up sys.path manipulation
         sys.path.pop(0)
 
-    if global_config:
+    if global_config.has_configuration() or global_config.has_inputs():
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
 
