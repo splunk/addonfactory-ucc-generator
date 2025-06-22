@@ -8,17 +8,13 @@ import { SearchResponse } from './Dashboard/DataIngestion.types';
 
 const FooterWrapper = styled.footer`
     padding: ${variables.spacingXSmall} ${variables.fontSizeXXLarge};
-    padding-bottom: 0px;
+    padding-bottom: 0;
     display: flex;
     font-size: ${variables.fontSizeSmall};
     border-top: 1px solid ${variables.borderActiveColor};
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    align-items: end;
     justify-content: flex-end;
     flex-direction: column;
+    align-items: flex-end;
 `;
 
 const VersionInfo = styled.div`

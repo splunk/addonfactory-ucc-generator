@@ -5,11 +5,11 @@ import mixins from '@splunk/themes/mixins';
 export const StyledContainer = styled.div`
     ${mixins.reset('inline')};
     display: flex;
+    flex-direction: column;
     font-size: ${variables.fontSizeLarge};
     line-height: 200%;
     margin: calc(${variables.spacing} * 1);
     min-height: calc(95vh - 80px);
-    position: relative;
 `;
 
 export const GlobalBodyStyle = createGlobalStyle`
