@@ -1,6 +1,5 @@
 import openapi_client
-from openapi_client.rest import ApiException
-from pprint import pprint
+from openapi_client.api.default_api import DefaultApi
 
 configuration = openapi_client.Configuration(
     host = "https://localhost:8089/servicesNS/-/Splunk_TA_UCCExample",
@@ -11,7 +10,8 @@ configuration = openapi_client.Configuration(
 configuration.verify_ssl = False
 
 with openapi_client.ApiClient(configuration) as api_client:
-    api_instance = openapi_client.DefaultApi(api_client)
+    api_instance = DefaultApi(api_client)
+
     output_mode = 'json'
 
     # List accounts (should be 0)
