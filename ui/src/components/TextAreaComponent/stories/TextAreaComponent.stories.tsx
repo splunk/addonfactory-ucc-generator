@@ -37,5 +37,30 @@ export const Base: Story = {
         error: false,
         controlOptions: { rowsMax: 10, rowsMin: 2 },
         disabled: false,
+        encrypted: false,
+    },
+};
+
+export const UnEncrypted: Story = {
+    args: {
+        handleChange: fn(),
+        value: 'visbile text',
+        field: 'field',
+        error: false,
+        controlOptions: { rowsMax: 10, rowsMin: 2 },
+        disabled: false,
+        encrypted: false,
+    },
+};
+
+export const Encrypted: Story = {
+    args: {
+        handleChange: fn(),
+        value: 'not visbile text',
+        field: 'field',
+        error: false,
+        controlOptions: { rowsMax: 10, rowsMin: 2 },
+        disabled: false,
+        encrypted: true,
     },
 };
