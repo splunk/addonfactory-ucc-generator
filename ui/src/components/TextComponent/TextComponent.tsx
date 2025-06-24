@@ -16,6 +16,7 @@ export interface TextComponentProps {
 
 class TextComponent extends Component<TextComponentProps> {
     handleChange = (e: unknown, { value }: { value: string | number }) => {
+        console.log('TextComponent handleChange', value);
         this.props.handleChange(this.props.field, value);
     };
 
