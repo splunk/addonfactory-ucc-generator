@@ -2,8 +2,8 @@ import { it, vi, expect, beforeEach } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Footer from './Footer';
-import * as configUtils from '../util/util';
-import { getGlobalConfigMock } from '../mocks/globalConfigMock';
+import * as configUtils from '../../util/util';
+import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 
 const setupConfig = (overrideMeta = {}) => {
     const mock = getGlobalConfigMock();

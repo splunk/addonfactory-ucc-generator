@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import SearchJob from '@splunk/search-job';
 import { variables } from '@splunk/themes';
-import { getUnifiedConfigs } from '../util/util';
-import { parseErrorMsg } from '../util/messageUtil';
-import { SearchResponse } from './Dashboard/DataIngestion.types';
+
+import { getUnifiedConfigs } from '../../util/util';
+import { parseErrorMsg } from '../../util/messageUtil';
+import { runSearchJob } from '../../pages/Dashboard/utils';
 
 const FooterWrapper = styled.footer`
     padding: ${variables.spacingXSmall} ${variables.fontSizeXXLarge};
@@ -20,17 +20,6 @@ const FooterWrapper = styled.footer`
 const VersionInfo = styled.div`
     font-weight: 500;
 `;
-
-const runSearchJob = (searchQuery: string): Promise<SearchResponse> =>
-    new Promise((resolve, reject) => {
-        const searchJob = SearchJob.create({ search: searchQuery });
-
-        const resultsSubscription = searchJob.getResults({ count: 0 }).subscribe({
-            next: (response: SearchResponse) => resolve(response),
-            error: (error: unknown) => reject(error),
-            complete: () => resultsSubscription.unsubscribe(),
-        });
-    });
 
 const Footer = () => {
     const [build, setBuild] = useState('...');

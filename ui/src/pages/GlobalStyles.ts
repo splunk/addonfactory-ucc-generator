@@ -9,7 +9,9 @@ export const StyledContainer = styled.div`
     font-size: ${variables.fontSizeLarge};
     line-height: 200%;
     margin: calc(${variables.spacing} * 1);
-    min-height: calc(95vh - 80px);
+    min-height: calc(
+        100vh - 78px - 70px
+    ); // full height of screen subtracting header and footer height
 `;
 
 export const GlobalBodyStyle = createGlobalStyle`
