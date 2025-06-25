@@ -4,14 +4,14 @@ import subprocess
 
 def install_splunk_appinspect():
     """
-    Functions to actually imitate that the splunk-appinspect library is present
+    Function to actually imitate that the splunk-appinspect library is present
     """
     subprocess.call("pip install splunk-appinspect", shell=True)
 
 
 def uninstall_splunk_appinspect():
     """
-    Functions to actually imitate that the splunk-appinspect library is absent
+    Function to actually imitate that the splunk-appinspect library is absent
     """
     subprocess.call("pip uninstall -y splunk_appinspect", shell=True)
 

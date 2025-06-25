@@ -55,7 +55,7 @@ PyYAML = "^6.0"
 defusedxml = "^0.7.1"
 colorama = "^0.4.6"
 packaging = ">=23.0"
-splunk-appinspect = { version = "^3.10.2", extras = ["validate"], optional = true }
+splunk-appinspect = { version = "^3.10.3", extras = ["validate"], optional = true }
 
 [tool.poetry.extras]
 validate = ["splunk-appinspect"]

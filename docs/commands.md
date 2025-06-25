@@ -128,7 +128,7 @@ It accepts the following parameters:
 ## `ucc-gen validate`
 
 
-The `ucc-gen validate` command is available starting from version `v5.65.0` and is used to validate
+The `ucc-gen validate` command is available starting from version `v5.68.0` and is used to validate
 Splunk apps and add-ons during development. It leverages `Splunk AppInspect` under the hood to ensure your add-on meets Splunk's standards and best practices.
 
 To use this command, you must have AppInspect installed on your system.
