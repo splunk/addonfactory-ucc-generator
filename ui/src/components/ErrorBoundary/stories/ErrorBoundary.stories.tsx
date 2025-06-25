@@ -20,6 +20,12 @@ const meta = {
             </ErrorBoundary>
         );
     },
+    parameters: {
+        snapshots: {
+            width: 1200,
+            height: 1000,
+        },
+    },
 } satisfies Meta<typeof ErrorBoundary>;
 
 export default meta;

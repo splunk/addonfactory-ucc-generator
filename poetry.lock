@@ -96,13 +96,13 @@ files = [
 
 [[package]]
 name = "certifi"
-version = "2025.4.26"
+version = "2025.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "certifi-2025.4.26-py3-none-any.whl", hash = "sha256:30350364dfe371162649852c63336a15c70c6510c2ad5015b21c2345311805f3"},
-    {file = "certifi-2025.4.26.tar.gz", hash = "sha256:0a816057ea3cdefcef70270d2c515e4506bbc954f417fa5ade2021213bb8f0c6"},
+    {file = "certifi-2025.6.15-py3-none-any.whl", hash = "sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057"},
+    {file = "certifi-2025.6.15.tar.gz", hash = "sha256:d747aa5a8b9bbbb1bb8c22bb13e22bd1f18e9796defa16bab421f7f7a317323b"},
 ]
 
 [[package]]
@@ -1429,13 +1429,13 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "5.3.3"
+version = "5.3.4"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-5.3.3-py3-none-any.whl", hash = "sha256:361444fb3a5c1dba9714824dd6592845015b454425f522b3dd1529c5081a10f8"},
-    {file = "pytest_splunk_addon_ui_smartx-5.3.3.tar.gz", hash = "sha256:0c6222dcf282dd48640af38f96378f5517eaf13b05e546187f0ca9c90c636b84"},
+    {file = "pytest_splunk_addon_ui_smartx-5.3.4-py3-none-any.whl", hash = "sha256:e4e30f53f138f3fb00a9b146d7d6774f807047f81620073f24a926d400e8680e"},
+    {file = "pytest_splunk_addon_ui_smartx-5.3.4.tar.gz", hash = "sha256:dcc899066c7928f10fc854aae656a54fca7b640e32c56b589cf34a393516bd76"},
 ]
 
 [package.dependencies]
