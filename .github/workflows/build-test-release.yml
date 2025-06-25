@@ -436,7 +436,6 @@ jobs:
       - test-unit
       - test-smoke
       - test-ui
-      - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
     runs-on: ubuntu-22.04
