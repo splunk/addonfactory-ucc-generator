@@ -1,11 +1,11 @@
 import { z } from 'zod';
 import {
-    CheckboxEntity,
-    RadioEntity,
-    SingleSelectEntity,
-    SingleSelectSplunkSearchEntity,
-    TextAreaEntity,
-    TextEntity,
+    CheckboxEntitySchema,
+    RadioEntitySchema,
+    SingleSelectEntitySchema,
+    SingleSelectSplunkSearchEntitySchema,
+    TextAreaEntitySchema,
+    TextEntitySchema,
 } from './entities';
 
 export const alerts = z
@@ -37,12 +37,12 @@ export const alerts = z
             entity: z
                 .array(
                     z.discriminatedUnion('type', [
-                        TextEntity,
-                        TextAreaEntity,
-                        SingleSelectEntity,
-                        CheckboxEntity,
-                        RadioEntity,
-                        SingleSelectSplunkSearchEntity,
+                        TextEntitySchema,
+                        TextAreaEntitySchema,
+                        SingleSelectEntitySchema,
+                        CheckboxEntitySchema,
+                        RadioEntitySchema,
+                        SingleSelectSplunkSearchEntitySchema,
                     ])
                 )
                 .optional(),
