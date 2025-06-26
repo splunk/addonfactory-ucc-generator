@@ -428,6 +428,14 @@ jobs:
           ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
           until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
         timeout-minutes: 5
+      - run: pip freeze
+      - run: ls output
+      - run: ls output/out_${{ matrix.splunk.version }}
+      - name: upload openapijson file
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapijson
+          path: /local/oa_${{ matrix.splunk.version }}.json
       - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
 
   all-checks:
