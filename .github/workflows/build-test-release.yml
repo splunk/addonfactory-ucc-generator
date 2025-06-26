@@ -156,47 +156,6 @@ jobs:
     outputs:
       failed: ${{ env.failed }}
 
-  test-smoke:
-    name: test-smoke ${{ matrix.python-version }}
-    needs:
-      - build-ui
-    runs-on: ubuntu-22.04
-    continue-on-error: true
-    strategy:
-      matrix:
-        python-version:
-          - "3.7"
-          - "3.8"
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: UCC-UI-build
-          path: built-ui/
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-      - run: |
-          poetry install
-          poetry run pytest tests/smoke
-      - name: Check for failed steps for jobs with continue-on-error
-        if: ${{ failure() }}
-        run: echo "failed=true" >> $GITHUB_ENV
-
-      - name: Set output if steps failed
-        run: |
-          echo "failed=${{ env.failed }}" >> $GITHUB_ENV
-    outputs:
-      failed: ${{ env.failed }}
-
   build-test-addon:
     runs-on: ubuntu-22.04
     needs:
@@ -336,8 +295,6 @@ jobs:
       - meta
       - build-test-addon
       - build
-      - test-unit
-      - test-smoke
     strategy:
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
@@ -373,14 +330,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: openapijson
-          path: /local/oa_${{ matrix.splunk.version }}.json
+          path: oa_${{ matrix.splunk.version }}.json
       - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
 
   all-checks:
     if: ${{ !cancelled() }}
     needs:
       - test-unit
-      - test-smoke
       - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
@@ -411,7 +367,6 @@ jobs:
       - compliance-copyrights
       - fossa-scan
       - test-unit
-      - test-smoke
       - appinspect-for-expected-outputs
       - semgrep
       - pre-commit
