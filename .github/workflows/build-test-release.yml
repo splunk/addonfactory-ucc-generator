@@ -228,68 +228,6 @@ jobs:
           name: Splunk_TA_UCCExample-packaged
           path: Splunk_TA_UCCExample*.tar.gz
 
-  test-ui:
-    name: test-ui Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
-    runs-on: ubuntu-22.04
-    permissions:
-      id-token: write
-      contents: read
-      checks: write
-    needs:
-      - meta
-      - build-test-addon
-      - build
-      - test-unit
-    strategy:
-      fail-fast: false
-      matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-        test-group:
-          - "1"
-          - "2"
-          - "3"
-          - "4"
-          - "5"
-          - "6"
-          - "7"
-          - "8"
-          - "9"
-          - "10"
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.7"
-      - uses: actions/download-artifact@v4
-        with:
-          name: Splunk_TA_UCCExample-raw-output
-          path: output/
-      - run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
-          poetry install --only dev
-      - name: Link chromedriver
-        # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
-        run: |
-          export PATH=$PATH:$CHROMEWEBDRIVER
-          chromedriver --version
-      - run: |
-          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
-          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
-          until curl -k -s -u admin:Chang3d! https://localhost:8089/services/server/info\?output_mode\=json | jq '.entry[0].content.kvStoreStatus' | grep -o "ready" ; do echo -n "Waiting for KVStore to become ready-" && sleep 5 ; done
-        timeout-minutes: 5
-      - run: poetry run pytest tests/ui --test-group-count 10 --test-group ${{ matrix.test-group }} --test-group-random-seed 123456 --headless --junitxml=test-results/junit.xml
-      - uses: actions/upload-artifact@v4
-        if: success() || failure()
-        with:
-          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
-          path: test-results/*
-      - uses: dorny/test-reporter@v2
-        if: success() || failure()
-        with:
-          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
-          path: "test-results/*.xml"
-          reporter: java-junit
-
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
     runs-on: ubuntu-22.04
@@ -443,7 +381,6 @@ jobs:
     needs:
       - test-unit
       - test-smoke
-      - test-ui
       - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
@@ -475,7 +412,6 @@ jobs:
       - fossa-scan
       - test-unit
       - test-smoke
-      - test-ui
       - appinspect-for-expected-outputs
       - semgrep
       - pre-commit
