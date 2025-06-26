@@ -1,4 +1,4 @@
 splunktaucclib
 httplib2
 cryptography == 41.0.5
-pyparser == 3.1.4
+pyparsing == 3.1.4
