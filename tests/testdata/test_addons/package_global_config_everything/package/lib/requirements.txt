@@ -1,4 +1,3 @@
 splunktaucclib
 httplib2
 cryptography == 41.0.5
-solnlib == 6.3
