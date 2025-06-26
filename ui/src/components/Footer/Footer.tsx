@@ -18,7 +18,7 @@ const FooterWrapper = styled.footer`
 `;
 
 const VersionInfo = styled.div`
-    font-weight: 500;
+    font-weight: ${variables.fontWeightSemiBold};
 `;
 
 const Footer = () => {
