@@ -8,12 +8,12 @@
         "field": {
           "type": "string",
           "pattern": "^\\w+$",
-          "description": "The field that would be used in the scripts to get the value from the user input. These are defined as param.<field_mentioned> in the alert_actions.conf."
+          "description": "Field identifier used in scripts to access the user input value. Referenced as param.<field_mentioned> in alert_actions.conf."
         },
         "label": {
           "type": "string",
           "maxLength": 30,
-          "description": "The text that would be shown in the alert action UI."
+          "description": "Display text shown in the alert action user interface."
         },
         "type": {
           "const": "singleSelectSplunkSearch",
@@ -23,7 +23,7 @@
         "help": {
           "type": "string",
           "maxLength": 200,
-          "description": "Help text to be shown under the field of the alert."
+          "description": "Help text displayed under the field to provide context about the field's usage."
         },
         "defaultValue": {
           "description": "The initial input value.",
@@ -43,30 +43,30 @@
         "required": {
           "type": "boolean",
           "default": false,
-          "description": "Whether the mentioned field is required or not."
+          "description": "Specifies whether the field is required or not."
         },
         "search": {
           "type": "string",
           "maxLength": 200,
-          "description": "A Splunk SPL that would query and return some result. Query the REST API, a lookup table, or indexed data."
+          "description": "A Splunk SPL query that returns results for the dropdown options. Can query REST API, lookup tables, or indexed data."
         },
         "valueField": {
           "type": "string",
           "maxLength": 200,
-          "description": "Field name to use for drop-down option values that correspond to the option labels. In some cases, you can use the same results field for the label-field and value-field. In other cases, you might need to display human-readable labels from one field and use the corresponding values from another field. Note: Applicable when a search property is defined."
+          "description": "Field name to use for dropdown option values. In some cases, you can use the same field for both label and value. In other cases, you might need human-readable labels from one field and corresponding values from another field. Note: Applicable when a search property is defined."
         },
         "labelField": {
           "type": "string",
           "maxLength": 200,
-          "description": "Field name to use for drop-down option labels. Labels generated from this field are visible in the drop-down interface. Note: Applicable when a search property is defined."
+          "description": "Field name to use for dropdown option labels. Labels from this field are visible in the dropdown interface. Note: Applicable when a search property is defined."
         },
         "options": {
           "type": "object",
-          "description": "Static choices that a user can select in the alert action UI.",
+          "description": "Configuration options for static dropdown choices displayed in the alert action UI.",
           "properties": {
             "items": {
               "type": "array",
-              "description": "An array of options with a label and a value.",
+              "description": "Array of predefined options with labels and values for user selection.",
               "items": {
                 "$ref": "#/definitions/ValueLabelPair"
               }
@@ -2582,7 +2582,8 @@
         },
         "isInteger": {
           "type": "boolean",
-          "description": "Specifies if the number should be an integer (true) or can be a float (false). Default value is false"
+          "description": "Specifies if the number should be an integer (true) or can be a float (false). Default value is false.",
+          "default": false
         }
       },
       "required": [
@@ -2593,10 +2594,12 @@
     },
     "RangeValue": {
       "type": "array",
-      "description": "Range of allowed values.",
+      "description": "Range of allowed values as a two-element array [min, max].",
       "items": {
         "type": "number"
-      }
+      },
+      "minItems": 2,
+      "maxItems": 2
     },
     "OAuthFields": {
       "type": "object",
@@ -2951,7 +2954,7 @@
         },
         "pattern": {
           "type": "string",
-          "description": "Regex pattern."
+          "description": "Regular expression pattern to validate against."
         }
       },
       "required": [
@@ -3084,7 +3087,7 @@
     },
     "Technology": {
       "type": "object",
-      "description": "The technology or technologies that the modular action supports.",
+      "description": "Defines the technology or technologies that the modular action supports.",
       "properties": {
         "version": {
           "type": "array",
@@ -3092,15 +3095,18 @@
             "type": "string",
             "pattern": "^\\d+(?:\\.\\d+)*$"
           },
-          "minItems": 1
+          "minItems": 1,
+          "description": "Array of supported version numbers."
         },
         "product": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Name of the product or technology."
         },
         "vendor": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Name of the vendor or organization."
         }
       },
       "required": [
@@ -3158,7 +3164,7 @@
     },
     "ValueLabelPair": {
       "type": "object",
-      "description": "Options with a label and a value.",
+      "description": "Option item with a display label and corresponding value for form controls.",
       "properties": {
         "value": {
           "oneOf": [
@@ -3172,12 +3178,13 @@
             {
               "type": "boolean"
             }
-          ]
+          ],
+          "description": "The actual value to be stored when this option is selected."
         },
         "label": {
           "type": "string",
           "maxLength": 100,
-          "description": "Text displayed next to entity field"
+          "description": "Text displayed to the user for this option."
         }
       },
       "required": [
@@ -3187,11 +3194,12 @@
     },
     "DashboardPanel": {
       "type": "object",
-      "description": "The dashboard panel provides some additional information about the add-on operations to increase the visibility into what the add-on is actually doing under the hood.",
+      "description": "Dashboard panel that provides operational insights and monitoring information for the add-on.",
       "properties": {
         "name": {
           "type": "string",
-          "maxLength": 100
+          "maxLength": 100,
+          "description": "Identifier for the dashboard panel"
         }
       },
       "required": [
@@ -3219,17 +3227,17 @@
     },
     "WarningMessageObject": {
       "type": "object",
-      "description": "Object for warning message definition",
+      "description": "Object for individual warning messages displayed in forms.",
       "properties": {
         "message": {
           "type": "string",
-          "description": "Text used for that description, you can put \\n to add a breakline",
+          "description": "Text content of the warning message. Use \\n to add line breaks.",
           "maxLength": 500
         },
         "alwaysDisplay": {
           "type": "boolean",
           "default": false,
-          "description": "Defines if message should disappear after any input changes."
+          "description": "When true, the message remains visible even after user input changes. When false, the message disappears after any input modification."
         }
       },
       "required": [
@@ -3238,16 +3246,16 @@
     },
     "Field": {
       "type": "string",
-      "description": "Unique identificator of input field",
+      "description": "Unique identifier for an input field used in forms and data handling.",
       "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
     },
     "SubDescription": {
       "type": "object",
-      "description": "Place to provide broader description of page",
+      "description": "Extended description section that provides detailed information about a page or section with optional embedded links.",
       "properties": {
         "text": {
           "type": "string",
-          "description": "Text used for the description, you can put \n to add a breakline.",
+          "description": "Main description text. Use \\n to add line breaks.",
           "maxLength": 1500
         },
         "links": {
@@ -3260,18 +3268,18 @@
     },
     "singleFieldToModify": {
       "type": "object",
-      "description": "Information about single field that will be modified.",
+      "description": "Configuration for modifying a specific field's properties based on another field's value.",
       "properties": {
         "fieldId": {
           "type": "string",
-          "description": "Used to identify field that modifications will be applied to"
+          "description": "Identifier of the field to be modified when the trigger condition is met."
         },
         "display": {
           "type": "boolean",
-          "description": "Declares display property of target component"
+          "description": "Controls whether the target field is visible (true) or hidden (false)."
         },
         "value": {
-          "description": "Declares current value of target component",
+          "description": "Sets the value of the target field when the trigger condition is met.",
           "oneOf": [
             {
               "type": "number"
@@ -3286,18 +3294,18 @@
         },
         "disabled": {
           "type": "boolean",
-          "description": "Declares if component should be disabled (enable = false)"
+          "description": "Controls whether the target field is disabled (true) or enabled (false)."
         },
         "required": {
           "type": "boolean",
-          "description": "Declares if component should be required"
+          "description": "Controls whether the target field is required (true) or optional (false)."
         },
         "help": {
           "$ref": "#/definitions/help"
         },
         "label": {
           "type": "string",
-          "description": "Declares label text of target component"
+          "description": "Sets the display label text for the target field."
         },
         "markdownMessage": {
           "$ref": "#/definitions/markdownMessage"
@@ -3312,25 +3320,25 @@
     },
     "links": {
       "type": "array",
-      "description": "Enables including links inside description",
+      "description": "Array of link definitions that can be embedded within description text using placeholder slugs.",
       "items": {
         "type": "object",
         "properties": {
           "slug": {
             "type": "string",
-            "description": "Used to identify the place for the link to appear. Put it inside the text, surrounded by 2 squared brackets.",
+            "description": "Unique identifier used as a placeholder in text. Surround with double square brackets [[slug]] in the text to create the link.",
             "maxLength": 50,
             "pattern": "^\\w+$",
             "minLength": 1
           },
           "linkText": {
             "type": "string",
-            "description": "The text to be inserted, instead of slug.",
+            "description": "Display text for the link that replaces the slug placeholder.",
             "maxLength": 500,
             "minLength": 1
           },
           "link": {
-            "description": "The link to be used.",
+            "description": "URL or path destination for the link.",
             "type": "string",
             "minLength": 1
           }
@@ -3344,9 +3352,10 @@
     },
     "fieldToModify": {
       "type": "object",
+      "description": "Defines a trigger condition and the resulting field modifications when that condition is met.",
       "properties": {
         "fieldValue": {
-          "description": "Value that will trigger the update, put [[any_other_value]] to trigger update for any other values than specified",
+          "description": "Trigger value that activates the field modifications. Use [[any_other_value]] to trigger for any value other than explicitly specified ones.",
           "oneOf": [
             {
               "type": "number"
@@ -3361,7 +3370,7 @@
         },
         "mode": {
           "type": "string",
-          "description": "Defines under which Mode modifications should occure. If not present modifications occure for all Mods",
+          "description": "Restricts modifications to a specific form mode. If omitted, modifications apply to all modes.",
           "enum": [
             "create",
             "edit",
@@ -3371,7 +3380,7 @@
         },
         "fieldsToModify": {
           "type": "array",
-          "description": "Array of fields that will be modified when Field Value matches component current value",
+          "description": "Array of field modifications to apply when the trigger condition is met.",
           "items": {
             "$ref": "#/definitions/singleFieldToModify"
           },
@@ -3385,7 +3394,7 @@
     },
     "modifyFieldsOnValue": {
       "type": "array",
-      "description": "It is used to speficy values and parameters that will influence visually other entities.",
+      "description": "Dynamic field modification system that changes field properties based on the current value of the parent field.",
       "items": {
         "$ref": "#/definitions/fieldToModify"
       }
@@ -4178,6 +4187,7 @@
       "default": false
     },
     "IntervalValue": {
+      "description": "Valid interval values: -1, positive numbers (seconds), or CRON expressions for scheduling.",
       "anyOf": [
         {
           "type": "number",
@@ -4195,6 +4205,7 @@
     },
     "IndexEntity": {
       "type": "object",
+      "description": "Index selection component that provides a dropdown of available Splunk indexes with built-in validation.",
       "properties": {
         "type": {
           "const": "index"
@@ -4203,10 +4214,12 @@
           "$ref": "#/definitions/Field"
         },
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "Display label for the index selection field."
         },
         "defaultValue": {
-          "type": "string"
+          "type": "string",
+          "description": "Default index to select when the form loads."
         },
         "help": {
           "$ref": "#/definitions/help"
@@ -4241,6 +4254,7 @@
     },
     "customSearchCommand": {
       "type": "array",
+      "description": "Configuration for custom search commands that extend Splunk's search capabilities with add-on specific functionality.",
       "items": {
         "$ref": "#/definitions/customSearchCommand"
       },
