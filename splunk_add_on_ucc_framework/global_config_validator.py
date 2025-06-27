@@ -72,7 +72,29 @@ class GlobalConfigValidator:
         try:
             return jsonschema.validate(instance=self._config, schema=schema)
         except jsonschema.ValidationError as e:
-            raise GlobalConfigValidatorException(e.message)
+            # Enhanced error message with more context
+            error_msg = f"JSON Schema validation failed: {e.message}"
+
+            if e.absolute_path:
+                error_msg += f"\n  - Error location in config: {' -> '.join(map(str, e.absolute_path))}"
+
+            if e.validator and e.validator_value is not None:
+                error_msg += (
+                    f"\n  - Failed validator: {e.validator} = {e.validator_value}"
+                )
+
+            if e.schema_path:
+                error_msg += (
+                    f"\n  - Schema path: {' -> '.join(map(str, e.schema_path))}"
+                )
+
+            if hasattr(e, "instance") and e.instance is not None:
+                instance_str = str(e.instance)
+                if len(instance_str) > 200:
+                    instance_str = instance_str[:200] + "..."
+                error_msg += f"\n  - Invalid value: {instance_str}"
+
+            raise GlobalConfigValidatorException(error_msg)
 
     def _validate_configuration_tab_table_has_name_field(self) -> None:
         """
