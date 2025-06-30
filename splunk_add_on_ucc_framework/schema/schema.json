@@ -2222,7 +2222,34 @@
       "items": {
         "anyOf": [
           {
-            "$ref": "#/definitions/StandardEntities"
+            "$ref": "#/definitions/CheckboxGroupEntity"
+          },
+          {
+            "$ref": "#/definitions/CheckboxTreeEntity"
+          },
+          {
+            "$ref": "#/definitions/TextEntity"
+          },
+          {
+            "$ref": "#/definitions/TextareaEntity"
+          },
+          {
+            "$ref": "#/definitions/SingleSelectEntity"
+          },
+          {
+            "$ref": "#/definitions/MultipleSelectEntity"
+          },
+          {
+            "$ref": "#/definitions/CheckboxEntity"
+          },
+          {
+            "$ref": "#/definitions/RadioEntity"
+          },
+          {
+            "$ref": "#/definitions/LinkEntity"
+          },
+          {
+            "$ref": "#/definitions/FileEntity"
           },
           {
             "$ref": "#/definitions/OAuthEntity"
@@ -2572,40 +2599,6 @@
         "type": "number"
       }
     },
-    "StandardEntities": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/CheckboxGroupEntity"
-        },
-        {
-          "$ref": "#/definitions/CheckboxTreeEntity"
-        },
-        {
-          "$ref": "#/definitions/TextEntity"
-        },
-        {
-          "$ref": "#/definitions/TextareaEntity"
-        },
-        {
-          "$ref": "#/definitions/SingleSelectEntity"
-        },
-        {
-          "$ref": "#/definitions/MultipleSelectEntity"
-        },
-        {
-          "$ref": "#/definitions/CheckboxEntity"
-        },
-        {
-          "$ref": "#/definitions/RadioEntity"
-        },
-        {
-          "$ref": "#/definitions/LinkEntity"
-        },
-        {
-          "$ref": "#/definitions/FileEntity"
-        }
-      ]
-    },
     "DefaultOAuthFields": {
       "type": "object",
       "properties": {
@@ -2664,7 +2657,34 @@
           "$ref": "#/definitions/DefaultOAuthFields"
         },
         {
-          "$ref": "#/definitions/StandardEntities"
+          "$ref": "#/definitions/CheckboxGroupEntity"
+        },
+        {
+          "$ref": "#/definitions/CheckboxTreeEntity"
+        },
+        {
+          "$ref": "#/definitions/TextEntity"
+        },
+        {
+          "$ref": "#/definitions/TextareaEntity"
+        },
+        {
+          "$ref": "#/definitions/SingleSelectEntity"
+        },
+        {
+          "$ref": "#/definitions/MultipleSelectEntity"
+        },
+        {
+          "$ref": "#/definitions/CheckboxEntity"
+        },
+        {
+          "$ref": "#/definitions/RadioEntity"
+        },
+        {
+          "$ref": "#/definitions/LinkEntity"
+        },
+        {
+          "$ref": "#/definitions/FileEntity"
         }
       ]
     },
