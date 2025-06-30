@@ -36,6 +36,13 @@ export const secondStandardTextField = {
     help: 'Standard Text help second field',
 } satisfies z.infer<typeof TextEntitySchema>;
 
+export const thirdStandardTextField = {
+    type: 'text',
+    label: 'Standard text label third field',
+    field: 'standard_text3',
+    help: 'Standard Text help third field',
+} satisfies z.infer<typeof TextEntitySchema>;
+
 export const firstModificationField = {
     type: 'text',
     label: 'First Modification field - text - label',
@@ -138,6 +145,39 @@ export const thirdModificationField = {
     help: 'Third Modification field - checkbox - help',
 } satisfies z.infer<typeof CheckboxEntitySchema>;
 
+export const regexpModificationField = {
+    type: 'text',
+    label: 'Regexp Modification field - text - label',
+    field: 'modification_field_regexp',
+    help: 'Regexp Modification field - text - help',
+    modifyFieldsOnValue: [
+        {
+            fieldValue: { pattern: '^verifying regexp.*' },
+            fieldsToModify: [
+                {
+                    fieldId: 'standard_text1',
+                    disabled: true,
+                    value: 'verifying regexp',
+                    help: 'regexp matched field1 new help for a value',
+                    label: 'regexp matched fielda new label for a value',
+                },
+            ],
+        },
+        {
+            fieldValue: { pattern: `^\\d[a-zA-Z]\\d[a-zA-Z]` },
+            fieldsToModify: [
+                {
+                    fieldId: 'standard_text1',
+                    disabled: false,
+                    value: 'regexp digit character digit character value matched',
+                    help: 'digit character digit character value matched',
+                    label: 'digit character digit character value matched',
+                },
+            ],
+        },
+    ],
+} satisfies z.infer<typeof TextEntitySchema>;
+
 export const getConfigWithModifications = () => {
     const standardConfig = getGlobalConfigMock();
     const newConfig = {
@@ -153,8 +193,10 @@ export const getConfigWithModifications = () => {
                             firstModificationField,
                             secondModificationField,
                             thirdModificationField,
+                            regexpModificationField,
                             firstStandardTextField,
                             secondStandardTextField,
+                            thirdStandardTextField,
                         ],
                         ...defaultTableProps,
                     },

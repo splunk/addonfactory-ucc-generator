@@ -9,6 +9,7 @@ import {
     firstModificationField,
     firstStandardTextField,
     getConfigWithModifications,
+    regexpModificationField,
     secondModificationField,
     secondStandardTextField,
     thirdModificationField,
@@ -218,4 +219,65 @@ it('verify markdown modifications', async () => {
     invariant(mods2Field1.markdownMessage.markdownType === 'link');
     const anchorElementField1 = within(componentParentElement).getByRole('link');
     expect(anchorElementField1).toHaveAttribute('href', mods1Field2.markdownMessage.link);
+});
+
+const findModsWithRegexp = (
+    modificationFiled: EntitiesAllowingModifications,
+    regexp: string,
+    fieldId: string
+) => {
+    const modification = modificationFiled.modifyFieldsOnValue
+        ?.find((mod) => typeof mod.fieldValue === 'object' && mod.fieldValue?.pattern === regexp)
+        ?.fieldsToModify.find((field: { fieldId: string }) => field.fieldId === fieldId);
+    invariant(modification);
+    return modification;
+};
+
+it('verify regexp modification after text components change', async () => {
+    renderModalWithProps(props);
+    const firstPattern = regexpModificationField.modifyFieldsOnValue?.[0].fieldValue?.pattern;
+    const secondPattern = regexpModificationField.modifyFieldsOnValue?.[1].fieldValue?.pattern;
+    const firstValueToInput = 'verifying regexp example value';
+    const secondValueToInput = '1a2b';
+    const [componentParentElement, componentInput] = getTextElementForField(
+        firstStandardTextField.field
+    );
+
+    const [, componentMakingRegexpMods] = getTextElementForField(regexpModificationField.field);
+
+    const mods1Field1 = findModsWithRegexp(
+        regexpModificationField,
+        firstPattern,
+        firstStandardTextField.field
+    );
+
+    const mods2Field1 = findModsWithRegexp(
+        regexpModificationField,
+        secondPattern,
+        firstStandardTextField.field
+    );
+
+    await userEvent.type(componentMakingRegexpMods, firstValueToInput);
+
+    const verifyAllProps = (
+        parentElement: Element,
+        input: Element,
+        mods: {
+            value?: string | number | boolean;
+            help?: StringOrTextWithLinksType;
+            label?: string;
+        }
+    ) => {
+        invariant(typeof mods.help === 'string', 'Help is not a string');
+        expect(parentElement).toHaveTextContent(mods.help);
+        invariant(typeof mods.label === 'string', 'Label is not a string');
+        expect(parentElement).toHaveTextContent(mods.label);
+    };
+
+    verifyAllProps(componentParentElement, componentInput, mods1Field1);
+
+    await userEvent.clear(componentMakingRegexpMods);
+    await userEvent.type(componentMakingRegexpMods, secondValueToInput);
+
+    verifyAllProps(componentParentElement, componentInput, mods2Field1);
 });
