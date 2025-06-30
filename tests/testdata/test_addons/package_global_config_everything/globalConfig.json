@@ -347,6 +347,24 @@
                                                         "required": true
                                                     }
                                                 ]
+                                            },
+                                            {
+                                                "fieldValue": {
+                                                    "pattern": "^\\d[a-zA-Z]\\d[a-zA-Z]"
+                                                },
+                                                "fieldsToModify": [
+                                                    {
+                                                        "fieldId": "oauth_oauth_text",
+                                                        "disabled": true,
+                                                        "display": true,
+                                                        "label": "Disabled on edit regex matched",
+                                                        "value": "test 6",
+                                                        "help": "Disabled on edit regex matched",
+                                                        "markdownMessage": {
+                                                            "text": "markdown message plain text regex matched"
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         ]
                                     },
