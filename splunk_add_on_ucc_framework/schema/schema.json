@@ -2570,9 +2570,7 @@
       "description": "Range of allowed values as a two-element array [min, max].",
       "items": {
         "type": "number"
-      },
-      "minItems": 2,
-      "maxItems": 2
+      }
     },
     "StandardEntities": {
       "anyOf": [
