@@ -4,11 +4,11 @@ This feature allows to specify conditions to modify other fields based on curren
 
 ### Modification Object Properties
 
-| Property                                            | Type   | Description                                                                                                                       |
-| --------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| fieldValue<span class="required-asterisk">\*</span> | string | Value of current field that will trigger the update. Put `[[any_other_value]]` to make update for any other value than specified. |
-| mode                                                | string | Mode that adds possibility to use modification only on certain mode. One of ( `create` / `edit` / `clone` / `config` )            |
-| fieldsToModify                                      | array  | List of fields modifications that will be applied after com ponent value will match.                                              |
+| Property                                            | Type                          | Description                                                                                                                                                                                                                  |
+| --------------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| fieldValue<span class="required-asterisk">\*</span> | string or { pattern :string } | The value of the current field that will trigger the modification. Use `[[any_other_value]]` to apply modifications for any value other than those explicitly specified. Alternatively, you can provide an object with a `pattern` property to validate the value against a regular expression. |
+| mode                                                | string                        | Mode that adds possibility to use modification only on certain mode. One of ( `create` / `edit` / `clone` / `config` )                                                                                                       |
+| fieldsToModify                                      | array                         | List of fields modifications that will be applied after com ponent value will match.                                                                                                                                         |
 
 ### fieldsToModify Properties
 
