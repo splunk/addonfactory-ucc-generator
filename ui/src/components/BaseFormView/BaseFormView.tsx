@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Message from '@splunk/react-ui/Message';
 
+import { z } from 'zod';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
@@ -31,7 +32,6 @@ import {
 import {
     CustomHookError,
     BaseFormState,
-    SingleSelectEntityType,
     BaseFormStateData,
     CurrentBaseFormInput,
     UtilBaseForm,
@@ -39,7 +39,6 @@ import {
     ServiceGroup,
     OauthConfiguration,
     AnyEntity,
-    OAuthEntity,
     BasicEntity,
     ChangeRecord,
     EntitiesAllowingModifications,
@@ -56,6 +55,8 @@ import { CustomHookConstructor, CustomHookInstance } from '../../types/component
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { CustomComponentContextType } from '../../context/CustomComponentContext';
 import { PageContextProviderType } from '../../context/PageContext';
+import { OAuthEntity } from '../../types/globalConfig/oAuth';
+import { SingleSelectEntitySchema } from '../../types/globalConfig/entities';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -297,7 +298,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         };
 
                         // Defining Entity for auth_type in entitylist of globalConfig
-                        const entity: SingleSelectEntityType = {
+                        const entity: z.TypeOf<typeof SingleSelectEntitySchema> = {
                             field: 'auth_type',
                             type: 'singleSelect',
                             label: 'Auth Type',
@@ -1138,21 +1139,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     }
                 );
             } else {
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${this.appName}/js/build/custom/${module}`],
-                    (Hook: CustomHookConstructor) => {
-                        this.hook = new Hook(
-                            globalConfig,
-                            this.props.serviceName,
-                            this.state,
-                            this.props.mode,
-                            this.util,
-                            this.props.groupName
-                        );
-                        resolve(Hook);
-                    }
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${this.appName}/js/build/custom/${module}`], (
+                    Hook: CustomHookConstructor
+                ) => {
+                    this.hook = new Hook(
+                        globalConfig,
+                        this.props.serviceName,
+                        this.state,
+                        this.props.mode,
+                        this.util,
+                        this.props.groupName
+                    );
+                    resolve(Hook);
+                });
             }
         });
         return myPromise;

@@ -63,7 +63,8 @@ it('Correctly call action handlers for page dialog', async () => {
 
     expect(handleOpenPageStyleDialog).toHaveBeenCalledWith(expect.objectContaining({}), 'edit');
 
-    screen.getAllByRole('button', { name: /clone/i })[0].click();
+    const btn = screen.getAllByRole('button', { name: /clone/i })[0];
+    await user.click(btn);
 
     expect(handleOpenPageStyleDialog).toHaveBeenNthCalledWith(
         2,

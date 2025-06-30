@@ -458,6 +458,7 @@ def generate(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
             ui_source_map,
+            has_dashboard=global_config.has_dashboard(),
         )
     global_config_file = (
         "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
