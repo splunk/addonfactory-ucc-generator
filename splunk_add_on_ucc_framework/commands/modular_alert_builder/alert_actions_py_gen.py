@@ -46,7 +46,6 @@ class AlertActionsPyGenerator:
             )
         space_replace = re.compile(r"[^\w]+")
         self._lib_dir = space_replace.sub("_", ta_name.lower())
-        select_autoescape(disabled_extensions=("template"))
         self._templates = Environment(
             loader=FileSystemLoader(
                 op.join(op.dirname(op.realpath(__file__)), "arf_template")
@@ -54,6 +53,7 @@ class AlertActionsPyGenerator:
             trim_blocks=True,
             lstrip_blocks=True,
             keep_trailing_newline=True,
+            autoescape=select_autoescape(disabled_extensions=("template")),
         )
 
     def _get_alert_py_name(self, alert: Any) -> str:
