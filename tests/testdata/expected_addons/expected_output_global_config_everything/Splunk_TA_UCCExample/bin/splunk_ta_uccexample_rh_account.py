@@ -179,14 +179,21 @@ fields = [
         default=None,
         validator=validator.AllOf(
             validator.String(
-                max_len=4096,
-                min_len=10,
-            ),
+                max_len=4096, 
+                min_len=10, 
+            ), 
             validator.Pattern(
-                regex=r"""^[a-zA-Z]\w*$""",
+                regex=r"""^[a-zA-Z]\w*$""", 
             )
         )
-    ),
+    ), 
+    field.RestField(
+        'example_textarea_field',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
     field.RestField(
         'client_id',
         required=False,

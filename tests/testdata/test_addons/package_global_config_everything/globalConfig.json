@@ -396,7 +396,7 @@
                                             "rowsMin": 3,
                                             "rowsMax": 15
                                         },
-                                        "required": true
+                                        "required": false
                                     }
                                 ],
                                 "oauth_client_credentials": [
