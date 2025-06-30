@@ -2222,34 +2222,7 @@
       "items": {
         "anyOf": [
           {
-            "$ref": "#/definitions/CheckboxGroupEntity"
-          },
-          {
-            "$ref": "#/definitions/CheckboxTreeEntity"
-          },
-          {
-            "$ref": "#/definitions/TextEntity"
-          },
-          {
-            "$ref": "#/definitions/TextareaEntity"
-          },
-          {
-            "$ref": "#/definitions/SingleSelectEntity"
-          },
-          {
-            "$ref": "#/definitions/MultipleSelectEntity"
-          },
-          {
-            "$ref": "#/definitions/CheckboxEntity"
-          },
-          {
-            "$ref": "#/definitions/RadioEntity"
-          },
-          {
-            "$ref": "#/definitions/LinkEntity"
-          },
-          {
-            "$ref": "#/definitions/FileEntity"
+            "$ref": "#/definitions/StandardEntities"
           },
           {
             "$ref": "#/definitions/OAuthEntity"
@@ -2601,7 +2574,41 @@
       "minItems": 2,
       "maxItems": 2
     },
-    "OAuthFields": {
+    "StandardEntities": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CheckboxGroupEntity"
+        },
+        {
+          "$ref": "#/definitions/CheckboxTreeEntity"
+        },
+        {
+          "$ref": "#/definitions/TextEntity"
+        },
+        {
+          "$ref": "#/definitions/TextareaEntity"
+        },
+        {
+          "$ref": "#/definitions/SingleSelectEntity"
+        },
+        {
+          "$ref": "#/definitions/MultipleSelectEntity"
+        },
+        {
+          "$ref": "#/definitions/CheckboxEntity"
+        },
+        {
+          "$ref": "#/definitions/RadioEntity"
+        },
+        {
+          "$ref": "#/definitions/LinkEntity"
+        },
+        {
+          "$ref": "#/definitions/FileEntity"
+        }
+      ]
+    },
+    "DefaultOAuthFields": {
       "type": "object",
       "properties": {
         "oauth_field": {
@@ -2652,6 +2659,16 @@
         }
       },
       "additionalProperties": false
+    },
+    "OAuthFields": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/DefaultOAuthFields"
+        },
+        {
+          "$ref": "#/definitions/StandardEntities"
+        }
+      ]
     },
     "BasicAuthRequirement": {
       "if": {

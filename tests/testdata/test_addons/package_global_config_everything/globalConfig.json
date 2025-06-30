@@ -386,6 +386,17 @@
                                                 "pattern": "^[a-zA-Z]\\w*$"
                                             }
                                         ]
+                                    },
+                                    {
+                                        "type": "textarea",
+                                        "label": "Example Textarea Field",
+                                        "field": "example_textarea_field",
+                                        "help": "Help message",
+                                        "options": {
+                                            "rowsMin": 3,
+                                            "rowsMax": 15
+                                        },
+                                        "required": true
                                     }
                                 ],
                                 "oauth_client_credentials": [
