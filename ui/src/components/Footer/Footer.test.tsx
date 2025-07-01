@@ -22,14 +22,14 @@ it('renders Footer by default when showFooter is undefined', async () => {
     setupConfig();
 
     render(<Footer />);
-    await screen.findByText(/Addon Version: 5.31.1R85f0e18e/i);
+    await screen.findByText(/Add-on Version: 5.31.1R85f0e18e/i);
 });
 
 it('renders Footer when showFooter is true', async () => {
     setupConfig({ showFooter: true });
 
     render(<Footer />);
-    await screen.findByText(/Addon Version: 5.31.1R85f0e18e/i);
+    await screen.findByText(/Add-on Version: 5.31.1R85f0e18e/i);
 });
 
 it('does not render Footer when showFooter is false', () => {
