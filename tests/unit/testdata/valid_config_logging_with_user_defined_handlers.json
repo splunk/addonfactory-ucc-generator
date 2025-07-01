@@ -52,7 +52,7 @@
                 "endpoint": "endpoint1",
                 "handlerType": "EAI",
                 "registerHandler": {
-                    "file": "file1",
+                    "file": "file1.py",
                     "actions": [
                         "list"
                     ]
@@ -63,11 +63,11 @@
                 "endpoint": "endpoint2",
                 "handlerType": "EAI",
                 "registerHandler": {
-                    "file": "file2",
+                    "file": "file2.py",
                     "actions": [
                         "list",
                         "create",
-                        "delete",
+                        "remove",
                         "edit"
                     ]
                 }

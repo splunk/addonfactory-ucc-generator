@@ -194,7 +194,7 @@ def test_restmap_endpoints_with_user_defined_handlers(
         handlertype = python
         python.version = python3
         handlerfile = file2.py
-        handleractions = list, create, delete, edit
+        handleractions = list, create, remove, edit
         handlerpersistentmode = true
         """
     ).lstrip()
