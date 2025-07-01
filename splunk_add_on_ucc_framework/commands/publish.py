@@ -57,7 +57,7 @@ def upload_package(
         return package_id
     else:
         logger.error("Failed to upload package. {}".format(response.text))
-        return None
+        response.raise_for_status()
 
 
 def check_package_validation(package_upload_id: str, username: str, password: str):
@@ -73,6 +73,7 @@ def check_package_validation(package_upload_id: str, username: str, password: st
                 validation_response.text
             )
         )
+        validation_response.raise_for_status()
 
 
 def publish_package(
