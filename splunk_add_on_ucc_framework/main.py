@@ -24,6 +24,7 @@ from splunk_add_on_ucc_framework.commands import init
 from splunk_add_on_ucc_framework.commands import import_from_aob
 from splunk_add_on_ucc_framework.commands import package
 from splunk_add_on_ucc_framework.commands import validate
+from splunk_add_on_ucc_framework.commands import publish
 
 logger = logging.getLogger("ucc_gen")
 
@@ -249,6 +250,56 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         required=True,
     )
 
+    publish_parser = subparsers.add_parser("publish", description="Publish package to the Splunkbase")
+    publish_parser.add_argument(
+        "--app-id",
+        type=int,
+        help="Splunkbase numerical app id listed in the URL of the app details page.",
+        required=True
+    )
+    publish_parser.add_argument(
+        "--package-path",
+        type=str,
+        help="path to the package to be published",
+        required=True
+    )
+    publish_parser.add_argument(
+        "--package-name",
+        type=str,
+        help="Name of the package file",
+        required=True
+    )
+    publish_parser.add_argument(
+        "--splunk-versions",
+        type=str,
+        help="The Splunk version(s) that the package is compatible with. For example, '9.1,9.2'.",
+        required=True
+    )
+    publish_parser.add_argument(
+        "--cim-versions",
+        type=str,
+        help="The CIM version(s) that the release is compatible with. For example, '4.9,6.1'.",
+        required=True
+    )
+    publish_parser.add_argument(
+        "--make-visible",
+        dest="visibility",
+        help="The release is to be visible upon package validation success.",
+        action="store_true"
+    )
+    publish_parser.add_argument(
+        "--username",
+        type=str,
+        help="Username of the splunkbase account",
+        required=True
+    )
+    publish_parser.add_argument(
+        "--password",
+        type=str,
+        help="Password of the splunkbase account",
+        required=True
+    )
+
     args = parser.parse_args(argv)
     if args.command == "build":
         if args.ui_source_map:
@@ -288,6 +339,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(
             addon_name=args.addon_name,
+        )
+    if args.command == "publish":
+        publish.publish_package(
+            app_id=args.app_id,
+            package_path=args.package_path,
+            package_name=args.package_name,
+            splunk_versions=args.splunk_versions,
+            cim_versions=args.cim_versions,
+            visibility=args.visibility,
+            username=args.username,
+            password=args.password
         )
     return 0
 
