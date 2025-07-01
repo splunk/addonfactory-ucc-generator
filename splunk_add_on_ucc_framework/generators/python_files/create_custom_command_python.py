@@ -61,7 +61,7 @@ class CustomCommandPy(FileGenerator):
         argument_list.append(arg_str)
         return argument_list
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.commands_info = []
         for command in self._global_config.custom_search_commands:
             argument_list: List[str] = []
