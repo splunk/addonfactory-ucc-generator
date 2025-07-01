@@ -29,7 +29,7 @@ def upload_package(
     visibility: bool,
     username: str,
     password: str,
-):
+) -> str:
     upload_url = (
         f"https://classic.stage.splunkbase.splunk.com/api/v1/app/{app_id}/new_release/"
     )
@@ -50,17 +50,17 @@ def upload_package(
     if response.status_code == 200:
         package_id = response.json().get("id", "")
         if package_id == "":
-            logger.info(
-                "Package uploaded but no package ID returned. {}".format(response.text)
-            )
-        logger.info("Package uploaded successfully. Package ID: {}".format(package_id))
-        return package_id
+            logger.info(f"Package uploaded but no package ID returned. {response.text}")
+        logger.info(f"Package uploaded successfully. Package ID: {package_id}")
     else:
-        logger.error("Failed to upload package. {}".format(response.text))
+        logger.error(f"Failed to upload package. {response.text}")
         response.raise_for_status()
+    return package_id
 
 
-def check_package_validation(package_upload_id: str, username: str, password: str):
+def check_package_validation(
+    package_upload_id: str, username: str, password: str
+) -> None:
     upload_status_url = f"https://classic.stage.splunkbase.splunk.com/api/v1/package/{package_upload_id}/"
     validation_response = requests.get(upload_status_url, auth=(username, password))
     if validation_response.status_code == 200:
@@ -85,7 +85,7 @@ def publish_package(
     visibility: bool,
     username: str,
     password: str,
-):
+) -> None:
     package_upload_id = upload_package(
         app_id,
         package_path,
