@@ -40,8 +40,16 @@ const Footer = () => {
                 const buildValue = response?.results?.[0]?.build;
 
                 if (buildValue && /^\d+$/.test(buildValue)) {
-                    const utcString = new Date(parseInt(buildValue, 10) * 1000).toUTCString();
-                    setBuild(utcString);
+                    const buildTimestamp = parseInt(buildValue, 10) * 1000;
+                    const utcFormatter = new Intl.DateTimeFormat('en-GB', {
+                        dateStyle: 'medium',
+                        timeStyle: 'medium',
+                        timeZone: 'UTC',
+                        hour12: false,
+                    });
+
+                    const formattedUTC = `${utcFormatter.format(new Date(buildTimestamp))} UTC`;
+                    setBuild(formattedUTC);
                 }
             } catch (err) {
                 setError(parseErrorMsg(err));
@@ -57,7 +65,7 @@ const Footer = () => {
 
     return (
         <FooterWrapper role="contentinfo">
-            <VersionInfo>Addon Version: {meta.version || 'Unknown'}</VersionInfo>
+            <VersionInfo>Add-on Version: {meta.version || 'Unknown'}</VersionInfo>
             <div>{error ? `Build Error: ${error}` : `Build Time: ${build}`}</div>
         </FooterWrapper>
     );
