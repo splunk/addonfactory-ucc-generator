@@ -55,6 +55,22 @@ const findMods = (
     return modification;
 };
 
+const verifyAllProps = (
+    parentElement: Element,
+    input: Element,
+    mods: {
+        value?: string | number | boolean;
+        help?: StringOrTextWithLinksType;
+        label?: string;
+    }
+) => {
+    expect(input).toHaveAttribute('value', mods.value);
+    invariant(typeof mods.help === 'string', 'Help is not a string');
+    expect(parentElement).toHaveTextContent(mods.help);
+    invariant(typeof mods.label === 'string', 'Label is not a string');
+    expect(parentElement).toHaveTextContent(mods.label);
+};
+
 const getTextElementForField = (field: string) => {
     const componentParentElement = screen
         .getAllByTestId('control-group')
@@ -128,22 +144,6 @@ it('verify modification after text components change', async () => {
     );
 
     await userEvent.type(componentMakingModsTextBox1, firstValueToInput);
-
-    const verifyAllProps = (
-        parentElement: Element,
-        input: Element,
-        mods: {
-            value?: string | number | boolean;
-            help?: StringOrTextWithLinksType;
-            label?: string;
-        }
-    ) => {
-        expect(input).toHaveAttribute('value', mods.value);
-        invariant(typeof mods.help === 'string');
-        expect(parentElement).toHaveTextContent(mods.help);
-        invariant(typeof mods.label === 'string');
-        expect(parentElement).toHaveTextContent(mods.label);
-    };
 
     expect(componentInput).toBeVisuallyDisabled();
 
@@ -259,25 +259,30 @@ it('verify regexp modification after text components change', async () => {
 
     await userEvent.type(componentMakingRegexpMods, firstValueToInput);
 
-    const verifyAllProps = (
-        parentElement: Element,
-        input: Element,
-        mods: {
-            value?: string | number | boolean;
-            help?: StringOrTextWithLinksType;
-            label?: string;
-        }
-    ) => {
-        invariant(typeof mods.help === 'string', 'Help is not a string');
-        expect(parentElement).toHaveTextContent(mods.help);
-        invariant(typeof mods.label === 'string', 'Label is not a string');
-        expect(parentElement).toHaveTextContent(mods.label);
-    };
-
     verifyAllProps(componentParentElement, componentInput, mods1Field1);
 
     await userEvent.clear(componentMakingRegexpMods);
     await userEvent.type(componentMakingRegexpMods, secondValueToInput);
 
     verifyAllProps(componentParentElement, componentInput, mods2Field1);
+});
+
+it('verify no modifications', async () => {
+    renderModalWithProps(props);
+    const firstValueToInput = 'example value';
+    const secondValueToInput = 'aaa111';
+    const [componentParentElement, componentInput] = getTextElementForField(
+        firstStandardTextField.field
+    );
+
+    const [, componentMakingRegexpMods] = getTextElementForField(regexpModificationField.field);
+
+    await userEvent.type(componentMakingRegexpMods, firstValueToInput);
+
+    verifyAllProps(componentParentElement, componentInput, firstStandardTextField);
+
+    await userEvent.clear(componentMakingRegexpMods);
+    await userEvent.type(componentMakingRegexpMods, secondValueToInput);
+
+    verifyAllProps(componentParentElement, componentInput, firstStandardTextField);
 });
