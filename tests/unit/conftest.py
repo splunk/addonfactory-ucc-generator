@@ -61,7 +61,7 @@ def global_config_all_json() -> global_config_lib.GlobalConfig:
 @pytest.fixture
 def global_config_no_configuration() -> global_config_lib.GlobalConfig:
     return global_config_lib.GlobalConfig.from_file(
-        helpers.get_testdata_file_path("global_config_no_configuration.json")
+        helpers.get_testdata_file_path("valid_global_config_no_configuration.json")
     )
 
 
@@ -101,6 +101,17 @@ def global_config_for_conf_only_TA() -> global_config_lib.GlobalConfig:
 def global_config_only_logging() -> global_config_lib.GlobalConfig:
     global_config_path = helpers.get_testdata_file_path(
         "valid_config_only_logging.json"
+    )
+    global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
+    return global_config
+
+
+@pytest.fixture
+def global_config_logging_with_user_defined_handlers() -> (
+    global_config_lib.GlobalConfig
+):
+    global_config_path = helpers.get_testdata_file_path(
+        "valid_config_logging_with_user_defined_handlers.json"
     )
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
     return global_config
