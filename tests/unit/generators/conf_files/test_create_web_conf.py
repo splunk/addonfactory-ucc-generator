@@ -1,8 +1,4 @@
 from textwrap import dedent
-
-from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
-    RestHandlerConfig,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import WebConf
 
 
@@ -83,33 +79,12 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
 
     assert content == expected_content
 
-    global_config_all_json.user_defined_handlers.add_definitions(
-        [
-            RestHandlerConfig(
-                name="name1",
-                endpoint="endpoint1",
-                handlerType="EAI",
-                registerHandler={"file": "file1", "actions": ["list"]},
-            ),
-            RestHandlerConfig(
-                name="name2",
-                endpoint="endpoint2",
-                handlerType="EAI",
-                registerHandler={
-                    "file": "file2",
-                    "actions": ["list", "create", "delete", "edit"],
-                },
-            ),
-            RestHandlerConfig(
-                name="name3",
-                endpoint="endpoint3",
-                handlerType="EAI",
-            ),
-        ]
-    )
 
+def test_web_conf_endpoints_with_user_defined_handlers(
+    global_config_logging_with_user_defined_handlers, input_dir, output_dir
+):
     web_conf = WebConf(
-        global_config_all_json,
+        global_config_logging_with_user_defined_handlers,
         input_dir,
         output_dir,
     )
@@ -119,8 +94,16 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
     with open(file_paths["web.conf"]) as fp:
         content = fp.read()
 
-    expected_content += dedent(
+    expected_content = dedent(
         """
+        [expose:splunk_ta_uccexample_settings]
+        pattern = splunk_ta_uccexample_settings
+        methods = POST, GET
+
+        [expose:splunk_ta_uccexample_settings_specified]
+        pattern = splunk_ta_uccexample_settings/*
+        methods = POST, GET, DELETE
+
         [expose:endpoint1]
         pattern = endpoint1
         methods = POST, GET
@@ -137,6 +120,6 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         pattern = endpoint2/*
         methods = POST, GET, DELETE
         """
-    )
+    ).lstrip()
 
     assert content == expected_content
