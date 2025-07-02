@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from os.path import isfile, join
-from typing import Any, Dict
+from typing import Dict
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
@@ -24,7 +24,7 @@ class ServerConf(FileGenerator):
         "files created as per configurations in globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = "server.conf"
         self.custom_conf = []
         self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))
