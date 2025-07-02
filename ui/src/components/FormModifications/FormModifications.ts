@@ -77,7 +77,7 @@ export function getAllFieldsWithModifications(
     return entitiesWithModifications as EntitiesAllowingModifications[];
 }
 
-const ifRefexpMatchesValue = (
+const ifRegexpMatchesValue = (
     value: AcceptableFormValueOrNullish,
     modificationValue: string | number | boolean | { pattern: string } | undefined
 ) => {
@@ -118,7 +118,7 @@ const getModificationForEntity = (
                 getValueMapTruthyFalse(currentFieldValue, page) ===
                     getValueMapTruthyFalse(mod.fieldValue, page) ||
                 // or if the mod value is a regex pattern and it matches the current field value
-                (ifRefexpMatchesValue(currentFieldValue, mod.fieldValue) &&
+                (ifRegexpMatchesValue(currentFieldValue, mod.fieldValue) &&
                     (!mod.mode || mod.mode === mode)))
         );
     });
