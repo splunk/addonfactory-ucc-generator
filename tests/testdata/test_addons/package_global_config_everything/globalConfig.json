@@ -249,8 +249,15 @@
                                 "auth_type": [
                                     "basic",
                                     "oauth",
-                                    "oauth_client_credentials"
+                                    "oauth_client_credentials",
+                                    "certificate_authorization"
                                 ],
+                                "oauth_type_labels": {
+                                    "basic": "Basic Authentication",
+                                    "oauth": "OAuth 2.0",
+                                    "oauth_client_credentials": "OAuth 2.0 Client Credentials",
+                                    "certificate_authorization": "Certificate Authorization"
+                                },
                                 "basic": [
                                     {
                                         "oauth_field": "username",
@@ -606,6 +613,28 @@
                                             "disableonEdit": true,
                                             "enable": false
                                         }
+                                    }
+                                ],
+                                "certificate_authorization": [
+                                    {
+                                        "oauth_field": "username_cert",
+                                        "label": "Username certificate",
+                                        "help": "Enter the username certificate for this account.",
+                                        "field": "username_cert"
+                                    },
+                                    {
+                                        "oauth_field": "password_cert",
+                                        "label": "Password certificate",
+                                        "encrypted": true,
+                                        "help": "Enter the password certificate for this account.",
+                                        "field": "password"
+                                    },
+                                    {
+                                        "oauth_field": "security_token_cert",
+                                        "label": "Security Token certificate",
+                                        "encrypted": true,
+                                        "help": "Enter the security certificate token.",
+                                        "field": "token_cert"
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
@@ -2346,7 +2375,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.67.0+e73d4162e",
+        "version": "5.67.0+f5921d36e",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [

@@ -21,10 +21,12 @@ type IAlertsIn = z.input<typeof alerts>;
 // Explicit type for the runtime schema of Department
 interface IAlertsRT extends z.ZodType<IAlerts, z.ZodTypeDef, IAlertsIn> {}
 
-export const GlobalConfigSchema = z.object({
-    meta: meta as IMetaRT,
-    pages: pages as IPagesRT,
-    alerts: alerts as IAlertsRT,
-});
+export const GlobalConfigSchema = z
+    .object({
+        meta: meta as IMetaRT,
+        pages: pages as IPagesRT,
+        alerts: alerts as IAlertsRT,
+    })
+    .passthrough();
 
 export type GlobalConfig = z.infer<typeof GlobalConfigSchema>;

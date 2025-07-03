@@ -29,14 +29,16 @@ const OAuthOptionsBaseSchema = z.object({
     disableonEdit: z.boolean().optional(),
     hideForPlatform: PlatformEnum.optional(),
     auth_type: z.array(
-        z.union([
-            z.enum(['basic', 'oauth', 'oauth_client_credentials']),
-            z.object({
-                value: z.string(),
-                label: z.string(),
-            }),
-        ])
+        z.union([z.enum(['basic', 'oauth', 'oauth_client_credentials']), z.string()])
     ),
+    oauth_type_labels: z
+        .object({
+            basic: z.string().optional(),
+            oauth: z.string().optional(),
+            oauth_client_credentials: z.string().optional(),
+        })
+        .catchall(z.string())
+        .optional(),
     basic: z.array(oAuthFieldSchema).optional(),
     oauth: z.array(oAuthFieldSchema).optional(),
     oauth_client_credentials: z.array(oAuthFieldSchema).optional(),
@@ -50,33 +52,11 @@ const OAuthOptionsBaseSchema = z.object({
     auth_endpoint_token_access_type: z.string().optional(),
 });
 
-export const OAuthOptionsSchema = OAuthOptionsBaseSchema.and(
-    z.record(z.string(), z.array(oAuthFieldSchema))
-);
-// .superRefine((data, ctx) => {
-//     // Validate additional properties that are not in the base schema
-//     const baseKeys = new Set(Object.keys(OAuthOptionsBaseSchema.shape));
-
-//     Object.entries(data).forEach(([key, value]) => {
-//         if (!baseKeys.has(key) && value !== undefined) {
-//             // Check if the additional property is an array of oAuthFieldSchema
-//             const result = z.array(oAuthFieldSchema).safeParse(value);
-//             if (!result.success) {
-//                 ctx.addIssue({
-//                     code: z.ZodIssueCode.custom,
-//                     message: `Additional property "${key}" must be an array of oAuthFieldSchema`,
-//                     path: [key],
-//                 });
-//             }
-//         }
-//     });
-// });
-
 export const oAuthEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('oauth'),
     defaultValue: z.string().optional(),
     validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: OAuthOptionsSchema,
+    options: OAuthOptionsBaseSchema.passthrough(),
 }).strict();
 
 export type OAuthEntity = z.TypeOf<typeof oAuthFieldSchema>;
