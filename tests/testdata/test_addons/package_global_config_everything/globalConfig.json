@@ -621,13 +621,6 @@
                                         "field": "username_cert"
                                     },
                                     {
-                                        "oauth_field": "password_cert",
-                                        "label": "Password certificate",
-                                        "encrypted": true,
-                                        "help": "Enter the password certificate for this account.",
-                                        "field": "password"
-                                    },
-                                    {
                                         "oauth_field": "security_token_cert",
                                         "label": "Security Token certificate",
                                         "encrypted": true,
