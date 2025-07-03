@@ -52,15 +52,11 @@ def test_alert_html_generate_html_no_global_config(
     global_config_for_conf_only_TA,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     alert_html = AlertActionsHtml(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     output = alert_html.generate()
     assert output == {}
@@ -74,8 +70,6 @@ def test_alert_html_generate_html_no_alerts(
     mock_set_attributes,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     mocked_gc = MagicMock()
     mocked_gc.has_alerts.return_value = False
@@ -84,8 +78,6 @@ def test_alert_html_generate_html_no_alerts(
         global_config=mocked_gc,
         input_dir=input_dir,
         output_dir=output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     output = alert_html.generate()
     assert output == {}
@@ -105,8 +97,6 @@ def test_alert_html_generate_html_with_alerts(
     global_config_for_alerts,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     html_content = """<html>
 <body>
@@ -124,8 +114,6 @@ def test_alert_html_generate_html_with_alerts(
         global_config_for_alerts,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     print("\n \n")
     print(alert_html._alert_settings)
@@ -152,8 +140,6 @@ def test_alert_actions_html_set_attributes_and_generate(
     global_config_for_alerts,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     html_content = """<html>
 <body>
@@ -170,8 +156,6 @@ def test_alert_actions_html_set_attributes_and_generate(
         global_config_for_alerts,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     assert hasattr(alert_html, "_alert_settings")
     alert_html.writer = MagicMock()
