@@ -282,19 +282,8 @@ class GlobalConfigBuilderSchema:
 
                 auth_types = entity_element["options"]["auth_type"]
 
-                if "basic" in auth_types:
-                    # Append all the basic auth fields to the content
-                    content = content + entity_element["options"]["basic"]
-
-                if "oauth" in auth_types:
-                    # Append all the oauth auth fields to the content
-                    content = content + entity_element["options"]["oauth"]
-
-                if "oauth_client_credentials" in auth_types:
-                    # Append all the oauth client credentials auth fields to the content
-                    content = (
-                        content + entity_element["options"]["oauth_client_credentials"]
-                    )
+                for auth_type in auth_types:
+                    content = content + entity_element["options"][auth_type]
 
                 if "oauth" in auth_types or "oauth_client_credentials" in auth_types:
                     # Append OAuth fields if there is at least one auth type
