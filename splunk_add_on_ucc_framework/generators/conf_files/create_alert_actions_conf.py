@@ -28,7 +28,7 @@ class AlertActionsConf(FileGenerator):
         "for the custom alert actions defined in globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = "alert_actions.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
         if self._global_config is None:
@@ -79,7 +79,7 @@ class AlertActionsConf(FileGenerator):
                 self.alerts[alert_name].append("icon_path = alerticon.png")
                 # we copy UCC framework's alerticon.png only when a custom isn't provided
                 shutil.copy(
-                    path.join(kwargs["ucc_dir"], "static", "alerticon.png"),
+                    path.join(self._ucc_dir, "static", "alerticon.png"),
                     path.join(self._get_output_dir(), "appserver", "static"),
                 )
             # process alert action properties in bulk

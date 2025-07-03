@@ -1,38 +1,28 @@
-import os.path
 from textwrap import dedent
-
-from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
-from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handlers import (
-    RestHandlerConfig,
-)
 from splunk_add_on_ucc_framework.generators.conf_files import WebConf
 
 
-UCC_DIR = os.path.dirname(ucc_framework_file)
-
-
 def test_generate_conf_for_conf_only_addon(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     web_conf = WebConf(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     file_paths = web_conf.generate()
     assert file_paths == [{}]
 
 
-def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_name):
+def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
     web_conf = WebConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        addon_name=ta_name,
-        ucc_dir=UCC_DIR,
     )
     output = web_conf.generate()
 
@@ -84,42 +74,26 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir, ta_na
         }
     ]
 
-    global_config_all_json.user_defined_handlers.add_definitions(
-        [
-            RestHandlerConfig(
-                name="name1",
-                endpoint="endpoint1",
-                handlerType="EAI",
-                registerHandler={"file": "file1", "actions": ["list"]},
-            ),
-            RestHandlerConfig(
-                name="name2",
-                endpoint="endpoint2",
-                handlerType="EAI",
-                registerHandler={
-                    "file": "file2",
-                    "actions": ["list", "create", "delete", "edit"],
-                },
-            ),
-            RestHandlerConfig(
-                name="name3",
-                endpoint="endpoint3",
-                handlerType="EAI",
-            ),
-        ]
-    )
 
+def test_web_conf_endpoints_with_user_defined_handlers(
+    global_config_logging_with_user_defined_handlers, input_dir, output_dir
+):
     web_conf = WebConf(
-        global_config_all_json,
+        global_config_logging_with_user_defined_handlers,
         input_dir,
         output_dir,
-        addon_name=ta_name,
-        ucc_dir=UCC_DIR,
     )
     output_2 = web_conf.generate()
 
-    expected_content += dedent(
+    expected_content = dedent(
         """
+        [expose:splunk_ta_uccexample_settings]
+        pattern = splunk_ta_uccexample_settings
+        methods = POST, GET
+
+        [expose:splunk_ta_uccexample_settings_specified]
+        pattern = splunk_ta_uccexample_settings/*
+        methods = POST, GET, DELETE
         [expose:endpoint1]
         pattern = endpoint1
         methods = POST, GET

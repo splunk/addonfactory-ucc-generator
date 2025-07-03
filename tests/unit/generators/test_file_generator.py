@@ -21,7 +21,7 @@ def has_ui():
 
 
 @fixture
-def app_manifest():
+def dummy_app_manifest():
     mock_manifest = MagicMock()
     mock_manifest.get_description.return_value = "Test Description"
     mock_manifest.get_authors.return_value = [{"name": "Test Author"}]
@@ -34,23 +34,17 @@ def set_attr():
     return {"file_name": "file_path"}
 
 
-def mocked__set_attribute(this, **kwargs):
-    this.attrib_1 = "value_1"
-    this.attrib_2 = "value_2"
-
-
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_get_output_dir(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attr, global_config_all_json, input_dir, output_dir, ta_name
 ):
+    global_config_all_json.meta["name"] = ta_name
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
-    expected_output_dir = f"{output_dir}/test_addon"
+    expected_output_dir = f"{output_dir}/{ta_name}"
     assert file_gen._get_output_dir() == expected_output_dir
 
 
@@ -60,14 +54,14 @@ def test_get_output_dir(
     return_value="tmp/path",
 )
 def test_get_file_output_path(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     # Test with string
@@ -91,15 +85,11 @@ def test_set_template_and_render(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     mock_get_template.return_value = Template("mock template")
@@ -116,15 +106,11 @@ def test_set_template_and_render_invalid_file_name(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     mock_get_template.return_value = Template("mock template")
     # Test with invalid file name
@@ -132,27 +118,16 @@ def test_set_template_and_render_invalid_file_name(
         file_gen.set_template_and_render(["dir1"], "test.invalid")
 
 
+@patch(
+    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
+)
 @patch.object(shutil, "copy")
 def test_begin(
-    mock_copy,
-    global_config_all_json,
-    input_dir,
-    output_dir,
-    ta_name,
-    addon_version,
-    has_ui,
-    app_manifest,
+    mock_copy, dummy_app_manifest, global_config_all_json, input_dir, output_dir
 ):
-    result = begin(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
-        addon_version=addon_version,
-        has_ui=has_ui,
-        app_manifest=app_manifest,
-    )
+    dummy_app_manifest.return_value = dummy_app_manifest
+    result = begin(global_config_all_json, input_dir, output_dir)
+    ta_name = global_config_all_json.product
     assert result == [
         {"app.conf": f"{output_dir}/{ta_name}/default/app.conf"},
         {"inputs.conf": f"{output_dir}/{ta_name}/default/inputs.conf"},
@@ -188,7 +163,8 @@ def test_begin(
         {"default.xml": f"{output_dir}/{ta_name}/default/data/ui/nav/default.xml"},
         {"inputs.xml": f"{output_dir}/{ta_name}/default/data/ui/views/inputs.xml"},
         {
-            "test_addon_redirect.xml": f"{output_dir}/{ta_name}/default/data/ui/views/test_addon_redirect.xml"
+            f"{ta_name.lower()}_redirect.xml": f"{output_dir}/{ta_name}/default/data/ui/views/"
+            f"{ta_name.lower()}_redirect.xml"
         },
         {
             "test_alert.html": f"{output_dir}/{ta_name}/default/data/ui/alerts/test_alert.html"
@@ -200,7 +176,9 @@ def test_begin(
 
 
 def test__set_attributes_error(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """
     This tests that the exception provided in side_effect is raised too
@@ -210,14 +188,15 @@ def test__set_attributes_error(
             global_config_all_json,
             input_dir,
             output_dir,
-            ucc_dir=ucc_dir,
-            addon_name=ta_name,
         )
 
 
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_generate(
-    mock_set_attribute, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attribute,
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """
     This tests that the exception provided in side_effect is raised too
@@ -226,8 +205,6 @@ def test_generate(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     with raises(NotImplementedError):
         file_gen.generate()

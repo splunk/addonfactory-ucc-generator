@@ -4,6 +4,7 @@ import re
 import tempfile
 import logging
 import json
+import pytest
 from os import path
 from pathlib import Path
 from typing import Dict, Any
@@ -511,35 +512,15 @@ def test_ucc_generate_with_configuration_files_only():
         )
         # the globalConfig would now always exist
         assert path.exists(global_config_path)
-        # clean-up for tests
-        os.remove(global_config_path)
 
-
-def test_ucc_generate_openapi_with_configuration_files_only():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_no_global_config",
-            "package",
-        )
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        actual_file_path = path.join(
+        openapi_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        # the openapi.json would now exist as globalConfig.json would always exist
-        assert path.exists(actual_file_path)
+        # the openapi.json should not be generated for .conf-only add-ons
+        assert not path.exists(openapi_file_path)
+
         # clean-up for tests
-        os.remove(
-            path.join(
-                package_folder,
-                path.pardir,
-                "globalConfig.json",
-            )
-        )
+        os.remove(global_config_path)
 
 
 def test_ucc_build_verbose_mode(caplog):
@@ -792,6 +773,50 @@ def test_ucc_generate_with_ui_source_map():
             assert path.exists(expected_file_path)
 
 
+@pytest.mark.parametrize(
+    "config, expected_file_count",
+    [
+        (
+            "package_global_config_configuration",
+            0,
+        ),
+        (
+            "package_global_config_everything",
+            2,
+        ),
+    ],
+)
+def test_ucc_dashboard_js_copying(config, expected_file_count):
+    with tempfile.TemporaryDirectory() as temp_dir:
+        package_folder = path.join(
+            path.dirname(path.realpath(__file__)),
+            "..",
+            "testdata",
+            "test_addons",
+            config,
+            "package",
+        )
+        build.generate(
+            source=package_folder, output_directory=temp_dir, ui_source_map=True
+        )
+
+        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+        js_build_folder = path.join(actual_folder, "appserver", "static", "js", "build")
+
+        js_build_dir = Path(js_build_folder)
+
+        dashbaord_files_counter = 0
+
+        for _ in js_build_dir.glob("DashboardPage.*"):
+            dashbaord_files_counter += 1
+
+        assert dashbaord_files_counter == expected_file_count, (
+            f"Expected {expected_file_count} DashboardPage.[hash].js files in {js_build_folder}, for {config}"
+            f"but found {dashbaord_files_counter}."
+        )
+
+
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
     package_folder = path.join(
         path.dirname(path.realpath(__file__)),
@@ -911,3 +936,52 @@ def _compare_interval_entities(
                             }
                         ],
                     }
+
+
+def test_ucc_generate_os_lib_requires_python_39_no_ignore(tmp_path, caplog):
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    #  this config has cffi for python version >= 3.8 and --ignore-requires-python flag is missing
+    unit_helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_with_os_libraries_no_ignore.json"
+    )
+
+    python_version = ".".join(str(x) for x in sys.version_info[:2])
+    from packaging.version import Version
+
+    if Version(python_version) < Version("3.8"):
+        with pytest.raises(SystemExit) as e:
+            build.generate(source=package_folder, config_path=str(tmp_file_gc))
+        assert (
+            "Package build aborted with error message: ERROR: Package 'cffi' requires a different "
+            "Python: 3.7.17 not in '>=3.8'" in e.value.args[0]
+        )
+    else:
+        build.generate(source=package_folder, config_path=str(tmp_file_gc))
+
+
+def test_ucc_generate_os_lib_requires_python_39_ignore(tmp_path, caplog):
+    package_folder = path.join(
+        path.dirname(path.realpath(__file__)),
+        "..",
+        "testdata",
+        "test_addons",
+        "package_global_config_only_one_tab",
+        "package",
+    )
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    #  this config has cffi for python version >= 3.8 but has --ignore-requires-python flag
+    unit_helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_with_os_libraries_ignore.json"
+    )
+
+    build.generate(source=package_folder, config_path=str(tmp_file_gc))

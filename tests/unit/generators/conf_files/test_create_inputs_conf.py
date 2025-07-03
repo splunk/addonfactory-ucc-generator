@@ -1,28 +1,23 @@
 import json
-import os
 from pathlib import Path
 from textwrap import dedent
 from unittest.mock import MagicMock
 
-from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from splunk_add_on_ucc_framework.generators.conf_files import InputsConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
 
 
-UCC_DIR = os.path.dirname(ucc_framework_file)
-
-
 def test_set_attributes_no_inputs_in_global_config(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """Test when _global_config is provided but has no inputs."""
     inputs_conf = InputsConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     inputs_conf._global_config = MagicMock()
     inputs_conf._global_config.inputs = []
@@ -37,16 +32,14 @@ def test_generate_conf(
     global_config_all_json,
     input_dir,
     output_dir,
-    ta_name,
 ):
+    ta_name = global_config_all_json.product
     exp_fname = "inputs.conf"
 
     inputs_conf = InputsConf(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
     )
     expected_content = dedent(
         """
@@ -74,21 +67,11 @@ def test_generate_conf(
     }
 
 
-def test_generate_conf_spec(
-    global_config_all_json,
-    input_dir,
-    output_dir,
-    ta_name,
-):
+def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
     exp_fname = "inputs.conf.spec"
 
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
-    )
+    inputs_conf = InputsConf(global_config_all_json, input_dir, output_dir)
     expected_content = (
         "\n".join(
             [
@@ -143,7 +126,7 @@ def test_generate_conf_spec(
     ]
 
 
-def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
+def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
     config_content = json.loads(
         Path(get_testdata_file_path("valid_config.json")).read_text()
     )
@@ -158,8 +141,6 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir, ta_name):
         GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
     )
     output = inputs_conf.generate_conf()
     assert (
@@ -273,8 +254,6 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
         GlobalConfig.from_file(str(config)),
         input_dir,
         output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
     )
 
     conf = inputs_conf.generate_conf()

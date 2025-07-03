@@ -6,15 +6,11 @@ def test_set_attributes_with_dashboard(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert hasattr(dashboard_xml, "dashboard_xml_content")
@@ -24,15 +20,11 @@ def test_set_attributes_without_dashboard(
     global_config_only_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_only_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     assert not hasattr(dashboard_xml, "dashboard_xml_content")
 
@@ -41,20 +33,17 @@ def test_generate_xml_with_dashboard(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
+    ta_name = global_config_all_json.product
     exp_fname = "dashboard.xml"
     expected_content = dedent(
-        """<?xml version="1.0" ?>
-<view isDashboard="False" template="test_addon:/templates/base.html" type="html">
+        f"""<?xml version="1.0" ?>
+<view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
     <label>Monitoring Dashboard</label>
 </view>
     """
@@ -74,15 +63,11 @@ def test_generate_xml_without_dashboard(
     global_config_only_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     dashboard_xml = DashboardXml(
         global_config_only_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     output = dashboard_xml.generate()
 

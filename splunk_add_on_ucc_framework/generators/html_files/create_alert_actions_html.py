@@ -29,7 +29,7 @@ class AlertActionsHtml(FileGenerator):
         " in `default/data/ui/alerts` folder."
     )
 
-    def _set_attributes(self, **kwargs: Dict[str, Any]) -> None:
+    def _set_attributes(self) -> None:
         if self._global_config.has_alerts():
             self._html_home = "alert_html_skeleton.template"
             envs = normalize.normalize(

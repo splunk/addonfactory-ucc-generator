@@ -257,6 +257,47 @@ describe('multiple services', () => {
     });
 
     describe('groups', () => {
+        const openAndVerifyGroup = async ({
+            groupTitle,
+            existsTitles,
+            doesNotExistsTitles,
+            user,
+        }: {
+            groupTitle: string;
+            existsTitles: string[];
+            doesNotExistsTitles: string[];
+            user: UserEvent;
+        }) => {
+            await user.click(screen.getByText(groupTitle));
+
+            // Ensure UI updates before assertions
+            await waitFor(() => {
+                existsTitles.forEach((title) => {
+                    expect(screen.getByText(title)).toBeInTheDocument();
+                });
+            });
+
+            // animation needs to finish, during animation elements are still visible
+            await waitFor(
+                () =>
+                    expect(screen.queryAllByRole('menuitem')).toHaveLength(
+                        // length should be number of existsTitles + 1 (Back button)
+                        existsTitles.length + 1
+                    ),
+                { timeout: 1000 }
+            );
+
+            // elements are HIDDEN via hideForPlatform "cloud"
+            doesNotExistsTitles.forEach((title) => {
+                expect(screen.queryByText(title)).not.toBeInTheDocument();
+            });
+
+            await user.click(screen.getByText('Back'));
+            await waitFor(() => expect(screen.queryByText('Back')).not.toBeInTheDocument(), {
+                timeout: 500,
+            });
+        };
+
         function getGroupedServices(): z.infer<typeof InputsPageTableSchema> {
             return BASIC_INPUTS_CONFIG_GROUPED_SERVICES;
         }
@@ -269,18 +310,18 @@ describe('multiple services', () => {
         });
 
         it('should render group items', async () => {
-            const userEventSetup = userEvent.setup();
+            const user = userEvent.setup();
             setup(getGroupedServices());
 
             // Open dropdown
-            await userEventSetup.click(getCreateDropdown());
+            await user.click(getCreateDropdown());
 
             // Check sub menu is not rendered
             expect(screen.queryByText('test-subservice1-title1')).not.toBeInTheDocument();
             expect(screen.queryByText('test-subservice-subTitle2')).not.toBeInTheDocument();
 
             // Click on group title
-            await userEventSetup.click(screen.getByText('test-group-title1'));
+            await user.click(screen.getByText('test-group-title1'));
 
             // Check sub menu is rendered
             expect(screen.getByText('test-subservice1-title1')).toBeInTheDocument();
@@ -292,7 +333,7 @@ describe('multiple services', () => {
             );
 
             // Click back button
-            await userEventSetup.click(screen.getByRole('menuitem', { name: 'Back' }));
+            await user.click(screen.getByRole('menuitem', { name: 'Back' }));
 
             await waitFor(() =>
                 expect(screen.queryByText('test-subservice-subTitle1')).not.toBeInTheDocument()
@@ -464,47 +505,6 @@ describe('multiple services', () => {
 
             await user.click(getCreateDropdown());
 
-            const openAndVerifyGroup = async ({
-                groupTitle,
-                existsTitles,
-                doesNotExistsTitles,
-                userEventSetup,
-            }: {
-                groupTitle: string;
-                existsTitles: string[];
-                doesNotExistsTitles: string[];
-                userEventSetup: UserEvent;
-            }) => {
-                await userEventSetup.click(screen.getByText(groupTitle));
-
-                // Ensure UI updates before assertions
-                await waitFor(() => {
-                    existsTitles.forEach((title) => {
-                        expect(screen.getByText(title)).toBeInTheDocument();
-                    });
-                });
-
-                // animation needs to finish, during animation elements are still visible
-                await waitFor(
-                    () =>
-                        expect(screen.queryAllByRole('menuitem')).toHaveLength(
-                            // length should be number of existsTitles + 1 (Back button)
-                            existsTitles.length + 1
-                        ),
-                    { timeout: 1000 }
-                );
-
-                // elements are HIDDEN via hideForPlatform "cloud"
-                doesNotExistsTitles.forEach((title) => {
-                    expect(screen.queryByText(title)).not.toBeInTheDocument();
-                });
-
-                await userEventSetup.click(screen.getByText('Back'));
-                await waitFor(() => expect(screen.queryByText('Back')).not.toBeInTheDocument(), {
-                    timeout: 500,
-                });
-            };
-
             // 2+1+1 two groups, one standard service, one service not hidden for cloud
             expect(screen.queryAllByRole('menuitem')).toHaveLength(4);
 
@@ -512,14 +512,14 @@ describe('multiple services', () => {
                 groupTitle: 'test-group-title1',
                 existsTitles: ['test-subservice1-title1'],
                 doesNotExistsTitles: ['test-subservice1-title2'],
-                userEventSetup: user,
+                user,
             });
 
             await openAndVerifyGroup({
                 groupTitle: 'test-group-title2',
                 existsTitles: ['test-subservice2-title2'],
                 doesNotExistsTitles: ['test-subservice2-title1'],
-                userEventSetup: user,
+                user,
             });
         });
     });

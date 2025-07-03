@@ -42,6 +42,7 @@ class OSDependentLibraryConfig:
     os: str
     deps_flag: str
     dependencies: bool = field(default=False)
+    ignore_requires_python: bool = field(default=False)
 
     @classmethod
     def from_dict(cls, **kwargs: Any) -> "OSDependentLibraryConfig":
@@ -55,7 +56,11 @@ class OSDependentLibraryConfig:
             )
         }
         deps_flag = "" if result.get("dependencies") else "--no-deps"
+        ignore_python = (
+            "--ignore-requires-python" if result.get("ignore_requires_python") else ""
+        )
         result.update({"deps_flag": deps_flag})
+        result.update({"ignore_requires_python": ignore_python})
         result.update({"python_version": result["python_version"]})
         return cls(**result)
 
@@ -68,7 +73,8 @@ class GlobalConfig:
     ) -> None:
         self._content = content
         self._is_global_config_yaml = is_yaml
-        self.user_defined_handlers = UserDefinedRestHandlers()
+        rest_handlers = self._content.get("options", {}).get("restHandlers", [])
+        self.user_defined_handlers = UserDefinedRestHandlers(rest_handlers)
 
     @classmethod
     def from_file(cls, global_config_path: str) -> "GlobalConfig":
@@ -107,11 +113,6 @@ class GlobalConfig:
                 self.is_yaml == other.is_yaml,
             ]
         )
-
-    def parse_user_defined_handlers(self) -> None:
-        """Parse user-defined REST handlers from globalConfig["options"]["restHandlers"]"""
-        rest_handlers = self._content.get("options", {}).get("restHandlers", [])
-        self.user_defined_handlers.add_definitions(rest_handlers)
 
     def dump(self, path: str) -> None:
         if self.is_yaml:

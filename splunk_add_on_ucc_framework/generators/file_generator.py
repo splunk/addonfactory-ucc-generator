@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import logging
+import os
 from abc import ABC
 from os.path import realpath, sep
 from typing import Any, Dict, List, Union, NoReturn
@@ -27,7 +28,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_sch
     GlobalConfigBuilderSchema,
 )
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
-
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
 from . import file_const as fc
 
 __all__ = ["FileGenerator", "begin"]
@@ -38,39 +39,39 @@ logger = logging.getLogger("ucc_gen")
 class FileGenerator(ABC):
     __description__ = "DESCRIBE THE FILE THAT IS GENERATED"
 
+    _ucc_dir = ucc_framework_file
+
     def __init__(
         self,
         global_config: GlobalConfig,
         input_dir: str,
         output_dir: str,
-        **kwargs: Any,
     ) -> None:
         """
         :param global_config: the GlobalConfig object that is validated and parsed
         :param input_dir: the path to the source code of globalConfig.(json|yaml)
         :param output_dir: the path to output/<addon_name> directory
-        :param ucc_dir: the path of source code of UCC framework
-        :param addon_name: the addon_name that is being generated
 
         """
         super().__init__()
         self._global_config = global_config
         self._input_dir = input_dir
         self._output_dir = output_dir
-        self._template_dir = [(sep.join([kwargs["ucc_dir"], "templates"]))]
+        self._template_dir = [(sep.join([os.path.dirname(self._ucc_dir), "templates"]))]
         self._template = Environment(
             loader=FileSystemLoader(self._template_dir),
             trim_blocks=True,
             lstrip_blocks=True,
             keep_trailing_newline=True,
         )
-        self._addon_name: str = kwargs["addon_name"]
+        self._addon_name: str = global_config.product
+        self.writer = write_file
         self._gc_schema: GlobalConfigBuilderSchema = GlobalConfigBuilderSchema(
             global_config
         )
-        self._set_attributes(**kwargs)
+        self._set_attributes()
 
-    def _set_attributes(self, **kwargs: Any) -> Union[NoReturn, None]:
+    def _set_attributes(self) -> Union[NoReturn, None]:
         raise NotImplementedError()
 
     def generate(self) -> List[Dict[str, str]]:
@@ -110,21 +111,19 @@ class FileGenerator(ABC):
 
 
 def begin(
-    global_config: GlobalConfig, input_dir: str, output_dir: str, **kwargs: Any
+    global_config: GlobalConfig, input_dir: str, output_dir: str
 ) -> List[Dict[str, str]]:
     generated_files: List[Dict[str, str]] = []
     for item in fc.GEN_FILE_LIST:
         file_details: List[Dict[str, str]] = [{}]
-        file_details = item.file_class(
-            global_config, input_dir, output_dir, **kwargs
-        ).generate()
+        file_details = item.file_class(global_config, input_dir, output_dir).generate()
         for details in file_details:
             updated_file_details: Dict[str, str] = {}
             if details:
                 write_file(
-                    file_name=details["file_name"],
-                    file_path=details["file_path"],
-                    content=details["content"],
+                    details["file_name"],
+                    details["file_path"],
+                    details["content"],
                     merge_mode=details.get("merge_mode", "stanza_overwrite"),
                 )
                 if details.get("file_name"):

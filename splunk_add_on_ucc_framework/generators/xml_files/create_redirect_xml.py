@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Any, Dict, List
+from typing import Dict, List
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
@@ -24,7 +24,7 @@ class RedirectXml(FileGenerator):
         " in `default/data/ui/views/` folder."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         if self._global_config.has_oauth():
             self.redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
                 self._addon_name,

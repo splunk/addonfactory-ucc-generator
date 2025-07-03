@@ -15,7 +15,7 @@
 #
 from copy import deepcopy
 from dataclasses import dataclass
-from typing import Dict, Any, Union, Iterable, Optional, Set, List
+from typing import Dict, Any, Iterable, Optional, Set, List
 
 from splunk_add_on_ucc_framework.commands.openapi_generator import oas
 
@@ -284,8 +284,7 @@ class RestHandlerConfig:
     def oas_paths(self) -> Dict[str, oas.PathItemObject]:
         if self.handlerType == "EAI":
             return self._oas_objects_eai()
-        else:
-            raise ValueError(f"Unsupported handler type: {self.handlerType}")
+        raise ValueError(f"Unsupported handler type: {self.handlerType}")
 
     @property
     def endpoint_registration_entry(self) -> Optional[EndpointRegistrationEntry]:
@@ -314,39 +313,31 @@ class UserDefinedRestHandlers:
     Represents a logic for dealing with user-defined REST handlers
     """
 
-    def __init__(self) -> None:
+    def __init__(self, definitions: Iterable[Dict[str, Any]]) -> None:
         self._definitions: List[RestHandlerConfig] = []
         self._names: Set[str] = set()
         self._endpoints: Set[str] = set()
 
-    def add_definitions(
-        self, definitions: Iterable[Union[Dict[str, Any], RestHandlerConfig]]
-    ) -> None:
         for definition in definitions:
-            self.add_definition(definition)
+            rest_handler_config_definition = RestHandlerConfig(**definition)
+            if rest_handler_config_definition.name in self._names:
+                raise ValueError(
+                    f"REST handler defined in Global Config contains duplicated name: "
+                    f"{rest_handler_config_definition.name}. "
+                    "Please change it to a unique name."
+                )
 
-    def add_definition(
-        self, definition: Union[Dict[str, Any], RestHandlerConfig]
-    ) -> None:
-        if not isinstance(definition, RestHandlerConfig):
-            definition = RestHandlerConfig(**definition)
+            if rest_handler_config_definition.endpoint in self._endpoints:
+                raise ValueError(
+                    f"REST handler defined in Global Config contains duplicated endpoint: "
+                    f"{rest_handler_config_definition.endpoint} "
+                    f"(name={rest_handler_config_definition.name}). Please change it to a unique endpoint."
+                )
 
-        if definition.name in self._names:
-            raise ValueError(
-                f"REST handler defined in Global Config contains duplicated name: {definition.name}. "
-                "Please change it to a unique name."
-            )
+            self._names.add(rest_handler_config_definition.name)
+            self._endpoints.add(rest_handler_config_definition.endpoint)
 
-        if definition.endpoint in self._endpoints:
-            raise ValueError(
-                f"REST handler defined in Global Config contains duplicated endpoint: {definition.endpoint} "
-                f"(name={definition.name}). Please change it to a unique endpoint."
-            )
-
-        self._names.add(definition.name)
-        self._endpoints.add(definition.endpoint)
-
-        self._definitions.append(definition)
+            self._definitions.append(rest_handler_config_definition)
 
     @property
     def oas_paths(self) -> Dict[str, oas.PathItemObject]:

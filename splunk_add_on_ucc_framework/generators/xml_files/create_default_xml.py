@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Dict, Any, List
+from typing import Dict, List
 import os
 from splunk_add_on_ucc_framework import data_ui_generator
 import logging
@@ -28,8 +28,8 @@ class DefaultXml(FileGenerator):
         " in `default/data/ui/nav` folder."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
-        addon_name = kwargs.get("addon_name")
+    def _set_attributes(self) -> None:
+        addon_name = self._addon_name
         if not isinstance(addon_name, str):
             raise ValueError("addon_name must be a string")
         default_ui_path = os.path.join(

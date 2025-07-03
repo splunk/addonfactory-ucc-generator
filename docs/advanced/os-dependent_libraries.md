@@ -1,7 +1,9 @@
 # OS-dependent libraries
 
-This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.
-To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries** field. This field takes the following attributes:
+This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system
+during the build process.
+To do this, you need to expand the **meta** section in the global configuration with the **os-dependentLibraries**
+field. This field takes the following attributes:
 
 | Property                                               | Type    | Description                                                                                                                                                                                                                                                                                                                                        | default value |
 |--------------------------------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
@@ -12,11 +14,14 @@ To do this, you need to expand the **meta** section in the global configuration 
 | python_version<span class="required-asterisk">*</span> | string  | is the Python version compatible with the library.                                                                                                                                                                                                                                                                                                 | -             |
 | target<span class="required-asterisk">*</span>         | string  | is the path where the selected library will be unpacked.                                                                                                                                                                                                                                                                                           | -             |
 | os<span class="required-asterisk">*</span>             | string  | is the name of the operating system which the library is intended for. Using this parameter, an appropriate insert into sys.path will be created. It takes 3 values **windows**, **linux**, and **darwin**.                                                                                                                                        | -             |
+| ignore_requires_python                                 | boolean | (Optional) (default: False). Determines whether the --ignore-requires-python flag is added to the pip install command. If set to True, the flag will be included, allowing the package to be installed regardless of the Python version the add-on was built with.                                                                                 | -             |
 
 ### About wheels files
 
-Generally, the wheel name convention is <br>**{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform tag}.whl**.<br>
-For example, for this particular library, <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl**<br>,
+Generally, the wheel name convention is <br>**{distribution}-{version}(-{build tag})?-{python tag}-{abi tag}-{platform
+tag}.whl**.<br>
+For example, for this particular library, <br>**grpcio-1.54.2-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+**<br>,
 your pip parameters are:
 
 * name = **grpcio**
@@ -30,9 +35,11 @@ and your pip command should look like this:<br>
 `pip install --no-deps --platform manylinux_2_17_x86_64 --python-version 37 --target your/path/to/target --only-binary=:all: grpcio==1.54.2`
 
 A dot in the platform part indicates that a given distribution supports several platforms.
-In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both **manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
+In this case, "**.**" in **manylinux_2_17_x86_64.manylinux2014_x86_64** means this distribution supports both *
+*manylinux_2_17_x86_64** and **manylinux2014_x86_64**.
 
-`python_version` parameter follow the same syntax as `--python-version` flag in `pip download` command, see [documentation](https://pip.pypa.io/en/stable/cli/pip_download/#cmdoption-python-version) for more details.
+`python_version` parameter follow the same syntax as `--python-version` flag in `pip download` command,
+see [documentation](https://pip.pypa.io/en/stable/cli/pip_download/#cmdoption-python-version) for more details.
 
 If there are libraries specified for different Python versions, they must have **different target** paths.
 
@@ -57,7 +64,8 @@ If there are libraries specified for different Python versions, they must have *
             },
 ```
 
-For more information, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s) and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
+For more information, see [.whl](https://www.youtube.com/watch?v=4L0Jb3Ku81s)
+and [manylinux platform](https://www.youtube.com/watch?v=80j-MRtHMek).
 
 ### Usage
 
@@ -137,8 +145,9 @@ output
                     └── cryptography-41.0.5.dist-info
 
 ```  
-  
-During the build process, a python script "import_declare_test.py" will be created in **output/ta_name/bin** to manipulate system paths.
+
+During the build process, a python script "import_declare_test.py" will be created in **output/ta_name/bin** to
+manipulate system paths.
 In each input using the specified libraries, this script must be imported.
 Currently, three operating systems are supported: **Windows**, **Linux**, and **Darwin**.
 If, for development purposes, there is a need to create other custom manipulations on sys.path,

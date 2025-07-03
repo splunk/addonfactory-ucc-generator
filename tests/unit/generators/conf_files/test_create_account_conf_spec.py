@@ -3,10 +3,6 @@ from unittest.mock import MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AccountConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
-from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
-import os.path
-
-UCC_DIR = os.path.dirname(ucc_framework_file)
 
 TA_NAME = "test_addon"
 
@@ -18,11 +14,13 @@ def global_config():
     return gc
 
 
-def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
+def test_set_attributes(
+    global_config,
+    input_dir,
+    output_dir,
+):
     """Test when _global_config has mixed accounts (some 'oauth', some not)."""
-    account_spec = AccountConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+    account_spec = AccountConf(global_config, input_dir, output_dir)
     account_spec._global_config = MagicMock()
     account_spec._gc_schema = MagicMock()
 
@@ -49,16 +47,12 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
 
 
 def test_set_attributes_conf_only_TA(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     """Test when _global_config is provided but it is a conf only TA, which implies it has no configuration."""
-    account_spec = AccountConf(
-        global_config_for_conf_only_TA,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
+    account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
     account_spec._set_attributes()
 
@@ -66,12 +60,12 @@ def test_set_attributes_conf_only_TA(
 
 
 def test_set_attributes_with_oauth_account(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config,
+    input_dir,
+    output_dir,
 ):
     """Test when _global_config has an account with name 'oauth'."""
-    account_spec = AccountConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+    account_spec = AccountConf(global_config, input_dir, output_dir)
     account_spec._global_config = MagicMock()
 
     account_spec._global_config.configs = [{"name": "oauth", "entity": "entity1"}]
@@ -83,20 +77,14 @@ def test_set_attributes_with_oauth_account(
 
 
 def test_generate_conf_spec(
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
-    ta_name,
 ):
-    exp_fname = f"{ta_name}_account.conf.spec"
+    ta_name = global_config_all_json.product
+    exp_fname = f"{global_config_all_json.namespace.lower()}_account.conf.spec"
 
-    account_spec = AccountConf(
-        global_config,
-        input_dir,
-        output_dir,
-        ucc_dir=UCC_DIR,
-        addon_name=ta_name,
-    )
+    account_spec = AccountConf(global_config_all_json, input_dir, output_dir)
     expected_content = (
         "[<name>]\n"
         + "\n".join(
@@ -138,15 +126,11 @@ def test_generate_conf_spec(
 
 
 def test_generate_conf_spec_no_configuration(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
-    account_spec = AccountConf(
-        global_config_for_conf_only_TA,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
+    account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
     file_paths = account_spec.generate()
     assert file_paths == [{}]

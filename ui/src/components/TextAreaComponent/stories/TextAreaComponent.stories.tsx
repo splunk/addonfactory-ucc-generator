@@ -37,5 +37,32 @@ export const Base: Story = {
         error: false,
         controlOptions: { rowsMax: 10, rowsMin: 2 },
         disabled: false,
+        encrypted: false,
+    },
+};
+
+export const UnEncrypted: Story = {
+    args: {
+        handleChange: fn(),
+        value: `visbile text 
+multiple lanes`,
+        field: 'field',
+        error: false,
+        controlOptions: { rowsMax: 10, rowsMin: 2 },
+        disabled: false,
+        encrypted: false,
+    },
+};
+
+export const Encrypted: Story = {
+    args: {
+        handleChange: fn(),
+        value: `none visbile text 
+multiple lanes`,
+        field: 'field',
+        error: false,
+        controlOptions: { rowsMax: 10, rowsMin: 2 },
+        disabled: false,
+        encrypted: true,
     },
 };
