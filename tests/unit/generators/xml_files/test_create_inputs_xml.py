@@ -1,5 +1,6 @@
 from splunk_add_on_ucc_framework.generators.xml_files import InputsXml
 from textwrap import dedent
+from tests.unit.helpers import compare_xml_content
 
 
 def test_set_attributes_with_inputs(
@@ -42,21 +43,21 @@ def test_generate_xml_with_inputs(
     )
     ta_name = global_config_all_json.product
     exp_fname = "inputs.xml"
-    file_paths = inputs_xml.generate()
+    output = inputs_xml.generate()
     expected_content = dedent(
         f"""<?xml version="1.0" ?>
-<view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
-    <label>Inputs</label>
-</view>
-    """
+            <view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
+                <label>Inputs</label>
+            </view>
+        """
     )
-    assert file_paths == [
-        {
-            "file_name": exp_fname,
-            "file_path": f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}",
-            "content": expected_content,
-        }
-    ]
+
+    diff = compare_xml_content(output[0]["content"], expected_content)
+    assert diff == ""
+    assert (
+        output[0]["file_path"]
+        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+    )
 
 
 def test_generate_xml_without_inputs(

@@ -1,5 +1,4 @@
-import xmldiff.main
-
+from tests.unit.helpers import compare_xml_content
 from splunk_add_on_ucc_framework import data_ui_generator
 
 
@@ -19,9 +18,8 @@ def test_generate_nav_default_xml():
     <view name="search"/>
 </nav>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_nav_default_xml_only_configuration():
@@ -38,9 +36,8 @@ def test_generate_nav_default_xml_only_configuration():
     <view name="search"/>
 </nav>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_nav_default_xml_with_default_inputs_page():
@@ -58,9 +55,8 @@ def test_generate_nav_default_xml_with_default_inputs_page():
     <view name="search"/>
 </nav>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_nav_default_xml_with_default_dashboard_page():
@@ -79,9 +75,8 @@ def test_generate_nav_default_xml_with_default_dashboard_page():
     <view name="search"/>
 </nav>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_nav_default_xml_with_search_view_default():
@@ -98,9 +93,8 @@ def test_generate_nav_default_xml_with_search_view_default():
     <view default="true" name="search"/>
 </nav>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_nav_default_xml_with_no_configuration():
@@ -117,9 +111,8 @@ def test_generate_nav_default_xml_with_no_configuration():
     <view default="true" name="search"/>
 </nav>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_views_inputs_xml():
@@ -130,9 +123,8 @@ def test_generate_views_inputs_xml():
     <label>Inputs</label>
 </view>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_views_configuration_xml():
@@ -143,9 +135,8 @@ def test_generate_views_configuration_xml():
     <label>Configuration</label>
 </view>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_views_dashboard_xml():
@@ -156,9 +147,8 @@ def test_generate_views_dashboard_xml():
     <label>Monitoring Dashboard</label>
 </view>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_generate_views_redirect_xml():
@@ -169,6 +159,5 @@ def test_generate_views_redirect_xml():
     <label>Redirect</label>
 </view>
 """
-    diff = xmldiff.main.diff_texts(result, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""

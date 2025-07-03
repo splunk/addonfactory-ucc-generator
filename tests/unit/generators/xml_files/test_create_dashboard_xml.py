@@ -1,5 +1,6 @@
 from splunk_add_on_ucc_framework.generators.xml_files import DashboardXml
 from textwrap import dedent
+from tests.unit.helpers import compare_xml_content
 
 
 def test_set_attributes_with_dashboard(
@@ -43,20 +44,19 @@ def test_generate_xml_with_dashboard(
     exp_fname = "dashboard.xml"
     expected_content = dedent(
         f"""<?xml version="1.0" ?>
-<view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
-    <label>Monitoring Dashboard</label>
-</view>
-    """
+            <view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
+                <label>Monitoring Dashboard</label>
+            </view>
+        """
     )
 
     output = dashboard_xml.generate()
-    assert output == [
-        {
-            "file_name": exp_fname,
-            "file_path": f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}",
-            "content": expected_content,
-        }
-    ]
+    diff = compare_xml_content(output[0]["content"], expected_content)
+    assert diff == ""
+    assert (
+        output[0]["file_path"]
+        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+    )
 
 
 def test_generate_xml_without_dashboard(

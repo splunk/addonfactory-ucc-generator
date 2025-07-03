@@ -1,6 +1,6 @@
 import pytest
 from splunk_add_on_ucc_framework.generators.xml_files import DefaultXml
-import xmldiff.main
+from tests.unit.helpers import compare_xml_content
 from textwrap import dedent
 
 
@@ -86,9 +86,8 @@ def test_set_attribute(
         input_dir,
         output_dir,
     )
-    diff = xmldiff.main.diff_texts(default_xml.default_xml_content, expected_result)
-
-    assert " ".join([str(item) for item in diff]) == ""
+    diff = compare_xml_content(default_xml.default_xml_content, expected_result)
+    assert diff == ""
 
 
 def test_set_attribute_with_no_pages(
@@ -119,20 +118,19 @@ def test_generate_xml(
     exp_fname = "default.xml"
     expected_content = dedent(
         """<?xml version="1.0" ?>
-<nav>
-    <view name="inputs"/>
-    <view default="true" name="configuration"/>
-    <view name="dashboard"/>
-    <view name="search"/>
-</nav>
-    """
+            <nav>
+                <view name="inputs"/>
+                <view default="true" name="configuration"/>
+                <view name="dashboard"/>
+                <view name="search"/>
+            </nav>
+        """
     )
 
-    file_paths = config_xml.generate()
-    assert file_paths == [
-        {
-            "file_name": exp_fname,
-            "file_path": f"{output_dir}/{ta_name}/default/data/ui/nav/{exp_fname}",
-            "content": expected_content,
-        }
-    ]
+    output = config_xml.generate()
+    diff = compare_xml_content(output[0]["content"], expected_content)
+    assert diff == ""
+    assert (
+        output[0]["file_path"]
+        == f"{output_dir}/{ta_name}/default/data/ui/nav/{exp_fname}"
+    )
