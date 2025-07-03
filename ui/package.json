@@ -164,7 +164,16 @@
     "@splunk/dashboard-inputs": "28.4.0",
     "@splunk/dashboard-search": "28.4.0",
     "@splunk/datasources": "28.4.0",
-    "@splunk/visualization-schemas": "27.4.0"
+    "@splunk/visualization-schemas": "27.4.0",
+    "@splunk/dashboard-definition": "28.4.0",
+    "@splunk/dashboard-icons": "28.4.0",
+    "@splunk/dashboard-layouts": "28.4.0",
+    "@splunk/dashboard-state": "28.4.0",
+    "@splunk/dashboard-telemetry": "28.4.0",
+    "@splunk/dashboard-ui": "28.4.0",
+    "@splunk/dashboard-utils": "28.4.0",
+    "@splunk/dashboard-validation": "28.4.0",
+    "@splunk/datasource-utils": "28.4.0"
   },
   "engines": {
     "node": ">=20.11.0",
