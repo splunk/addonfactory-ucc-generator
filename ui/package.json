@@ -30,12 +30,12 @@
     "prepublishOnly": "yarn run build:lib"
   },
   "dependencies": {
-    "@splunk/dashboard-action-buttons": "^28.6.0",
-    "@splunk/dashboard-context": "^28.6.0",
-    "@splunk/dashboard-core": "^28.6.0",
-    "@splunk/dashboard-presets": "^28.6.0",
-    "@splunk/dashboard-state": "^28.6.0",
-    "@splunk/dashboard-types": "^28.6.0",
+    "@splunk/dashboard-action-buttons": "28.4.0",
+    "@splunk/dashboard-context": "28.4.0",
+    "@splunk/dashboard-core": "28.4.0",
+    "@splunk/dashboard-presets": "28.4.0",
+    "@splunk/dashboard-state": "28.4.0",
+    "@splunk/dashboard-types": "28.4.0",
     "@splunk/react-events-viewer": "^27.4.0",
     "@splunk/react-icons": "^4.14.0",
     "@splunk/react-page": "^8.0.0",
@@ -159,7 +159,12 @@
     "esbuild": "^0.25.5",
     "axios": "^1.10.0",
     "jspdf": "^3.0.1",
-    "http-proxy-middleware": "^3.0.5"
+    "http-proxy-middleware": "^3.0.5",
+    "@splunk/dashboard-event-handlers": "28.4.0",
+    "@splunk/dashboard-inputs": "28.4.0",
+    "@splunk/dashboard-search": "28.4.0",
+    "@splunk/datasources": "28.4.0",
+    "@splunk/visualization-schemas": "27.4.0"
   },
   "engines": {
     "node": ">=20.11.0",
