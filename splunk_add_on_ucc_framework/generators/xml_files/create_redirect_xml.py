@@ -15,7 +15,7 @@
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from typing import Dict
-from splunk_add_on_ucc_framework import data_ui_generator
+from xml.etree import ElementTree as ET
 
 
 class RedirectXml(FileGenerator):
@@ -24,9 +24,26 @@ class RedirectXml(FileGenerator):
         " in `default/data/ui/views/` folder."
     )
 
+    def generate_views_redirect_xml(self, addon_name: str) -> str:
+        """
+        Generates `default/data/ui/views/redirect.xml` file.
+        """
+        view = ET.Element(
+            "view",
+            attrib={
+                "template": f"{addon_name}:templates/{addon_name.lower()}_redirect.html",
+                "type": "html",
+                "isDashboard": "False",
+            },
+        )
+        label = ET.SubElement(view, "label")
+        label.text = "Redirect"
+        view_as_string = ET.tostring(view, encoding="unicode")
+        return view_as_string
+
     def _set_attributes(self) -> None:
         if self._global_config.has_oauth():
-            self.redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
+            self.redirect_xml_content = self.generate_views_redirect_xml(
                 self._addon_name,
             )
             self.ta_name = self._addon_name.lower()
