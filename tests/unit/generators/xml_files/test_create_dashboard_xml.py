@@ -1,13 +1,32 @@
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import DashboardXml
+import xmldiff.main
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_views_dashboard_xml",
-    return_value="<xml></xml>",
-)
+def test_generate_views_dashboard_xml(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+):
+    dashboard_xml = DashboardXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+
+    result = dashboard_xml.generate_views_dashboard_xml("Splunk_TA_UCCExample")
+
+    expected_result = """<?xml version="1.0" ?>
+    <view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
+        <label>Monitoring Dashboard</label>
+    </view>
+    """
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    assert " ".join([str(item) for item in diff]) == ""
+
+
 def test_set_attributes_with_dashboard(
-    mock_generate_dashboard_xml,
     global_config_all_json,
     input_dir,
     output_dir,
@@ -21,12 +40,7 @@ def test_set_attributes_with_dashboard(
     assert hasattr(dashboard_xml, "dashboard_xml_content")
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_views_dashboard_xml",
-    return_value="<xml></xml>",
-)
 def test_set_attributes_without_dashboard(
-    mock_generate_dashboard_xml,
     global_config_only_configuration,
     input_dir,
     output_dir,
