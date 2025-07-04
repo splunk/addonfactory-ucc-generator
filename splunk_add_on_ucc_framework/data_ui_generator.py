@@ -36,7 +36,7 @@ def generate_nav_default_xml(
     default_view: Optional[str],
 ) -> str:
     """
-    It generates `default/data/ui/nav/default.xml` file.
+    Generates `default/data/ui/nav/default.xml` file.
 
     The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
@@ -63,11 +63,13 @@ def generate_nav_default_xml(
             SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
         else:
             SubElement(nav, "view", attrib={"name": "configuration"})
+
     if include_dashboard:
         if default_view == "dashboard":
             SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
         else:
             SubElement(nav, "view", attrib={"name": "dashboard"})
+
     if default_view == "search":
         SubElement(nav, "view", attrib={"name": "search", "default": "true"})
     else:
