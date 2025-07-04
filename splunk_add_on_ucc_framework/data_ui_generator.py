@@ -36,7 +36,7 @@ def generate_nav_default_xml(
     default_view: Optional[str],
 ) -> str:
     """
-    Generates `default/data/ui/nav/default.xml` file.
+    It generates `default/data/ui/nav/default.xml` file.
 
     The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
