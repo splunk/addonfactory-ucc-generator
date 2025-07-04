@@ -18,9 +18,10 @@ import logging
 import shutil
 from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
-from os.path import dirname, exists, isdir, join, isfile
+from os.path import dirname, exists, isdir, join, isfile, abspath
 from splunk_add_on_ucc_framework.app_manifest import AppManifest
 from typing import Any, Dict
+import sys
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
 import dunamai
@@ -28,6 +29,7 @@ import jinja2
 import yaml
 
 from splunk_add_on_ucc_framework import exceptions
+from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 
 logger = logging.getLogger("ucc_gen")
 
@@ -61,6 +63,25 @@ def check_author_name(source: str, app_manifest: AppManifest) -> None:
                 "Conflicting author names are identified between app.manifest and app.conf in the source directory. "
                 "Please specify the author name in app.manifest."
             )
+
+
+def get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
+    app_manifest_path = abspath(
+        join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
+    )
+    with open(app_manifest_path) as manifest_file:
+        app_manifest_content = manifest_file.read()
+    try:
+        app_manifest = app_manifest_lib.AppManifest(app_manifest_content)
+        app_manifest.validate()
+        return app_manifest
+    except app_manifest_lib.AppManifestFormatException as e:
+        logger.error(
+            f"Manifest file @ {app_manifest_path} has invalid format.\n"
+            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
+            f"Error message: {e}.\n"
+        )
+        sys.exit(1)
 
 
 def recursive_overwrite(

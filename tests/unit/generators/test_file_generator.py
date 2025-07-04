@@ -10,23 +10,17 @@ def set_attr():
     return {"file_name": "file_path"}
 
 
-def mocked__set_attribute(this, **kwargs):
-    this.attrib_1 = "value_1"
-    this.attrib_2 = "value_2"
-
-
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_get_output_dir(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attr, global_config_all_json, input_dir, output_dir, ta_name
 ):
+    global_config_all_json.meta["name"] = ta_name
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
-    expected_output_dir = f"{output_dir}/test_addon"
+    expected_output_dir = f"{output_dir}/{ta_name}"
     assert file_gen._get_output_dir() == expected_output_dir
 
 
@@ -36,14 +30,14 @@ def test_get_output_dir(
     return_value="tmp/path",
 )
 def test_get_file_output_path(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     # Test with string
@@ -67,15 +61,11 @@ def test_set_template_and_render(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     mock_get_template.return_value = Template("mock template")
@@ -92,15 +82,11 @@ def test_set_template_and_render_invalid_file_name(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     mock_get_template.return_value = Template("mock template")
     # Test with invalid file name
@@ -119,8 +105,6 @@ def test_begin(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     mock_item = MagicMock()
     mock_item.file_class.return_value.generate.return_value = {
@@ -133,8 +117,6 @@ def test_begin(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert result == [{"file1": "/path/to/file1"}]
@@ -144,7 +126,9 @@ def test_begin(
 
 
 def test__set_attributes_error(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """
     This tests that the exception provided in side_effect is raised too
@@ -154,14 +138,15 @@ def test__set_attributes_error(
             global_config_all_json,
             input_dir,
             output_dir,
-            ucc_dir=ucc_dir,
-            addon_name=ta_name,
         )
 
 
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_generate(
-    mock_set_attribute, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attribute,
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """
     This tests that the exception provided in side_effect is raised too
@@ -170,8 +155,6 @@ def test_generate(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     with raises(NotImplementedError):
         file_gen.generate()

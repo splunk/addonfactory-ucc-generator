@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Tuple, List, Dict
+from typing import Tuple, List, Dict
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -24,7 +24,7 @@ class SettingsConf(FileGenerator):
         "file for the Proxy, Logging or Custom Tab mentioned in globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.settings_stanzas: List[Tuple[str, List[str]]] = []
         self.default_content: str = ""
 
