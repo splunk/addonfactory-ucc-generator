@@ -112,7 +112,9 @@ function DashboardPage() {
         <ErrorBoundary>
             <GlobalDashboardStyle />
             <DashboardStyles>
-                <OverviewDashboard dashboardDefinition={overviewDef} />
+                <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
+                    <OverviewDashboard dashboardDefinition={overviewDef} />
+                </Suspense>
                 {overviewDef ? ( // if overview is loaded then all default tabs should be present so table is injected
                     <TabLayout
                         autoActivate
