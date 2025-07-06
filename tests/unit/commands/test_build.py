@@ -144,7 +144,7 @@ def test_add_modular_input(GlobalConfig, tmp_path):
             "title": "Example Input Three",
         }
     ]
-    _add_modular_input(ta_name, gc, str(tmp_path))
+    _add_modular_input(ta_name, gc, str(tmp_path), "some/path")
 
     input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
     helper_path = tmp_path / ta_name / "bin" / "example_helper.py"

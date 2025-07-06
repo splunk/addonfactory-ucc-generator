@@ -20,12 +20,14 @@ import os
 import shutil
 import sys
 from typing import Optional, List, Any
+from importlib.util import find_spec, module_from_spec
 import subprocess
 import colorama as c
 import fnmatch
 import filecmp
 import platform
 import traceback
+import inspect
 
 from urllib.parse import quote
 
@@ -115,7 +117,10 @@ def _modify_and_replace_token_for_oauth_templates(
 
 
 def _add_modular_input(
-    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+    ta_name: str,
+    global_config: global_config_lib.GlobalConfig,
+    outputdir: str,
+    gc_path: str,
 ) -> None:
     for service in global_config.inputs:
         input_name = service.get("name")
@@ -133,6 +138,25 @@ def _add_modular_input(
 
         input_helper_module = service.get("inputHelperModule")
 
+        addon_root_path = os.path.dirname(gc_path)
+        bin_path = os.path.join(addon_root_path, "package", "bin")
+
+        output_bin_path = os.path.join(outputdir, ta_name, "bin")
+
+        function_to_check = ["stream_events", "validate_input"]
+        len_of_args = []
+
+        for function in function_to_check:
+            try:
+                result = _get_num_of_args(
+                    input_helper_module, bin_path, output_bin_path, function
+                )
+                len_of_args.append(result)
+            except ModuleNotFoundError:
+                len_of_args.append(0)
+            except (AttributeError, TypeError) as e:
+                sys.exit(e.args[0])
+
         content = (
             utils.get_j2_env()
             .get_template(template)
@@ -142,6 +166,8 @@ def _add_modular_input(
                 description=description,
                 entity=entity,
                 input_helper_module=input_helper_module,
+                stream_events_args=len_of_args[0],
+                validate_input_args=len_of_args[1],
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
@@ -163,6 +189,44 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
+
+
+def _get_num_of_args(
+    module_name: str, root_addon_bin_path: str, output_bin_path: str, function_name: str
+) -> int:
+    if root_addon_bin_path not in sys.path:
+        sys.path.insert(0, root_addon_bin_path)
+    if output_bin_path not in sys.path:
+        sys.path.insert(0, output_bin_path)
+
+    try:
+        spec = find_spec(module_name)
+        if spec is None or spec.loader is None:
+            raise ModuleNotFoundError(
+                f"Module '{module_name}' not found in '{root_addon_bin_path}'"
+            )
+
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        if not hasattr(module, function_name):
+            raise AttributeError(
+                f"'{function_name}' not found in module '{module_name}'"
+            )
+
+        func = getattr(module, function_name)
+        if not callable(func):
+            raise TypeError(
+                f"'{function_name}' in module '{module_name}' is not callable"
+            )
+
+        return len(inspect.getfullargspec(func).args)
+
+    finally:
+        if root_addon_bin_path in sys.path:
+            sys.path.remove(root_addon_bin_path)
+        if output_bin_path in sys.path:
+            sys.path.remove(output_bin_path)
 
 
 def _get_ignore_list(
@@ -547,7 +611,7 @@ def generate(
         )
     if global_config.has_inputs():
         logger.info("Generating inputs code")
-        _add_modular_input(ta_name, global_config, output_directory)
+        _add_modular_input(ta_name, global_config, output_directory, gc_path)
     if global_config.has_alerts():
         logger.info("Generating alerts code")
         alert_builder.generate_alerts(global_config, ta_name, output_directory)
