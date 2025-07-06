@@ -165,11 +165,9 @@ export default defineConfig(({ mode }) => {
                 apply: 'build',
             },
             splunkPathRewriter,
-            nodePolyfills(
-                {
-                    include: ['events'],
-                }
-            ),
+            nodePolyfills({
+                include: ['events'],
+            }),
         ],
         build: {
             outDir: 'dist/build',
@@ -181,7 +179,21 @@ export default defineConfig(({ mode }) => {
                 },
                 output: {
                     entryFileNames: '[name].js',
-                    chunkFileNames: '[name].[hash].js',
+                    chunkFileNames: (chunkInfo) => {
+                        if (
+                            chunkInfo.moduleIds?.some(
+                                (moduleId) =>
+                                    // Check if the moduleId is related to Dashboard pages
+                                    moduleId.includes('/pages/Dashboard/') || // Unix path support
+                                    moduleId.includes('\\pages\\Dashboard\\') || // Windows path support
+                                    moduleId.includes('@splunk/dashboard-presets') // check if @splunk/dashboard-presets is used inside the chunk
+                            )
+                        ) {
+                            return `DashboardPage.${chunkInfo.name}.[hash].js`;
+                        }
+
+                        return `[name].[hash].js`;
+                    },
                 },
             },
             target: 'es2020',
