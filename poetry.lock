@@ -92,7 +92,7 @@ version = "2025.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.7"
-groups = ["dev"]
+groups = ["main", "dev"]
 files = [
     {file = "certifi-2025.6.15-py3-none-any.whl", hash = "sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057"},
     {file = "certifi-2025.6.15.tar.gz", hash = "sha256:d747aa5a8b9bbbb1bb8c22bb13e22bd1f18e9796defa16bab421f7f7a317323b"},
@@ -2146,4 +2146,4 @@ validate = ["splunk-appinspect"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.7,<3.14"
-content-hash = "9555226a6ffd268f8dd0fda787797ff58b6bb85852e6340b3e1b4f6dd45d2cd8"
+content-hash = "93a4219f734db62cbc7e6bee7756f8285883867f10891d0894735fb1611c2678"
