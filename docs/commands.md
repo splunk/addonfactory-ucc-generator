@@ -139,3 +139,27 @@ You can install the required dependencies using the following command:
 It accepts the following parameters:
 
 * `--addon-path` - [required] Specifies the path to the built add-on that you want to validate.
+
+## `ucc-gen publish`
+
+`ucc-gen publish` command is available starting from version `v5.68.0` and is used to upload a packaged add-on (.tar.gz) to Splunkbase.
+One of the main use case of this command is to automate the process of the add-on release through the workflow.
+
+It does not support:
+
+* Updating the package file for the same version which was uploaded earlier
+* Updating the metadata like `splunk_versions` and `cim_versions`
+
+It accepts the following parameters:
+
+* `--app-id` - [required] Splunkbase numerical app id listed in the URL of the app details page.
+* `--package-path` - [required] path to the package file (.tar.gz) to be published (must be a valid UCC package).
+* `--splunk-versions` - [required] comma-separated list of supported Splunk versions (e.g. "9.1,9.2").
+* `--cim-versions` - [required] comma-separated list of supported CIM versions (e.g. "5.x,6.x").
+* `--username` - [required] Username of the splunkbase account.
+* `--password` - [required] Password of the splunkbase account.
+* `--make-visible` - [optional] flag to make the uploaded release publicly visible immediately upon successful validation.
+
+Caution: Packages uploaded with `--make-visible` flag cannot be deleted or updated later.
+
+> **Note:** For any reason if the user wants to update the build package for particular version which was uploaded earlier, they'll have to delete the previously uploaded build first from the Splunkbase UI (This is only possible if the package was previously uploaded without `--make-visible` flag).

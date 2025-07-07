@@ -262,11 +262,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     publish_parser.add_argument(
         "--package-path",
         type=str,
-        help="path to the package to be published",
+        help="path to the package file (.tar.gz) to be published",
         required=True,
-    )
-    publish_parser.add_argument(
-        "--package-name", type=str, help="Name of the package file", required=True
     )
     publish_parser.add_argument(
         "--splunk-versions",
@@ -337,7 +334,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         publish.publish_package(
             app_id=args.app_id,
             package_path=args.package_path,
-            package_name=args.package_name,
             splunk_versions=args.splunk_versions,
             cim_versions=args.cim_versions,
             visibility=args.visibility,
