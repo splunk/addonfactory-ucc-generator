@@ -4,11 +4,14 @@ import io
 import urllib.error
 import json
 
-from splunk_add_on_ucc_framework.commands.publish import upload_package, check_package_validation
+from http.client import HTTPMessage
+from splunk_add_on_ucc_framework.commands.publish import (
+    upload_package,
+    check_package_validation,
+)
 
 
 class TestPackageUpload(unittest.TestCase):
-
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
     @patch("builtins.open", new_callable=mock_open, read_data=b"file binary content")
@@ -26,11 +29,13 @@ class TestPackageUpload(unittest.TestCase):
             cim_versions="6.x",
             visibility=True,
             username="user",
-            password="pass"
+            password="pass",
         )
         self.assertEqual(pkg_id, "pkg123")
         mock_file.assert_called_once_with("tests/test_package.tgz", "rb")
-        mock_logger.info.assert_called_with("Package uploaded successfully. Package ID: pkg123")
+        mock_logger.info.assert_called_with(
+            "Package uploaded successfully. Package ID: pkg123"
+        )
 
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
@@ -55,9 +60,14 @@ class TestPackageUpload(unittest.TestCase):
     @patch("urllib.request.urlopen")
     @patch("builtins.open", new_callable=mock_open, read_data=b"file binary content")
     def test_upload_package_http_error(self, mock_file, mock_urlopen, mock_logger):
+        headers = HTTPMessage()
+        headers.add_header("Content-Type", "application/json")
         mock_error = urllib.error.HTTPError(
-            url="url", code=400, msg="Bad Request", hdrs=None,
-            fp=io.BytesIO(b'{"error":"Bad data"}')
+            url="url",
+            code=400,
+            msg="Bad Request",
+            hdrs=headers,
+            fp=io.BytesIO(b'{"error":"Bad data"}'),
         )
         mock_urlopen.side_effect = mock_error
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_error)
@@ -69,17 +79,18 @@ class TestPackageUpload(unittest.TestCase):
             )
             mock_file.assert_called_once_with("tests/test_package.tgz", "rb")
             mock_logger.error.assert_called_with(
-                "Failed to upload package. {}".format(mock_error.read().decode())
+                f"Failed to upload package. {mock_error.read().decode()}"
             )
 
 
 class TestPackageValidation(unittest.TestCase):
-
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
     def test_check_package_validation_success(self, mock_urlopen, mock_logger):
         mock_response = MagicMock()
-        mock_response.read.return_value = json.dumps({"message": "Validation passed"}).encode("utf-8")
+        mock_response.read.return_value = json.dumps(
+            {"message": "Validation passed"}
+        ).encode("utf-8")
         mock_urlopen.return_value = mock_response
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_response)
         mock_urlopen.return_value.__exit__ = MagicMock(return_value=None)
@@ -90,9 +101,14 @@ class TestPackageValidation(unittest.TestCase):
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
     def test_check_package_validation_http_error(self, mock_urlopen, mock_logger):
+        headers = HTTPMessage()
+        headers.add_header("Content-Type", "application/json")
         mock_error = urllib.error.HTTPError(
-            url="url", code=500, msg="Internal Server Error", hdrs=None,
-            fp=io.BytesIO(b'Server error')
+            url="url",
+            code=500,
+            msg="Internal Server Error",
+            hdrs=headers,
+            fp=io.BytesIO(b"Server error"),
         )
         mock_urlopen.side_effect = mock_error
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_error)
@@ -101,6 +117,5 @@ class TestPackageValidation(unittest.TestCase):
         with self.assertRaises(urllib.error.HTTPError):
             check_package_validation("pkg123", "user", "pass")
             mock_logger.error.assert_called_with(
-                "Failed to retrieve package validation status. {}".format(mock_error.read().decode())
+                f"Failed to retrieve package validation status. {mock_error.read().decode()}"
             )
-
