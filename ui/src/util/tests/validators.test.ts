@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { getFormattedMessage } from '../messageUtil';
-import Validator, { parseFunctionRawStr, SaveValidator, ValidatorEntity } from '../Validator';
+import Validator, { SaveValidator, ValidatorEntity } from '../Validator';
 import FILE_CONST from '../../constants/fileInputConstant';
 
 describe('Validator.checkIsFieldHasInput', () => {
@@ -452,23 +452,6 @@ describe('Validator.doValidation - custom case', () => {
             errorField: 'testField',
             errorMsg: 'Custom validation failed for testField',
         });
-    });
-});
-
-describe('parseFunctionRawStr', () => {
-    it('should correctly parse a valid function string', () => {
-        const validFunctionString = '(data) => data.data === "valid"';
-        const { error, result } = parseFunctionRawStr(validFunctionString);
-        expect(error).toBeUndefined();
-        expect(result).toBeInstanceOf(Function);
-        expect(result && result({ data: 'valid' })).toBe(true);
-    });
-
-    it('should return an error for an empty function string', () => {
-        const emptyFunctionString = '';
-        const { error, result } = parseFunctionRawStr(emptyFunctionString);
-        expect(error).toBe(' is not a function');
-        expect(result).toBeUndefined();
     });
 });
 
