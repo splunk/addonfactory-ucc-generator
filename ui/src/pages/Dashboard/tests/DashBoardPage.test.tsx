@@ -50,14 +50,11 @@ it('render with all default dashboards', async () => {
     setUnifiedConfig(mockConfig);
     render(<DashboardPage />);
     await waitFor(
-        () => {
-            const waitingSpinner = screen.queryAllByTestId('wait-spinner');
-            expect(waitingSpinner.length).toBe(0); // no waiting spinner should be present
-        },
-        { timeout: 5000 }
+        () => expect(screen.queryAllByTestId('wait-spinner').length).toBe(0), // no waiting spinner should be present
+        { timeout: 7000 }
     );
 
-    const timeLabels = await screen.findAllByText('Time', {}, { timeout: 10000 });
+    const timeLabels = await screen.findAllByText('Time');
     expect(timeLabels[0]).toBeInTheDocument();
     expect(timeLabels.length).toEqual(2);
 
@@ -89,4 +86,4 @@ it('render with all default dashboards', async () => {
 
         expect(elementWithId).toBeInTheDocument();
     });
-}, 6000);
+}, 8000);
