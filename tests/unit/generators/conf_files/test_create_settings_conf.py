@@ -14,10 +14,12 @@ def global_config():
     return gc
 
 
-def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+def test_set_attributes(
+    global_config,
+    input_dir,
+    output_dir,
+):
+    settings_conf = SettingsConf(global_config, input_dir, output_dir)
     settings_conf._global_config = MagicMock()
     settings_conf._gc_schema = MagicMock()
 
@@ -46,14 +48,14 @@ def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
 
 
 def test_set_attribute_for_conf_only_TA(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     settings_conf = SettingsConf(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     settings_conf._set_attributes()
     assert settings_conf.settings_stanzas == []
@@ -61,10 +63,14 @@ def test_set_attribute_for_conf_only_TA(
 
 
 def test_set_attributes_no_settings_key(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config,
+    input_dir,
+    output_dir,
 ):
     settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config,
+        input_dir,
+        output_dir,
     )
     settings_conf._addon_name = "TestAddon"
     settings_conf._global_config = MagicMock()
@@ -92,18 +98,20 @@ def test_set_attributes_no_settings_key(
     "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf.get_file_output_path"
 )
 def test_generate_conf(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    mock_template,
+    global_config,
+    input_dir,
+    output_dir,
 ):
     content = "content"
-    exp_fname = f"{ta_name}_settings.conf"
+    exp_fname = f"{TA_NAME}_settings.conf"
     file_path = f"output_path/{exp_fname}"
     mock_op_path.return_value = file_path
     template_render = MagicMock()
     template_render.render.return_value = content
 
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
+    settings_conf = SettingsConf(global_config, input_dir, output_dir)
     settings_conf.writer = MagicMock()
     settings_conf._template = template_render
     file_paths = settings_conf.generate_conf()
@@ -123,10 +131,14 @@ def test_generate_conf(
     return_value=MagicMock(),
 )
 def test_generate_conf_no_default_content(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config,
+    input_dir,
+    output_dir,
 ):
     settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config,
+        input_dir,
+        output_dir,
     )
     settings_conf.default_content = ""
     result = settings_conf.generate_conf()
@@ -140,17 +152,23 @@ def test_generate_conf_no_default_content(
     "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf.get_file_output_path"
 )
 def test_generate_conf_spec(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    mock_template,
+    global_config,
+    input_dir,
+    output_dir,
 ):
     content = "content"
-    exp_fname = f"{ta_name}_settings.conf.spec"
+    exp_fname = f"{TA_NAME}_settings.conf.spec"
     file_path = f"output_path/{exp_fname}"
     mock_op_path.return_value = file_path
     mock_template_render = MagicMock()
     mock_template_render.render.return_value = content
 
     settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config,
+        input_dir,
+        output_dir,
     )
     settings_conf.writer = MagicMock()
     settings_conf._template = mock_template_render
@@ -172,10 +190,14 @@ def test_generate_conf_spec(
     return_value=MagicMock(),
 )
 def test_generate_conf_no_settings_stanzas(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+    global_config,
+    input_dir,
+    output_dir,
 ):
     settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config,
+        input_dir,
+        output_dir,
     )
     settings_conf.settings_stanzas = []
     result = settings_conf.generate_conf_spec()

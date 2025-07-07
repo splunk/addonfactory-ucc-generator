@@ -1,0 +1,89 @@
+{
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging",
+                    "entity": [
+                        {
+                            "type": "singleSelect",
+                            "label": "Log level",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG",
+                                        "label": "DEBUG"
+                                    },
+                                    {
+                                        "value": "INFO",
+                                        "label": "INFO"
+                                    },
+                                    {
+                                        "value": "WARNING",
+                                        "label": "WARNING"
+                                    },
+                                    {
+                                        "value": "ERROR",
+                                        "label": "ERROR"
+                                    },
+                                    {
+                                        "value": "CRITICAL",
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "INFO",
+                            "field": "loglevel",
+                            "required": true
+                        }
+                    ],
+                    "title": "Logging"
+                }
+            ],
+            "title": "Configuration",
+            "description": "Set up your add-on"
+        }
+    },
+    "options": {
+        "restHandlers": [
+            {
+                "name": "name1",
+                "endpoint": "endpoint1",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "file1.py",
+                    "actions": [
+                        "list"
+                    ]
+                }
+            },
+            {
+                "name": "name2",
+                "endpoint": "endpoint2",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "file2.py",
+                    "actions": [
+                        "list",
+                        "create",
+                        "remove",
+                        "edit"
+                    ]
+                }
+            },
+            {
+                "name": "name3",
+                "endpoint": "endpoint3",
+                "handlerType": "EAI"
+            }
+        ]
+    },
+    "meta": {
+        "name": "Splunk_TA_UCCExample",
+        "restRoot": "splunk_ta_uccexample",
+        "version": "1.0.0",
+        "displayName": "Splunk UCC test Add-on",
+        "schemaVersion": "0.0.3"
+    }
+}
