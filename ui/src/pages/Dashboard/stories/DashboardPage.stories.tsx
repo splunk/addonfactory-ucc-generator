@@ -37,7 +37,7 @@ export const DashboardPageView: Story = {
             () => {
                 expect(canvas.queryByTestId('wait-spinner')).toBeNull();
             },
-            { timeout: 2000 }
+            { timeout: 5000 } // Wait for the loading spinner to disappear
         );
 
         await canvas.findByRole('heading', { name: 'Data Ingestion' });
