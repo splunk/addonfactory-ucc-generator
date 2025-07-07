@@ -3361,6 +3361,15 @@
             },
             {
               "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "pattern": {
+                  "type": "string",
+                  "description": "Regex pattern that will be used to match against component value"
+                }
+              }
             }
           ]
         },
