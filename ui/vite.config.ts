@@ -189,7 +189,7 @@ export default defineConfig(({ mode }) => {
                                     moduleId.includes('@splunk/dashboard-presets') // check if @splunk/dashboard-presets is used inside the chunk
                             )
                         ) {
-                            return `DashboardPage.${chunkInfo.name}.[hash].js`;
+                            return `Dashboard.${chunkInfo.name}.[hash].js`;
                         }
 
                         return `[name].[hash].js`;
