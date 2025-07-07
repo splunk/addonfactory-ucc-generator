@@ -23,6 +23,7 @@ from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework.commands import init
 from splunk_add_on_ucc_framework.commands import import_from_aob
 from splunk_add_on_ucc_framework.commands import package
+from splunk_add_on_ucc_framework.commands import validate
 
 logger = logging.getLogger("ucc_gen")
 
@@ -238,6 +239,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="add-on name",
         required=True,
     )
+    validate_parser = subparsers.add_parser(
+        "validate", description="Used to validate Splunk app using Splunk appinspect"
+    )
+    validate_parser.add_argument(
+        "--addon-path",
+        type=str,
+        help="Path of the Splunk app.",
+        required=True,
+    )
 
     args = parser.parse_args(argv)
     if args.command == "build":
@@ -261,6 +271,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)
+    if args.command == "validate":
+        validate.validate(file_path=args.addon_path)
     if args.command == "init":
         init.init(
             addon_name=args.addon_name,

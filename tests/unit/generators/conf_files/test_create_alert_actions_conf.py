@@ -46,19 +46,17 @@ def mocked__set_attribute(this, **kwargs):
 
 
 def test_set_attributes_global_config_with_empty_alerts(
-    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts,
+    input_dir,
+    output_dir,
 ):
     global_config_for_alerts = MagicMock()
     global_config_for_alerts.alerts = []
 
     alert_action_conf = AlertActionsConf(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+        global_config_for_alerts, input_dir, output_dir
     )
-    alert_action_conf._set_attributes(ucc_dir=ucc_dir)
+    alert_action_conf._set_attributes()
 
     assert alert_action_conf.alerts == {}
     assert alert_action_conf.alerts_spec == {}
@@ -77,8 +75,6 @@ def test_generate_conf(
     global_config_for_alerts,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     content = "content"
     exp_fname = "alert_actions.conf"
@@ -88,11 +84,7 @@ def test_generate_conf(
     template_render.render.return_value = content
 
     alert_actions_conf = AlertActionsConf(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+        global_config_for_alerts, input_dir, output_dir
     )
 
     alert_actions_conf.writer = MagicMock()
@@ -112,14 +104,12 @@ def test_generate_conf(
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 def test_generate_conf_no_alerts(
-    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts,
+    input_dir,
+    output_dir,
 ):
     alert_action_conf = AlertActionsConf(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+        global_config_for_alerts, input_dir, output_dir
     )
     alert_action_conf.alerts = {}
     result = alert_action_conf.generate_conf()
@@ -139,8 +129,6 @@ def test_generate_conf_spec(
     global_config_for_alerts,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     content = "content"
     exp_fname = "alert_actions.conf.spec"
@@ -150,11 +138,7 @@ def test_generate_conf_spec(
     template_render.render.return_value = content
 
     alert_actions_conf = AlertActionsConf(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+        global_config_for_alerts, input_dir, output_dir
     )
 
     alert_actions_conf.writer = MagicMock()
@@ -174,14 +158,12 @@ def test_generate_conf_spec(
 
 @patch.object(AlertActionsConf, "_set_attributes", mocked__set_attribute)
 def test_generate_conf_no_alerts_spec(
-    global_config_for_alerts, input_dir, output_dir, ucc_dir, ta_name
+    global_config_for_alerts,
+    input_dir,
+    output_dir,
 ):
     alert_action_conf = AlertActionsConf(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+        global_config_for_alerts, input_dir, output_dir
     )
     alert_action_conf.alerts_spec = {}
     result = alert_action_conf.generate_conf_spec()
