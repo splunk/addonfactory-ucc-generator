@@ -77,6 +77,29 @@ export function getAllFieldsWithModifications(
     return entitiesWithModifications as EntitiesAllowingModifications[];
 }
 
+const ifRegexpMatchesValue = (
+    value: AcceptableFormValueOrNullish,
+    modificationValue: string | number | boolean | { pattern: string } | undefined
+) => {
+    if (
+        value === undefined ||
+        value === null ||
+        typeof modificationValue !== 'object' ||
+        !('pattern' in modificationValue)
+    ) {
+        return false;
+    }
+    try {
+        const regex = new RegExp(modificationValue.pattern);
+
+        return regex.test(value.toString());
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(`Invalid regex pattern: ${modificationValue.pattern}`, e);
+        return false;
+    }
+};
+
 const getModificationForEntity = (
     entity: EntitiesAllowingModifications,
     stateShallowCopy: BaseFormState,
@@ -93,8 +116,10 @@ const getModificationForEntity = (
             (currentFieldValue === mod.fieldValue ||
                 // here conversion is needed as splunk keeps boolish data on configuration page as 1 and 0
                 getValueMapTruthyFalse(currentFieldValue, page) ===
-                    getValueMapTruthyFalse(mod.fieldValue, page)) &&
-            (!mod.mode || mod.mode === mode)
+                    getValueMapTruthyFalse(mod.fieldValue, page) ||
+                // or if the mod value is a regex pattern and it matches the current field value
+                (ifRegexpMatchesValue(currentFieldValue, mod.fieldValue) &&
+                    (!mod.mode || mod.mode === mode)))
         );
     });
 

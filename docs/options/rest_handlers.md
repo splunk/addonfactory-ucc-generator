@@ -15,7 +15,7 @@ custom handlers developed by the user.
         "handlerType": "EAI",
         "registerHandler": {
           "file": "storage_buckets.py",
-          "actions": ["list", "create", "delete", "edit"]
+          "actions": ["list", "create", "remove", "edit"]
         },
         "requestParameters": {
           "create": {
@@ -27,7 +27,7 @@ custom handlers developed by the user.
             }
           },
           "edit": {...},
-          "delete": {...},
+          "remove": {...},
           "list": {...}
         },
         "responseParameters": {...}
@@ -39,7 +39,7 @@ custom handlers developed by the user.
 
 The example above defines an `EAI` rest handler named `StorageBuckets` with the endpoint `Splunk_TA_Example_buckets`.
 UCC will modify the `web.conf` and `restmap.conf` files to register the handler. The handler file location is
-`bin/storage_buckets.py` and it will allow the actions `list`, `create`, `delete`, and `edit`.
+`bin/storage_buckets.py` and it will allow the actions `list`, `create`, `remove`, and `edit`.
 OpenApi entries will be generated for the handler with the specified request and response parameters. For example,
 `POST` requests to `.../Splunk_TA_Example_buckets` require a `param_name` parameter.
 
@@ -67,7 +67,7 @@ OpenApi entries will be generated for the handler with the specified request and
 
 The `requestParameters` and `responseParameters` objects are used to define the parameters for each action.
 
-Allowed actions are: `list`, `create`, `edit`, `delete`.
+Allowed actions are: `list`, `create`, `edit`, `remove`.
 
 ### Format
 
@@ -111,7 +111,7 @@ Allowed actions are: `list`, `create`, `edit`, `delete`.
       }
     }
   },
-  "delete": {
+  "remove": {
     "param_str_2": {
       "schema": {
         "type": "string"
