@@ -12,10 +12,10 @@ def test_generate_views_redirect_xml(global_config_all_json, input_dir, output_d
     result = redirect_xml.generate_views_redirect_xml("Splunk_TA_UCCExample")
 
     expected_result = """<?xml version="1.0" ?>
-<view isDashboard="False" template="Splunk_TA_UCCExample:templates/splunk_ta_uccexample_redirect.html" type="html">
-    <label>Redirect</label>
-</view>
-"""
+    <view isDashboard="False" template="Splunk_TA_UCCExample:templates/splunk_ta_uccexample_redirect.html" type="html">
+        <label>Redirect</label>
+    </view>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""

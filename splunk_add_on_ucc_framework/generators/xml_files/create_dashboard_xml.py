@@ -15,7 +15,8 @@
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from typing import Dict
-from lxml import etree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
+from splunk_add_on_ucc_framework.utils import pretty_print_xml
 
 
 class DashboardXml(FileGenerator):
@@ -26,21 +27,20 @@ class DashboardXml(FileGenerator):
 
     def generate_views_dashboard_xml(self, addon_name: str) -> str:
         """
-        Generates `default/data/ui/views/dashboard.xml` xml content using lxml.
+        Generates `default/data/ui/views/dashboard.xml` file.
         """
-        view = ET.Element(
+        view = Element(
             "view",
-            template=f"{addon_name}:/templates/base.html",
-            type="html",
-            isDashboard="False",
+            attrib={
+                "template": f"{addon_name}:/templates/base.html",
+                "type": "html",
+                "isDashboard": "False",
+            },
         )
-
-        label = ET.SubElement(view, "label")
+        label = SubElement(view, "label")
         label.text = "Monitoring Dashboard"
-
-        # Convert to pretty-printed XML string
-        view_as_string = ET.tostring(view, encoding="unicode", pretty_print=True)
-        return view_as_string
+        view_as_string = tostring(view, encoding="unicode")
+        return pretty_print_xml(view_as_string)
 
     def _set_attributes(self) -> None:
         if self._global_config.has_dashboard():

@@ -15,7 +15,8 @@
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from typing import Dict
-from lxml import etree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
+from splunk_add_on_ucc_framework.utils import pretty_print_xml
 
 
 class InputsXml(FileGenerator):
@@ -28,7 +29,7 @@ class InputsXml(FileGenerator):
         """
         Generates `default/data/ui/views/inputs.xml` file.
         """
-        view = ET.Element(
+        view = Element(
             "view",
             attrib={
                 "template": f"{addon_name}:/templates/base.html",
@@ -36,10 +37,10 @@ class InputsXml(FileGenerator):
                 "isDashboard": "False",
             },
         )
-        label = ET.SubElement(view, "label")
+        label = SubElement(view, "label")
         label.text = "Inputs"
-        view_as_string = ET.tostring(view, encoding="unicode", pretty_print=True)
-        return view_as_string
+        view_as_string = tostring(view, encoding="unicode")
+        return pretty_print_xml(view_as_string)
 
     def _set_attributes(self) -> None:
         if self._global_config.has_inputs():

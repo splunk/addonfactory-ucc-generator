@@ -43,13 +43,13 @@ def test_generate_nav_default_xml(default_xml_object):
     )
 
     expected_result = """<?xml version="1.0" ?>
-<nav>
-    <view name="inputs"/>
-    <view default="true" name="configuration"/>
-    <view name="dashboard"/>
-    <view name="search"/>
-</nav>
-"""
+    <nav>
+        <view name="inputs"/>
+        <view default="true" name="configuration"/>
+        <view name="dashboard"/>
+        <view name="search"/>
+    </nav>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""
@@ -64,11 +64,11 @@ def test_generate_nav_default_xml_only_configuration(default_xml_object):
     )
 
     expected_result = """<?xml version="1.0" ?>
-<nav>
-    <view default="true" name="configuration"/>
-    <view name="search"/>
-</nav>
-"""
+    <nav>
+        <view default="true" name="configuration"/>
+        <view name="search"/>
+    </nav>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""
@@ -83,11 +83,11 @@ def test_generate_nav_default_xml_with_default_inputs_page(default_xml_object):
     )
 
     expected_result = """<?xml version="1.0" ?>
-<nav>
-    <view default="true" name="inputs"/>
-    <view name="configuration"/>
-    <view name="search"/>
-</nav>
+    <nav>
+        <view default="true" name="inputs"/>
+        <view name="configuration"/>
+        <view name="search"/>
+    </nav>
 """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
@@ -103,13 +103,13 @@ def test_generate_nav_default_xml_with_default_dashboard_page(default_xml_object
     )
 
     expected_result = """<?xml version="1.0" ?>
-<nav>
-    <view name="inputs"/>
-    <view name="configuration"/>
-    <view default="true" name="dashboard"/>
-    <view name="search"/>
-</nav>
-"""
+    <nav>
+        <view name="inputs"/>
+        <view name="configuration"/>
+        <view default="true" name="dashboard"/>
+        <view name="search"/>
+    </nav>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""
@@ -124,11 +124,11 @@ def test_generate_nav_default_xml_with_search_view_default(default_xml_object):
     )
 
     expected_result = """<?xml version="1.0" ?>
-<nav>
-    <view name="configuration"/>
-    <view default="true" name="search"/>
-</nav>
-"""
+    <nav>
+        <view name="configuration"/>
+        <view default="true" name="search"/>
+    </nav>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""
@@ -143,11 +143,11 @@ def test_generate_nav_default_xml_with_no_configuration(default_xml_object):
     )
 
     expected_result = """<?xml version="1.0" ?>
-<nav>
-    <view name="inputs"/>
-    <view default="true" name="search"/>
-</nav>
-"""
+    <nav>
+        <view name="inputs"/>
+        <view default="true" name="search"/>
+    </nav>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""

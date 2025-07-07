@@ -8,10 +8,10 @@ def test_generate_views_inputs_xml(global_config_all_json, input_dir, output_dir
     result = inputs_xml.generate_views_inputs_xml("Splunk_TA_UCCExample")
 
     expected_result = """<?xml version="1.0" ?>
-<view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
-    <label>Inputs</label>
-</view>
-"""
+    <view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
+        <label>Inputs</label>
+    </view>
+    """
     diff = xmldiff.main.diff_texts(result, expected_result)
 
     assert " ".join([str(item) for item in diff]) == ""

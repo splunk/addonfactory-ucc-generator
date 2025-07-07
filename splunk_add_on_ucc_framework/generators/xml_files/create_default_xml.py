@@ -17,7 +17,8 @@ from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from typing import Dict
 import os
 from typing import Optional
-from lxml import etree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
+from splunk_add_on_ucc_framework.utils import pretty_print_xml
 import logging
 
 logger = logging.getLogger("ucc_gen")
@@ -41,7 +42,7 @@ class DefaultXml(FileGenerator):
 
         The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
         """
-        nav = ET.Element("nav")
+        nav = Element("nav")
         if default_view is None:
             # we do this calculation as all the below properties are now optional
             if include_configuration:
@@ -55,31 +56,31 @@ class DefaultXml(FileGenerator):
 
         if include_inputs:
             if default_view == "inputs":
-                ET.SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
+                SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
             else:
-                ET.SubElement(nav, "view", attrib={"name": "inputs"})
+                SubElement(nav, "view", attrib={"name": "inputs"})
 
         if include_configuration:
             if default_view == "configuration":
-                ET.SubElement(
+                SubElement(
                     nav, "view", attrib={"name": "configuration", "default": "true"}
                 )
             else:
-                ET.SubElement(nav, "view", attrib={"name": "configuration"})
+                SubElement(nav, "view", attrib={"name": "configuration"})
+
         if include_dashboard:
             if default_view == "dashboard":
-                ET.SubElement(
-                    nav, "view", attrib={"name": "dashboard", "default": "true"}
-                )
+                SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
             else:
-                ET.SubElement(nav, "view", attrib={"name": "dashboard"})
-        if default_view == "search":
-            ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
-        else:
-            ET.SubElement(nav, "view", attrib={"name": "search"})
+                SubElement(nav, "view", attrib={"name": "dashboard"})
 
-        nav_as_string = ET.tostring(nav, encoding="unicode", pretty_print=True)
-        return nav_as_string
+        if default_view == "search":
+            SubElement(nav, "view", attrib={"name": "search", "default": "true"})
+        else:
+            SubElement(nav, "view", attrib={"name": "search"})
+
+        nav_as_string = tostring(nav, encoding="unicode")
+        return pretty_print_xml(nav_as_string)
 
     def _set_attributes(self) -> None:
         addon_name = self._addon_name
