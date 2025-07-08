@@ -144,8 +144,8 @@ def _add_modular_input(
                 input_helper_module=input_helper_module,
             )
         )
-        input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
-        with open(input_file_name, "w") as input_file:
+        input_file_name_2 = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
+        with open(input_file_name_2, "w") as input_file:
             input_file.write(content)
 
         if input_helper_module is not None:
