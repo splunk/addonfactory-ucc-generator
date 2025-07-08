@@ -71,9 +71,7 @@ def upload_package(
     username: str,
     password: str,
 ) -> str:
-    upload_url = (
-        f"https://classic.stage.splunkbase.splunk.com/api/v1/app/{app_id}/new_release/"
-    )
+    upload_url = f"https://splunkbase.splunk.com/api/v1/app/{app_id}/new_release/"
 
     fields = {
         "filename": os.path.basename(package_path),
@@ -114,7 +112,7 @@ def upload_package(
 def check_package_validation(
     package_upload_id: str, username: str, password: str
 ) -> None:
-    url = f"https://classic.stage.splunkbase.splunk.com/api/v1/package/{package_upload_id}/"
+    url = f"https://splunkbase.splunk.com/api/v1/package/{package_upload_id}/"
     auth_header = base64.b64encode(f"{username}:{password}".encode()).decode("utf-8")
     context = ssl.create_default_context(cafile=certifi.where())
 

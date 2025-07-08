@@ -508,6 +508,71 @@ def test_package_command(mock_package, args, expected_parameters):
 
 
 @pytest.mark.parametrize(
+    "args,expected_parameters",
+    [
+        (
+            [
+                "publish",
+                "--app-id",
+                "123",
+                "--package-path",
+                "dist/app.tar.gz",
+                "--splunk-versions",
+                "9.5",
+                "--cim-versions",
+                "6.x",
+                "--username",
+                "user",
+                "--password",
+                "pass",
+            ],
+            {
+                "app_id": 123,
+                "package_path": "dist/app.tar.gz",
+                "splunk_versions": "9.5",
+                "cim_versions": "6.x",
+                "username": "user",
+                "password": "pass",
+                "visibility": False,
+            },
+        ),
+        (
+            [
+                "publish",
+                "--app-id",
+                "456",
+                "--package-path",
+                "/tmp/app.tar.gz",
+                "--splunk-versions",
+                "9.1,9.2",
+                "--cim-versions",
+                "4.9,4.8",
+                "--username",
+                "user",
+                "--password",
+                "pass",
+                "--make-visible",
+            ],
+            {
+                "app_id": 456,
+                "package_path": "/tmp/app.tar.gz",
+                "splunk_versions": "9.1,9.2",
+                "cim_versions": "4.9,4.8",
+                "username": "user",
+                "password": "pass",
+                "visibility": True,
+            },
+        ),
+    ],
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.publish.publish_package")
+def test_publsuh_command(mock_publish, args, expected_parameters):
+    main.main(args)
+
+    mock_publish.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
     "config_path,should_pass",
     (
         ["path/to/config.json", True],

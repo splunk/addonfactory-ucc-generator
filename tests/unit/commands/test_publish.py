@@ -1,4 +1,4 @@
-import unittest
+import pytest
 from unittest.mock import patch, MagicMock, mock_open
 import io
 import urllib.error
@@ -11,7 +11,7 @@ from splunk_add_on_ucc_framework.commands.publish import (
 )
 
 
-class TestPackageUpload(unittest.TestCase):
+class TestPackageUpload:
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
     @patch("builtins.open", new_callable=mock_open, read_data=b"file binary content")
@@ -31,7 +31,7 @@ class TestPackageUpload(unittest.TestCase):
             username="user",
             password="pass",
         )
-        self.assertEqual(pkg_id, "pkg123")
+        assert pkg_id == "pkg123"
         mock_file.assert_called_once_with("tests/test_package.tgz", "rb")
         mock_logger.info.assert_called_with(
             "Package uploaded successfully. Package ID: pkg123"
@@ -50,7 +50,7 @@ class TestPackageUpload(unittest.TestCase):
         pkg_id = upload_package(
             1001, "tests/test_package.tgz", "9.5", "6.x", True, "user", "pass"
         )
-        self.assertEqual(pkg_id, "")
+        assert pkg_id == ""
         mock_file.assert_called_once_with("tests/test_package.tgz", "rb")
         mock_logger.info.assert_called_with(
             "Package uploaded but no package ID returned. {}"
@@ -73,7 +73,7 @@ class TestPackageUpload(unittest.TestCase):
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_error)
         mock_urlopen.return_value.__exit__ = MagicMock(return_value=None)
 
-        with self.assertRaises(urllib.error.HTTPError):
+        with pytest.raises(urllib.error.HTTPError):
             upload_package(
                 1001, "tests/test_package.tgz", "9.5", "6.x", True, "user", "pass"
             )
@@ -83,7 +83,7 @@ class TestPackageUpload(unittest.TestCase):
             )
 
 
-class TestPackageValidation(unittest.TestCase):
+class TestPackageValidation:
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
     def test_check_package_validation_success(self, mock_urlopen, mock_logger):
@@ -114,7 +114,7 @@ class TestPackageValidation(unittest.TestCase):
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_error)
         mock_urlopen.return_value.__exit__ = MagicMock(return_value=None)
 
-        with self.assertRaises(urllib.error.HTTPError):
+        with pytest.raises(urllib.error.HTTPError):
             check_package_validation("pkg123", "user", "pass")
             mock_logger.error.assert_called_with(
                 f"Failed to retrieve package validation status. {mock_error.read().decode()}"
