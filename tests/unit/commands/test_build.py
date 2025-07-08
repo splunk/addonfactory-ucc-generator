@@ -8,6 +8,7 @@ from splunk_add_on_ucc_framework.commands.build import (
     _get_build_output_path,
     _get_python_version_from_executable,
     _get_and_check_global_config_path,
+    _delete_pyc_files,
     generate,
 )
 from splunk_add_on_ucc_framework.exceptions import (
@@ -17,6 +18,49 @@ from splunk_add_on_ucc_framework.exceptions import (
 from splunk_add_on_ucc_framework import __version__
 
 CURRENT_PATH = os.getcwd()
+
+input_value = {
+    "name": "example_input_three",
+    "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
+    "inputHelperModule": "",
+    "entity": [
+        {
+            "type": "text",
+            "label": "Name",
+            "validators": [
+                {
+                    "type": "regex",
+                    "errorMsg": "...",
+                    "pattern": "^[a-zA-Z]\\w*$",
+                },
+                {
+                    "type": "string",
+                    "errorMsg": "Length of input name should be between 1 and 100",
+                    "minLength": 1,
+                    "maxLength": 100,
+                },
+            ],
+            "field": "name",
+            "help": "A unique name for the data input.",
+            "required": True,
+        },
+        {
+            "type": "text",
+            "label": "Interval",
+            "validators": [
+                {
+                    "type": "regex",
+                    "errorMsg": "Interval must be an integer.",
+                    "pattern": "^\\-[1-9]\\d*$|^\\d*$",
+                }
+            ],
+            "field": "interval",
+            "help": "Time interval of the data input, in seconds.",
+            "required": True,
+        },
+    ],
+    "title": "Example Input Three",
+}
 
 
 @pytest.mark.parametrize(
@@ -114,50 +158,8 @@ def test_add_modular_input(GlobalConfig, helpers, tmp_path):
     )
 
     gc = GlobalConfig.from_file("", False)
-    gc.inputs = [
-        {
-            "name": "example_input_three",
-            "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
-            "inputHelperModule": helpers,
-            "entity": [
-                {
-                    "type": "text",
-                    "label": "Name",
-                    "validators": [
-                        {
-                            "type": "regex",
-                            "errorMsg": "...",
-                            "pattern": "^[a-zA-Z]\\w*$",
-                        },
-                        {
-                            "type": "string",
-                            "errorMsg": "Length of input name should be between 1 and 100",
-                            "minLength": 1,
-                            "maxLength": 100,
-                        },
-                    ],
-                    "field": "name",
-                    "help": "A unique name for the data input.",
-                    "required": True,
-                },
-                {
-                    "type": "text",
-                    "label": "Interval",
-                    "validators": [
-                        {
-                            "type": "regex",
-                            "errorMsg": "Interval must be an integer.",
-                            "pattern": "^\\-[1-9]\\d*$|^\\d*$",
-                        }
-                    ],
-                    "field": "interval",
-                    "help": "Time interval of the data input, in seconds.",
-                    "required": True,
-                },
-            ],
-            "title": "Example Input Three",
-        }
-    ]
+    input_value["inputHelperModule"] = helpers
+    gc.inputs = [input_value]
     if helpers == "example_helper_no_stream_events":
         with pytest.raises(SystemExit):
             _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
@@ -173,6 +175,26 @@ def test_add_modular_input(GlobalConfig, helpers, tmp_path):
         helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
         assert input_path.is_file()
         assert helper_path.is_file()
+
+
+@patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
+def test_remove_pyc_files(GlobalConfig, tmp_path):
+    ta_name = "test_ta"
+    (tmp_path / ta_name / "bin").mkdir(parents=True)
+    (tmp_path / ta_name / "default").mkdir(parents=True)
+
+    helpers_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "testdata/",
+    )
+
+    gc = GlobalConfig.from_file("", False)
+    input_value["inputHelperModule"] = "example_helper"
+    gc.inputs = [input_value]
+
+    _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
+    _delete_pyc_files(helpers_path)
 
 
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")

@@ -350,6 +350,18 @@ def _get_and_check_global_config_path(source: str, config_path: Optional[str]) -
     return ""
 
 
+def _delete_pyc_files(lookup_path: str) -> None:
+    for dir_path, dir_names, file_names in os.walk(lookup_path):
+        for filename in file_names:
+            if filename.endswith(".pyc"):
+                file_path = os.path.join(dir_path, filename)
+                try:
+                    os.remove(file_path)
+                    logger.info(f"Deleted: {file_path}")
+                except Exception as e:
+                    logger.error(f"Error deleting {file_path}: {e}")
+
+
 def summary_report(
     source: str,
     ta_name: str,
@@ -735,6 +747,8 @@ def generate(
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api_object.json, openapi_file, indent=4)
+
+    _delete_pyc_files(os.path.join(output_directory, ta_name, "bin"))
 
     summary_report(
         source,
