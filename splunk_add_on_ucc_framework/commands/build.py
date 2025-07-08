@@ -143,19 +143,21 @@ def _add_modular_input(
 
         output_bin_path = os.path.join(outputdir, ta_name, "bin")
 
-        function_to_check = ["stream_events", "validate_input"]
-        len_of_args = []
+        # Default values 0 will result with no 'self' in those function in input.template
+        len_of_args = {"stream_events": 0, "validate_input": 0}
 
-        for function in function_to_check:
-            try:
-                result = _get_num_of_args(
-                    input_helper_module, bin_path, output_bin_path, function
-                )
-                len_of_args.append(result)
-            except ModuleNotFoundError:
-                len_of_args.append(0)
-            except (AttributeError, TypeError) as e:
-                sys.exit(e.args[0])
+        if input_helper_module:
+            for func in len_of_args:
+                try:
+                    result = _get_num_of_args(
+                        input_helper_module, bin_path, output_bin_path, func
+                    )
+                    len_of_args[func] = result
+                except ModuleNotFoundError:
+                    # If no module, that was specified in globalConfig, default one will be created without 'self'
+                    pass
+                except (AttributeError, TypeError) as e:
+                    sys.exit(e.args[0])
 
         content = (
             utils.get_j2_env()
@@ -166,8 +168,8 @@ def _add_modular_input(
                 description=description,
                 entity=entity,
                 input_helper_module=input_helper_module,
-                stream_events_args=len_of_args[0],
-                validate_input_args=len_of_args[1],
+                stream_events_args=len_of_args["stream_events"],
+                validate_input_args=len_of_args["validate_input"],
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
@@ -194,6 +196,7 @@ def _add_modular_input(
 def _get_num_of_args(
     module_name: str, root_addon_bin_path: str, output_bin_path: str, function_name: str
 ) -> int:
+    # Temporarily add custom paths to sys.path so that the module can be found
     if root_addon_bin_path not in sys.path:
         sys.path.insert(0, root_addon_bin_path)
     if output_bin_path not in sys.path:
@@ -206,6 +209,7 @@ def _get_num_of_args(
                 f"Module '{module_name}' not found in '{root_addon_bin_path}'"
             )
 
+        # Dynamically load the module
         module = module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -214,15 +218,18 @@ def _get_num_of_args(
                 f"'{function_name}' not found in module '{module_name}'"
             )
 
+        # Get the function object
         func = getattr(module, function_name)
         if not callable(func):
             raise TypeError(
                 f"'{function_name}' in module '{module_name}' is not callable"
             )
 
+        # Return the number of defined positional and keyword arguments (excluding *args/**kwargs)
         return len(inspect.getfullargspec(func).args)
 
     finally:
+        # Clean up sys.path
         if root_addon_bin_path in sys.path:
             sys.path.remove(root_addon_bin_path)
         if output_bin_path in sys.path:

@@ -93,18 +93,32 @@ def test_get_python_version_from_executable_nonexisting_command():
         _get_python_version_from_executable(target_python_version)
 
 
+@pytest.mark.parametrize(
+    "helpers",
+    [
+        "example_helper",
+        "example_helper_no_stream_events",
+        "example_helper_not_callable",
+    ],
+)
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
-def test_add_modular_input(GlobalConfig, tmp_path):
+def test_add_modular_input(GlobalConfig, helpers, tmp_path):
     ta_name = "test_ta"
     (tmp_path / ta_name / "bin").mkdir(parents=True)
     (tmp_path / ta_name / "default").mkdir(parents=True)
+
+    helpers_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "testdata/",
+    )
 
     gc = GlobalConfig.from_file("", False)
     gc.inputs = [
         {
             "name": "example_input_three",
             "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
-            "inputHelperModule": "example_helper",
+            "inputHelperModule": helpers,
             "entity": [
                 {
                     "type": "text",
@@ -144,12 +158,21 @@ def test_add_modular_input(GlobalConfig, tmp_path):
             "title": "Example Input Three",
         }
     ]
-    _add_modular_input(ta_name, gc, str(tmp_path), "some/path")
+    if helpers == "example_helper_no_stream_events":
+        with pytest.raises(SystemExit):
+            _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
 
-    input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
-    helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
-    assert input_path.is_file()
-    assert helper_path.is_file()
+    if helpers == "example_helper_not_callable":
+        with pytest.raises(SystemExit):
+            _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
+
+    if helpers == "example_helper":
+        _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
+
+        input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
+        helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
+        assert input_path.is_file()
+        assert helper_path.is_file()
 
 
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
