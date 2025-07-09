@@ -21,6 +21,7 @@ _ACCOUNT_CONFIG = {
     "endpoint": "",
     "example_help_link": "",
     "url": "https://test.example.com",
+    "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
 }
 
 
@@ -818,6 +819,9 @@ class TestAccount(UccTester):
         account.entity.multiple_select.select("Option One")
         account.entity.password.set_value(_ACCOUNT_CONFIG["password"])
         account.entity.security_token.set_value("TestToken")
+        account.entity.text_area_basic_oauth.set_value(
+            _ACCOUNT_CONFIG["example_textarea_field_basic_oauth"]
+        )
         self.assert_util(account.entity.save, True)
         account.table.wait_for_rows_to_appear(1)
         self.assert_util(

@@ -188,7 +188,7 @@ fields = [
         )
     ), 
     field.RestField(
-        'example_textarea_field',
+        'example_textarea_field_basic_oauth',
         required=False,
         encrypted=False,
         default=None,

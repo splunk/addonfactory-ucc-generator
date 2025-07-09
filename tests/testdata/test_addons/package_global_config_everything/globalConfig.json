@@ -390,7 +390,7 @@
                                     {
                                         "type": "textarea",
                                         "label": "Example Textarea Field",
-                                        "field": "example_textarea_field",
+                                        "field": "example_textarea_field_basic_oauth",
                                         "help": "Help message",
                                         "options": {
                                             "rowsMin": 3,
@@ -2271,7 +2271,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.65.0+62ed494cd",
+        "version": "5.67.0+3b5743115",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
