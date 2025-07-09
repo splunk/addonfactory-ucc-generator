@@ -17,7 +17,7 @@
 # It proposed to replace `xml` with `defusedxml` and it does not have such
 # import.
 # nosemgrep: splunk.use-defused-xml
-from xml.etree import ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
 from defusedxml import minidom
 from typing import Optional
 
@@ -40,7 +40,7 @@ def generate_nav_default_xml(
 
     The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
     """
-    nav = ET.Element("nav")
+    nav = Element("nav")
     if default_view is None:
         # we do this calculation as all the below properties are now optional
         if include_configuration:
@@ -54,28 +54,28 @@ def generate_nav_default_xml(
 
     if include_inputs:
         if default_view == "inputs":
-            ET.SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
+            SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
         else:
-            ET.SubElement(nav, "view", attrib={"name": "inputs"})
+            SubElement(nav, "view", attrib={"name": "inputs"})
 
     if include_configuration:
         if default_view == "configuration":
-            ET.SubElement(
-                nav, "view", attrib={"name": "configuration", "default": "true"}
-            )
+            SubElement(nav, "view", attrib={"name": "configuration", "default": "true"})
         else:
-            ET.SubElement(nav, "view", attrib={"name": "configuration"})
+            SubElement(nav, "view", attrib={"name": "configuration"})
+
     if include_dashboard:
         if default_view == "dashboard":
-            ET.SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
+            SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
         else:
-            ET.SubElement(nav, "view", attrib={"name": "dashboard"})
-    if default_view == "search":
-        ET.SubElement(nav, "view", attrib={"name": "search", "default": "true"})
-    else:
-        ET.SubElement(nav, "view", attrib={"name": "search"})
+            SubElement(nav, "view", attrib={"name": "dashboard"})
 
-    nav_as_string = ET.tostring(nav, encoding="unicode")
+    if default_view == "search":
+        SubElement(nav, "view", attrib={"name": "search", "default": "true"})
+    else:
+        SubElement(nav, "view", attrib={"name": "search"})
+
+    nav_as_string = tostring(nav, encoding="unicode")
     return _pretty_print_xml(nav_as_string)
 
 
@@ -83,7 +83,7 @@ def generate_views_inputs_xml(addon_name: str) -> str:
     """
     Generates `default/data/ui/views/inputs.xml` file.
     """
-    view = ET.Element(
+    view = Element(
         "view",
         attrib={
             "template": f"{addon_name}:/templates/base.html",
@@ -91,9 +91,9 @@ def generate_views_inputs_xml(addon_name: str) -> str:
             "isDashboard": "False",
         },
     )
-    label = ET.SubElement(view, "label")
+    label = SubElement(view, "label")
     label.text = "Inputs"
-    view_as_string = ET.tostring(view, encoding="unicode")
+    view_as_string = tostring(view, encoding="unicode")
     return _pretty_print_xml(view_as_string)
 
 
@@ -101,7 +101,7 @@ def generate_views_configuration_xml(addon_name: str) -> str:
     """
     Generates `default/data/ui/views/configuration.xml` file.
     """
-    view = ET.Element(
+    view = Element(
         "view",
         attrib={
             "template": f"{addon_name}:/templates/base.html",
@@ -109,9 +109,9 @@ def generate_views_configuration_xml(addon_name: str) -> str:
             "isDashboard": "False",
         },
     )
-    label = ET.SubElement(view, "label")
+    label = SubElement(view, "label")
     label.text = "Configuration"
-    view_as_string = ET.tostring(view, encoding="unicode")
+    view_as_string = tostring(view, encoding="unicode")
     return _pretty_print_xml(view_as_string)
 
 
@@ -119,7 +119,7 @@ def generate_views_dashboard_xml(addon_name: str) -> str:
     """
     Generates `default/data/ui/views/dashboard.xml` file.
     """
-    view = ET.Element(
+    view = Element(
         "view",
         attrib={
             "template": f"{addon_name}:/templates/base.html",
@@ -127,9 +127,9 @@ def generate_views_dashboard_xml(addon_name: str) -> str:
             "isDashboard": "False",
         },
     )
-    label = ET.SubElement(view, "label")
+    label = SubElement(view, "label")
     label.text = "Monitoring Dashboard"
-    view_as_string = ET.tostring(view, encoding="unicode")
+    view_as_string = tostring(view, encoding="unicode")
     return _pretty_print_xml(view_as_string)
 
 
@@ -137,7 +137,7 @@ def generate_views_redirect_xml(addon_name: str) -> str:
     """
     Generates `default/data/ui/views/redirect.xml` file.
     """
-    view = ET.Element(
+    view = Element(
         "view",
         attrib={
             "template": f"{addon_name}:templates/{addon_name.lower()}_redirect.html",
@@ -145,7 +145,7 @@ def generate_views_redirect_xml(addon_name: str) -> str:
             "isDashboard": "False",
         },
     )
-    label = ET.SubElement(view, "label")
+    label = SubElement(view, "label")
     label.text = "Redirect"
-    view_as_string = ET.tostring(view, encoding="unicode")
+    view_as_string = tostring(view, encoding="unicode")
     return _pretty_print_xml(view_as_string)
