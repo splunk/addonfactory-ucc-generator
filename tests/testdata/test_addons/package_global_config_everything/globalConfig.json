@@ -406,7 +406,8 @@
                                         "options": {
                                             "rowsMin": 3,
                                             "rowsMax": 5
-                                        }
+                                        },
+                                        "required": false
                                     },
                                     {
                                         "label": "Basic Oauth select",
@@ -428,7 +429,8 @@
                                                     "value": "option3"
                                                 }
                                             ]
-                                        }
+                                        },
+                                        "required": false
                                     },
                                     {
                                         "label": "Basic Oauth radio",
@@ -450,7 +452,8 @@
                                                     "value": "right"
                                                 }
                                             ]
-                                        }
+                                        },
+                                        "required": false
                                     }
                                 ],
                                 "oauth_client_credentials": [
