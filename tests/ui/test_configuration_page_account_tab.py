@@ -1024,6 +1024,9 @@ class TestAccount(UccTester):
             "username": "TestCloneUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
+            "example_textarea_field_basic_oauth": _ACCOUNT_CONFIG[
+                "example_textarea_field_basic_oauth"
+            ],
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
