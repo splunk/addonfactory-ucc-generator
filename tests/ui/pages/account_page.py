@@ -115,7 +115,8 @@ class AccountEntity(Entity):
         self.text_area_basic_oauth = TextArea(
             browser,
             Selector(
-                select=entity_container.select + ' [data-name="example_textarea_field"]'
+                select=entity_container.select
+                + ' [data-name="example_textarea_field_basic_oauth"]'
             ),
         )
 

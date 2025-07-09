@@ -799,6 +799,9 @@ class TestAccount(UccTester):
             "username": _ACCOUNT_CONFIG["username"],
             "custom_endpoint": _ACCOUNT_CONFIG["custom_endpoint"],
             "disabled": False,
+            "example_textarea_field_basic_oauth": _ACCOUNT_CONFIG[
+                "example_textarea_field_basic_oauth"
+            ],
             "password": "******",
             "token": "******",
             "url": "https://test.example.com",
@@ -988,6 +991,7 @@ class TestAccount(UccTester):
             "username": "TestEditUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
+            "example_textarea_field_basic_oauth": "",
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
