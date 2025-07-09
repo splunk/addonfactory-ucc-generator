@@ -195,6 +195,27 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'text_area_test_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'select_test_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'radio_test_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'client_id',
         required=False,
         encrypted=False,

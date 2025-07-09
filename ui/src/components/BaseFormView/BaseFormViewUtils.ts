@@ -1,25 +1,25 @@
 import { MODE_CLONE, MODE_CONFIG, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
-import { BaseFormStateData } from '../../types/components/BaseFormSharableTypes';
 import {
     AnyEntity,
     BaseFormProps,
     BasicEntity,
     CurrentBaseFormInput,
 } from '../../types/components/BaseFormTypes';
-// import { OAuthEntity } from '../../types/globalConfig/entities';
+import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
+import { OAuthEntity } from '../../types/globalConfig/entities';
 import { shouldHideForPlatform } from '../../util/pageContext';
 
 export const mapEntityIntoBaseForViewEntityObject = (
-    e: AnyEntity,
+    e: OAuthEntity | AnyEntity,
     currentInput: CurrentBaseFormInput,
     props: BaseFormProps,
-    temState?: BaseFormStateData, // shared state for oauth
+    currentOauthValue?: AcceptableFormValueOrNullish, // shared state for oauth
     oauthType?: string // shared state for oauth
 ) => {
     const tempEntity: BasicEntity = {
         disabled: false,
         error: false,
-        display: temState?.auth_type ? oauthType === temState?.auth_type?.value : true,
+        display: true,
     };
 
     if (e.type !== 'helpLink' && e.type !== 'custom') {
@@ -39,7 +39,12 @@ export const mapEntityIntoBaseForViewEntityObject = (
             tempEntity.value = typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
             tempEntity.display =
                 typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
+            if (oauthType) {
+                tempEntity.display =
+                    typeof e?.options?.display !== 'undefined'
+                        ? e.options.display
+                        : oauthType === currentOauthValue;
+            }
             tempEntity.display = shouldHideForPlatform(
                 e.options?.hideForPlatform,
                 props.pageContext?.platform
@@ -56,7 +61,12 @@ export const mapEntityIntoBaseForViewEntityObject = (
             tempEntity.value = e.encrypted ? '' : tempEntity.value;
             tempEntity.display =
                 typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
+            if (oauthType) {
+                tempEntity.display =
+                    typeof e?.options?.display !== 'undefined'
+                        ? e.options.display
+                        : oauthType === currentOauthValue;
+            }
             tempEntity.display = shouldHideForPlatform(
                 e.options?.hideForPlatform,
                 props.pageContext?.platform
@@ -78,7 +88,12 @@ export const mapEntityIntoBaseForViewEntityObject = (
 
             tempEntity.display =
                 typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
+            if (oauthType) {
+                tempEntity.display =
+                    typeof e?.options?.display !== 'undefined'
+                        ? e.options.display
+                        : oauthType === currentOauthValue;
+            }
             tempEntity.display = shouldHideForPlatform(
                 e.options?.hideForPlatform,
                 props.pageContext?.platform
@@ -99,7 +114,12 @@ export const mapEntityIntoBaseForViewEntityObject = (
             tempEntity.value = e.encrypted ? '' : tempEntity.value;
             tempEntity.display =
                 typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
+            if (oauthType) {
+                tempEntity.display =
+                    typeof e?.options?.display !== 'undefined'
+                        ? e.options.display
+                        : oauthType === currentOauthValue;
+            }
             tempEntity.display = shouldHideForPlatform(
                 e.options?.hideForPlatform,
                 props.pageContext?.platform

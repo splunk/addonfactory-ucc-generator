@@ -315,7 +315,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                     field,
                                     this.currentInput,
                                     this.props,
-                                    temState,
+                                    authType.length > 1 ? temState?.auth_type?.value : authType[0],
                                     type
                                 );
 
