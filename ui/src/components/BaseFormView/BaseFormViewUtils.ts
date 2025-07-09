@@ -24,7 +24,7 @@ export const mapEntityIntoBaseForViewEntityObject = (
 
     if (e.type !== 'helpLink' && e.type !== 'custom') {
         // encrypt by default for oauth
-        e.encrypted = e?.encrypted || !!oauthType;
+        e.encrypted = e?.encrypted || false;
 
         if (e.type === 'file' && currentInput?.[e.field]) {
             /*
