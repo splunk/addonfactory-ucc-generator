@@ -991,7 +991,7 @@ class TestAccount(UccTester):
             "username": "TestEditUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
-            "example_textarea_field_basic_oauth": "",
+            "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
