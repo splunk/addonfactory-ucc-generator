@@ -738,7 +738,7 @@ describe('Oauth2 - client credentials', () => {
         });
     });
 
-    it('Ouath with many types of inputs - check if correctly renders', async () => {
+    it('Oauth with many types of inputs - check if correctly renders', async () => {
         setUpConfigManyTypesInOauth();
         renderModalWithProps();
         const user = userEvent.setup();
