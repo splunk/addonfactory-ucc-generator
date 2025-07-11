@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { within } from '@storybook/test';
+import { waitFor, within, expect } from '@storybook/test';
 import DashboardPage from '../DashboardPage';
 
 import { DASHBOARD_JSON_MOCKS } from '../tests/mockJs';
@@ -33,9 +33,16 @@ export const DashboardPageView: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await canvas.findByRole('heading', { name: 'Data Ingestion' });
+        await waitFor(
+            () => {
+                expect(canvas.queryByTestId('wait-spinner')).toBeNull();
+            },
+            { timeout: 5000 } // Wait for the loading spinner to disappear
+        );
+
+        await canvas.findByRole('heading', { name: 'Data Ingestion' }, { timeout: 5000 });
         await canvas.findAllByText((match) => match.includes('Search sid not found'), undefined, {
-            timeout: 10_000,
+            timeout: 5000,
         });
     },
 };

@@ -782,7 +782,7 @@ def test_ucc_generate_with_ui_source_map():
         ),
         (
             "package_global_config_everything",
-            2,
+            18,
         ),
     ],
 )
@@ -808,7 +808,7 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
 
         dashbaord_files_counter = 0
 
-        for _ in js_build_dir.glob("DashboardPage.*"):
+        for _ in js_build_dir.glob("Dashboard.*"):
             dashbaord_files_counter += 1
 
         assert dashbaord_files_counter == expected_file_count, (
