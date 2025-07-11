@@ -1,11 +1,14 @@
 import { z } from 'zod';
 import {
     AllValidators,
+    CommonEditableEntityFields,
     CommonEditableEntityOptions,
     ModifyFieldsOnValue,
     PlatformEnum,
     StringOrTextWithLinks,
 } from './baseSchemas';
+
+import { StringValidator, RegexValidator } from './validators';
 
 export const oAuthFieldSchema = z
     .object({
