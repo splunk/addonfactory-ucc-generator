@@ -789,7 +789,7 @@ last line`
         expect(textAreaOauthBasic).toHaveValue('Text area value\nmultiplce lines\nlast line');
     });
 
-    it('Ouath with many types of inputs hiddes elements when Oauth 2.0 selected', async () => {
+    it('Oauth with many types of inputs hiddes elements when Oauth 2.0 selected', async () => {
         setUpConfigManyTypesInOauth();
         renderModalWithProps();
         const user = userEvent.setup();
