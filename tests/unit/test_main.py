@@ -566,7 +566,7 @@ def test_package_command(mock_package, args, expected_parameters):
     ],
 )
 @mock.patch("splunk_add_on_ucc_framework.commands.publish.publish_package")
-def test_publsuh_command(mock_publish, args, expected_parameters):
+def test_publish_command(mock_publish, args, expected_parameters):
     main.main(args)
 
     mock_publish.assert_called_with(**expected_parameters)
