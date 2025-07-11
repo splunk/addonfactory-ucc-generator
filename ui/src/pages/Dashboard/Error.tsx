@@ -169,3 +169,5 @@ export const ErrorDashboard = ({
         </DashboardContextProvider>
     ) : null;
 };
+
+export default ErrorDashboard;

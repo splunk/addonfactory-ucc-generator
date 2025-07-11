@@ -124,7 +124,7 @@ def recursive_overwrite(
         # EnterpriseViewOnlyPreset is the biggest UI dashboard library file
         # that is not used if dashbaord is not present.
         if ((".js.map" not in dest) or ui_source_map) and (
-            has_dashboard or "DashboardPage." not in dest
+            has_dashboard or "Dashboard." not in dest
         ):
             shutil.copy(src, dest)
 
