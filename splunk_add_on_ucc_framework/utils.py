@@ -30,8 +30,16 @@ import yaml
 
 from splunk_add_on_ucc_framework import exceptions
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from defusedxml import minidom
 
 logger = logging.getLogger("ucc_gen")
+
+
+def pretty_print_xml(string: str) -> str:
+    """
+    Returns a pretty-printed XML as a string.
+    """
+    return minidom.parseString(string).toprettyxml(indent="    ")
 
 
 def get_j2_env() -> jinja2.Environment:
@@ -101,9 +109,14 @@ def recursive_overwrite(
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            recursive_overwrite(
-                join(src, f), join(dest, f), ui_source_map, has_dashboard
-            )
+            if f.endswith(".conf"):
+                merge_conf_file(
+                    join(src, f), join(dest, f), merge_mode="item_overwrite"
+                )
+            else:
+                recursive_overwrite(
+                    join(src, f), join(dest, f), ui_source_map, has_dashboard
+                )
     else:
         if exists(dest):
             remove(dest)
@@ -111,7 +124,7 @@ def recursive_overwrite(
         # EnterpriseViewOnlyPreset is the biggest UI dashboard library file
         # that is not used if dashbaord is not present.
         if ((".js.map" not in dest) or ui_source_map) and (
-            has_dashboard or "DashboardPage." not in dest
+            has_dashboard or "Dashboard." not in dest
         ):
             shutil.copy(src, dest)
 

@@ -16,7 +16,9 @@
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from typing import Dict
 import os
-from splunk_add_on_ucc_framework import data_ui_generator
+from typing import Optional
+from xml.etree.ElementTree import Element, SubElement, tostring
+from splunk_add_on_ucc_framework.utils import pretty_print_xml
 import logging
 
 logger = logging.getLogger("ucc_gen")
@@ -27,6 +29,58 @@ class DefaultXml(FileGenerator):
         "Generates default.xml file based on configs present in globalConfig,"
         " in `default/data/ui/nav` folder."
     )
+
+    def generate_nav_default_xml(
+        self,
+        include_inputs: bool,
+        include_dashboard: bool,
+        include_configuration: bool,
+        default_view: Optional[str],
+    ) -> str:
+        """
+        Generates `default/data/ui/nav/default.xml` file.
+
+        The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
+        """
+        nav = Element("nav")
+        if default_view is None:
+            # we do this calculation as all the below properties are now optional
+            if include_configuration:
+                default_view = "configuration"
+            elif include_inputs:
+                default_view = "inputs"
+            elif include_dashboard:
+                default_view = "dashboard"
+            else:
+                default_view = "search"
+
+        if include_inputs:
+            if default_view == "inputs":
+                SubElement(nav, "view", attrib={"name": "inputs", "default": "true"})
+            else:
+                SubElement(nav, "view", attrib={"name": "inputs"})
+
+        if include_configuration:
+            if default_view == "configuration":
+                SubElement(
+                    nav, "view", attrib={"name": "configuration", "default": "true"}
+                )
+            else:
+                SubElement(nav, "view", attrib={"name": "configuration"})
+
+        if include_dashboard:
+            if default_view == "dashboard":
+                SubElement(nav, "view", attrib={"name": "dashboard", "default": "true"})
+            else:
+                SubElement(nav, "view", attrib={"name": "dashboard"})
+
+        if default_view == "search":
+            SubElement(nav, "view", attrib={"name": "search", "default": "true"})
+        else:
+            SubElement(nav, "view", attrib={"name": "search"})
+
+        nav_as_string = tostring(nav, encoding="unicode")
+        return pretty_print_xml(nav_as_string)
 
     def _set_attributes(self) -> None:
         addon_name = self._addon_name
@@ -42,7 +96,7 @@ class DefaultXml(FileGenerator):
             )
         else:
             if self._global_config.has_pages():
-                self.default_xml_content = data_ui_generator.generate_nav_default_xml(
+                self.default_xml_content = self.generate_nav_default_xml(
                     include_inputs=self._global_config.has_inputs(),
                     include_dashboard=self._global_config.has_dashboard(),
                     include_configuration=self._global_config.has_configuration(),
