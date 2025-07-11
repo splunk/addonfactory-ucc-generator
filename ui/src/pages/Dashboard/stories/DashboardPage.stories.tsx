@@ -40,9 +40,9 @@ export const DashboardPageView: Story = {
             { timeout: 5000 } // Wait for the loading spinner to disappear
         );
 
-        await canvas.findByRole('heading', { name: 'Data Ingestion' });
+        await canvas.findByRole('heading', { name: 'Data Ingestion' }, { timeout: 5000 });
         await canvas.findAllByText((match) => match.includes('Search sid not found'), undefined, {
-            timeout: 10_000,
+            timeout: 5000,
         });
     },
 };
