@@ -30,8 +30,16 @@ import yaml
 
 from splunk_add_on_ucc_framework import exceptions
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from defusedxml import minidom
 
 logger = logging.getLogger("ucc_gen")
+
+
+def pretty_print_xml(string: str) -> str:
+    """
+    Returns a pretty-printed XML as a string.
+    """
+    return minidom.parseString(string).toprettyxml(indent="    ")
 
 
 def get_j2_env() -> jinja2.Environment:
