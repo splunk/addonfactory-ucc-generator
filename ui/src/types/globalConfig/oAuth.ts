@@ -1,14 +1,11 @@
 import { z } from 'zod';
 import {
     AllValidators,
-    CommonEditableEntityFields,
     CommonEditableEntityOptions,
     ModifyFieldsOnValue,
     PlatformEnum,
     StringOrTextWithLinks,
 } from './baseSchemas';
-
-import { StringValidator, RegexValidator } from './validators';
 
 export const oAuthFieldSchema = z
     .object({
@@ -26,7 +23,7 @@ export const oAuthFieldSchema = z
     })
     .strict();
 
-const OAuthOptionsBaseSchema = z.object({
+export const OAuthOptionsBaseSchema = z.object({
     enable: z.boolean().optional(),
     display: z.boolean().optional(),
     disableonEdit: z.boolean().optional(),
@@ -42,9 +39,6 @@ const OAuthOptionsBaseSchema = z.object({
         })
         .catchall(z.string())
         .optional(),
-    basic: z.array(oAuthFieldSchema).optional(),
-    oauth: z.array(oAuthFieldSchema).optional(),
-    oauth_client_credentials: z.array(oAuthFieldSchema).optional(),
     auth_label: z.string().optional(),
     oauth_popup_width: z.number().optional(),
     oauth_popup_height: z.number().optional(),
@@ -54,12 +48,3 @@ const OAuthOptionsBaseSchema = z.object({
     oauth_state_enabled: z.boolean().optional(),
     auth_endpoint_token_access_type: z.string().optional(),
 });
-
-export const oAuthEntitySchema = CommonEditableEntityFields.extend({
-    type: z.literal('oauth'),
-    defaultValue: z.string().optional(),
-    validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
-    options: OAuthOptionsBaseSchema.passthrough(),
-}).strict();
-
-export type OAuthEntity = z.TypeOf<typeof oAuthFieldSchema>;
