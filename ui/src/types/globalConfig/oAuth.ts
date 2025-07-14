@@ -9,7 +9,7 @@ import {
 
 export const oAuthFieldSchema = z
     .object({
-        oauth_field: z.string().optional(), // Optional field to indicate this is an OAuth field
+        oauth_field: z.string(), // Optional field to indicate this is an OAuth field
         label: z.string(),
         field: z.string(),
         type: z.literal('text').default('text').optional(),
