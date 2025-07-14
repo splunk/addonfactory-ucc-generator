@@ -1,6 +1,27 @@
 from splunk_add_on_ucc_framework.generators.xml_files import DashboardXml
-from textwrap import dedent
 from tests.unit.helpers import compare_xml_content
+
+
+def test_generate_views_dashboard_xml(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+):
+    dashboard_xml = DashboardXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+
+    result = dashboard_xml.generate_views_dashboard_xml("Splunk_TA_UCCExample")
+
+    expected_result = """<?xml version="1.0" ?>
+    <view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
+        <label>Monitoring Dashboard</label>
+    </view>
+    """
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_set_attributes_with_dashboard(
@@ -42,13 +63,11 @@ def test_generate_xml_with_dashboard(
     )
     ta_name = global_config_all_json.product
     exp_fname = "dashboard.xml"
-    expected_content = dedent(
-        f"""<?xml version="1.0" ?>
-            <view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
-                <label>Monitoring Dashboard</label>
-            </view>
+    expected_content = f"""<?xml version="1.0" ?>
+        <view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
+            <label>Monitoring Dashboard</label>
+        </view>
         """
-    )
 
     output = dashboard_xml.generate()
     diff = compare_xml_content(output[0]["content"], expected_content)

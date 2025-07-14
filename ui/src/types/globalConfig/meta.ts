@@ -14,6 +14,7 @@ export const meta = z
         searchViewDefault: z.boolean().default(false).optional(),
         isVisible: z.boolean().default(true).optional(),
         supportedThemes: z.array(z.string()).optional(),
+        showFooter: z.boolean().default(true).optional(),
     })
     .strict();
 

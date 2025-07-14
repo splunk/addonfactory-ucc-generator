@@ -1,6 +1,18 @@
 from splunk_add_on_ucc_framework.generators.xml_files import InputsXml
-from textwrap import dedent
 from tests.unit.helpers import compare_xml_content
+
+
+def test_generate_views_inputs_xml(global_config_all_json, input_dir, output_dir):
+    inputs_xml = InputsXml(global_config_all_json, input_dir, output_dir)
+    result = inputs_xml.generate_views_inputs_xml("Splunk_TA_UCCExample")
+
+    expected_result = """<?xml version="1.0" ?>
+    <view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
+        <label>Inputs</label>
+    </view>
+    """
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
 
 
 def test_set_attributes_with_inputs(
@@ -44,13 +56,11 @@ def test_generate_xml_with_inputs(
     ta_name = global_config_all_json.product
     exp_fname = "inputs.xml"
     output = inputs_xml.generate()
-    expected_content = dedent(
-        f"""<?xml version="1.0" ?>
-            <view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
-                <label>Inputs</label>
-            </view>
+    expected_content = f"""<?xml version="1.0" ?>
+        <view isDashboard="False" template="{ta_name}:/templates/base.html" type="html">
+            <label>Inputs</label>
+        </view>
         """
-    )
 
     diff = compare_xml_content(output[0]["content"], expected_content)
     assert diff == ""

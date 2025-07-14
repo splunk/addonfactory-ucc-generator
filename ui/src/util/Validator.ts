@@ -21,9 +21,19 @@ export const parseFunctionRawStr = (rawStr: string) => {
     let error;
     let result: SaveValidatorFunc | undefined;
 
+    /**
+     * Parses a string representation of a function into a real executable function.
+     *
+     * Use the `Function` constructor instead of `eval` because:
+     * - It provides better isolation and does not access the local scope (unlike eval).
+     * - It avoids unintended variable leakage or access to local variables.
+     * - It's marginally safer and more predictable in controlled environments.
+     *
+     * Note: This still executes dynamic code and should not be used with untrusted input.
+     */
     try {
-        // eslint-disable-next-line no-eval
-        result = eval(`(${rawStr})`);
+        // eslint-disable-next-line no-new-func
+        result = new Function(`return (${rawStr});`)() as SaveValidatorFunc;
     } catch (e) {
         error = getFormattedMessage(11, [rawStr]);
     }

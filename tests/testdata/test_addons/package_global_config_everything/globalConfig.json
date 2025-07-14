@@ -404,6 +404,74 @@
                                                 "pattern": "^[a-zA-Z]\\w*$"
                                             }
                                         ]
+                                    },
+                                    {
+                                        "type": "textarea",
+                                        "label": "Example Textarea Field",
+                                        "field": "example_textarea_field_basic_oauth",
+                                        "help": "Help message",
+                                        "options": {
+                                            "rowsMin": 3,
+                                            "rowsMax": 15
+                                        },
+                                        "required": false
+                                    },
+                                    {
+                                        "label": "Text Area Token",
+                                        "help": "Enter Text Area Token",
+                                        "field": "text_area_test_basic_oauth",
+                                        "type": "textarea",
+                                        "options": {
+                                            "rowsMin": 3,
+                                            "rowsMax": 5
+                                        },
+                                        "required": false
+                                    },
+                                    {
+                                        "label": "Basic Oauth select",
+                                        "help": "additiona oauth select",
+                                        "field": "select_test_basic_oauth",
+                                        "type": "singleSelect",
+                                        "options": {
+                                            "items": [
+                                                {
+                                                    "label": "Option 1",
+                                                    "value": "option1"
+                                                },
+                                                {
+                                                    "label": "Option 2",
+                                                    "value": "option2"
+                                                },
+                                                {
+                                                    "label": "Option 3",
+                                                    "value": "option3"
+                                                }
+                                            ]
+                                        },
+                                        "required": false
+                                    },
+                                    {
+                                        "label": "Basic Oauth radio",
+                                        "help": "Additiona oauth radio",
+                                        "field": "radio_test_basic_oauth",
+                                        "type": "radio",
+                                        "options": {
+                                            "items": [
+                                                {
+                                                    "label": "Left",
+                                                    "value": "left"
+                                                },
+                                                {
+                                                    "label": "Middle",
+                                                    "value": "middle"
+                                                },
+                                                {
+                                                    "label": "Right",
+                                                    "value": "right"
+                                                }
+                                            ]
+                                        },
+                                        "required": false
                                     }
                                 ],
                                 "oauth_client_credentials": [
@@ -2278,7 +2346,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.65.0+62ed494cd",
+        "version": "5.67.0+e73d4162e",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
