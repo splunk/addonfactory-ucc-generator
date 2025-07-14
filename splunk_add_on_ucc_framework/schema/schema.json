@@ -2555,6 +2555,11 @@
           "type": "boolean",
           "default": true,
           "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
+        },
+        "showFooter": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ability to show the footer component on every page of add-on"
         }
       },
       "required": [
