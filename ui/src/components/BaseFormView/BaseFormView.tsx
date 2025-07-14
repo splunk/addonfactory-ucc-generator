@@ -539,10 +539,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             let temEntities: AnyEntity[] | undefined;
             if (this.isOAuth) {
                 let reqFields: string[] = [];
+                const otherOauthFields: string[] = [];
                 Object.keys(this.authMap).forEach((type) => {
                     // `isAuthVal` is required in a case where only single auth type is provided
                     if (type === this.datadict.auth_type || !this.isAuthVal) {
                         reqFields = [...reqFields, ...this.authMap[type]];
+                    } else {
+                        otherOauthFields.push(...this.authMap[type]);
                     }
                 });
 
@@ -551,6 +554,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     if (e.type !== 'helpLink' && reqFields.includes(e.field)) {
                         // All oauth fields are required except if explicitely `required` is set to `false`
                         return { required: true, ...e };
+                    }
+                    if (otherOauthFields.includes(e.field)) {
+                        return { ...e, required: false };
                     }
                     return e;
                 });
