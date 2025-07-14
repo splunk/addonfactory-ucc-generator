@@ -1,3 +1,5 @@
+import { GlobalConfig } from '../../../../types/globalConfig/globalConfig';
+
 export const PAGE_CONFIG_BOTH_OAUTH = {
     pages: {
         configuration: {
@@ -238,7 +240,7 @@ export const getConfigOauthOauth = () => {
     return configCp;
 };
 
-export const getConfigOauthBasicWithAdditionalFieldTypes = () => {
+export const getConfigOauthBasicWithAdditionalFieldTypes = (): GlobalConfig => {
     const configCp = JSON.parse(JSON.stringify(PAGE_CONFIG_BOTH_OAUTH));
     if (configCp.pages.configuration.tabs[0].entity[2].options?.auth_type) {
         configCp.pages.configuration.tabs[0].entity[2].options.auth_type = ['basic'];
