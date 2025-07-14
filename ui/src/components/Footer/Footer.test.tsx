@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 
 import Footer from './Footer';
-import * as utils from '../../pages/Dashboard/utils';
+import * as utils from '../../util/searchUtil';
 import * as configUtils from '../../util/util';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 
