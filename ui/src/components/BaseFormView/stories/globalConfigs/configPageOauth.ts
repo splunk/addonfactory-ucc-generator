@@ -237,3 +237,81 @@ export const getConfigOauthOauth = () => {
     }
     return configCp;
 };
+
+export const getConfigOauthBasicWithAdditionalFieldTypes = () => {
+    const configCp = JSON.parse(JSON.stringify(PAGE_CONFIG_BOTH_OAUTH));
+    if (configCp.pages.configuration.tabs[0].entity[2].options?.auth_type) {
+        configCp.pages.configuration.tabs[0].entity[2].options.auth_type = ['basic'];
+        configCp.pages.configuration.tabs[0].entity[2].options.basic.push(
+            {
+                oauth_field: 'additional_text',
+                label: 'Additional Text Field',
+                field: 'additional_text',
+                type: 'text',
+                help: 'This is an additional text field for basic auth.',
+            },
+            {
+                label: 'Security Token certificate',
+                encrypted: true,
+                help: 'Enter the security certificate token.',
+                field: 'token_cert_2',
+            },
+            {
+                label: 'Text Area Token',
+                help: 'Enter Text Area Token',
+                field: 'text_area_test_basic_oauth',
+                type: 'textarea',
+                options: {
+                    rowsMin: 3,
+                    rowsMax: 5,
+                },
+                required: false,
+            },
+            {
+                label: 'Basic Oauth select',
+                help: 'additiona oauth select',
+                field: 'select_test_basic_oauth',
+                type: 'singleSelect',
+                options: {
+                    items: [
+                        {
+                            label: 'Option 1',
+                            value: 'option1',
+                        },
+                        {
+                            label: 'Option 2',
+                            value: 'option2',
+                        },
+                        {
+                            label: 'Option 3',
+                            value: 'option3',
+                        },
+                    ],
+                },
+            },
+            {
+                label: 'Basic Oauth radio',
+                help: 'Additiona oauth radio',
+                field: 'radio_test_basic_oauth',
+                type: 'radio',
+                options: {
+                    items: [
+                        {
+                            label: 'Left',
+                            value: 'left',
+                        },
+                        {
+                            label: 'Middle',
+                            value: 'middle',
+                        },
+                        {
+                            label: 'Right',
+                            value: 'right',
+                        },
+                    ],
+                },
+            }
+        );
+    }
+    return configCp;
+};
