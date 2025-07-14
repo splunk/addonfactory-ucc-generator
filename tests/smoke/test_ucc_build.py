@@ -813,7 +813,7 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
 
         assert dashbaord_files_counter == expected_file_count, (
             f"Expected {expected_file_count} Dashboard.[hash].js files in {js_build_folder}, for {config}"
-            f"but found {dashbaord_files_counter}."
+            f" but found {dashbaord_files_counter}."
         )
 
 
