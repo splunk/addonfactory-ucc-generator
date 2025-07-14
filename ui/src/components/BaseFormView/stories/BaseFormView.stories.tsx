@@ -2,7 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn, userEvent, within } from '@storybook/test';
 
-import BaseFormView, { BaseFormProps } from '../BaseFormView';
+import BaseFormView from '../BaseFormView';
 import {
     PAGE_CONFIG_BOTH_OAUTH,
     getConfigOauthBasic,
@@ -19,6 +19,7 @@ import {
     getGlobalConfigMockModificationToGroupsConfig,
 } from '../tests/configMocks';
 import { invariant } from '../../../util/invariant';
+import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
