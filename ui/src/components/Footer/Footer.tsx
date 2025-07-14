@@ -4,7 +4,7 @@ import { variables } from '@splunk/themes';
 
 import { getUnifiedConfigs } from '../../util/util';
 import { parseErrorMsg } from '../../util/messageUtil';
-import { runSearchJob } from '../../pages/Dashboard/utils';
+import { runSearchJob } from '../../util/searchUtil';
 
 const FooterWrapper = styled.footer`
     padding: ${variables.spacingXSmall} ${variables.fontSizeXXLarge};
