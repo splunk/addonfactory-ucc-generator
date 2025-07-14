@@ -14,8 +14,8 @@ import {
     loadDashboardJsonDefinition,
     queryMap,
 } from './utils';
-import { FieldValue, SearchResponse } from './DataIngestion.types';
 import { FEATURE_FLAGS } from './consts';
+import { FieldValue, SearchResponse } from '../../util/searchUtil';
 
 /**
  * @param {object} props
