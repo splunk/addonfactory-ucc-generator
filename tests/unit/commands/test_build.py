@@ -1,4 +1,5 @@
 import os
+from random import randint
 from unittest.mock import MagicMock, patch
 import pytest
 import platform
@@ -10,6 +11,7 @@ from splunk_add_on_ucc_framework.commands.build import (
     _get_and_check_global_config_path,
     _delete_pyc_files,
     generate,
+    _get_num_of_args,
 )
 from splunk_add_on_ucc_framework.exceptions import (
     CouldNotIdentifyPythonVersionException,
@@ -286,3 +288,26 @@ def test_source_directory_not_found(caplog):
         )
 
     assert expected_msg == caplog.messages[-1]
+
+
+def test_get_num_of_args_nonexisting_file():
+    file_name = f"non_existing_file_{randint(10, 100)}.py"
+    with pytest.raises(FileNotFoundError) as excinfo:
+        _get_num_of_args("func", file_name)
+
+    assert (
+        str(excinfo.value)
+        == f"Module path '{file_name}' does not point to a valid file."
+    )
+
+
+def test_get_num_of_args(tmp_path):
+    file_path = tmp_path / f"some_module_{randint(10, 100)}.py"
+
+    file_path.write_text(
+        "def some_function(a, b, c):\n    pass\ndef another_function():\n    pass\n"
+    )
+
+    assert _get_num_of_args("some_function", str(file_path)) == 3
+    assert _get_num_of_args("another_function", str(file_path)) == 0
+    assert _get_num_of_args("nonexistent_function", str(file_path)) is None
