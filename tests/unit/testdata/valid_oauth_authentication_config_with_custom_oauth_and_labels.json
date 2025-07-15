@@ -30,47 +30,10 @@
                             {
                                 "label": "Auth Type",
                                 "field": "auth_type"
-                            },
-                            {
-                                "label": "Test Custom Cell",
-                                "field": "test_custom_cell",
-                                "customCell": {
-                                    "src": "CustomInputCell",
-                                    "type": "external"
-                                }
-                            },
-                            {
-                                "label": "AMD Test Custom Cell",
-                                "field": "amd_test_custom_cell",
-                                "customCell": {
-                                    "src": "amdCustomInputCell"
-                                }
                             }
                         ]
                     },
-                    "hook": {
-                        "src": "amdCustomHook"
-                    },
                     "entity": [
-                        {
-                            "type": "custom",
-                            "label": "Example Custom Control",
-                            "field": "custom_control_field",
-                            "help": "This is an example multipleSelect for account entity",
-                            "options": {
-                                "src": "custom_control",
-                                "type": "external"
-                            }
-                        },
-                        {
-                            "type": "custom",
-                            "label": "Amd Example Custom Control",
-                            "field": "amd_custom_control_field",
-                            "help": " This is an example Amd multipleSelect for account entity",
-                            "options": {
-                                "src": "amdCustom_control"
-                            }
-                        },
                         {
                             "type": "text",
                             "label": "Name",
@@ -95,26 +58,14 @@
                             "type": "text",
                             "label": "Field no validators",
                             "field": "field_no_validators",
-                            "help": {
-                                "text": "Some field with description\nin separated line",
-                                "link": "https://splunk.github.io/addonfactory-ucc-generator/"
-                            },
+                            "help": "Some field",
                             "required": false
                         },
                         {
                             "type": "text",
                             "label": "Field no validators (suppressed)",
                             "field": "field_no_validators_suppressed",
-                            "help": {
-                                "text": "Description with link as individual word [[link]]",
-                                "links": [
-                                    {
-                                        "slug": "link",
-                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
-                                        "linkText": "here"
-                                    }
-                                ]
-                            },
+                            "help": "Some field",
                             "required": false,
                             "validators": []
                         },
@@ -197,16 +148,7 @@
                             "label": "Example Radio",
                             "field": "account_radio",
                             "defaultValue": "yes",
-                            "help": {
-                                "text": "This is an example radio button for the account entity. \nRead more about it [[radio_docs]]",
-                                "links": [
-                                    {
-                                        "slug": "radio_docs",
-                                        "link": "http://localhost:8001/addonfactory-ucc-generator/entity/components/#radio-bar",
-                                        "linkText": "here"
-                                    }
-                                ]
-                            },
+                            "help": "This is an example radio button for the account entity",
                             "required": true,
                             "options": {
                                 "items": [
@@ -655,37 +597,8 @@
                             "field": "config2_help_link",
                             "type": "helpLink",
                             "options": {
-                                "text": "SSL configuration \ndocumentation",
+                                "text": "SSL configuration documentation",
                                 "link": "https://docs.splunk.com/Documentation"
-                            }
-                        },
-                        {
-                            "field": "config3_help_text_with_links",
-                            "type": "helpLink",
-                            "options": {
-                                "text": "Check out our new documentation [[here]]. \nIt is super awesome",
-                                "links": [
-                                    {
-                                        "slug": "here",
-                                        "link": "https://splunk.github.io/addonfactory-ucc-generator/",
-                                        "linkText": "here"
-                                    }
-                                ]
-                            }
-                        }
-                    ],
-                    "groups": [
-                        {
-                            "label": "Hidden entities",
-                            "fields": [
-                                "text_field_hidden_for_cloud",
-                                "text_field_hidden_for_enterprise",
-                                "field_no_validators",
-                                "field_no_validators_suppressed"
-                            ],
-                            "options": {
-                                "isExpandable": true,
-                                "expand": false
                             }
                         }
                     ],
@@ -694,34 +607,111 @@
                     "restHandlerClass": "CustomAccountValidator"
                 },
                 {
-                    "name": "custom_tab",
-                    "title": "Custom_tab without entity",
-                    "customTab": {
-                        "src": "custom_tab",
-                        "type": "external"
-                    }
-                },
-                {
-                    "type": "proxyTab",
-                    "proxy_type": true,
-                    "username": {
-                        "type": "text",
-                        "label": "Username",
-                        "validators": [
-                            {
-                                "type": "string",
-                                "errorMsg": "Max length of username is 50",
-                                "minLength": 0,
-                                "maxLength": 50
-                            }
-                        ],
-                        "field": "proxy_username"
+                    "name": "proxy",
+                    "warning": {
+                        "config": {
+                            "message": "Some warning for account text config"
+                        }
                     },
-                    "password": true,
-                    "dns_resolution": true,
+                    "entity": [
+                        {
+                            "type": "checkbox",
+                            "label": "Enable",
+                            "field": "proxy_enabled"
+                        },
+                        {
+                            "type": "singleSelect",
+                            "label": "Proxy Type",
+                            "options": {
+                                "disableSearch": true,
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "http",
+                                        "label": "http"
+                                    },
+                                    {
+                                        "value": "socks4",
+                                        "label": "socks4"
+                                    },
+                                    {
+                                        "value": "socks5",
+                                        "label": "socks5"
+                                    }
+                                ]
+                            },
+                            "defaultValue": "http",
+                            "field": "proxy_type"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Host",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Max host length is 4096",
+                                    "minLength": 0,
+                                    "maxLength": 4096
+                                },
+                                {
+                                    "type": "regex",
+                                    "errorMsg": "Proxy Host should not have special characters",
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }
+                            ],
+                            "field": "proxy_url"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Port",
+                            "validators": [
+                                {
+                                    "type": "number",
+                                    "range": [
+                                        1,
+                                        65535
+                                    ],
+                                    "isInteger": true
+                                }
+                            ],
+                            "field": "proxy_port"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Username",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Max length of username is 50",
+                                    "minLength": 0,
+                                    "maxLength": 50
+                                }
+                            ],
+                            "field": "proxy_username"
+                        },
+                        {
+                            "type": "text",
+                            "label": "Password",
+                            "validators": [
+                                {
+                                    "type": "string",
+                                    "errorMsg": "Max length of password is 8192",
+                                    "minLength": 0,
+                                    "maxLength": 8192
+                                }
+                            ],
+                            "encrypted": true,
+                            "field": "proxy_password"
+                        },
+                        {
+                            "type": "checkbox",
+                            "label": "DNS resolution",
+                            "field": "proxy_rdns"
+                        }
+                    ],
                     "options": {
                         "saveValidator": "function(formData) { if(!formData.proxy_enabled || formData.proxy_enabled === '0') {return true; } if(!formData.proxy_url) { return 'Proxy Host can not be empty'; } if(!formData.proxy_port) { return 'Proxy Port can not be empty'; } return true; }"
-                    }
+                    },
+                    "title": "Proxy"
                 },
                 {
                     "type": "loggingTab"
@@ -880,76 +870,6 @@
                         }
                     ],
                     "title": "Custom table row"
-                },
-                {
-                    "name": "custom_amd_row_tab",
-                    "table": {
-                        "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
-                        ],
-                        "header": [
-                            {
-                                "label": "Name",
-                                "field": "name"
-                            },
-                            {
-                                "label": "Text Test",
-                                "field": "text_test"
-                            }
-                        ],
-                        "moreInfo": [
-                            {
-                                "field": "name",
-                                "label": "Name"
-                            },
-                            {
-                                "field": "text_test",
-                                "label": "Text Test"
-                            }
-                        ],
-                        "customRow": {
-                            "src": "amdCustom_input_row_replace"
-                        }
-                    },
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of ID should be between 1 and 50",
-                                    "minLength": 1,
-                                    "maxLength": 50
-                                },
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                }
-                            ],
-                            "field": "name",
-                            "help": "Enter a unique name for this account.",
-                            "required": true
-                        },
-                        {
-                            "field": "text_test",
-                            "label": "Text Test",
-                            "help": "This is a text test",
-                            "type": "text",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "required": true
-                        }
-                    ],
-                    "title": "AMD Custom table row"
                 },
                 {
                     "name": "tab_hidden_for_cloud",
@@ -1170,19 +1090,6 @@
                             }
                         },
                         {
-                            "field": "dependent_dropdown",
-                            "label": "Dependent",
-                            "type": "singleSelect",
-                            "required": false,
-                            "options": {
-                                "dependencies": [
-                                    "input_one_radio"
-                                ],
-                                "disableonEdit": true,
-                                "endpointUrl": "splunk_ta_uccexample/dependent_dropdown"
-                            }
-                        },
-                        {
                             "field": "singleSelectTest",
                             "label": "Single Select Group Test",
                             "type": "singleSelect",
@@ -1268,8 +1175,7 @@
                             "type": "singleSelect",
                             "label": "Example Account",
                             "options": {
-                                "referenceName": "account",
-                                "allowList": "^[a-zA-Z]\\w*$"
+                                "referenceName": "account"
                             },
                             "help": "",
                             "field": "account",
@@ -1445,10 +1351,8 @@
                         },
                         {
                             "type": "index",
-                            "field": "index",
                             "label": "Index",
-                            "help": "An index is a type of data repository. Select the index in which you want to collect the events.",
-                            "defaultValue": "default",
+                            "field": "index",
                             "required": true
                         },
                         {
@@ -1780,82 +1684,6 @@
                             "label": "Interval",
                             "help": "Time interval of the data input, in seconds.",
                             "required": true
-                        },
-                        {
-                            "type": "checkboxTree",
-                            "label": "Event Filters",
-                            "field": "event_filters",
-                            "required": true,
-                            "options": {
-                                "delimiter": "|",
-                                "groups": [
-                                    {
-                                        "label": "Transactions",
-                                        "options": {
-                                            "isExpandable": true,
-                                            "expand": true
-                                        },
-                                        "fields": [
-                                            "slow_request",
-                                            "transaction_stall"
-                                        ]
-                                    },
-                                    {
-                                        "label": "others",
-                                        "options": {
-                                            "isExpandable": true,
-                                            "expand": true
-                                        },
-                                        "fields": [
-                                            "custom_events",
-                                            "cluster_events",
-                                            "network_events"
-                                        ]
-                                    }
-                                ],
-                                "rows": [
-                                    {
-                                        "field": "code_problems",
-                                        "checkbox": {
-                                            "label": "Code Problems",
-                                            "defaultValue": true
-                                        }
-                                    },
-                                    {
-                                        "field": "slow_request",
-                                        "checkbox": {
-                                            "label": "Slow Request",
-                                            "defaultValue": true
-                                        }
-                                    },
-                                    {
-                                        "field": "transaction_stall",
-                                        "checkbox": {
-                                            "label": "Transactions Stall",
-                                            "defaultValue": false
-                                        }
-                                    },
-                                    {
-                                        "field": "custom_events",
-                                        "checkbox": {
-                                            "label": "Custom Events",
-                                            "defaultValue": true
-                                        }
-                                    },
-                                    {
-                                        "field": "cluster_events",
-                                        "checkbox": {
-                                            "label": "Cluster Events"
-                                        }
-                                    },
-                                    {
-                                        "field": "network_events",
-                                        "checkbox": {
-                                            "label": "Network Events"
-                                        }
-                                    }
-                                ]
-                            }
                         }
                     ],
                     "title": "Example Input Three"
@@ -1891,13 +1719,7 @@
                             "required": true
                         }
                     ],
-                    "title": "Example Input Four",
-                    "disableNewInput": true,
-                    "subTitle": "Creates disabled input",
-                    "hook": {
-                        "src": "input_hook",
-                        "type": "external"
-                    }
+                    "title": "Example Input Four"
                 },
                 {
                     "name": "service_hidden_for_cloud",
@@ -1966,116 +1788,6 @@
                     ],
                     "title": "Service hidden for enterprise",
                     "hideForPlatform": "enterprise"
-                },
-                {
-                    "name": "service_with_conf_param",
-                    "conf": "some_conf",
-                    "entity": [
-                        {
-                            "type": "interval",
-                            "field": "interval",
-                            "label": "Interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Service with conf param"
-                },
-                {
-                    "name": "service_inside_menu_one",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "field": "name",
-                            "required": true
-                        },
-                        {
-                            "type": "interval",
-                            "field": "interval",
-                            "label": "Interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        },
-                        {
-                            "type": "text",
-                            "field": "text_with_validators",
-                            "label": "Text with validators",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "minLength": 2,
-                                    "maxLength": 8192,
-                                    "errorMsg": "Length of Query parameters should be between 2 and 8192"
-                                },
-                                {
-                                    "type": "regex",
-                                    "pattern": "^\\$",
-                                    "errorMsg": "Query parameters should start with '$'"
-                                }
-                            ]
-                        }
-                    ],
-                    "title": "Service 1 Inside Menu"
-                },
-                {
-                    "name": "service_inside_menu_two",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "field": "name",
-                            "required": true
-                        },
-                        {
-                            "type": "interval",
-                            "field": "interval",
-                            "label": "Interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Service 2 Inside Menu "
-                },
-                {
-                    "name": "service_inside_menu_three",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "field": "name",
-                            "required": true
-                        },
-                        {
-                            "type": "interval",
-                            "field": "interval",
-                            "label": "Interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Service 3 Inside Menu - style Dialog",
-                    "style": "dialog"
-                },
-                {
-                    "name": "service_inside_menu_four",
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "field": "name",
-                            "required": true
-                        },
-                        {
-                            "type": "interval",
-                            "field": "interval",
-                            "label": "Interval",
-                            "help": "Time interval of the data input, in seconds.",
-                            "required": true
-                        }
-                    ],
-                    "title": "Service 4 Inside Menu - style page",
-                    "style": "page"
                 }
             ],
             "title": "Inputs",
@@ -2109,14 +1821,6 @@
                     {
                         "label": "Interval",
                         "field": "interval"
-                    },
-                    {
-                        "label": "Input Type",
-                        "field": "serviceTitle"
-                    },
-                    {
-                        "label": "Input Service",
-                        "field": "serviceName"
                     },
                     {
                         "label": "Index",
@@ -2179,63 +1883,12 @@
                 ]
             },
             "hideFieldId": "hide_in_ui",
-            "readonlyFieldId": "hard_disabled",
-            "inputsUniqueAcrossSingleService": false,
-            "groupsMenu": [
-                {
-                    "groupName": "example_input_one",
-                    "groupTitle": "Example Input One"
-                },
-                {
-                    "groupName": "example_input_two",
-                    "groupTitle": "Example Input Two"
-                },
-                {
-                    "groupName": "example_input_three",
-                    "groupTitle": "Example Input Three"
-                },
-                {
-                    "groupName": "example_input_four",
-                    "groupTitle": "Example Input Four"
-                },
-                {
-                    "groupName": "service_hidden_for_cloud",
-                    "groupTitle": "Service hidden for cloud"
-                },
-                {
-                    "groupName": "service_hidden_for_enterprise",
-                    "groupTitle": "Service hidden for enterprise"
-                },
-                {
-                    "groupName": "service_with_conf_param",
-                    "groupTitle": "Service with conf param"
-                },
-                {
-                    "groupName": "group_one",
-                    "groupTitle": "Group One",
-                    "groupServices": [
-                        "service_inside_menu_one",
-                        "service_inside_menu_two"
-                    ]
-                },
-                {
-                    "groupName": "group_two",
-                    "groupTitle": "Group Two",
-                    "groupServices": [
-                        "service_inside_menu_two",
-                        "service_inside_menu_four",
-                        "service_inside_menu_three"
-                    ]
-                }
-            ]
+            "readonlyFieldId": "hard_disabled"
         },
         "dashboard": {
             "panels": [
                 {
                     "name": "default"
-                },
-                {
-                    "name": "custom"
                 }
             ]
         }
@@ -2366,105 +2019,14 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.67.0+f5921d36e",
+        "version": "5.52.0+443c82a36",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
+        "_uccVersion": "5.52.0",
         "supportedThemes": [
             "light",
             "dark"
         ],
-        "isVisible": true,
-        "os-dependentLibraries": [
-            {
-                "name": "cryptography",
-                "version": "41.0.5",
-                "platform": "win_amd64",
-                "python_version": "37",
-                "os": "windows",
-                "target": "3rdparty/windows"
-            },
-            {
-                "name": "cryptography",
-                "version": "41.0.5",
-                "platform": "macosx_10_12_universal2",
-                "python_version": "37",
-                "os": "darwin",
-                "target": "3rdparty/darwin"
-            },
-            {
-                "name": "cryptography",
-                "version": "41.0.5",
-                "dependencies": true,
-                "platform": "manylinux2014_x86_64",
-                "python_version": "37",
-                "os": "linux",
-                "target": "3rdparty/linux"
-            }
-        ]
-    },
-    "customSearchCommand": [
-        {
-            "commandName": "generatetextcommand",
-            "fileName": "generatetext.py",
-            "commandType": "generating",
-            "requiredSearchAssistant": true,
-            "description": " This command generates COUNT occurrences of a TEXT string.",
-            "syntax": "generatetextcommand count=<event_count> text=<string>",
-            "usage": "public",
-            "arguments": [
-                {
-                    "name": "count",
-                    "required": true,
-                    "validate": {
-                        "type": "Integer",
-                        "minimum": 5,
-                        "maximum": 10
-                    }
-                },
-                {
-                    "name": "text",
-                    "required": true
-                }
-            ]
-        },
-        {
-            "commandName": "filtercommand",
-            "fileName": "filter.py",
-            "commandType": "dataset processing",
-            "requiredSearchAssistant": true,
-            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
-            "syntax": "| filtercommand contains='value1' replace='value to be replaced,value to replace with'",
-            "usage": "public",
-            "arguments": [
-                {
-                    "name": "contains"
-                },
-                {
-                    "name": "replace_array"
-                }
-            ]
-        },
-        {
-            "commandName": "countmatchescommand",
-            "fileName": "countmatches.py",
-            "commandType": "streaming",
-            "requiredSearchAssistant": false,
-            "arguments": [
-                {
-                    "name": "fieldname",
-                    "validate": {
-                        "type": "Fieldname"
-                    },
-                    "required": true
-                },
-                {
-                    "name": "pattern",
-                    "validate": {
-                        "type": "RegularExpression"
-                    },
-                    "required": true
-                }
-            ]
-        }
-    ]
+        "isVisible": true
+    }
 }

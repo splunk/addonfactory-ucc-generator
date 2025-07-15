@@ -261,21 +261,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     if (authType.length > 1) {
                         this.isAuthVal = true;
                         // Defining state for auth_type in case of multiple Authentication
+                        const currentInputOauth =
+                            authType.find((oauth) => oauth === this.currentInput?.auth_type) ||
+                            authType[0];
+
                         const tempEntity = {
                             disabled: false,
                             error: false,
                             display: true,
-                            value:
-                                this.currentInput?.auth_type === 'oauth' ||
-                                this.currentInput?.auth_type === 'basic' ||
-                                this.currentInput?.auth_type === 'oauth_client_credentials'
-                                    ? this.currentInput?.auth_type
-                                    : authType[0],
+                            value: currentInputOauth,
                         };
 
                         temState.auth_type = tempEntity;
 
-                        const content = {
+                        const defaultOauthLabels: Record<string, string> = {
                             basic: 'Basic Authentication',
                             oauth: 'OAuth 2.0 - Authorization Code Grant Type',
                             oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
@@ -288,10 +287,17 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             label: 'Auth Type',
                             options: {
                                 hideClearBtn: true,
-                                autoCompleteFields: authType.map((type) => ({
-                                    label: content[type],
-                                    value: type,
-                                })),
+                                autoCompleteFields: authType.map((oauthConf) =>
+                                    typeof oauthConf === 'object'
+                                        ? oauthConf
+                                        : {
+                                              label:
+                                                  e?.options?.oauth_type_labels?.[oauthConf] ||
+                                                  defaultOauthLabels[oauthConf] ||
+                                                  oauthConf,
+                                              value: oauthConf,
+                                          }
+                                ),
                             },
                         };
 
@@ -304,7 +310,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     // Iterating over everytype of Authentication under "oauth" type
                     authType?.forEach((type) => {
                         const authfields: string[] = [];
-                        const fields = e?.options[type];
+                        const oauthType = type;
+                        const fields = e?.options[oauthType] as OAuthEntity[];
                         if (fields) {
                             // For Particaular type iterating over fields
                             fields.forEach((field: OAuthEntity) => {
@@ -344,7 +351,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 temEntities.push(field);
                                 authfields?.push(field.field);
                             });
-                            this.authMap[type] = authfields;
+                            this.authMap[oauthType] = authfields;
                         }
                     });
                     if (authType.includes('oauth')) {
