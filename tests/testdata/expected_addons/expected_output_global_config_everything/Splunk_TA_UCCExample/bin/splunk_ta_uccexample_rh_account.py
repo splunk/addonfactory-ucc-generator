@@ -279,6 +279,20 @@ fields = [
         validator=None
     ),
     field.RestField(
+        'username_cert',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'token_cert',
+        required=False,
+        encrypted=True,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'access_token',
         required=False,
         encrypted=True,
