@@ -512,35 +512,15 @@ def test_ucc_generate_with_configuration_files_only():
         )
         # the globalConfig would now always exist
         assert path.exists(global_config_path)
-        # clean-up for tests
-        os.remove(global_config_path)
 
-
-def test_ucc_generate_openapi_with_configuration_files_only():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_no_global_config",
-            "package",
-        )
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        actual_file_path = path.join(
+        openapi_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        # the openapi.json would now exist as globalConfig.json would always exist
-        assert path.exists(actual_file_path)
+        # the openapi.json should not be generated for .conf-only add-ons
+        assert not path.exists(openapi_file_path)
+
         # clean-up for tests
-        os.remove(
-            path.join(
-                package_folder,
-                path.pardir,
-                "globalConfig.json",
-            )
-        )
+        os.remove(global_config_path)
 
 
 def test_ucc_build_verbose_mode(caplog):
@@ -802,7 +782,7 @@ def test_ucc_generate_with_ui_source_map():
         ),
         (
             "package_global_config_everything",
-            2,
+            18,
         ),
     ],
 )
@@ -828,12 +808,12 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
 
         dashbaord_files_counter = 0
 
-        for _ in js_build_dir.glob("DashboardPage.*"):
+        for _ in js_build_dir.glob("Dashboard.*"):
             dashbaord_files_counter += 1
 
         assert dashbaord_files_counter == expected_file_count, (
-            f"Expected {expected_file_count} DashboardPage.[hash].js files in {js_build_folder}, for {config}"
-            f"but found {dashbaord_files_counter}."
+            f"Expected {expected_file_count} Dashboard.[hash].js files in {js_build_folder}, for {config}"
+            f" but found {dashbaord_files_counter}."
         )
 
 

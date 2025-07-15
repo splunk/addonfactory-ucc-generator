@@ -1,10 +1,8 @@
 import { RefreshButton, ExportButton, OpenSearchButton } from '@splunk/dashboard-action-buttons';
 import React from 'react';
-import SearchJob from '@splunk/search-job';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { getBuildDirPath } from '../../util/script';
-import { SearchResponse } from './DataIngestion.types';
-import { getSearchUrl } from '../../util/searchUtil';
+import { getSearchUrl, runSearchJob, SearchResponse } from '../../util/searchUtil';
 
 /**
  *
@@ -293,6 +291,7 @@ function getLicenseUsageSearchParams(globalConfig: GlobalConfig) {
         return null;
     }
 }
+
 export async function fetchDropdownValuesFromQuery(
     globalConfig: GlobalConfig
 ): Promise<SearchResponse[]> {
@@ -319,29 +318,6 @@ export async function fetchDropdownValuesFromQuery(
     if (!eventQuery) {
         eventQuery = `index=_internal source=*license_usage.log type=Usage earliest=${timeForDataIngestionTableStart} latest=${timeForDataIngestionTableEnd} | fieldsummary | fields field values | where field IN ("s", "st", "idx", "h")`;
     }
-
-    // Function to run a search job for a given query
-    const runSearchJob = (searchQuery: string): Promise<SearchResponse> =>
-        new Promise((resolve, reject) => {
-            const searchJob = SearchJob.create({ search: searchQuery });
-
-            const resultsSubscription = searchJob.getResults({ count: 0 }).subscribe({
-                next: (response: SearchResponse) => {
-                    try {
-                        resolve(response);
-                    } catch (error) {
-                        reject(error);
-                    }
-                },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                error: (error: unknown) => {
-                    reject(error);
-                },
-                complete: () => {
-                    resultsSubscription.unsubscribe();
-                },
-            });
-        });
 
     // Execute all queries concurrently
     const queryPromises = [

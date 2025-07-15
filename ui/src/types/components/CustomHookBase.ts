@@ -1,7 +1,7 @@
 import { GlobalConfig } from '../globalConfig/globalConfig';
 import { Mode } from '../../constants/modes';
 import { AcceptableFormValueOrNullish, NullishFormRecord } from './shareableTypes';
-import { BaseFormState, UtilBaseForm } from './BaseFormTypes';
+import { BaseFormState, UtilBaseForm } from './BaseFormSharableTypes';
 
 export type CustomHookInstance<T extends typeof CustomHookBase = typeof CustomHookBase> =
     InstanceType<T>;

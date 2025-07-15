@@ -111,7 +111,9 @@ export const MarkdownMessageType = z.union([
 
 export const FieldToModify = z
     .object({
-        fieldValue: z.union([z.number(), z.string(), z.boolean()]),
+        fieldValue: z
+            .union([z.number(), z.string(), z.boolean(), z.object({ pattern: z.string() })])
+            .optional(),
         mode: z.enum(['create', 'edit', 'config', 'clone']).optional(),
         fieldsToModify: z.array(
             z.object({

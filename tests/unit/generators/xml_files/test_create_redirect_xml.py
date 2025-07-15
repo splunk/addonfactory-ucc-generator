@@ -1,49 +1,49 @@
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import RedirectXml
+import xmldiff.main
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_views_redirect_xml",
-    return_value="<xml></xml>",
-)
-def test_set_attributes_with_oauth(
-    mock_generate_redirect_xml,
-    global_config_all_json,
-    input_dir,
-    output_dir,
-    ucc_dir,
-    ta_name,
-):
+def test_generate_views_redirect_xml(global_config_all_json, input_dir, output_dir):
     redirect_xml = RedirectXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+    )
+    result = redirect_xml.generate_views_redirect_xml("Splunk_TA_UCCExample")
+
+    expected_result = """<?xml version="1.0" ?>
+    <view isDashboard="False" template="Splunk_TA_UCCExample:templates/splunk_ta_uccexample_redirect.html" type="html">
+        <label>Redirect</label>
+    </view>
+    """
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    assert " ".join([str(item) for item in diff]) == ""
+
+
+def test_set_attributes_with_oauth(
+    global_config_all_json, input_dir, output_dir, ta_name
+):
+    global_config_all_json.meta["name"] = ta_name
+    redirect_xml = RedirectXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
     )
 
     assert hasattr(redirect_xml, "redirect_xml_content")
     assert redirect_xml.ta_name == "test_addon"
 
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_views_redirect_xml",
-    return_value="<xml></xml>",
-)
 def test_set_attributes_without_oauth(
-    mock_generate_redirect_xml,
     global_config_only_logging,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     redirect_xml = RedirectXml(
         global_config_only_logging,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     assert not hasattr(redirect_xml, "redirect_xml_content")
@@ -53,14 +53,15 @@ def test_set_attributes_without_oauth(
     "splunk_add_on_ucc_framework.generators.xml_files.RedirectXml.get_file_output_path"
 )
 def test_generate_xml_with_oauth(
-    mock_op_path, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_op_path,
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     redirect_xml = RedirectXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     redirect_xml.redirect_xml_content = "<xml></xml>"
     exp_fname = f"{redirect_xml.ta_name}_redirect.xml"
@@ -89,15 +90,11 @@ def test_generate_xml_without_oauth(
     global_config_only_logging,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     redirect_xml = RedirectXml(
         global_config_only_logging,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     mock_writer = MagicMock()

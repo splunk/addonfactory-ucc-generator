@@ -1,20 +1,39 @@
 from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.xml_files import ConfigurationXml
 
+import xmldiff.main
 
-@patch(
-    "splunk_add_on_ucc_framework.data_ui_generator.generate_views_configuration_xml",
-    return_value="<xml></xml>",
-)
-def test_set_attributes(
-    mock_generate_xml, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+
+def test_generate_views_configuration_xml(
+    global_config_all_json, input_dir, output_dir
 ):
     config_xml = ConfigurationXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
+    )
+
+    result = config_xml.generate_views_configuration_xml("Splunk_TA_UCCExample")
+
+    expected_result = """<?xml version="1.0" ?>
+    <view isDashboard="False" template="Splunk_TA_UCCExample:/templates/base.html" type="html">
+        <label>Configuration</label>
+    </view>
+    """
+    diff = xmldiff.main.diff_texts(result, expected_result)
+
+    assert " ".join([str(item) for item in diff]) == ""
+
+
+def test_set_attributes(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+):
+    config_xml = ConfigurationXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
     )
     assert hasattr(config_xml, "configuration_xml_content")
 
@@ -23,15 +42,11 @@ def test_set_attributes_without_configuration(
     global_config_no_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     config_xml = ConfigurationXml(
         global_config_no_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     assert not hasattr(config_xml, "configuration_xml_content")
 
@@ -45,15 +60,11 @@ def test_generate_xml_without_configuration(
     global_config_no_configuration,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     configuration_xml = ConfigurationXml(
         global_config_no_configuration,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     mock_writer = MagicMock()
@@ -77,15 +88,11 @@ def test_generate_xml(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     config_xml = ConfigurationXml(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     config_xml.configuration_xml_content = "<xml></xml>"
     exp_fname = "configuration.xml"
