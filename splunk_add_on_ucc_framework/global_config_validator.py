@@ -775,10 +775,17 @@ class GlobalConfigValidator:
         for entity in all_entities:
             if entity["type"] == "oauth":
                 # each auth_type defined in list should have entities defined
-                for oauthType in entity["options"]["auth_type"]:
-                    if oauthType not in entity["options"]:
+                for auth_type in entity["options"]["auth_type"]:
+                    if auth_type not in entity["options"]:
                         raise GlobalConfigValidatorException(
-                            f"Authorization type '{oauthType}' does not have any entities defined."
+                            f"Authorization type '{auth_type}' does not have any entities defined."
+                        )
+
+                for auth_type_in_label in entity["options"]["oauth_type_labels"].keys():
+                    if auth_type_in_label not in entity["options"]:
+                        raise GlobalConfigValidatorException(
+                            f"Authorization type '{auth_type_in_label}', included in "
+                            "oauth_type_labels, does not have any entities defined."
                         )
 
     def _validate_oauth_entities_definition(self) -> None:
@@ -793,37 +800,6 @@ class GlobalConfigValidator:
             tabs = pages["configuration"]["tabs"]
 
             self._validate_if_entities_has_oauth_configured_correctly(tabs)
-
-    def _validate_oauth_labels_definition(self) -> None:
-        """
-        Validates that when OAuth labels defined and oauth types
-        are defined in oauth.options.auth_type, then each auth_type
-        should have entities defined in oauth.options[auth_type].
-        """
-        pages = self._config["pages"]
-
-        if "configuration" in pages:
-            # tabs are required in configuration
-            tabs = pages["configuration"]["tabs"]
-
-            grouped_entities: List[Any] = [
-                el.get("entity") for el in tabs if el.get("entity")
-            ]
-            all_entities = list(itertools.chain.from_iterable(grouped_entities))
-
-            for entity in all_entities:
-                if (
-                    entity["type"] == "oauth"
-                    and "options" in entity
-                    and "oauth_type_labels" in entity["options"]
-                ):
-                    auth_labels: Dict[str, str] = entity["options"]["oauth_type_labels"]
-                    for auth_type in auth_labels.keys():
-                        if auth_type not in entity["options"]:
-                            raise GlobalConfigValidatorException(
-                                f"Authorization type '{auth_type}', included in "
-                                "oauth_type_labels, does not have any entities defined."
-                            )
 
     def validate(self) -> None:
         self._validate_config_against_schema()
@@ -840,7 +816,6 @@ class GlobalConfigValidator:
             self._validate_oauth_entities_definition()
             self._validate_field_modifications()
             self._validate_custom_search_commands()
-            self._validate_oauth_labels_definition()
         self._validate_alerts()
         self._validate_meta_default_view()
 
