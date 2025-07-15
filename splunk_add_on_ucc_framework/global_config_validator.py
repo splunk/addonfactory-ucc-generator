@@ -781,12 +781,15 @@ class GlobalConfigValidator:
                             f"Authorization type '{auth_type}' does not have any entities defined."
                         )
 
-                for auth_type_in_label in entity["options"]["oauth_type_labels"].keys():
-                    if auth_type_in_label not in entity["options"]:
-                        raise GlobalConfigValidatorException(
-                            f"Authorization type '{auth_type_in_label}', included in "
-                            "oauth_type_labels, does not have any entities defined."
-                        )
+                if "oauth_type_labels" in entity["options"]:
+                    for auth_type_in_label in entity["options"][
+                        "oauth_type_labels"
+                    ].keys():
+                        if auth_type_in_label not in entity["options"]:
+                            raise GlobalConfigValidatorException(
+                                f"Authorization type '{auth_type_in_label}', included in "
+                                "oauth_type_labels, does not have any entities defined."
+                            )
 
     def _validate_oauth_entities_definition(self) -> None:
         """
