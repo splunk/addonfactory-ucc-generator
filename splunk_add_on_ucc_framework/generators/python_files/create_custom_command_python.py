@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -87,9 +87,9 @@ class CustomCommandPy(FileGenerator):
                 }
             )
 
-    def generate(self) -> List[Dict[str, str]]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.commands_info:
-            return [{}]
+            return None
 
         generated_files = []
         for command_info in self.commands_info:

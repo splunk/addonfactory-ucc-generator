@@ -42,7 +42,7 @@ def test_generate_conf_without_custom_command(
     output = commands_conf.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert output == [{}]
+    assert output is None
 
 
 def test_commands_conf_generation(global_config_all_json, input_dir, output_dir):

@@ -133,4 +133,4 @@ def test_generate_conf_spec_no_configuration(
     account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
     file_paths = account_spec.generate()
-    assert file_paths == [{}]
+    assert file_paths is None

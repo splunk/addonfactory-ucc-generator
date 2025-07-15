@@ -13,7 +13,7 @@ def test_alert_html_generate_html_no_global_config(
         output_dir,
     )
     output = alert_html.generate()
-    assert output == [{}]
+    assert output is None
 
 
 def test_alert_html_generate_html_no_alerts(
@@ -23,7 +23,7 @@ def test_alert_html_generate_html_no_alerts(
 ):
     alert_html = AlertActionsHtml(global_config_for_conf_only_TA, input_dir, output_dir)
     output = alert_html.generate()
-    assert output == [{}]
+    assert output is None
     assert not hasattr(alert_html, "_alert_settings")
 
 

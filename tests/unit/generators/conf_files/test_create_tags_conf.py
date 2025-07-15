@@ -59,4 +59,4 @@ def test_generate_conf_no_alert_settings(
     )
 
     output = tags_conf.generate()
-    assert output == [{}]
+    assert output is None

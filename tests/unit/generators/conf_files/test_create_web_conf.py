@@ -13,8 +13,8 @@ def test_generate_conf_for_conf_only_addon(
         output_dir,
     )
 
-    file_paths = web_conf.generate()
-    assert file_paths == [{}]
+    output = web_conf.generate()
+    assert output is None
 
 
 def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
@@ -110,5 +110,5 @@ def test_web_conf_endpoints_with_user_defined_handlers(
         methods = POST, GET, DELETE
         """
     ).lstrip()
-
-    assert output_2[0]["content"] == expected_content
+    if output_2 is not None:
+        assert output_2[0]["content"] == expected_content

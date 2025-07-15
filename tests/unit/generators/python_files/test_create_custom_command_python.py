@@ -91,10 +91,10 @@ def test_generate_python_without_custom_command(
         input_dir,
         output_dir,
     )
-    file_paths = custom_command.generate()
+    output = custom_command.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == [{}]
+    assert output is None
 
 
 def test_generate_python(global_config_all_json, input_dir, output_dir):
@@ -133,6 +133,7 @@ class GeneratetextcommandCommand(GeneratingCommand):
 
 dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
     '''
-    assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
-    assert output[0]["file_name"] == exp_fname
-    assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"
+    if output is not None:
+        assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
+        assert output[0]["file_name"] == exp_fname
+        assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"

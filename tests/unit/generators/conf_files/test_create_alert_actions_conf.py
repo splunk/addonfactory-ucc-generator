@@ -112,7 +112,7 @@ def test_generate_conf_no_alerts(
         global_config_only_configuration, input_dir, output_dir
     )
     result = alert_action_conf.generate_conf()
-    assert result == {}
+    assert result is None
 
 
 @patch.object(shutil, "copy")
@@ -155,6 +155,5 @@ def test_generate_conf_no_alerts_spec(
     alert_action_conf = AlertActionsConf(
         global_config_only_configuration, input_dir, output_dir
     )
-    alert_action_conf.alerts_spec = {}
     result = alert_action_conf.generate_conf_spec()
-    assert result == {}
+    assert result is None

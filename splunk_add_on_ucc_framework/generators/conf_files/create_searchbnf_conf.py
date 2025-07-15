@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -35,9 +35,9 @@ class SearchbnfConf(FileGenerator):
                     }
                     self.searchbnf_info.append(searchbnf_dict)
 
-    def generate(self) -> List[Dict[str, str]]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.searchbnf_info:
-            return [{}]
+            return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Union, List
+from typing import Dict, Union, List, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -43,9 +43,9 @@ class RestMapConf(FileGenerator):
 
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
 
-    def generate(self) -> List[Dict[str, str]]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.endpoints:
-            return [{}]
+            return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(

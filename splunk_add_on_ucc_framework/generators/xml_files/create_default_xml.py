@@ -102,9 +102,9 @@ class DefaultXml(FileGenerator):
                     default_view=self._global_config.meta.get("defaultView"),
                 )
 
-    def generate(self) -> List[Dict[str, str]]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_pages():
-            return [{}]
+            return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "nav", "default.xml"]
         )

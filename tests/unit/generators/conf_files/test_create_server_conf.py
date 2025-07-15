@@ -74,7 +74,7 @@ def test_generate_conf_existing_conf(
     )
 
     output = server_conf.generate()
-    assert output == [{}]
+    assert output is None
 
 
 def test_generate_conf_no_custom_conf(
@@ -89,5 +89,5 @@ def test_generate_conf_no_custom_conf(
     )
     server_conf.custom_conf = []
 
-    file_paths = server_conf.generate()
-    assert file_paths == [{}]
+    output = server_conf.generate()
+    assert output is None

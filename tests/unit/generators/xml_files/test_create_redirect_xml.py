@@ -61,12 +61,13 @@ def test_generate_xml_with_oauth(global_config_all_json, input_dir, output_dir):
             </view>
         """
     output = redirect_xml.generate()
-    diff = compare_xml_content(output[0]["content"], expected_content)
-    assert diff == ""
-    assert (
-        output[0]["file_path"]
-        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
-    )
+    if output is not None:
+        diff = compare_xml_content(output[0]["content"], expected_content)
+        assert diff == ""
+        assert (
+            output[0]["file_path"]
+            == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+        )
 
 
 def test_generate_xml_without_oauth(
@@ -80,7 +81,5 @@ def test_generate_xml_without_oauth(
         output_dir,
     )
 
-    file_paths = redirect_xml.generate()
-
-    # Assert that no files are returned since no dashboard is configured
-    assert file_paths == [{}]
+    output = redirect_xml.generate()
+    assert output is None

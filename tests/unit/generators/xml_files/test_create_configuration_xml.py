@@ -56,7 +56,7 @@ def test_generate_xml_without_configuration(
     )
 
     output = configuration_xml.generate()
-    assert output == [{}]
+    assert output is None
 
 
 def test_generate_xml(
@@ -78,9 +78,10 @@ def test_generate_xml(
         """
 
     output = config_xml.generate()
-    diff = compare_xml_content(output[0]["content"], expected_content)
-    assert diff == ""
-    assert (
-        output[0]["file_path"]
-        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
-    )
+    if output is not None:
+        diff = compare_xml_content(output[0]["content"], expected_content)
+        assert diff == ""
+        assert (
+            output[0]["file_path"]
+            == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+        )

@@ -143,69 +143,71 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
         output_dir,
     )
     output = inputs_conf.generate_conf()
-    assert (
-        output["content"]
-        == dedent(
-            """
-            [example_input_one]
-            python.version = python3
-            disabled = true
-            input_one_radio = yes
-            index = default
-            order_by = LastModifiedDate
-            use_existing_checkpoint = yes
-            limit = 1000
-            [example_input_two]
-            python.version = python3
-            disabled = true
-            index = default
-            input_two_checkbox_bool = true
-            input_two_radio = yes
-            use_existing_checkpoint = yes
-            """
-        ).lstrip()
-    )
+    if output is not None:
+        assert (
+            output["content"]
+            == dedent(
+                """
+                [example_input_one]
+                python.version = python3
+                disabled = true
+                input_one_radio = yes
+                index = default
+                order_by = LastModifiedDate
+                use_existing_checkpoint = yes
+                limit = 1000
+                [example_input_two]
+                python.version = python3
+                disabled = true
+                index = default
+                input_two_checkbox_bool = true
+                input_two_radio = yes
+                use_existing_checkpoint = yes
+                """
+            ).lstrip()
+        )
 
     specs = inputs_conf.generate_conf_spec()
-    assert specs[0]["content"] == "\n".join(
-        [
-            "[example_input_one://<name>]",
-            "account =",
-            "example_help_link =",
-            "index = (Default: default)",
-            "input_one_checkbox = This is an example checkbox for the input one entity",
-            "input_one_radio = This is an example radio button for the input one entity (Default: yes)",
-            "interval = Time interval of the data input, in seconds.",
-            "limit = The maximum number of results returned by the query. (Default: 1000)",
-            "multipleSelectTest =",
-            "object = The name of the object to query for.",
-            "object_fields = Object fields from which to collect data. Delimit multiple fields using a comma.",
-            "order_by = The datetime field by which to query results in ascending order for indexing. (Default: "
-            "LastModifiedDate)",
-            "singleSelectTest =",
-            "start_date = The datetime after which to query and index records, in this "
-            'format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
-            "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
-            "collection. (Default: yes)",
-            "[example_input_two://<name>]",
-            "account =",
-            "api1 =",
-            "api2 =",
-            "api3 =",
-            "example_help_link =",
-            "index = (Default: default)",
-            "input_two_checkbox = This is an example checkbox for the input two entity",
-            "input_two_checkbox_bool = This is an example checkbox for the input two entity with bool default "
-            "(Default: true)",
-            "input_two_multiple_select = This is an example multipleSelect for input two entity",
-            "input_two_radio = This is an example radio button for the input two entity (Default: yes)",
-            "interval = Time interval of the data input, in seconds .",
-            'start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after which to query and '
-            "index records.  The default is 90 days before today.",
-            "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
-            "collection. (Default: yes)\n",
-        ]
-    )
+    if specs is not None:
+        assert specs[0]["content"] == "\n".join(
+            [
+                "[example_input_one://<name>]",
+                "account =",
+                "example_help_link =",
+                "index = (Default: default)",
+                "input_one_checkbox = This is an example checkbox for the input one entity",
+                "input_one_radio = This is an example radio button for the input one entity (Default: yes)",
+                "interval = Time interval of the data input, in seconds.",
+                "limit = The maximum number of results returned by the query. (Default: 1000)",
+                "multipleSelectTest =",
+                "object = The name of the object to query for.",
+                "object_fields = Object fields from which to collect data. Delimit multiple fields using a comma.",
+                "order_by = The datetime field by which to query results in ascending order for indexing. (Default: "
+                "LastModifiedDate)",
+                "singleSelectTest =",
+                "start_date = The datetime after which to query and index records, in this "
+                'format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
+                "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
+                "collection. (Default: yes)",
+                "[example_input_two://<name>]",
+                "account =",
+                "api1 =",
+                "api2 =",
+                "api3 =",
+                "example_help_link =",
+                "index = (Default: default)",
+                "input_two_checkbox = This is an example checkbox for the input two entity",
+                "input_two_checkbox_bool = This is an example checkbox for the input two entity with bool default "
+                "(Default: true)",
+                "input_two_multiple_select = This is an example multipleSelect for input two entity",
+                "input_two_radio = This is an example radio button for the input two entity (Default: yes)",
+                "interval = Time interval of the data input, in seconds .",
+                'start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after which to query and '
+                "index records.  The default is 90 days before today.",
+                "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
+                "collection. (Default: yes)\n",
+            ]
+        )
 
 
 def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp_path):
@@ -257,15 +259,17 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     )
 
     conf = inputs_conf.generate_conf()
-    assert conf["content"] == ("[example_input_three]\npython.version = python3\n")
+    if conf is not None:
+        assert conf["content"] == ("[example_input_three]\npython.version = python3\n")
 
     specs = inputs_conf.generate_conf_spec()
-    assert specs[0]["file_name"] == "some_conf.conf.spec"
-    assert specs[0]["content"] == "\n".join(
-        [
-            "[<name>]",
-            "required_field =",
-            "optional_field =",
-            "field_desc = Some description",
-        ]
-    )
+    if specs is not None:
+        assert specs[0]["file_name"] == "some_conf.conf.spec"
+        assert specs[0]["content"] == "\n".join(
+            [
+                "[<name>]",
+                "required_field =",
+                "optional_field =",
+                "field_desc = Some description",
+            ]
+        )

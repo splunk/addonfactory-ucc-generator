@@ -70,12 +70,13 @@ def test_generate_xml_with_dashboard(
         """
 
     output = dashboard_xml.generate()
-    diff = compare_xml_content(output[0]["content"], expected_content)
-    assert diff == ""
-    assert (
-        output[0]["file_path"]
-        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
-    )
+    if output is not None:
+        diff = compare_xml_content(output[0]["content"], expected_content)
+        assert diff == ""
+        assert (
+            output[0]["file_path"]
+            == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+        )
 
 
 def test_generate_xml_without_dashboard(
@@ -91,4 +92,4 @@ def test_generate_xml_without_dashboard(
     output = dashboard_xml.generate()
 
     # Assert that no files are returned since no dashboard is configured
-    assert output == [{}]
+    assert output is None

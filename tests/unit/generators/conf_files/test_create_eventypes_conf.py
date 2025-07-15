@@ -1,4 +1,3 @@
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import EventtypesConf
 from textwrap import dedent
 
@@ -50,21 +49,15 @@ def test_generate_conf(
     ]
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.EventtypesConf._set_attributes",
-    return_value=MagicMock(),
-)
 def test_generate_conf_no_alert_settings(
-    global_config_all_json,
+    global_config_only_configuration,
     input_dir,
     output_dir,
 ):
     eventtypes_conf = EventtypesConf(
-        global_config_all_json,
+        global_config_only_configuration,
         input_dir,
         output_dir,
     )
-
-    eventtypes_conf.alert_settings = {}
     file_paths = eventtypes_conf.generate()
-    assert file_paths == [{}]
+    assert file_paths is None

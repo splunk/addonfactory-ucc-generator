@@ -18,7 +18,7 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
     normalize,
 )
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from os import linesep
 from re import search
 
@@ -39,9 +39,9 @@ class AlertActionsHtml(FileGenerator):
             schema_content = envs["schema.content"]
             self._alert_settings = schema_content["modular_alerts"]
 
-    def generate(self) -> List[Dict[str, str]]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_alerts():
-            return [{}]
+            return None
 
         alert_details: List[Any] = []
         for self.alert in self._alert_settings:
