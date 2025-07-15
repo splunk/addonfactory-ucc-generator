@@ -12,13 +12,15 @@ import {
     CheckboxEntitySchema,
     FileEntitySchema,
     MultipleSelectEntitySchema,
+    oAuthEntitySchema,
     RadioEntitySchema,
     SingleSelectEntitySchema,
     TextAreaEntitySchema,
     TextEntitySchema,
 } from '../globalConfig/entities';
 import { PageContextProviderType } from '../../context/PageContext';
-import { oAuthEntitySchema, oAuthFieldSchema } from '../globalConfig/oAuth';
+import { oAuthFieldSchema } from '../globalConfig/oAuth';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -73,6 +75,7 @@ export interface BaseFormProps {
     groupName?: string;
     handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
     pageContext?: PageContextProviderType;
+    customComponentContext?: CustomComponentContextType;
 }
 
 export interface BaseFormState {
