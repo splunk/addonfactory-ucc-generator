@@ -136,15 +136,10 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
             </>
         );
 
-        const isRequiredModified =
+        const modifiedRequire =
             typeof this.props?.modifiedEntitiesData?.required === 'boolean'
                 ? this.props?.modifiedEntitiesData?.required
                 : this.props.entity?.required;
-
-        const isFieldRequired =
-            isRequiredModified === undefined // // if oauth_field exists field required by default
-                ? 'oauth_field' in (this.props.entity || {}) // if oauth_field does not exists not required by default
-                : isRequiredModified;
 
         const label = this.props?.modifiedEntitiesData?.label || this?.props?.entity?.label || '';
         return (
@@ -157,7 +152,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                     // @ts-expect-error property should be data-name, but is mapped in obj ControlGroupWrapper
                     dataName={this?.props?.entity.field}
                     labelWidth={240}
-                    required={isFieldRequired}
+                    required={modifiedRequire}
                     label={label}
                 >
                     {rowView}

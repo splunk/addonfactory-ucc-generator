@@ -323,6 +323,11 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 // eslint-disable-next-line no-param-reassign
                                 field.type = field?.type || 'text';
 
+                                // if field is not defined as required, set it to true as it is default for oauth
+                                // eslint-disable-next-line no-param-reassign
+                                field.required =
+                                    typeof field?.required !== 'undefined' ? field?.required : true;
+
                                 // Handled special case for redirect_url
                                 if (field.field === 'redirect_url') {
                                     tempEntity.value = window.location.href
@@ -334,8 +339,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                     tempEntity.disabled = true;
                                 }
 
-                                // TODO: why field is pushed isntead of tempEntity
-                                // TODO: why temp entity is created at all
+                                // TODO: why field is pushed instead of tempEntity, it contains more data about field
+                                // while tempEntity got just basic state props.
                                 temEntities.push(field);
                                 authfields?.push(field.field);
                             });
@@ -534,10 +539,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             let temEntities: AnyEntity[] | undefined;
             if (this.isOAuth) {
                 let reqFields: string[] = [];
+                const otherOauthFields: string[] = [];
                 Object.keys(this.authMap).forEach((type) => {
                     // `isAuthVal` is required in a case where only single auth type is provided
                     if (type === this.datadict.auth_type || !this.isAuthVal) {
                         reqFields = [...reqFields, ...this.authMap[type]];
+                    } else {
+                        otherOauthFields.push(...this.authMap[type]);
                     }
                 });
 
@@ -546,6 +554,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     if (e.type !== 'helpLink' && reqFields.includes(e.field)) {
                         // All oauth fields are required except if explicitely `required` is set to `false`
                         return { required: true, ...e };
+                    }
+                    if (otherOauthFields.includes(e.field)) {
+                        return { ...e, required: false };
                     }
                     return e;
                 });
