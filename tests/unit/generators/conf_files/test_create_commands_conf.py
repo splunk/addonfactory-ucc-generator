@@ -39,29 +39,20 @@ def test_generate_conf_without_custom_command(
         input_dir,
         output_dir,
     )
-    file_paths = commands_conf.generate()
+    output = commands_conf.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == {}
+    assert output is None
 
 
-def test_commands_conf_generation(
-    global_config_all_json, input_dir, output_dir, ta_name
-):
-    global_config_all_json.meta["name"] = ta_name
+def test_commands_conf_generation(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
     commands_conf = CommandsConf(
         global_config_all_json,
         input_dir,
         output_dir,
     )
-    file_paths = commands_conf.generate()
-
-    assert file_paths is not None
-    assert file_paths.keys() == {"commands.conf"}
-    assert file_paths["commands.conf"].endswith(f"{ta_name}/default/commands.conf")
-
-    with open(file_paths["commands.conf"]) as fp:
-        content = fp.read()
+    output = commands_conf.generate()
 
     expected_content = dedent(
         """
@@ -71,4 +62,10 @@ def test_commands_conf_generation(
         python.version = python3
         """
     ).lstrip()
-    assert content == expected_content
+    assert output == [
+        {
+            "file_name": "commands.conf",
+            "file_path": f"{output_dir}/{ta_name}/default/commands.conf",
+            "content": expected_content,
+        }
+    ]

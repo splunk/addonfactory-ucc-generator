@@ -78,24 +78,18 @@ def test_generate_conf_without_custom_command(
     file_paths = searchbnf_conf.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == {}
+    assert file_paths is None
 
 
-def test_generate_conf(global_config_all_json, input_dir, output_dir, ta_name):
-    global_config_all_json.meta["name"] = ta_name
+def test_generate_conf(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
     searchbnf_conf = SearchbnfConf(
         global_config_all_json,
         input_dir,
         output_dir,
     )
-    file_paths = searchbnf_conf.generate()
+    output = searchbnf_conf.generate()
     exp_fname = "searchbnf.conf"
-
-    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/default/{exp_fname}"}
-
-    with open(file_paths["searchbnf.conf"]) as fp:
-        content = fp.read()
-
     expected_content = dedent(
         """
         [generatetextcommand]
@@ -104,5 +98,10 @@ def test_generate_conf(global_config_all_json, input_dir, output_dir, ta_name):
         usage = public
         """
     ).lstrip()
-
-    assert content == expected_content
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+            "content": expected_content,
+        }
+    ]

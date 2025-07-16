@@ -17,7 +17,7 @@ import logging
 import os
 from abc import ABC
 from os.path import realpath, sep
-from typing import Any, Dict, List, Union, NoReturn
+from typing import Any, Dict, List, Union, NoReturn, Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -74,7 +74,7 @@ class FileGenerator(ABC):
     def _set_attributes(self) -> Union[NoReturn, None]:
         raise NotImplementedError()
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         raise NotImplementedError()
 
     def _get_output_dir(self) -> str:
@@ -115,12 +115,19 @@ def begin(
 ) -> List[Dict[str, str]]:
     generated_files: List[Dict[str, str]] = []
     for item in fc.GEN_FILE_LIST:
-        file_details: Dict[str, str] = {}
         file_details = item.file_class(global_config, input_dir, output_dir).generate()
-        for k, v in file_details.items():
-            if not k:
-                continue
-            logger.info(f"Successfully generated '{k}' at '{v}'.")
-        generated_files.append(file_details)
+        if file_details is None:
+            continue
+        for details in file_details:
+            write_file(
+                details["file_name"],
+                details["file_path"],
+                details["content"],
+                merge_mode=details.get("merge_mode", "stanza_overwrite"),
+            )
+            logger.info(
+                f"Successfully generated '{details['file_name']}' at '{details['file_path']}"
+            )
+            generated_files.append({details["file_name"]: details["file_path"]})
 
     return generated_files

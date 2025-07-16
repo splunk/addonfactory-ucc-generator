@@ -1,5 +1,5 @@
 from pytest import fixture
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AccountConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
@@ -76,39 +76,53 @@ def test_set_attributes_with_oauth_account(
     assert account_spec.account_fields == []
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.AccountConf.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.AccountConf.get_file_output_path"
-)
 def test_generate_conf_spec(
-    mock_op_path,
-    mock_template,
-    global_config,
+    global_config_all_json,
     input_dir,
     output_dir,
 ):
-    content = "content"
-    exp_fname = f"{TA_NAME}_account.conf.spec"
-    file_path = "output_path/ta_name_account.conf.spec"
-    mock_op_path.return_value = file_path
-    mock_template_render = MagicMock()
-    mock_template_render.render.return_value = content
+    ta_name = global_config_all_json.product
+    exp_fname = f"{global_config_all_json.namespace.lower()}_account.conf.spec"
 
-    account_spec = AccountConf(global_config, input_dir, output_dir)
-    account_spec.writer = MagicMock()
-    account_spec._template = mock_template_render
-
-    file_paths = account_spec.generate()
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-    account_spec.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
+    account_spec = AccountConf(global_config_all_json, input_dir, output_dir)
+    expected_content = (
+        "[<name>]\n"
+        + "\n".join(
+            [
+                "access_token = ",
+                "account_checkbox = ",
+                "account_multiple_select = ",
+                "account_radio = ",
+                "auth_type = ",
+                "client_id = ",
+                "client_id_oauth_credentials = ",
+                "client_secret = ",
+                "client_secret_oauth_credentials = ",
+                "custom_endpoint = ",
+                "endpoint = ",
+                "example_help_link = ",
+                "instance_url = ",
+                "oauth_state_enabled = ",
+                "password = ",
+                "redirect_url = ",
+                "refresh_token = ",
+                "service_account = ",
+                "textarea_field = ",
+                "token = ",
+                "username = ",
+            ]
+        )
+        + "\n"
     )
-    assert file_paths == {exp_fname: file_path}
+
+    output = account_spec.generate()
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/README/{exp_fname}",
+            "content": expected_content,
+        }
+    ]
 
 
 def test_generate_conf_spec_no_configuration(
@@ -119,4 +133,4 @@ def test_generate_conf_spec_no_configuration(
     account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
     file_paths = account_spec.generate()
-    assert file_paths == {}
+    assert file_paths is None
