@@ -648,9 +648,10 @@ class TestAccount(UccTester):
         self.assert_util(
             account.entity.auth_key.list_of_values(),
             [
-                "Basic Authentication",
+                "Basic Authentication/Authorization",
                 "OAuth 2.0 - Authorization Code Grant Type",
                 "OAuth 2.0 - Client Credentials Grant Type",
+                "Certificate Authorization",
             ],
         )
 
@@ -1179,7 +1180,7 @@ class TestAccount(UccTester):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
         auth_value_dict = {
-            "basic": "Basic Authentication",
+            "basic": "Basic Authentication/Authorization",
             "oauth": "OAuth 2.0 - Authorization Code Grant Type",
         }
         for auth_type_value, auth_type_name in auth_value_dict.items():

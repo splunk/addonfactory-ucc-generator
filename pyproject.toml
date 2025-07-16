@@ -16,7 +16,7 @@
 
 [tool.poetry]
 name = "splunk_add_on_ucc_framework"
-version = "5.67.0"
+version = "5.68.0"
 description = "Splunk Add-on SDK formerly UCC is a build and code generation framework"
 license = "Apache-2.0"
 authors = ["Splunk <addonfactory@splunk.com>"]
@@ -56,6 +56,7 @@ defusedxml = "^0.7.1"
 colorama = "^0.4.6"
 packaging = ">=23.0"
 splunk-appinspect = { version = "^3.10.3", extras = ["validate"], optional = true }
+certifi = "^2025.6.15"
 
 [tool.poetry.extras]
 validate = ["splunk-appinspect"]

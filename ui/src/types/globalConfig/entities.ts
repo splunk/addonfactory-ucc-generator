@@ -12,7 +12,7 @@ import {
     TextElementWithLinksSchema,
     ValueLabelPair,
 } from './baseSchemas';
-import { oAuthFieldSchema, OAuthOptionsSchema } from './oAuth';
+import { oAuthFieldSchema, OAuthOptionsBaseSchema } from './oAuth';
 
 const DefaultValueUnion = z.union([z.string(), z.number(), z.boolean()]);
 
@@ -265,11 +265,11 @@ export const OAuthAcceptableTypes = z.union([
     FileEntitySchema,
 ]);
 
-const OAuthOptionsSchemaWithEntities = OAuthOptionsSchema.extend({
+const OAuthOptionsSchemaWithEntities = OAuthOptionsBaseSchema.extend({
     basic: z.array(OAuthAcceptableTypes).optional(),
     oauth: z.array(OAuthAcceptableTypes).optional(),
     oauth_client_credentials: z.array(OAuthAcceptableTypes).optional(),
-}).strict();
+}).passthrough();
 
 export const oAuthEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('oauth'),
