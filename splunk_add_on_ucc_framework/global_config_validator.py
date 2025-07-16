@@ -81,7 +81,7 @@ class GlobalConfigValidator:
         """
         for tab in self.resolved_configuration:
             if "table" in tab:
-                entities = tab["entity"]
+                entities = tab.get("entity", [])
                 has_name_field = False
                 for entity in entities:
                     if entity["field"] == "name":
@@ -141,7 +141,8 @@ class GlobalConfigValidator:
         and we need to throw a validation error.
         """
         for tab in self.resolved_configuration:
-            entities = tab["entity"]
+            # For customTab entity is optional
+            entities = tab.get("entity", [])
             for entity in entities:
                 if entity["type"] == "file":
                     is_required = entity.get("required", False)
@@ -251,7 +252,7 @@ class GlobalConfigValidator:
         """
         pages = self._config["pages"]
         for tab in self.resolved_configuration:
-            entities = tab["entity"]
+            entities = tab.get("entity", [])
             for entity in entities:
                 self._validate_entity_validators(entity)
 
@@ -395,7 +396,7 @@ class GlobalConfigValidator:
             if tab.tab_type is not None:
                 types.append(tab.tab_type.lower())
 
-            self._validate_entity_duplicates(tab["entity"])
+            self._validate_entity_duplicates(tab.get("entity", []))
         if (
             self._find_duplicates_in_list(names)
             or self._find_duplicates_in_list(titles)
@@ -760,6 +761,49 @@ class GlobalConfigValidator:
                     " should not be same for custom search command."
                 )
 
+    def _validate_if_entities_has_oauth_configured_correctly(
+        self, tabs: List[Dict[str, Any]]
+    ) -> None:
+        """
+        Validates if entities has oauth configured correctly.
+        """
+        grouped_entities: List[Any] = [
+            el.get("entity") for el in tabs if el.get("entity")
+        ]
+        all_entities = list(itertools.chain.from_iterable(grouped_entities))
+
+        for entity in all_entities:
+            if entity["type"] == "oauth":
+                # each auth_type defined in list should have entities defined
+                for auth_type in entity["options"]["auth_type"]:
+                    if auth_type not in entity["options"]:
+                        raise GlobalConfigValidatorException(
+                            f"Authorization type '{auth_type}' does not have any entities defined."
+                        )
+
+                if "oauth_type_labels" in entity["options"]:
+                    for auth_type_in_label in entity["options"][
+                        "oauth_type_labels"
+                    ].keys():
+                        if auth_type_in_label not in entity["options"]:
+                            raise GlobalConfigValidatorException(
+                                f"Authorization type '{auth_type_in_label}', included in "
+                                "oauth_type_labels, does not have any entities defined."
+                            )
+
+    def _validate_oauth_entities_definition(self) -> None:
+        """
+        Validates that OAuth defined in oauth.options.auth_type
+        has definitions for entities under options["auth_type"]
+        """
+        pages = self._config["pages"]
+
+        if "configuration" in pages:
+            # tabs are required in configuration
+            tabs = pages["configuration"]["tabs"]
+
+            self._validate_if_entities_has_oauth_configured_correctly(tabs)
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         if self._global_config.has_pages():
@@ -772,6 +816,7 @@ class GlobalConfigValidator:
             self._validate_panels()
             self._validate_checkbox_group()
             self._validate_groups()
+            self._validate_oauth_entities_definition()
             self._validate_field_modifications()
             self._validate_custom_search_commands()
         self._validate_alerts()

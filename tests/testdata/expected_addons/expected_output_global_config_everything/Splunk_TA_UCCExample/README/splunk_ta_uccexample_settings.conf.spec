@@ -1,3 +1,5 @@
+[custom_tab]
+
 [proxy]
 proxy_enabled = 
 proxy_password = 

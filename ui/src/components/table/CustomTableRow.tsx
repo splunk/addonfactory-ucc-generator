@@ -68,17 +68,19 @@ function CustomTableRow(props: CustomTableRowProps) {
 
     const toggleRef = React.createRef<HTMLDivElement>();
 
-    const getCustomCell = (customRow: RowDataFields, header: CellHeader) =>
-        header.customCell?.src &&
-        header.customCell?.type &&
-        React.createElement(CustomTableCell, {
-            serviceName: row.serviceName,
-            field: header.field,
-            row: customRow,
-            fileName: header.customCell.src,
-            type: header.customCell.type,
-            customComponentContext: componentContext,
-        });
+    const getCustomCell = (customRow: RowDataFields, header: CellHeader) => {
+        return (
+            header.customCell?.src &&
+            React.createElement(CustomTableCell, {
+                serviceName: row.serviceName,
+                field: header.field,
+                row: customRow,
+                fileName: header.customCell.src,
+                type: header.customCell.type,
+                customComponentContext: componentContext,
+            })
+        );
+    };
 
     const rowActionsPrimaryButton = useCallback(
         (selectedRow: RowDataFields, header: CellHeader) => (

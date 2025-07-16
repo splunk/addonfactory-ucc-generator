@@ -47,6 +47,8 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
     + `oauth_timeout` is the timeout in seconds for oauth authentication (Optional, defaults to 180 seconds).
     + `oauth_state_enabled` is used to include the state for oauth authentication (default value is false).
     + `auth_endpoint_token_access_type` is an optional parameter that is mapped into the value of the token_access_type query param in the authorisation url.
+    + The `oauth_type_labels` property lets you customize the display names of OAuth methods in the UI. For example, `{ "basic": "Basic Auth" }` will show the basic authorization option as 'Basic Auth' instead of the default 'Basic Authentication'.
+    + You can also introduce custom authorization methods from the front-end. To enable this, the backend REST handler must be updated to support the new method. To add a custom method, include it in the `auth_type` array (for example, `additional_authorization_method`) and define a property with the same name, listing all required entities for that method. (See `additional_authorization_method` in the example below.) To set a user-friendly label, add it to `oauth_type_labels`.
 
     + The fields allowed in the basic and oauth fields are the following:
         - `oauth_field` should be kept as it is and without any change.
@@ -92,7 +94,8 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
                         "auth_type": [
                             "basic",
                             "oauth",
-                            "oauth_client_credentials"
+                            "oauth_client_credentials",
+                            "additional_authorization_method"
                         ],
                         "basic": [
                             {
@@ -176,6 +179,28 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
                                 "label": "Endpoint",
                                 "field": "endpoint_token_oauth_credentials",
                                 "help": "Enter Endpoint"
+                            }
+                        ],
+                        "additional_authorization_method": [
+                            {
+                                "oauth_field": "additional_username",
+                                "label": "Username",
+                                "field": "additional_username",
+                                "help": "Additional Authorization method "
+                            },
+                            {
+                                "oauth_field": "additional_method_certificate",
+                                "label": "Certificate",
+                                "field": "additional_method_certificate",
+                                "encrypted": true,
+                                "help": "Enter Certificate"
+                            },
+                            {
+                                "oauth_field": "additional_authorization_param",
+                                "label": "Securtiy Token(Optional)",
+                                "field": "additional_authorization_param",
+                                "encrypted": true,
+                                "help": "Security Token (Optional)."
                             }
                         ],
                         "auth_label": "Auth Type",

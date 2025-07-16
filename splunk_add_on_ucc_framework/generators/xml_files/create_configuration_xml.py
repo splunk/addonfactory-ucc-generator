@@ -14,8 +14,9 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Any, Dict
-from splunk_add_on_ucc_framework import data_ui_generator
+from xml.etree.ElementTree import Element, SubElement, tostring
+from splunk_add_on_ucc_framework.utils import pretty_print_xml
+from typing import Optional, List, Dict
 
 
 class ConfigurationXml(FileGenerator):
@@ -24,23 +25,39 @@ class ConfigurationXml(FileGenerator):
         "configuration is defined in globalConfig."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def generate_views_configuration_xml(self, addon_name: str) -> str:
+        """
+        Generates `default/data/ui/views/configuration.xml` file.
+        """
+        view = Element(
+            "view",
+            attrib={
+                "template": f"{addon_name}:/templates/base.html",
+                "type": "html",
+                "isDashboard": "False",
+            },
+        )
+        label = SubElement(view, "label")
+        label.text = "Configuration"
+        view_as_string = tostring(view, encoding="unicode")
+        return pretty_print_xml(view_as_string)
+
+    def _set_attributes(self) -> None:
         if self._global_config.has_configuration():
-            self.configuration_xml_content = (
-                data_ui_generator.generate_views_configuration_xml(
-                    self._addon_name,
-                )
+            self.configuration_xml_content = self.generate_views_configuration_xml(
+                self._addon_name,
             )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_configuration():
-            return {}
+            return None
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", "configuration.xml"]
         )
-        self.writer(
-            file_name="configuration.xml",
-            file_path=file_path,
-            content=self.configuration_xml_content,
-        )
-        return {"configuration.xml": file_path}
+        return [
+            {
+                "file_name": "configuration.xml",
+                "file_path": file_path,
+                "content": self.configuration_xml_content,
+            }
+        ]

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from collections import defaultdict
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -31,7 +31,7 @@ class InputsConf(FileGenerator):
     def _spec_file_name(self, conf_name: str) -> str:
         return f"{self._conf_file_name(conf_name)}.spec"
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = self._conf_file_name("inputs")
 
         # A list of service names from globalConfig that will be in inputs.conf
@@ -99,15 +99,19 @@ class InputsConf(FileGenerator):
                 prop = f"{field_name} = {field_value}".rstrip()
                 spec_properties.append(prop)
 
-    def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_conf())
-        conf_files.update(self.generate_conf_spec())
-        return conf_files
+    def generate(self) -> Optional[List[Dict[str, str]]]:
+        conf_files: List[Dict[str, str]] = []
+        conf = self.generate_conf()
+        conf_spec = self.generate_conf_spec()
+        if conf is not None:
+            conf_files.append(conf)
+        if conf_spec is not None:
+            conf_files.extend(conf_spec)
+        return None if conf_files == [] else conf_files
 
-    def generate_conf(self) -> Dict[str, str]:
+    def generate_conf(self) -> Optional[Dict[str, str]]:
         if not self.inputs_conf_names:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
@@ -118,16 +122,15 @@ class InputsConf(FileGenerator):
             input_names=self.inputs_conf_names,
             default_values=self.inputs_conf_params,
         )
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
-    def _generate_spec_inputs(self) -> Dict[str, str]:
+    def _generate_spec_inputs(self) -> Optional[Dict[str, str]]:
         if not self.inputs_conf_spec:
-            return {}
+            return None
 
         spec_file = self._spec_file_name("inputs")
         file_path = self.get_file_output_path(["README", spec_file])
@@ -140,12 +143,11 @@ class InputsConf(FileGenerator):
             input_names=self.inputs_conf_names,
             input_stanzas=self.inputs_conf_spec,
         )
-        self.writer(
-            file_name=spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {spec_file: file_path}
+        return {
+            "file_name": spec_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
     def _generate_spec_other(self, name: str, parameters: List[str]) -> Dict[str, str]:
         spec_file = self._spec_file_name(name)
@@ -154,20 +156,21 @@ class InputsConf(FileGenerator):
         content = ["[<name>]"]
         content.extend(parameters)
 
-        self.writer(
-            file_name=spec_file,
-            file_path=file_path,
-            content="\n".join(content),
-        )
-        return {spec_file: file_path}
+        return {
+            "file_name": spec_file,
+            "file_path": file_path,
+            "content": "\n".join(content),
+        }
 
-    def generate_conf_spec(self) -> Dict[str, str]:
-        files = self._generate_spec_inputs()
+    def generate_conf_spec(self) -> Optional[List[Dict[str, str]]]:
+        files: List[Dict[str, str]] = []
+        spec_input = self._generate_spec_inputs()
+        if spec_input is not None:
+            files.append(spec_input)
 
         for name, params in self.other_spec_files.items():
-            files.update(self._generate_spec_other(name, params))
+            files.append(self._generate_spec_other(name, params))
 
         if not files:
-            return {}
-
+            return None
         return files

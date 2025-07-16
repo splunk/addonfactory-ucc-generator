@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, Union, List
+from typing import Dict, Union, List, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -30,12 +30,12 @@ class WebConf(FileGenerator):
         "`restmap.conf` which is generated based on configurations from globalConfig."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         pass
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_pages():
-            return {}
+            return None
 
         endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
         endpoints.extend(self._gc_schema.endpoints)
@@ -49,9 +49,10 @@ class WebConf(FileGenerator):
             "web_conf.template",
             endpoints=endpoints,
         )
-        self.writer(
-            file_name=conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {conf_file: file_path}
+        return [
+            {
+                "file_name": conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

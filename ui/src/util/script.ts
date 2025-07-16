@@ -6,7 +6,9 @@ export function getBuildDirPath() {
     const scriptsCount = scripts.length;
     for (let i = 0; i < scriptsCount; i += 1) {
         const s = scripts[i];
-        if (s.src && s.src.match(/js\/build/)) {
+        // /js/build/custom/ is from non external custom components and is placed at the top of the page
+        // which has incorrect src path
+        if (s.src && s.src.match(/js\/build/) && !s.src.includes('/js/build/custom/')) {
             const lastSlashIndex = s.src.lastIndexOf('/');
             return s.src.slice(0, lastSlashIndex);
         }

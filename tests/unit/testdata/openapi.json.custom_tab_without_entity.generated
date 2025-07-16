@@ -2,10 +2,15 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Splunk_TA_UCCExample",
-        "version": "5.59.0+728642d3c",
-        "description": "Splunk Add-on for UCC Example",
+        "version": "1.0.0",
+        "description": "Splunk UCC test Add-on",
         "contact": {
-            "name": "Splunk Inc."
+            "name": "Splunk",
+            "email": "addonfactory@splunk.com"
+        },
+        "license": {
+            "name": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
         }
     },
     "servers": [

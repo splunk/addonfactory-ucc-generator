@@ -39,6 +39,7 @@ from splunk_add_on_ucc_framework import (
 from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from splunk_add_on_ucc_framework.utils import get_app_manifest
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     builder as alert_builder,
@@ -57,7 +58,6 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
-from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
@@ -240,25 +240,6 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
             )
             exit(1)
     return addon_version.strip()
-
-
-def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    try:
-        app_manifest = app_manifest_lib.AppManifest(app_manifest_content)
-        app_manifest.validate()
-        return app_manifest
-    except app_manifest_lib.AppManifestFormatException as e:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f"Error message: {e}.\n"
-        )
-        sys.exit(1)
 
 
 def _get_build_output_path(output_directory: Optional[str] = None) -> str:
@@ -469,7 +450,7 @@ def generate(
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
-    app_manifest = _get_app_manifest(source)
+    app_manifest = get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
 
@@ -509,13 +490,13 @@ def generate(
             "please unify them to build the add-on."
         )
         sys.exit(1)
-    global_config.parse_user_defined_handlers()
     scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
     if global_config.has_pages():
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
             ui_source_map,
+            has_dashboard=global_config.has_dashboard(),
         )
     global_config_file = (
         "globalConfig.yaml" if gc_path.endswith(".yaml") else "globalConfig.json"
@@ -551,14 +532,7 @@ def generate(
     logger.info(f"Installed add-on requirements into {ucc_lib_target} from {source}")
     generated_files.extend(
         begin(
-            global_config=global_config,
-            input_dir=source,
-            output_dir=output_directory,
-            ucc_dir=internal_root_dir,
-            addon_name=ta_name,
-            app_manifest=app_manifest,
-            addon_version=addon_version,
-            has_ui=global_config.meta.get("isVisible", True),
+            global_config=global_config, input_dir=source, output_dir=output_directory
         )
     )
     # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -576,11 +550,6 @@ def generate(
     if global_config.has_alerts():
         logger.info("Generating alerts code")
         alert_builder.generate_alerts(global_config, ta_name, output_directory)
-
-    conf_file_names = []
-    conf_file_names.extend(list(scheme.settings_conf_file_names))
-    conf_file_names.extend(list(scheme.configs_conf_file_names))
-    conf_file_names.extend(list(scheme.oauth_conf_file_names))
 
     if global_config.has_dashboard():
         logger.info("Including dashboard")
@@ -639,21 +608,6 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
-
-    ui_available = False
-    if global_config and global_config.has_pages():
-        ui_available = global_config.meta.get("isVisible", True)
-    # NOTE: merging source and generated 'app.conf' as per previous design
-    AppConf(
-        global_config=global_config,
-        input_dir=source,
-        output_dir=output_directory,
-        ucc_dir=internal_root_dir,
-        addon_name=ta_name,
-        app_manifest=app_manifest,
-        addon_version=addon_version,
-        has_ui=ui_available,
-    ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
@@ -686,7 +640,7 @@ def generate(
         # clean-up sys.path manipulation
         sys.path.pop(0)
 
-    if global_config:
+    if global_config.has_configuration() or global_config.has_inputs():
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
 

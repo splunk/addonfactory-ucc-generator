@@ -28,7 +28,6 @@
                     },
                     "name": "example_input_one",
                     "restHandlerName": "custom_rest_handler_file_rh",
-                    "restHandlerClass": "CustomRestHandlerClass",
                     "entity": [
                         {
                             "type": "interval",
@@ -40,49 +39,84 @@
                 }
             ],
             "title": "Inputs",
-            "description": "Manage your data inputs"
-        }
-    },
-    "alerts": [
-        {
-            "name": "test_alert",
-            "label": "Test Alert",
-            "description": "Description for test Alert Action",
-            "adaptiveResponse": {
-                "task": [
-                    "Create",
-                    "Update"
+            "description": "Manage your data inputs",
+             "table": {
+                "actions": [
+                    "edit",
+                    "delete",
+                    "clone"
                 ],
-                "supportsAdhoc": true,
-                "supportsCloud": true,
-                "subject": [
-                    "endpoint"
-                ],
-                "category": [
-                    "Information Conveyance",
-                    "Information Portrayal"
-                ],
-                "technology": [
+                "header": [
                     {
-                        "version": [
-                            "1.0.0"
-                        ],
-                        "product": "Test Incident Update",
-                        "vendor": "Splunk"
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Account Name",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled"
                     }
                 ],
-                "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
-                "sourcetype": "test:incident"
-            },
-            "entity": [
-                {
-                    "type": "interval",
-                    "field": "interval",
-                    "label": "Interval"
-                }
-            ]
+                "moreInfo": [
+                    {
+                        "label": "Name",
+                        "field": "name"
+                    },
+                    {
+                        "label": "Interval",
+                        "field": "interval"
+                    },
+                    {
+                        "label": "Index",
+                        "field": "index"
+                    },
+                    {
+                        "label": "Status",
+                        "field": "disabled",
+                        "mapping": {
+                            "true": "Disabled",
+                            "false": "Enabled"
+                        }
+                    },
+                    {
+                        "label": "Example Account",
+                        "field": "account"
+                    },
+                    {
+                        "label": "Object",
+                        "field": "object"
+                    },
+                    {
+                        "label": "Object Fields",
+                        "field": "object_fields"
+                    },
+                    {
+                        "label": "Order By",
+                        "field": "order_by"
+                    },
+                    {
+                        "label": "Query Start Date",
+                        "field": "start_date"
+                    },
+                    {
+                        "label": "Limit",
+                        "field": "limit"
+                    }
+                ]
+            }
         }
-    ],
+    },
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",

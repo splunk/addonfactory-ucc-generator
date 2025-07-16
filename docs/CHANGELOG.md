@@ -1,5 +1,55 @@
 # Changelog
 
+# [5.68.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.67.0...v5.68.0) (2025-07-15)
+
+
+### Bug Fixes
+
+* do not generate openapi.json for .conf-only add-ons ([#1742](https://github.com/splunk/addonfactory-ucc-generator/issues/1742)) ([3133ea2](https://github.com/splunk/addonfactory-ucc-generator/commit/3133ea24accc888c865ea8f2932bc4f4e4371660))
+* fix Jinja2 vulnerability for autoescape ([#1790](https://github.com/splunk/addonfactory-ucc-generator/issues/1790)) ([c0eefef](https://github.com/splunk/addonfactory-ucc-generator/commit/c0eefefa677313438bb60bc0e31f45284c2a1579))
+
+
+### Features
+
+* add command to publish package ([#1813](https://github.com/splunk/addonfactory-ucc-generator/issues/1813)) ([277e80e](https://github.com/splunk/addonfactory-ucc-generator/commit/277e80ec741a013a897c3a6c1211c1505213ea4e))
+* added footer component ([#1796](https://github.com/splunk/addonfactory-ucc-generator/issues/1796)) ([f7f7e1a](https://github.com/splunk/addonfactory-ucc-generator/commit/f7f7e1ae88b6604b44abe7494719fb9924bcacf5))
+* allow more custom oauth methods ([#1817](https://github.com/splunk/addonfactory-ucc-generator/issues/1817)) ([5bcc9aa](https://github.com/splunk/addonfactory-ucc-generator/commit/5bcc9aa739bfb7b041be2965708f229e83e1eb82))
+* **modify field on value:** support regexp expresion ([#1812](https://github.com/splunk/addonfactory-ucc-generator/issues/1812)) ([3c9d575](https://github.com/splunk/addonfactory-ucc-generator/commit/3c9d57595d12b564feadd1e3020f594465eadffb))
+* **oauth:** allow different components ([#1810](https://github.com/splunk/addonfactory-ucc-generator/issues/1810)) ([b10160f](https://github.com/splunk/addonfactory-ucc-generator/commit/b10160fa4afa75d0d62425ecbf71a5d6db3064e0))
+* **textarea:** mask data when encrypted ([#1805](https://github.com/splunk/addonfactory-ucc-generator/issues/1805)) ([8ad5e52](https://github.com/splunk/addonfactory-ucc-generator/commit/8ad5e5244e24791f7d694950e4f306247f4e9b2d))
+* ucc-gen validate command support ([#1771](https://github.com/splunk/addonfactory-ucc-generator/issues/1771)) ([f4c3e40](https://github.com/splunk/addonfactory-ucc-generator/commit/f4c3e4078da0995fc0e557cece8315e71a76a532))
+* update recursive_overwrite method to merge .conf files ([#1800](https://github.com/splunk/addonfactory-ucc-generator/issues/1800)) ([4444c65](https://github.com/splunk/addonfactory-ucc-generator/commit/4444c651346a7059f1c1628d61a654ad4c198f6e))
+
+# [5.67.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.66.0...v5.67.0) (2025-06-17)
+
+
+### Bug Fixes
+
+* added --ignore-requires-python flag for os-dependent ([#1792](https://github.com/splunk/addonfactory-ucc-generator/issues/1792)) ([b9b7347](https://github.com/splunk/addonfactory-ucc-generator/commit/b9b7347dd990c41d0cf72ab15039af26b8f9f5a9))
+
+
+### Features
+
+* add multiline support for tabs ([#1778](https://github.com/splunk/addonfactory-ucc-generator/issues/1778)) ([7616bcb](https://github.com/splunk/addonfactory-ucc-generator/commit/7616bcb4b716116757416d37e108f8e5fee51710))
+* added user-friendly storybook component ([#1759](https://github.com/splunk/addonfactory-ucc-generator/issues/1759)) ([5d04783](https://github.com/splunk/addonfactory-ucc-generator/commit/5d047834c244843945befbf2eeda09e2b5a85684))
+* **dashbaord:** do not build dashboard files when no need ([#1795](https://github.com/splunk/addonfactory-ucc-generator/issues/1795)) ([fafac88](https://github.com/splunk/addonfactory-ucc-generator/commit/fafac88abe7aead8405b7aa4e16ba82405d5e7fb))
+
+# [5.66.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.65.0...v5.66.0) (2025-06-03)
+
+
+### Bug Fixes
+
+* custom tab without entity error ([#1718](https://github.com/splunk/addonfactory-ucc-generator/issues/1718)) ([9c38fd4](https://github.com/splunk/addonfactory-ucc-generator/commit/9c38fd4a2f12e8bd35e7d87f5a5268938e78603b))
+* handling of non external custom elements ([#1766](https://github.com/splunk/addonfactory-ucc-generator/issues/1766)) ([2342a05](https://github.com/splunk/addonfactory-ucc-generator/commit/2342a050aeecca9a34f15ca3e0c0c30ad929f771))
+* remove support for interval and index type of entities for alerts ([#1757](https://github.com/splunk/addonfactory-ucc-generator/issues/1757)) ([49c04be](https://github.com/splunk/addonfactory-ucc-generator/commit/49c04be804bcd27f820d2bb8d77b0674499b513c))
+* set host and port for proxy as required ([#1755](https://github.com/splunk/addonfactory-ucc-generator/issues/1755)) ([4bafe79](https://github.com/splunk/addonfactory-ucc-generator/commit/4bafe79e8ffeebe0b10ed294157ec06b387cf0ce))
+* **ui lib:** do not copy files from lib while building ([#1756](https://github.com/splunk/addonfactory-ucc-generator/issues/1756)) ([3b433ee](https://github.com/splunk/addonfactory-ucc-generator/commit/3b433eebbb2c677c70009581389a3537423bc8a4))
+
+
+### Features
+
+* **playground:** api calls as success to enable internal data flow ([#1731](https://github.com/splunk/addonfactory-ucc-generator/issues/1731)) ([6170551](https://github.com/splunk/addonfactory-ucc-generator/commit/6170551f539c150b4a88e63b57d4ab3e7b2569ad))
+
 # [5.65.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.64.0...v5.65.0) (2025-05-15)
 
 

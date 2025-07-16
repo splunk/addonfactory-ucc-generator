@@ -1,8 +1,7 @@
 import React from 'react';
 import { z } from 'zod';
 import Link from '@splunk/react-ui/Link';
-
-import { TextElementWithLinksSchema } from '../../types/globalConfig/entities';
+import { TextElementWithLinksSchema } from '../../types/globalConfig/baseSchemas';
 
 export type TextWithLinks = z.TypeOf<typeof TextElementWithLinksSchema>;
 

@@ -21,6 +21,7 @@ _ACCOUNT_CONFIG = {
     "endpoint": "",
     "example_help_link": "",
     "url": "https://test.example.com",
+    "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
 }
 
 
@@ -647,9 +648,10 @@ class TestAccount(UccTester):
         self.assert_util(
             account.entity.auth_key.list_of_values(),
             [
-                "Basic Authentication",
+                "Basic Authentication/Authorization",
                 "OAuth 2.0 - Authorization Code Grant Type",
                 "OAuth 2.0 - Client Credentials Grant Type",
+                "Certificate Authorization",
             ],
         )
 
@@ -682,12 +684,15 @@ class TestAccount(UccTester):
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.forwarder
     @pytest.mark.account
+    @pytest.mark.flaky(reruns=5, reruns_delay=5)
     def test_account_list_example_multiple_select(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
     ):
         """Verifies example multiple select list dropdown"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
+        account.entity.multiple_select.wait_for("input")
+        account.entity.multiple_select.wait_for_values()
         self.assert_util(
             account.entity.multiple_select.list_of_values(),
             ["Option One", "Option Two"],
@@ -795,6 +800,9 @@ class TestAccount(UccTester):
             "username": _ACCOUNT_CONFIG["username"],
             "custom_endpoint": _ACCOUNT_CONFIG["custom_endpoint"],
             "disabled": False,
+            "example_textarea_field_basic_oauth": _ACCOUNT_CONFIG[
+                "example_textarea_field_basic_oauth"
+            ],
             "password": "******",
             "token": "******",
             "url": "https://test.example.com",
@@ -815,6 +823,9 @@ class TestAccount(UccTester):
         account.entity.multiple_select.select("Option One")
         account.entity.password.set_value(_ACCOUNT_CONFIG["password"])
         account.entity.security_token.set_value("TestToken")
+        account.entity.text_area_basic_oauth.set_value(
+            _ACCOUNT_CONFIG["example_textarea_field_basic_oauth"]
+        )
         self.assert_util(account.entity.save, True)
         account.table.wait_for_rows_to_appear(1)
         self.assert_util(
@@ -823,6 +834,7 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option One",
+                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -851,6 +863,7 @@ class TestAccount(UccTester):
                 "name": "TestAccount",
                 "auth type": "basic",
                 "test custom cell": "Option is not available",
+                "amd test custom cell": "AMD Option is not available",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -894,6 +907,7 @@ class TestAccount(UccTester):
                 "name": "TestAccount2",
                 "auth type": "basic",
                 "test custom cell": "Option One",
+                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -978,6 +992,7 @@ class TestAccount(UccTester):
             "username": "TestEditUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
+            "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
@@ -1010,6 +1025,9 @@ class TestAccount(UccTester):
             "username": "TestCloneUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
+            "example_textarea_field_basic_oauth": _ACCOUNT_CONFIG[
+                "example_textarea_field_basic_oauth"
+            ],
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
@@ -1070,7 +1088,13 @@ class TestAccount(UccTester):
     ):
         """Verifies headers of account table"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
-        expected_headers = ["Name", "Auth Type", "Test Custom Cell", "Actions"]
+        expected_headers = [
+            "Name",
+            "Auth Type",
+            "Test Custom Cell",
+            "AMD Test Custom Cell",
+            "Actions",
+        ]
         self.assert_util(list(account.table.get_headers()), expected_headers)
 
     @pytest.mark.execute_enterprise_cloud_true
@@ -1156,7 +1180,7 @@ class TestAccount(UccTester):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
         auth_value_dict = {
-            "basic": "Basic Authentication",
+            "basic": "Basic Authentication/Authorization",
             "oauth": "OAuth 2.0 - Authorization Code Grant Type",
         }
         for auth_type_value, auth_type_name in auth_value_dict.items():
@@ -1278,6 +1302,7 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option Two",
+                "amd test custom cell": "AMD Option Two",
                 "actions": "Edit | Clone | Delete",
             },
         )

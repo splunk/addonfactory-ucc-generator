@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -61,7 +61,7 @@ class CustomCommandPy(FileGenerator):
         argument_list.append(arg_str)
         return argument_list
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.commands_info = []
         for command in self._global_config.custom_search_commands:
             argument_list: List[str] = []
@@ -87,11 +87,11 @@ class CustomCommandPy(FileGenerator):
                 }
             )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.commands_info:
-            return {}
+            return None
 
-        generated_files = {}
+        generated_files = []
         for command_info in self.commands_info:
             file_name = command_info["file_name"] + ".py"
             file_path = self.get_file_output_path(["bin", file_name])
@@ -106,10 +106,11 @@ class CustomCommandPy(FileGenerator):
                 syntax=command_info["syntax"],
                 list_arg=command_info["list_arg"],
             )
-            self.writer(
-                file_name=file_name,
-                file_path=file_path,
-                content=rendered_content,
+            generated_files.append(
+                {
+                    "file_name": file_name,
+                    "file_path": file_path,
+                    "content": rendered_content,
+                }
             )
-            generated_files.update({file_name: file_path})
         return generated_files

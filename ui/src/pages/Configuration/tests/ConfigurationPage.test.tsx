@@ -1,7 +1,8 @@
 import { beforeEach, expect, it, MockInstance, vi } from 'vitest';
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 
 import { http, HttpResponse } from 'msw';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';
@@ -82,6 +83,15 @@ it('should display error when server returns error', async () => {
     );
 
     setup({ _uccVersion: undefined });
+    await waitFor(async () => {
+        const loading = screen.queryByText('Waiting');
+        if (loading) {
+            await waitFor(() => expect(loading).not.toHaveTextContent('Waiting'));
+        }
+    });
+    const showButton = screen.getByText('Error Details');
+    expect(showButton).toBeInTheDocument();
+    await userEvent.click(showButton);
 
     const errorText = await screen.findByText(errorMessage);
     expect(errorText).toBeInTheDocument();

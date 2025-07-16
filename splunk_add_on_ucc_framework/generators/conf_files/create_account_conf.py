@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -24,7 +24,7 @@ class AccountConf(FileGenerator):
         "file for the configuration mentioned in globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.account_fields: List[Tuple[str, List[str]]] = []
         if self._global_config.has_configuration():
             self.conf_spec_file = (
@@ -36,14 +36,14 @@ class AccountConf(FileGenerator):
                 if account["name"] == "oauth":
                     continue
                 content = self._gc_schema._get_oauth_enitities(account["entity"])
-                fields, special_fields = self._gc_schema._parse_fields(content)
+                fields, _ = self._gc_schema._parse_fields(content)
                 self.account_fields.append(
                     ("<name>", [f"{f._name} = " for f in fields])
                 )
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.account_fields:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
@@ -51,9 +51,10 @@ class AccountConf(FileGenerator):
         )
 
         rendered_content = self._template.render(account_stanzas=self.account_fields)
-        self.writer(
-            file_name=self.conf_spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_spec_file: file_path}
+        return [
+            {
+                "file_name": self.conf_spec_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

@@ -2,10 +2,11 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { fn, userEvent, within } from '@storybook/test';
 
-import BaseFormView, { BaseFormProps } from '../BaseFormView';
+import BaseFormView from '../BaseFormView';
 import {
     PAGE_CONFIG_BOTH_OAUTH,
     getConfigOauthBasic,
+    getConfigOauthBasicWithAdditionalFieldTypes,
     getConfigOauthOauth,
 } from './globalConfigs/configPageOauth';
 import { setUnifiedConfig } from '../../../util/util';
@@ -19,6 +20,7 @@ import {
     getGlobalConfigMockModificationToGroupsConfig,
 } from '../tests/configMocks';
 import { invariant } from '../../../util/invariant';
+import { BaseFormProps } from '../../../types/components/BaseFormTypes';
 
 interface BaseFormStoriesProps extends BaseFormProps {
     config: GlobalConfig;
@@ -104,6 +106,19 @@ export const OuathBasicCloud: Story = {
         stanzaName: 'unknownStanza',
         handleFormSubmit: fn(),
         config: getConfigOauthBasic() as GlobalConfig,
+        platform: 'cloud',
+    },
+};
+
+export const OauthBasicWithAdditionalFieldTypes: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'account',
+        mode: 'create' as Mode,
+        page: 'configuration',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getConfigOauthBasicWithAdditionalFieldTypes(),
         platform: 'cloud',
     },
 };

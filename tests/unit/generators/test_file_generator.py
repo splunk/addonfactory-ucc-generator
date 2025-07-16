@@ -3,6 +3,30 @@ from splunk_add_on_ucc_framework.generators.file_generator import begin
 from unittest.mock import patch, MagicMock
 from pytest import raises, fixture
 from jinja2 import Template
+from splunk_add_on_ucc_framework import __file__ as ucc_framework_file
+import os.path
+import shutil
+
+UCC_DIR = os.path.dirname(ucc_framework_file)
+
+
+@fixture
+def addon_version():
+    return "1.0.0"
+
+
+@fixture
+def has_ui():
+    return True
+
+
+@fixture
+def dummy_app_manifest():
+    mock_manifest = MagicMock()
+    mock_manifest.get_description.return_value = "Test Description"
+    mock_manifest.get_authors.return_value = [{"name": "Test Author"}]
+    mock_manifest.get_title.return_value = "Test Addon"
+    return mock_manifest
 
 
 @fixture
@@ -10,23 +34,17 @@ def set_attr():
     return {"file_name": "file_path"}
 
 
-def mocked__set_attribute(this, **kwargs):
-    this.attrib_1 = "value_1"
-    this.attrib_2 = "value_2"
-
-
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_get_output_dir(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attr, global_config_all_json, input_dir, output_dir, ta_name
 ):
+    global_config_all_json.meta["name"] = ta_name
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
-    expected_output_dir = f"{output_dir}/test_addon"
+    expected_output_dir = f"{output_dir}/{ta_name}"
     assert file_gen._get_output_dir() == expected_output_dir
 
 
@@ -36,14 +54,14 @@ def test_get_output_dir(
     return_value="tmp/path",
 )
 def test_get_file_output_path(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     # Test with string
@@ -67,15 +85,11 @@ def test_set_template_and_render(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
 
     mock_get_template.return_value = Template("mock template")
@@ -92,15 +106,11 @@ def test_set_template_and_render_invalid_file_name(
     global_config_all_json,
     input_dir,
     output_dir,
-    ucc_dir,
-    ta_name,
 ):
     file_gen = FileGenerator(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     mock_get_template.return_value = Template("mock template")
     # Test with invalid file name
@@ -109,42 +119,66 @@ def test_set_template_and_render_invalid_file_name(
 
 
 @patch(
-    "splunk_add_on_ucc_framework.generators.file_generator.fc.GEN_FILE_LIST",
-    new_callable=list,
+    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
 )
-@patch("splunk_add_on_ucc_framework.generators.file_generator.logger")
+@patch.object(shutil, "copy")
 def test_begin(
-    mock_logger,
-    mock_gen_file_list,
-    global_config_all_json,
-    input_dir,
-    output_dir,
-    ucc_dir,
-    ta_name,
+    mock_copy, dummy_app_manifest, global_config_all_json, input_dir, output_dir
 ):
-    mock_item = MagicMock()
-    mock_item.file_class.return_value.generate.return_value = {
-        "file1": "/path/to/file1"
-    }
-
-    mock_gen_file_list.extend([mock_item])
-
-    result = begin(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
-    )
-
-    assert result == [{"file1": "/path/to/file1"}]
-    mock_logger.info.assert_called_once_with(
-        "Successfully generated 'file1' at '/path/to/file1'."
-    )
+    dummy_app_manifest.return_value = dummy_app_manifest
+    result = begin(global_config_all_json, input_dir, output_dir)
+    ta_name = global_config_all_json.product
+    assert result == [
+        {"app.conf": f"{output_dir}/{ta_name}/default/app.conf"},
+        {"inputs.conf": f"{output_dir}/{ta_name}/default/inputs.conf"},
+        {"inputs.conf.spec": f"{output_dir}/{ta_name}/README/inputs.conf.spec"},
+        {"server.conf": f"{output_dir}/{ta_name}/default/server.conf"},
+        {"restmap.conf": f"{output_dir}/{ta_name}/default/restmap.conf"},
+        {"web.conf": f"{output_dir}/{ta_name}/default/web.conf"},
+        {"alert_actions.conf": f"{output_dir}/{ta_name}/default/alert_actions.conf"},
+        {
+            "alert_actions.conf.spec": f"{output_dir}/{ta_name}/README/alert_actions.conf.spec"
+        },
+        {"eventtypes.conf": f"{output_dir}/{ta_name}/default/eventtypes.conf"},
+        {"tags.conf": f"{output_dir}/{ta_name}/default/tags.conf"},
+        {"commands.conf": f"{output_dir}/{ta_name}/default/commands.conf"},
+        {"searchbnf.conf": f"{output_dir}/{ta_name}/default/searchbnf.conf"},
+        {
+            "splunk_ta_uccexample_account.conf.spec": f"{output_dir}/{ta_name}/"
+            "README/splunk_ta_uccexample_account.conf.spec"
+        },
+        {
+            "splunk_ta_uccexample_settings.conf": f"{output_dir}/{ta_name}/default/splunk_ta_uccexample_settings.conf"
+        },
+        {
+            "splunk_ta_uccexample_settings.conf.spec": f"{output_dir}/{ta_name}/"
+            "README/splunk_ta_uccexample_settings.conf.spec"
+        },
+        {
+            "configuration.xml": f"{output_dir}/{ta_name}/default/data/ui/views/configuration.xml"
+        },
+        {
+            "dashboard.xml": f"{output_dir}/{ta_name}/default/data/ui/views/dashboard.xml"
+        },
+        {"default.xml": f"{output_dir}/{ta_name}/default/data/ui/nav/default.xml"},
+        {"inputs.xml": f"{output_dir}/{ta_name}/default/data/ui/views/inputs.xml"},
+        {
+            f"{ta_name.lower()}_redirect.xml": f"{output_dir}/{ta_name}/default/data/ui/views/"
+            f"{ta_name.lower()}_redirect.xml"
+        },
+        {
+            "test_alert.html": f"{output_dir}/{ta_name}/default/data/ui/alerts/test_alert.html"
+        },
+        {
+            "generatetextcommand.py": f"{output_dir}/{ta_name}/bin/generatetextcommand.py"
+        },
+    ]
 
 
 def test__set_attributes_error(
-    global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """
     This tests that the exception provided in side_effect is raised too
@@ -154,14 +188,15 @@ def test__set_attributes_error(
             global_config_all_json,
             input_dir,
             output_dir,
-            ucc_dir=ucc_dir,
-            addon_name=ta_name,
         )
 
 
 @patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_generate(
-    mock_set_attribute, global_config_all_json, input_dir, output_dir, ucc_dir, ta_name
+    mock_set_attribute,
+    global_config_all_json,
+    input_dir,
+    output_dir,
 ):
     """
     This tests that the exception provided in side_effect is raised too
@@ -170,8 +205,6 @@ def test_generate(
         global_config_all_json,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
     with raises(NotImplementedError):
         file_gen.generate()

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict
+from typing import Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -21,7 +21,7 @@ from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 class SearchbnfConf(FileGenerator):
     __description__ = "Generates `searchbnf.conf` for custom search commands provided in the globalConfig."
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def _set_attributes(self) -> None:
         self.conf_file = "searchbnf.conf"
         self.searchbnf_info = []
         if self._global_config.has_custom_search_commands():
@@ -35,9 +35,9 @@ class SearchbnfConf(FileGenerator):
                     }
                     self.searchbnf_info.append(searchbnf_dict)
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.searchbnf_info:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
@@ -46,9 +46,10 @@ class SearchbnfConf(FileGenerator):
         rendered_content = self._template.render(
             searchbnf_info=self.searchbnf_info,
         )
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return [
+            {
+                "file_name": self.conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]
