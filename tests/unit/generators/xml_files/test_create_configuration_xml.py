@@ -78,10 +78,10 @@ def test_generate_xml(
         """
 
     output = config_xml.generate()
-    if output is not None:
-        diff = compare_xml_content(output[0]["content"], expected_content)
-        assert diff == ""
-        assert (
-            output[0]["file_path"]
-            == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
-        )
+    assert output is not None
+    diff = compare_xml_content(output[0]["content"], expected_content)
+    assert diff == ""
+    assert (
+        output[0]["file_path"]
+        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+    )

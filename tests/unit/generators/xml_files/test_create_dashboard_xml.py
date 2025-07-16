@@ -70,13 +70,13 @@ def test_generate_xml_with_dashboard(
         """
 
     output = dashboard_xml.generate()
-    if output is not None:
-        diff = compare_xml_content(output[0]["content"], expected_content)
-        assert diff == ""
-        assert (
-            output[0]["file_path"]
-            == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
-        )
+    assert output is not None
+    diff = compare_xml_content(output[0]["content"], expected_content)
+    assert diff == ""
+    assert (
+        output[0]["file_path"]
+        == f"{output_dir}/{ta_name}/default/data/ui/views/{exp_fname}"
+    )
 
 
 def test_generate_xml_without_dashboard(

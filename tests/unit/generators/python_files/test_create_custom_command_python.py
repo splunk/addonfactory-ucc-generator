@@ -133,7 +133,7 @@ class GeneratetextcommandCommand(GeneratingCommand):
 
 dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
     '''
-    if output is not None:
-        assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
-        assert output[0]["file_name"] == exp_fname
-        assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"
+    assert output is not None
+    assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
+    assert output[0]["file_name"] == exp_fname
+    assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"

@@ -110,5 +110,5 @@ def test_web_conf_endpoints_with_user_defined_handlers(
         methods = POST, GET, DELETE
         """
     ).lstrip()
-    if output_2 is not None:
-        assert output_2[0]["content"] == expected_content
+    assert output_2 is not None
+    assert output_2[0]["content"] == expected_content

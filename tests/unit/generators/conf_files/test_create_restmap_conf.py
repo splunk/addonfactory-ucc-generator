@@ -98,9 +98,9 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir):
         output_dir,
     )
     output = restmap_conf.generate()
-    if output is not None:
-        assert output[0]["file_name"] == "restmap.conf"
-        assert output[0]["content"] == expected_content
+    assert output is not None
+    assert output[0]["file_name"] == "restmap.conf"
+    assert output[0]["content"] == expected_content
 
 
 def test_restmap_endpoints_with_user_defined_handlers(
@@ -137,6 +137,6 @@ def test_restmap_endpoints_with_user_defined_handlers(
         global_config_logging_with_user_defined_handlers, input_dir, output_dir
     )
     output = restmap_conf.generate()
-    if output is not None:
-        assert output[0]["file_name"] == "restmap.conf"
-        assert output[0]["content"] == expected_content
+    assert output is not None
+    assert output[0]["file_name"] == "restmap.conf"
+    assert output[0]["content"] == expected_content
