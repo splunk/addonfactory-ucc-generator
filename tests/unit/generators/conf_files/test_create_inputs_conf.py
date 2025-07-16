@@ -273,3 +273,19 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
                 "field_desc = Some description",
             ]
         )
+
+
+def test_generate_inputs_no_services(
+    global_config_only_configuration,
+    input_dir,
+    output_dir,
+):
+    inputs_conf = InputsConf(
+        global_config_only_configuration,
+        input_dir,
+        output_dir,
+    )
+    result = inputs_conf.generate()
+    assert result is None
+    assert inputs_conf.generate_conf() is None
+    assert inputs_conf.generate_conf_spec() is None

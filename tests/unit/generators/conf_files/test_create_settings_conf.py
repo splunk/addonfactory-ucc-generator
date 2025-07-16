@@ -1,4 +1,3 @@
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import SettingsConf
 
 
@@ -83,23 +82,20 @@ def test_generate_conf(global_config_all_json, input_dir, output_dir):
     }
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_default_content(
-    global_config,
+def test_generate_setting_no_configuration(
+    global_config_no_configuration,
     input_dir,
     output_dir,
 ):
     settings_conf = SettingsConf(
-        global_config,
+        global_config_no_configuration,
         input_dir,
         output_dir,
     )
-    settings_conf.default_content = ""
-    result = settings_conf.generate_conf()
-    result is None
+    result = settings_conf.generate()
+    assert result is None
+    assert settings_conf.generate_conf() is None
+    assert settings_conf.generate_conf_spec() is None
 
 
 def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
@@ -139,22 +135,3 @@ def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
         "file_path": f"{output_dir}/{ta_name}/README/{exp_fname}",
         "content": expected_content,
     }
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_settings_stanzas(
-    global_config,
-    input_dir,
-    output_dir,
-):
-    settings_conf = SettingsConf(
-        global_config,
-        input_dir,
-        output_dir,
-    )
-    settings_conf.settings_stanzas = []
-    result = settings_conf.generate_conf_spec()
-    result is None

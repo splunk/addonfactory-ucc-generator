@@ -56,7 +56,7 @@ class SettingsConf(FileGenerator):
             conf_files.append(conf)
         if conf_spec is not None:
             conf_files.append(conf_spec)
-        return None if conf_files == [{}] else conf_files
+        return None if conf_files == [] else conf_files
 
     def generate_conf(self) -> Optional[Dict[str, str]]:
         if not self.default_content:

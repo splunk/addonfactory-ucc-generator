@@ -105,13 +105,15 @@ def test_generate_conf(mock_copy, global_config_for_alerts, input_dir, output_di
     }
 
 
-def test_generate_conf_no_alerts(
+def test_generate_alerts_no_alerts(
     global_config_only_configuration, input_dir, output_dir
 ):
     alert_action_conf = AlertActionsConf(
         global_config_only_configuration, input_dir, output_dir
     )
-    result = alert_action_conf.generate_conf()
+    result = alert_action_conf.generate()
+    assert alert_action_conf.generate_conf() is None
+    assert alert_action_conf.generate_conf_spec() is None
     assert result is None
 
 
@@ -145,15 +147,3 @@ param.name = <string> Name. It's a required parameter. It's default value is xyz
         "file_path": f"{output_dir}/{ta_name}/README/{exp_fname}",
         "content": expected_content,
     }
-
-
-def test_generate_conf_no_alerts_spec(
-    global_config_only_configuration,
-    input_dir,
-    output_dir,
-):
-    alert_action_conf = AlertActionsConf(
-        global_config_only_configuration, input_dir, output_dir
-    )
-    result = alert_action_conf.generate_conf_spec()
-    assert result is None
