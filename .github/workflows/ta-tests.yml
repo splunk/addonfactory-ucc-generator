@@ -240,7 +240,7 @@ jobs:
           fi
           
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ github.event.inputs.target_repo }} --run-id "$WORKFLOW_RUN_ID" --exit-status success --timeout 3600
+          gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --exit-status success
           
           if [[ $? -ne 0 ]]; then
             echo "Workflow run did not complete successfully or timed out"
