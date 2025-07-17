@@ -14,9 +14,10 @@
 # limitations under the License.
 #
 from time import time
-from typing import Dict
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
+from typing import Dict, List
+
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.utils import get_app_manifest
 
 
@@ -57,7 +58,7 @@ class AppConf(FileGenerator):
         ).lower()
         self.build = str(int(time()))
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="app_conf.template"
@@ -75,10 +76,11 @@ class AppConf(FileGenerator):
             label=self.title,
             is_visible=self.is_visible,
         )
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-            merge_mode="item_overwrite",
-        )
-        return {self.conf_file: file_path}
+        return [
+            {
+                "file_name": self.conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+                "merge_mode": "item_overwrite",
+            }
+        ]

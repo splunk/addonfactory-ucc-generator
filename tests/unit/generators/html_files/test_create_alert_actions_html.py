@@ -1,51 +1,5 @@
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.html_files import AlertActionsHtml
-from pytest import fixture
-
-
-@fixture
-def set_attr():
-    return {"file_name": "file_path"}
-
-
-def mocked__set_attribute(this, **kwargs):
-    this._alert_settings = [
-        {
-            "label": "Dev Alert",
-            "description": "Description for Dev Alert Action",
-            "iconFileName": "dev icon.png",
-            "customScript": "DevAlertLogic",
-            "short_name": "dev_alert",
-            "parameters": [
-                {
-                    "label": "Name",
-                    "required": True,
-                    "format_type": "text",
-                    "name": "name",
-                    "default_value": "xyz",
-                    "help_string": "Please enter your name",
-                },
-                {
-                    "label": "All Incidents",
-                    "required": False,
-                    "format_type": "checkbox",
-                    "name": "all_incidents",
-                    "default_value": 0,
-                    "help_string": "Tick if you want to update all incidents/problems",
-                },
-                {
-                    "label": "Action:",
-                    "required": True,
-                    "format_type": "radio",
-                    "name": "action",
-                    "help_string": "Select the action you want to perform",
-                    "default_value": "update",
-                    "possible_values": {"Update": "update", "Delete": "delete"},
-                },
-            ],
-        }
-    ]
-    this._html_home = "_html_home"
+from textwrap import dedent
 
 
 def test_alert_html_generate_html_no_global_config(
@@ -59,110 +13,108 @@ def test_alert_html_generate_html_no_global_config(
         output_dir,
     )
     output = alert_html.generate()
-    assert output == {}
+    assert output is None
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml._set_attributes",
-    return_value=MagicMock(),
-)
 def test_alert_html_generate_html_no_alerts(
-    mock_set_attributes,
+    global_config_for_conf_only_TA,
     input_dir,
     output_dir,
 ):
-    mocked_gc = MagicMock()
-    mocked_gc.has_alerts.return_value = False
-
-    alert_html = AlertActionsHtml(
-        global_config=mocked_gc,
-        input_dir=input_dir,
-        output_dir=output_dir,
-    )
+    alert_html = AlertActionsHtml(global_config_for_conf_only_TA, input_dir, output_dir)
     output = alert_html.generate()
-    assert output == {}
+    assert output is None
     assert not hasattr(alert_html, "_alert_settings")
 
 
-@patch.object(AlertActionsHtml, "_set_attributes", mocked__set_attribute)
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml.get_file_output_path"
-)
 def test_alert_html_generate_html_with_alerts(
-    mock_op_path,
-    mock_template,
-    global_config_for_alerts,
+    global_config_all_json,
     input_dir,
     output_dir,
 ):
-    html_content = """<html>
-<body>
-<p>This is a paragraph.</p>
-<p>This is another paragraph.</p>
-</body>
-</html>"""
-    exp_fname = "dev_alert.html"
-    file_path = "output_path/alert_html.html"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = html_content
+    ta_name = global_config_all_json.product
+    exp_fname = "test_alert.html"
 
-    alert_html = AlertActionsHtml(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-    )
-    print("\n \n")
-    print(alert_html._alert_settings)
-    alert_html.writer = MagicMock()
-    alert_html._template = template_render
-
-    assert alert_html.generate() == {exp_fname: file_path}
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-    alert_html.writer.assert_called_once_with(
-        file_name=exp_fname, file_path=file_path, content=html_content
-    )
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.html_files.AlertActionsHtml.get_file_output_path"
-)
-def test_alert_actions_html_set_attributes_and_generate(
-    mock_op_path,
-    mock_template,
-    global_config_for_alerts,
-    input_dir,
-    output_dir,
-):
-    html_content = """<html>
-<body>
-<p>This is a paragraph.</p>
-<p>This is another paragraph.</p>
-</body>
-</html>"""
-    file_path = "output_path/alert_html.html"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = html_content
-
-    alert_html = AlertActionsHtml(
-        global_config_for_alerts,
-        input_dir,
-        output_dir,
-    )
-    assert hasattr(alert_html, "_alert_settings")
-    alert_html.writer = MagicMock()
-    alert_html._template = template_render
+    alert_html = AlertActionsHtml(global_config_all_json, input_dir, output_dir)
     output = alert_html.generate()
 
-    assert output is not None
-    assert len(output) == 4, "4 alert action html file path should be provided"
-    assert mock_op_path.call_count == 4
-    assert mock_template.call_count == 4
+    expected_content = dedent(
+        """
+    <form class="form-horizontal form-complex">
+    <div class="control-group">
+        <label class="control-label" for="test_alert_name">Name <span class="required">*</span> </label>
+        <div class="controls">
+    <input type="text" name="action.test_alert.param.name"
+            id="test_alert_name" />
+                <span class="help-block">
+            Please enter your name
+        </span>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <label class="checkbox" for="test_alert_all_incidents">
+                <input type="checkbox" name="action.test_alert.param.all_incidents" id="test_alert_all_incidents"  />
+                All Incidents
+            </label>
+                <span class="help-block">
+            Tick if you want to update all incidents/problems
+        </span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="test_alert_table_list">Table List  </label>
+        <div class="controls">
+    <select name="action.test_alert.param.table_list" id="test_alert_table_list">
+            <option value="Incident">incident</option>
+            <option value="Problem">problem</option>
+    </select>
+                <span class="help-block">
+            Please select the table
+        </span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Action:</label>
+            <div class="controls">
+                    <label class="radio" for="test_alert_action_Update">
+                        <input type="radio"
+                        name="action.test_alert.param.action" id="test_alert_action_Update" value="Update"
+                         />
+                        update
+                    </label>
+                    <label class="radio" for="test_alert_action_Delete">
+                        <input type="radio"
+                        name="action.test_alert.param.action" id="test_alert_action_Delete" value="Delete"
+                         />
+                        delete
+                    </label>
+                    <span class="help-block">
+            Select the action you want to perform
+        </span>
+            </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="test_alert_account">Select Account <span class="required">*</span> </label>
+        <div class="controls">
+            <splunk-search-dropdown name="action.test_alert.param.account" id="test_alert_account"
+                    value-field="title"
+                    label-field="title"
+                    search="| rest /servicesNS/nobody/Splunk_TA_UCCExample/splunk_ta_uccexample_account | dedup title"
+                    earliest="-4@h"
+                    latest="now"
+     />
+                <span class="help-block">
+            Select the account from the dropdown
+        </span>
+        </div>
+    </div>
+    </form>"""
+    ).lstrip()
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/data/ui/alerts/{exp_fname}",
+            "content": expected_content,
+        }
+    ]

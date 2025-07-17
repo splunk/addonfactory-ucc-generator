@@ -2030,9 +2030,36 @@
                     "const": "oauth_client_credentials",
                     "type": "string",
                     "description": "Exactly: oauth_client_credentials"
+                  },
+                  {
+                    "type": "string",
+                    "description": "Any different value that is not one of the above will be treated as a custom auth type."
                   }
                 ]
-              }
+              },
+              "additionalProperties": false
+            },
+            "oauth_type_labels": {
+              "type": "object",
+              "description": "It is used to set the label for each authentication type in the auth_type dropdown.",
+              "properties": {
+                "basic": {
+                  "type": "string",
+                  "default": "Basic Authentication",
+                  "description": "Label for Basic Authentication type."
+                },
+                "oauth": {
+                  "type": "string",
+                  "default": "OAuth 2.0 with Authorization Code Grant (interactive)",
+                  "description": "Label for OAuth 2.0 with Authorization Code Grant (interactive) authentication type."
+                },
+                "oauth_client_credentials": {
+                  "type": "string",
+                  "default": "OAuth 2.0 with Client Credentials Grant (non-interactive)",
+                  "description": "Label for OAuth 2.0 with Client Credentials Grant (non-interactive) authentication type."
+                }
+              },
+              "additionalProperties": true
             },
             "basic": {
               "type": "array",
@@ -2097,7 +2124,8 @@
             },
             "hideForPlatform": {
               "$ref": "#/definitions/HideForPlatform"
-            }
+            },
+            "additionalProperties": true
           },
           "allOf": [
             {
@@ -2139,7 +2167,6 @@
               }
             }
           ],
-          "additionalProperties": false,
           "required": [
             "auth_type"
           ]

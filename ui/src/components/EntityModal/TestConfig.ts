@@ -30,13 +30,25 @@ const entityBasicOauthDisableonEdit = [
         required: true,
         encrypted: false,
         options: {
-            auth_type: ['basic'],
+            auth_type: ['basic', 'additional_oauth'],
             basic: [
                 {
                     oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'basic_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: true,
+                        enable: true,
+                    },
+                },
+            ],
+            additional_oauth: [
+                {
+                    oauth_field: 'some_text_jest_test_add_cred',
+                    label: 'some_text Token additional oauth',
+                    help: 'Enter some_text additional oauth',
+                    field: 'basic_oauth_text_jest_test_add_cred',
                     options: {
                         disableonEdit: true,
                         enable: true,

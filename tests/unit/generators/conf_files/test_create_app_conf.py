@@ -1,116 +1,94 @@
-from pytest import fixture
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AppConf
+from textwrap import dedent
+from tests.unit.helpers import get_testdata_file_path
+import os
+from time import time
+
+INPUT_DIR = os.path.join(get_testdata_file_path("app.manifest"), os.pardir)
 
 
-@fixture
-def has_ui():
-    return True
-
-
-@fixture
-def has_ui_no_globalConfig():
-    return False
-
-
-@fixture
-def dummy_app_manifest():
-    mock_manifest = MagicMock()
-    mock_manifest.get_description.return_value = "Test Description"
-    mock_manifest.get_authors.return_value = [{"name": "Test Author"}]
-    return mock_manifest
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
-)
 def test_set_attributes_check_for_updates_false(
-    dummy_app_manifest,
     global_config_all_json,
-    input_dir,
     output_dir,
 ):
     """Test _set_attributes when _global_config has checkForUpdates set to False."""
-
-    dummy_app_manifest.return_value = dummy_app_manifest
     global_config_all_json.meta.update({"checkForUpdates": False})
 
-    app_conf = AppConf(global_config_all_json, input_dir, output_dir)
+    app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
 
     assert app_conf.check_for_updates == "false"
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
-)
-def test_set_attributes_supported_themes(
-    dummy_app_manifest, global_config_all_json, input_dir, output_dir
-):
+def test_set_attributes_supported_themes(global_config_all_json, output_dir):
     """Test _set_attributes when _global_config has supportedThemes."""
-    dummy_app_manifest.return_value = dummy_app_manifest
     global_config_all_json.meta.update({"supportedThemes": ["dark", "light"]})
-    app_conf = AppConf(global_config_all_json, input_dir, output_dir)
+    app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
 
     assert app_conf.supported_themes == "dark, light"
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
-)
 def test_set_attributes_with_global_config_and_schema(
-    dummy_app_manifest,
     global_config_all_json,
-    input_dir,
     output_dir,
 ):
     """Test _set_attributes when _global_config and _gc_schema provide config file names."""
-    dummy_app_manifest.return_value = dummy_app_manifest
     expected_custom_conf = [
         "splunk_ta_uccexample_settings",
         "splunk_ta_uccexample_account",
         "splunk_ta_uccexample_oauth",
     ]
 
-    app_conf = AppConf(global_config_all_json, input_dir, output_dir)
+    app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
 
     assert app_conf.custom_conf == expected_custom_conf
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.AppConf.set_template_and_render"
-)
-@patch("splunk_add_on_ucc_framework.generators.conf_files.AppConf.get_file_output_path")
 def test_generate_conf(
-    mock_op_path,
-    mock_template,
-    dummy_app_manifest,
     global_config_all_json,
-    input_dir,
     output_dir,
 ):
-    content = "content"
     exp_fname = "app.conf"
-    file_path = "output_path/app.conf"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = content
+    ta_name = global_config_all_json.product
 
-    dummy_app_manifest.return_value = dummy_app_manifest
-    app_conf = AppConf(global_config_all_json, input_dir, output_dir)
-    app_conf.writer = MagicMock()
-    app_conf._template = template_render
-    file_paths = app_conf.generate()
+    app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
+    output = app_conf.generate()
+    # Build is calculated dynamically, we can't pass static value.
+    build = str(int(time()))
+    expected_content = dedent(
+        f"""
+        [launcher]
+        version = 1.0.0
+        description = Description of Splunk Add-on for UCC Example
+        author = Splunk
 
-    # Ensure the appropriate methods were called and the file was generated
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-    app_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-        merge_mode="item_overwrite",
-    )
-    assert file_paths == {exp_fname: file_path}
+        [id]
+        version = 1.0.0
+        name = Splunk_TA_UCCExample
+
+        [install]
+        build = {build}
+        is_configured = false
+        state = enabled
+
+        [package]
+        id = Splunk_TA_UCCExample
+        check_for_updates = true
+
+        [ui]
+        label = Splunk Add-on for UCC Example
+        is_visible = true
+
+        [triggers]
+        reload.splunk_ta_uccexample_settings = simple
+        reload.splunk_ta_uccexample_account = simple
+        reload.splunk_ta_uccexample_oauth = simple
+        """
+    ).lstrip()
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+            "content": expected_content,
+            "merge_mode": "item_overwrite",
+        }
+    ]

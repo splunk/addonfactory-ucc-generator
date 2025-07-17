@@ -24,6 +24,7 @@ from unittest.mock import patch
         "valid_config.json",
         "valid_config.yaml",
         "valid_config_only_logging.json",
+        "valid_oauth_authentication_config_with_custom_oauth_and_labels.json",
     ],
 )
 @patch("os.path.isfile", return_value=True)
@@ -345,6 +346,19 @@ def test_autocompletefields_children_support_integer_values():
             "invalid_config_meta_default_dashboard_page_but_no_dashboard_defined.json",
             (
                 'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
+            ),
+        ),
+        (
+            "invalid_oauth_config_with_labels_entities_not_defined.json",
+            (
+                "Authorization type 'unexisting_auth_type_label', included in oauth_type_labels,"
+                " does not have any entities defined."
+            ),
+        ),
+        (
+            "invalid_custom_oauth_entities_not_defined.json",
+            (
+                "Authorization type 'unexisting_auth_type' does not have any entities defined."
             ),
         ),
     ],

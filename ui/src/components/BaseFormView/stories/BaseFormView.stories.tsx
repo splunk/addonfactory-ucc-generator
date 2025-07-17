@@ -6,6 +6,7 @@ import BaseFormView from '../BaseFormView';
 import {
     PAGE_CONFIG_BOTH_OAUTH,
     getConfigOauthBasic,
+    getConfigOauthBasicWithAdditionalFieldTypes,
     getConfigOauthOauth,
 } from './globalConfigs/configPageOauth';
 import { setUnifiedConfig } from '../../../util/util';
@@ -105,6 +106,19 @@ export const OuathBasicCloud: Story = {
         stanzaName: 'unknownStanza',
         handleFormSubmit: fn(),
         config: getConfigOauthBasic() as GlobalConfig,
+        platform: 'cloud',
+    },
+};
+
+export const OauthBasicWithAdditionalFieldTypes: Story = {
+    args: {
+        currentServiceState: {},
+        serviceName: 'account',
+        mode: 'create' as Mode,
+        page: 'configuration',
+        stanzaName: 'unknownStanza',
+        handleFormSubmit: fn(),
+        config: getConfigOauthBasicWithAdditionalFieldTypes(),
         platform: 'cloud',
     },
 };
