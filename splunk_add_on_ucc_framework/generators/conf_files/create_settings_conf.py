@@ -16,6 +16,7 @@
 from typing import Tuple, List, Dict, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class SettingsConf(FileGenerator):
@@ -24,14 +25,17 @@ class SettingsConf(FileGenerator):
         "file for the Proxy, Logging or Custom Tab mentioned in globalConfig"
     )
 
-    def _set_attributes(self) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.settings_stanzas: List[Tuple[str, List[str]]] = []
         self.default_content: str = ""
 
-        if self._global_config.has_configuration():
-            self.conf_file = self._global_config.namespace.lower() + "_settings.conf"
+        if global_config.has_configuration():
+            self.conf_file = global_config.namespace.lower() + "_settings.conf"
             self.conf_spec_file = f"{self.conf_file}.spec"
-            for setting in self._global_config.settings:
+            for setting in global_config.settings:
                 content = self._gc_schema._get_oauth_enitities(
                     setting.get("entity", [])
                 )
