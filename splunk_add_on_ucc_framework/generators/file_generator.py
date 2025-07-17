@@ -14,9 +14,8 @@
 # limitations under the License.
 #
 import logging
-import os
 from abc import ABC
-from os.path import realpath, sep
+from os.path import realpath, sep, dirname, abspath
 from typing import Any, Dict, List, Union, NoReturn, Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -39,7 +38,7 @@ logger = logging.getLogger("ucc_gen")
 class FileGenerator(ABC):
     __description__ = "DESCRIBE THE FILE THAT IS GENERATED"
 
-    _ucc_dir = ucc_framework_file
+    _ucc_dir = abspath(dirname(ucc_framework_file))
 
     def __init__(
         self,
@@ -57,7 +56,7 @@ class FileGenerator(ABC):
         self._global_config = global_config
         self._input_dir = input_dir
         self._output_dir = output_dir
-        self._template_dir = [(sep.join([os.path.dirname(self._ucc_dir), "templates"]))]
+        self._template_dir = [(sep.join([self._ucc_dir, "templates"]))]
         self._template = Environment(
             loader=FileSystemLoader(self._template_dir),
             trim_blocks=True,
