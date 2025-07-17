@@ -146,6 +146,7 @@ def test_ucc_generate_with_everything(caplog):
         files_to_be_equal = [
             ("README.txt",),
             ("appserver", "static", "test icon.png"),
+            ("appserver", "static", "alerticon.png"),
             ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
@@ -158,6 +159,7 @@ def test_ucc_generate_with_everything(caplog):
             ("default", "commands.conf"),
             ("default", "searchbnf.conf"),
             ("default", "data", "ui", "alerts", "test_alert.html"),
+            ("default", "data", "ui", "alerts", "test_alert_default.html"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
             ("default", "data", "ui", "views", "inputs.xml"),
@@ -213,7 +215,6 @@ def test_ucc_generate_with_everything(caplog):
 
         # when custom files are provided, default files shouldn't be shipped
         files_should_be_absent = [
-            ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("appserver", "static", "js", "build", "entry_page.js.map"),
             ("lib", "__pycache__"),
