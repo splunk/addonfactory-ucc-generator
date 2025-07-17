@@ -217,3 +217,28 @@ jobs:
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
           git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
           git push --force origin $GIT_BRANCH
+
+      - name: Obtain the workflow run ID
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        id: get-workflow-run-id
+        run: |
+          WORKFLOW_RUN_ID=$(gh run -R ${{ github.event.inputs.target_repo }} list -b ucc/ci_tests_trigger_pipeline --json databaseId --limit 1 --status in_progress --workflow build-test-release | jq -r '.[0].databaseId')
+          echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID" >> $GITHUB_ENV
+          echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
+
+      - name: Wait for the workflow run to complete
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        id: wait-for-workflow
+        run: |
+          if [[ -z "$WORKFLOW_RUN_ID" ]]; then
+            echo "No workflow run ID found, skipping wait"
+            exit 0
+          fi
+          
+          echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
+          gh run watch -R ${{ github.event.inputs.target_repo }} --run-id "$WORKFLOW_RUN_ID" --exit-status success --timeout 3600
+          
+          if [[ $? -ne 0 ]]; then
+            echo "Workflow run did not complete successfully or timed out"
+            exit 1
+          fi
