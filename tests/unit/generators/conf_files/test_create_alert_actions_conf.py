@@ -1,21 +1,17 @@
 import shutil
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from splunk_add_on_ucc_framework.generators.conf_files import AlertActionsConf
 from textwrap import dedent
 
 
-def test_set_attributes_global_config_with_empty_alerts(
-    global_config_for_alerts,
+def test_init_global_config_with_empty_alerts(
+    global_config_only_configuration,
     input_dir,
     output_dir,
 ):
-    global_config_for_alerts = MagicMock()
-    global_config_for_alerts.alerts = []
-
     alert_action_conf = AlertActionsConf(
-        global_config_for_alerts, input_dir, output_dir
+        global_config_only_configuration, input_dir, output_dir
     )
-    alert_action_conf._set_attributes()
 
     assert alert_action_conf.alerts == {}
     assert alert_action_conf.alerts_spec == {}

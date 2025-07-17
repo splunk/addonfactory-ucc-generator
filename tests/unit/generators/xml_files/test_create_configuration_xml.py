@@ -22,7 +22,7 @@ def test_generate_views_configuration_xml(
     assert diff == ""
 
 
-def test_set_attributes(global_config_all_json, input_dir, output_dir):
+def test_init(global_config_all_json, input_dir, output_dir):
     config_xml = ConfigurationXml(
         global_config_all_json,
         input_dir,
@@ -31,7 +31,7 @@ def test_set_attributes(global_config_all_json, input_dir, output_dir):
     assert hasattr(config_xml, "configuration_xml_content")
 
 
-def test_set_attributes_without_configuration(
+def test_init_without_configuration(
     global_config_no_configuration,
     input_dir,
     output_dir,
