@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import logging
+import sys
 from typing import Any, Dict, Tuple, List, Optional
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
@@ -23,7 +24,6 @@ from splunk_add_on_ucc_framework.entity import (
 )
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.tabs import resolve_tab
-from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
 
@@ -325,19 +325,13 @@ def _stop_build_on_placeholder_usage(
         "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
         "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
     )
-    exc_msg = (
-        "`placeholder` option found for %s '%s'. It has been removed from UCC. "
-        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
-    )
     for tab in global_config.configuration:
         for entity in tab.get("entity", []):
             if "placeholder" in entity.get("options", {}):
                 logger.error(
                     log_msg % ("configuration tab", tab["name"], entity["field"])
                 )
-                raise GlobalConfigValidatorException(
-                    exc_msg % ("configuration tab", tab["name"])
-                )
+                sys.exit(1)
     services = global_config.inputs
     if not services:
         return
@@ -347,9 +341,8 @@ def _stop_build_on_placeholder_usage(
                 logger.error(
                     log_msg % ("input service", service["name"], entity["field"])
                 )
-                raise GlobalConfigValidatorException(
-                    exc_msg % ("input service", service["name"])
-                )
+                sys.exit(1)
+
     global_config.update_schema_version("0.0.8")
 
 
