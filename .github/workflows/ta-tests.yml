@@ -221,6 +221,8 @@ jobs:
       - name: Obtain the workflow run ID
         if: success() && github.event.inputs.run_pipelines == 'true'
         id: get-workflow-run-id
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
         run: |
           WORKFLOW_RUN_ID=$(gh run -R ${{ github.event.inputs.target_repo }} list -b ucc/ci_tests_trigger_pipeline --json databaseId --limit 1 --status in_progress --workflow build-test-release | jq -r '.[0].databaseId')
           echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID" >> $GITHUB_ENV
@@ -229,6 +231,8 @@ jobs:
       - name: Wait for the workflow run to complete
         if: success() && github.event.inputs.run_pipelines == 'true'
         id: wait-for-workflow
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
         run: |
           if [[ -z "$WORKFLOW_RUN_ID" ]]; then
             echo "No workflow run ID found, skipping wait"
