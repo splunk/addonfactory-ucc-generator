@@ -69,7 +69,6 @@ export const StyledHeading = styled(Heading)`
     text-align: center;
     margin: 0;
     font-weight: ${variables.fontWeightBold};
-    font-size: ${variables.fontSizeXXLarge};
 `;
 
 export const StyledBody = styled(Card.Body)`
