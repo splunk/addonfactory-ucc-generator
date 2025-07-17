@@ -127,6 +127,8 @@ jobs:
         id: prepare
         working-directory: TA
         run: |
+          set -x
+          
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
@@ -140,7 +142,8 @@ jobs:
             if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
               echo "Branch $GIT_BRANCH already exists, checking it out"
               git checkout "$GIT_BRANCH"
-              git pull origin main --no-ff --no-edit --allow-unrelated-histories  # Merge main into the branch
+              git reset --hard "origin/main"  # Reset to main branch
+              git rebase main $GIT_BRANCH  # Rebase the branch onto main
               echo "branch-created=false" >> "$GITHUB_OUTPUT"
             else
               echo "Branch $GIT_BRANCH does not exist, creating it"
