@@ -1,48 +1,5 @@
 from textwrap import dedent
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import RestMapConf
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.RestMapConf.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.RestMapConf.get_file_output_path"
-)
-def test_generate_conf(
-    mock_op_path,
-    mock_template,
-    global_config_all_json,
-    input_dir,
-    output_dir,
-):
-    content = "content"
-    exp_fname = "restmap.conf"
-    file_path = "output_path/restmap.conf"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = content
-
-    restmap_conf = RestMapConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-    )
-
-    restmap_conf.writer = MagicMock()
-    restmap_conf._template = template_render
-    file_paths = restmap_conf.generate()
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-
-    # Ensure the writer function was called with the correct parameters
-    restmap_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-
-    assert file_paths == {exp_fname: file_path}
 
 
 def test_generate_conf_no_gc_schema(
@@ -57,7 +14,7 @@ def test_generate_conf_no_gc_schema(
     )
 
     file_paths = restmap_conf.generate()
-    assert file_paths == {}
+    assert file_paths is None
 
 
 def test_generate_conf_for_conf_only_TA(
@@ -72,7 +29,7 @@ def test_generate_conf_for_conf_only_TA(
     )
 
     file_paths = restmap_conf.generate()
-    assert file_paths == {}
+    assert file_paths is None
 
 
 def test_set_attributes(
@@ -107,28 +64,24 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir):
             "handlerfile = splunk_ta_uccexample_rh_oauth.py",
             "handleractions = edit",
             "handlerpersistentmode = true",
-            "",
             "[admin_external:splunk_ta_uccexample_account]",
             "handlertype = python",
             "python.version = python3",
             "handlerfile = splunk_ta_uccexample_rh_account.py",
             "handleractions = edit, list, remove, create",
             "handlerpersistentmode = true",
-            "",
             "[admin_external:splunk_ta_uccexample_settings]",
             "handlertype = python",
             "python.version = python3",
             "handlerfile = splunk_ta_uccexample_rh_settings.py",
             "handleractions = edit, list",
             "handlerpersistentmode = true",
-            "",
             "[admin_external:splunk_ta_uccexample_example_input_one]",
             "handlertype = python",
             "python.version = python3",
             "handlerfile = splunk_ta_uccexample_rh_example_input_one.py",
             "handleractions = edit, list, remove, create",
             "handlerpersistentmode = true",
-            "",
             "[admin_external:splunk_ta_uccexample_example_input_two]",
             "handlertype = python",
             "python.version = python3",
@@ -144,15 +97,10 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir):
         input_dir,
         output_dir,
     )
-    file_paths = restmap_conf.generate()
-
-    assert file_paths is not None
-    assert file_paths.keys() == {"restmap.conf"}
-
-    with open(file_paths["restmap.conf"]) as fp:
-        content = fp.read()
-
-    assert content == expected_content
+    output = restmap_conf.generate()
+    assert output is not None
+    assert output[0]["file_name"] == "restmap.conf"
+    assert output[0]["content"] == expected_content
 
 
 def test_restmap_endpoints_with_user_defined_handlers(
@@ -170,14 +118,12 @@ def test_restmap_endpoints_with_user_defined_handlers(
         handlerfile = splunk_ta_uccexample_rh_settings.py
         handleractions = edit, list
         handlerpersistentmode = true
-
         [admin_external:endpoint1]
         handlertype = python
         python.version = python3
         handlerfile = file1.py
         handleractions = list
         handlerpersistentmode = true
-
         [admin_external:endpoint2]
         handlertype = python
         python.version = python3
@@ -190,12 +136,7 @@ def test_restmap_endpoints_with_user_defined_handlers(
     restmap_conf = RestMapConf(
         global_config_logging_with_user_defined_handlers, input_dir, output_dir
     )
-    file_paths = restmap_conf.generate()
-
-    assert file_paths is not None
-    assert file_paths.keys() == {"restmap.conf"}
-
-    with open(file_paths["restmap.conf"]) as fp:
-        content = fp.read()
-
-    assert content == expected_content
+    output = restmap_conf.generate()
+    assert output is not None
+    assert output[0]["file_name"] == "restmap.conf"
+    assert output[0]["content"] == expected_content

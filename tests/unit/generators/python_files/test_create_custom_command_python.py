@@ -1,5 +1,10 @@
 from pytest import fixture
 from splunk_add_on_ucc_framework.generators.python_files import CustomCommandPy
+from textwrap import dedent
+
+
+def normalize_code(code: str) -> str:
+    return dedent(code).replace("\\\n", " ").replace("\n", "").replace(" ", "")
 
 
 @fixture
@@ -86,19 +91,49 @@ def test_generate_python_without_custom_command(
         input_dir,
         output_dir,
     )
-    file_paths = custom_command.generate()
+    output = custom_command.generate()
 
     # Assert that no files are returned since no custom command is configured
-    assert file_paths == {}
+    assert output is None
 
 
-def test_generate_python(global_config_all_json, input_dir, output_dir, ta_name):
+def test_generate_python(global_config_all_json, input_dir, output_dir):
     exp_fname = "generatetextcommand.py"
-    global_config_all_json.meta["name"] = ta_name
+    ta_name = global_config_all_json.meta["name"]
     custom_command_py = CustomCommandPy(
         global_config_all_json,
         input_dir,
         output_dir,
     )
-    file_paths = custom_command_py.generate()
-    assert file_paths == {exp_fname: f"{output_dir}/{ta_name}/bin/{exp_fname}"}
+    output = custom_command_py.generate()
+    expected_content = '''
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \\
+    dispatch, GeneratingCommand, Configuration, Option, validators
+from generatetext import generate
+
+@Configuration()
+class GeneratetextcommandCommand(GeneratingCommand):
+    """
+
+    ##Syntax
+    generatetextcommand count=<event_count> text=<string>
+
+    ##Description
+    This command generates COUNT occurrences of a TEXT string.
+
+    """
+    count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10))
+    text = Option(name='text', require=True)
+
+    def generate(self):
+       return generate(self)
+
+dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
+    '''
+    assert output is not None
+    assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
+    assert output[0]["file_name"] == exp_fname
+    assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"

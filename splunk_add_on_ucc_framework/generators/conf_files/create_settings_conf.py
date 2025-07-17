@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
@@ -48,31 +48,34 @@ class SettingsConf(FileGenerator):
                     "settings"
                 ].generate_conf_with_default_values()
 
-    def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_conf())
-        conf_files.update(self.generate_conf_spec())
-        return conf_files
+    def generate(self) -> Optional[List[Dict[str, str]]]:
+        conf_files: List[Dict[str, str]] = []
+        conf = self.generate_conf()
+        conf_spec = self.generate_conf_spec()
+        if conf is not None:
+            conf_files.append(conf)
+        if conf_spec is not None:
+            conf_files.append(conf_spec)
+        return None if conf_files == [] else conf_files
 
-    def generate_conf(self) -> Dict[str, str]:
+    def generate_conf(self) -> Optional[Dict[str, str]]:
         if not self.default_content:
-            return {}
+            return None
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="settings_conf.template"
         )
 
         rendered_content = self._template.render(default_content=self.default_content)
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
-    def generate_conf_spec(self) -> Dict[str, str]:
+    def generate_conf_spec(self) -> Optional[Dict[str, str]]:
         if not self.settings_stanzas:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
@@ -80,9 +83,8 @@ class SettingsConf(FileGenerator):
         )
 
         rendered_content = self._template.render(settings_stanzas=self.settings_stanzas)
-        self.writer(
-            file_name=self.conf_spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_spec_file: file_path}
+        return {
+            "file_name": self.conf_spec_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }

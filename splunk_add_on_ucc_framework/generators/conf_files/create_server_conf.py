@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from os.path import isfile, join
-from typing import Dict
+from typing import Dict, List, Optional
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 
 
@@ -31,22 +31,23 @@ class ServerConf(FileGenerator):
         self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
         self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.custom_conf:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         # For now, only create server.conf only if
         # no server.conf is present in the source package.
         if isfile(join(self._input_dir, "default", self.conf_file)):
-            return {}
+            return None
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="server_conf.template"
         )
         rendered_content = self._template.render(custom_conf=self.custom_conf)
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return [
+            {
+                "file_name": self.conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        ]

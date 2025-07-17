@@ -2361,6 +2361,43 @@
                 }
             ],
             "customScript": "myAlertLogic"
+        },
+        {
+            "name": "test_alert_default",
+            "label": "Test Alert Default",
+            "description": "Description for test Alert Action",
+            "adaptiveResponse": {
+                "task": [
+                    "Create"
+                ],
+                "subject": [
+                    "endpoint"
+                ],
+                "category": [
+                    "Information Portrayal"
+                ],
+                "technology": [
+                    {
+                        "version": [
+                            "1.0.0"
+                        ],
+                        "product": "Test Incident Update",
+                        "vendor": "Splunk"
+                    }
+                ],
+                "drilldownUri": "search?q=search%20index%3D\"_internal\"&earliest=0&latest=",
+                "sourcetype": "test:incident"
+            },
+            "entity": [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "field": "name",
+                    "defaultValue": "xyz",
+                    "required": true,
+                    "help": "Please enter your name"
+                }
+            ]
         }
     ],
     "meta": {

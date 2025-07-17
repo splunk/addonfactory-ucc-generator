@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Dict
+from typing import Dict, List, Optional
 from xml.etree.ElementTree import Element, SubElement, tostring
 from splunk_add_on_ucc_framework.utils import pretty_print_xml
 
@@ -49,16 +49,17 @@ class RedirectXml(FileGenerator):
             )
             self.ta_name = self._addon_name.lower()
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_oauth():
-            return {}
+            return None
         file_name = f"{self.ta_name}_redirect.xml"
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", file_name]
         )
-        self.writer(
-            file_name=file_name,
-            file_path=file_path,
-            content=self.redirect_xml_content,
-        )
-        return {file_name: file_path}
+        return [
+            {
+                "file_name": file_name,
+                "file_path": file_path,
+                "content": self.redirect_xml_content,
+            }
+        ]
