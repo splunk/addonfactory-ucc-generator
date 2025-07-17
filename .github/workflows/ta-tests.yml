@@ -130,7 +130,7 @@ jobs:
             if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
               echo "Branch $GIT_BRANCH already exists, checking it out"
               git checkout "$GIT_BRANCH"
-              git pull origin main --no-ff --no-edit  # Merge main into the branch
+              git pull origin main --no-ff --no-edit --allow-unrelated-histories  # Merge main into the branch
               echo "branch-created=false" >> "$GITHUB_OUTPUT"
             else
               echo "Branch $GIT_BRANCH does not exist, creating it"
