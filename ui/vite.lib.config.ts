@@ -23,9 +23,11 @@ export default defineConfig({
             formats: ['es'],
             fileName: 'index',
         },
+        commonjsOptions: {
+            esmExternals: ['react', 'react-dom', 'react-is', 'styled-components'],
+        },
         emptyOutDir: true,
         rollupOptions: {
-            external: modulesNotToBundle,
             output: {
                 format: 'module',
                 dir: 'dist/lib',

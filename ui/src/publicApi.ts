@@ -37,4 +37,7 @@ export type { Tab } from './components/CustomTab/CustomTab.types';
 
 export type { RowDataFields } from './context/TableContext';
 
-export { renderConfigurationPage } from './UccTestCommand/uiUccTests/configPageUccTest';
+export {
+    renderConfigurationPage,
+    renderInputsPage,
+} from './UccTestCommand/uiUccTests/testUccPages';
