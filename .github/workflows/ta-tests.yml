@@ -185,7 +185,17 @@ jobs:
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
-          poetry run ucc-gen build
+          poetry run ucc-gen build > build_output.log 2>&1
+          if tail -n 1 build_output.log | grep -q "^INFO: File creation summary: created: "; then
+            echo "✓ Build completed successfully with expected output"
+            cat build_output.log
+          else
+            echo "✗ Build did not complete with expected output"
+            echo "Last line of output should start with 'INFO: File creation summary: created: '"
+            echo "Full output:"
+            cat build_output.log
+            exit 1
+          fi
       - name: Importing GPG key
         if: success() && github.event.inputs.run_pipelines == 'true'
         uses: crazy-max/ghaction-import-gpg@v6
