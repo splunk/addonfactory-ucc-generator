@@ -190,6 +190,8 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "splunk_ta_uccexample_validate_account_rh.py"),
             ("bin", "myAlertLogic.py"),
             ("bin", "test_alert.py"),
+            ("bin", "test_alert_default.py"),
+            ("bin", "splunk_ta_uccexample", "modalert_test_alert_default_helper.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),
             ("README", "some_conf.conf.spec"),
