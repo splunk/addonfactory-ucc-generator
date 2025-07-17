@@ -142,12 +142,12 @@ jobs:
             if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
               echo "Branch $GIT_BRANCH already exists, checking it out"
               git checkout "$GIT_BRANCH"
-              git reset --hard "origin/main"  # Reset to main branch
-              git rebase main $GIT_BRANCH  # Rebase the branch onto main
+              git reset --hard "origin/${{ github.event.inputs.target_branch }}"  # Reset to main branch
+              git rebase ${{ github.event.inputs.target_branch }} $GIT_BRANCH  # Rebase the branch onto main
               echo "branch-created=false" >> "$GITHUB_OUTPUT"
             else
               echo "Branch $GIT_BRANCH does not exist, creating it"
-              git checkout -b "$GIT_BRANCH" "origin/main"
+              git checkout -b "$GIT_BRANCH" "origin/${{ github.event.inputs.target_branch }}"
               echo "branch-created=true" >> "$GITHUB_OUTPUT"
             fi
           
