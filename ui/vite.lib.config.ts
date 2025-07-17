@@ -16,6 +16,7 @@ export default defineConfig({
         }),
     ],
     build: {
+        minify: false,
         copyPublicDir: false,
         lib: {
             entry: resolve(__dirname, 'src/publicApi.ts'),
@@ -23,9 +24,6 @@ export default defineConfig({
             fileName: 'index',
         },
         emptyOutDir: true,
-        commonjsOptions: {
-            esmExternals: ['styled-components'],
-        },
         rollupOptions: {
             external: modulesNotToBundle,
             output: {
