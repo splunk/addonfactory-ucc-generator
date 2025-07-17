@@ -23,7 +23,7 @@ on:
         required: false
         default: ""
       run_pipelines:
-        description: "Run pipelines for all TAs (true/false)"
+        description: "Trigger TA pipelines (true/false)"
         required: false
         default: "false"
 
