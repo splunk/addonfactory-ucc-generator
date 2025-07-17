@@ -156,8 +156,7 @@ jobs:
             cat build_output.log
           else
             echo "✗ Build did not complete with expected output"
-            echo "Last line of output:"
-            tail -n 1 build_output.log
+            echo "Last line of output should start with 'INFO: File creation summary: created: '"
             echo "Full output:"
             cat build_output.log
             exit 1
