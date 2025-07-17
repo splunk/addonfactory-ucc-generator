@@ -216,4 +216,4 @@ jobs:
           git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
           git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
-          git push origin $GIT_BRANCH
+          git push --force origin $GIT_BRANCH
