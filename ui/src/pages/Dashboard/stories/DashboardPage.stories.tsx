@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { waitFor, within, expect } from '@storybook/test';
+import { waitForElementToBeRemoved, within } from '@storybook/test';
 import DashboardPage from '../DashboardPage';
 
 import { DASHBOARD_JSON_MOCKS } from '../tests/mockJs';
