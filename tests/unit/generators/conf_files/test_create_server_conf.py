@@ -1,9 +1,9 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from splunk_add_on_ucc_framework.generators.conf_files import ServerConf
 from textwrap import dedent
 
 
-def test_set_attributes(
+def test_init(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -13,15 +13,11 @@ def test_set_attributes(
         input_dir,
         output_dir,
     )
-
-    server_conf._gc_schema = MagicMock()
-    server_conf._gc_schema.settings_conf_file_names = ["settings_conf"]
-    server_conf._gc_schema.configs_conf_file_names = ["configs_conf"]
-    server_conf._gc_schema.oauth_conf_file_names = ["oauth_conf"]
-
-    server_conf._set_attributes()
-
-    expected_custom_conf = ["settings_conf", "configs_conf", "oauth_conf"]
+    expected_custom_conf = [
+        "splunk_ta_uccexample_settings",
+        "splunk_ta_uccexample_account",
+        "splunk_ta_uccexample_oauth",
+    ]
     assert server_conf.custom_conf == expected_custom_conf
 
 

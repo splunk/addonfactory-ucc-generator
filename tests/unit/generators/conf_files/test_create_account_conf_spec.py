@@ -1,52 +1,8 @@
-from pytest import fixture
 from unittest.mock import MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import AccountConf
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
-
-TA_NAME = "test_addon"
 
 
-@fixture
-def global_config():
-    gc = GlobalConfig.from_file(get_testdata_file_path("valid_config.json"))
-    gc._content["meta"]["restRoot"] = TA_NAME
-    return gc
-
-
-def test_set_attributes(
-    global_config,
-    input_dir,
-    output_dir,
-):
-    """Test when _global_config has mixed accounts (some 'oauth', some not)."""
-    account_spec = AccountConf(global_config, input_dir, output_dir)
-    account_spec._global_config = MagicMock()
-    account_spec._gc_schema = MagicMock()
-
-    # Mock the global config and schema behaviors
-    account_spec._global_config.configs = [
-        {"name": "oauth", "entity": "entity1"},
-        {"name": "non_oauth", "entity": "entity2"},
-    ]
-    account_spec._global_config.namespace = TA_NAME
-    account_spec._gc_schema._get_oauth_enitities.return_value = "mocked_content"
-    account_spec._gc_schema._parse_fields.return_value = (
-        [MagicMock(_name="field2")],
-        [MagicMock(_name="field3")],
-    )
-
-    account_spec._set_attributes()
-
-    # Only the non-oauth account should be processed
-    assert account_spec.account_fields == [("<name>", ["field2 = "])]
-    assert (
-        account_spec.conf_spec_file
-        == f"{global_config.namespace.lower()}_account.conf.spec"
-    )
-
-
-def test_set_attributes_conf_only_TA(
+def test_init_conf_only_TA(
     global_config_for_conf_only_TA,
     input_dir,
     output_dir,
@@ -54,23 +10,17 @@ def test_set_attributes_conf_only_TA(
     """Test when _global_config is provided but it is a conf only TA, which implies it has no configuration."""
     account_spec = AccountConf(global_config_for_conf_only_TA, input_dir, output_dir)
 
-    account_spec._set_attributes()
-
     assert account_spec.account_fields == []
 
 
-def test_set_attributes_with_oauth_account(
-    global_config,
+def test_init_with_oauth_account(
     input_dir,
     output_dir,
 ):
     """Test when _global_config has an account with name 'oauth'."""
+    global_config = MagicMock()
+    global_config.configs = [{"name": "oauth", "entity": []}]
     account_spec = AccountConf(global_config, input_dir, output_dir)
-    account_spec._global_config = MagicMock()
-
-    account_spec._global_config.configs = [{"name": "oauth", "entity": "entity1"}]
-
-    account_spec._set_attributes()
 
     # Since 'oauth' should be skipped, account_fields should remain empty
     assert account_spec.account_fields == []

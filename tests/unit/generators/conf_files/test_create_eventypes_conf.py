@@ -2,7 +2,7 @@ from splunk_add_on_ucc_framework.generators.conf_files import EventtypesConf
 from textwrap import dedent
 
 
-def test_set_attribute(
+def test_init(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -12,8 +12,6 @@ def test_set_attribute(
         input_dir,
         output_dir,
     )
-
-    eventtypes_conf._set_attributes()
     assert eventtypes_conf.conf_file == "eventtypes.conf"
 
 
