@@ -206,9 +206,11 @@ jobs:
             echo "header:" > .licenserc.yaml
             echo "  paths-ignore:" >> .licenserc.yaml
             echo '    - "*.whl"' >> .licenserc.yaml
+            git add .licenserc.yaml
           elif ! grep -q '*.whl' .licenserc.yaml; then
             echo "Updating existing .licenserc.yaml to ignore *.whl files"
             sed -i '/paths-ignore:/a \ \ \ \ - "\*.whl"' .licenserc.yaml
+            git add .licenserc.yaml
           fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
@@ -239,7 +241,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
         run: |
-          WORKFLOW_RUN_ID=$(gh run -R ${{ github.event.inputs.target_repo }} list -b ucc/ci_tests_trigger_pipeline --json databaseId --limit 1 --status in_progress --workflow build-test-release | jq -r '.[0].databaseId')
+          for i in {1..30}; do
+            echo "Attempt $i to get workflow run ID"
+            WORKFLOW_RUN_ID=$(gh run -R ${{ github.event.inputs.target_repo }} list -b ucc/ci_tests_trigger_pipeline --json databaseId --limit 1 --status in_progress --workflow build-test-release | jq -r '.[0].databaseId')
+
+            if [[ -n "$WORKFLOW_RUN_ID" ]]; then
+              echo "Found workflow run ID: $WORKFLOW_RUN_ID"
+              break
+            fi
+
+            echo "Workflow run ID not found, retrying in 2 seconds..."
+            sleep 2
+          done
+          
           echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID" >> $GITHUB_ENV
           echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
 
