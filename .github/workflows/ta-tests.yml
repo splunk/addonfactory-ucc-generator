@@ -202,13 +202,12 @@ jobs:
           set -x
           
           if [[ ! -f .licenserc.yaml ]]; then
-              echo "Copying .licenserc.yaml from UCC Framework"
-              cp ../UCC/.licenserc.yaml .licenserc.yaml
-          fi
-          
-          echo "Updating .licenserc.yaml for triggered tests with ignored path to *.whl files"
-          if ! grep -q \*.whl .licenserc.yaml; then
-            echo "Adding ignored path for *.whl files to .licenserc.yaml"
+            echo "Creating .licenserc.yaml from UCC Framework"
+            echo "header:" > .licenserc.yaml
+            echo "  paths-ignore:" >> .licenserc.yaml
+            echo '    - "*.whl"' >> .licenserc.yaml
+          elif ! grep -q '*.whl' .licenserc.yaml; then
+            echo "Updating existing .licenserc.yaml to ignore *.whl files"
             sed -i '/paths-ignore:/a \ \ \ \ - "\*.whl"' .licenserc.yaml
           fi
       - name: Run ucc-gen build in Target Add-on
