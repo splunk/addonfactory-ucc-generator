@@ -195,6 +195,22 @@ jobs:
             echo "Adding UCC, pyproject.toml and poetry.lock to commit"
             git add pyproject.toml poetry.lock *.whl
           fi
+      - name: Update project files for triggered tests (.licenserc.yaml)
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        run: |
+          set -x
+          
+          if [[ ! -f .licenserc.yaml ]]; then
+              echo "Copying .licenserc.yaml from UCC Framework"
+              cp ../UCC/.licenserc.yaml .licenserc.yaml
+          fi
+          
+          echo "Updating .licenserc.yaml for triggered tests with ignored path to *.whl files"
+          if ! grep -q \*.whl .licenserc.yaml; then
+            echo "Adding ignored path for *.whl files to .licenserc.yaml"
+            sed -i '/paths-ignore:/a \ \ \ \ - "\*.whl"' .licenserc.yaml
+          fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
