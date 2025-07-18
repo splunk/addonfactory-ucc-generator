@@ -2,7 +2,7 @@ from splunk_add_on_ucc_framework.generators.conf_files import TagsConf
 from textwrap import dedent
 
 
-def test_set_attribute(
+def test_init(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -12,8 +12,6 @@ def test_set_attribute(
         input_dir,
         output_dir,
     )
-
-    tags_conf._set_attributes()
     assert tags_conf.alert_settings
     assert tags_conf.conf_file == "tags.conf"
 

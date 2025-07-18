@@ -7,11 +7,11 @@ from time import time
 INPUT_DIR = os.path.join(get_testdata_file_path("app.manifest"), os.pardir)
 
 
-def test_set_attributes_check_for_updates_false(
+def test_init_check_for_updates_false(
     global_config_all_json,
     output_dir,
 ):
-    """Test _set_attributes when _global_config has checkForUpdates set to False."""
+    """Test __init__ when _global_config has checkForUpdates set to False."""
     global_config_all_json.meta.update({"checkForUpdates": False})
 
     app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
@@ -19,19 +19,19 @@ def test_set_attributes_check_for_updates_false(
     assert app_conf.check_for_updates == "false"
 
 
-def test_set_attributes_supported_themes(global_config_all_json, output_dir):
-    """Test _set_attributes when _global_config has supportedThemes."""
+def test_init_supported_themes(global_config_all_json, output_dir):
+    """Test __init__ when _global_config has supportedThemes."""
     global_config_all_json.meta.update({"supportedThemes": ["dark", "light"]})
     app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
 
     assert app_conf.supported_themes == "dark, light"
 
 
-def test_set_attributes_with_global_config_and_schema(
+def test_init_with_global_config_and_schema(
     global_config_all_json,
     output_dir,
 ):
-    """Test _set_attributes when _global_config and _gc_schema provide config file names."""
+    """Test __init__ when _global_config and _gc_schema provide config file names."""
     expected_custom_conf = [
         "splunk_ta_uccexample_settings",
         "splunk_ta_uccexample_account",

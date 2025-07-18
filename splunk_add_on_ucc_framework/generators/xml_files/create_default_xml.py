@@ -18,6 +18,7 @@ from typing import Dict, List, Optional
 import os
 from xml.etree.ElementTree import Element, SubElement, tostring
 from splunk_add_on_ucc_framework.utils import pretty_print_xml
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 import logging
 
 logger = logging.getLogger("ucc_gen")
@@ -28,6 +29,30 @@ class DefaultXml(FileGenerator):
         "Generates default.xml file based on configs present in globalConfig,"
         " in `default/data/ui/nav` folder."
     )
+
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
+        addon_name = self._addon_name
+        if not isinstance(addon_name, str):
+            raise ValueError("addon_name must be a string")
+        default_ui_path = os.path.join(
+            self._output_dir, addon_name, "default", "data", "ui"
+        )
+        default_xml_path = os.path.join(default_ui_path, "nav", "default.xml")
+        if os.path.exists(default_xml_path):
+            logger.info(
+                "Skipping generating data/ui/nav/default.xml because file already exists."
+            )
+        else:
+            if global_config.has_pages():
+                self.default_xml_content = self.generate_nav_default_xml(
+                    include_inputs=global_config.has_inputs(),
+                    include_dashboard=global_config.has_dashboard(),
+                    include_configuration=global_config.has_configuration(),
+                    default_view=global_config.meta.get("defaultView"),
+                )
 
     def generate_nav_default_xml(
         self,
@@ -80,27 +105,6 @@ class DefaultXml(FileGenerator):
 
         nav_as_string = tostring(nav, encoding="unicode")
         return pretty_print_xml(nav_as_string)
-
-    def _set_attributes(self) -> None:
-        addon_name = self._addon_name
-        if not isinstance(addon_name, str):
-            raise ValueError("addon_name must be a string")
-        default_ui_path = os.path.join(
-            self._output_dir, addon_name, "default", "data", "ui"
-        )
-        default_xml_path = os.path.join(default_ui_path, "nav", "default.xml")
-        if os.path.exists(default_xml_path):
-            logger.info(
-                "Skipping generating data/ui/nav/default.xml because file already exists."
-            )
-        else:
-            if self._global_config.has_pages():
-                self.default_xml_content = self.generate_nav_default_xml(
-                    include_inputs=self._global_config.has_inputs(),
-                    include_dashboard=self._global_config.has_dashboard(),
-                    include_configuration=self._global_config.has_configuration(),
-                    default_view=self._global_config.meta.get("defaultView"),
-                )
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_pages():

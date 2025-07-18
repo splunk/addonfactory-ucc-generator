@@ -16,6 +16,7 @@
 from os.path import isfile, join
 from typing import Dict, List, Optional
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class ServerConf(FileGenerator):
@@ -24,7 +25,10 @@ class ServerConf(FileGenerator):
         "files created as per configurations in globalConfig"
     )
 
-    def _set_attributes(self) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "server.conf"
         self.custom_conf = []
         self.custom_conf.extend(list(self._gc_schema.settings_conf_file_names))

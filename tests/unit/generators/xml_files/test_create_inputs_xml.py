@@ -15,7 +15,7 @@ def test_generate_views_inputs_xml(global_config_all_json, input_dir, output_dir
     assert diff == ""
 
 
-def test_set_attributes_with_inputs(
+def test_init_with_inputs(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -29,7 +29,7 @@ def test_set_attributes_with_inputs(
     assert hasattr(inputs_xml, "inputs_xml_content")
 
 
-def test_set_attributes_without_inputs(
+def test_init_without_inputs(
     global_config_only_configuration,
     input_dir,
     output_dir,
