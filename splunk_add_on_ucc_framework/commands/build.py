@@ -59,6 +59,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
+from splunk_add_on_ucc_framework.auto_gen_comparator import CodeGeneratorDiffChecker
 
 logger = logging.getLogger("ucc_gen")
 
@@ -453,7 +454,7 @@ def generate(
     app_manifest = get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
-
+    auto_gen_ignore_list = []
     gc_path = _get_and_check_global_config_path(source, config_path)
     if not gc_path:
         # create one in source directory if it doesn't exist
@@ -549,7 +550,9 @@ def generate(
         _add_modular_input(ta_name, global_config, output_directory)
     if global_config.has_alerts():
         logger.info("Generating alerts code")
-        alert_builder.generate_alerts(global_config, ta_name, output_directory)
+        auto_gen_ignore_list.extend(
+            alert_builder.generate_alerts(global_config, ta_name, output_directory)
+        )
 
     if global_config.has_dashboard():
         logger.info("Including dashboard")
@@ -578,6 +581,11 @@ def generate(
 
     # Update files before overwriting
     handle_package_files_update(source)
+
+    comparator = CodeGeneratorDiffChecker(
+        source, os.path.join(output_directory, ta_name)
+    )
+    comparator.deduce_gen_and_custom_content(logger, auto_gen_ignore_list)
 
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
