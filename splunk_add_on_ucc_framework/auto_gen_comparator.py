@@ -54,7 +54,7 @@ class CodeGeneratorDiffChecker:
         self.different_files: Dict[str, Any[Dict[str, str], List[Dict[str, str]]]] = {}
         # {src_full_file_name : short_file_name}
         self.common_files: Dict[str, str] = {}
-        self.same_stanza:  Dict[str, str] = {}
+        self.same_stanza: Dict[str, str] = {}
 
     def deduce_gen_and_custom_content(
         self, logger: Logger, ignore_file_list: List[str] = []
@@ -93,7 +93,7 @@ class CodeGeneratorDiffChecker:
                 #     )
 
         self.print_files(logger)
-    
+
     def _conf_file_diff_checker(self, src_file: str, target_file: str) -> None:
         """
         Find the difference between the source code and generated code for the
@@ -101,12 +101,14 @@ class CodeGeneratorDiffChecker:
         """
 
         """
-        If src_dict and dst_dict are same then we can log COMMON_FILES_MESSAGE_PART_1 and COMMON_FILES_MESSAGE_PART_2 with which files are they. If found skip checking for that file.
+        If src_dict and dst_dict are same then log COMMON_FILES_MESSAGE_PART_1 and COMMON_FILES_MESSAGE_PART_2
+        with which files are they. If found skip checking for that file.
 
-        if src_dict contain something that we do not generate in general not present in dst dict then we have to log DIFFERENT_FILES_MESSAGE with file name 
-        the diff can be in stanza or in key-value in any stanza.
+        if src_dict contain something that we do not generate in general not present in dst dict then we have to
+        log DIFFERENT_FILES_MESSAGE with file name the diff can be in stanza or in key-value in any stanza.
 
-        if src_dict contain stanzas or key-values that is present in dst_dict then we need to log diff msg stating that we do generate this so you can remove this part
+        if src_dict contain stanzas or key-values that is present in dst_dict then we
+        need to log diff msg stating that we do generate this so you can remove this part.
         """
         sparser = conf_parser.TABConfigParser()
         sparser.read(src_file)
@@ -140,8 +142,9 @@ class CodeGeneratorDiffChecker:
 
                 # If stanza dicts are identical, mark them as same stanza
                 if src_kv == dst_kv:
-                    self.same_stanza[f"{src_file} :: {stanza}"] = src_file.split(sep=sep)[-1]
-
+                    self.same_stanza[f"{src_file} :: {stanza}"] = src_file.split(
+                        sep=sep
+                    )[-1]
 
     def _xml_file_diff_checker(self, src_file: str, target_file: str) -> None:
         """
