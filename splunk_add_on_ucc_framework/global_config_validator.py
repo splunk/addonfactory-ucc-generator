@@ -808,7 +808,6 @@ class GlobalConfigValidator:
         """
         Stops the build of addon and logs error if placeholder is used.
         Deprecation Notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
-        Allows to update the schema version if placeholder isn't found.
         """
         log_msg = (
             "`placeholder` option found for %s '%s' -> entity field '%s'. "
