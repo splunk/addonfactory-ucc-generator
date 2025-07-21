@@ -254,7 +254,7 @@ jobs:
           fi
           
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --exit-status
+          gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID"
           
           echo "Results:"
           RESULTS="$(gh run view -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
