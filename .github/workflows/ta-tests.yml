@@ -256,13 +256,9 @@ jobs:
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
           gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --exit-status
           
-          gh run view -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
-            -q '.jobs[] |  select(.name | test("build|spl2")) | "\(.name): \(.conclusion)"' \
-            | grep -v "success"
+          echo "Results:"
+          RESULTS="$(gh run view -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
+            -q '.jobs[] |  select(.name | test("build|spl2")) | "\(.name): \(.conclusion)"')"
           
-          if [[ $? -eq 0 ]]; then
-              echo "Some jobs in the workflow run failed"
-              exit 1
-          else
-              echo "All jobs in the workflow run succeeded"
-          fi
+          echo $RESULTS
+          [[ $(echo $RESULTS | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
