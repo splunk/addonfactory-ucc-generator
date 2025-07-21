@@ -17,6 +17,7 @@ from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from xml.etree.ElementTree import Element, SubElement, tostring
 from splunk_add_on_ucc_framework.utils import pretty_print_xml
 from typing import Optional, List, Dict
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class ConfigurationXml(FileGenerator):
@@ -24,6 +25,15 @@ class ConfigurationXml(FileGenerator):
         "Generates configuration.xml file in `default/data/ui/views/` folder if "
         "configuration is defined in globalConfig."
     )
+
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
+        if global_config.has_configuration():
+            self.configuration_xml_content = self.generate_views_configuration_xml(
+                self._addon_name,
+            )
 
     def generate_views_configuration_xml(self, addon_name: str) -> str:
         """
@@ -41,12 +51,6 @@ class ConfigurationXml(FileGenerator):
         label.text = "Configuration"
         view_as_string = tostring(view, encoding="unicode")
         return pretty_print_xml(view_as_string)
-
-    def _set_attributes(self) -> None:
-        if self._global_config.has_configuration():
-            self.configuration_xml_content = self.generate_views_configuration_xml(
-                self._addon_name,
-            )
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_configuration():

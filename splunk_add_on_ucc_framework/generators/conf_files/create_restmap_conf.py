@@ -22,6 +22,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handler
     EndpointRegistrationEntry,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class RestMapConf(FileGenerator):
@@ -30,15 +31,18 @@ class RestMapConf(FileGenerator):
         "are generated based on configs from globalConfig"
     )
 
-    def _set_attributes(self) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "restmap.conf"
         self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
 
-        if self._global_config.has_pages():
+        if global_config.has_pages():
             self.endpoints.extend(self._gc_schema.endpoints)
             self.namespace = self._gc_schema.namespace
             self.endpoints.extend(
-                self._global_config.user_defined_handlers.endpoint_registration_entries
+                global_config.user_defined_handlers.endpoint_registration_entries
             )
 
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))

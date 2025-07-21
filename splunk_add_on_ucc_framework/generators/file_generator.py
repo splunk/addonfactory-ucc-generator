@@ -16,7 +16,7 @@
 import logging
 from abc import ABC
 from os.path import realpath, sep, dirname, abspath
-from typing import Any, Dict, List, Union, NoReturn, Optional
+from typing import Any, Dict, List, Union, Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -68,10 +68,6 @@ class FileGenerator(ABC):
         self._gc_schema: GlobalConfigBuilderSchema = GlobalConfigBuilderSchema(
             global_config
         )
-        self._set_attributes()
-
-    def _set_attributes(self) -> Union[NoReturn, None]:
-        raise NotImplementedError()
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         raise NotImplementedError()

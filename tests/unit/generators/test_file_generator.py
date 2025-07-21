@@ -29,15 +29,7 @@ def dummy_app_manifest():
     return mock_manifest
 
 
-@fixture
-def set_attr():
-    return {"file_name": "file_path"}
-
-
-@patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
-def test_get_output_dir(
-    mock_set_attr, global_config_all_json, input_dir, output_dir, ta_name
-):
+def test_get_output_dir(global_config_all_json, input_dir, output_dir, ta_name):
     global_config_all_json.meta["name"] = ta_name
     file_gen = FileGenerator(
         global_config_all_json,
@@ -48,7 +40,6 @@ def test_get_output_dir(
     assert file_gen._get_output_dir() == expected_output_dir
 
 
-@patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 @patch(
     "splunk_add_on_ucc_framework.generators.FileGenerator._get_output_dir",
     return_value="tmp/path",
@@ -77,11 +68,9 @@ def test_get_file_output_path(
         file_gen.get_file_output_path({"path": "/dummy/path"})  # type: ignore[arg-type]
 
 
-@patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 @patch("jinja2.Environment.get_template")
 def test_set_template_and_render(
     mock_get_template,
-    mock_set_attribute,
     global_config_all_json,
     input_dir,
     output_dir,
@@ -98,11 +87,9 @@ def test_set_template_and_render(
     mock_get_template.assert_called_once_with("test.template")
 
 
-@patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 @patch("jinja2.Environment.get_template")
 def test_set_template_and_render_invalid_file_name(
     mock_get_template,
-    mock_set_attribute,
     global_config_all_json,
     input_dir,
     output_dir,
@@ -175,25 +162,7 @@ def test_begin(
     ]
 
 
-def test__set_attributes_error(
-    global_config_all_json,
-    input_dir,
-    output_dir,
-):
-    """
-    This tests that the exception provided in side_effect is raised too
-    """
-    with raises(NotImplementedError):
-        FileGenerator(
-            global_config_all_json,
-            input_dir,
-            output_dir,
-        )
-
-
-@patch("splunk_add_on_ucc_framework.generators.FileGenerator._set_attributes")
 def test_generate(
-    mock_set_attribute,
     global_config_all_json,
     input_dir,
     output_dir,
