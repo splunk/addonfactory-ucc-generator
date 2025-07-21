@@ -195,23 +195,6 @@ jobs:
             echo "Adding UCC, pyproject.toml and poetry.lock to commit"
             git add pyproject.toml poetry.lock *.whl
           fi
-      - name: Update project files for triggered tests (.licenserc.yaml)
-        if: success() && github.event.inputs.run_pipelines == 'true'
-        working-directory: TA
-        run: |
-          set -x
-          
-          if [[ ! -f .licenserc.yaml ]]; then
-            echo "Creating .licenserc.yaml from UCC Framework"
-            echo "header:" > .licenserc.yaml
-            echo "  paths-ignore:" >> .licenserc.yaml
-            echo '    - "*.whl"' >> .licenserc.yaml
-            git add .licenserc.yaml
-          elif ! grep -q '*.whl' .licenserc.yaml; then
-            echo "Updating existing .licenserc.yaml to ignore *.whl files"
-            sed -i '/paths-ignore:/a \ \ \ \ - "\*.whl"' .licenserc.yaml
-            git add .licenserc.yaml
-          fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
@@ -269,9 +252,15 @@ jobs:
           fi
           
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --exit-status success
+          gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --exit-status
           
-          if [[ $? -ne 0 ]]; then
-            echo "Workflow run did not complete successfully or timed out"
-            exit 1
+          gh run view -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
+            -q '.jobs[] |  select(.name | test("build|spl2")) | "\(.name): \(.conclusion)"' \
+            | grep -v "success"
+          
+          if [[ $? -eq 0 ]]; then
+              echo "Some jobs in the workflow run failed"
+              exit 1
+          else
+              echo "All jobs in the workflow run succeeded"
           fi
