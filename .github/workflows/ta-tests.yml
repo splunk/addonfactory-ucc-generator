@@ -167,6 +167,12 @@ jobs:
             echo "Installing UCC package $UCC_WHL"
             poetry add "./$UCC_WHL" --group dev && break
             RETRY_COUNT=$((RETRY_COUNT+1))
+          
+            if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
+              echo "Poetry install failed after $MAX_RETRIES attempts, exiting"
+              exit 1
+            fi
+          
             echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
           done
@@ -183,6 +189,12 @@ jobs:
               poetry add splunktaucclib@latest && break
             fi
             RETRY_COUNT=$((RETRY_COUNT+1))
+          
+            if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
+              echo "splunktaucclib install failed after $MAX_RETRIES attempts, exiting"
+              exit 1
+            fi
+          
             echo "splunktaucclib install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
           done
