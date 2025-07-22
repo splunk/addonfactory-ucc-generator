@@ -13,13 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import ast
 import glob
 import json
 import logging
 import os
 import shutil
 import sys
-from typing import Optional, List, Any
+from pathlib import Path
+from typing import Optional, List, Any, Union
 import subprocess
 import colorama as c
 import fnmatch
@@ -114,7 +116,10 @@ def _modify_and_replace_token_for_oauth_templates(
 
 
 def _add_modular_input(
-    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+    ta_name: str,
+    global_config: global_config_lib.GlobalConfig,
+    outputdir: str,
+    gc_path: str,
 ) -> None:
     for service in global_config.inputs:
         input_name = service.get("name")
@@ -132,6 +137,39 @@ def _add_modular_input(
 
         input_helper_module = service.get("inputHelperModule")
 
+        len_of_args = {"stream_events": 2, "validate_input": 1}
+        include_self = {"stream_events": False, "validate_input": False}
+
+        if input_helper_module:
+            addon_root_path = os.path.dirname(gc_path)
+            bin_path = os.path.join(addon_root_path, "package", "bin")
+            helper_path = os.path.join(bin_path, f"{input_helper_module}.py")
+
+            for func in len_of_args:
+                try:
+                    result = _get_num_of_args(func, helper_path)
+
+                    if result is None:
+                        logger.error(
+                            f"Cannot find function definition 'def {func}(...)' in module '{input_helper_module}'."
+                        )
+                        exit(1)
+
+                    if result == len_of_args[func]:
+                        # change nothing
+                        include_self[func] = False
+                    elif result == len_of_args[func] + 1:
+                        # add self to the function
+                        include_self[func] = True
+                    else:
+                        logger.error(
+                            f"Unexpected number of arguments in helper module. "
+                            f"Function '{func}' in '{input_helper_module}' has {result} arguments."
+                        )
+                except FileNotFoundError:
+                    # If no module, that was specified in globalConfig, default one will be created without 'self'
+                    pass
+
         content = (
             utils.get_j2_env()
             .get_template(template)
@@ -141,6 +179,8 @@ def _add_modular_input(
                 description=description,
                 entity=entity,
                 input_helper_module=input_helper_module,
+                stream_events_self=include_self["stream_events"],
+                validate_input_self=include_self["validate_input"],
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
@@ -162,6 +202,27 @@ def _add_modular_input(
             )
             with open(helper_filename, "w") as helper_file:
                 helper_file.write(content)
+
+
+def _get_num_of_args(
+    function_name: str,
+    module_path: Union[str, Path],
+) -> Optional[int]:
+    module_path = Path(module_path)
+
+    if not module_path.is_file():
+        raise FileNotFoundError(
+            f"Module path '{module_path}' does not point to a valid file."
+        )
+
+    module_content = ast.parse(module_path.read_text(encoding="utf-8"))
+
+    for node in module_content.body:
+        if isinstance(node, ast.FunctionDef) and node.name == function_name:
+            # Return the number of arguments defined in the function
+            return len(node.args.args)
+
+    return None
 
 
 def _get_ignore_list(
@@ -546,7 +607,7 @@ def generate(
         )
     if global_config.has_inputs():
         logger.info("Generating inputs code")
-        _add_modular_input(ta_name, global_config, output_directory)
+        _add_modular_input(ta_name, global_config, output_directory, gc_path)
     if global_config.has_alerts():
         logger.info("Generating alerts code")
         alert_builder.generate_alerts(global_config, ta_name, output_directory)
