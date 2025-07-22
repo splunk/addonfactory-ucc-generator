@@ -28,7 +28,7 @@ export default defineConfig({
             fileName: 'index',
         },
         commonjsOptions: {
-            esmExternals: modulesNotToBundle,
+            esmExternals: ['styled-components'],
         },
         emptyOutDir: true,
         rollupOptions: {
