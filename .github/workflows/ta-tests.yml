@@ -258,7 +258,7 @@ jobs:
           
           echo "Results:"
           RESULTS="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
-            -q '.jobs[] |  select(.conclusion != "skipped") | select(.name | test("build|spl2")) \
+            -q '.jobs[] |  select(.conclusion != "skipped") | select(.name | test("build|spl2"))
             | "\(.name): \(.conclusion)"')"
           
           echo $RESULTS
