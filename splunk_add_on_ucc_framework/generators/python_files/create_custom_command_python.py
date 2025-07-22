@@ -16,10 +16,40 @@
 from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class CustomCommandPy(FileGenerator):
     __description__ = "Generates Python files for custom search commands provided in the globalConfig."
+
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
+        self.commands_info = []
+        for command in global_config.custom_search_commands:
+            argument_list: List[str] = []
+            imported_file_name = command["fileName"].replace(".py", "")
+            template = command["commandType"].replace(" ", "_") + ".template"
+            for argument in command["arguments"]:
+                argument_dict = {
+                    "name": argument["name"],
+                    "require": argument.get("required", False),
+                    "validate": argument.get("validate"),
+                    "default": argument.get("defaultValue"),
+                }
+                self.argument_generator(argument_list, argument_dict)
+            self.commands_info.append(
+                {
+                    "imported_file_name": imported_file_name,
+                    "file_name": command["commandName"],
+                    "class_name": command["commandName"].title(),
+                    "description": command.get("description"),
+                    "syntax": command.get("syntax"),
+                    "template": template,
+                    "list_arg": argument_list,
+                }
+            )
 
     def argument_generator(
         self, argument_list: List[str], arg: Dict[str, Any]
@@ -60,32 +90,6 @@ class CustomCommandPy(FileGenerator):
             )
         argument_list.append(arg_str)
         return argument_list
-
-    def _set_attributes(self) -> None:
-        self.commands_info = []
-        for command in self._global_config.custom_search_commands:
-            argument_list: List[str] = []
-            imported_file_name = command["fileName"].replace(".py", "")
-            template = command["commandType"].replace(" ", "_") + ".template"
-            for argument in command["arguments"]:
-                argument_dict = {
-                    "name": argument["name"],
-                    "require": argument.get("required", False),
-                    "validate": argument.get("validate"),
-                    "default": argument.get("defaultValue"),
-                }
-                self.argument_generator(argument_list, argument_dict)
-            self.commands_info.append(
-                {
-                    "imported_file_name": imported_file_name,
-                    "file_name": command["commandName"],
-                    "class_name": command["commandName"].title(),
-                    "description": command.get("description"),
-                    "syntax": command.get("syntax"),
-                    "template": template,
-                    "list_arg": argument_list,
-                }
-            )
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.commands_info:

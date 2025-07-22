@@ -16,16 +16,20 @@
 from typing import Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class SearchbnfConf(FileGenerator):
     __description__ = "Generates `searchbnf.conf` for custom search commands provided in the globalConfig."
 
-    def _set_attributes(self) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "searchbnf.conf"
         self.searchbnf_info = []
-        if self._global_config.has_custom_search_commands():
-            for command in self._global_config.custom_search_commands:
+        if global_config.has_custom_search_commands():
+            for command in global_config.custom_search_commands:
                 if command.get("requiredSearchAssistant", False):
                     searchbnf_dict = {
                         "command_name": command["commandName"],

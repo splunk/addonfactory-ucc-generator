@@ -804,6 +804,42 @@ class GlobalConfigValidator:
 
             self._validate_if_entities_has_oauth_configured_correctly(tabs)
 
+    def _validate_usage_of_placeholder(self) -> None:
+        """
+        Stops the build of addon and logs error if placeholder is used.
+        Deprecation Notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
+        """
+        log_msg = (
+            "`placeholder` option found for %s '%s' -> entity field '%s'. "
+            "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+            "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
+        )
+        exc_msg = (
+            "`placeholder` option found for %s '%s'. It has been removed from UCC. "
+            "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
+        )
+        for tab in self._global_config.configuration:
+            for entity in tab.get("entity", []):
+                if "placeholder" in entity.get("options", {}):
+                    logger.error(
+                        log_msg % ("configuration tab", tab["name"], entity["field"])
+                    )
+                    raise GlobalConfigValidatorException(
+                        exc_msg % ("configuration tab", tab["name"])
+                    )
+        services = self._global_config.inputs
+        if not services:
+            return
+        for service in services:
+            for entity in service.get("entity", {}):
+                if "placeholder" in entity.get("options", {}):
+                    logger.error(
+                        log_msg % ("input service", service["name"], entity["field"])
+                    )
+                    raise GlobalConfigValidatorException(
+                        exc_msg % ("input service", service["name"])
+                    )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         if self._global_config.has_pages():
@@ -819,6 +855,7 @@ class GlobalConfigValidator:
             self._validate_oauth_entities_definition()
             self._validate_field_modifications()
             self._validate_custom_search_commands()
+            self._validate_usage_of_placeholder()
         self._validate_alerts()
         self._validate_meta_default_view()
 

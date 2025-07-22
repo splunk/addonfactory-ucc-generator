@@ -22,6 +22,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handler
     EndpointRegistrationEntry,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class WebConf(FileGenerator):
@@ -30,8 +31,10 @@ class WebConf(FileGenerator):
         "`restmap.conf` which is generated based on configurations from globalConfig."
     )
 
-    def _set_attributes(self) -> None:
-        pass
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_pages():

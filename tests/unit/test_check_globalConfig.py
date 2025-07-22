@@ -19,7 +19,7 @@ def get_global_config_files():
 
 
 @pytest.mark.parametrize("config_file", get_global_config_files())
-def test_build_addon_from_global_config(config_file):
+def test_build_addon_from_global_config(config_file, caplog):
     is_valid = os.path.basename(config_file).startswith("valid_")
     if os.path.basename(config_file) in [
         "valid_config.json",
@@ -46,10 +46,13 @@ def test_build_addon_from_global_config(config_file):
         shutil.copy(config_file, os.path.join(temp_dir, target_config_name))
 
         if is_valid:
-            try:
-                build.generate(source=package_folder)
-            except Exception as e:
-                pytest.fail(f"Valid config '{config_file}' caused build failure: {e}")
+            build.generate(source=package_folder)
+            # create set comprehension to get all log levels
+            cap_log_levels = {i[1] for i in caplog.record_tuples}
+            for log_level in cap_log_levels:
+                # fail if we have any error logs
+                if log_level > 30:
+                    assert False, caplog.text
         else:
             with pytest.raises(SystemExit):
                 build.generate(source=package_folder)

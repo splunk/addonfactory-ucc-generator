@@ -24,7 +24,7 @@ def test_generate_views_dashboard_xml(
     assert diff == ""
 
 
-def test_set_attributes_with_dashboard(
+def test_init_with_dashboard(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -38,7 +38,7 @@ def test_set_attributes_with_dashboard(
     assert hasattr(dashboard_xml, "dashboard_xml_content")
 
 
-def test_set_attributes_without_dashboard(
+def test_init_without_dashboard(
     global_config_only_configuration,
     input_dir,
     output_dir,
