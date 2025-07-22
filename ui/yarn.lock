@@ -2989,7 +2989,7 @@
     "@splunk/ui-utils" "^1.6.0"
     lodash "^4.17.14"
 
-"@splunk/react-events-viewer@^27.5.0":
+"@splunk/react-events-viewer@^27.4.0", "@splunk/react-events-viewer@^27.5.0":
   version "27.5.0"
   resolved "https://registry.npmjs.org/@splunk/react-events-viewer/-/react-events-viewer-27.5.0.tgz#09589fa9cf780fb2b068f22d321d844c96d1cb09"
   integrity sha512-GazOm09gccKu06e4R/AT/T86PXVTUTKBvubj85GgOhJ7aNPXrrF2fMke8CTyVFQjDjY7cwd+YmMwsqzIn2eqSg==
@@ -3260,7 +3260,7 @@
   dependencies:
     "@splunk/ui-utils" "^1.8.0"
 
-"@splunk/visualization-context@^27.5.0":
+"@splunk/visualization-context@^27.4.0":
   version "27.5.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-context/-/visualization-context-27.5.0.tgz#b221e92fd1f123868de052a847d627a0653d3e58"
   integrity sha512-knvKv+8MwL68d98cz6m5NvklhfuUXYY4yfmk/ZNahPDi1V/yEv7jUsFnvlcoe77njHBpQwHye7cqHezItJS3Pg==
@@ -3297,12 +3297,12 @@
     "@splunk/visualization-schemas" "^27.5.0"
     lodash "^4.17.21"
 
-"@splunk/visualization-schemas@27.5.0", "@splunk/visualization-schemas@^27.5.0":
-  version "27.5.0"
-  resolved "https://registry.npmjs.org/@splunk/visualization-schemas/-/visualization-schemas-27.5.0.tgz#8d74da91aa9f87655b27c3f24e9729e83522cb27"
-  integrity sha512-aSw6lr05ejaqbXPFqRq7SkSxHLxALj35mjqQ6iIfmyovoJlzttSGMWUEslGYzT8mDk6/mPWw8xABlXFBLiJnHw==
+"@splunk/visualization-schemas@27.4.0", "@splunk/visualization-schemas@^27.5.0":
+  version "27.4.0"
+  resolved "https://registry.npmjs.org/@splunk/visualization-schemas/-/visualization-schemas-27.4.0.tgz#4fb0c7ef0a6fd15b08ad2d2f3ea32af9440bffc2"
+  integrity sha512-xKWWu+i7e8NJFaCS71NBs/5cYLXSkYa1gwLEnrwPx0fzw1y+Q9EmHmVbAyD+1CRpYEg+S2eCAZix//DeRCxsbg==
   dependencies:
-    "@splunk/visualization-color-palettes" "^27.5.0"
+    "@splunk/visualization-color-palettes" "^27.4.0"
     "@types/json-schema" "^7.0.15"
 
 "@splunk/visualization-themes@^27.5.0":
