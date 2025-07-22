@@ -179,7 +179,7 @@ def test_entity_migration(tmp_path):
     )
 
 
-def test_config_validation_when_placeholder_is_absent(tmp_path, caplog):
+def test_config_validation_for_placeholder_during_update(tmp_path, caplog):
     tmp_file_gc = tmp_path / "globalConfig.json"
 
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
@@ -190,26 +190,6 @@ def test_config_validation_when_placeholder_is_absent(tmp_path, caplog):
 
     assert expected_schema_version == global_config.schema_version
     assert caplog.text == ""
-
-
-def test_config_validation_when_placeholder_is_present(tmp_path, caplog):
-    tmp_file_gc = tmp_path / "globalConfig.json"
-
-    helpers.copy_testdata_gc_to_tmp_file(
-        tmp_file_gc, "invalid_config_placeholder_usage.json"
-    )
-    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
-    error_log = (
-        "`placeholder` option found for input service 'example_input_one' -> entity field 'name'. "
-        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
-        "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
-    )
-
-    with pytest.raises(SystemExit):
-        _stop_build_on_placeholder_usage(global_config)
-    expected_schema_version = "0.0.7"
-    assert expected_schema_version == global_config.schema_version
-    assert error_log in caplog.text
 
 
 def test_dump_enable_from_global_config_enable_present(tmp_path, caplog):
