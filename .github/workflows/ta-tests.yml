@@ -226,7 +226,7 @@ jobs:
         run: |
           for i in {1..30}; do
             echo "Attempt $i to get workflow run ID"
-            WORKFLOW_RUN_ID=$(gh run -R ${{ github.event.inputs.target_repo }} list -b ucc/ci_tests_trigger_pipeline \
+            WORKFLOW_RUN_ID=$(gh run -R ${{ matrix.target_repo }} list -b ucc/ci_tests_trigger_pipeline \
               --json databaseId --limit 1 --status in_progress --workflow build-test-release \
               -q '.[0].databaseId | select( . != null )')
 
@@ -254,10 +254,10 @@ jobs:
           fi
           
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID"
+          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID"
           
           echo "Results:"
-          RESULTS="$(gh run view -R ${{ github.event.inputs.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
+          RESULTS="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
             -q '.jobs[] |  select(.name | test("build|spl2")) | "\(.name): \(.conclusion)"')"
           
           echo $RESULTS
