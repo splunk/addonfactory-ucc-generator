@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { gettext } from '@splunk/ui-utils/i18n';
 import SearchIcon from '@splunk/react-icons/enterprise/Search';
 import File from '@splunk/react-icons/File';
+import Card from '@splunk/react-ui/Card';
 import { parseErrorMsg } from '../../util/messageUtil';
 import { getSearchUrl } from '../../util/searchUtil';
 import { getUnifiedConfigs } from '../../util/util';
@@ -14,7 +15,6 @@ import {
     LinksSection,
     PStyled,
     SectionTitle,
-    StyledBody,
     StyledCard,
     StyledCollapsiblePanel,
     StyledContainer,
@@ -83,7 +83,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                         <StyledHeader>
                             <div>
                                 <StyledWarningIcon />
-                                <StyledHeading level={2}>
+                                <StyledHeading level={1}>
                                     {gettext('Something went wrong')}
                                 </StyledHeading>
                             </div>
@@ -94,7 +94,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
                             </PStyled>
                         </StyledHeader>
 
-                        <StyledBody>
+                        <Card.Body>
                             {parsedErrorMessage && (
                                 <StyledCollapsiblePanel
                                     defaultOpen
@@ -177,7 +177,7 @@ OR component="PersistentScript"`,
                                     </LinkContent>
                                 </LinkItem>
                             </LinksSection>
-                        </StyledBody>
+                        </Card.Body>
                     </StyledCard>
                 </StyledContainer>
             );
