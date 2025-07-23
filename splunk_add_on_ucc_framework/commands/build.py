@@ -292,14 +292,14 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
                 "repository?). Use `--ta-version` to specify the version you "
                 "want."
             )
-            exit(1)
+            sys.exit(1)
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
                 "Check out "
                 "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
             )
-            exit(1)
+            sys.exit(1)
     return addon_version.strip()
 
 

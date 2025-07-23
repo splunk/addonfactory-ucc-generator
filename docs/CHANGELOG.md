@@ -1,5 +1,12 @@
 # Changelog
 
+# [5.69.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.1...v5.69.0) (2025-07-22)
+
+
+### Features
+
+* add self param to stream_events and validate_input at build-time ([#1829](https://github.com/splunk/addonfactory-ucc-generator/issues/1829)) ([5aa5e95](https://github.com/splunk/addonfactory-ucc-generator/commit/5aa5e9533ca365904f0924aca96d462d4b15bac1))
+
 ## [5.68.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.0...v5.68.1) (2025-07-17)
 
 
