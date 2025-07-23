@@ -145,6 +145,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         return (
             this.props.display && (
                 <ControlGroupWrapper
+                    labelPosition="left"
                     {...this?.props?.entity}
                     {...this.props?.modifiedEntitiesData}
                     help={helpText}
