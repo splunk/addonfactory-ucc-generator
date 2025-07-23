@@ -29,3 +29,5 @@ export const OverviewDashboard = ({
         </DashboardContextProvider>
     ) : null;
 };
+
+export default OverviewDashboard;

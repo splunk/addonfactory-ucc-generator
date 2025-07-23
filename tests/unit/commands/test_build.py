@@ -1,6 +1,8 @@
 import os
+from random import randint
 from unittest.mock import MagicMock, patch
 import pytest
+import platform
 
 from splunk_add_on_ucc_framework.commands.build import (
     _add_modular_input,
@@ -8,6 +10,7 @@ from splunk_add_on_ucc_framework.commands.build import (
     _get_python_version_from_executable,
     _get_and_check_global_config_path,
     generate,
+    _get_num_of_args,
 )
 from splunk_add_on_ucc_framework.exceptions import (
     CouldNotIdentifyPythonVersionException,
@@ -16,6 +19,49 @@ from splunk_add_on_ucc_framework.exceptions import (
 from splunk_add_on_ucc_framework import __version__
 
 CURRENT_PATH = os.getcwd()
+
+input_value = {
+    "name": "example_input_three",
+    "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
+    "inputHelperModule": "",
+    "entity": [
+        {
+            "type": "text",
+            "label": "Name",
+            "validators": [
+                {
+                    "type": "regex",
+                    "errorMsg": "...",
+                    "pattern": "^[a-zA-Z]\\w*$",
+                },
+                {
+                    "type": "string",
+                    "errorMsg": "Length of input name should be between 1 and 100",
+                    "minLength": 1,
+                    "maxLength": 100,
+                },
+            ],
+            "field": "name",
+            "help": "A unique name for the data input.",
+            "required": True,
+        },
+        {
+            "type": "text",
+            "label": "Interval",
+            "validators": [
+                {
+                    "type": "regex",
+                    "errorMsg": "Interval must be an integer.",
+                    "pattern": "^\\-[1-9]\\d*$|^\\d*$",
+                }
+            ],
+            "field": "interval",
+            "help": "Time interval of the data input, in seconds.",
+            "required": True,
+        },
+    ],
+    "title": "Example Input Three",
+}
 
 
 @pytest.mark.parametrize(
@@ -92,67 +138,48 @@ def test_get_python_version_from_executable_nonexisting_command():
         _get_python_version_from_executable(target_python_version)
 
 
+@pytest.mark.parametrize(
+    "helpers",
+    [
+        "example_helper",
+        "example_helper_no_stream_events",
+        "example_helper_not_callable",
+    ],
+)
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
-def test_add_modular_input(GlobalConfig, tmp_path):
+def test_add_modular_input(GlobalConfig, helpers, tmp_path):
     ta_name = "test_ta"
     (tmp_path / ta_name / "bin").mkdir(parents=True)
     (tmp_path / ta_name / "default").mkdir(parents=True)
 
-    gc = GlobalConfig.from_file("", False)
-    gc.inputs = [
-        {
-            "name": "example_input_three",
-            "restHandlerName": "splunk_ta_uccexample_rh_three_custom",
-            "inputHelperModule": "example_helper",
-            "entity": [
-                {
-                    "type": "text",
-                    "label": "Name",
-                    "validators": [
-                        {
-                            "type": "regex",
-                            "errorMsg": "...",
-                            "pattern": "^[a-zA-Z]\\w*$",
-                        },
-                        {
-                            "type": "string",
-                            "errorMsg": "Length of input name should be between 1 and 100",
-                            "minLength": 1,
-                            "maxLength": 100,
-                        },
-                    ],
-                    "field": "name",
-                    "help": "A unique name for the data input.",
-                    "required": True,
-                },
-                {
-                    "type": "text",
-                    "label": "Interval",
-                    "validators": [
-                        {
-                            "type": "regex",
-                            "errorMsg": "Interval must be an integer.",
-                            "pattern": "^\\-[1-9]\\d*$|^\\d*$",
-                        }
-                    ],
-                    "field": "interval",
-                    "help": "Time interval of the data input, in seconds.",
-                    "required": True,
-                },
-            ],
-            "title": "Example Input Three",
-        }
-    ]
-    _add_modular_input(ta_name, gc, str(tmp_path))
+    helpers_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "testdata/",
+    )
 
-    input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
-    helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
-    assert input_path.is_file()
-    assert helper_path.is_file()
+    gc = GlobalConfig.from_file("", False)
+    input_value["inputHelperModule"] = helpers
+    gc.inputs = [input_value]
+    if helpers == "example_helper_no_stream_events":
+        with pytest.raises(SystemExit):
+            _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
+
+    if helpers == "example_helper_not_callable":
+        with pytest.raises(SystemExit):
+            _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
+
+    if helpers == "example_helper":
+        _add_modular_input(ta_name, gc, str(tmp_path), helpers_path)
+
+        input_path = tmp_path / ta_name / "bin" / "example_input_three.py"
+        helper_path = tmp_path / ta_name / "bin" / "example_helper.py"
+        assert input_path.is_file()
+        assert helper_path.is_file()
 
 
 @patch("splunk_add_on_ucc_framework.global_config.GlobalConfig")
-@patch("splunk_add_on_ucc_framework.commands.build._get_app_manifest")
+@patch("splunk_add_on_ucc_framework.commands.build.get_app_manifest")
 @patch("splunk_add_on_ucc_framework.commands.build._get_and_check_global_config_path")
 @patch("os.path.exists")
 @patch(
@@ -206,7 +233,7 @@ def test_uncaught_exception(mock_get_build_output_path, caplog):
         "addonfactory-ucc-generator/issues/new?template=bug_report.yml&title=%5BBUG%5D%20Some%20"
         "exc%20msg&description="
     )
-    expected_params = f"&ucc_version={__version__}&system_info=Linux"
+    expected_params = f"&ucc_version={__version__}&system_info={platform.system()}"
 
     generate(
         source="source/path",
@@ -240,3 +267,26 @@ def test_source_directory_not_found(caplog):
         )
 
     assert expected_msg == caplog.messages[-1]
+
+
+def test_get_num_of_args_nonexisting_file():
+    file_name = f"non_existing_file_{randint(10, 100)}.py"
+    with pytest.raises(FileNotFoundError) as excinfo:
+        _get_num_of_args("func", file_name)
+
+    assert (
+        str(excinfo.value)
+        == f"Module path '{file_name}' does not point to a valid file."
+    )
+
+
+def test_get_num_of_args(tmp_path):
+    file_path = tmp_path / f"some_module_{randint(10, 100)}.py"
+
+    file_path.write_text(
+        "def some_function(a, b, c):\n    pass\ndef another_function():\n    pass\n"
+    )
+
+    assert _get_num_of_args("some_function", str(file_path)) == 3
+    assert _get_num_of_args("another_function", str(file_path)) == 0
+    assert _get_num_of_args("nonexistent_function", str(file_path)) is None

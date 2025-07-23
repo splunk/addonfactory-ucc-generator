@@ -45,6 +45,13 @@ fields = [
         validator=None
     ), 
     field.RestField(
+        'amd_custom_control_field',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
         'field_no_validators',
         required=False,
         encrypted=False,
@@ -172,13 +179,41 @@ fields = [
         default=None,
         validator=validator.AllOf(
             validator.String(
-                max_len=4096,
-                min_len=10,
-            ),
+                max_len=4096, 
+                min_len=10, 
+            ), 
             validator.Pattern(
-                regex=r"""^[a-zA-Z]\w*$""",
+                regex=r"""^[a-zA-Z]\w*$""", 
             )
         )
+    ), 
+    field.RestField(
+        'example_textarea_field_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'text_area_test_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'select_test_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'radio_test_basic_oauth',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
     ),
     field.RestField(
         'client_id',
@@ -240,6 +275,20 @@ fields = [
         'endpoint_token_oauth_credentials',
         required=False,
         encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'username_cert',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'token_cert',
+        required=False,
+        encrypted=True,
         default=None,
         validator=None
     ),

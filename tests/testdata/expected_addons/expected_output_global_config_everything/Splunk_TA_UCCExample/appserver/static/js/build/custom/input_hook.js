@@ -64,8 +64,8 @@ class Hook {
 
     /* 
         Put form validation logic here.
-        Return ture if validation pass, false otherwise.
-        Call displayErrorMsg when validtion failed.
+        Return true if validation pass, false otherwise.
+        Call displayErrorMsg when validation failed.
     */
 
     onSaveSuccess() {

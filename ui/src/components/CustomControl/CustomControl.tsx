@@ -44,13 +44,12 @@ class CustomControl extends React.Component<Props, State> {
                     }
                 );
             } else {
-                // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${module}`],
-                    (Control: CustomControlConstructor) => {
-                        resolve(Control);
-                    }
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${appName}/js/build/custom/${module}`], (
+                    Control: CustomControlConstructor
+                ) => {
+                    resolve(Control);
+                });
             }
         });
 

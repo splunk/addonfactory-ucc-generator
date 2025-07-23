@@ -90,11 +90,12 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
             } else {
                 const globalConfig = getUnifiedConfigs();
                 const appName = globalConfig.meta.name;
-                // @ts-expect-error typeof __non_webpack_require__ is not known during bundle
-                __non_webpack_require__(
-                    [`app/${appName}/js/build/custom/${this.props.fileName}`],
-                    (Control: CustomMenuConstructor) => resolve(Control)
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${appName}/js/build/custom/${this.props.fileName}`], (
+                    Control: CustomMenuConstructor
+                ) => {
+                    resolve(Control);
+                });
             }
         });
 

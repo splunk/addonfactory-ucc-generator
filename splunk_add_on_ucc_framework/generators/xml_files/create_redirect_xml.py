@@ -14,8 +14,10 @@
 # limitations under the License.
 #
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
-from typing import Any, Dict
-from splunk_add_on_ucc_framework import data_ui_generator
+from typing import Dict, List, Optional
+from xml.etree.ElementTree import Element, SubElement, tostring
+from splunk_add_on_ucc_framework.utils import pretty_print_xml
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class RedirectXml(FileGenerator):
@@ -24,23 +26,44 @@ class RedirectXml(FileGenerator):
         " in `default/data/ui/views/` folder."
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
-        if self._global_config.has_oauth():
-            self.redirect_xml_content = data_ui_generator.generate_views_redirect_xml(
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
+        if global_config.has_oauth():
+            self.redirect_xml_content = self.generate_views_redirect_xml(
                 self._addon_name,
             )
             self.ta_name = self._addon_name.lower()
 
-    def generate(self) -> Dict[str, str]:
+    def generate_views_redirect_xml(self, addon_name: str) -> str:
+        """
+        Generates `default/data/ui/views/redirect.xml` file.
+        """
+        view = Element(
+            "view",
+            attrib={
+                "template": f"{addon_name}:templates/{addon_name.lower()}_redirect.html",
+                "type": "html",
+                "isDashboard": "False",
+            },
+        )
+        label = SubElement(view, "label")
+        label.text = "Redirect"
+        view_as_string = tostring(view, encoding="unicode")
+        return pretty_print_xml(view_as_string)
+
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_oauth():
-            return {}
+            return None
         file_name = f"{self.ta_name}_redirect.xml"
         file_path = self.get_file_output_path(
             ["default", "data", "ui", "views", file_name]
         )
-        self.writer(
-            file_name=file_name,
-            file_path=file_path,
-            content=self.redirect_xml_content,
-        )
-        return {file_name: file_path}
+        return [
+            {
+                "file_name": file_name,
+                "file_path": file_path,
+                "content": self.redirect_xml_content,
+            }
+        ]

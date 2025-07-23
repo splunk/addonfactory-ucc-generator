@@ -18,9 +18,10 @@ from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     arf_consts as ac,
     normalize,
 )
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
 from os import linesep
 from re import search
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AlertActionsHtml(FileGenerator):
@@ -29,21 +30,24 @@ class AlertActionsHtml(FileGenerator):
         " in `default/data/ui/alerts` folder."
     )
 
-    def _set_attributes(self, **kwargs: Dict[str, Any]) -> None:
-        if self._global_config.has_alerts():
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
+        if global_config.has_alerts():
             self._html_home = "alert_html_skeleton.template"
             envs = normalize.normalize(
-                self._global_config.alerts,
-                self._global_config.namespace,
+                global_config.alerts,
+                global_config.namespace,
             )
             schema_content = envs["schema.content"]
             self._alert_settings = schema_content["modular_alerts"]
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_alerts():
-            return {}
+            return None
 
-        alert_details: Dict[str, str] = {}
+        alert_details: List[Any] = []
         for self.alert in self._alert_settings:
             self.set_template_and_render(
                 template_file_path=["html_templates"],
@@ -65,10 +69,7 @@ class AlertActionsHtml(FileGenerator):
                     file_name,
                 ]
             )
-            self.writer(
-                file_name=file_name,
-                file_path=file_path,
-                content=text,
+            alert_details.append(
+                {"file_name": file_name, "file_path": file_path, "content": text}
             )
-            alert_details.update({file_name: file_path})
         return alert_details

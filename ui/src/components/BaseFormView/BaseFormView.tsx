@@ -4,10 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Message from '@splunk/react-ui/Message';
 
+import { z } from 'zod';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
-import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG, Mode } from '../../constants/modes';
+import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
 import { generateEndPointUrl, postRequest } from '../../util/api';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
@@ -26,12 +27,10 @@ import {
     AcceptableFormValueOrNull,
     AcceptableFormValueOrNullish,
     NullishFormRecord,
-    StandardPages,
 } from '../../types/components/shareableTypes';
 import {
     CustomHookError,
     BaseFormState,
-    SingleSelectEntityType,
     BaseFormStateData,
     CurrentBaseFormInput,
     UtilBaseForm,
@@ -39,41 +38,27 @@ import {
     ServiceGroup,
     OauthConfiguration,
     AnyEntity,
-    OAuthEntity,
-    BasicEntity,
     ChangeRecord,
     EntitiesAllowingModifications,
     CustomValidatorFunc,
     AvaillableOAuthTypes,
+    BaseFormProps,
 } from '../../types/components/BaseFormTypes';
 import {
     getAllFieldsWithModifications,
     getModifiedState,
 } from '../FormModifications/FormModifications';
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { shouldHideForPlatform } from '../../util/pageContext';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
 import { CustomElementsMap } from '../../types/CustomTypes';
-import { CustomComponentContextType } from '../../context/CustomComponentContext';
-import { PageContextProviderType } from '../../context/PageContext';
+import { OAuthEntity, SingleSelectEntitySchema } from '../../types/globalConfig/entities';
+import { mapEntityIntoBaseForViewEntityObject } from './BaseFormViewUtils';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
     console.error(
         `[Custom Hook] Something went wrong while calling ${params.methodName}. Error: ${params.error?.name} ${params.error?.message}`
     );
-}
-
-export interface BaseFormProps {
-    currentServiceState?: Record<string, AcceptableFormValueOrNull>;
-    serviceName: string;
-    mode: Mode;
-    page: StandardPages;
-    stanzaName: string;
-    groupName?: string;
-    handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
-    pageContext?: PageContextProviderType;
-    customComponentContext?: CustomComponentContextType;
 }
 
 class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
@@ -276,37 +261,43 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     if (authType.length > 1) {
                         this.isAuthVal = true;
                         // Defining state for auth_type in case of multiple Authentication
+                        const currentInputOauth =
+                            authType.find((oauth) => oauth === this.currentInput?.auth_type) ||
+                            authType[0];
+
                         const tempEntity = {
                             disabled: false,
                             error: false,
                             display: true,
-                            value:
-                                this.currentInput?.auth_type === 'oauth' ||
-                                this.currentInput?.auth_type === 'basic' ||
-                                this.currentInput?.auth_type === 'oauth_client_credentials'
-                                    ? this.currentInput?.auth_type
-                                    : authType[0],
+                            value: currentInputOauth,
                         };
 
                         temState.auth_type = tempEntity;
 
-                        const content = {
+                        const defaultOauthLabels: Record<string, string> = {
                             basic: 'Basic Authentication',
                             oauth: 'OAuth 2.0 - Authorization Code Grant Type',
                             oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
                         };
 
                         // Defining Entity for auth_type in entitylist of globalConfig
-                        const entity: SingleSelectEntityType = {
+                        const entity: z.TypeOf<typeof SingleSelectEntitySchema> = {
                             field: 'auth_type',
                             type: 'singleSelect',
                             label: 'Auth Type',
                             options: {
                                 hideClearBtn: true,
-                                autoCompleteFields: authType.map((type) => ({
-                                    label: content[type],
-                                    value: type,
-                                })),
+                                autoCompleteFields: authType.map((oauthConf) =>
+                                    typeof oauthConf === 'object'
+                                        ? oauthConf
+                                        : {
+                                              label:
+                                                  e?.options?.oauth_type_labels?.[oauthConf] ||
+                                                  defaultOauthLabels[oauthConf] ||
+                                                  oauthConf,
+                                              value: oauthConf,
+                                          }
+                                ),
                             },
                         };
 
@@ -319,44 +310,30 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     // Iterating over everytype of Authentication under "oauth" type
                     authType?.forEach((type) => {
                         const authfields: string[] = [];
-                        const fields = e?.options[type];
+                        const oauthType = type;
+                        const fields = e?.options[oauthType] as OAuthEntity[];
                         if (fields) {
                             // For Particaular type iterating over fields
                             fields.forEach((field: OAuthEntity) => {
                                 if (!field) {
                                     return;
                                 }
-                                // every field for auth type
-                                const tempEntity: BasicEntity = {
-                                    disabled: field?.options?.enable === false,
-                                    error: false,
-                                    display: temState?.auth_type
-                                        ? type === temState?.auth_type?.value
-                                        : true,
-                                };
-
-                                if (props.mode === MODE_CREATE) {
-                                    tempEntity.value =
-                                        typeof field?.defaultValue !== 'undefined'
-                                            ? field.defaultValue
-                                            : undefined;
-                                } else {
-                                    const isEncrypted = field?.encrypted || false;
-                                    tempEntity.value = !isEncrypted
-                                        ? this.currentInput?.[field.field]
-                                        : '';
-                                }
-
-                                if (props.mode === MODE_EDIT) {
-                                    // .disableonEdit = false do not overwrite .disabled = true
-                                    tempEntity.disabled =
-                                        field?.options?.disableonEdit === true ||
-                                        tempEntity.disabled;
-                                }
+                                const tempEntity = mapEntityIntoBaseForViewEntityObject(
+                                    field,
+                                    this.currentInput,
+                                    this.props,
+                                    authType.length > 1 ? temState?.auth_type?.value : authType[0],
+                                    type
+                                );
 
                                 temState[field.field] = tempEntity;
                                 // eslint-disable-next-line no-param-reassign
                                 field.type = field?.type || 'text';
+
+                                // if field is not defined as required, set it to true as it is default for oauth
+                                // eslint-disable-next-line no-param-reassign
+                                field.required =
+                                    typeof field?.required !== 'undefined' ? field?.required : true;
 
                                 // Handled special case for redirect_url
                                 if (field.field === 'redirect_url') {
@@ -369,12 +346,12 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                     tempEntity.disabled = true;
                                 }
 
-                                // TODO: why field is pushed isntead of tempEntity
-                                // TODO: why temp entity is created at all
+                                // TODO: why field is pushed instead of tempEntity, it contains more data about field
+                                // while tempEntity got just basic state props.
                                 temEntities.push(field);
                                 authfields?.push(field.field);
                             });
-                            this.authMap[type] = authfields;
+                            this.authMap[oauthType] = authfields;
                         }
                     });
                     if (authType.includes('oauth')) {
@@ -394,118 +371,11 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     }
                 }
             } else {
-                const tempEntity: BasicEntity = {
-                    disabled: false,
-                    error: false,
-                    display: true,
-                };
-
-                if (e.type !== 'helpLink' && e.type !== 'custom') {
-                    e.encrypted = e?.encrypted || false;
-
-                    if (e.type === 'file' && this.currentInput?.[e.field]) {
-                        /*
-                         adding example name to enable possibility of removal file,
-                         not forcing value addition as if value is encrypted it is shared as
-                         string ie. ***** and it is considered a valid default value
-                         if value is not encrypted it is pushed correctly along with this name
-                        */
-                        tempEntity.fileNameToDisplay = 'Previous File';
-                    }
-                    if (props.mode === MODE_CREATE) {
-                        tempEntity.value =
-                            typeof e.defaultValue !== 'undefined' ? e?.defaultValue : null;
-                        tempEntity.display =
-                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
-                        tempEntity.display = shouldHideForPlatform(
-                            e.options?.hideForPlatform,
-                            props.pageContext?.platform
-                        )
-                            ? false
-                            : tempEntity.display;
-                        tempEntity.error = false;
-                        tempEntity.disabled = e?.options?.enable === false;
-                        temState[e.field] = tempEntity;
-                    } else if (props.mode === MODE_EDIT) {
-                        tempEntity.value =
-                            typeof this.currentInput?.[e.field] !== 'undefined'
-                                ? this.currentInput?.[e.field]
-                                : null;
-                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                        tempEntity.display =
-                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
-                        tempEntity.display = shouldHideForPlatform(
-                            e.options?.hideForPlatform,
-                            props.pageContext?.platform
-                        )
-                            ? false
-                            : tempEntity.display;
-
-                        tempEntity.error = false;
-                        tempEntity.disabled = e?.options?.enable === false;
-                        if (e.field === 'name') {
-                            tempEntity.disabled = true;
-                        } else if (typeof e?.options?.disableonEdit !== 'undefined') {
-                            tempEntity.disabled = e.options.disableonEdit;
-                        }
-                        temState[e.field] = tempEntity;
-                    } else if (props.mode === MODE_CLONE) {
-                        tempEntity.value =
-                            e.field === 'name' || e.encrypted ? '' : this.currentInput?.[e.field];
-
-                        tempEntity.display =
-                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
-                        tempEntity.display = shouldHideForPlatform(
-                            e.options?.hideForPlatform,
-                            props.pageContext?.platform
-                        )
-                            ? false
-                            : tempEntity.display;
-
-                        tempEntity.error = false;
-                        tempEntity.disabled = e?.options?.enable === false;
-                        temState[e.field] = tempEntity;
-                    } else if (props.mode === MODE_CONFIG) {
-                        e.defaultValue =
-                            typeof e.defaultValue !== 'undefined' ? e.defaultValue : undefined;
-                        tempEntity.value =
-                            typeof this.currentInput?.[e.field] !== 'undefined'
-                                ? this.currentInput?.[e.field]
-                                : e.defaultValue;
-                        tempEntity.value = e.encrypted ? '' : tempEntity.value;
-                        tempEntity.display =
-                            typeof e?.options?.display !== 'undefined' ? e.options.display : true;
-
-                        tempEntity.display = shouldHideForPlatform(
-                            e.options?.hideForPlatform,
-                            props.pageContext?.platform
-                        )
-                            ? false
-                            : tempEntity.display;
-
-                        tempEntity.error = false;
-                        tempEntity.disabled = e?.options?.enable === false;
-                        if (e.field === 'name') {
-                            tempEntity.disabled = true;
-                        } else if (typeof e?.options?.disableonEdit !== 'undefined') {
-                            tempEntity.disabled = e.options.disableonEdit;
-                        }
-                        temState[e.field] = tempEntity;
-                    } else {
-                        throw new Error(`Invalid mode : ${props.mode}`);
-                    }
-                } else {
-                    if (e.type === 'custom') {
-                        // value for custom control element is passed to custom js later on
-                        tempEntity.value = this.currentInput?.[e.field];
-                    }
-                    // TODO extract if before this if else block
-                    temState[e.field] = tempEntity;
-                }
-
+                temState[e.field] = mapEntityIntoBaseForViewEntityObject(
+                    e,
+                    this.currentInput,
+                    this.props
+                );
                 // handle dependent fields
                 if (e.type === 'singleSelect' || e.type === 'multipleSelect') {
                     const fieldsDependedOn = e.options?.dependencies;
@@ -676,10 +546,13 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             let temEntities: AnyEntity[] | undefined;
             if (this.isOAuth) {
                 let reqFields: string[] = [];
+                const otherOauthFields: string[] = [];
                 Object.keys(this.authMap).forEach((type) => {
                     // `isAuthVal` is required in a case where only single auth type is provided
                     if (type === this.datadict.auth_type || !this.isAuthVal) {
                         reqFields = [...reqFields, ...this.authMap[type]];
+                    } else {
+                        otherOauthFields.push(...this.authMap[type]);
                     }
                 });
 
@@ -688,6 +561,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     if (e.type !== 'helpLink' && reqFields.includes(e.field)) {
                         // All oauth fields are required except if explicitely `required` is set to `false`
                         return { required: true, ...e };
+                    }
+                    if (otherOauthFields.includes(e.field)) {
+                        return { ...e, required: false };
                     }
                     return e;
                 });
@@ -1138,21 +1014,20 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     }
                 );
             } else {
-                // @ts-expect-error should be exported to other js module and imported here
-                __non_webpack_require__(
-                    [`app/${this.appName}/js/build/custom/${module}`],
-                    (Hook: CustomHookConstructor) => {
-                        this.hook = new Hook(
-                            globalConfig,
-                            this.props.serviceName,
-                            this.state,
-                            this.props.mode,
-                            this.util,
-                            this.props.groupName
-                        );
-                        resolve(Hook);
-                    }
-                );
+                // eslint-disable-next-line import/no-dynamic-require, global-require
+                require([`app/${this.appName}/js/build/custom/${module}`], (
+                    Hook: CustomHookConstructor
+                ) => {
+                    this.hook = new Hook(
+                        globalConfig,
+                        this.props.serviceName,
+                        this.state,
+                        this.props.mode,
+                        this.util,
+                        this.props.groupName
+                    );
+                    resolve(Hook);
+                });
             }
         });
         return myPromise;

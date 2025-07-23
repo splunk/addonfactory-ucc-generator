@@ -1,5 +1,6 @@
-from typing import List, Dict, Any
 from unittest.mock import patch
+
+import pytest
 
 from splunk_add_on_ucc_framework.commands.rest_builder.global_config_builder_schema import (
     GlobalConfigBuilderSchema,
@@ -66,67 +67,375 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
     )
 
 
-def test_get_oauth_entities(global_config_all_json):
-    content: List[Dict[str, Any]] = [
-        {
-            "type": "text",
-            "label": "Name",
-            "field": "name",
-            "required": True,
-        },
-        {
-            "type": "oauth",
-            "field": "oauth",
-            "label": "Not used",
-            "options": {
-                "auth_type": ["oauth_client_credentials"],
-                "oauth_client_credentials": [
-                    {
-                        "oauth_field": "client_id_oauth_credentials",
-                        "label": "Client Id",
-                        "field": "client_id_oauth_credentials",
+@pytest.mark.parametrize(
+    "content,expected_result",
+    [
+        (
+            # Test case: oauth combinations (additional_oauth + oauth_client_credentials)
+            [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "field": "name",
+                    "required": True,
+                },
+                {
+                    "type": "oauth",
+                    "field": "oauth",
+                    "label": "Not used",
+                    "options": {
+                        "auth_type": ["additional_oauth", "oauth_client_credentials"],
+                        "additional_oauth": [
+                            {
+                                "oauth_field": "username_additional_oauth",
+                                "label": "Username",
+                                "field": "username_additional_oauth",
+                            },
+                            {
+                                "oauth_field": "password_additional_oauth",
+                                "label": "Password",
+                                "field": "password_additional_oauth",
+                                "encrypted": True,
+                            },
+                            {
+                                "oauth_field": "certificate_additional_oauth",
+                                "label": "Certificate",
+                                "field": "certificate_additional_oauth",
+                            },
+                        ],
+                        "oauth_client_credentials": [
+                            {
+                                "oauth_field": "client_id_oauth_credentials",
+                                "label": "Client Id",
+                                "field": "client_id_oauth_credentials",
+                            },
+                            {
+                                "oauth_field": "client_secret_oauth_credentials",
+                                "label": "Client Secret",
+                                "field": "client_secret_oauth_credentials",
+                                "encrypted": True,
+                            },
+                            {
+                                "oauth_field": "endpoint_token_oauth_credentials",
+                                "label": "Token endpoint",
+                                "field": "endpoint_token_oauth_credentials",
+                            },
+                        ],
+                        "auth_code_endpoint": "/services/oauth2/authorize",
+                        "access_token_endpoint": "/services/oauth2/token",
+                        "oauth_timeout": 30,
+                        "oauth_state_enabled": False,
                     },
-                    {
-                        "oauth_field": "client_secret_oauth_credentials",
-                        "label": "Client Secret",
-                        "field": "client_secret_oauth_credentials",
-                        "encrypted": True,
+                },
+            ],
+            [
+                {"field": "name", "label": "Name", "required": True, "type": "text"},
+                {
+                    "field": "username_additional_oauth",
+                    "label": "Username",
+                    "oauth_field": "username_additional_oauth",
+                },
+                {
+                    "encrypted": True,
+                    "field": "password_additional_oauth",
+                    "label": "Password",
+                    "oauth_field": "password_additional_oauth",
+                },
+                {
+                    "field": "certificate_additional_oauth",
+                    "label": "Certificate",
+                    "oauth_field": "certificate_additional_oauth",
+                },
+                {
+                    "field": "client_id_oauth_credentials",
+                    "label": "Client Id",
+                    "oauth_field": "client_id_oauth_credentials",
+                },
+                {
+                    "encrypted": True,
+                    "field": "client_secret_oauth_credentials",
+                    "label": "Client Secret",
+                    "oauth_field": "client_secret_oauth_credentials",
+                },
+                {
+                    "field": "endpoint_token_oauth_credentials",
+                    "label": "Token endpoint",
+                    "oauth_field": "endpoint_token_oauth_credentials",
+                },
+                {"encrypted": True, "field": "access_token"},
+                {"encrypted": True, "field": "refresh_token"},
+                {"field": "instance_url"},
+                {"field": "auth_type"},
+            ],
+        ),
+        (  # Test case: oauth combinations (additional_oauth only)
+            [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "field": "name",
+                    "required": True,
+                },
+                {
+                    "type": "oauth",
+                    "field": "oauth",
+                    "label": "Not used",
+                    "options": {
+                        "auth_type": ["additional_oauth"],
+                        "additional_oauth": [
+                            {
+                                "oauth_field": "username_additional_oauth",
+                                "label": "Username",
+                                "field": "username_additional_oauth",
+                            },
+                            {
+                                "oauth_field": "password_additional_oauth",
+                                "label": "Password",
+                                "field": "password_additional_oauth",
+                                "encrypted": True,
+                            },
+                            {
+                                "oauth_field": "certificate_additional_oauth",
+                                "label": "Certificate",
+                                "field": "certificate_additional_oauth",
+                            },
+                        ],
                     },
-                    {
-                        "oauth_field": "endpoint_token_oauth_credentials",
-                        "label": "Token endpoint",
-                        "field": "endpoint_token_oauth_credentials",
+                },
+            ],
+            [
+                {"field": "name", "label": "Name", "required": True, "type": "text"},
+                {
+                    "field": "username_additional_oauth",
+                    "label": "Username",
+                    "oauth_field": "username_additional_oauth",
+                },
+                {
+                    "encrypted": True,
+                    "field": "password_additional_oauth",
+                    "label": "Password",
+                    "oauth_field": "password_additional_oauth",
+                },
+                {
+                    "field": "certificate_additional_oauth",
+                    "label": "Certificate",
+                    "oauth_field": "certificate_additional_oauth",
+                },
+            ],
+        ),
+        (  # Test case: oauth combinations (oauth_client_credentials only)
+            [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "field": "name",
+                    "required": True,
+                },
+                {
+                    "type": "oauth",
+                    "field": "oauth",
+                    "label": "Not used",
+                    "options": {
+                        "auth_type": ["oauth_client_credentials"],
+                        "oauth_client_credentials": [
+                            {
+                                "oauth_field": "client_id_oauth_credentials",
+                                "label": "Client Id",
+                                "field": "client_id_oauth_credentials",
+                            },
+                            {
+                                "oauth_field": "client_secret_oauth_credentials",
+                                "label": "Client Secret",
+                                "field": "client_secret_oauth_credentials",
+                                "encrypted": True,
+                            },
+                            {
+                                "oauth_field": "endpoint_token_oauth_credentials",
+                                "label": "Token endpoint",
+                                "field": "endpoint_token_oauth_credentials",
+                            },
+                        ],
+                        "auth_code_endpoint": "/services/oauth2/authorize",
+                        "access_token_endpoint": "/services/oauth2/token",
+                        "oauth_timeout": 30,
+                        "oauth_state_enabled": False,
                     },
-                ],
-                "auth_code_endpoint": "/services/oauth2/authorize",
-                "access_token_endpoint": "/services/oauth2/token",
-                "oauth_timeout": 30,
-                "oauth_state_enabled": False,
-            },
-        },
-    ]
+                },
+            ],
+            [
+                {"field": "name", "label": "Name", "required": True, "type": "text"},
+                {
+                    "field": "client_id_oauth_credentials",
+                    "label": "Client Id",
+                    "oauth_field": "client_id_oauth_credentials",
+                },
+                {
+                    "encrypted": True,
+                    "field": "client_secret_oauth_credentials",
+                    "label": "Client Secret",
+                    "oauth_field": "client_secret_oauth_credentials",
+                },
+                {
+                    "field": "endpoint_token_oauth_credentials",
+                    "label": "Token endpoint",
+                    "oauth_field": "endpoint_token_oauth_credentials",
+                },
+                {"encrypted": True, "field": "access_token"},
+                {"encrypted": True, "field": "refresh_token"},
+                {"field": "instance_url"},
+            ],
+        ),
+        (
+            # Test case: oauth combinations (basic + additional_oauth + oauth_client_credentials)
+            # Additionaly mixed boolean types to verify they are not changed
+            [
+                {
+                    "type": "text",
+                    "label": "Name",
+                    "field": "name",
+                    "required": True,
+                },
+                {
+                    "type": "oauth",
+                    "field": "oauth",
+                    "label": "Not used",
+                    "options": {
+                        "auth_type": [
+                            "basic",
+                            "additional_oauth",
+                            "oauth_client_credentials",
+                        ],
+                        "additional_oauth": [
+                            {
+                                "oauth_field": "username_additional_oauth",
+                                "label": "Username",
+                                "field": "username_additional_oauth",
+                            },
+                            {
+                                "oauth_field": "password_additional_oauth",
+                                "label": "Password",
+                                "field": "password_additional_oauth",
+                                "encrypted": True,
+                            },
+                            {
+                                "oauth_field": "certificate_additional_oauth",
+                                "label": "Certificate",
+                                "field": "certificate_additional_oauth",
+                            },
+                        ],
+                        "oauth_client_credentials": [
+                            {
+                                "oauth_field": "client_id_oauth_credentials",
+                                "label": "Client Id",
+                                "field": "client_id_oauth_credentials",
+                            },
+                            {
+                                "oauth_field": "client_secret_oauth_credentials",
+                                "label": "Client Secret",
+                                "field": "client_secret_oauth_credentials",
+                                "encrypted": True,
+                            },
+                            {
+                                "oauth_field": "endpoint_token_oauth_credentials",
+                                "label": "Token endpoint",
+                                "field": "endpoint_token_oauth_credentials",
+                            },
+                        ],
+                        "basic": [
+                            {
+                                "oauth_field": "username",
+                                "label": "Username",
+                                "help": "Enter the username for this account.",
+                                "field": "username",
+                            },
+                            {
+                                "oauth_field": "password",
+                                "label": "Password",
+                                "encrypted": "true",
+                                "help": "Enter the password for this account.",
+                                "field": "password",
+                            },
+                            {
+                                "oauth_field": "security_token",
+                                "label": "Security Token",
+                                "encrypted": "true",
+                                "help": "Enter the security token.",
+                                "field": "token",
+                            },
+                        ],
+                        "auth_code_endpoint": "/services/oauth2/authorize",
+                        "access_token_endpoint": "/services/oauth2/token",
+                        "oauth_timeout": 30,
+                        "oauth_state_enabled": False,
+                    },
+                },
+            ],
+            [
+                {"field": "name", "label": "Name", "required": True, "type": "text"},
+                {
+                    "oauth_field": "username",
+                    "label": "Username",
+                    "help": "Enter the username for this account.",
+                    "field": "username",
+                },
+                {
+                    "oauth_field": "password",
+                    "label": "Password",
+                    "encrypted": "true",
+                    "help": "Enter the password for this account.",
+                    "field": "password",
+                },
+                {
+                    "oauth_field": "security_token",
+                    "label": "Security Token",
+                    "encrypted": "true",
+                    "help": "Enter the security token.",
+                    "field": "token",
+                },
+                {
+                    "field": "username_additional_oauth",
+                    "label": "Username",
+                    "oauth_field": "username_additional_oauth",
+                },
+                {
+                    "encrypted": True,
+                    "field": "password_additional_oauth",
+                    "label": "Password",
+                    "oauth_field": "password_additional_oauth",
+                },
+                {
+                    "field": "certificate_additional_oauth",
+                    "label": "Certificate",
+                    "oauth_field": "certificate_additional_oauth",
+                },
+                {
+                    "field": "client_id_oauth_credentials",
+                    "label": "Client Id",
+                    "oauth_field": "client_id_oauth_credentials",
+                },
+                {
+                    "encrypted": True,
+                    "field": "client_secret_oauth_credentials",
+                    "label": "Client Secret",
+                    "oauth_field": "client_secret_oauth_credentials",
+                },
+                {
+                    "field": "endpoint_token_oauth_credentials",
+                    "label": "Token endpoint",
+                    "oauth_field": "endpoint_token_oauth_credentials",
+                },
+                {"encrypted": True, "field": "access_token"},
+                {"encrypted": True, "field": "refresh_token"},
+                {"field": "instance_url"},
+                {"field": "auth_type"},
+            ],
+        ),
+    ],
+)
+def test_get_oauth_entities_combinations(
+    global_config_all_json, content, expected_result
+):
     global_config_all_json.configuration[0]["entity"] = content
 
     global_config_builder_schema = GlobalConfigBuilderSchema(global_config_all_json)
-    assert global_config_builder_schema._get_oauth_enitities(content) == [
-        {"field": "name", "label": "Name", "required": True, "type": "text"},
-        {
-            "field": "client_id_oauth_credentials",
-            "label": "Client Id",
-            "oauth_field": "client_id_oauth_credentials",
-        },
-        {
-            "encrypted": True,
-            "field": "client_secret_oauth_credentials",
-            "label": "Client Secret",
-            "oauth_field": "client_secret_oauth_credentials",
-        },
-        {
-            "field": "endpoint_token_oauth_credentials",
-            "label": "Token endpoint",
-            "oauth_field": "endpoint_token_oauth_credentials",
-        },
-        {"encrypted": True, "field": "access_token"},
-        {"encrypted": True, "field": "refresh_token"},
-        {"field": "instance_url"},
-    ]
+    assert global_config_builder_schema._get_oauth_enitities(content) == expected_result

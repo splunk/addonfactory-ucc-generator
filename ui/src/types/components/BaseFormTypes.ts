@@ -8,18 +8,19 @@ import {
 } from './shareableTypes';
 import { MarkdownMessageProps } from '../../components/MarkdownMessage/MarkdownMessage';
 import {
-    AnyOfEntity,
-    CheckboxEntity,
-    FileEntity,
-    MultipleSelectEntity,
-    OAuthEntity,
-    OAuthFields,
-    RadioEntity,
-    SingleSelectEntity,
-    TextAreaEntity,
-    TextEntity,
+    AnyOfEntitySchema,
+    CheckboxEntitySchema,
+    FileEntitySchema,
+    MultipleSelectEntitySchema,
+    oAuthEntitySchema,
+    RadioEntitySchema,
+    SingleSelectEntitySchema,
+    TextAreaEntitySchema,
+    TextEntitySchema,
 } from '../globalConfig/entities';
 import { PageContextProviderType } from '../../context/PageContext';
+import { oAuthFieldSchema } from '../globalConfig/oAuth';
+import { CustomComponentContextType } from '../../context/CustomComponentContext';
 
 export type CurrentBaseFormInput =
     | Record<string, AcceptableFormValueOrNull>
@@ -74,6 +75,7 @@ export interface BaseFormProps {
     groupName?: string;
     handleFormSubmit: (isSubmitting: boolean, closeEntity: boolean) => void;
     pageContext?: PageContextProviderType;
+    customComponentContext?: CustomComponentContextType;
 }
 
 export interface BaseFormState {
@@ -85,20 +87,6 @@ export interface BaseFormState {
     errorMsg?: string;
     warningMsg?: string;
     stateModified?: boolean;
-}
-
-export interface SingleSelectEntityType {
-    field: string;
-    type: 'singleSelect';
-    label: string;
-    options: {
-        hideClearBtn: boolean;
-        autoCompleteFields: {
-            label: string;
-            value: AvaillableOAuthTypes;
-        }[];
-    };
-    modifyFieldsOnValue?: ModifyFieldsOnValue;
 }
 
 export interface UtilBaseForm {
@@ -129,21 +117,21 @@ export interface OauthConfiguration {
     authEndpointAccessTokenType: string | null;
 }
 
-export type AnyEntity = z.TypeOf<typeof AnyOfEntity> | z.TypeOf<typeof OAuthFields>;
+export type AnyEntity = z.TypeOf<typeof AnyOfEntitySchema> | z.TypeOf<typeof oAuthFieldSchema>;
 
 export type EntitiesAllowingModifications =
-    | z.TypeOf<typeof TextEntity>
-    | z.TypeOf<typeof TextAreaEntity>
-    | z.TypeOf<typeof SingleSelectEntity>
-    | z.TypeOf<typeof MultipleSelectEntity>
-    | z.TypeOf<typeof CheckboxEntity>
-    | z.TypeOf<typeof RadioEntity>
-    | z.TypeOf<typeof FileEntity>
-    | z.TypeOf<typeof OAuthFields>;
+    | z.TypeOf<typeof TextEntitySchema>
+    | z.TypeOf<typeof TextAreaEntitySchema>
+    | z.TypeOf<typeof SingleSelectEntitySchema>
+    | z.TypeOf<typeof MultipleSelectEntitySchema>
+    | z.TypeOf<typeof CheckboxEntitySchema>
+    | z.TypeOf<typeof RadioEntitySchema>
+    | z.TypeOf<typeof FileEntitySchema>
+    | z.TypeOf<typeof oAuthFieldSchema>;
 
-export type OAuthEntity = z.TypeOf<typeof OAuthFields>;
-
-export type AvaillableOAuthTypes = z.TypeOf<typeof OAuthEntity>['options']['auth_type'][number];
+export type AvaillableOAuthTypes = z.TypeOf<
+    typeof oAuthEntitySchema
+>['options']['auth_type'][number];
 
 export interface BasicEntity {
     disabled: boolean;

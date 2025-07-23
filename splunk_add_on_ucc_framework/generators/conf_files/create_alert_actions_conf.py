@@ -16,10 +16,11 @@
 import json
 import shutil
 from os import path
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AlertActionsConf(FileGenerator):
@@ -28,15 +29,18 @@ class AlertActionsConf(FileGenerator):
         "for the custom alert actions defined in globalConfig"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "alert_actions.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
-        if self._global_config is None:
+        if global_config is None:
             return
 
         envs = normalize.normalize(
-            self._global_config.alerts,
-            self._global_config.namespace,
+            global_config.alerts,
+            global_config.namespace,
         )
         schema_content = envs["schema.content"]
         self._alert_settings = schema_content["modular_alerts"]
@@ -79,7 +83,7 @@ class AlertActionsConf(FileGenerator):
                 self.alerts[alert_name].append("icon_path = alerticon.png")
                 # we copy UCC framework's alerticon.png only when a custom isn't provided
                 shutil.copy(
-                    path.join(kwargs["ucc_dir"], "static", "alerticon.png"),
+                    path.join(self._ucc_dir, "static", "alerticon.png"),
                     path.join(self._get_output_dir(), "appserver", "static"),
                 )
             # process alert action properties in bulk
@@ -127,31 +131,34 @@ class AlertActionsConf(FileGenerator):
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
 
-    def generate(self) -> Dict[str, str]:
-        conf_files: Dict[str, str] = {}
-        conf_files.update(self.generate_conf())
-        conf_files.update(self.generate_conf_spec())
-        return conf_files
+    def generate(self) -> Optional[List[Dict[str, str]]]:
+        conf_files: List[Dict[str, str]] = []
+        conf = self.generate_conf()
+        conf_spec = self.generate_conf_spec()
+        if conf is not None:
+            conf_files.append(conf)
+        if conf_spec is not None:
+            conf_files.append(conf_spec)
+        return None if conf_files == [] else conf_files
 
-    def generate_conf(self) -> Dict[str, str]:
+    def generate_conf(self) -> Optional[Dict[str, str]]:
         if not self.alerts:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
         )
         rendered_content = self._template.render(alerts=self.alerts)
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_file: file_path}
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
 
-    def generate_conf_spec(self) -> Dict[str, str]:
+    def generate_conf_spec(self) -> Optional[Dict[str, str]]:
         if not self.alerts_spec:
-            return {}
+            return None
 
         file_path = self.get_file_output_path(["README", self.conf_spec_file])
         self.set_template_and_render(
@@ -159,9 +166,8 @@ class AlertActionsConf(FileGenerator):
             file_name="alert_actions_conf_spec.template",
         )
         rendered_content = self._template.render(alerts=self.alerts_spec)
-        self.writer(
-            file_name=self.conf_spec_file,
-            file_path=file_path,
-            content=rendered_content,
-        )
-        return {self.conf_spec_file: file_path}
+        return {
+            "file_name": self.conf_spec_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }

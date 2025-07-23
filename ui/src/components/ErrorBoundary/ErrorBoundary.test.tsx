@@ -61,7 +61,7 @@ it('should render Error Boundary with useful links', async () => {
     );
 
     const link = screen.getByRole('link', {
-        name: 'Troubleshooting (Opens new window)',
+        name: 'UCC Troubleshooting Guide (Opens new window)',
     });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute(
@@ -70,7 +70,7 @@ it('should render Error Boundary with useful links', async () => {
     );
 
     const searchLink = screen.getByRole('link', {
-        name: 'General Error Splunk Search (Opens new window)',
+        name: 'Search All Splunk Errors (Opens new window)',
     });
     expect(searchLink).toBeInTheDocument();
     expect(searchLink).toHaveAttribute(

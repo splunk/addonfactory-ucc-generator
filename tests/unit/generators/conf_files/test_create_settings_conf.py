@@ -1,182 +1,134 @@
-from pytest import fixture
-from unittest.mock import patch, MagicMock
 from splunk_add_on_ucc_framework.generators.conf_files import SettingsConf
-from splunk_add_on_ucc_framework.global_config import GlobalConfig
-from tests.unit.helpers import get_testdata_file_path
-
-TA_NAME = "test_addon"
 
 
-@fixture
-def global_config():
-    gc = GlobalConfig.from_file(get_testdata_file_path("valid_config.json"))
-    gc._content["meta"]["restRoot"] = TA_NAME
-    return gc
-
-
-def test_set_attributes(global_config, input_dir, output_dir, ucc_dir, ta_name):
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+def test_init(global_config_only_logging, input_dir, output_dir):
+    settings_conf = SettingsConf(global_config_only_logging, input_dir, output_dir)
+    assert (
+        settings_conf.conf_file
+        == f"{global_config_only_logging.namespace.lower()}_settings.conf"
     )
-    settings_conf._global_config = MagicMock()
-    settings_conf._gc_schema = MagicMock()
-
-    settings_conf._global_config.settings = [{"entity": "entity1", "name": "setting1"}]
-    settings_conf._global_config.namespace = TA_NAME
-    settings_conf._gc_schema._get_oauth_enitities.return_value = "mocked_content"
-    settings_conf._gc_schema._parse_fields.return_value = (
-        [MagicMock(_name="field1")],
-        [MagicMock(_name="field3")],
+    assert (
+        settings_conf.conf_file
+        == f"{global_config_only_logging.namespace.lower()}_settings.conf"
     )
-
-    settings_conf._gc_schema._endpoints = {"settings": MagicMock()}
-    settings_conf._gc_schema._endpoints[
-        "settings"
-    ].generate_conf_with_default_values.return_value = "default_values"
-
-    settings_conf._set_attributes()
-
-    assert settings_conf.conf_file == f"{global_config.namespace.lower()}_settings.conf"
     assert (
         settings_conf.conf_spec_file
-        == f"{global_config.namespace.lower()}_settings.conf.spec"
+        == f"{global_config_only_logging.namespace.lower()}_settings.conf.spec"
     )
-    assert settings_conf.settings_stanzas == [("setting1", ["field1 = "])]
-    assert settings_conf.default_content == "default_values"
+    assert settings_conf.settings_stanzas == [("logging", ["loglevel = "])]
+    assert settings_conf.default_content == "[logging]\nloglevel = INFO"
 
 
-def test_set_attribute_for_conf_only_TA(
-    global_config_for_conf_only_TA, input_dir, output_dir, ucc_dir, ta_name
+def test_init_for_conf_only_TA(
+    global_config_for_conf_only_TA,
+    input_dir,
+    output_dir,
 ):
     settings_conf = SettingsConf(
         global_config_for_conf_only_TA,
         input_dir,
         output_dir,
-        ucc_dir=ucc_dir,
-        addon_name=ta_name,
     )
-    settings_conf._set_attributes()
     assert settings_conf.settings_stanzas == []
     assert settings_conf.default_content == ""
 
 
-def test_set_attributes_no_settings_key(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    settings_conf._addon_name = "TestAddon"
-    settings_conf._global_config = MagicMock()
-    settings_conf._gc_schema = MagicMock()
-
-    settings_conf._global_config.settings = [{"entity": "entity1", "name": "setting1"}]
-    settings_conf._gc_schema._get_oauth_enitities.return_value = "mocked_content"
-    settings_conf._gc_schema._parse_fields.return_value = (
-        [MagicMock(_name="field1")],
-        [MagicMock(_name="field3")],
-    )
-
-    settings_conf._gc_schema._endpoints = {}
-
-    settings_conf._set_attributes()
-
-    assert settings_conf.settings_stanzas == [("setting1", ["field1 = "])]
+def test_init_no_settings_key(global_config_for_alerts, input_dir, output_dir):
+    settings_conf = SettingsConf(global_config_for_alerts, input_dir, output_dir)
     assert settings_conf.default_content == ""
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf.get_file_output_path"
-)
-def test_generate_conf(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    content = "content"
-    exp_fname = f"{ta_name}_settings.conf"
-    file_path = f"output_path/{exp_fname}"
-    mock_op_path.return_value = file_path
-    template_render = MagicMock()
-    template_render.render.return_value = content
+def test_generate_conf(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
+    exp_fname = f"{global_config_all_json.namespace.lower()}_settings.conf"
 
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+    settings_conf = SettingsConf(global_config_all_json, input_dir, output_dir)
+    output = settings_conf.generate_conf()
+    expected_content = (
+        "\n".join(
+            [
+                "[proxy]",
+                "proxy_enabled = ",
+                "proxy_type = http",
+                "proxy_url = ",
+                "proxy_port = ",
+                "proxy_username = ",
+                "proxy_password = ",
+                "proxy_rdns = ",
+                "",
+                "[logging]",
+                "loglevel = INFO",
+                "",
+                "[custom_abc]",
+                "testString = ",
+                "testNumber = ",
+                "testRegex = ",
+                "testEmail = ",
+                "testIpv4 = ",
+                "testDate = ",
+                "testUrl = ",
+            ]
+        )
+        + "\n"
     )
-    settings_conf.writer = MagicMock()
-    settings_conf._template = template_render
-    file_paths = settings_conf.generate_conf()
 
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-    settings_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-    assert file_paths == {exp_fname: file_path}
+    assert output == {
+        "file_name": exp_fname,
+        "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+        "content": expected_content,
+    }
 
 
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_default_content(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    settings_conf.default_content = ""
-    result = settings_conf.generate_conf()
-    result is None
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf.set_template_and_render"
-)
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf.get_file_output_path"
-)
-def test_generate_conf_spec(
-    mock_op_path, mock_template, global_config, input_dir, output_dir, ucc_dir, ta_name
-):
-    content = "content"
-    exp_fname = f"{ta_name}_settings.conf.spec"
-    file_path = f"output_path/{exp_fname}"
-    mock_op_path.return_value = file_path
-    mock_template_render = MagicMock()
-    mock_template_render.render.return_value = content
-
-    settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
-    )
-    settings_conf.writer = MagicMock()
-    settings_conf._template = mock_template_render
-
-    file_paths = settings_conf.generate_conf_spec()
-
-    assert mock_op_path.call_count == 1
-    assert mock_template.call_count == 1
-    settings_conf.writer.assert_called_once_with(
-        file_name=exp_fname,
-        file_path=file_path,
-        content=content,
-    )
-    assert file_paths == {exp_fname: file_path}
-
-
-@patch(
-    "splunk_add_on_ucc_framework.generators.conf_files.SettingsConf._set_attributes",
-    return_value=MagicMock(),
-)
-def test_generate_conf_no_settings_stanzas(
-    global_config, input_dir, output_dir, ucc_dir, ta_name
+def test_generate_setting_no_configuration(
+    global_config_no_configuration,
+    input_dir,
+    output_dir,
 ):
     settings_conf = SettingsConf(
-        global_config, input_dir, output_dir, ucc_dir=ucc_dir, addon_name=ta_name
+        global_config_no_configuration,
+        input_dir,
+        output_dir,
     )
-    settings_conf.settings_stanzas = []
-    result = settings_conf.generate_conf_spec()
-    result is None
+    result = settings_conf.generate()
+    assert result is None
+    assert settings_conf.generate_conf() is None
+    assert settings_conf.generate_conf_spec() is None
+
+
+def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
+    exp_fname = f"{global_config_all_json.namespace.lower()}_settings.conf.spec"
+
+    settings_conf = SettingsConf(global_config_all_json, input_dir, output_dir)
+    expected_content = (
+        "\n".join(
+            [
+                "[proxy]",
+                "proxy_enabled = ",
+                "proxy_password = ",
+                "proxy_port = ",
+                "proxy_rdns = ",
+                "proxy_type = ",
+                "proxy_url = ",
+                "proxy_username = ",
+                "[logging]",
+                "loglevel = ",
+                "[custom_abc]",
+                "testDate = ",
+                "testEmail = ",
+                "testIpv4 = ",
+                "testNumber = ",
+                "testRegex = ",
+                "testString = ",
+                "testUrl = ",
+            ]
+        )
+        + "\n"
+    )
+
+    output = settings_conf.generate_conf_spec()
+    assert output == {
+        "file_name": exp_fname,
+        "file_path": f"{output_dir}/{ta_name}/README/{exp_fname}",
+        "content": expected_content,
+    }

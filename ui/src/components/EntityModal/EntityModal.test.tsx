@@ -3,8 +3,8 @@ import React from 'react';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse } from 'msw';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import EntityModal, { EntityModalProps } from './EntityModal';
 import { setUnifiedConfig } from '../../util/util';
 import {
@@ -21,6 +21,7 @@ import {
     getConfigWarningMessageAlwaysDisplay,
     WARNING_MESSAGES_ALWAYS_DISPLAY,
     getConfigWithAllTypesOfOauth,
+    getConfigWithManyTypesInOauth,
 } from './TestConfig';
 import {
     ERROR_AUTH_PROCESS_TERMINATED_TRY_AGAIN,
@@ -30,7 +31,7 @@ import { Mode } from '../../constants/modes';
 import { StandardPages } from '../../types/components/shareableTypes';
 import { server } from '../../mocks/server';
 import { invariant } from '../../util/invariant';
-import { OAuthFields } from '../../types/globalConfig/entities';
+import { oAuthFieldSchema } from '../../types/globalConfig/oAuth';
 
 vi.mock('../../util/api', async () => ({
     ...(await vi.importActual('../../util/api')),
@@ -585,7 +586,7 @@ describe('Oauth2 - client credentials', () => {
         handleRequestClose = vi.fn();
     });
 
-    const getOauthFields = (oauthCredsFields: Array<z.infer<typeof OAuthFields>>) => {
+    const getOauthFields = (oauthCredsFields: Array<z.infer<typeof oAuthFieldSchema>>) => {
         return oauthCredsFields.map((field) => {
             const oauthField = screen.getByRole('textbox', {
                 name: field.label,
@@ -597,6 +598,12 @@ describe('Oauth2 - client credentials', () => {
 
     const setUpConfigAllOauth = () => {
         const newConfig = getConfigWithAllTypesOfOauth();
+        setUnifiedConfig(newConfig);
+        return newConfig;
+    };
+
+    const setUpConfigManyTypesInOauth = () => {
+        const newConfig = getConfigWithManyTypesInOauth();
         setUnifiedConfig(newConfig);
         return newConfig;
     };
@@ -729,5 +736,123 @@ describe('Oauth2 - client credentials', () => {
         await waitFor(() => {
             expect(handleRequestClose).toHaveBeenCalled();
         });
+    });
+
+    it('Oauth with many types of inputs - check if correctly renders', async () => {
+        setUpConfigManyTypesInOauth();
+        renderModalWithProps();
+        const user = userEvent.setup();
+
+        const oauthSelector = screen.getByRole('combobox', {
+            name: 'Auth Type',
+        });
+
+        const selectOauthBasic = screen.getByRole('combobox', {
+            name: 'Basic Oauth select',
+        });
+
+        const radioOauthBasic = screen.getByRole('radiogroup', {
+            name: 'Basic Oauth radio',
+        });
+
+        const textAreaOauthBasic = screen.getByRole('textbox', {
+            name: 'Basic Oauth text area',
+        });
+
+        expect(oauthSelector).toBeInTheDocument();
+        expect(selectOauthBasic).toBeInTheDocument();
+        expect(radioOauthBasic).toBeInTheDocument();
+        expect(textAreaOauthBasic).toBeInTheDocument();
+
+        const middleOptionRadio = within(radioOauthBasic).getByRole('radio', {
+            name: 'Middle',
+        });
+
+        await user.click(middleOptionRadio);
+
+        expect(radioOauthBasic).toHaveAttribute('data-test-value', 'middle');
+
+        await user.click(selectOauthBasic);
+        const basicOauthOption = screen.getByRole('option', {
+            name: 'Option 2',
+        });
+        await user.click(basicOauthOption);
+        expect(selectOauthBasic).toHaveAttribute('data-test-value', 'option2');
+
+        await user.type(
+            textAreaOauthBasic,
+            `Text area value
+multiplce lines
+last line`
+        );
+
+        expect(textAreaOauthBasic).toHaveValue('Text area value\nmultiplce lines\nlast line');
+    });
+
+    it('Oauth with many types of inputs hiddes elements when Oauth 2.0 selected', async () => {
+        setUpConfigManyTypesInOauth();
+        renderModalWithProps();
+        const user = userEvent.setup();
+
+        const oauthSelector = screen.getByRole('combobox', {
+            name: 'Auth Type',
+        });
+
+        expect(oauthSelector).toBeInTheDocument();
+        expect(
+            screen.getByRole('combobox', {
+                name: 'Basic Oauth select',
+            })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('radiogroup', {
+                name: 'Basic Oauth radio',
+            })
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole('textbox', {
+                name: 'Basic Oauth text area',
+            })
+        ).toBeInTheDocument();
+
+        expect(
+            screen.queryByRole('textbox', {
+                name: 'Client Id',
+            })
+        ).not.toBeInTheDocument();
+
+        expect(
+            screen.queryByRole('textbox', {
+                name: 'Client Secret',
+            })
+        ).not.toBeInTheDocument();
+
+        await user.click(oauthSelector);
+
+        const oauthClientCredentials = screen.getByRole('option', {
+            name: 'OAuth 2.0 - Authorization Code Grant Type',
+        });
+        await user.click(oauthClientCredentials);
+
+        expect(
+            screen.getByRole('combobox', {
+                name: 'Auth Type',
+            })
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByRole('combobox', {
+                name: 'Basic Oauth select',
+            })
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('radiogroup', {
+                name: 'Basic Oauth radio',
+            })
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByRole('textbox', {
+                name: 'Basic Oauth text area',
+            })
+        ).not.toBeInTheDocument();
     });
 });
