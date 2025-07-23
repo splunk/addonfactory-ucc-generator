@@ -14,7 +14,7 @@ def custom_search_command_without_search_assistance():
     ]
 
 
-def test_set_attributes_without_custom_command(
+def test_init_without_custom_command(
     global_config_only_configuration,
     input_dir,
     output_dir,
@@ -27,7 +27,7 @@ def test_set_attributes_without_custom_command(
     assert searchbnf_conf.searchbnf_info == []
 
 
-def test_set_attributes(
+def test_init(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -48,7 +48,7 @@ def test_set_attributes(
     ]
 
 
-def test_set_attributes_without_search_assistance(
+def test_init_without_search_assistance(
     global_config_all_json,
     input_dir,
     output_dir,

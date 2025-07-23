@@ -8,21 +8,19 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
 
 
-def test_set_attributes_no_inputs_in_global_config(
-    global_config_all_json,
+def test_init_no_inputs_in_global_config(
+    global_config_only_configuration,
     input_dir,
     output_dir,
 ):
     """Test when _global_config is provided but has no inputs."""
     inputs_conf = InputsConf(
-        global_config_all_json,
+        global_config_only_configuration,
         input_dir,
         output_dir,
     )
     inputs_conf._global_config = MagicMock()
     inputs_conf._global_config.inputs = []
-
-    inputs_conf._set_attributes()
 
     assert not inputs_conf.generate_conf()
     assert not inputs_conf.generate_conf_spec()

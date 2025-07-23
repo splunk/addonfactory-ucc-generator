@@ -18,7 +18,7 @@ def default_xml_object(global_config_all_json, input_dir, output_dir):
     return default_xml
 
 
-def test_set_attribute_with_error(
+def test_init_with_error(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -195,7 +195,7 @@ def test_generate_nav_default_xml_with_no_configuration(default_xml_object):
         ),
     ],
 )
-def test_set_attribute(
+def test_init(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -212,7 +212,7 @@ def test_set_attribute(
     assert diff == ""
 
 
-def test_set_attribute_with_no_pages(
+def test_init_with_no_pages(
     global_config_for_conf_only_TA,
     input_dir,
     output_dir,

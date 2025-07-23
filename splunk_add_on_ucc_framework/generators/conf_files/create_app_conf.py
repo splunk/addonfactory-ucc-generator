@@ -27,13 +27,11 @@ class AppConf(FileGenerator):
     )
 
     def __init__(self, global_config: GlobalConfig, input_dir: str, output_dir: str):
+        super().__init__(global_config, input_dir, output_dir)
         app_manifest = get_app_manifest(input_dir)
         self.description = app_manifest.get_description()
         self.title = app_manifest.get_title()
         self.author = app_manifest.get_authors()[0]["name"]
-        super().__init__(global_config, input_dir, output_dir)
-
-    def _set_attributes(self) -> None:
         self.conf_file = "app.conf"
         self.check_for_updates = "true"
         self.custom_conf = []
@@ -45,16 +43,14 @@ class AppConf(FileGenerator):
         self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
         self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
-        if self._global_config.meta.get("checkForUpdates") is False:
+        if global_config.meta.get("checkForUpdates") is False:
             self.check_for_updates = "false"
-        if self._global_config.meta.get("supportedThemes") is not None:
-            self.supported_themes = ", ".join(
-                self._global_config.meta["supportedThemes"]
-            )
+        if global_config.meta.get("supportedThemes") is not None:
+            self.supported_themes = ", ".join(global_config.meta["supportedThemes"])
 
-        self.addon_version = self._global_config.version
+        self.addon_version = global_config.version
         self.is_visible = str(
-            self._global_config.meta.get("isVisible", self._global_config.has_pages())
+            global_config.meta.get("isVisible", global_config.has_pages())
         ).lower()
         self.build = str(int(time()))
 

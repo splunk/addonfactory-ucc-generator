@@ -19,9 +19,7 @@ def test_generate_views_redirect_xml(global_config_all_json, input_dir, output_d
     assert diff == ""
 
 
-def test_set_attributes_with_oauth(
-    global_config_all_json, input_dir, output_dir, ta_name
-):
+def test_init_with_oauth(global_config_all_json, input_dir, output_dir, ta_name):
     global_config_all_json.meta["name"] = ta_name
     redirect_xml = RedirectXml(
         global_config_all_json,
@@ -33,7 +31,7 @@ def test_set_attributes_with_oauth(
     assert redirect_xml.ta_name == global_config_all_json.meta["name"].lower()
 
 
-def test_set_attributes_without_oauth(
+def test_init_without_oauth(
     global_config_only_logging,
     input_dir,
     output_dir,
