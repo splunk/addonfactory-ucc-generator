@@ -2735,6 +2735,9 @@
           "$ref": "#/definitions/CheckboxEntity"
         },
         {
+          "$ref": "#/definitions/DateEntity"
+        },
+        {
           "$ref": "#/definitions/RadioEntity"
         },
         {
