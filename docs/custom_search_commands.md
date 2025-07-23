@@ -9,7 +9,6 @@ There are 4 types of Custom search commands:
 - Transforming
 - Dataset processing
 
-> Note: Currently UCC supports only three types of custom search command, that are `Generating`, `Streaming` and `Dataset processing`.
 
 > Note: Eventing commands are being referred as Dataset processing commands [reference](https://dev.splunk.com/enterprise/docs/devtools/customsearchcommands/).
 
