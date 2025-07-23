@@ -20,7 +20,6 @@ export default defineConfig({
         }),
     ],
     build: {
-        minify: false,
         copyPublicDir: false,
         lib: {
             entry: resolve(__dirname, 'src/publicApi.ts'),

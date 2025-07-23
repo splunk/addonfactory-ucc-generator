@@ -146,20 +146,15 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
 
         function fetchInputs() {
             const requests =
-                services?.map((service) => {
-                    console.log(
-                        `Fetching data for service: ${
-                            service.name
-                        } from endpoint ${generateEndPointUrl(encodeURIComponent(service.name))}`
-                    );
+                services?.map((service) =>
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    return getRequest<{ entry: [any] }>({
+                    getRequest<{ entry: [any] }>({
                         endpointUrl: generateEndPointUrl(encodeURIComponent(service.name)),
                         params: { count: -1 },
                         signal: abortController.signal,
                         handleError: false,
-                    });
-                }) || [];
+                    })
+                ) || [];
 
             Promise.all(requests)
                 .catch((caughtError) => {

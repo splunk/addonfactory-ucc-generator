@@ -15,8 +15,6 @@ export const renderConfigurationPage = (
     globalConfig: GlobalConfig,
     components?: CustomElementsMap
 ) => {
-    console.log('Rendering Configuration Page for UCC Tests', globalConfig);
-
     setUnifiedConfig(globalConfig);
 
     return render(
@@ -30,7 +28,6 @@ export const renderConfigurationPage = (
 };
 
 export const renderInputsPage = (globalConfig: GlobalConfig, components?: CustomElementsMap) => {
-    console.log('Rendering Configuration Page for UCC Tests', globalConfig);
 
     setUnifiedConfig(globalConfig);
 
