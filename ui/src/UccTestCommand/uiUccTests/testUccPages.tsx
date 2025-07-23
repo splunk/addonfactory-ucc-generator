@@ -28,7 +28,6 @@ export const renderConfigurationPage = (
 };
 
 export const renderInputsPage = (globalConfig: GlobalConfig, components?: CustomElementsMap) => {
-
     setUnifiedConfig(globalConfig);
 
     return render(
