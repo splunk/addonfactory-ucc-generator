@@ -448,7 +448,8 @@
           "enum": [
             "generating",
             "streaming",
-            "dataset processing"
+            "dataset processing",
+            "transforming"
           ]
         },
         "requiredSearchAssistant": {
