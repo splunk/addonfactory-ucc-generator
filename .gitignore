@@ -49,4 +49,3 @@ splunk_add_on_ucc_framework/package/appserver/static/js/build/
 !splunk_add_on_ucc_framework/package/appserver/static/js/build/redirect_page.js
 coverage.xml
 .coverage
-node_modules

@@ -6,10 +6,6 @@ import DatePickerComponent from '../DatePickerComponent';
 const meta = {
     component: DatePickerComponent,
     title: 'DatePickerComponent',
-    argTypes: {
-        handleChange: { action: 'handleChange' },
-        disabled: { control: 'boolean' },
-    },
     render: (props) => {
         const [value, setValue] = useState(props.value);
 
@@ -32,8 +28,26 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
     args: {
         field: 'date',
+        value: '',
+        handleChange: fn(),
+        disabled: false,
+    },
+};
+
+export const DateSelected: Story = {
+    args: {
+        field: 'date',
         value: '2024-01-01',
         handleChange: fn(),
         disabled: false,
+    },
+};
+
+export const DateDisabled: Story = {
+    args: {
+        field: 'date',
+        value: '2024-01-01',
+        handleChange: fn(),
+        disabled: true,
     },
 };

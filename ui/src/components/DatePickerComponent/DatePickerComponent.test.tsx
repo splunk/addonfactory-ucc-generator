@@ -1,21 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { vi, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
+
 import DatePickerComponent from './DatePickerComponent';
 
-const handleChange = jest.fn();
+const handleChange = vi.fn();
 
-beforeEach(() => {
+const setup = () =>
     render(<DatePickerComponent value="2025-21-05" handleChange={handleChange} field="fieldId" />);
-});
 
 it('should render text component correctly with value', async () => {
+    setup();
     const date = screen.getByRole('combobox');
 
     expect(date).toHaveValue('2025-21-05');
 });
 
 it('should trigger callback correctly after typing', async () => {
+    setup();
     const input = screen.getByRole('combobox');
 
     // Clear existing value
@@ -28,6 +31,7 @@ it('should trigger callback correctly after typing', async () => {
 });
 
 it('should use callback with empty string after clear', async () => {
+    setup();
     const date = screen.getByRole('combobox');
 
     await userEvent.clear(date);
