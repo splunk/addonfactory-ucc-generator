@@ -6,7 +6,7 @@ import license from 'rollup-plugin-license';
 import type { ViteUserConfig as VitestUserConfigInterface } from 'vitest/config';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
-const proxyTargetUrl = 'http://localhost:8000';
+const proxyTargetUrl = 'http://localhost:9000';
 const devServerPort = 5173;
 const devServerUrl = `http://localhost:${devServerPort}`;
 

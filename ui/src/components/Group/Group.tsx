@@ -23,6 +23,7 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
             }
         }
     }
+    background-color: transparent;
 `;
 
 const CustomGroupLabel = styled.div`

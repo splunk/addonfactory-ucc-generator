@@ -170,6 +170,8 @@ export const InputTabCustomHeader: Story = {
             await user.click(closeBtn);
         }
 
+        await canvas.findByText('Create New Input');
+
         const editButtons = await canvas.findAllByRole('button', { name: 'Edit' });
         await user.click(editButtons[2]);
 
