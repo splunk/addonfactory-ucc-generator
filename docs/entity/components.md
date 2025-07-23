@@ -420,6 +420,7 @@ The component maps and unmaps values into a single field in the format `fieldNam
 See the underlying `@splunk/react-ui` component: [`Date`](https://splunkui.splunk.com/Packages/react-ui/Date).
 
 See the following example usage:
+
 ```json
 {
     "type": "date",
