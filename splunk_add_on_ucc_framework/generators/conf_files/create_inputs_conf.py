@@ -17,6 +17,7 @@ from collections import defaultdict
 from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class InputsConf(FileGenerator):
@@ -25,13 +26,10 @@ class InputsConf(FileGenerator):
         "file for the services mentioned in globalConfig"
     )
 
-    def _conf_file_name(self, conf_name: str) -> str:
-        return f"{conf_name}.conf"
-
-    def _spec_file_name(self, conf_name: str) -> str:
-        return f"{self._conf_file_name(conf_name)}.spec"
-
-    def _set_attributes(self) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.conf_file = self._conf_file_name("inputs")
 
         # A list of service names from globalConfig that will be in inputs.conf
@@ -47,10 +45,10 @@ class InputsConf(FileGenerator):
         # (i.e. dict key is the spec file name)
         self.other_spec_files: Dict[str, List[str]] = defaultdict(list)
 
-        if not self._global_config.has_inputs():
+        if not global_config.has_inputs():
             return
 
-        for service in self._global_config.inputs:
+        for service in global_config.inputs:
             default_values = None
 
             # If the service has a conf property, it will be in a separate spec file
@@ -98,6 +96,12 @@ class InputsConf(FileGenerator):
                 field_value = " ".join(field_value_parts)
                 prop = f"{field_name} = {field_value}".rstrip()
                 spec_properties.append(prop)
+
+    def _conf_file_name(self, conf_name: str) -> str:
+        return f"{conf_name}.conf"
+
+    def _spec_file_name(self, conf_name: str) -> str:
+        return f"{self._conf_file_name(conf_name)}.spec"
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         conf_files: List[Dict[str, str]] = []

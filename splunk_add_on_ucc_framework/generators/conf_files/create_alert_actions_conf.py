@@ -20,6 +20,7 @@ from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class AlertActionsConf(FileGenerator):
@@ -28,15 +29,18 @@ class AlertActionsConf(FileGenerator):
         "for the custom alert actions defined in globalConfig"
     )
 
-    def _set_attributes(self) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "alert_actions.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
-        if self._global_config is None:
+        if global_config is None:
             return
 
         envs = normalize.normalize(
-            self._global_config.alerts,
-            self._global_config.namespace,
+            global_config.alerts,
+            global_config.namespace,
         )
         schema_content = envs["schema.content"]
         self._alert_settings = schema_content["modular_alerts"]

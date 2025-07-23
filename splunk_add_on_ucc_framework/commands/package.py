@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import logging
+import sys
 import os
 import tarfile
 from typing import Optional
@@ -47,7 +48,7 @@ def package(path_to_built_addon: str, output_directory: Optional[str] = None) ->
             f"Cannot package an add-on without a manifest file. "
             f"Please check the --path provided."
         )
-        exit(1)
+        sys.exit(1)
     with open(app_manifest_path) as _f:
         app_manifest_content = _f.read()
     app_manifest = app_manifest_lib.AppManifest(app_manifest_content)

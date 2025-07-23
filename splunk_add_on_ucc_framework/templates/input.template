@@ -41,14 +41,18 @@ class {{class_name}}(smi.Script):
         return scheme
 
     def validate_input(self, definition: smi.ValidationDefinition):
-        {%- if input_helper_module %}
+        {%- if input_helper_module and validate_input_self %}
+        return validate_input(self, definition)
+        {%- elif input_helper_module %}
         return validate_input(definition)
         {%- else %}
         return
         {%- endif %}
 
     def stream_events(self, inputs: smi.InputDefinition, ew: smi.EventWriter):
-        {%- if input_helper_module %}
+        {%- if input_helper_module and stream_events_self %}
+        return stream_events(self, inputs, ew)
+        {%- elif input_helper_module %}
         return stream_events(inputs, ew)
         {%- else %}
         input_items = [{'count': len(inputs.inputs)}]

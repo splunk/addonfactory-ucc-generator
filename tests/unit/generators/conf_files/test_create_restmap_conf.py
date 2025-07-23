@@ -32,7 +32,7 @@ def test_generate_conf_for_conf_only_TA(
     assert file_paths is None
 
 
-def test_set_attributes(
+def test_init(
     global_config_all_json,
     input_dir,
     output_dir,
@@ -42,7 +42,6 @@ def test_set_attributes(
         input_dir,
         output_dir,
     )
-    restmap_conf._set_attributes()
     assert hasattr(restmap_conf, "endpoints")
     assert hasattr(restmap_conf, "endpoint_names")
     assert hasattr(restmap_conf, "namespace")

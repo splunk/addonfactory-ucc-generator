@@ -17,6 +17,7 @@ from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from typing import Dict, List, Optional
 from xml.etree.ElementTree import Element, SubElement, tostring
 from splunk_add_on_ucc_framework.utils import pretty_print_xml
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class RedirectXml(FileGenerator):
@@ -24,6 +25,16 @@ class RedirectXml(FileGenerator):
         "Generates ta_name_redirect.xml file, if oauth is mentioned in globalConfig,"
         " in `default/data/ui/views/` folder."
     )
+
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
+        if global_config.has_oauth():
+            self.redirect_xml_content = self.generate_views_redirect_xml(
+                self._addon_name,
+            )
+            self.ta_name = self._addon_name.lower()
 
     def generate_views_redirect_xml(self, addon_name: str) -> str:
         """
@@ -41,13 +52,6 @@ class RedirectXml(FileGenerator):
         label.text = "Redirect"
         view_as_string = tostring(view, encoding="unicode")
         return pretty_print_xml(view_as_string)
-
-    def _set_attributes(self) -> None:
-        if self._global_config.has_oauth():
-            self.redirect_xml_content = self.generate_views_redirect_xml(
-                self._addon_name,
-            )
-            self.ta_name = self._addon_name.lower()
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_oauth():
