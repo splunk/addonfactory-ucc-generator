@@ -172,10 +172,7 @@ export const InputTabCustomHeader: Story = {
 
         await canvas.findByRole('button', { name: 'Create New Input' });
 
-        const editButtons = canvas.getAllByLabelText('Edit');
-        if (editButtons.length < 3) {
-            throw new Error(`Expected at least 3 edit buttons, got ${editButtons.length}`);
-        }
+        const editButtons = await canvas.findAllByTestId('edit-button');
 
         await user.click(editButtons[2]);
 
