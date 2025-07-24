@@ -10,7 +10,7 @@ jobs:
         shell: bash
     runs-on: ubuntu-22.04
     env:
-      isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' }}
+      isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' || github.event.pull_request.base.ref == 'ucc-v5.x' }}
     steps:
       - uses: actions/checkout@v4
         with:
