@@ -17,6 +17,7 @@
   "branches": [
     "+([0-9])?(.{+([0-9]),x}).x",
     "main",
+    "ucc-v5-unexisting-for-testing",
     {
       "name": "release/beta",
       "prerelease": "beta",
