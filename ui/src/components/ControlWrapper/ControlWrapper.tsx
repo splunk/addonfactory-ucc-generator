@@ -13,7 +13,7 @@ import { Mode } from '../../constants/modes';
 import { mapTextToElements } from '../../util/textutils/textUtils';
 import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
 
-const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
+export const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
     // label width + control width

@@ -23,6 +23,9 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
             }
         }
     }
+    div[data-test='body'] > div {
+        padding: ${variables.spacingLarge} 0px;
+    }
     background-color: transparent;
 `;
 
