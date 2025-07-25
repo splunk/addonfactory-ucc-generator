@@ -58,10 +58,7 @@ const meta = {
                                 }
                                 tabId={pageId}
                                 key={pageId}
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
+                                style={{ width: '150px', alignItems: 'end' }}
                             />
                         ))}
                     </TabBar>
