@@ -35,8 +35,6 @@ class AlertActionsConf(FileGenerator):
         super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "alert_actions.conf"
         self.conf_spec_file = f"{self.conf_file}.spec"
-        if global_config is None:
-            return
 
         envs = normalize.normalize(
             global_config.alerts,
