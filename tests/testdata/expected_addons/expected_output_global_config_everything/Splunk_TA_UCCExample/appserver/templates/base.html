@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright 2021 Splunk Inc.
+  ~ Copyright 2025 Splunk Inc.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -14,7 +14,11 @@
   ~ limitations under the License.
   ~
 -->
-<%! app_name = cherrypy.request.path_info.split('/')[3] %>\
+<%!
+from splunk.appserver.mrsparkle.lib import util
+
+app_name = cherrypy.request.path_info.split('/')[3]
+%>\
 <!DOCTYPE html>
 <html class="no-js" lang="">
     <head>
@@ -22,7 +26,9 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>${_('Loading')}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" href="${util.getFaviconURL()}" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <base  >
     </head>
 
     <body>
@@ -35,6 +41,6 @@
 
         <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
 
-        <script src="${make_url(page_path)}"></script>
+        <script type="module" src="${make_url(page_path)}"></script>
     </body>
 </html>
