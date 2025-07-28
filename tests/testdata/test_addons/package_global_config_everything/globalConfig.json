@@ -1117,7 +1117,7 @@
                             "message": "Some warning for account text clone"
                         },
                         "config": {
-                            "message": "Some warning for account text delete"
+                            "message": "Some warning for account text config"
                         }
                     },
                     "entity": [

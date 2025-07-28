@@ -493,8 +493,8 @@
                         "clone": {
                             "message": "Some warning for account text clone"
                         },
-                        "delete": {
-                            "message": "Some warning for account text delete"
+                        "config": {
+                            "message": "Some warning for account text config"
                         }
                     },
                     "entity": [
