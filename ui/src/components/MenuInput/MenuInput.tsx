@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import Dropdown from '@splunk/react-ui/Dropdown';
@@ -11,12 +11,12 @@ import variables from '@splunk/themes/variables';
 
 import { getFormattedMessage } from '../../util/messageUtil';
 import { getUnifiedConfigs } from '../../util/util';
-import CustomMenu from '../CustomMenu/CustomMenu';
+// import CustomMenu from '../CustomMenu/CustomMenu';
 import { invariant } from '../../util/invariant';
 import { usePageContext } from '../../context/usePageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { UCCButton } from '../UCCButton/UCCButton';
-import CustomComponentContext from '../../context/CustomComponentContext';
+// import CustomComponentContext from '../../context/CustomComponentContext';
 
 const CustomSubTitle = styled.span`
     color: ${variables.brandColorD20};
@@ -33,17 +33,17 @@ interface Group {
     subTitle?: string;
 }
 
-interface CustomMenuType {
-    src: string;
-    type: string;
-}
+// interface CustomMenuType {
+//     src: string;
+//     type: string;
+// }
 
 interface MenuInputProps {
     handleRequestOpen: (args: { serviceName: string; input?: string; groupName?: string }) => void;
 }
 
 function MenuInput({ handleRequestOpen }: MenuInputProps) {
-    const customComponentContext = useContext(CustomComponentContext);
+    // const customComponentContext = useContext(CustomComponentContext);
     const [activePanelId, setActivePanelId] = useState<string>(ROOT_GROUP_NAME);
     const [slidingPanelsTransition, setSlidingPanelsTransition] = useState<'forward' | 'backward'>(
         'forward'
@@ -57,7 +57,7 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     const { inputs } = pages;
     invariant(inputs);
     const groupsMenu = 'groupsMenu' in inputs ? inputs.groupsMenu : undefined;
-    const customMenuField = 'menu' in inputs ? inputs.menu : undefined;
+    // const customMenuField = 'menu' in inputs ? inputs.menu : undefined;
 
     const [services, setServices] = useState(inputs.services);
 
@@ -87,10 +87,10 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
         setOpenDropDown(true);
     };
 
-    const handleChangeCustomMenu = (val: { service: string; input?: string }) => {
-        const { service, input } = val;
-        handleRequestOpen({ serviceName: service, input });
-    };
+    // const handleChangeCustomMenu = (val: { service: string; input?: string }) => {
+    //     const { service, input } = val;
+    //     handleRequestOpen({ serviceName: service, input });
+    // };
 
     const getMenuItems = (serviceItems: Group[], groupName: string) =>
         serviceItems.map((service: Group) =>
@@ -228,40 +228,40 @@ function MenuInput({ handleRequestOpen }: MenuInputProps) {
     );
 
     // Making a custom menu
-    const makeCustomMenu = (menu: CustomMenuType) => (
-        <>
-            {React.createElement(CustomMenu, {
-                fileName: menu.src,
-                type: menu.type,
-                handleChange: handleChangeCustomMenu,
-                customComponentContext,
-            })}
-        </>
-    );
+    // const makeCustomMenu = (menu: CustomMenuType) => (
+    //     <>
+    //         {React.createElement(CustomMenu, {
+    //             fileName: menu.src,
+    //             type: menu.type,
+    //             handleChange: handleChangeCustomMenu,
+    //             customComponentContext,
+    //         })}
+    //     </>
+    // );
 
-    const getCustomMenuAndGroupsMenu = (menu: CustomMenuType) => (
-        <>
-            {React.createElement(CustomMenu, {
-                fileName: menu.src,
-                type: menu.type,
-                handleChange: handleChangeCustomMenu,
-                customComponentContext,
-            })}
-            {services.length === 1 ? makeInputButton() : makeSingleSelectDropDown()}
-        </>
-    );
+    // const getCustomMenuAndGroupsMenu = (menu: CustomMenuType) => (
+    //     <>
+    //         {React.createElement(CustomMenu, {
+    //             fileName: menu.src,
+    //             type: menu.type,
+    //             handleChange: handleChangeCustomMenu,
+    //             customComponentContext,
+    //         })}
+    //         {services.length === 1 ? makeInputButton() : makeSingleSelectDropDown()}
+    //     </>
+    // );
 
-    if (services && !customMenuField?.src) {
-        return services.length === 1 ? makeInputButton() : makeSingleSelectDropDown();
-    }
+    invariant(services);
+
+    return services.length === 1 ? makeInputButton() : makeSingleSelectDropDown();
 
     // Introducing a condition to enable simultaneous support for custom menu src and Groups Menu.
-    // ADDON-62948
-    if (services && customMenuField?.src && groupsMenu) {
-        return getCustomMenuAndGroupsMenu(customMenuField);
-    }
-    invariant(customMenuField);
-    return makeCustomMenu(customMenuField);
+    // // ADDON-62948
+    // if (services && customMenuField?.src && groupsMenu) {
+    //     return getCustomMenuAndGroupsMenu(customMenuField);
+    // }
+    // invariant(customMenuField);
+    // return makeCustomMenu(customMenuField);
 }
 
 MenuInput.propTypes = {

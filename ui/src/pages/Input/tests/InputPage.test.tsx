@@ -53,7 +53,7 @@ const renderMockAndOpenCustomMenu = async (globalConfigMock: GlobalConfig) => {
     };
 };
 
-it('custom menu should redirect user on menu click - mock menu page style', async () => {
+it.skip('custom menu should redirect user on menu click - mock menu page style', async () => {
     const globalConfigMock = getGlobalConfigMockWithCustomMenuStylePage();
 
     const { service, action, input } = await renderMockAndOpenCustomMenu(globalConfigMock);
@@ -66,7 +66,7 @@ it('custom menu should redirect user on menu click - mock menu page style', asyn
     });
 });
 
-it('custom menu should open input modal on menu click - mock menu page dialog', async () => {
+it.skip('custom menu should open input modal on menu click - mock menu page dialog', async () => {
     const globalConfigMock = getGlobalConfigMockWithCustomMenuStyleDialog();
     const { service } = await renderMockAndOpenCustomMenu(globalConfigMock);
 

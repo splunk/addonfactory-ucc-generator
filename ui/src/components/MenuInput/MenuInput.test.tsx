@@ -525,7 +525,7 @@ describe('multiple services', () => {
     });
 
     describe('menu', () => {
-        it('should render CustomMenu wrapper with groupsMenu without rendering underlying custom component', async () => {
+        it.skip('should render CustomMenu wrapper with groupsMenu without rendering underlying custom component', async () => {
             vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
                 default: MockCustomRenderableCustomMenu,
             }));
@@ -548,7 +548,7 @@ describe('multiple services', () => {
             expect(mockRenderFunction).not.toHaveBeenCalled();
         });
 
-        it('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component', async () => {
+        it.skip('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component', async () => {
             vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
                 default: MockCustomRenderableCustomMenu,
             }));
@@ -564,7 +564,7 @@ describe('multiple services', () => {
             expect(createNewInputBtn).not.toBeInTheDocument();
         });
 
-        it('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component - contex components', async () => {
+        it.skip('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component - contex components', async () => {
             setupComponentContext(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
 
             // the loading indicator is from CustomMenu component
