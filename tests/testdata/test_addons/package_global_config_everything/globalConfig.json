@@ -1476,7 +1476,7 @@
                             "type": "date",
                             "field": "example_date_field",
                             "label": "Example field Date",
-                            "help": "This is an example date field (ko-KR)",
+                            "help": "This is an example date field",
                             "required": true,
                             "defaultValue": "2025-05-20"
                         },
@@ -1484,7 +1484,7 @@
                             "type": "date",
                             "field": "example_second_date_field",
                             "label": "Example Second field Date ",
-                            "help": "This is an example date field (ko-KR)",
+                            "help": "This is an example date field",
                             "required": true,
                             "defaultValue": "2025-05-20"
                         },

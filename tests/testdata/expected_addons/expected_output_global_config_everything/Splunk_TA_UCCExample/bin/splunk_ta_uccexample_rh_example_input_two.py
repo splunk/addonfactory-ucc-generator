@@ -72,6 +72,20 @@ fields = [
         validator=None
     ),
     field.RestField(
+        'example_date_field',
+        required=True,
+        encrypted=False,
+        default='2025-05-20',
+        validator=None
+    ),
+    field.RestField(
+       'example_second_date_field',
+       required=True,
+       encrypted=False,
+       default='2025-05-20',
+        validator=None
+    ),
+    field.RestField(
         'input_two_text_hidden_for_enterprise',
         required=False,
         encrypted=False,
