@@ -14,20 +14,6 @@ import {
 } from '../../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { PageContextProvider } from '../../context/PageContext';
-import { getBuildDirPath } from '../../util/script';
-import {
-    CustomComponentContextType,
-    CustomComponentContextProvider,
-} from '../../context/CustomComponentContext';
-import { CustomMenuBase } from '../CustomMenu/CustomMenuBase';
-
-const mockRenderFunction = vi.fn().mockReturnValue(undefined);
-
-class MockCustomRenderableCustomMenu extends CustomMenuBase {
-    navigator = vi.fn<(arg0: unknown) => void>();
-
-    render = mockRenderFunction;
-}
 
 function setup(inputs: z.infer<typeof pages.shape.inputs>) {
     const mockHandleRequestOpen = vi.fn();
@@ -50,31 +36,6 @@ function setup(inputs: z.infer<typeof pages.shape.inputs>) {
     );
     return { mockHandleRequestOpen };
 }
-
-const BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU = {
-    services: [
-        {
-            name: 'test-service-name1',
-            title: 'test-service-title1',
-            entity: [],
-        },
-    ],
-    menu: {
-        src: 'CustomMenu',
-        type: 'external',
-    },
-    title: '',
-    table: {
-        actions: [],
-        header: [
-            {
-                field: '',
-                label: '',
-            },
-        ],
-        customRow: {},
-    },
-} satisfies z.infer<typeof pages.shape.inputs>;
 
 const BASIC_INPUTS_CONFIG_GROUPED_SERVICES = {
     services: [
@@ -122,37 +83,6 @@ const BASIC_INPUTS_CONFIG_GROUPED_SERVICES = {
         customRow: {},
     },
 };
-
-function setupComponentContext(inputs: z.infer<typeof pages.shape.inputs>) {
-    const mockHandleRequestOpen = vi.fn();
-    const globalConfigMock = getGlobalConfigMock();
-
-    const compContext: CustomComponentContextType = {
-        CustomMenu: {
-            component: MockCustomRenderableCustomMenu,
-            type: 'menu',
-        },
-    };
-
-    setUnifiedConfig({
-        ...globalConfigMock,
-        pages: {
-            ...globalConfigMock.pages,
-            inputs,
-        },
-    });
-
-    render(
-        <CustomComponentContextProvider customComponents={compContext}>
-            <PageContextProvider platform="cloud">
-                <AnimationToggleProvider enabled={false}>
-                    <MenuInput handleRequestOpen={mockHandleRequestOpen} />
-                </AnimationToggleProvider>
-            </PageContextProvider>
-        </CustomComponentContextProvider>
-    );
-    return { mockHandleRequestOpen };
-}
 
 function getCreateButton() {
     return screen.getByRole('button', { name: 'Create New Input' });
@@ -521,59 +451,6 @@ describe('multiple services', () => {
                 doesNotExistsTitles: ['test-subservice2-title1'],
                 user,
             });
-        });
-    });
-
-    describe('menu', () => {
-        it.skip('should render CustomMenu wrapper with groupsMenu without rendering underlying custom component', async () => {
-            vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
-                default: MockCustomRenderableCustomMenu,
-            }));
-            setup({
-                ...BASIC_INPUTS_CONFIG_GROUPED_SERVICES,
-                menu: {
-                    src: 'CustomMenu',
-                    type: 'external',
-                },
-            });
-            // the loading indicator from CustomMenu component
-            const loadingEl = screen.getByText('Loading...');
-            expect(loadingEl).toBeInTheDocument();
-            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
-
-            const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
-
-            expect(createNewInputBtn).toBeInTheDocument();
-            // that's weird
-            expect(mockRenderFunction).not.toHaveBeenCalled();
-        });
-
-        it.skip('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component', async () => {
-            vi.doMock(`${getBuildDirPath()}/custom/CustomMenu.js`, () => ({
-                default: MockCustomRenderableCustomMenu,
-            }));
-
-            setup(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
-
-            // the loading indicator is from CustomMenu component
-            const loadingEl = screen.getByText('Loading...');
-            expect(loadingEl).toBeInTheDocument();
-            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
-            expect(mockRenderFunction).toHaveBeenCalled();
-            const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
-            expect(createNewInputBtn).not.toBeInTheDocument();
-        });
-
-        it.skip('should render CustomMenu wrapper without groupsMenu without rendering underlying custom component - contex components', async () => {
-            setupComponentContext(BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU);
-
-            // the loading indicator is from CustomMenu component
-            const loadingEl = screen.getByText('Loading...');
-            expect(loadingEl).toBeInTheDocument();
-            await waitFor(() => expect(screen.queryByText('Loading...')).toBeNull());
-            expect(mockRenderFunction).toHaveBeenCalled();
-            const createNewInputBtn = screen.queryByRole('button', { name: 'Create New Input' });
-            expect(createNewInputBtn).not.toBeInTheDocument();
         });
     });
 });
