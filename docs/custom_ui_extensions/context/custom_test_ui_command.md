@@ -1,49 +1,51 @@
-# UI Sub-Project Test Guide
+# Testing UI Components in UCC Framework
 
-This guide outlines the recommended steps and configuration for testing UI with a UI sub-project as part of a Splunk Technology Add-on (TA), using the Unified Configuration Console (UCC) framework.
-
----
-
-## Prerequisites
-
-Ensure the following are installed on your system:
-
-- **Node.js** (version ≥ 22)
-- **npm** (version ≥ 10)
+This guide shows you how to test custom UI components in your Splunk Technology Add-on (TA) using the Unified Configuration Console (UCC) framework.
 
 ---
 
-## Step 1: Setup the UI Sub-Project
+## What You'll Need
 
-Setup project as mentioned in [UI Sub-Project Setup Guide](./custom_project_init.md)
+Before starting, make sure you have:
 
-## Step 2: Create testing files
+- **Node.js** version 22 or higher
+- **npm** version 10 or higher
 
-Inside your project create testing files with any regular vitest extension (`['**/*.{test,spec}.?(c|m)[jt]s?(x)']`). Testing file can be anywhere inside src directory, as test will use `'src/**/*.{js,jsx,ts,tsx}'` pattern to verify which files are testing ones.
+---
 
-## Step 3: Add testing command
+## Getting Started
 
-If you are using recommended structure, modify package.json file and any workflow files necessary.
-The command that you want to add is `test-ucc-ui`.
+### 1. Set Up Your UI Project
 
-The whole modification should be just one line in scripts section:
+First, create your UI sub-project by following the [UI Sub-Project Setup Guide](./custom_project_init.md).
+
+### 2. Create Your Test Files
+
+Create test files anywhere in your `src` directory. Use any of these file extensions:
+
+- `.test.js`, `.test.ts`, `.test.jsx`, `.test.tsx`
+- `.spec.js`, `.spec.ts`, `.spec.jsx`, `.spec.tsx`
+
+The testing framework will automatically find files matching the pattern `src/**/*.{js,jsx,ts,tsx}`.
+
+### 3. Add the Test Command
+
+Update your `package.json` file to include the test command:
 
 ```json
 {
-  ...
   "scripts": {
     "ucc-test": "test-ucc-ui"
-  },
-  ...
+  }
 }
 ```
 
-#### package.json
+#### Complete package.json Example
 
-> If you created package json as in `UI Sub-Project Setup Guide` the modifications should look like this.
+If you followed the UI Sub-Project Setup Guide, your `package.json` should look like this:
 
 <details>
-  <summary>Modified package.json</summary>
+  <summary>View complete package.json</summary>
 
 ```json
 {
@@ -85,30 +87,26 @@ The whole modification should be just one line in scripts section:
 
 </details>
 
+---
 
-## Step 4 Reuse testing functions
+## Testing Your UI Components
 
-To create more advanced UI tests use `renderConfigurationPage`, `renderInputsPage` functions that enables you to easily render each page separately.
+The UCC framework provides two main functions to help you test your pages:
 
+### Testing Configuration Pages
 
-### renderConfigurationPage
+Use `renderConfigurationPage()` to test your configuration pages (like account settings).
 
-`renderConfigurationPage(globalConfig, customComponents)` accepts 2 parameters:
+**Parameters:**
 
-1st is **required** parameter referencing **globalConfig.json** file. For testing purposes we recommend to use the same global config that you have configured in your TA, but if there is a substitute can be created and reused in its place.
+- `globalConfig` (required): Your globalConfig.json file content
+- `customComponents` (optional): Object containing your custom UI components
 
-2nd one is **optional** and it is object of custom components shared in the same way as in [uccInit](./custom_project_init.md#add-to-uccinit) function.
+**Example:**
 
-
-<details>
-  <summary>Example usage in test (verifies if account forms opens correctly)</summary>
-
-```ts
-import {
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
-import { it, expect, vi } from "vitest";
+```typescript
+import { screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { it, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
 
 import { getGlobalConfig } from "./utils";
@@ -117,6 +115,7 @@ import DateInputClass from "../ucc-ui-extensions/DateInput";
 
 it("Should open account addition form", async () => {
   mockResponse();
+  
   renderConfigurationPage(getGlobalConfig(), {
     DateInput: {
       component: DateInputClass,
@@ -128,51 +127,45 @@ it("Should open account addition form", async () => {
     },
   });
 
+  // Wait for page to load
   await waitForElementToBeRemoved(() => screen.getByText("Waiting"));
 
+  // Check if page elements are present
   expect(screen.getByText("Configuration")).toBeInTheDocument();
-  const data = await screen.findByText("Mocked Account name");
-  expect(data).toBeInTheDocument();
-  const newInput = screen.getByRole("button", {
-    name: "Add",
-  });
-  expect(newInput).toBeInTheDocument();
-
-  await userEvent.click(newInput);
+  expect(await screen.findByText("Mocked Account name")).toBeInTheDocument();
+  
+  // Test clicking the Add button
+  const addButton = screen.getByRole("button", { name: "Add" });
+  expect(addButton).toBeInTheDocument();
+  
+  await userEvent.click(addButton);
   expect(await screen.findByText("Add Accounts")).toBeInTheDocument();
 });
 ```
 
-</details>
+### Testing Input Pages
 
+Use `renderInputsPage()` to test your input pages (like data input configurations).
 
-### renderInputsPage
+**Parameters:** Same as `renderConfigurationPage()`
 
-`renderInputsPage(globalConfig, customComponents)` accepts the same 2 parameters as previous function where:
+- `globalConfig` (required): Your globalConfig.json file content
+- `customComponents` (optional): Object containing your custom UI components
 
-1st is **required** parameter referencing **globalConfig.json** file. For testing purposes we recommend to use the same global config that you have configured in your TA, but if there is a substitute can be created and reused in its place.
+**Example:**
 
-2nd one is **optional** and it is object of custom components shared in the same way as in [uccInit](./custom_project_init.md#add-to-uccinit) function.
-
-
-<details>
-  <summary>Example usage in test (verifies if account forms opens correctly)</summary>
-
-```ts
-import {
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
-import { it, expect, vi } from "vitest";
+```typescript
+import { screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { it, expect } from "vitest";
 import userEvent from "@testing-library/user-event";
 
 import { getGlobalConfig } from "./utils";
 import AdvancedInputsTabClass from "../ucc-ui-extensions/AdvancedInputsTab";
 import DateInputClass from "../ucc-ui-extensions/DateInput";
 
-
 it("Should open inputs addition form", async () => {
   mockResponse();
+  
   renderInputsPage(getGlobalConfig(), {
     DateInput: {
       component: DateInputClass,
@@ -184,34 +177,33 @@ it("Should open inputs addition form", async () => {
     },
   });
 
+  // Wait for page to load
   await waitForElementToBeRemoved(() => screen.getByText("Waiting"));
 
+  // Check if page elements are present
   expect(screen.getByText("Inputs")).toBeInTheDocument();
-  const data = await screen.findByText("Mocked Input name");
-  expect(data).toBeInTheDocument();
-  const newInput = screen.getByRole("button", {
-    name: "Create New Input",
-  });
-  expect(newInput).toBeInTheDocument();
-
-  await userEvent.click(newInput);
+  expect(await screen.findByText("Mocked Input name")).toBeInTheDocument();
+  
+  // Test clicking the Create button
+  const createButton = screen.getByRole("button", { name: "Create New Input" });
+  expect(createButton).toBeInTheDocument();
+  
+  await userEvent.click(createButton);
   expect(await screen.findByText("Add Example service name")).toBeInTheDocument();
 });
 ```
 
-</details>
+---
 
-## Tips
+## Testing Best Practices
 
-Code fragments we recommend to use:
+### Mock API Responses
 
-### MockData Fetching
+We recommend using [MSW (Mock Service Worker)](https://mswjs.io/) to mock API calls in your tests.
 
-For that one we recommend to use [msw](https://mswjs.io/).
-<details>
-<summary>server initialise file (server.ts)</summary>
+**1. Set up the server (server.ts):**
 
-```ts
+```typescript
 import { setupServer } from "msw/node";
 import { afterAll, afterEach } from "vitest";
 
@@ -220,6 +212,7 @@ export const server = setupServer();
 server.listen({
   onUnhandledRequest: "warn",
 });
+
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
@@ -227,13 +220,9 @@ process.once("SIGINT", () => server.close());
 process.once("SIGTERM", () => server.close());
 ```
 
-</details>
-Plus additional code to fetch any request/response are needed in tests
+**2. Mock responses in your tests:**
 
-<details>
-<summary>test usecase</summary>
-
-```ts
+```typescript
 function mockResponse() {
   server.use(
     http.get(`/servicesNS/nobody/-/:endpointUrl/:serviceName`, () => {
@@ -244,16 +233,11 @@ function mockResponse() {
     })
   );
 }
-
 ```
 
-</details>
+**3. Use standard response format:**
 
-Where returned data follow standard format/structure:
-<details>
-<summary> Data format</summary>
-
-```ts
+```typescript
 export const mockServerResponseWithContent = {
   links: {
     create: `/servicesNS/nobody/Splunk_TA_Example/account/_new`,
@@ -274,4 +258,14 @@ export const mockServerResponseWithContent = {
 };
 ```
 
-</details>
+---
+
+## Running Your Tests
+
+Once everything is set up, run your tests with:
+
+```bash
+npm run ucc-test
+```
+
+This will execute all test files in your `src` directory and show you the results.
