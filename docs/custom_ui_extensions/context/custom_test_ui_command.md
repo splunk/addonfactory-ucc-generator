@@ -19,7 +19,7 @@ Setup project as mentioned in [UI Sub-Project Setup Guide](./custom_project_init
 
 ## Step 2: Create testing files
 
-Inside your project create testing files with any regular vitest extension (`['**/*.{test,spec}.?(c|m)[jt]s?(x)']`). Testing file can be anywhere inside src directory, as test will use `'src/**/*.{js,jsx,ts,tsx}'` patter to verify which files are testing ones.
+Inside your project create testing files with any regular vitest extension (`['**/*.{test,spec}.?(c|m)[jt]s?(x)']`). Testing file can be anywhere inside src directory, as test will use `'src/**/*.{js,jsx,ts,tsx}'` pattern to verify which files are testing ones.
 
 ## Step 3: Add testing command
 
@@ -32,7 +32,7 @@ The whole modification should be just one line in scripts section:
 {
   ...
   "scripts": {
-    "ucc-gen": "test-ucc-ui"
+    "ucc-test": "test-ucc-ui"
   },
   ...
 }
@@ -53,7 +53,7 @@ The whole modification should be just one line in scripts section:
   "type": "module",
   "scripts": {
     "ucc-gen": "ucc-gen-ui ta_name=Splunk_TA_Name init_file_dir=src/ucc-ui.ts",
-    "ucc-gen": "test-ucc-ui"
+    "ucc-test": "test-ucc-ui"
   },
   "dependencies": {
     "@splunk/add-on-ucc-framework": "^5.65.0",
@@ -95,7 +95,7 @@ To create more advanced UI tests use `renderConfigurationPage`, `renderInputsPag
 
 `renderConfigurationPage(globalConfig, customComponents)` accepts 2 parameters:
 
-1st is **required** parameter referencing **globalConfig.json** file. For testing purposes we recommend to use the same global config that you have configured in your TA, but if there is a substitute can be created and reused in it's place.
+1st is **required** parameter referencing **globalConfig.json** file. For testing purposes we recommend to use the same global config that you have configured in your TA, but if there is a substitute can be created and reused in its place.
 
 2nd one is **optional** and it is object of custom components shared in the same way as in [uccInit](./custom_project_init.md#add-to-uccinit) function.
 
@@ -148,9 +148,9 @@ it("Should open account addition form", async () => {
 
 ### renderInputsPage
 
-`renderInputsPage(globalConfig, customComponents)` accepts the same 2 parameters as previouse function where:
+`renderInputsPage(globalConfig, customComponents)` accepts the same 2 parameters as previous function where:
 
-1st is **required** parameter referencing **globalConfig.json** file. For testing purposes we recommend to use the same global config that you have configured in your TA, but if there is a substitute can be created and reused in it's place.
+1st is **required** parameter referencing **globalConfig.json** file. For testing purposes we recommend to use the same global config that you have configured in your TA, but if there is a substitute can be created and reused in its place.
 
 2nd one is **optional** and it is object of custom components shared in the same way as in [uccInit](./custom_project_init.md#add-to-uccinit) function.
 
