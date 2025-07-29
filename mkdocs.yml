@@ -103,7 +103,6 @@ nav:
         - Custom control: "custom_ui_extensions/standard/custom_control.md"
         - Custom row: "custom_ui_extensions/standard/custom_row.md"
         - Custom cell: "custom_ui_extensions/standard/custom_cell.md"
-        - Custom menu: "custom_ui_extensions/standard/custom_menu.md"
         - Custom tab: "custom_ui_extensions/standard/custom_tab.md"
       - Context:
         - Overview: "custom_ui_extensions/context/overview.md"
