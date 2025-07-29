@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 import { fn } from '@storybook/test';
+
 import DatePickerComponent from '../DatePickerComponent';
 
 const meta = {
@@ -34,10 +35,18 @@ export const Default: Story = {
     },
 };
 
-export const DateSelected: Story = {
+export const DateSelectedGB: Story = {
     args: {
         field: 'date',
-        value: '2024-01-01',
+        value: '2025-01-20',
+        handleChange: fn(),
+        disabled: false,
+    },
+};
+export const DateSelectedzhcn: Story = {
+    args: {
+        field: 'date',
+        value: '2025-01-21',
         handleChange: fn(),
         disabled: false,
     },
@@ -46,7 +55,7 @@ export const DateSelected: Story = {
 export const DateDisabled: Story = {
     args: {
         field: 'date',
-        value: '2024-01-01',
+        value: '2024-01-22',
         handleChange: fn(),
         disabled: true,
     },

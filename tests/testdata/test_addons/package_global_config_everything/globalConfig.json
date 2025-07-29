@@ -1473,6 +1473,22 @@
                             }
                         },
                         {
+                            "type": "date",
+                            "field": "example_date_field",
+                            "label": "Example field Date",
+                            "help": "This is an example date field (ko-KR)",
+                            "required": true,
+                            "defaultValue": "2025-05-20"
+                        },
+                        {
+                            "type": "date",
+                            "field": "example_second_date_field",
+                            "label": "Example Second field Date ",
+                            "help": "This is an example date field (ko-KR)",
+                            "required": true,
+                            "defaultValue": "2025-05-20"
+                        },
+                        {
                             "type": "text",
                             "label": "Text input hidden for enterprise",
                             "field": "input_two_text_hidden_for_enterprise",
