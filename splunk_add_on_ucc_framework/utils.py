@@ -184,7 +184,7 @@ def merge_conf_file(
 
     sparser = conf_parser.TABConfigParser()
     sparser.read(src_file)
-    src_dict = sparser.item_dict()
+    src_dict = sparser.item_dict(preserve_comments=True)
     parser = conf_parser.TABConfigParser()
     parser.read(dst_file)
     dst_dict = parser.item_dict()
@@ -205,7 +205,8 @@ def merge_conf_file(
                 parser.add_section(stanza)
 
             for k, v in key_values.items():
-                if v:
+                # if the value of parameter is empty then it would be added in .conf file
+                if v or v == "":
                     parser.set(stanza, k, v)
                 else:
                     parser.remove_option(stanza, k)
@@ -213,6 +214,9 @@ def merge_conf_file(
         # overwrite the whole file
         parser.read(src_file)
 
+    # if any comments are present at the top of .conf file then write it to destination file.
+    if sparser.top_comments is not []:
+        parser.top_comments = sparser.top_comments
     with open(dst_file, "w") as df:
         parser.write(df)
 
