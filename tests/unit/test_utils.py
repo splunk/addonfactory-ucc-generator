@@ -3,10 +3,95 @@ from unittest import mock
 
 import dunamai
 import pytest
+import os
 from unittest.mock import patch, MagicMock
-from os.path import join
+from textwrap import dedent
 
 from splunk_add_on_ucc_framework import exceptions, utils
+from tests.unit.helpers import write_conf_file
+
+
+def test_stanza_overwrite_with_comments(tmp_path):
+    src = tmp_path / "src.conf"
+    dst = tmp_path / "dst.conf"
+    write_conf_file(
+        src,
+        "# License header\n[stanza1]\nkey1 = value1 ; This is an comment\nkey2 = value2\n",
+    )
+    write_conf_file(dst, "[stanza1]\nkey1 = old_value\n[stanza2]\nkey3 = value3\n")
+
+    utils.merge_conf_file(str(src), str(dst), "stanza_overwrite")
+
+    with open(f"{tmp_path}/dst.conf") as f:
+        content = f.read()
+    expected_content = dedent(
+        """
+        # License header
+        [stanza2]
+        key3 = value3
+
+        [stanza1]
+        key1 = value1 ; This is an comment
+        key2 = value2
+        """
+    ).lstrip()
+    assert expected_content == content
+
+
+def test_item_overwrite_with_comment(tmp_path):
+    src = tmp_path / "src.conf"
+    dst = tmp_path / "dst.conf"
+    write_conf_file(
+        src,
+        "# License header 1\n ; License header 2\n[stanza1]\nkey1 =   \nkey2 = value2 ; This is an comment\n",
+    )
+    write_conf_file(dst, "[stanza2]\nkey2 = value2\n")
+
+    utils.merge_conf_file(str(src), str(dst), "item_overwrite")
+
+    with open(f"{tmp_path}/dst.conf") as f:
+        content = f.read()
+
+    # replace is used to add a whitespace to omit pre-commit failure
+    expected_content = (
+        dedent(
+            """
+        # License header 1
+        ; License header 2
+        [stanza2]
+        key2 = value2
+
+        [stanza1]
+        key1 =
+        key2 = value2 ; This is an comment
+        """
+        )
+        .lstrip()
+        .replace("key1 =", "key1 = ")
+    )
+    assert expected_content == content
+
+
+def test_full_overwrite(tmp_path):
+    src = tmp_path / "src.conf"
+    dst = tmp_path / "dst.conf"
+    write_conf_file(src, "[new]\na=b\n")
+    write_conf_file(dst, "[old]\nx=y\n")
+
+    utils.merge_conf_file(str(src), str(dst), "full")
+
+    with open(f"{tmp_path}/dst.conf") as f:
+        content = f.read()
+    expected_content = dedent(
+        """
+        [old]
+        x = y
+
+        [new]
+        a = b
+        """
+    ).lstrip()
+    assert expected_content == content
 
 
 def test_get_j2_env():
@@ -72,7 +157,7 @@ def test_check_author_names_conflict(mock_logger, mock_tab_config_parser, mock_i
     mock_tab_config_parser.return_value = app_conf_mock
     utils.check_author_name(source, app_manifest)
 
-    check_path = join(source, "default", "app.conf")
+    check_path = os.path.join(source, "default", "app.conf")
     mock_isfile.assert_called_once_with(check_path)
     mock_logger.warning.assert_called_once_with(
         "Conflicting author names are identified between app.manifest and app.conf in the source directory. "
@@ -88,7 +173,7 @@ def test_check_author_names_no_conflict(mock_isfile):
 
     mock_isfile.return_value = False
     utils.check_author_name(source, app_manifest)
-    mock_isfile.assert_called_once_with(join(source, "default", "app.conf"))
+    mock_isfile.assert_called_once_with(os.path.join(source, "default", "app.conf"))
 
 
 @mock.patch("splunk_add_on_ucc_framework.utils.dunamai.Version", autospec=True)

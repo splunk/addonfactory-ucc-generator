@@ -12,6 +12,10 @@ Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
 
 
+def write_conf_file(path: Path, content: str) -> int:
+    return path.write_text(content)
+
+
 def compare_xml_content(content: str, expected_content: str) -> str:
     diff = xmldiff.main.diff_texts(content, expected_content)
     return " ".join([str(item) for item in diff])
