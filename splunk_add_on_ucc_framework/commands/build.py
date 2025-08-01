@@ -60,6 +60,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
+from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
@@ -669,6 +670,10 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
+    # NOTE: merging source and generated 'app.conf' as per previous design
+    AppConf(
+        global_config=global_config, input_dir=source, output_dir=output_directory
+    ).generate()
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
