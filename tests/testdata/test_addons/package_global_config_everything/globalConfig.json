@@ -38,18 +38,8 @@
                                     "src": "CustomInputCell",
                                     "type": "external"
                                 }
-                            },
-                            {
-                                "label": "AMD Test Custom Cell",
-                                "field": "amd_test_custom_cell",
-                                "customCell": {
-                                    "src": "amdCustomInputCell"
-                                }
                             }
                         ]
-                    },
-                    "hook": {
-                        "src": "amdCustomHook"
                     },
                     "entity": [
                         {
@@ -60,15 +50,6 @@
                             "options": {
                                 "src": "custom_control",
                                 "type": "external"
-                            }
-                        },
-                        {
-                            "type": "custom",
-                            "label": "Amd Example Custom Control",
-                            "field": "amd_custom_control_field",
-                            "help": " This is an example Amd multipleSelect for account entity",
-                            "options": {
-                                "src": "amdCustom_control"
                             }
                         },
                         {
@@ -893,10 +874,7 @@
                                 "field": "text_test",
                                 "label": "Text Test"
                             }
-                        ],
-                        "customRow": {
-                            "src": "amdCustom_input_row_replace"
-                        }
+                        ]
                     },
                     "entity": [
                         {
