@@ -17,7 +17,7 @@ export const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName
     'data-name': props.dataName,
 }))`
     // label width + control width
-    width: calc(260px + 320px);
+    width: calc(280px + 320px);
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
     }

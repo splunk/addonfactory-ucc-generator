@@ -42,8 +42,6 @@ export const StyledHeader = styled(Card.Header)`
     color: ${variables.contentColorActive};
     text-align: center;
     border-bottom: none;
-    padding: ${variables.spacingLarge};
-    padding-bottom: 0px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -69,11 +67,6 @@ export const StyledHeading = styled(Heading)`
     text-align: center;
     margin: 0;
     font-weight: ${variables.fontWeightBold};
-`;
-
-export const StyledBody = styled(Card.Body)`
-    padding: ${variables.spacingXLarge};
-    padding-top: ${variables.spacingXXLarge};
 `;
 
 export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
@@ -123,11 +116,11 @@ export const ErrorDetailsContainer = styled.div`
     })};
     border-radius: ${variables.borderRadius};
     padding: ${variables.spacingLarge};
-    margin: ${variables.spacingLarge} 0;
+    margin-top: ${variables.spacingHalf};
     font-size: ${variables.fontSizeSmall};
     white-space: pre-wrap;
     word-break: break-word;
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
 `;
 
