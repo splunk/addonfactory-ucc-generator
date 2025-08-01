@@ -21,7 +21,10 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
 
     const loadCustomTab = (): Promise<CustomTabConstructor> =>
         new Promise((resolve) => {
-            const customComp = customCompontentContext?.[tab?.customTab?.src];
+            const customComp = tab?.customTab?.src
+                ? customCompontentContext?.[tab?.customTab?.src]
+                : undefined;
+
             if (customComp?.type === 'tab') {
                 const Control = customComp.component;
                 resolve(Control);
