@@ -4,6 +4,17 @@ from splunk_add_on_ucc_framework.generators.conf_files import AlertActionsConf
 from textwrap import dedent
 
 
+@patch.object(shutil, "copy")
+def test_custom_icon_file_name(
+    mock_copy, global_config_for_alerts, input_dir, output_dir
+):
+    alert_action_conf = AlertActionsConf(
+        global_config_for_alerts, input_dir, output_dir
+    )
+
+    assert "icon_path = dev_icon.png" in alert_action_conf.alerts["test_alert_default"]
+
+
 def test_init_global_config_with_empty_alerts(
     global_config_only_configuration,
     input_dir,
@@ -55,7 +66,7 @@ def test_generate_conf(mock_copy, global_config_for_alerts, input_dir, output_di
                 "is_custom = 1",
                 "payload_format = json",
                 "[test_alert_default]",
-                "icon_path = alerticon.png",
+                "icon_path = dev_icon.png",
                 "label = Test Alert Default",
                 "description = Description for test Alert Action",
                 (
