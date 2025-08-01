@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { _ } from '@splunk/ui-utils/i18n';
-import { getUnifiedConfigs } from '../../util/util';
 import { getBuildDirPath } from '../../util/script';
 import { CustomTabConstructor } from './CustomTabBase';
 import { Tab } from './CustomTab.types';
@@ -15,9 +14,6 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
 
     const [loading, setLoading] = useState(true);
     const divRef = useRef<HTMLDivElement>(null);
-
-    const globalConfig = getUnifiedConfigs();
-    const appName = globalConfig.meta.name;
 
     const loadCustomTab = (): Promise<CustomTabConstructor> =>
         new Promise((resolve) => {
@@ -34,13 +30,6 @@ const CustomTab: React.FC<CustomTabProps> = ({ tab }) => {
                 ).then((external) => {
                     const Control = external.default;
                     resolve(Control);
-                });
-            } else {
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${appName}/js/build/custom/${tab.customTab!.src}`], (
-                    loadedCustomtab
-                ) => {
-                    resolve(loadedCustomtab);
                 });
             }
         });

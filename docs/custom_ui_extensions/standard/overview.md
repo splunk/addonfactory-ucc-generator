@@ -41,7 +41,7 @@ appserver/static/js/build/custom/CustomInputJSFile.js
 }
 ```
 
-Note: Specify the `type` key as `external` to indicate that these scripts should use the ESM syntax for module exporting and importing. Scripts not marked as external or without the type specified will default to the RequireJS (AMD) syntax. Additionally, custom JavaScript files and their modules will not be processed by Webpack.
+Note: Specify the `type` key as `external` to indicate that these scripts should use the ESM syntax for module exporting and importing. Additionally, custom JavaScript files and their modules will not be processed by Webpack.
 
 ### React Component Extension
 

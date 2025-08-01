@@ -105,7 +105,6 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
     loadCustomControl = (): Promise<CustomRowConstructor> =>
         new Promise((resolve, reject) => {
             const { type, fileName } = this.props;
-            const globalConfig = getUnifiedConfigs();
             const customComp = this.customComponentContext?.[this.props.fileName];
             if (customComp?.type === 'row') {
                 const Control = customComp.component;
@@ -114,14 +113,6 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
                 import(/* @vite-ignore */ `${getBuildDirPath()}/custom/${fileName}.js`)
                     .then((external) => resolve(external.default))
                     .catch((error) => reject(error));
-            } else {
-                const appName = globalConfig.meta.name;
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${appName}/js/build/custom/${fileName}`], (
-                    Row: CustomRowConstructor
-                ) => {
-                    resolve(Row);
-                });
             }
         });
 

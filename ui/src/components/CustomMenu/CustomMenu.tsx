@@ -87,15 +87,6 @@ class CustomMenu extends Component<CustomMenuProps, CustomMenuState> {
                         // eslint-disable-next-line no-console
                         console.error(`[Custom Menu] Error loading custom menu ${error.message}`);
                     });
-            } else {
-                const globalConfig = getUnifiedConfigs();
-                const appName = globalConfig.meta.name;
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${appName}/js/build/custom/${this.props.fileName}`], (
-                    Control: CustomMenuConstructor
-                ) => {
-                    resolve(Control);
-                });
             }
         });
 

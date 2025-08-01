@@ -72,7 +72,6 @@ const BASIC_INPUTS_CONFIG_WITH_CUSTOM_MENU = {
                 label: '',
             },
         ],
-        customRow: {},
     },
 } satisfies z.infer<typeof pages.shape.inputs>;
 
@@ -119,7 +118,6 @@ const BASIC_INPUTS_CONFIG_GROUPED_SERVICES = {
                 label: '',
             },
         ],
-        customRow: {},
     },
 };
 
@@ -498,7 +496,6 @@ describe('multiple services', () => {
                             label: '',
                         },
                     ],
-                    customRow: {},
                 },
             });
             // the loading indicator from CustomMenu component
