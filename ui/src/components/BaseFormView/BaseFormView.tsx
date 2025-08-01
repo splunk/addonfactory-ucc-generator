@@ -1013,21 +1013,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         resolve(Hook);
                     }
                 );
-            } else {
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${this.appName}/js/build/custom/${module}`], (
-                    Hook: CustomHookConstructor
-                ) => {
-                    this.hook = new Hook(
-                        globalConfig,
-                        this.props.serviceName,
-                        this.state,
-                        this.props.mode,
-                        this.util,
-                        this.props.groupName
-                    );
-                    resolve(Hook);
-                });
             }
         });
         return myPromise;
