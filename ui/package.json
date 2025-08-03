@@ -60,8 +60,8 @@
     "styled-components": "^5.3.11",
     "uuid": "^11.1.0",
     "zod": "^4.0.14",
-    "vite": "^7.0.5",
-    "vite-plugin-checker": "^0.10.1"
+    "vite": "^7.0.6",
+    "vite-plugin-checker": "^0.10.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
@@ -85,7 +85,7 @@
     "@storybook/react-vite": "^8.6.14",
     "@storybook/test-runner": "^0.23.0",
     "@testing-library/dom": "^8.20.1",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.6.1",
     "@types/glob": "^9.0.0",
@@ -116,7 +116,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-storybook": "^0.12.0 ",
-    "eslint-plugin-testing-library": "^7.6.0",
+    "eslint-plugin-testing-library": "^7.6.3",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
     "jest-fixed-jsdom": "^0.0.9",
@@ -131,10 +131,10 @@
     "style-loader": "^4.0.0",
     "stylelint": "^14.16.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "undici": "^5.29.0",
     "url": "^0.11.4",
-    "vite-plugin-dts": "4.5.3",
+    "vite-plugin-dts": "4.5.4",
     "vitest": "^3.2.4",
     "vite-plugin-node-polyfills": "^0.24.0"
   },
@@ -143,7 +143,7 @@
     "react-dom": "^16.14.0",
     "react-is": "^16.14.0",
     "styled-components": "^5.3.11",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "resolutions": {
     "@npmcli/git": "^2.1.0",
@@ -157,7 +157,7 @@
     "strip-ansi": "^6.0.1",
     "string-width": "^4.2.3",
     "esbuild": "^0.25.8",
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "jspdf": "^3.0.1",
     "http-proxy-middleware": "^3.0.5",
     "@splunk/dashboard-event-handlers": "29.0.0",
