@@ -272,9 +272,7 @@ pages:
     description: Set up your add-on
   inputs:
     services:
-    - hook:
-        src: Hook
-      name: example_input_one
+    - name: example_input_one
       entity:
       - type: text
         label: Name
