@@ -92,16 +92,13 @@ def get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
         sys.exit(1)
 
 
-def recursive_overwrite(
-    src: str, dest: str, ui_source_map: bool = False, has_dashboard: bool = True
-) -> None:
+def recursive_overwrite(src: str, dest: str, has_dashboard: bool = True) -> None:
     """
     Method to copy from src to dest recursively.
 
     Args:
         src (str): Source of copy
         dest (str): Destination to copy
-        ui_source_map (bool): flag that decides if source map files should be copied
     """
     # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
     if isdir(src):
@@ -114,18 +111,14 @@ def recursive_overwrite(
                     join(src, f), join(dest, f), merge_mode="item_overwrite"
                 )
             else:
-                recursive_overwrite(
-                    join(src, f), join(dest, f), ui_source_map, has_dashboard
-                )
+                recursive_overwrite(join(src, f), join(dest, f), has_dashboard)
     else:
         if exists(dest):
             remove(dest)
 
         # EnterpriseViewOnlyPreset is the biggest UI dashboard library file
         # that is not used if dashbaord is not present.
-        if ((".js.map" not in dest) or ui_source_map) and (
-            has_dashboard or "Dashboard." not in dest
-        ):
+        if has_dashboard or "Dashboard." not in dest:
             shutil.copy(src, dest)
 
 
