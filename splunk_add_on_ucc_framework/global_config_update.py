@@ -258,6 +258,11 @@ def handle_global_config_update(
         global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.9")
 
+    if _version_tuple(version) < _version_tuple("0.0.10"):
+        _remove_oauth_field_from_entites(global_config)
+        global_config.dump(global_config_path)
+        logger.info("Updated globalConfig schema to version 0.0.10")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
@@ -356,3 +361,53 @@ def _dump_enable_from_global_config(
                     ] = actions  # Update the actions in the service's table
 
     global_config.update_schema_version("0.0.9")
+
+
+def _remove_oauth_field_from_oauth_entity(
+    entity: Dict[str, Any],
+) -> None:
+    """
+    Remove the 'oauth_field' field from the oauth entity in globalConfig.
+    This is to ensure that the 'oauth_field' field is not used in entities anymore.
+    """
+    if entity and "field" in entity and "oauth_field" in entity:
+        logger.warning(
+            "The 'oauth_field' field is no longer supported in entities. "
+            "Please remove it from your globalConfig. Field: %s",
+            entity["field"],
+        )
+        del entity["oauth_field"]
+
+
+def _handle_removal_of_oauth_field_from_entities(
+    services_or_tabs: List[Dict[str, Any]],
+) -> None:
+    """
+    Remove the 'oauth' field from entities in globalConfig.
+    This is to ensure that the 'oauth' field is not used in entities anymore.
+    """
+    for tab in services_or_tabs:
+        conf_entities = tab.get("entity")
+        if conf_entities is None:
+            continue
+
+        for entity in conf_entities:
+            if entity.get("field") == "oauth":
+                auth_types = entity["options"].get("auth_type", [])
+
+                for auth in auth_types:
+                    auth_entities = entity["options"].get(auth, [])
+                    for auth_entity in auth_entities:
+                        _remove_oauth_field_from_oauth_entity(auth_entity)
+
+
+def _remove_oauth_field_from_entites(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    """
+    Remove the 'oauth' field from entities in globalConfig.
+    This is to ensure that the 'oauth' field is not used in entities anymore.
+    """
+
+    _handle_removal_of_oauth_field_from_entities(global_config.inputs)
+    _handle_removal_of_oauth_field_from_entities(global_config.configuration)
