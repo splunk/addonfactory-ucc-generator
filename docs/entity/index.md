@@ -20,11 +20,6 @@ title: Entity
 | [validators](./validators.md)                                    | array                                      | It is used to validate the values of fields using various validators. It is strongly advised to specify validators for every entity.                                                                                      | -             |
 | [modifyFieldsOnValue](./modifyFieldsOnValue.md)                  | array                                      | It is used to specify values and parameters that will influence visually other entities.                                                                                                                                  | -             |
 
-!!! warning "Placeholder deprecation"
-
-    The [Placeholder](https://splunkui.splunk.com/Packages/react-ui/Text?section=develop) attribute is deprecated and renounced.
-    The placeholder text is no longer displayed in the UI. Instead, use the `help` attribute.
-
 ## Common Options
 
 This section describes common options that can be used within the `options` object in entity properties.
@@ -36,4 +31,3 @@ This section describes common options that can be used within the `options` obje
 | enable              | boolean | The enable property sets whether a field is enabled or not.                                                                                  | true          |
 | requiredWhenVisible | boolean | It makes the field required on the UI when it appears. It is used only for visibility.                                                       | false         |
 | hideForPlatform     | string  | Defines for which platform element should be hidden from UI perspective. Currently only two platforms are supported `cloud` or `enterprise`. | -             |
-| placeholder         | string  | (`Renounced`) The grey text is shown when the input is empty.                                                                                | -             |
