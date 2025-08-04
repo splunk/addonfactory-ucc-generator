@@ -1,5 +1,19 @@
 # Changelog
 
+# [5.69.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.1...v5.69.0) (2025-07-22)
+
+
+### Features
+
+* add self param to stream_events and validate_input at build-time ([#1829](https://github.com/splunk/addonfactory-ucc-generator/issues/1829)) ([5aa5e95](https://github.com/splunk/addonfactory-ucc-generator/commit/5aa5e9533ca365904f0924aca96d462d4b15bac1))
+
+## [5.68.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.0...v5.68.1) (2025-07-17)
+
+
+### Bug Fixes
+
+* path issue for default alert icon ([#1839](https://github.com/splunk/addonfactory-ucc-generator/issues/1839)) ([342ebb4](https://github.com/splunk/addonfactory-ucc-generator/commit/342ebb49d65beba125052a4cc8bd4d892be9b63b))
+
 # [5.68.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.67.0...v5.68.0) (2025-07-15)
 
 

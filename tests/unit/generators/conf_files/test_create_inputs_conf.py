@@ -1,31 +1,10 @@
 import json
 from pathlib import Path
 from textwrap import dedent
-from unittest.mock import MagicMock
 
 from splunk_add_on_ucc_framework.generators.conf_files import InputsConf
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from tests.unit.helpers import get_testdata_file_path
-
-
-def test_set_attributes_no_inputs_in_global_config(
-    global_config_all_json,
-    input_dir,
-    output_dir,
-):
-    """Test when _global_config is provided but has no inputs."""
-    inputs_conf = InputsConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-    )
-    inputs_conf._global_config = MagicMock()
-    inputs_conf._global_config.inputs = []
-
-    inputs_conf._set_attributes()
-
-    assert not inputs_conf.generate_conf()
-    assert not inputs_conf.generate_conf_spec()
 
 
 def test_generate_conf(
@@ -229,6 +208,7 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
                     "type": "text",
                     "label": "Required field",
                     "field": "required_field",
+                    "defaultValue": "test_field",
                     "required": True,
                 },
                 {
@@ -268,7 +248,7 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     assert specs[0]["content"] == "\n".join(
         [
             "[<name>]",
-            "required_field =",
+            "required_field = (Default: test_field)",
             "optional_field =",
             "field_desc = Some description",
         ]

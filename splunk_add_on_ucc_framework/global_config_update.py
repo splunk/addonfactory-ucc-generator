@@ -23,7 +23,6 @@ from splunk_add_on_ucc_framework.entity import (
 )
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 from splunk_add_on_ucc_framework.tabs import resolve_tab
-from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
 logger = logging.getLogger("ucc_gen")
 
@@ -315,41 +314,8 @@ def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
 def _stop_build_on_placeholder_usage(
     global_config: global_config_lib.GlobalConfig,
 ) -> None:
-    """
-    Stops the build of addon and logs error if placeholder is used.
-    Deprecation Notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831.
-    Allows to update the schema version if placeholder isn't found.
-    """
-    log_msg = (
-        "`placeholder` option found for %s '%s' -> entity field '%s'. "
-        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
-        "\n\tDeprecation notice: https://github.com/splunk/addonfactory-ucc-generator/issues/831."
-    )
-    exc_msg = (
-        "`placeholder` option found for %s '%s'. It has been removed from UCC. "
-        "We recommend to use `help` instead (https://splunk.github.io/addonfactory-ucc-generator/entity/)."
-    )
-    for tab in global_config.configuration:
-        for entity in tab.get("entity", []):
-            if "placeholder" in entity.get("options", {}):
-                logger.error(
-                    log_msg % ("configuration tab", tab["name"], entity["field"])
-                )
-                raise GlobalConfigValidatorException(
-                    exc_msg % ("configuration tab", tab["name"])
-                )
-    services = global_config.inputs
-    if not services:
-        return
-    for service in services:
-        for entity in service.get("entity", {}):
-            if "placeholder" in entity.get("options", {}):
-                logger.error(
-                    log_msg % ("input service", service["name"], entity["field"])
-                )
-                raise GlobalConfigValidatorException(
-                    exc_msg % ("input service", service["name"])
-                )
+    # we skip this step as we are stopping while validating it.
+    # The step is present only for backward compatibility.
     global_config.update_schema_version("0.0.8")
 
 

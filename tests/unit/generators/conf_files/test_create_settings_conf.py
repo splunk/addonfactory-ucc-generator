@@ -1,7 +1,7 @@
 from splunk_add_on_ucc_framework.generators.conf_files import SettingsConf
 
 
-def test_set_attributes(global_config_only_logging, input_dir, output_dir):
+def test_init(global_config_only_logging, input_dir, output_dir):
     settings_conf = SettingsConf(global_config_only_logging, input_dir, output_dir)
     assert (
         settings_conf.conf_file
@@ -19,7 +19,7 @@ def test_set_attributes(global_config_only_logging, input_dir, output_dir):
     assert settings_conf.default_content == "[logging]\nloglevel = INFO"
 
 
-def test_set_attribute_for_conf_only_TA(
+def test_init_for_conf_only_TA(
     global_config_for_conf_only_TA,
     input_dir,
     output_dir,
@@ -29,16 +29,18 @@ def test_set_attribute_for_conf_only_TA(
         input_dir,
         output_dir,
     )
-    settings_conf._set_attributes()
     assert settings_conf.settings_stanzas == []
     assert settings_conf.default_content == ""
 
 
-def test_set_attributes_no_settings_key(
-    global_config_for_alerts, input_dir, output_dir
-):
+def test_init_no_settings_key(global_config_for_alerts, input_dir, output_dir):
     settings_conf = SettingsConf(global_config_for_alerts, input_dir, output_dir)
     assert settings_conf.default_content == ""
+
+
+def test_init_tab_without_entity(global_config_only_custom_tab, input_dir, output_dir):
+    settings_conf = SettingsConf(global_config_only_custom_tab, input_dir, output_dir)
+    assert settings_conf.default_content == "[custom_tab]\n\n"
 
 
 def test_generate_conf(global_config_all_json, input_dir, output_dir):
