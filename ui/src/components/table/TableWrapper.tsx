@@ -16,7 +16,7 @@ import { useTableContext } from '../../context/useTableContext';
 import { isFalse, isTrue } from '../../util/considerFalseAndTruthy';
 import { isReadonlyRow } from './table.utils';
 import { ITableConfig } from '../../types/globalConfig/pages';
-import { StandardPages } from '../../types/components/shareableTypes';
+import { AcceptableFormValueOrNull, StandardPages } from '../../types/components/shareableTypes';
 
 export interface ITableWrapperProps {
     page: typeof PAGE_INPUT | typeof PAGE_CONF;
@@ -316,27 +316,20 @@ const TableWrapper: React.FC<ITableWrapperProps> = ({
             headers?.find((header: { field: string }) => header.field === sortKey)?.mapping || {};
         // Sort the array based on the sort value
         const sortedArr = allRowsData.sort((rowA, rowB) => {
+            const rowAValue: AcceptableFormValueOrNull =
+                rowA[sortKey] === undefined || rowA[sortKey] === null
+                    ? ''
+                    : headerMapping[String(rowA[sortKey])] || rowA[sortKey];
+
+            const rowBValue =
+                rowB[sortKey] === undefined || rowB[sortKey] === null
+                    ? ''
+                    : headerMapping[String(rowB[sortKey])] || rowB[sortKey];
+
             if (sortDir === 'asc') {
-                const rowAValue =
-                    rowA[sortKey] === undefined
-                        ? ''
-                        : headerMapping[String(rowA[sortKey])] || rowA[sortKey];
-                const rowBValue =
-                    rowB[sortKey] === undefined
-                        ? ''
-                        : headerMapping[String(rowB[sortKey])] || rowB[sortKey];
                 return rowAValue > rowBValue ? 1 : -1;
             }
             if (sortDir === 'desc') {
-                const rowAValue =
-                    rowA[sortKey] === undefined
-                        ? ''
-                        : headerMapping[String(rowA[sortKey])] || rowA[sortKey];
-                const rowBValue =
-                    rowB[sortKey] === undefined
-                        ? ''
-                        : headerMapping[String(rowB[sortKey])] || rowB[sortKey];
-
                 return rowBValue > rowAValue ? 1 : -1;
             }
             return 0;
