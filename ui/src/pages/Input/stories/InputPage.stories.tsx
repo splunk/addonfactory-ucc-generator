@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
-import { userEvent, within, expect } from '@storybook/test';
+import { userEvent, within, expect, waitForElementToBeRemoved } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
@@ -165,9 +165,16 @@ export const InputTabCustomHeader: Story = {
         const body = within(canvasElement.ownerDocument.body);
         const canvas = within(canvasElement);
 
+        // Look for Close/Cancel button from the previous dialog
         const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+
         if (closeBtn) {
             await user.click(closeBtn);
+
+            const dialog = body.queryByRole('dialog');
+            if (dialog) {
+                await waitForElementToBeRemoved(() => body.queryByRole('dialog'));
+            }
         }
 
         await canvas.findByRole('button', { name: 'Create New Input' });
