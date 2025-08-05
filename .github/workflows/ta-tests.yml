@@ -22,6 +22,10 @@ on:
         description: "Branch of splunk/addonfactory-ucc-library to use (leave empty to use latest from PyPI)"
         required: false
         default: ""
+      run_pipelines:
+        description: "Trigger TA pipelines (true/false)"
+        required: false
+        default: "false"
 
 jobs:
   build-ucc:
@@ -108,14 +112,51 @@ jobs:
         with:
           name: ucc-package-whl
           path: UCC
-
-      - name: Install Dependencies in Target Add-on
+      - name: Importing GPG key
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          workdir: TA
+      - name: Prepare the Target Add-on
+        id: prepare
         working-directory: TA
         run: |
-          UCC_WHL=$(ls ../UCC/*.whl)
+          set -x
+          
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
+          
+          # Use the special branch
+          if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
+            GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
+          
+            git fetch origin
+          
+            if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
+              echo "Branch $GIT_BRANCH already exists, checking it out"
+              git checkout "$GIT_BRANCH"
+              git reset --hard "origin/${{ github.event.inputs.target_branch }}"  # Reset to main branch
+              git rebase ${{ github.event.inputs.target_branch }} $GIT_BRANCH  # Rebase the branch onto main
+              echo "branch-created=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "Branch $GIT_BRANCH does not exist, creating it"
+              git checkout -b "$GIT_BRANCH" "origin/${{ github.event.inputs.target_branch }}"
+              echo "branch-created=true" >> "$GITHUB_OUTPUT"
+            fi
+          
+            echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
+          fi
+          
+          rm splunk_add_on_ucc_framework-*.whl || true
+          cp ../UCC/*.whl ./
+          UCC_WHL=$(ls *.whl)
           
           # Retry logic for poetry install
           MAX_RETRIES=3
@@ -123,8 +164,15 @@ jobs:
           
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
-            poetry add ../UCC/$UCC_WHL --group dev && break
+            echo "Installing UCC package $UCC_WHL"
+            poetry add "./$UCC_WHL" --group dev && break
             RETRY_COUNT=$((RETRY_COUNT+1))
+          
+            if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
+              echo "Poetry install failed after $MAX_RETRIES attempts, exiting"
+              exit 1
+            fi
+          
             echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
           done
@@ -141,12 +189,24 @@ jobs:
               poetry add splunktaucclib@latest && break
             fi
             RETRY_COUNT=$((RETRY_COUNT+1))
+          
+            if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
+              echo "splunktaucclib install failed after $MAX_RETRIES attempts, exiting"
+              exit 1
+            fi
+          
             echo "splunktaucclib install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
           done
           
           mkdir -p package/lib
           poetry export --without-hashes -o package/lib/requirements.txt
+          
+          # Add to commit
+          if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
+            echo "Adding UCC, pyproject.toml and poetry.lock to commit"
+            git add pyproject.toml poetry.lock *.whl
+          fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
@@ -161,3 +221,57 @@ jobs:
             cat build_output.log
             exit 1
           fi
+      - name: Push changes to a temporary branch in order to trigger the pipeline
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        run: |
+          git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
+          git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
+          git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
+          git push --force origin $GIT_BRANCH
+
+      - name: Obtain the workflow run ID
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        id: get-workflow-run-id
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          for i in {1..30}; do
+            echo "Attempt $i to get workflow run ID"
+            WORKFLOW_RUN_ID=$(gh run -R ${{ matrix.target_repo }} list -b ucc/ci_tests_trigger_pipeline \
+              --json databaseId --limit 1 --status in_progress --workflow build-test-release \
+              -q '.[0].databaseId | select( . != null )')
+
+            if [[ -n "$WORKFLOW_RUN_ID" ]]; then
+              echo "Found workflow run ID: $WORKFLOW_RUN_ID"
+              break
+            fi
+
+            echo "Workflow run ID not found, retrying in 2 seconds..."
+            sleep 2
+          done
+          
+          echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID" >> $GITHUB_ENV
+          echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
+
+      - name: Wait for the workflow run to complete
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        id: wait-for-workflow
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          if [[ -z "$WORKFLOW_RUN_ID" ]]; then
+            echo "No workflow run ID found, skipping wait"
+            exit 0
+          fi
+          
+          echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
+          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID"
+          
+          echo "Results:"
+          RESULTS="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
+            -q '.jobs[] |  select(.conclusion != "skipped") | select(.name | test("build|spl2"))
+            | "\(.name): \(.conclusion)"')"
+          
+          echo $RESULTS
+          [[ $(echo $RESULTS | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
