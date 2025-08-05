@@ -10,10 +10,10 @@ class FiltercommandCommand(EventingCommand):
     """
 
     ##Syntax
-    | filtercommand contains='value1' replace='value to be replaced,value to replace with'
+    filtercommand contains=<string> replace=<string>
 
     ##Description
-    It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.
+    Filters records from the events stream.
 
     """
 

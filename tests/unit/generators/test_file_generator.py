@@ -108,6 +108,38 @@ def test_set_template_and_render_invalid_file_name(
 @patch(
     "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
 )
+def test_begin_no_inputs(
+    dummy_app_manifest, global_config_only_configuration, input_dir, output_dir
+):
+    dummy_app_manifest.return_value = dummy_app_manifest
+    result = begin(global_config_only_configuration, input_dir, output_dir)
+    ta_name = global_config_only_configuration.product
+    assert result == [
+        {"app.conf": f"{output_dir}/{ta_name}/default/app.conf"},
+        {"server.conf": f"{output_dir}/{ta_name}/default/server.conf"},
+        {"restmap.conf": f"{output_dir}/{ta_name}/default/restmap.conf"},
+        {"web.conf": f"{output_dir}/{ta_name}/default/web.conf"},
+        {
+            "splunk_ta_uccexample_account.conf.spec": f"{output_dir}/{ta_name}/"
+            "README/splunk_ta_uccexample_account.conf.spec"
+        },
+        {
+            "splunk_ta_uccexample_settings.conf": f"{output_dir}/{ta_name}/default/splunk_ta_uccexample_settings.conf"
+        },
+        {
+            "splunk_ta_uccexample_settings.conf.spec": f"{output_dir}/{ta_name}/"
+            "README/splunk_ta_uccexample_settings.conf.spec"
+        },
+        {
+            "configuration.xml": f"{output_dir}/{ta_name}/default/data/ui/views/configuration.xml"
+        },
+        {"default.xml": f"{output_dir}/{ta_name}/default/data/ui/nav/default.xml"},
+    ]
+
+
+@patch(
+    "splunk_add_on_ucc_framework.generators.conf_files.create_app_conf.get_app_manifest"
+)
 @patch.object(shutil, "copy")
 def test_begin(
     mock_copy, dummy_app_manifest, global_config_all_json, input_dir, output_dir

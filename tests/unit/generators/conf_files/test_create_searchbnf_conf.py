@@ -92,7 +92,7 @@ def test_generate_conf(global_config_all_json, input_dir, output_dir):
     exp_fname = "searchbnf.conf"
     expected_content = dedent(
         """
-        [generatetextcommand]
+        [generatetextcommand-command]
         syntax = generatetextcommand count=<event_count> text=<string>
         description = This command generates COUNT occurrences of a TEXT string.
         usage = public

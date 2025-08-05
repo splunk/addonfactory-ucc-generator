@@ -25,6 +25,10 @@ def custom_search_commands():
                     "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
                 },
                 {
+                    "name": "max_word",
+                    "validate": {"type": "Integer", "maximum": 100},
+                },
+                {
                     "name": "age",
                     "validate": {"type": "Integer", "minimum": 18},
                 },
@@ -72,6 +76,7 @@ def test_init(
             "list_arg": [
                 "count = Option(name='count', require=True, "
                 "validate=validators.Integer(minimum=5, maximum=10))",
+                "max_word = Option(name='max_word', require=False, validate=validators.Integer(maximum=100))",
                 "age = Option(name='age', require=False, validate=validators.Integer(minimum=18))",
                 "text = Option(name='text', require=True, default='test_text')",
                 "contains = Option(name='contains', require=False)",

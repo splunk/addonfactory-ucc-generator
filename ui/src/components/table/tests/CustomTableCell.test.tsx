@@ -3,7 +3,7 @@ import React from 'react';
 import { http, HttpResponse } from 'msw';
 import { BrowserRouter } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import { vi, expect } from 'vitest';
 
 import TableWrapper, { ITableWrapperProps } from '../TableWrapper';
 import { server } from '../../../mocks/server';
@@ -200,13 +200,22 @@ test('Error as custom cell without render method', async () => {
 });
 
 test('Error as custom cell file is undefined', async () => {
-    consoleError.mockImplementation(() => {});
-    // mockCustomCellToUndefined();
+    const mockConsoleError = vi.fn();
+    consoleError.mockImplementation(mockConsoleError);
+
     mockCustomCellModule('undefined');
     mocksAndRenderTable();
 
     const row = await waitForRow();
     expect(row).toBeInTheDocument();
+
+    await waitFor(() => {
+        expect(mockConsoleError).toHaveBeenCalledWith(
+            expect.stringContaining(
+                "[Custom Cell] Error loading custom control Error: Cannot find module '/custom/CustomInputCell.js' imported from"
+            )
+        );
+    });
 
     await waitFor(() => {
         const errorMessage = within(row).queryByText('Loaded module is not a constructor function');
