@@ -3290,7 +3290,8 @@
         "config": {
           "$ref": "#/definitions/WarningMessageObject"
         }
-      }
+      },
+      "additionalProperties": false
     },
     "WarningMessageObject": {
       "type": "object",

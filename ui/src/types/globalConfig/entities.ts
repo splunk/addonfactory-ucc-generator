@@ -203,7 +203,7 @@ export const CustomEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('custom'),
     options: z
         .object({
-            type: z.literal('external'),
+            type: z.literal('external').optional(),
             src: z.string(),
             hideForPlatform: PlatformEnum.optional(),
         })
@@ -221,6 +221,7 @@ export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
             items: z.array(ValueLabelPair),
         })
         .optional(),
+    required: z.boolean().default(false).optional(),
 }).strict();
 
 export const StrictIndexEntitySchema = z
