@@ -12,6 +12,7 @@ from splunk_add_on_ucc_framework.global_config_update import (
     _dump_with_migrated_entities,
     _stop_build_on_placeholder_usage,
     _dump_enable_from_global_config,
+    _remove_oauth_field_from_entites,
     handle_global_config_update,
 )
 from splunk_add_on_ucc_framework.entity import IntervalEntity
@@ -225,8 +226,45 @@ def test_handle_global_config_update_when_valid_config(tmp_path):
 
     helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
     global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
-    expected_schema_version = "0.0.9"
+    expected_schema_version = "0.0.10"
 
     handle_global_config_update(global_config, tmp_file_gc)
 
     assert global_config.schema_version == expected_schema_version
+
+
+def test_remove_oauth_field_from_entites(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    # Load the global config without oauth_field properties, which is the target configuration
+    helpers.copy_testdata_gc_to_tmp_file(tmp_file_gc, "valid_config.json")
+    global_config_target = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
+
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "valid_config_with_oauth_fields.json"
+    )
+    # Load the global config with oauth_field properties
+    global_config_with_oauth_fields = global_config_lib.GlobalConfig.from_file(
+        str(tmp_file_gc)
+    )
+
+    assert (  # Check that the configurations are different as should contain oauth_field properties
+        global_config_with_oauth_fields.configuration
+        != global_config_target.configuration
+    )
+    # inputs are the same as they do not contain oauth_field properties
+    assert global_config_with_oauth_fields.inputs == global_config_target.inputs
+
+    _remove_oauth_field_from_entites(global_config_with_oauth_fields)
+
+    expected_schema_version = "0.0.10"
+    # version should be updated after removing oauth_field properties
+    assert global_config_with_oauth_fields.schema_version == expected_schema_version
+
+    assert (  # Check that the configurations are the same as should not contain oauth_field properties after changes
+        global_config_with_oauth_fields.configuration
+        == global_config_target.configuration
+    )
+
+    # inputs remains the same as it does not contain oauth_field properties
+    assert global_config_with_oauth_fields.inputs == global_config_target.inputs

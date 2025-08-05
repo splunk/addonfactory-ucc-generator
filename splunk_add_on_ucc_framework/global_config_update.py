@@ -411,3 +411,5 @@ def _remove_oauth_field_from_entites(
 
     _handle_removal_of_oauth_field_from_entities(global_config.inputs)
     _handle_removal_of_oauth_field_from_entities(global_config.configuration)
+
+    global_config.update_schema_version("0.0.10")
