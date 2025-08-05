@@ -241,7 +241,7 @@ def test_remove_oauth_field_from_entites(tmp_path):
     global_config_target = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
 
     helpers.copy_testdata_gc_to_tmp_file(
-        tmp_file_gc, "valid_config_with_oauth_fields.json"
+        tmp_file_gc, "invalid_config_with_oauth_fields.json"
     )
     # Load the global config with oauth_field properties
     global_config_with_oauth_fields = global_config_lib.GlobalConfig.from_file(
