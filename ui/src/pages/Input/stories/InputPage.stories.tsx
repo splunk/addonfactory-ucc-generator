@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { http, HttpResponse } from 'msw';
-import { userEvent, within, expect, waitForElementToBeRemoved } from '@storybook/test';
+import { userEvent, within, expect } from '@storybook/test';
 import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import InputPage from '../InputPage';
@@ -156,6 +156,10 @@ export const InputTabViewAdd: Story = {
 
         await user.click(await body.findByText('Demo input page'));
         await expect(await canvas.findByRole('textbox', { name: /name/i })).toBeInTheDocument();
+
+        if (closeBtn) {
+            await user.click(closeBtn);
+        }
     },
 };
 
@@ -170,11 +174,6 @@ export const InputTabCustomHeader: Story = {
 
         if (closeBtn) {
             await user.click(closeBtn);
-
-            const dialog = body.queryByRole('dialog');
-            if (dialog) {
-                await waitForElementToBeRemoved(() => body.queryByRole('dialog'));
-            }
         }
 
         await canvas.findByRole('button', { name: 'Create New Input' });
