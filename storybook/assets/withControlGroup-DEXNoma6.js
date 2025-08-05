@@ -1,0 +1,1 @@
+import{j as t}from"./jsx-runtime-D55GQ3BV.js";import{C as e}from"./ControlGroup-Dz58dqqR.js";const i=(o,{name:r})=>t.jsx(e,{label:r,labelWidth:260,children:o()});i.__docgenInfo={description:"",methods:[],displayName:"withControlGroup"};export{i as w};
