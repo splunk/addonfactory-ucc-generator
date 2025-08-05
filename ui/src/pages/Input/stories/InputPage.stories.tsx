@@ -143,26 +143,6 @@ export const InputPageViewUpdateInput: Story = {
     },
 };
 
-export const InputTabViewAdd: Story = {
-    play: async ({ canvasElement }) => {
-        const user = userEvent.setup();
-        const body = within(canvasElement.ownerDocument.body);
-        const canvas = within(canvasElement);
-        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
-        if (closeBtn) {
-            await user.click(closeBtn);
-        }
-        await user.click(canvas.getByRole('button', { name: 'Create New Input' }));
-
-        await user.click(await body.findByText('Demo input page'));
-        await expect(await canvas.findByRole('textbox', { name: /name/i })).toBeInTheDocument();
-
-        if (closeBtn) {
-            await user.click(closeBtn);
-        }
-    },
-};
-
 export const InputTabCustomHeader: Story = {
     play: async ({ canvasElement }) => {
         const user = userEvent.setup();
@@ -184,5 +164,21 @@ export const InputTabCustomHeader: Story = {
         await expect(
             await body.findByRole('dialog', { name: 'Update custom header' })
         ).toBeInTheDocument();
+    },
+};
+
+export const InputTabViewAdd: Story = {
+    play: async ({ canvasElement }) => {
+        const user = userEvent.setup();
+        const body = within(canvasElement.ownerDocument.body);
+        const canvas = within(canvasElement);
+        const closeBtn = canvas.queryByRole('button', { name: /(Close)|(Cancel)/ });
+        if (closeBtn) {
+            await user.click(closeBtn);
+        }
+        await user.click(canvas.getByRole('button', { name: 'Create New Input' }));
+
+        await user.click(await body.findByText('Demo input page'));
+        await expect(await canvas.findByRole('textbox', { name: /name/i })).toBeInTheDocument();
     },
 };
