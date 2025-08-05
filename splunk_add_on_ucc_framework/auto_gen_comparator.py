@@ -105,9 +105,8 @@ class CodeGeneratorDiffChecker:
             for stanza in STANZA_TO_REMOVE[file_name].keys():
                 if stanza in src_dict.keys():
                     for key_value in STANZA_TO_REMOVE[file_name][stanza]:
-                        if key_value in src_dict[stanza]:
-                            del src_dict[stanza][key_value]
-                            del dst_dict[stanza][key_value]
+                        src_dict[stanza].pop(key_value, None)
+                        dst_dict[stanza].pop(key_value, None)
 
         if src_dict == dst_dict:
             self.common_files[src_file] = src_file.split(sep=sep)[-1]

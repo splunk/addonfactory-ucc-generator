@@ -611,6 +611,7 @@ def generate(
         _add_modular_input(ta_name, global_config, output_directory, gc_path)
     if global_config.has_alerts():
         logger.info("Generating alerts code")
+        # Update this code one python files are generated using FileGenerator class
         auto_gen_ignore_list.extend(
             alert_builder.generate_alerts(global_config, ta_name, output_directory)
         )
