@@ -12,7 +12,7 @@ const GroupWrapper = styled.div`
 const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
     span {
         button {
-            background-color: ${variables.neutral100};
+            background-color: ${variables.neutral200};
             font-size: 14px;
 
             &:hover:not([disabled]),
@@ -23,18 +23,20 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
             }
         }
     }
-`;
-
-const StyledPadding8 = styled.div`
-    padding-top: 8px;
-    padding-bottom: 8px;
+    div[data-test='body'] > div {
+        padding: ${variables.spacingLarge} 0px;
+    }
+    background-color: transparent;
 `;
 
 const CustomGroupLabel = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 6px 10px;
-    background-color: ${variables.neutral100};
+    background-color: ${variables.neutral200};
+    &:hover:not([disabled]) {
+        background-color: ${variables.neutral300};
+    }
     font-size: 14px;
     margin-bottom: 10px;
 `;
@@ -63,7 +65,7 @@ function Group({ isExpandable, defaultOpen, children, title, description }: Grou
                     defaultOpen={defaultOpen}
                     description={description}
                 >
-                    <StyledPadding8>{children}</StyledPadding8>
+                    {children}
                 </CollapsiblePanelWrapper>
             ) : (
                 <>

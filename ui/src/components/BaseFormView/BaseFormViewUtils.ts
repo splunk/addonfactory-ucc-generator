@@ -1,3 +1,6 @@
+import Message from '@splunk/react-ui/Message';
+import { variables } from '@splunk/themes';
+import styled from 'styled-components';
 import { MODE_CLONE, MODE_CONFIG, MODE_CREATE, MODE_EDIT } from '../../constants/modes';
 import {
     AnyEntity,
@@ -146,3 +149,7 @@ export const mapEntityIntoBaseForViewEntityObject = (
         return tempEntity;
     }
 };
+
+export const StyledMessage = styled(Message)`
+    margin-bottom: ${variables.spacingLarge};
+`;

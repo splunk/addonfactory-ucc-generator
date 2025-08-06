@@ -7,7 +7,6 @@
     "rootDirs": [".", "../splunk_add_on_ucc_framework/schema/schema.json"],
     "baseUrl": ".",
 
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
@@ -30,7 +29,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
     "paths": {
       "@/*": ["src/*"],
     },

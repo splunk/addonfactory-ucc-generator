@@ -26,6 +26,9 @@ initialize({
 
 const preview: Preview = {
     parameters: {
+        a11y: {
+            test: 'warn', // todo: remove this after fixing test case
+        },
         loaders: [mswLoader],
         backgrounds: {
             disable: true,

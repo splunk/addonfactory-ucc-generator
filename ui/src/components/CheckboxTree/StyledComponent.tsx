@@ -18,36 +18,39 @@ export const CheckboxContainer = styled.div`
 `;
 
 export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
+    // for collapsible button
+    & > div > button[data-test='toggle'][aria-controls] {
+        border: 0;
+        margin-right: ${variables.spacingSmall} !important;
+        all: unset;
+        cursor: pointer;
+    }
+
     & > *:not(:last-child) {
-        // expander
-        [data-test='toggle'] {
-            background-color: ${pick({
-                enterprise: variables.neutral300,
-            })};
+        // for parent checkbox
+        button[data-test='toggle'][data-selected='false'] {
+            background-color: ${variables.neutral100};
         }
-        // checkbox
-        [data-test='button'] {
-            ${CheckboxInHeader}
-        }
-        margin-bottom: ${variables.spacingXSmall};
-        background-color: ${pick({
-            enterprise: variables.neutral300,
-            prisma: variables.neutral200,
-        })};
         display: flex;
         align-items: center;
         // for prisma styling
         & > span {
             align-content: center;
         }
+        background-color: ${variables.neutral200};
+        &:hover:not([disabled]) {
+            background-color: ${variables.neutral300};
+            box-shadow: none;
+        }
     }
+    background-color: transparent;
 `;
 
 export const RowContainer = styled.div`
-    margin: 0 0 ${variables.spacingSmall}
+    margin: 0 0 0
         ${pick({
             enterprise: '30px',
-            prisma: '53px',
+            prisma: '45px',
         })};
 `;
 
@@ -55,10 +58,10 @@ export const GroupLabel = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 6px ${variables.spacingSmall};
-    background-color: ${pick({
-        enterprise: variables.neutral300,
-        prisma: variables.neutral200,
-    })};
+    background-color: ${variables.neutral200};
+    &:hover:not([disabled]) {
+        background-color: ${variables.neutral300};
+    }
 
     button {
         ${CheckboxInHeader}

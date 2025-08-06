@@ -89,8 +89,10 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {!props.readonly && rowActions.includes('edit') && (
                         <Tooltip content={_('Edit')}>
                             <ActionButtonComponent
+                                id="edit-btn"
                                 aria-label={_('Edit')}
                                 icon={<Pencil />}
+                                data-testid="edit-button"
                                 onClick={() => handleEditActionClick(selectedRow)}
                                 className="editBtn"
                             />
@@ -99,8 +101,10 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {rowActions.includes('clone') && (
                         <Tooltip content={_('Clone')}>
                             <ActionButtonComponent
+                                id="clone-btn"
                                 aria-label={_('Clone')}
                                 icon={<Clone size={1} />}
+                                data-testid="clone-button"
                                 onClick={() => handleCloneActionClick(selectedRow)}
                                 className="cloneBtn"
                             />
@@ -113,10 +117,12 @@ function CustomTableRow(props: CustomTableRowProps) {
                             )}
                         >
                             <ActionButtonComponent
+                                id="search-btn"
                                 aria-label={_(
                                     `Go to search for events associated with ${selectedRow.name}`
                                 )}
                                 icon={<Magnifier />}
+                                data-testid="search-button"
                                 to={`/app/search/search?q=search%20index%3D_internal%20source%3D*${selectedRow.name}*`}
                                 className="searchBtn"
                                 inline={false}
@@ -127,8 +133,10 @@ function CustomTableRow(props: CustomTableRowProps) {
                     {!props.readonly && rowActions.includes('delete') && (
                         <Tooltip content={_('Delete')}>
                             <ActionButtonComponent
+                                id="delete-btn"
                                 aria-label={_('Delete')}
                                 icon={<Trash size={1} />}
+                                data-testid="delete-button"
                                 onClick={() => handleDeleteActionClick(selectedRow)}
                                 className="deleteBtn"
                             />

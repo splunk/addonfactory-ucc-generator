@@ -1,5 +1,5 @@
 import React from 'react';
-import layout from '@splunk/react-page';
+import layout from '@splunk/react-page/18';
 import { getUserTheme, ThemeMap } from '@splunk/splunk-utils/themes';
 
 import { PAGE_CONF, PAGE_DASHBOARD, PAGE_INPUT } from '../constants/pages';

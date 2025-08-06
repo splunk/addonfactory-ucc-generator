@@ -8,6 +8,7 @@ const StyledCheckboxRowWrapper = styled.div`
     & > *:not(:last-child) {
         margin-bottom: 10px;
     }
+    background-color: transparent;
 `;
 
 interface CheckboxSubGroupProps {

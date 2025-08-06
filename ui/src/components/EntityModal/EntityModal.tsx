@@ -82,10 +82,7 @@ class EntityModal extends Component<EntityModalProps, EntityModalState> {
                 open={this.props.open}
                 onRequestClose={this.handleRequestClose}
             >
-                <Modal.Header
-                    title={this.props.formLabel}
-                    onRequestClose={this.handleRequestClose}
-                />
+                <Modal.Header title={this.props.formLabel} />
                 <Modal.Body>
                     <CustomComponentContext.Consumer>
                         {(customComponentContext) => (

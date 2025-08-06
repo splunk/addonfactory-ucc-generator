@@ -1,11 +1,11 @@
 import React from 'react';
-import ControlGroup from '@splunk/react-ui/ControlGroup';
 import { Decorator } from '@storybook/react';
+import { ControlGroupWrapper } from '../src/components/ControlWrapper/ControlWrapper';
 
 export const withControlGroup: Decorator = (StoryFn, { name }) => {
     return (
-        <ControlGroup label={name} labelWidth={260}>
+        <ControlGroupWrapper label={name} labelWidth={260} labelPosition="left">
             {StoryFn()}
-        </ControlGroup>
+        </ControlGroupWrapper>
     );
 };
