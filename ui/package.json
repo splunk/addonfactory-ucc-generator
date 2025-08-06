@@ -48,6 +48,9 @@
     "@splunk/visualization-context": "^28.0.0",
     "@storybook/test": "^8.6.14",
     "@vitejs/plugin-react": "^4.7.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^12.1.5",
+    "@vitest/coverage-istanbul": "^3.2.4",
     "glob": "^11.0.3",
     "immutability-helper": "^3.1.1",
     "js-yaml": "^4.1.0",
@@ -61,7 +64,8 @@
     "uuid": "^11.1.0",
     "zod": "^4.0.14",
     "vite": "^7.0.5",
-    "vite-plugin-checker": "^0.10.1"
+    "vite-plugin-checker": "^0.10.1",
+    "vitest": "^3.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
@@ -85,8 +89,6 @@
     "@storybook/react-vite": "^8.6.14",
     "@storybook/test-runner": "^0.23.0",
     "@testing-library/dom": "^8.20.1",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^14.6.1",
     "@types/glob": "^9.0.0",
     "@types/jest-image-snapshot": "^6.4.0",
@@ -97,7 +99,6 @@
     "@types/styled-components": "^5.1.34",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@vitest/coverage-istanbul": "^3.2.4",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^30.0.5",
     "babel-loader": "^8.4.1",
@@ -121,8 +122,8 @@
     "jest-environment-jsdom": "^30.0.5",
     "jest-fixed-jsdom": "^0.0.9",
     "jest-image-snapshot": "^6.5.1",
-    "msw": "^2.10.4",
     "jsdom": "^26.1.0",
+    "msw": "^2.10.4",
     "msw-storybook-addon": "^2.0.5",
     "prettier": "^2.8.8",
     "querystring-es3": "^0.2.1",
@@ -135,7 +136,6 @@
     "undici": "^5.29.0",
     "url": "^0.11.4",
     "vite-plugin-dts": "4.5.3",
-    "vitest": "^3.2.4",
     "vite-plugin-node-polyfills": "^0.24.0"
   },
   "peerDependencies": {
@@ -186,11 +186,14 @@
   },
   "files": [
     "dist/lib",
-    "cli/vite.config_ucc-gen-ui.ts"
+    "cli/vite.config_ucc-gen-ui.ts",
+    "cli/vite.config_ucc-test-gen-ui.ts",
+    "cli/ucc-vite-test-setup.ts"
   ],
   "type": "module",
   "bin": {
-    "ucc-gen-ui": "cli/ucc-gen-build-ui.js"
+    "ucc-gen-ui": "cli/ucc-gen-build-ui.js",
+    "test-ucc-ui": "cli/ucc-gen-test-ui.js"
   },
   "types": "./dist/lib/publicApi.d.ts",
   "module": "./dist/lib/index.js",
