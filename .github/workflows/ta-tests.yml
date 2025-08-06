@@ -74,7 +74,6 @@ jobs:
               "splunk/splunk-add-on-for-microsoft-office-365",
               "splunk/splunk-add-on-for-salesforce",
               "splunk/splunk-add-on-for-servicenow",
-              "splunk/splunk-add-on-for-servicenow",
               "splunk/splunk-add-on-for-mysql",
               "splunk/splunk-add-on-for-cisco-asa",
               "splunk/splunk-add-on-for-unix-and-linux"
