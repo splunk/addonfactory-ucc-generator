@@ -22,7 +22,7 @@ export const TableCaptionComponent = styled.div`
 
 export const TableSelectBoxWrapper = styled.span`
     button {
-        margin-left: 80px;
+        margin-left: 50px;
         min-width: 100px;
     }
 `;

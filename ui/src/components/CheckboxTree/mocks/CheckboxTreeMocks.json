@@ -56,7 +56,7 @@
                   {
                     "label": "Group 3",
                     "options": {
-                      "isExpandable": true,
+                      "isExpandable": false,
                       "expand": true
                     },
                     "fields": [
