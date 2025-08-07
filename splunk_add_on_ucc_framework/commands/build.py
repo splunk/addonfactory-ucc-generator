@@ -64,6 +64,7 @@ from splunk_add_on_ucc_framework.package_files_update import handle_package_file
 from splunk_add_on_ucc_framework.auto_gen_comparator import CodeGeneratorDiffChecker
 
 logger = logging.getLogger("ucc_gen")
+logger.setLevel("CRITICAL")
 
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
@@ -645,13 +646,16 @@ def generate(
     handle_package_files_update(source)
 
     comparator = CodeGeneratorDiffChecker(
-        source, os.path.join(output_directory, ta_name)
+        source,
+        os.path.join(output_directory, ta_name),
+        ta_name,
     )
-    comparator.deduce_gen_and_custom_content(logger, auto_gen_ignore_list)
-
+    comparator.deduce_gen_and_custom_content(
+        logger, auto_gen_ignore_list, verbose_file_summary_report
+    )
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
-
+    sys.exit(1)
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME
     )

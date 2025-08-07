@@ -32,7 +32,7 @@ def create_file(path: Path, content: str) -> int:
     return path.write_text(content, encoding="utf-8")
 
 
-def test_deduce_common_conf_xml_file(tmp_path, caplog):
+def test_deduce_common_conf_xml_file(tmp_path, caplog, ta_name):
     src_dir = tmp_path / "src"
     dst_dir = tmp_path / "dst"
 
@@ -48,7 +48,7 @@ def test_deduce_common_conf_xml_file(tmp_path, caplog):
     create_file(src_xml_file, XML_CONTENT)
     create_file(dst_xml_file, XML_CONTENT)
 
-    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir))
+    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir), ta_name)
     comparator.deduce_gen_and_custom_content(build.logger, ignore_file_list=[])
 
     expected_lines = [
@@ -62,7 +62,7 @@ def test_deduce_common_conf_xml_file(tmp_path, caplog):
         assert line in caplog.text
 
 
-def test_deduce_different_conf_xml_file(tmp_path):
+def test_deduce_different_conf_xml_file(tmp_path, ta_name):
     src_dir = tmp_path / "src"
     dst_dir = tmp_path / "dst"
 
@@ -78,12 +78,12 @@ def test_deduce_different_conf_xml_file(tmp_path):
     create_file(src_xml_file, XML_CONTENT)
     create_file(dst_xml_file, XML_CONTENT)
 
-    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir))
+    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir), ta_name)
     comparator.deduce_gen_and_custom_content(build.logger, ignore_file_list=[])
     assert len(comparator.common_files) == 0
 
 
-def test_deduce_different_content_in_conf_file(tmp_path):
+def test_deduce_different_content_in_conf_file(tmp_path, ta_name):
     src_dir = tmp_path / "src"
     dst_dir = tmp_path / "dst"
 
@@ -100,12 +100,12 @@ def test_deduce_different_content_in_conf_file(tmp_path):
     create_file(src_file, CONF_FILE_CONTENT)
     create_file(dst_file, dst_conf)
 
-    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir))
+    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir), ta_name)
     comparator.deduce_gen_and_custom_content(build.logger, ignore_file_list=[])
     assert len(comparator.common_files) == 0
 
 
-def test_xml_invalid_detection(tmp_path, caplog):
+def test_xml_invalid_detection(tmp_path, caplog, ta_name):
     src_dir = tmp_path / "src"
     dst_dir = tmp_path / "dst"
 
@@ -122,7 +122,7 @@ def test_xml_invalid_detection(tmp_path, caplog):
     dst_xml_file = dst_dir / "test.xml"
     create_file(src_xml_file, valid_xml)
     create_file(dst_xml_file, invalid_xml)
-    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir))
+    comparator = CodeGeneratorDiffChecker(str(src_dir), str(dst_dir), ta_name)
     comparator.deduce_gen_and_custom_content(build.logger, ignore_file_list=[])
 
     expected_lines = [

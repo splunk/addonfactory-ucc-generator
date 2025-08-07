@@ -26,6 +26,16 @@ from pathlib import Path
 
 import re
 
+# from defusedxml.ElementTree import parse, ParseError
+# from colorama import init, Fore, Style
+
+# from xmldiff import main
+# from xmldiff import formatting
+
+# formatter = formatting.XMLFormatter(normalize=formatting.WS_BOTH, pretty_print=True)
+# init(autoreset=True)
+
+
 # Some fields are dynamically generated just like `build` for app.conf
 # so while comparing them we should remove them from the dict
 STANZA_TO_REMOVE = {"app.conf": {"install": ["build"]}}
@@ -41,14 +51,20 @@ class CodeGeneratorDiffChecker:
         "features that allows you to remove the above files."
     )
 
-    def __init__(self, src_dir: str, dst_dir: str) -> None:
+    def __init__(self, src_dir: str, dst_dir: str, ta_name: str) -> None:
         self.source_directory = src_dir
         self.target_directory = dst_dir
+        self.addon_name = ta_name
         self.different_files: Dict[str, Any[Dict[str, str], List[Dict[str, str]]]] = {}
         self.common_files: Dict[str, str] = {}
+        self.same_stanza: Dict[str, str] = {}
+        self.diff_stanza: Dict[str, str] = {}
+        self.XML_and_HTML_different_files: Dict[
+            str, Any[Dict[str, str], List[Dict[str, str]]]
+        ] = {}
 
     def deduce_gen_and_custom_content(
-        self, logger: Logger, ignore_file_list: List[str] = []
+        self, logger: Logger, ignore_file_list: List[str] = [], verbose: bool = False
     ) -> None:
         """
         Deduce that the files have same content or different
@@ -73,49 +89,262 @@ class CodeGeneratorDiffChecker:
             if file_name in src_all_files.keys():
                 if file_name in ignore_file_list:
                     continue
-                # currently we are comparing for these 3 .conf files
-                # In future we will be scoping more conf files.
-                if file_name in ["app.conf", "restmap.conf", "web.conf"]:
+                if file_name.endswith(".conf"):
                     self._conf_file_diff_checker(
                         src_all_files[file_name], dest_all_files[file_name]
                     )
-                elif file_name.endswith(".xml"):
+                elif file_name.endswith((".xml", ".html")):
                     self._xml_file_diff_checker(
                         src_all_files[file_name], dest_all_files[file_name]
                     )
+                # elif file_name.endswith(".html"):
+                #     self._xml_and_html_file_diff_checker(
+                #         src_all_files[file_name], dest_all_files[file_name],verbose = verbose
+                #     )
 
         self.print_files(logger)
 
-    def _conf_file_diff_checker(self, src_file: str, target_file: str) -> None:
+    # Commenting this code for now, will un comment after CSV files are generated
+
+    # def _conf_file_diff_checker(self, src_file: str, target_file: str) -> None:
+    #     """
+    #     Find the difference between the source code and generated code for the
+    #     conf files created in package/default directory
+    #     """
+
+    #     sparser = conf_parser.TABConfigParser()
+    #     sparser.read(src_file)
+    #     src_dict = sparser.item_dict()
+    #     parser = conf_parser.TABConfigParser()
+    #     parser.read(target_file)
+    #     dst_dict = parser.item_dict()
+    #     # extract file_name from src_file which is a path of the file
+    #     file_name = path.basename(src_file)
+
+    #     if file_name in STANZA_TO_REMOVE.keys():
+    #         for stanza in STANZA_TO_REMOVE[file_name].keys():
+    #             if stanza in src_dict.keys():
+    #                 for key_value in STANZA_TO_REMOVE[file_name][stanza]:
+    #                     src_dict[stanza].pop(key_value, None)
+    #                     dst_dict[stanza].pop(key_value, None)
+
+    #     if src_dict == dst_dict:
+    #         self.common_files[src_file] = src_file.split(sep=sep)[-1]
+
+    # def _xml_file_diff_checker(self, src_file: str, target_file: str) -> None:
+    #     """
+    #     Find the difference between the source code and generated code for the
+    #     XML files created in package/default/data directory
+    #     """
+    #     with open(src_file, encoding="utf-8") as f:
+    #         src_xml_text = f.read()
+
+    #     with open(target_file, encoding="utf-8") as f:
+    #         dst_xml_text = f.read()
+
+    #     # Remove all XML comments
+    #     src_xml_no_comments = remove_xml_comments(src_xml_text)
+    #     dst_xml_no_comments = remove_xml_comments(dst_xml_text)
+
+    #     with tempfile.TemporaryDirectory() as temp_dir:
+    #         p1 = Path(temp_dir) / "src.xml"
+    #         p2 = Path(temp_dir) / "dst.xml"
+    #         p1.write_text(src_xml_no_comments, encoding="utf-8")
+    #         p2.write_text(dst_xml_no_comments, encoding="utf-8")
+    #         parser = etree.XMLParser()
+    #         try:
+    #             src_tree = objectify.parse(p1, parser=parser)
+    #         except etree.XMLSyntaxError:
+    #             self.different_files[src_file] = {
+    #                 "repository": "invalid XML present. Please update the source code with valid XML.",
+    #                 "output": "[unverified]",
+    #             }
+    #             return
+    #         try:
+    #             target_tree = objectify.parse(str(p2), parser=parser)
+    #         except etree.XMLSyntaxError:
+    #             self.different_files[src_file] = {
+    #                 "repository": "[unverified]",
+    #                 "output": "invalid XML generated from globalConfig. Ensure necessary characters are escaped.",
+    #             }
+    #             return
+
+    #         src_root = src_tree.getroot()
+    #         target_root = target_tree.getroot()
+
+    #         def __compare_elements(
+    #             src_elem: etree._Element, target_elem: etree._Element
+    #         ) -> bool:
+    #             if src_elem.tag != target_elem.tag:
+    #                 return False
+
+    #             if src_elem.text != target_elem.text:
+    #                 return False
+
+    #             if src_elem.attrib != target_elem.attrib:
+    #                 return False
+
+    #             for child1, child2 in zip(src_elem, target_elem):
+    #                 # recursively check for tags, attributes, texts of XML
+    #                 __compare_elements(child1, child2)
+    #             return True
+
+    #     if __compare_elements(src_root, target_root):
+    #         self.common_files[src_file] = src_file.split(sep=sep)[-1]
+
+    # def print_files(self, logger: Logger) -> None:
+    #     """
+    #     Print the common and different files in the console
+    #     """
+    #     messages: List[str] = []
+    #     if self.common_files:
+    #         messages.append("-" * 120)
+    #         messages.append(self.COMMON_FILES_MESSAGE_PART_1)
+    #         messages.extend(
+    #             [f"{idx + 1}) {f}" for idx, f in enumerate(self.common_files.keys())]
+    #         )
+    #         messages.append(self.COMMON_FILES_MESSAGE_PART_2)
+    #         messages.append("-" * 120)
+    #         logger.warning("\n\n".join(messages))
+
+    #     messages.clear()
+
+    #     if self.different_files:
+    #         messages.append("+" * 120)
+    #         file_count = 1
+    #         for k, v in self.different_files.items():
+    #             file_msg: str = ""
+    #             file_msg = f"{file_count}) {k}"
+    #             if isinstance(v, dict):
+    #                 file_msg += f"\n\tSource: {v.get('repository')}, Generated: {v.get('output')}"
+    #             messages.append(file_msg)
+    #             file_count += 1
+    #         messages.append("+" * 120)
+    #         logger.warning("\n".join(messages))
+    #     messages.clear()
+
+    # def _xml_and_html_file_diff_checker(self, src_file: str, target_file: str,verbose: bool= False) -> None:
+    #    """
+    #    Find the difference between the source code and generated code for the
+    #    XML or HTML files created in package/default/data directory
+    #    """
+    #    try:
+    #        parse(src_file)
+    #    except ParseError:
+    #         self.different_files[src_file] = {
+    #             "repository": "invalid HTML present. Please update the source code with valid HTML.",
+    #             "output": "[unverified]",
+    #         }
+
+    #    try:
+    #        parse(target_file)
+    #    except ParseError:
+    #         self.different_files[src_file] = {
+    #             "repository": "[unverified] ",
+    #             "output": "invalid HTML generated from globalConfig. Ensure necessary characters are escaped.",
+    #         }
+    #    # for comparing we compare generated file with that file which is present in repo
+    #    # here src_file contains path of file which is already present in the repo and
+    #    # target_file contains path path of XML file which is generated.
+    #    differences = main.diff_files(target_file,src_file,diff_options=
+    # {'F': 0.5, 'ratio_mode': 'accurate'},formatter=formatter)
+
+    #    lines = differences.splitlines()
+    #    new_l = []
+    #    diff_present = False
+    #    for line in lines:
+    #        if line.find("diff:") > -1:
+    #            diff_present = True
+    #            new_l.append(Fore.YELLOW + line + Style.RESET_ALL)
+    #        else:
+    #            new_l.append(line)
+
+    #    if diff_present:
+    #        self.XML_and_HTML_different_files[f"{src_file}::{src_file.split(sep=sep)[-1]}"] = new_l
+    #    else:
+    #         self.common_files[src_file] = src_file.split(sep=sep)[-1]
+
+    def print_files(self, logger: Logger) -> None:
         """
-        Find the difference between the source code and generated code for the
-        conf files created in package/default directory
+        Print the common and different files in the console
         """
+        messages: List[str] = []
+        messages.append(
+            "Add-on Name, Serial Number, File path/File_path_with_stanza, Source Code/Necessary action required,"
+            " UCC Generated"
+        )
+        file_count = 1
+        for k, v in self.common_files.items():
+            file_msg: str = ""
+            file_msg = f"{self.addon_name}, {file_count}, {k}, Following file can be removed, UCC already generates it"
+            file_count += 1
+            messages.append(file_msg)
 
-        sparser = conf_parser.TABConfigParser()
-        sparser.read(src_file)
-        src_dict = sparser.item_dict()
-        parser = conf_parser.TABConfigParser()
-        parser.read(target_file)
-        dst_dict = parser.item_dict()
-        # extract file_name from src_file which is a path of the file
-        file_name = path.basename(src_file)
+        for k, v in self.same_stanza.items():
+            file_msg = f"{self.addon_name}, {file_count}, {k}, Stanza can be removed, UCC already generates it"
+            file_count += 1
+            messages.append(file_msg)
 
-        if file_name in STANZA_TO_REMOVE.keys():
-            for stanza in STANZA_TO_REMOVE[file_name].keys():
-                if stanza in src_dict.keys():
-                    for key_value in STANZA_TO_REMOVE[file_name][stanza]:
-                        src_dict[stanza].pop(key_value, None)
-                        dst_dict[stanza].pop(key_value, None)
+        for k, v in self.diff_stanza.items():
+            file_msg = (
+                f"{self.addon_name}, {file_count}, {k}, Stanza is present in source code, "
+                "UCC wasn't able to generate it. Add required config in globalConfig"
+            )
+            file_count += 1
+            messages.append(file_msg)
 
-        if src_dict == dst_dict:
-            self.common_files[src_file] = src_file.split(sep=sep)[-1]
+        for k, value in self.different_files.items():
+            file_msg = f"{self.addon_name}, {file_count}, {k}"
+            just_for_html = k
+            actual_path = just_for_html.split("::")[0]
+            if actual_path.endswith(".html"):
+                continue
+            if isinstance(value, dict):
+                src_code_val = value.get("repository").replace('"', '""')  # type: ignore
+                file_msg += (
+                    f',"Source Code: {src_code_val} "'
+                    if src_code_val != ""
+                    else ",Source Code: Empty value passed"
+                ) + (
+                    f",\"UCC Generated: {value.get('output')}\""
+                    if value.get("output")
+                    else ", --"
+                )
+                messages.append(file_msg)
+                file_count += 1
+            elif isinstance(value, list):
+                # List format is for XMLs
+                for v in value:
+                    file_msg = f"{self.addon_name}, {file_count}, {k}"
+                    sep_msg = f",\"Source Code: {v.get('repository')} \"" + (  # type: ignore
+                        f",\"UCC Generated: {v.get('output')} \""  # type: ignore
+                        if v.get("output")  # type: ignore
+                        else ", --"
+                    )
+                    messages.append(file_msg + sep_msg)
+                    file_count += 1
+        # if self.XML_and_HTML_different_files:
+        #    messages.append("+" * 120)
+        #    file_count = 1
+        #    for k, v in self.XML_and_HTML_different_files.items():
+        #        file_msg = f"{file_count}) {k}"
+        #        file_msg += "\n\t"
+        #        if isinstance(v, list):
+        #             file_msg += "\n\t".join(v)
+        #        messages.append(file_msg)
+        #        file_count += 1
+
+        #    messages.append("+" * 120)
+
+        logger.critical("\n".join(messages))
+        messages.clear()
 
     def _xml_file_diff_checker(self, src_file: str, target_file: str) -> None:
         """
         Find the difference between the source code and generated code for the
         XML files created in package/default/data directory
         """
+        diff_count = len(self.different_files)
         with open(src_file, encoding="utf-8") as f:
             src_xml_text = f.read()
 
@@ -154,54 +383,100 @@ class CodeGeneratorDiffChecker:
 
             def __compare_elements(
                 src_elem: etree._Element, target_elem: etree._Element
-            ) -> bool:
+            ) -> None:
                 if src_elem.tag != target_elem.tag:
-                    return False
+                    if self.different_files.get(f"{src_file}::{src_elem.tag}") is None:
+                        self.different_files[f"{src_file}::{src_elem.tag}"] = []
+                    self.different_files[f"{src_file}::{src_elem.tag}"].append(
+                        {"repository": src_elem.tag, "output": target_elem.tag}
+                    )
 
                 if src_elem.text != target_elem.text:
-                    return False
+                    if self.different_files.get(f"{src_file}::{src_elem.tag}") is None:
+                        self.different_files[f"{src_file}::{src_elem.tag}"] = []
+                    # strip the extra spaces from texts in XMLs
+                    self.different_files[f"{src_file}::{src_elem.tag}"].append(
+                        {
+                            "repository": src_elem.text.strip(),
+                            "output": target_elem.text.strip(),
+                        }
+                    )
 
                 if src_elem.attrib != target_elem.attrib:
-                    return False
+                    if self.different_files.get(f"{src_file}::{src_elem.tag}") is None:
+                        self.different_files[f"{src_file}::{src_elem.tag}"] = []
+                    self.different_files[f"{src_file}::{src_elem.tag}"].append(
+                        {"repository": src_elem.attrib, "output": target_elem.attrib}
+                    )
 
                 for child1, child2 in zip(src_elem, target_elem):
                     # recursively check for tags, attributes, texts of XML
                     __compare_elements(child1, child2)
-                return True
 
-        if __compare_elements(src_root, target_root):
+            __compare_elements(src_root, target_root)
+            if diff_count == len(self.different_files):
+                self.common_files[src_file] = src_file.split(sep=sep)[-1]
+
+    def _conf_file_diff_checker(self, src_file: str, target_file: str) -> None:
+        """
+        Find the difference between the source code and generated code for the
+        conf files created in package/default directory
+        """
+        """
+        If src_dict and dst_dict are same then log COMMON_FILES_MESSAGE_PART_1 and COMMON_FILES_MESSAGE_PART_2
+        with which files are they. If found skip checking for that file.
+        if src_dict contain something that we do not generate in general not present in dst dict then we have to
+        log DIFFERENT_FILES_MESSAGE with file name the diff can be in stanza or in key-value in any stanza.
+        if src_dict contain stanzas or key-values that is present in dst_dict then we
+        need to log diff msg stating that we do generate this so you can remove this part.
+        """
+        sparser = conf_parser.TABConfigParser()
+        sparser.read(src_file)
+        src_dict = sparser.item_dict()
+        parser = conf_parser.TABConfigParser()
+        parser.read(target_file)
+        dst_dict = parser.item_dict()
+        file_name = path.basename(src_file)
+        if file_name in STANZA_TO_REMOVE.keys():
+            for stanza in STANZA_TO_REMOVE[file_name].keys():
+                if stanza in src_dict.keys():
+                    for key_value in STANZA_TO_REMOVE[file_name][stanza]:
+                        src_dict[stanza].pop(key_value, None)
+                        dst_dict[stanza].pop(key_value, None)
+        if src_dict == dst_dict:
             self.common_files[src_file] = src_file.split(sep=sep)[-1]
+        else:
+            for stanza, src_kv in src_dict.items():
+                dst_kv = dst_dict.get(stanza)
+                # # Stanza not present in destination
+                # if dst_kv is None:
+                #     for key, val in src_kv.items():
+                #         self.different_files[f"{src_file}[{stanza}] :: {key}"] = {
+                #             "repository": val,
+                #             "output": "",
+                #         }
+                #     continue
 
-    def print_files(self, logger: Logger) -> None:
-        """
-        Print the common and different files in the console
-        """
-        messages: List[str] = []
-        if self.common_files:
-            messages.append("-" * 120)
-            messages.append(self.COMMON_FILES_MESSAGE_PART_1)
-            messages.extend(
-                [f"{idx + 1}) {f}" for idx, f in enumerate(self.common_files.keys())]
-            )
-            messages.append(self.COMMON_FILES_MESSAGE_PART_2)
-            messages.append("-" * 120)
-            logger.warning("\n\n".join(messages))
+                # Stanza Not present in destination i.e we do not generate this whole stanza, so
+                if dst_kv is None:
+                    for key, val in src_kv.items():
+                        self.diff_stanza[f"{src_file} :: {stanza}"] = src_file.split(
+                            sep=sep
+                        )[-1]
+                    continue
 
-        messages.clear()
-
-        if self.different_files:
-            messages.append("+" * 120)
-            file_count = 1
-            for k, v in self.different_files.items():
-                file_msg: str = ""
-                file_msg = f"{file_count}) {k}"
-                if isinstance(v, dict):
-                    file_msg += f"\n\tSource: {v.get('repository')}, Generated: {v.get('output')}"
-                messages.append(file_msg)
-                file_count += 1
-            messages.append("+" * 120)
-            logger.warning("\n".join(messages))
-        messages.clear()
+                # Stanza present, check individual key differences
+                for key, val in src_kv.items():
+                    if key not in dst_kv:
+                        self.different_files[f"{src_file}[{stanza}] :: {key}"] = {
+                            "repository": val,
+                            "output": "",
+                        }
+                # If stanza dicts are identical, mark them as same stanza
+                if src_kv == dst_kv:
+                    self.same_stanza[f"{src_file} :: {stanza}"] = src_file.split(
+                        sep=sep
+                    )[-1]
 
 
 def remove_xml_comments(xml: str) -> str:
