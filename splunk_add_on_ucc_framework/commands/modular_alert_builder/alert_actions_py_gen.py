@@ -16,7 +16,7 @@
 import logging
 import re
 from os import path as op
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -55,6 +55,7 @@ class AlertActionsPyGenerator:
             keep_trailing_newline=True,
             autoescape=select_autoescape(disabled_extensions=("template")),
         )
+        self.alerts_script_list: List[str] = []
 
     def _get_alert_py_name(self, alert: Any) -> str:
         return alert[ac.SHORT_NAME] + ".py"
@@ -104,10 +105,13 @@ class AlertActionsPyGenerator:
                 rendered_content,
             )
 
-    def handle(self) -> None:
+    def handle(self) -> List[str]:
         for alert in self._alert_actions_setting:
             logger.info(
                 f"Generating Python file for alert action {alert[ac.SHORT_NAME]}"
             )
             self.gen_main_py_file(alert)
             self.gen_helper_py_file(alert)
+            if alert.get("customScript"):
+                self.alerts_script_list.append(alert["customScript"])
+        return self.alerts_script_list
