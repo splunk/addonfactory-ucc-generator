@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 
 from splunk_add_on_ucc_framework.entity.entity import Entity
 
@@ -27,10 +27,10 @@ CRON_REGEX = (
 
 
 class IntervalEntity(Entity):
-    def short_form(self) -> Dict[str, Any]:
+    def short_form(self) -> dict[str, Any]:
         return dict(self)
 
-    def long_form(self) -> Dict[str, Any]:
+    def long_form(self) -> dict[str, Any]:
         definition = {
             "type": "text",
             "field": self["field"],
@@ -64,7 +64,7 @@ class IntervalEntity(Entity):
         return definition
 
     @classmethod
-    def from_definition(cls, definition: Dict[str, Any]) -> Optional[Entity]:
+    def from_definition(cls, definition: dict[str, Any]) -> Optional[Entity]:
         if definition.get("type") == "interval":
             return cls(definition)
 

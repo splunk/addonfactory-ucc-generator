@@ -13,16 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 
-class Entity(Dict[Any, Any]):
-    def short_form(self) -> Dict[Any, Any]:
+class Entity(dict[Any, Any]):
+    def short_form(self) -> dict[Any, Any]:
         return self
 
-    def long_form(self) -> Dict[Any, Any]:
+    def long_form(self) -> dict[Any, Any]:
         return self
 
     @classmethod
-    def from_definition(cls, definition: Dict[Any, Any]) -> Optional["Entity"]:
+    def from_definition(cls, definition: dict[Any, Any]) -> Optional["Entity"]:
         return cls(definition)

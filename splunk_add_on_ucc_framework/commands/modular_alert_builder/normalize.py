@@ -15,7 +15,7 @@
 #
 
 import copy
-from typing import Any, Dict, List
+from typing import Any
 
 mapping_keys = {
     "adaptiveResponse": "adaptive_response",
@@ -38,14 +38,14 @@ mapping_values = {
 }
 
 
-def convert_list_to_dict(value_list: List[Any]) -> Dict[str, Any]:
+def convert_list_to_dict(value_list: list[Any]) -> dict[str, Any]:
     return_list = {}
     for each_dict in value_list:
         return_list[each_dict["label"]] = each_dict["value"]
     return return_list
 
 
-def transform_params(parameter_list: List[Any]) -> None:
+def transform_params(parameter_list: list[Any]) -> None:
     for param in parameter_list:
         if param["format_type"] in ["dropdownlist", "radio"]:
             options = param.pop("options")
@@ -80,7 +80,7 @@ def transform_params(parameter_list: List[Any]) -> None:
                     param["ctrl_props"]["latest"] = latest_time
 
 
-def iterdict(dictionary: Dict[str, Any], result: Dict[str, Any]) -> None:
+def iterdict(dictionary: dict[str, Any], result: dict[str, Any]) -> None:
     """
     This function replaces key and value with the ones required by add-on alert builder
     """
@@ -106,8 +106,8 @@ def iterdict(dictionary: Dict[str, Any], result: Dict[str, Any]) -> None:
 
 
 def normalize(
-    original_schema_content: List[Dict[str, Any]], short_name: str
-) -> Dict[str, Any]:
+    original_schema_content: list[dict[str, Any]], short_name: str
+) -> dict[str, Any]:
     """
     Process the globalConfig alert schema to generate structure required by add-on alert generator
     """

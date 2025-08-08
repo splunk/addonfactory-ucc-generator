@@ -20,7 +20,7 @@ import logging
 import sys
 import json
 
-from typing import Dict, Any, FrozenSet
+from typing import Any
 from splunk_add_on_ucc_framework import app_manifest as ap
 
 logger = logging.getLogger("ucc_gen")
@@ -56,7 +56,7 @@ def import_from_aob(addon_name: str) -> None:
 
 
 def add_app_manifest_key(
-    app_manifest_data: Dict[Any, Any], key: str, value: FrozenSet[str]
+    app_manifest_data: dict[Any, Any], key: str, value: frozenset[str]
 ) -> None:
     if key not in app_manifest_data:
         app_manifest_data.update({key: value})
@@ -65,7 +65,7 @@ def add_app_manifest_key(
         app_manifest_data.update({key: value})
 
 
-def check_app_manifest_schema_version(app_manifest_data: Dict[Any, Any]) -> None:
+def check_app_manifest_schema_version(app_manifest_data: dict[Any, Any]) -> None:
     key = "schemaVersion"
     version = app_manifest_data[key]
     if version != ap.APP_MANIFEST_SCHEMA_VERSION:

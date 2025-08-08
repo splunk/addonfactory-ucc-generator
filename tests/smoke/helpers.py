@@ -1,11 +1,10 @@
 import difflib
 import os
-from typing import List, Tuple
 import xmldiff.main
 
 
 def compare_file_content(
-    files_to_be_equal: List[Tuple[str, ...]],
+    files_to_be_equal: list[tuple[str, ...]],
     expected_folder: str,
     actual_folder: str,
 ) -> None:
@@ -28,7 +27,7 @@ def compare_file_content(
         assert False, "Some diffs were found"
 
 
-def _compare_xml(actual_file_path: str, expected_file_path: str) -> List[str]:
+def _compare_xml(actual_file_path: str, expected_file_path: str) -> list[str]:
     diff = xmldiff.main.diff_files(expected_file_path, actual_file_path)
 
     if diff:
@@ -39,7 +38,7 @@ def _compare_xml(actual_file_path: str, expected_file_path: str) -> List[str]:
 
 def _compare_content(
     actual_file_path: str, expected_file_path: str, file_mode: str = "r"
-) -> List[str]:
+) -> list[str]:
     # we let Python pick the file mode (rb or rt) by specifying the default 'r'
     diff_results = []
 
