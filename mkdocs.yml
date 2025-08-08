@@ -58,6 +58,7 @@ plugins:
 
 nav:
   - About UCC: "index.md"
+  - What's new: "whats_new.md"
   - Getting started: "quickstart.md"
   - Commands: "commands.md"
   - ".conf files": "dot_conf_files.md"
