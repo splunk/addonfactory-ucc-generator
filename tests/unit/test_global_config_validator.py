@@ -696,20 +696,17 @@ def test_should_warn_on_empty_validators(schema_json):
 
     oauth_fields = [
         {
-            "oauth_field": "username",
             "label": "Username",
             "help": "Enter the username for this account.",
             "field": "username",
         },
         {
-            "oauth_field": "password",
             "label": "Password",
             "encrypted": True,
             "help": "Enter the password for this account.",
             "field": "password",
         },
         {
-            "oauth_field": "security_token",
             "label": "Security Token",
             "encrypted": True,
             "help": "Enter the security token.",

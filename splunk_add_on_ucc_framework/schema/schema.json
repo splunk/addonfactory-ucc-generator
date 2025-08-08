@@ -2634,11 +2634,6 @@
     "DefaultOAuthFields": {
       "type": "object",
       "properties": {
-        "oauth_field": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "Must keep it as in examples. It is for mandatory fields as mentioned before."
-        },
         "label": {
           "type": "string",
           "maxLength": 100,

@@ -59,27 +59,23 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
                                 auth_type: ['basic', 'oauth'],
                                 basic: [
                                     {
-                                        oauth_field: 'username',
                                         label: 'Username',
                                         help: 'Enter the username for this account.',
                                         field: 'username',
                                     },
                                     {
-                                        oauth_field: 'password',
                                         label: 'Password',
                                         encrypted: true,
                                         help: 'Enter the password for this account.',
                                         field: 'password',
                                     },
                                     {
-                                        oauth_field: 'security_token',
                                         label: 'Security Token',
                                         encrypted: true,
                                         help: 'Enter the security token.',
                                         field: 'token',
                                     },
                                     {
-                                        oauth_field: 'some_text',
                                         label: 'Disabled on edit for oauth',
                                         help: 'Enter text for field disabled on edit',
                                         field: 'basic_oauth_text',
@@ -91,38 +87,32 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
                                 ],
                                 oauth: [
                                     {
-                                        oauth_field: 'client_id',
                                         label: 'Client Id',
                                         field: 'client_id',
                                         help: 'Enter the Client Id for this account.',
                                     },
                                     {
-                                        oauth_field: 'client_secret',
                                         label: 'Client Secret',
                                         field: 'client_secret',
                                         encrypted: true,
                                         help: 'Enter the Client Secret key for this account.',
                                     },
                                     {
-                                        oauth_field: 'redirect_url',
                                         label: 'Redirect url',
                                         field: 'redirect_url',
                                         help: 'Copy and paste this URL into your app.',
                                     },
                                     {
-                                        oauth_field: 'endpoint_token',
                                         label: 'Token endpoint',
                                         field: 'endpoint_token',
                                         help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
                                     },
                                     {
-                                        oauth_field: 'endpoint_authorize',
                                         label: 'Authorize endpoint',
                                         field: 'endpoint_authorize',
                                         help: 'Put here endpoint used for authorization ie. login.salesforce.com',
                                     },
                                     {
-                                        oauth_field: 'oauth_some_text',
                                         label: 'Disabled on edit for oauth',
                                         help: 'Enter text for field disabled on edit',
                                         field: 'oauth_oauth_text',
@@ -246,7 +236,6 @@ export const getConfigOauthBasicWithAdditionalFieldTypes = (): GlobalConfig => {
         configCp.pages.configuration.tabs[0].entity[2].options.auth_type = ['basic'];
         configCp.pages.configuration.tabs[0].entity[2].options.basic.push(
             {
-                oauth_field: 'additional_text',
                 label: 'Additional Text Field',
                 field: 'additional_text',
                 type: 'text',

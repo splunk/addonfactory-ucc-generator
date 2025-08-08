@@ -51,7 +51,6 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
     + You can also introduce custom authorization methods from the front-end. To enable this, the backend REST handler must be updated to support the new method. To add a custom method, include it in the `auth_type` array (for example, `additional_authorization_method`) and define a property with the same name, listing all required entities for that method. (See `additional_authorization_method` in the example below.) To set a user-friendly label, add it to `oauth_type_labels`.
 
     + The fields allowed in the basic and oauth fields are the following:
-        - `oauth_field` should be kept as it is and without any change.
         - `label` can be changed if the user wants to change the label of the field in UI.
         - `field` must keep it as it is for mandatory fields as mentioned before.
         - `help` can be changed the if user wants to change the help text displayed below the field.
@@ -99,20 +98,17 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
                         ],
                         "basic": [
                             {
-                                "oauth_field": "username",
                                 "label": "User Name",
                                 "field": "username",
                                 "help": "Enter Account name."
                             },
                             {
-                                "oauth_field": "password",
                                 "label": "Password",
                                 "field": "password",
                                 "encrypted": true,
                                 "help": "Enter Password."
                             },
                             {
-                                "oauth_field": "security_token",
                                 "label": "Securtiy Token",
                                 "field": "security_token",
                                 "encrypted": true,
@@ -121,33 +117,28 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
                         ],
                         "oauth": [
                             {
-                                "oauth_field": "client_id",
                                 "label": "Client Id",
                                 "field": "client_id",
                                 "help": "Enter Client Id."
                             },
                             {
-                                "oauth_field": "client_secret",
                                 "label": "Client Secret",
                                 "field": "client_secret",
                                 "encrypted": true,
                                 "help": "Enter Client Secret."
                             },
                             {
-                                "oauth_field": "redirect_url",
                                 "label": "Redirect url",
                                 "field": "redirect_url",
                                 "help": "Please add this redirect URL in your app."
                             },
                             {
-                                "oauth_field": "scope",
                                 "label": "Scope",
                                 "field": "scope",
                                 "help": "Enter the scope for the authorization code with ',' separating each scope.",
                                 "required": false
                             },
                             {
-                                "oauth_field": "endpoint",
                                 "label": "Endpoint",
                                 "field": "endpoint",
                                 "help": "Enter Endpoint"
@@ -155,27 +146,23 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
                         ],
                         "oauth_client_credentials": [
                             {
-                                "oauth_field": "client_id_oauth_credentials",
                                 "label": "Client Id",
                                 "field": "client_id_oauth_credentials",
                                 "help": "Enter Client Id."
                             },
                             {
-                                "oauth_field": "client_secret_oauth_credentials",
                                 "label": "Client Secret",
                                 "field": "client_secret_oauth_credentials",
                                 "encrypted": true,
                                 "help": "Enter Client Secret."
                             },
                             {
-                                "oauth_field": "scope",
                                 "label": "Scope",
                                 "field": "scope",
                                 "help": "Enter the scope for the authorization code with ',' separating each scope.",
                                 "required": false
                             },
                             {
-                                "oauth_field": "endpoint_token_oauth_credentials",
                                 "label": "Endpoint",
                                 "field": "endpoint_token_oauth_credentials",
                                 "help": "Enter Endpoint"
@@ -183,20 +170,17 @@ OAuth can be used inside the entity tag. Use `type: "oauth"` in the entity list 
                         ],
                         "additional_authorization_method": [
                             {
-                                "oauth_field": "additional_username",
                                 "label": "Username",
                                 "field": "additional_username",
                                 "help": "Additional Authorization method "
                             },
                             {
-                                "oauth_field": "additional_method_certificate",
                                 "label": "Certificate",
                                 "field": "additional_method_certificate",
                                 "encrypted": true,
                                 "help": "Enter Certificate"
                             },
                             {
-                                "oauth_field": "additional_authorization_param",
                                 "label": "Securtiy Token(Optional)",
                                 "field": "additional_authorization_param",
                                 "encrypted": true,
