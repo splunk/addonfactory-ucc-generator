@@ -20,7 +20,7 @@ from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
 from os.path import dirname, exists, isdir, join, isfile, abspath
 from splunk_add_on_ucc_framework.app_manifest import AppManifest
-from typing import Any, Dict
+from typing import Any
 import sys
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -143,13 +143,13 @@ def get_os_path(path: str) -> str:
     return path.strip(sep)
 
 
-def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_json_config(config: dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
         f.write("\n")
 
 
-def dump_yaml_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_yaml_config(config: dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         yaml.dump(config, f, indent=4, sort_keys=False)
 

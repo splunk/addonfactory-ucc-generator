@@ -1,4 +1,4 @@
-from typing import Any, List, Dict
+from typing import Any
 
 from splunk_add_on_ucc_framework.commands.openapi_generator import oas
 from splunk_add_on_ucc_framework.commands.openapi_generator.oas import (
@@ -155,7 +155,7 @@ def test_paths_get():
             )
         )
     }
-    security: List[Dict[str, Any]] = [{basic_auth: []}]
+    security: list[dict[str, Any]] = [{basic_auth: []}]
 
     open_api_object.components = components
     open_api_object.paths = paths

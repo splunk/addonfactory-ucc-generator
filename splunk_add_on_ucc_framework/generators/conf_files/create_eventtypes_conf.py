@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
@@ -31,7 +31,7 @@ class EventtypesConf(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "eventtypes.conf"
-        self.alert_settings: Dict[str, List[Dict[str, Any]]] = {}
+        self.alert_settings: dict[str, list[dict[str, Any]]] = {}
         envs = normalize.normalize(
             global_config.alerts,
             global_config.namespace,
@@ -39,7 +39,7 @@ class EventtypesConf(FileGenerator):
         schema_content = envs["schema.content"]
         self.alert_settings = schema_content["modular_alerts"]
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self.alert_settings:
             return None
 

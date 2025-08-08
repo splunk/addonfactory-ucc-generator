@@ -16,7 +16,7 @@
 import logging
 import re
 from os import path as op
-from typing import Any, Dict
+from typing import Any
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -32,7 +32,7 @@ class AlertActionsPyGenerator:
     def __init__(
         self,
         addon_name: str,
-        input_setting: Dict[str, Any],
+        input_setting: dict[str, Any],
         package_path: str,
     ) -> None:
         self._addon_name = addon_name

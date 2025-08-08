@@ -22,7 +22,8 @@ import sys
 from pathlib import Path
 
 from packaging.version import Version
-from typing import List, Optional, Set, Iterable, Dict
+from typing import Optional
+from collections.abc import Iterable
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
@@ -55,7 +56,7 @@ class InvalidArguments(Exception):
 def _subprocess_run(
     command: str,
     command_desc: Optional[str] = None,
-    env: Optional[Dict[str, str]] = None,
+    env: Optional[dict[str, str]] = None,
 ) -> "subprocess.CompletedProcess[bytes]":
     command_desc = command_desc or command
     try:
@@ -180,7 +181,7 @@ def install_python_libraries(
     ucc_lib_target: str,
     python_binary_name: str,
     includes_ui: bool = False,
-    os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
+    os_libraries: Optional[list[OSDependentLibraryConfig]] = None,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     pip_custom_flag: Optional[str] = None,
@@ -312,9 +313,9 @@ def remove_execute_bit(installation_path: str) -> None:
 def install_os_dependent_libraries(
     ucc_lib_target: str,
     installer: str,
-    os_libraries: Optional[List[OSDependentLibraryConfig]],
-) -> Set[str]:
-    cleanup_libraries: Set[str] = set()
+    os_libraries: Optional[list[OSDependentLibraryConfig]],
+) -> set[str]:
+    cleanup_libraries: set[str] = set()
 
     if not os_libraries:
         logger.info("No os-dependentLibraries to install.")
@@ -371,7 +372,7 @@ Possible solutions, either:
     return cleanup_libraries
 
 
-def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]) -> bool:
+def validate_conflicting_paths(libs: list[OSDependentLibraryConfig]) -> bool:
     name_target_pairs = [(lib.name, lib.target) for lib in libs]
     conflicts = {x for x in name_target_pairs if name_target_pairs.count(x) > 1}
     if conflicts:

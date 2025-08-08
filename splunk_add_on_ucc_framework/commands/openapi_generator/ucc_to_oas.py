@@ -16,7 +16,7 @@
 import copy
 from enum import Flag, auto
 from functools import lru_cache
-from typing import List, Tuple, Dict, Any, Optional
+from typing import Any, Optional
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
 from splunk_add_on_ucc_framework.commands.openapi_generator.oas import (
@@ -89,13 +89,13 @@ def __add_security_scheme_object(open_api_object: OpenAPIObject) -> OpenAPIObjec
     return open_api_object
 
 
-def __create_schema_name(*, name: str, without: Optional[List[str]] = None) -> str:
+def __create_schema_name(*, name: str, without: Optional[list[str]] = None) -> str:
     return f"{name}_without_{'_'.join(without)}" if without else name
 
 
 def __get_schema_object(
-    *, name: str, entities: List[Any], without: Optional[List[str]] = None
-) -> Tuple[str, oas.SchemaObject]:
+    *, name: str, entities: list[Any], without: Optional[list[str]] = None
+) -> tuple[str, oas.SchemaObject]:
     name = __create_schema_name(name=name, without=without)
     schema_object = oas.SchemaObject(type="object")
     schema_object.properties = {}
@@ -220,7 +220,7 @@ def __get_media_type_object_with_schema_ref(
 ) -> oas.MediaTypeObject:
     if for_responses:
         schema_name = __create_schema_name(name=schema_name, without=["name"])
-    schema: Optional[Dict[str, Any]] = (
+    schema: Optional[dict[str, Any]] = (
         {"$ref": f"#/components/schemas/{schema_name}"}
         if not for_responses
         else {
@@ -273,7 +273,7 @@ def __get_path_get_for_item(*, name: str) -> oas.OperationObject:
 
 
 def __get_path_post(
-    *, name: str, description: str, request_schema_without: Optional[List[str]] = None
+    *, name: str, description: str, request_schema_without: Optional[list[str]] = None
 ) -> oas.OperationObject:
     return oas.OperationObject(
         description=description,
@@ -305,9 +305,9 @@ def __get_path_post_for_create(
     return __get_path_post(
         name=name,
         description=f"Create item in {name}",
-        request_schema_without=["disabled"]
-        if page == GloblaConfigPages.INPUTS
-        else None,
+        request_schema_without=(
+            ["disabled"] if page == GloblaConfigPages.INPUTS else None
+        ),
     )
 
 
@@ -334,7 +334,7 @@ def __get_path_delete(*, name: str) -> oas.OperationObject:
     )
 
 
-def __get_output_mode() -> Dict[str, Any]:
+def __get_output_mode() -> dict[str, Any]:
     return {
         "name": "output_mode",
         "in": "query",
@@ -349,7 +349,7 @@ def __assign_ta_paths(
     open_api_object: OpenAPIObject,
     path: str,
     path_name: str,
-    actions: List[str],
+    actions: list[str],
     page: GloblaConfigPages,
 ) -> OpenAPIObject:
     if open_api_object.paths is not None:
@@ -365,9 +365,9 @@ def __assign_ta_paths(
             open_api_object.paths[path] = oas.PathItemObject(
                 get=__get_path_get_for_item(name=path_name),
                 post=__get_path_post_for_update(name=path_name),
-                delete=__get_path_delete(name=path_name)
-                if "delete" in actions
-                else None,
+                delete=(
+                    __get_path_delete(name=path_name) if "delete" in actions else None
+                ),
             )
             open_api_object.paths[path].parameters = [
                 {
@@ -392,13 +392,17 @@ def __add_paths(
                 if hasattr(tab, "entity"):
                     open_api_object = __assign_ta_paths(
                         open_api_object=open_api_object,
-                        path=f"/{global_config.meta.restRoot}_{tab.name}"  # type: ignore[attr-defined]
-                        if hasattr(tab, "table")
-                        else f"/{global_config.meta.restRoot}_settings/{tab.name}",  # type: ignore[attr-defined]
+                        path=(
+                            f"/{global_config.meta.restRoot}_{tab.name}"  # type: ignore
+                            if hasattr(tab, "table")
+                            else f"/{global_config.meta.restRoot}_settings/{tab.name}"  # type: ignore
+                        ),
                         path_name=tab.name,
-                        actions=tab.table.actions
-                        if hasattr(tab, "table") and hasattr(tab.table, "actions")
-                        else None,
+                        actions=(
+                            tab.table.actions
+                            if hasattr(tab, "table") and hasattr(tab.table, "actions")
+                            else None
+                        ),
                         page=GloblaConfigPages.CONFIGURATION,
                     )
         if hasattr(global_config.pages, "inputs") and hasattr(

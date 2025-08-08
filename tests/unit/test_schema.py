@@ -1,5 +1,5 @@
 import functools
-from typing import Any, Dict
+from typing import Any
 
 import jsonschema
 import pytest
@@ -13,7 +13,7 @@ def schema_validate(schema_json):
 
 @pytest.fixture
 def config(global_config_all_json_content):
-    class BetterDict(Dict[Any, Any]):
+    class BetterDict(dict[Any, Any]):
         def with_tab(self, tab):
             self["pages"]["configuration"]["tabs"].append(tab)
             return self

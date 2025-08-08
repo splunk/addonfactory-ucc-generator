@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List, Optional, Any, TYPE_CHECKING
+from typing import Optional, Any, TYPE_CHECKING
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
     RestEndpointBuilder,
@@ -30,7 +30,7 @@ class DataInputEntityBuilder(RestEntityBuilder):
     def __init__(
         self,
         name: Optional[str],
-        fields: List["RestFieldBuilder"],
+        fields: list["RestFieldBuilder"],
         input_type: str,
         **kwargs: Any,
     ) -> None:
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     def conf_name(self) -> str:
         return "inputs"
 
-    def actions(self) -> List[str]:
+    def actions(self) -> list[str]:
         return ["edit", "list", "remove", "create"]
 
     def generate_rh(self) -> str:
