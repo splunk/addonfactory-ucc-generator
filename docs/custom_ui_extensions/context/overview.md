@@ -117,8 +117,8 @@ To initialize front-end code, you need to provide an `uccInit` function in the `
 **Key Properties:**
 
 - `ComponentNameFromGlobalConfig`: Matches the `src` defined in the `globalConfig.json` file.
-- `component`: Refers to a component that extends one of the available custom component types (`CustomHookBase`, `CustomControlBase`, `CustomTabBase`, `CustomMenuBase`, `CustomCellBase`, `CustomRowBase`).
-- `type`: Defines the component type. Available types `"hook"`, `"cell"`, `"row"`, `"control"`, `"tab"`, and `"menu"`.
+- `component`: Refers to a component that extends one of the available custom component types (`CustomHookBase`, `CustomControlBase`, `CustomTabBase`, `CustomCellBase`, `CustomRowBase`).
+- `type`: Defines the component type. Available types `"hook"`, `"cell"`, `"row"`, `"control"` and `"tab"`.
 
 ### Example: `ucc-ui.ts`
 

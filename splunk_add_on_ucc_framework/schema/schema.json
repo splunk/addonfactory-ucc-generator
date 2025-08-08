@@ -3847,10 +3847,6 @@
         "subDescription": {
           "$ref": "#/definitions/SubDescription"
         },
-        "menu": {
-          "description": "This property allows you to enable the custom menu feature",
-          "type": "object"
-        },
         "table": {
           "$ref": "#/definitions/InputsTable"
         },
