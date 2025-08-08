@@ -37,6 +37,7 @@ ENTITY_TYPES_WITHOUT_VALIDATORS = {
     "index",
     "helpLink",
     "checkbox",
+    "date",
     "interval",
     "custom",
 }

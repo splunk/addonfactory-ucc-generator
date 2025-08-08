@@ -39,6 +39,18 @@ class EXAMPLE_INPUT_TWO(smi.Script):
         )
         scheme.add_argument(
             smi.Argument(
+                'example_date_field',
+                required_on_create=True,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
+                'example_second_date_field',
+                required_on_create=True,
+            )
+        )
+        scheme.add_argument(
+            smi.Argument(
                 'input_two_text_hidden_for_enterprise',
                 required_on_create=False,
             )
