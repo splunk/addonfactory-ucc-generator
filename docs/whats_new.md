@@ -13,6 +13,26 @@ This section describes the changes introduced in version 6.0.0 of addonfactory-u
 - Removed AMD `require` for custom components
 - Removed `oauth_field` parameter in OAuth entities from the UI
 
+### Dropped support for Python 3.7
+
+Current version supports Python 3.9 and above.
+Related libraries and dependencies have also been updated accordingly.
+
+```
+python = ">=3.9,<3.14"
+jinja2 = ">=3.1.6,<4"
+jsonschema = "^4.25.0"
+packaging = ">=25.0"
+```
+
+### Removed support for .uccignore
+
+This feature was deprecated starting from v5.53.0 and has now been removed in UCC 6.
+
+Attempting to use it will result in a build error and the process will exit with code 1.
+
+Equivalent functionality can be achieved using [additional_packaging.py](./additional_packaging.md), specifically with the `cleanup_output_files` feature to remove files after the source code is copied.
+
 
 ### Removed support for `--ui-source-map` flag
 
@@ -22,7 +42,7 @@ The `--ui-source-map` build command flag is no longer supported.
 
 Feature was deprecated and removed as it can be replaced by [Multilevel Menu](./inputs/multilevel_menu.md) feature.
 
-Previouse configuration:
+Previous configuration:
 
 ```json
 {
@@ -74,7 +94,7 @@ class CustomMenu {
 export default CustomMenu;
 ```
 
-Similar effect can be acheved with groupsMenu feature.
+Similar effect can be achieved with groupsMenu feature.
 
 ```json
 "groupsMenu": [
@@ -101,5 +121,5 @@ As a result of this update, custom references must now include both the `src` an
 
 ### Removal of oauth_field parameter from OAuth
 
-The `oauth_field` is no longer needed in oauth entities, as right now eveything is based on `field` property itself.
-We advice to remove `oauth_field` property from `globalConfig.json` but if it will end up there, we will remove it during building process.
+The `oauth_field` is no longer needed in oauth entities, as right now everything is based on `field` property itself.
+We advise to remove `oauth_field` property from `globalConfig.json` but if it will end up there, we will remove it during building process.
