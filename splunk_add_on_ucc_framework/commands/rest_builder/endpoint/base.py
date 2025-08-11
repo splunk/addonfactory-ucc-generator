@@ -22,7 +22,7 @@ __all__ = [
     "indent",
 ]
 
-from typing import Optional, List, TYPE_CHECKING, Any
+from typing import Optional, TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.field import (
@@ -54,8 +54,8 @@ special_fields = [
     def __init__(
         self,
         name: Optional[str],
-        fields: List["RestFieldBuilder"],
-        special_fields: Optional[List["RestFieldBuilder"]] = None,
+        fields: list["RestFieldBuilder"],
+        special_fields: Optional[list["RestFieldBuilder"]] = None,
         **kwargs: Any,
     ) -> None:
         self._name = name
@@ -126,7 +126,7 @@ class RestEndpointBuilder:
     def __init__(self, name: Optional[str], namespace: str, **kwargs: Any):
         self._name = name
         self._namespace = namespace
-        self._entities: List[RestEntityBuilder] = []
+        self._entities: list[RestEntityBuilder] = []
         conf_name = kwargs.get("conf_name")
         if conf_name is not None:
             self._conf_name = conf_name
@@ -171,7 +171,7 @@ class RestEndpointBuilder:
         return self._rest_handler_class
 
     @property
-    def entities(self) -> List[RestEntityBuilder]:
+    def entities(self) -> list[RestEntityBuilder]:
         return self._entities
 
     @property
@@ -181,7 +181,7 @@ class RestEndpointBuilder:
     def add_entity(self, entity: RestEntityBuilder) -> None:
         self._entities.append(entity)
 
-    def actions(self) -> List[str]:
+    def actions(self) -> list[str]:
         raise NotImplementedError()
 
     def generate_spec(self) -> str:

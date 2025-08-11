@@ -21,7 +21,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from typing import Optional, List, Any, Union
+from typing import Optional, Any, Union
 import subprocess
 import colorama as c
 import fnmatch
@@ -229,7 +229,7 @@ def _get_num_of_args(
 
 def _get_ignore_list(
     addon_name: str, ucc_ignore_path: str, output_directory: str
-) -> List[str]:
+) -> list[str]:
     """
     Return path of files/folders to be removed.
 
@@ -261,7 +261,7 @@ def _get_ignore_list(
         return ignore_list
 
 
-def _remove_listed_files(ignore_list: List[str]) -> List[str]:
+def _remove_listed_files(ignore_list: list[str]) -> list[str]:
     """
     Return path of files/folders to removed in output folder.
 
