@@ -14,14 +14,13 @@
 # limitations under the License.
 #
 import ast
-import glob
 import json
 import logging
 import os
 import shutil
 import sys
 from pathlib import Path
-from typing import Optional, List, Any, Union
+from typing import Optional, Any, Union
 import subprocess
 import colorama as c
 import fnmatch

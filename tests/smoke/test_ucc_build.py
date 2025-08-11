@@ -16,7 +16,6 @@ import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.commands import build
 from splunk_add_on_ucc_framework import __version__
-import pytest
 
 
 def _compare_app_conf(expected_folder: str, actual_folder: str) -> None:
