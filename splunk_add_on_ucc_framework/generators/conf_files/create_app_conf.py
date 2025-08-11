@@ -14,9 +14,11 @@
 # limitations under the License.
 #
 from time import time
-from typing import Any, Dict
+from typing import Dict, List
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
+from splunk_add_on_ucc_framework.utils import get_app_manifest
 
 
 class AppConf(FileGenerator):
@@ -24,7 +26,12 @@ class AppConf(FileGenerator):
         "Generates `app.conf` with the details mentioned in globalConfig[meta]"
     )
 
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def __init__(self, global_config: GlobalConfig, input_dir: str, output_dir: str):
+        super().__init__(global_config, input_dir, output_dir)
+        app_manifest = get_app_manifest(input_dir)
+        self.description = app_manifest.get_description()
+        self.title = app_manifest.get_title()
+        self.author = app_manifest.get_authors()[0]["name"]
         self.conf_file = "app.conf"
         self.check_for_updates = "true"
         self.custom_conf = []
@@ -36,21 +43,18 @@ class AppConf(FileGenerator):
         self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
         self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
-        if self._global_config.meta.get("checkForUpdates") is False:
+        if global_config.meta.get("checkForUpdates") is False:
             self.check_for_updates = "false"
-        if self._global_config.meta.get("supportedThemes") is not None:
-            self.supported_themes = ", ".join(
-                self._global_config.meta["supportedThemes"]
-            )
+        if global_config.meta.get("supportedThemes") is not None:
+            self.supported_themes = ", ".join(global_config.meta["supportedThemes"])
 
-        self.addon_version = kwargs["addon_version"]
-        self.is_visible = str(kwargs["has_ui"]).lower()
-        self.description = kwargs["app_manifest"].get_description()
-        self.title = kwargs["app_manifest"].get_title()
-        self.author = kwargs["app_manifest"].get_authors()[0]["name"]
+        self.addon_version = global_config.version
+        self.is_visible = str(
+            global_config.meta.get("isVisible", global_config.has_pages())
+        ).lower()
         self.build = str(int(time()))
 
-    def generate(self) -> Dict[str, str]:
+    def generate(self) -> List[Dict[str, str]]:
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="app_conf.template"
@@ -68,10 +72,11 @@ class AppConf(FileGenerator):
             label=self.title,
             is_visible=self.is_visible,
         )
-        self.writer(
-            file_name=self.conf_file,
-            file_path=file_path,
-            content=rendered_content,
-            merge_mode="item_overwrite",
-        )
-        return {self.conf_file: file_path}
+        return [
+            {
+                "file_name": self.conf_file,
+                "file_path": file_path,
+                "content": rendered_content,
+                "merge_mode": "item_overwrite",
+            }
+        ]

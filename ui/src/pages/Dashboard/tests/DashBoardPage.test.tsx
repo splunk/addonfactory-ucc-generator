@@ -1,7 +1,7 @@
 import './mockMatchMediaForDashboardPage.ts';
 import { beforeEach, expect, it, vi } from 'vitest';
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { http, HttpResponse, RequestHandler } from 'msw';
 
 import DashboardPage from '../DashboardPage';
@@ -39,8 +39,8 @@ it('dashboard page renders waiting spinner', async () => {
 
     render(<DashboardPage />);
 
-    const waitingSpinner = await screen.findByTestId('wait-spinner');
-    expect(waitingSpinner).toBeInTheDocument();
+    const waitingSpinner = await screen.findAllByTestId('wait-spinner');
+    expect(waitingSpinner.length).toBeGreaterThan(0); // waiting spinners from other components
 });
 
 it('render with all default dashboards', async () => {
@@ -49,6 +49,10 @@ it('render with all default dashboards', async () => {
     const mockConfig = getGlobalConfigMock();
     setUnifiedConfig(mockConfig);
     render(<DashboardPage />);
+    await waitFor(
+        () => expect(screen.queryAllByTestId('wait-spinner').length).toBe(0), // no waiting spinner should be present
+        { timeout: 7000 }
+    );
 
     const timeLabels = await screen.findAllByText('Time');
     expect(timeLabels[0]).toBeInTheDocument();
@@ -82,4 +86,4 @@ it('render with all default dashboards', async () => {
 
         expect(elementWithId).toBeInTheDocument();
     });
-});
+}, 8000);

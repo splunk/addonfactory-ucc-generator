@@ -21,6 +21,7 @@ _ACCOUNT_CONFIG = {
     "endpoint": "",
     "example_help_link": "",
     "url": "https://test.example.com",
+    "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
 }
 
 
@@ -647,9 +648,10 @@ class TestAccount(UccTester):
         self.assert_util(
             account.entity.auth_key.list_of_values(),
             [
-                "Basic Authentication",
+                "Basic Authentication/Authorization",
                 "OAuth 2.0 - Authorization Code Grant Type",
                 "OAuth 2.0 - Client Credentials Grant Type",
+                "Certificate Authorization",
             ],
         )
 
@@ -798,6 +800,9 @@ class TestAccount(UccTester):
             "username": _ACCOUNT_CONFIG["username"],
             "custom_endpoint": _ACCOUNT_CONFIG["custom_endpoint"],
             "disabled": False,
+            "example_textarea_field_basic_oauth": _ACCOUNT_CONFIG[
+                "example_textarea_field_basic_oauth"
+            ],
             "password": "******",
             "token": "******",
             "url": "https://test.example.com",
@@ -818,6 +823,9 @@ class TestAccount(UccTester):
         account.entity.multiple_select.select("Option One")
         account.entity.password.set_value(_ACCOUNT_CONFIG["password"])
         account.entity.security_token.set_value("TestToken")
+        account.entity.text_area_basic_oauth.set_value(
+            _ACCOUNT_CONFIG["example_textarea_field_basic_oauth"]
+        )
         self.assert_util(account.entity.save, True)
         account.table.wait_for_rows_to_appear(1)
         self.assert_util(
@@ -984,6 +992,7 @@ class TestAccount(UccTester):
             "username": "TestEditUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
+            "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
@@ -1016,6 +1025,9 @@ class TestAccount(UccTester):
             "username": "TestCloneUser",
             "custom_endpoint": "login.example.com",
             "disabled": False,
+            "example_textarea_field_basic_oauth": _ACCOUNT_CONFIG[
+                "example_textarea_field_basic_oauth"
+            ],
             "password": "TestEditPassword",
             "token": "TestEditToken",
             "url": "https://test.example.com",
@@ -1168,7 +1180,7 @@ class TestAccount(UccTester):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
         auth_value_dict = {
-            "basic": "Basic Authentication",
+            "basic": "Basic Authentication/Authorization",
             "oauth": "OAuth 2.0 - Authorization Code Grant Type",
         }
         for auth_type_value, auth_type_name in auth_value_dict.items():

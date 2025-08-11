@@ -13,12 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import ast
+import glob
 import json
 import logging
 import os
 import shutil
 import sys
-from typing import Optional, Any
+from pathlib import Path
+from typing import Optional, List, Any, Union
 import subprocess
 import colorama as c
 import fnmatch
@@ -38,6 +41,7 @@ from splunk_add_on_ucc_framework import (
 from splunk_add_on_ucc_framework import dashboard
 from splunk_add_on_ucc_framework import meta_conf as meta_conf_lib
 from splunk_add_on_ucc_framework import app_manifest as app_manifest_lib
+from splunk_add_on_ucc_framework.utils import get_app_manifest
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import (
     builder as alert_builder,
@@ -57,6 +61,7 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
 from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
+from splunk_add_on_ucc_framework.utils import write_file
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
@@ -113,7 +118,10 @@ def _modify_and_replace_token_for_oauth_templates(
 
 
 def _add_modular_input(
-    ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
+    ta_name: str,
+    global_config: global_config_lib.GlobalConfig,
+    outputdir: str,
+    gc_path: str,
 ) -> None:
     for service in global_config.inputs:
         input_name = service.get("name")
@@ -131,6 +139,39 @@ def _add_modular_input(
 
         input_helper_module = service.get("inputHelperModule")
 
+        len_of_args = {"stream_events": 2, "validate_input": 1}
+        include_self = {"stream_events": False, "validate_input": False}
+
+        if input_helper_module:
+            addon_root_path = os.path.dirname(gc_path)
+            bin_path = os.path.join(addon_root_path, "package", "bin")
+            helper_path = os.path.join(bin_path, f"{input_helper_module}.py")
+
+            for func in len_of_args:
+                try:
+                    result = _get_num_of_args(func, helper_path)
+
+                    if result is None:
+                        logger.error(
+                            f"Cannot find function definition 'def {func}(...)' in module '{input_helper_module}'."
+                        )
+                        exit(1)
+
+                    if result == len_of_args[func]:
+                        # change nothing
+                        include_self[func] = False
+                    elif result == len_of_args[func] + 1:
+                        # add self to the function
+                        include_self[func] = True
+                    else:
+                        logger.error(
+                            f"Unexpected number of arguments in helper module. "
+                            f"Function '{func}' in '{input_helper_module}' has {result} arguments."
+                        )
+                except FileNotFoundError:
+                    # If no module, that was specified in globalConfig, default one will be created without 'self'
+                    pass
+
         content = (
             utils.get_j2_env()
             .get_template(template)
@@ -140,6 +181,8 @@ def _add_modular_input(
                 description=description,
                 entity=entity,
                 input_helper_module=input_helper_module,
+                stream_events_self=include_self["stream_events"],
+                validate_input_self=include_self["validate_input"],
             )
         )
         input_file_name = os.path.join(outputdir, ta_name, "bin", input_name + ".py")
@@ -163,6 +206,27 @@ def _add_modular_input(
                 helper_file.write(content)
 
 
+def _get_num_of_args(
+    function_name: str,
+    module_path: Union[str, Path],
+) -> Optional[int]:
+    module_path = Path(module_path)
+
+    if not module_path.is_file():
+        raise FileNotFoundError(
+            f"Module path '{module_path}' does not point to a valid file."
+        )
+
+    module_content = ast.parse(module_path.read_text(encoding="utf-8"))
+
+    for node in module_content.body:
+        if isinstance(node, ast.FunctionDef) and node.name == function_name:
+            # Return the number of arguments defined in the function
+            return len(node.args.args)
+
+    return None
+
+
 def _get_addon_version(addon_version: Optional[str]) -> str:
     if not addon_version:
         try:
@@ -173,34 +237,15 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
                 "repository?). Use `--ta-version` to specify the version you "
                 "want."
             )
-            exit(1)
+            sys.exit(1)
         except exceptions.CouldNotVersionFromGitException:
             logger.error(
                 "Could not find the proper version from git tags. "
                 "Check out "
                 "https://github.com/splunk/addonfactory-ucc-generator/issues/404"
             )
-            exit(1)
+            sys.exit(1)
     return addon_version.strip()
-
-
-def _get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
-    app_manifest_path = os.path.abspath(
-        os.path.join(source, app_manifest_lib.APP_MANIFEST_FILE_NAME),
-    )
-    with open(app_manifest_path) as manifest_file:
-        app_manifest_content = manifest_file.read()
-    try:
-        app_manifest = app_manifest_lib.AppManifest(app_manifest_content)
-        app_manifest.validate()
-        return app_manifest
-    except app_manifest_lib.AppManifestFormatException as e:
-        logger.error(
-            f"Manifest file @ {app_manifest_path} has invalid format.\n"
-            f"Please refer to {app_manifest_lib.APP_MANIFEST_WEBSITE}.\n"
-            f"Error message: {e}.\n"
-        )
-        sys.exit(1)
 
 
 def _get_build_output_path(output_directory: Optional[str] = None) -> str:
@@ -411,7 +456,7 @@ def generate(
     shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
     os.makedirs(os.path.join(output_directory))
     logger.info(f"Cleaned out directory {output_directory}")
-    app_manifest = _get_app_manifest(source)
+    app_manifest = get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
     generated_files = []
 
@@ -451,7 +496,6 @@ def generate(
             "please unify them to build the add-on."
         )
         sys.exit(1)
-    global_config.parse_user_defined_handlers()
     scheme = global_config_builder_schema.GlobalConfigBuilderSchema(global_config)
     if global_config.has_pages():
         utils.recursive_overwrite(
@@ -494,14 +538,7 @@ def generate(
     logger.info(f"Installed add-on requirements into {ucc_lib_target} from {source}")
     generated_files.extend(
         begin(
-            global_config=global_config,
-            input_dir=source,
-            output_dir=output_directory,
-            ucc_dir=internal_root_dir,
-            addon_name=ta_name,
-            app_manifest=app_manifest,
-            addon_version=addon_version,
-            has_ui=global_config.meta.get("isVisible", True),
+            global_config=global_config, input_dir=source, output_dir=output_directory
         )
     )
     # TODO: all FILES GENERATED object: generated_files, use it for comparison
@@ -515,15 +552,10 @@ def generate(
         )
     if global_config.has_inputs():
         logger.info("Generating inputs code")
-        _add_modular_input(ta_name, global_config, output_directory)
+        _add_modular_input(ta_name, global_config, output_directory, gc_path)
     if global_config.has_alerts():
         logger.info("Generating alerts code")
         alert_builder.generate_alerts(global_config, ta_name, output_directory)
-
-    conf_file_names = []
-    conf_file_names.extend(list(scheme.settings_conf_file_names))
-    conf_file_names.extend(list(scheme.configs_conf_file_names))
-    conf_file_names.extend(list(scheme.oauth_conf_file_names))
 
     if global_config.has_dashboard():
         logger.info("Including dashboard")
@@ -582,21 +614,18 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
-
-    ui_available = False
-    if global_config and global_config.has_pages():
-        ui_available = global_config.meta.get("isVisible", True)
     # NOTE: merging source and generated 'app.conf' as per previous design
-    AppConf(
-        global_config=global_config,
-        input_dir=source,
-        output_dir=output_directory,
-        ucc_dir=internal_root_dir,
-        addon_name=ta_name,
-        app_manifest=app_manifest,
-        addon_version=addon_version,
-        has_ui=ui_available,
+    app_conf = AppConf(
+        global_config=global_config, input_dir=source, output_dir=output_directory
     ).generate()
+    # we need to explicitly call write method since we are not generating
+    # file in child classes
+    write_file(
+        app_conf[0]["file_name"],
+        app_conf[0]["file_path"],
+        app_conf[0]["content"],
+        merge_mode=app_conf[0]["merge_mode"],
+    )
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
@@ -629,7 +658,7 @@ def generate(
         # clean-up sys.path manipulation
         sys.path.pop(0)
 
-    if global_config:
+    if global_config.has_configuration() or global_config.has_inputs():
         logger.info("Generating OpenAPI file")
         open_api_object = ucc_to_oas.transform(global_config, app_manifest)
 

@@ -24,6 +24,7 @@ from unittest.mock import patch
         "valid_config.json",
         "valid_config.yaml",
         "valid_config_only_logging.json",
+        "valid_oauth_authentication_config_with_custom_oauth_and_labels.json",
     ],
 )
 @patch("os.path.isfile", return_value=True)
@@ -51,7 +52,7 @@ def test_validation_when_created_from_app_manifest(app_manifest_correct):
 def test_autocompletefields_support_integer_values():
     # Regression unit test: https://github.com/splunk/addonfactory-ucc-generator/issues/794
     global_config_path = helpers.get_testdata_file_path(
-        "invalid_config_configuration_autoCompleteFields_integer_values.json"
+        "valid_config_configuration_autoCompleteFields_integer_values.json"
     )
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
@@ -64,7 +65,7 @@ def test_autocompletefields_support_integer_values():
 def test_autocompletefields_children_support_integer_values():
     # Regression unit test: https://github.com/splunk/addonfactory-ucc-generator/issues/794
     global_config_path = helpers.get_testdata_file_path(
-        "invalid_config_configuration_autoCompleteFields_children_integer_values.json"
+        "valid_config_configuration_autoCompleteFields_children_integer_values.json"
     )
     global_config = global_config_lib.GlobalConfig.from_file(global_config_path)
 
@@ -345,6 +346,19 @@ def test_autocompletefields_children_support_integer_values():
             "invalid_config_meta_default_dashboard_page_but_no_dashboard_defined.json",
             (
                 'meta.defaultView == "dashboard" but there is no dashboard defined in globalConfig'
+            ),
+        ),
+        (
+            "invalid_oauth_config_with_labels_entities_not_defined.json",
+            (
+                "Authorization type 'unexisting_auth_type_label', included in oauth_type_labels,"
+                " does not have any entities defined."
+            ),
+        ),
+        (
+            "invalid_custom_oauth_entities_not_defined.json",
+            (
+                "Authorization type 'unexisting_auth_type' does not have any entities defined."
             ),
         ),
     ],
@@ -743,4 +757,17 @@ def test_config_validation_status_toggle_confirmation():
     validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
 
     with does_not_raise():
+        validator.validate()
+
+
+def test_config_validation_when_placeholder_is_present(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "invalid_config_placeholder_usage.json"
+    )
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with pytest.raises(GlobalConfigValidatorException):
         validator.validate()

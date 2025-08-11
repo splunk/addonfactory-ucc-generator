@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { TabSchema } from '../../types/globalConfig/pages';
 import { getGlobalConfigMock } from '../../mocks/globalConfigMock';
 import { GlobalConfigSchema } from '../../types/globalConfig/globalConfig';
-import { oAuthEntitySchema } from '../../types/globalConfig/oAuth';
+import { oAuthEntitySchema } from '../../types/globalConfig/entities';
 
 const defaultTableProps = {
     name: 'account',
@@ -30,13 +30,25 @@ const entityBasicOauthDisableonEdit = [
         required: true,
         encrypted: false,
         options: {
-            auth_type: ['basic'],
+            auth_type: ['basic', 'additional_oauth'],
             basic: [
                 {
                     oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'basic_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: true,
+                        enable: true,
+                    },
+                },
+            ],
+            additional_oauth: [
+                {
+                    oauth_field: 'some_text_jest_test_add_cred',
+                    label: 'some_text Token additional oauth',
+                    help: 'Enter some_text additional oauth',
+                    field: 'basic_oauth_text_jest_test_add_cred',
                     options: {
                         disableonEdit: true,
                         enable: true,
@@ -562,6 +574,103 @@ export const getConfigWithAllTypesOfOauth = () => {
                 ...globalConfig.pages.configuration,
                 title: globalConfig.pages.configuration?.title ?? '',
                 tabs: [{ entity: allEntityTypesConfig, ...defaultTableProps }],
+            },
+        },
+    };
+    return newConfig satisfies z.infer<typeof GlobalConfigSchema>;
+};
+
+const manyTypesInOauth = [
+    {
+        type: 'oauth',
+        field: 'oauth_jest_test',
+        label: 'Not used',
+        required: true,
+        encrypted: false,
+        options: {
+            auth_type: ['basic', 'oauth'],
+            basic: [
+                {
+                    oauth_field: 'some_text_jest_test',
+                    label: 'some_text Token',
+                    help: 'Enter some_text',
+                    field: 'basic_oauth_text_jest_test',
+                    options: {
+                        disableonEdit: true,
+                        enable: true,
+                    },
+                },
+                {
+                    label: 'Basic Oauth text area',
+                    help: 'Enter Basic Oauth text area',
+                    field: 'text_area_test_basic_oauth',
+                    type: 'textarea',
+                    options: {
+                        rowsMin: 3,
+                        rowsMax: 5,
+                    },
+                },
+                {
+                    label: 'Basic Oauth select',
+                    help: 'additiona oauth select',
+                    field: 'select_test_basic_oauth',
+                    type: 'singleSelect',
+                    options: {
+                        autoCompleteFields: [
+                            { label: 'Option 1', value: 'option1' },
+                            { label: 'Option 2', value: 'option2' },
+                            { label: 'Option 3', value: 'option3' },
+                        ],
+                    },
+                },
+                {
+                    label: 'Basic Oauth radio',
+                    help: 'Additiona oauth radio',
+                    field: 'radio_test_basic_oauth',
+                    type: 'radio',
+                    options: {
+                        items: [
+                            { label: 'Left', value: 'left' },
+                            { label: 'Middle', value: 'middle' },
+                            { label: 'Right', value: 'right' },
+                        ],
+                    },
+                },
+            ],
+            oauth: [
+                {
+                    oauth_field: 'client_id',
+                    label: 'Client Id',
+                    field: 'client_id',
+                    help: 'Enter the Client Id for this account.',
+                    defaultValue: 'Client Id',
+                },
+                {
+                    oauth_field: 'client_secret',
+                    label: 'Client Secret',
+                    field: 'client_secret',
+                    encrypted: true,
+                    help: 'Enter the Client Secret key for this account.',
+                    defaultValue: 'Client Secret',
+                },
+            ],
+            display: true,
+            disableonEdit: false,
+            enable: true,
+        },
+    } satisfies z.infer<typeof oAuthEntitySchema>,
+];
+
+export const getConfigWithManyTypesInOauth = () => {
+    const globalConfig = getGlobalConfigMock();
+    const newConfig = {
+        ...globalConfig,
+        pages: {
+            ...globalConfig.pages,
+            configuration: {
+                ...globalConfig.pages.configuration,
+                title: globalConfig.pages.configuration?.title ?? '',
+                tabs: [{ entity: manyTypesInOauth, ...defaultTableProps }],
             },
         },
     };

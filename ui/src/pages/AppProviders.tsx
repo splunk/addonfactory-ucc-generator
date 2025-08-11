@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
 import SplunkThemeProvider from '@splunk/themes/SplunkThemeProvider';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { GlobalBodyStyle, StyledContainer } from './GlobalStyles';
+import { GlobalBodyStyle, MainContent, StyledContainer } from './GlobalStyles';
 import ConfigManager from '../util/configManager';
 import { WaitSpinnerWrapper } from '../components/table/CustomTableStyle';
+import Footer from '../components/Footer/Footer';
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
     return (
@@ -16,7 +17,8 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
                             !loading &&
                             appData && (
                                 <Suspense fallback={<WaitSpinnerWrapper size="medium" />}>
-                                    {children}
+                                    <MainContent>{children}</MainContent>
+                                    <Footer />
                                 </Suspense>
                             )
                         }

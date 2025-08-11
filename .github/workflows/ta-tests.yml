@@ -74,7 +74,9 @@ jobs:
               "splunk/splunk-add-on-for-microsoft-office-365",
               "splunk/splunk-add-on-for-salesforce",
               "splunk/splunk-add-on-for-servicenow",
-              "splunk/splunk-add-on-for-mysql"
+              "splunk/splunk-add-on-for-mysql",
+              "splunk/splunk-add-on-for-cisco-asa",
+              "splunk/splunk-add-on-for-unix-and-linux"
             ]' >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
           fi
@@ -150,4 +152,14 @@ jobs:
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
-          poetry run ucc-gen build
+          poetry run ucc-gen build > build_output.log 2>&1
+          if tail -n 1 build_output.log | grep -q "^INFO: File creation summary: created: "; then
+            echo "✓ Build completed successfully with expected output"
+            cat build_output.log
+          else
+            echo "✗ Build did not complete with expected output"
+            echo "Last line of output should start with 'INFO: File creation summary: created: '"
+            echo "Full output:"
+            cat build_output.log
+            exit 1
+          fi

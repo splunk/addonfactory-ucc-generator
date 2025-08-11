@@ -4,11 +4,17 @@ import os
 from typing import Dict, Any
 from pathlib import Path
 import yaml
+import xmldiff.main
 
 from splunk_add_on_ucc_framework import __file__ as module_init_path
 
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
+
+
+def compare_xml_content(content: str, expected_content: str) -> str:
+    diff = xmldiff.main.diff_texts(content, expected_content)
+    return " ".join([str(item) for item in diff])
 
 
 def get_path_to_source_dir() -> str:

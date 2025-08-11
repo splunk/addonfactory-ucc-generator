@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { NumberValidator, RegexValidator, StringValidator } from './validators';
 
-import { oAuthEntitySchema } from './oAuth';
 import {
     AllValidators,
     CommonEditableEntityFields,
@@ -13,6 +12,7 @@ import {
     TextElementWithLinksSchema,
     ValueLabelPair,
 } from './baseSchemas';
+import { oAuthFieldSchema, OAuthOptionsBaseSchema } from './oAuth';
 
 const DefaultValueUnion = z.union([z.string(), z.number(), z.boolean()]);
 
@@ -203,7 +203,7 @@ export const CustomEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('custom'),
     options: z
         .object({
-            type: z.literal('external'),
+            type: z.literal('external').optional(),
             src: z.string(),
             hideForPlatform: PlatformEnum.optional(),
         })
@@ -221,6 +221,7 @@ export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
             items: z.array(ValueLabelPair),
         })
         .optional(),
+    required: z.boolean().default(false).optional(),
 }).strict();
 
 export const StrictIndexEntitySchema = z
@@ -251,6 +252,33 @@ export const StrictIntervalEntitySchema = z
     })
     .strict();
 
+export const OAuthAcceptableTypes = z.union([
+    oAuthFieldSchema,
+    LinkEntitySchema,
+    TextEntitySchema,
+    TextAreaEntitySchema,
+    SingleSelectEntitySchema,
+    MultipleSelectEntitySchema,
+    CheckboxEntitySchema,
+    CheckboxGroupEntitySchema,
+    CheckboxTreeEntitySchema,
+    RadioEntitySchema,
+    FileEntitySchema,
+]);
+
+const OAuthOptionsSchemaWithEntities = OAuthOptionsBaseSchema.extend({
+    basic: z.array(OAuthAcceptableTypes).optional(),
+    oauth: z.array(OAuthAcceptableTypes).optional(),
+    oauth_client_credentials: z.array(OAuthAcceptableTypes).optional(),
+}).passthrough();
+
+export const oAuthEntitySchema = CommonEditableEntityFields.extend({
+    type: z.literal('oauth'),
+    defaultValue: z.string().optional(),
+    validators: z.array(z.union([StringValidator, RegexValidator])).optional(),
+    options: OAuthOptionsSchemaWithEntities,
+}).strict();
+
 export const AnyOfEntitySchema = z.discriminatedUnion('type', [
     LinkEntitySchema.strict(),
     TextEntitySchema.strict(),
@@ -265,3 +293,5 @@ export const AnyOfEntitySchema = z.discriminatedUnion('type', [
     oAuthEntitySchema.strict(),
     CustomEntitySchema.strict(),
 ]);
+
+export type OAuthEntity = z.TypeOf<typeof OAuthAcceptableTypes>;

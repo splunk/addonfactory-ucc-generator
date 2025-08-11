@@ -1,7 +1,7 @@
 import { GlobalConfig } from '../../types/globalConfig/globalConfig';
-import { UtilBaseForm } from '../../types/components/BaseFormTypes';
 import { AcceptableFormValueOrNullish } from '../../types/components/shareableTypes';
 import { ControlData } from './CustomControl.types';
+import { UtilBaseForm } from '../../types/components/BaseFormSharableTypes';
 
 type ValueSetter = (newValue: AcceptableFormValueOrNullish) => void;
 

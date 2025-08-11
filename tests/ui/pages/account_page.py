@@ -12,6 +12,7 @@ from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
 from pytest_splunk_addon_ui_smartx.components.controls.learn_more import LearnMore
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
 from pytest_splunk_addon_ui_smartx.components.controls.message import Message
+from pytest_splunk_addon_ui_smartx.components.controls.textarea import TextArea
 from pytest_splunk_addon_ui_smartx.components.conf_table import ConfigurationTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 
@@ -110,6 +111,13 @@ class AccountEntity(Entity):
         self.auth_type = OAuthSelect(
             browser,
             Selector(select='[data-test="control-group"][data-name="auth_type"]'),
+        )
+        self.text_area_basic_oauth = TextArea(
+            browser,
+            Selector(
+                select=entity_container.select
+                + ' [data-name="example_textarea_field_basic_oauth"]'
+            ),
         )
 
 

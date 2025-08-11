@@ -13,57 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
+from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
 class CustomCommandPy(FileGenerator):
     __description__ = "Generates Python files for custom search commands provided in the globalConfig."
 
-    def argument_generator(
-        self, argument_list: List[str], arg: Dict[str, Any]
-    ) -> List[str]:
-        validate_str = ""
-        validate = arg.get("validate", {})
-        if validate:
-            validate_type = validate["type"]
-            if validate_type in ("Integer", "Float"):
-                min_val = validate.get("minimum")
-                max_val = validate.get("maximum")
-                args = []
-                if min_val is not None:
-                    args.append(f"minimum={min_val}")
-                if max_val is not None:
-                    args.append(f"maximum={max_val}")
-                validate_args = ", ".join(args)
-                validate_str = (
-                    f", validate=validators.{validate_type}({validate_args})"
-                    if args
-                    else f", validate=validators.{validate_type}()"
-                )
-            elif validate_type:
-                validate_str = f", validate=validators.{validate_type}()"
-
-        if arg["default"] is None:
-            arg_str = (
-                f"{arg['name']} = Option(name='{arg['name']}', "
-                f"require={arg.get('require')}"
-                f"{validate_str})"
-            )
-        else:
-            arg_str = (
-                f"{arg['name']} = Option(name='{arg['name']}', "
-                f"require={arg.get('require')}"
-                f"{validate_str}, "
-                f"default='{arg.get('default', '')}')"
-            )
-        argument_list.append(arg_str)
-        return argument_list
-
-    def _set_attributes(self, **kwargs: Any) -> None:
+    def __init__(
+        self, global_config: GlobalConfig, input_dir: str, output_dir: str
+    ) -> None:
+        super().__init__(global_config, input_dir, output_dir)
         self.commands_info = []
-        for command in self._global_config.custom_search_commands:
+        for command in global_config.custom_search_commands:
             argument_list: List[str] = []
             imported_file_name = command["fileName"].replace(".py", "")
             template = command["commandType"].replace(" ", "_") + ".template"
@@ -87,11 +51,51 @@ class CustomCommandPy(FileGenerator):
                 }
             )
 
-    def generate(self) -> Dict[str, str]:
-        if not self.commands_info:
-            return {}
+    def argument_generator(
+        self, argument_list: List[str], arg: Dict[str, Any]
+    ) -> List[str]:
+        validate_str = ""
+        validate = arg.get("validate", {})
+        if validate:
+            validate_type = validate["type"]
+            if validate_type in ("Integer", "Float"):
+                min_val = validate.get("minimum")
+                max_val = validate.get("maximum")
+                args = []
+                if min_val is not None:
+                    args.append(f"minimum={min_val}")
+                if max_val is not None:
+                    args.append(f"maximum={max_val}")
+                validate_args = ", ".join(args)
+                validate_str = (
+                    f", validate=validators.{validate_type}({validate_args})"
+                    if args
+                    else f", validate=validators.{validate_type}()"
+                )
+            else:
+                validate_str = f", validate=validators.{validate_type}()"
 
-        generated_files = {}
+        if arg["default"] is None:
+            arg_str = (
+                f"{arg['name']} = Option(name='{arg['name']}', "
+                f"require={arg.get('require')}"
+                f"{validate_str})"
+            )
+        else:
+            arg_str = (
+                f"{arg['name']} = Option(name='{arg['name']}', "
+                f"require={arg.get('require')}"
+                f"{validate_str}, "
+                f"default='{arg.get('default', '')}')"
+            )
+        argument_list.append(arg_str)
+        return argument_list
+
+    def generate(self) -> Optional[List[Dict[str, str]]]:
+        if not self.commands_info:
+            return None
+
+        generated_files = []
         for command_info in self.commands_info:
             file_name = command_info["file_name"] + ".py"
             file_path = self.get_file_output_path(["bin", file_name])
@@ -106,10 +110,11 @@ class CustomCommandPy(FileGenerator):
                 syntax=command_info["syntax"],
                 list_arg=command_info["list_arg"],
             )
-            self.writer(
-                file_name=file_name,
-                file_path=file_path,
-                content=rendered_content,
+            generated_files.append(
+                {
+                    "file_name": file_name,
+                    "file_path": file_path,
+                    "content": rendered_content,
+                }
             )
-            generated_files.update({file_name: file_path})
         return generated_files

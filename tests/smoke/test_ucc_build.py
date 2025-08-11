@@ -147,6 +147,7 @@ def test_ucc_generate_with_everything(caplog):
         files_to_be_equal = [
             ("README.txt",),
             ("appserver", "static", "test icon.png"),
+            ("appserver", "static", "alerticon.png"),
             ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
@@ -159,6 +160,7 @@ def test_ucc_generate_with_everything(caplog):
             ("default", "commands.conf"),
             ("default", "searchbnf.conf"),
             ("default", "data", "ui", "alerts", "test_alert.html"),
+            ("default", "data", "ui", "alerts", "test_alert_default.html"),
             ("default", "data", "ui", "nav", "default.xml"),
             ("default", "data", "ui", "views", "configuration.xml"),
             ("default", "data", "ui", "views", "inputs.xml"),
@@ -189,6 +191,8 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "splunk_ta_uccexample_validate_account_rh.py"),
             ("bin", "myAlertLogic.py"),
             ("bin", "test_alert.py"),
+            ("bin", "test_alert_default.py"),
+            ("bin", "splunk_ta_uccexample", "modalert_test_alert_default_helper.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),
             ("README", "some_conf.conf.spec"),
@@ -214,7 +218,6 @@ def test_ucc_generate_with_everything(caplog):
 
         # when custom files are provided, default files shouldn't be shipped
         files_should_be_absent = [
-            ("appserver", "static", "alerticon.png"),
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_helper.py"),
             ("appserver", "static", "js", "build", "entry_page.js.map"),
             ("lib", "__pycache__"),
@@ -513,35 +516,15 @@ def test_ucc_generate_with_configuration_files_only():
         )
         # the globalConfig would now always exist
         assert path.exists(global_config_path)
-        # clean-up for tests
-        os.remove(global_config_path)
 
-
-def test_ucc_generate_openapi_with_configuration_files_only():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_no_global_config",
-            "package",
-        )
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        actual_file_path = path.join(
+        openapi_file_path = path.join(
             temp_dir, "Splunk_TA_UCCExample", "appserver", "static", "openapi.json"
         )
-        # the openapi.json would now exist as globalConfig.json would always exist
-        assert path.exists(actual_file_path)
+        # the openapi.json should not be generated for .conf-only add-ons
+        assert not path.exists(openapi_file_path)
+
         # clean-up for tests
-        os.remove(
-            path.join(
-                package_folder,
-                path.pardir,
-                "globalConfig.json",
-            )
-        )
+        os.remove(global_config_path)
 
 
 def test_ucc_build_verbose_mode(caplog):
@@ -771,7 +754,7 @@ def test_ucc_generate_with_ui_source_map():
         ),
         (
             "package_global_config_everything",
-            2,
+            18,
         ),
     ],
 )
@@ -797,12 +780,12 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
 
         dashbaord_files_counter = 0
 
-        for _ in js_build_dir.glob("DashboardPage.*"):
+        for _ in js_build_dir.glob("Dashboard.*"):
             dashbaord_files_counter += 1
 
         assert dashbaord_files_counter == expected_file_count, (
-            f"Expected {expected_file_count} DashboardPage.[hash].js files in {js_build_folder}, for {config}"
-            f"but found {dashbaord_files_counter}."
+            f"Expected {expected_file_count} Dashboard.[hash].js files in {js_build_folder}, for {config}"
+            f" but found {dashbaord_files_counter}."
         )
 
 

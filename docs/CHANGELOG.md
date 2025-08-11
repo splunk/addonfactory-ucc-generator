@@ -1,5 +1,51 @@
 # Changelog
 
+## [5.69.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.0...v5.69.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* searchbnf.conf issue ([#1860](https://github.com/splunk/addonfactory-ucc-generator/issues/1860)) ([58f62c3](https://github.com/splunk/addonfactory-ucc-generator/commit/58f62c338775afc202aac7cb9b7776f8899d2fbd))
+
+
+### Reverts
+
+* merging of .conf files ([#1873](https://github.com/splunk/addonfactory-ucc-generator/issues/1873)) ([1c93133](https://github.com/splunk/addonfactory-ucc-generator/commit/1c9313371d3eee7519018a3adbf437b37be88821)), closes [#1800](https://github.com/splunk/addonfactory-ucc-generator/issues/1800) [#1832](https://github.com/splunk/addonfactory-ucc-generator/issues/1832)
+
+# [5.69.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.1...v5.69.0) (2025-07-22)
+
+
+### Features
+
+* add self param to stream_events and validate_input at build-time ([#1829](https://github.com/splunk/addonfactory-ucc-generator/issues/1829)) ([5aa5e95](https://github.com/splunk/addonfactory-ucc-generator/commit/5aa5e9533ca365904f0924aca96d462d4b15bac1))
+
+## [5.68.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.0...v5.68.1) (2025-07-17)
+
+
+### Bug Fixes
+
+* path issue for default alert icon ([#1839](https://github.com/splunk/addonfactory-ucc-generator/issues/1839)) ([342ebb4](https://github.com/splunk/addonfactory-ucc-generator/commit/342ebb49d65beba125052a4cc8bd4d892be9b63b))
+
+# [5.68.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.67.0...v5.68.0) (2025-07-15)
+
+
+### Bug Fixes
+
+* do not generate openapi.json for .conf-only add-ons ([#1742](https://github.com/splunk/addonfactory-ucc-generator/issues/1742)) ([3133ea2](https://github.com/splunk/addonfactory-ucc-generator/commit/3133ea24accc888c865ea8f2932bc4f4e4371660))
+* fix Jinja2 vulnerability for autoescape ([#1790](https://github.com/splunk/addonfactory-ucc-generator/issues/1790)) ([c0eefef](https://github.com/splunk/addonfactory-ucc-generator/commit/c0eefefa677313438bb60bc0e31f45284c2a1579))
+
+
+### Features
+
+* add command to publish package ([#1813](https://github.com/splunk/addonfactory-ucc-generator/issues/1813)) ([277e80e](https://github.com/splunk/addonfactory-ucc-generator/commit/277e80ec741a013a897c3a6c1211c1505213ea4e))
+* added footer component ([#1796](https://github.com/splunk/addonfactory-ucc-generator/issues/1796)) ([f7f7e1a](https://github.com/splunk/addonfactory-ucc-generator/commit/f7f7e1ae88b6604b44abe7494719fb9924bcacf5))
+* allow more custom oauth methods ([#1817](https://github.com/splunk/addonfactory-ucc-generator/issues/1817)) ([5bcc9aa](https://github.com/splunk/addonfactory-ucc-generator/commit/5bcc9aa739bfb7b041be2965708f229e83e1eb82))
+* **modify field on value:** support regexp expresion ([#1812](https://github.com/splunk/addonfactory-ucc-generator/issues/1812)) ([3c9d575](https://github.com/splunk/addonfactory-ucc-generator/commit/3c9d57595d12b564feadd1e3020f594465eadffb))
+* **oauth:** allow different components ([#1810](https://github.com/splunk/addonfactory-ucc-generator/issues/1810)) ([b10160f](https://github.com/splunk/addonfactory-ucc-generator/commit/b10160fa4afa75d0d62425ecbf71a5d6db3064e0))
+* **textarea:** mask data when encrypted ([#1805](https://github.com/splunk/addonfactory-ucc-generator/issues/1805)) ([8ad5e52](https://github.com/splunk/addonfactory-ucc-generator/commit/8ad5e5244e24791f7d694950e4f306247f4e9b2d))
+* ucc-gen validate command support ([#1771](https://github.com/splunk/addonfactory-ucc-generator/issues/1771)) ([f4c3e40](https://github.com/splunk/addonfactory-ucc-generator/commit/f4c3e4078da0995fc0e557cece8315e71a76a532))
+* update recursive_overwrite method to merge .conf files ([#1800](https://github.com/splunk/addonfactory-ucc-generator/issues/1800)) ([4444c65](https://github.com/splunk/addonfactory-ucc-generator/commit/4444c651346a7059f1c1628d61a654ad4c198f6e))
+
 # [5.67.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.66.0...v5.67.0) (2025-06-17)
 
 
