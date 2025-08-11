@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, List, Any, Tuple
+from typing import Any
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -54,10 +54,10 @@ def _is_true(val: Any) -> bool:
 class GlobalConfigBuilderSchema:
     def __init__(self, global_config: global_config_lib.GlobalConfig):
         self.global_config = global_config
-        self._settings_conf_file_names: List[str] = list()
-        self._configs_conf_file_names: List[str] = list()
-        self._oauth_conf_file_names: List[str] = list()
-        self._endpoints: Dict[str, RestEndpointBuilder] = {}
+        self._settings_conf_file_names: list[str] = list()
+        self._configs_conf_file_names: list[str] = list()
+        self._oauth_conf_file_names: list[str] = list()
+        self._endpoints: dict[str, RestEndpointBuilder] = {}
         self._parse_builder_schema()
 
     @property
@@ -69,19 +69,19 @@ class GlobalConfigBuilderSchema:
         return self.global_config.namespace
 
     @property
-    def settings_conf_file_names(self) -> List[str]:
+    def settings_conf_file_names(self) -> list[str]:
         return self._settings_conf_file_names
 
     @property
-    def configs_conf_file_names(self) -> List[str]:
+    def configs_conf_file_names(self) -> list[str]:
         return self._configs_conf_file_names
 
     @property
-    def oauth_conf_file_names(self) -> List[str]:
+    def oauth_conf_file_names(self) -> list[str]:
         return self._oauth_conf_file_names
 
     @property
-    def endpoints(self) -> List[RestEndpointBuilder]:
+    def endpoints(self) -> list[RestEndpointBuilder]:
         return list(self._endpoints.values())
 
     @property
@@ -244,10 +244,10 @@ class GlobalConfigBuilderSchema:
                 data_input_endpoint.add_entity(data_input_entity)
 
     def _parse_fields(
-        self, fields_content: List[Dict[str, Any]]
-    ) -> Tuple[List[RestFieldBuilder], List[RestFieldBuilder]]:
-        fields: List[RestFieldBuilder] = []
-        special_fields: List[RestFieldBuilder] = []
+        self, fields_content: list[dict[str, Any]]
+    ) -> tuple[list[RestFieldBuilder], list[RestFieldBuilder]]:
+        fields: list[RestFieldBuilder] = []
+        special_fields: list[RestFieldBuilder] = []
         if fields_content:
             for field in fields_content:
                 rest_field = RestFieldBuilder(
@@ -272,8 +272,8 @@ class GlobalConfigBuilderSchema:
     """
 
     def _get_oauth_enitities(
-        self, content: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, content: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         if content:
             for entity_element in content:
                 # Check if we have oauth type

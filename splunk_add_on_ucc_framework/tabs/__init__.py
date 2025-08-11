@@ -14,17 +14,17 @@
 # limitations under the License.
 #
 
-from typing import Dict, Any, List, Type
+from typing import Any
 
 from splunk_add_on_ucc_framework.tabs.proxy_tab import ProxyTab
 from splunk_add_on_ucc_framework.tabs.logging_tab import LoggingTab
 from splunk_add_on_ucc_framework.tabs.tab import Tab
 
 
-TAB_TYPES: List[Type[Tab]] = [LoggingTab, ProxyTab]
+TAB_TYPES: list[type[Tab]] = [LoggingTab, ProxyTab]
 
 
-def resolve_tab(tab_definition: Dict[Any, Any]) -> Tab:
+def resolve_tab(tab_definition: dict[Any, Any]) -> Tab:
     """
     Convert the tab dictionary into a tab object. It tries to initialize every type from TAB_TYPES. If there are
     no matches, it initializes Tab class.
