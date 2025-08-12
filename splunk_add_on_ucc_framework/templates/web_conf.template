@@ -13,7 +13,7 @@ methods = POST, GET, DELETE
 pattern = {{ endpoint.name }}
 methods = {{ methods[endpoint.name] | join(', ') }}
 
-{% if endpoint.is_specified -%}
+{% if endpoint.resourcePresent -%}
 [expose:{{ endpoint.name }}_specified]
 pattern = {{ endpoint.name }}/*
 methods = POST, GET, DELETE

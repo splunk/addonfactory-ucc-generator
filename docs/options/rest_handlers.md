@@ -13,6 +13,7 @@ custom handlers developed by the user.
         "name": "StorageBuckets",
         "endpoint": "Splunk_TA_Example_buckets",
         "handlerType": "EAI",
+        "resourcePresent": true,
         "registerHandler": {
           "file": "storage_buckets.py",
           "actions": ["list", "create", "remove", "edit"]
@@ -57,6 +58,7 @@ OpenApi entries will be generated for the handler with the specified request and
 |--------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | registerHandler    | If it is specified, UCC will add proper lines to `web.conf` and `restmap.conf`. You need to specify handler file name and EAI actions. Example: `{"file": "handler.py", "actions" ["create", "list"]}` |
 | requestParameters  | Request parameters for each action. The parameters are used in the OpenApi specification. See below.                                                                                                   |
+| resourcePresent | Specifies whether the collection should expose its resources as well via web.conf or not. Default value is False.|
 | responseParameters | Response parameters for each action. The parameters are used in the OpenApi specification. See below.                                                                                                  |
 
 `registerHandler` is needed to register the handler in the `web.conf` and `restmap.conf` files.

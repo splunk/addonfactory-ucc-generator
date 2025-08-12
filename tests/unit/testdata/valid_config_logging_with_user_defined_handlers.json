@@ -51,7 +51,7 @@
                 "name": "name1",
                 "endpoint": "endpoint1",
                 "handlerType": "EAI",
-                "is_specified": true,
+                "resourcePresent": true,
                 "registerHandler": {
                     "file": "file1.py",
                     "actions": [

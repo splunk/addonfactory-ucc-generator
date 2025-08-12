@@ -2917,9 +2917,9 @@
           "description": "The name of the handler.",
           "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
         },
-        "is_specified": {
+        "resourcePresent": {
           "type": "boolean",
-          "description": "Specifies where `specified` stanza in web.conf should be generated or not.",
+          "description": "Specifies whether the collection should expose its resources as well via web.conf or not.",
           "default": false
         },
         "endpoint": {
