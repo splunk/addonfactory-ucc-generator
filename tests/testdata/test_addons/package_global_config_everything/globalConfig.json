@@ -2503,5 +2503,22 @@
                 }
             ]
         }
-    ]
+    ],
+    "options": {
+        "restHandlers": [
+            {
+                "name": "StorageBuckets",
+                "endpoint": "Splunk_TA_Example_buckets",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "storage_buckets.py",
+                    "actions": [
+                        "list",
+                        "create",
+                        "edit"
+                    ]
+                }
+            }
+        ]
+    }
 }
