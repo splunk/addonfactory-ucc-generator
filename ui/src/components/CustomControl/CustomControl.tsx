@@ -53,6 +53,8 @@ class CustomControl extends React.Component<Props, State> {
             }
         });
 
+    declare context: React.ContextType<typeof CustomComponentContext>;
+
     shouldRender: boolean;
 
     el?: HTMLElement;

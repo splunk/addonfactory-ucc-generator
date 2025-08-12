@@ -76,7 +76,6 @@ describe('TableWrapper - Configuration Page', () => {
     it('sort items after filtering', async () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
         renderTable();
-        const user = userEvent.setup();
 
         const numberOfItems = await screen.findByText('9 Items');
         expect(numberOfItems).toBeInTheDocument();
@@ -102,8 +101,11 @@ describe('TableWrapper - Configuration Page', () => {
           "222222",
         ]
     `);
-
-        await user.click(customHeader!);
+        await userEvent.click(screen.getByRole('button', { name: /Custom Text/i }));
+        expect(screen.getByRole('columnheader', { name: /Custom Text/i })).toHaveAttribute(
+            'aria-sort',
+            'ascending'
+        );
 
         const allCustomTextsAsc = screen
             .getAllByTestId('cell')
@@ -124,7 +126,11 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await user.click(customHeader!);
+        await userEvent.click(screen.getByRole('button', { name: /Custom Text/i }));
+        expect(screen.getByRole('columnheader', { name: /Custom Text/i })).toHaveAttribute(
+            'aria-sort',
+            'descending'
+        );
 
         // No unique data-testid available to extract the columns in order
         // eslint-disable-next-line testing-library/no-node-access
