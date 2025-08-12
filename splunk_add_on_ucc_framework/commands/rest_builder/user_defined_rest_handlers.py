@@ -73,6 +73,7 @@ class EndpointRegistrationEntry:
     name: str
     rh_name: str
     actions_list: List[str]
+    is_specified: bool = False
 
     def actions(self) -> List[str]:
         """
@@ -90,6 +91,7 @@ class RestHandlerConfig:
     name: str
     endpoint: str
     handlerType: str
+    is_specified: bool = False
     registerHandler: Optional[Dict[str, Any]] = None
     requestParameters: Optional[Dict[str, Dict[str, Any]]] = None
     responseParameters: Optional[Dict[str, Dict[str, Any]]] = None
@@ -305,6 +307,7 @@ class RestHandlerConfig:
             name=self.endpoint,
             rh_name=file,
             actions_list=self.registerHandler["actions"],
+            is_specified=self.is_specified,
         )
 
 

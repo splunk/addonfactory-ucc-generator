@@ -7,3 +7,22 @@ methods = POST, GET
 pattern = {{ endpoint.name }}/*
 methods = POST, GET, DELETE
 {% endfor %}
+
+{% for endpoint in custom_endpoints -%}
+[expose:{{ endpoint.name }}]
+pattern = {{ endpoint.name }}
+methods = {{ methods[endpoint.name] | join(', ') }}
+
+{% if endpoint.is_specified -%}
+[expose:{{ endpoint.name }}_specified]
+pattern = {{ endpoint.name }}/*
+methods = POST, GET, DELETE
+{% endif -%}
+{% endfor -%}
+
+
+{% for url in endpointUrl -%}
+[expose:{{url}}]
+pattern = {{url}}
+methods = GET
+{% endfor -%}

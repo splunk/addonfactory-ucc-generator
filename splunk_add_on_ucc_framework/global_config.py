@@ -15,8 +15,9 @@
 #
 import functools
 import json
-from typing import Optional, Any, List, Dict
+from typing import Optional, Any, List, Dict, Set
 from dataclasses import dataclass, field, fields
+from urllib.parse import urlparse
 
 import yaml
 
@@ -165,6 +166,27 @@ class GlobalConfig:
         if self.has_pages() and "configuration" in self._content["pages"]:
             return self._content["pages"]["configuration"]["tabs"]
         return []
+
+    @property
+    def endpointUrl(self) -> List[str]:
+        def extract_urls(entities_list: List[Any]) -> Set[str]:
+            urls = set()
+            for content in entities_list:
+                for entity in content.get("entity", []):
+                    if entity.get("type") in ("multipleSelect", "singleSelect"):
+                        endpoint = entity.get("options", {}).get("endpointUrl")
+                        if endpoint:
+                            urls.add(urlparse(endpoint).path)
+            return urls
+
+        urls = set()
+        if self.has_configuration():
+            urls.update(extract_urls(self.configuration))
+
+        if self.has_inputs():
+            urls.update(extract_urls(self.inputs))
+
+        return list(urls)
 
     @property
     def pages(self) -> List[Any]:
