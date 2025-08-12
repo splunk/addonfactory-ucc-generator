@@ -66,7 +66,6 @@ const table = {
             label: '',
         },
     ],
-    customRow: {},
 } satisfies z.infer<typeof TableSchema>;
 
 const commonServices = [
