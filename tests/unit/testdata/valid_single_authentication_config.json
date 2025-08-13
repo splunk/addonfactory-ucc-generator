@@ -193,26 +193,22 @@
                                 ],
                                 "oauth": [
                                     {
-                                        "oauth_field": "client_id",
                                         "label": "Client Id",
                                         "field": "client_id",
                                         "help": "Enter the Client Id for this account."
                                     },
                                     {
-                                        "oauth_field": "client_secret",
                                         "label": "Client Secret",
                                         "field": "client_secret",
                                         "encrypted": true,
                                         "help": "Enter the Client Secret key for this account."
                                     },
                                     {
-                                        "oauth_field": "redirect_url",
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
                                     },
                                     {
-                                        "oauth_field": "endpoint_token",
                                         "label": "Token endpoint",
                                         "field": "endpoint_token",
                                         "help": "Put here endpoint used for token acqusition ie. login.salesforce.com",
@@ -287,13 +283,11 @@
                                         ]
                                     },
                                     {
-                                        "oauth_field": "endpoint_authorize",
                                         "label": "Authorize endpoint",
                                         "field": "endpoint_authorize",
                                         "help": "Put here endpoint used for authorization ie. login.salesforce.com"
                                     },
                                     {
-                                        "oauth_field": "oauth_some_text",
                                         "label": "Disabled on edit for oauth",
                                         "help": "Enter text for field disabled on edit",
                                         "field": "oauth_oauth_text",
