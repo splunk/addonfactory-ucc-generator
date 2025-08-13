@@ -55,7 +55,7 @@ class CustomTab {
     * Custom Tab
     * @constructor
     * @param {Object} tab - Tab details.
-    * @param {element} el - The element of the custom menu.
+    * @param {element} el - The element of the custom tab.
     */
     constructor(tab, el) {
         this.tab = tab;
