@@ -7,6 +7,7 @@ import { server } from './src/mocks/server';
 import './src/tests/expectExtenders';
 
 global.URL.createObjectURL = vi.fn();
+/* eslint-disable testing-library/no-unnecessary-act */
 
 /**
  * Configure test attributes
@@ -46,7 +47,7 @@ beforeEach(() => {
     consoleError = vi.spyOn(console, 'error');
     consoleError.mockImplementation((...args: Parameters<typeof console.error>) => {
         originalConsoleError(...args);
-        // todo: not sure about the error come from
+        // todo: will be resolved in the future
         // throw new Error(
         //     'Console error was called. Call consoleError.mockImplementation(() => {}) if this is expected.'
         // );
