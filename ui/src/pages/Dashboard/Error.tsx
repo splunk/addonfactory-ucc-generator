@@ -13,7 +13,7 @@ import { OPEN_SEARCH_LABEL } from './ErrorPageConfig';
 import { getUnifiedConfigs } from '../../util/util';
 import { FEATURE_FLAGS } from './consts';
 
-const OpenSearchStyledBtn = styled(({ ...props }) => <Button {...props} />)`
+const OpenSearchStyledBtn = styled(Button)`
     max-width: fit-content;
     font-size: ${variables.fontSize};
     align-content: flex-end;
