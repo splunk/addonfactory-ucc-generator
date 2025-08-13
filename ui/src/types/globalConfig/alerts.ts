@@ -14,11 +14,12 @@ export const alerts = z
             name: z.string(),
             label: z.string(),
             description: z.string(),
+            iconFileName: z.string().optional(),
             adaptiveResponse: z
                 .object({
                     task: z.array(z.string()).min(1),
-                    supportsAdhoc: z.boolean(),
-                    supportsCloud: z.boolean(),
+                    supportsAdhoc: z.boolean().default(false).optional(),
+                    supportsCloud: z.boolean().default(true).optional(),
                     subject: z.array(z.string()).min(1),
                     category: z.array(z.string()).min(1),
                     technology: z
@@ -46,6 +47,7 @@ export const alerts = z
                     ])
                 )
                 .optional(),
+            customScript: z.string().optional(),
         })
     )
     .min(1)

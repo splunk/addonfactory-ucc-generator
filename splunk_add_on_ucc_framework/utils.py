@@ -20,7 +20,7 @@ from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
 from os.path import dirname, exists, isdir, join, isfile, abspath
 from splunk_add_on_ucc_framework.app_manifest import AppManifest
-from typing import Any, Dict
+from typing import Any
 import sys
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -106,12 +106,9 @@ def recursive_overwrite(src: str, dest: str, has_dashboard: bool = True) -> None
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            if f.endswith(".conf"):
-                merge_conf_file(
-                    join(src, f), join(dest, f), merge_mode="item_overwrite"
-                )
-            else:
-                recursive_overwrite(join(src, f), join(dest, f), has_dashboard)
+            recursive_overwrite(
+                join(src, f), join(dest, f), ui_source_map, has_dashboard
+            )
     else:
         if exists(dest):
             remove(dest)
@@ -141,13 +138,13 @@ def get_os_path(path: str) -> str:
     return path.strip(sep)
 
 
-def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_json_config(config: dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
         f.write("\n")
 
 
-def dump_yaml_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_yaml_config(config: dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         yaml.dump(config, f, indent=4, sort_keys=False)
 

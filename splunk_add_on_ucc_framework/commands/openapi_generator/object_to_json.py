@@ -15,18 +15,18 @@
 #
 import json as json_lib
 import dataclasses
-from typing import Any, Dict, List
+from typing import Any
 
 
 class EnhancedJSONEncoder(json_lib.JSONEncoder):
-    def default(self, o: Any) -> Dict[str, Any]:
+    def default(self, o: Any) -> dict[str, Any]:
         if dataclasses.is_dataclass(o):
             return dataclasses.asdict(o)
         return super().default(o)
 
 
 class Init:
-    def _list_iterator(self, _list: List[Any]) -> Any:
+    def _list_iterator(self, _list: list[Any]) -> Any:
         return_list = []
         for i in _list:
             if i is None:
@@ -55,12 +55,12 @@ class Init:
     def __str__(self) -> str:
         return json_lib.dumps(self, cls=EnhancedJSONEncoder)
 
-    def get_json(self, *, remove_nulls: bool = False) -> Dict[Any, Any]:
+    def get_json(self, *, remove_nulls: bool = False) -> dict[Any, Any]:
         j = json_lib.loads(str(self))
         if remove_nulls:
             j = self._iterator(json=j)
         return j
 
     @property
-    def json(self) -> Dict[Any, Any]:
+    def json(self) -> dict[Any, Any]:
         return self.get_json(remove_nulls=True)

@@ -7,7 +7,7 @@ export const TableSchema = z.object({
             z.object({
                 field: z.string(),
                 label: z.string(),
-                mapping: z.record(z.any()).optional(),
+                mapping: z.record(z.string(), z.string()).optional(),
             })
         )
         .optional(),
@@ -15,11 +15,11 @@ export const TableSchema = z.object({
         z.object({
             field: z.string(),
             label: z.string(),
-            mapping: z.record(z.any()).optional(),
-            customCell: z.record(z.any()).optional(),
+            mapping: z.record(z.string(), z.string()).optional(),
+            customCell: z.record(z.string(), z.string()).optional(),
         })
     ),
-    customRow: z.record(z.any()).optional(),
+    customRow: z.record(z.string(), z.string()).optional(),
     actions: z.array(z.enum(['edit', 'delete', 'clone', 'search'])),
 });
 
@@ -68,12 +68,12 @@ export const TabSchema = z.object({
         actions: z.array(z.enum(['edit', 'delete', 'clone'])),
     }).optional(),
     style: z.enum(['page', 'dialog']).optional(),
-    hook: z.record(z.any()).optional(),
+    hook: z.record(z.string(), z.string()).optional(),
     conf: z.string().optional(),
     restHandlerName: z.string().optional(),
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
-    customTab: z.record(z.any()).optional(),
+    customTab: z.record(z.string(), z.string()).optional(),
     warning: WarningSchema,
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     groups: GroupsSchema,
@@ -88,7 +88,7 @@ export const TableLessServiceSchema = z.object({
     options: HooksSchema,
     groups: GroupsSchema,
     style: z.enum(['page', 'dialog']).optional(),
-    hook: z.record(z.any()).optional(),
+    hook: z.record(z.string(), z.string()).optional(),
     conf: z.string().optional(),
     restHandlerName: z.string().optional(),
     restHandlerModule: z.string().optional(),
@@ -135,12 +135,6 @@ export const InputsPageTableSchema = z
         title: z.string(),
         description: z.string().optional(),
         subDescription: SubDescriptionSchema,
-        menu: z
-            .object({
-                type: z.literal('external'),
-                src: z.string(),
-            })
-            .optional(),
         table: TableSchema,
         groupsMenu: z
             .array(

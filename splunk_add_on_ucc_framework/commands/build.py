@@ -21,7 +21,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
-from typing import Optional, List, Any, Union
+from typing import Optional, Any, Union
 import subprocess
 import colorama as c
 import fnmatch
@@ -60,6 +60,8 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
+from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
+from splunk_add_on_ucc_framework.utils import write_file
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
@@ -227,7 +229,7 @@ def _get_num_of_args(
 
 def _get_ignore_list(
     addon_name: str, ucc_ignore_path: str, output_directory: str
-) -> List[str]:
+) -> list[str]:
     """
     Return path of files/folders to be removed.
 
@@ -259,7 +261,7 @@ def _get_ignore_list(
         return ignore_list
 
 
-def _remove_listed_files(ignore_list: List[str]) -> List[str]:
+def _remove_listed_files(ignore_list: list[str]) -> list[str]:
     """
     Return path of files/folders to removed in output folder.
 
@@ -667,6 +669,18 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
+    # NOTE: merging source and generated 'app.conf' as per previous design
+    app_conf = AppConf(
+        global_config=global_config, input_dir=source, output_dir=output_directory
+    ).generate()
+    # we need to explicitly call write method since we are not generating
+    # file in child classes
+    write_file(
+        app_conf[0]["file_name"],
+        app_conf[0]["file_path"],
+        app_conf[0]["content"],
+        merge_mode=app_conf[0]["merge_mode"],
+    )
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")
