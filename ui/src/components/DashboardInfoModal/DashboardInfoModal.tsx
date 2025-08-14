@@ -32,11 +32,7 @@ function DashboardInfoModal(props: DashboardInfoModalProps) {
             open={props.open}
             onRequestClose={() => props.handleRequestClose()}
         >
-            <Modal.Header
-                onRequestClose={() => props.handleRequestClose()}
-                title={props.title}
-                subtitle={props.subtitle}
-            />
+            <Modal.Header title={props.title} subtitle={props.subtitle} />
             <Modal.Body>
                 {props?.infoMessage ? (
                     <Message appearance="fill" type="info">

@@ -242,7 +242,7 @@ class CustomTableControl extends Component<CustomTableControlProps, CustomTableC
                 </span>
             );
         } else if (checkMethodIsPresent) {
-            content = <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>;
+            content = <DL termWidth="250">{getExpansionRowData(row, moreInfo)}</DL>;
         } else {
             content = (
                 <span

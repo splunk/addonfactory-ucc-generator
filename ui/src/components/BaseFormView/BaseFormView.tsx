@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 
-import Message from '@splunk/react-ui/Message';
-
 import { z } from 'zod';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
@@ -52,7 +50,7 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { OAuthEntity, SingleSelectEntitySchema } from '../../types/globalConfig/entities';
-import { mapEntityIntoBaseForViewEntityObject } from './BaseFormViewUtils';
+import { mapEntityIntoBaseForViewEntityObject, StyledMessage } from './BaseFormViewUtils';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -964,9 +962,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     generateErrorMessage = () => {
         if (this.state.errorMsg) {
             return (
-                <Message appearance="fill" type="error">
+                <StyledMessage appearance="fill" type="error">
                     {this.state.errorMsg}
-                </Message>
+                </StyledMessage>
             );
         }
         return null;
@@ -975,9 +973,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     generateWarningMessage = () => {
         if (this.state.warningMsg) {
             return (
-                <Message appearance="fill" type="warning">
+                <StyledMessage appearance="fill" type="warning">
                     {this.state.warningMsg}
-                </Message>
+                </StyledMessage>
             );
         }
         return null;
