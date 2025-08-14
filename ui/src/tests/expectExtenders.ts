@@ -9,8 +9,8 @@ expect.extend({
         }
 
         const ariaDisabled = field.getAttribute('aria-disabled');
-
-        if (ariaDisabled === 'false') {
+        // in sui-5, input does not include aria-disabled = false
+        if (ariaDisabled === null) {
             return { pass: true, message: () => 'Field is enabled' };
         }
 

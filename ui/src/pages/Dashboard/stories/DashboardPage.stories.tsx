@@ -40,7 +40,6 @@ export const DashboardPageView: Story = {
 
         // Check for the correct tab
         await canvas.findByRole('tab', { name: /Data ingestion/i }, { timeout: 5000 });
-        // to do: add this test case and fix it.
-        // await canvas.findAllByText(/Search sid not found/i, {}, { timeout: 5000 });
+        await canvas.findAllByText(/Search sid not found/i, {}, { timeout: 10000 });
     },
 };

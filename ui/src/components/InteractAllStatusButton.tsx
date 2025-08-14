@@ -24,7 +24,7 @@ interface DisableAllStatusButtonProps {
     changeToggleStatus: (row: InputRowData) => void;
 }
 
-const InteractAllActionButton = styled(Button)`
+const InteractAllActionButton = styled(({ ...props }) => <Button {...props} />)`
     max-width: fit-content;
     font-size: ${variables.fontSize};
 `;

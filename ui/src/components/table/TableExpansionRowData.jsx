@@ -26,5 +26,5 @@ export function getExpansionRowData(row, moreInfo) {
             return definitionList;
         }, []) || [];
 
-    return <DL>{definitionLists}</DL>;
+    return definitionLists.length > 0 ? <DL>{definitionLists}</DL> : [];
 }

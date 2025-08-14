@@ -12,7 +12,7 @@ it('should render checkbox correctly with default value', async () => {
     const checkboxElement = screen.getByTestId('switch');
     expect(checkboxElement).toBeInTheDocument();
 
-    const checkboxElementBtn = screen.getByTestId('button');
+    const checkboxElementBtn = screen.getByRole('checkbox');
     expect(checkboxElementBtn).toBeInTheDocument();
 
     expect(checkboxElementBtn).toBeChecked();
@@ -21,7 +21,7 @@ it('should render checkbox correctly with default value', async () => {
 it('should correctly trigger callback with 0', async () => {
     render(<CheckBoxComponent value handleChange={handleChange} field="fieldId" />);
 
-    const checkboxElementBtn = screen.getByTestId('button');
+    const checkboxElementBtn = screen.getByRole('checkbox');
     expect(checkboxElementBtn).toBeInTheDocument();
 
     expect(checkboxElementBtn).toBeChecked();
@@ -34,7 +34,7 @@ it('should correctly trigger callback with 0', async () => {
 it('should correctly trigger callback with 1', async () => {
     render(<CheckBoxComponent value={false} handleChange={handleChange} field="fieldId" />);
 
-    const checkboxElementBtn = screen.getByTestId('button');
+    const checkboxElementBtn = screen.getByRole('checkbox');
     expect(checkboxElementBtn).toBeInTheDocument();
 
     expect(checkboxElementBtn).not.toBeChecked();

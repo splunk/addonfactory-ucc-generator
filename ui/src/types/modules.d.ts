@@ -233,9 +233,4 @@ declare module '@splunk/react-page' {
 declare module '@splunk/ui-utils/i18n';
 declare module 'uuid';
 
-declare module '@splunk/react-page/18' {
-    import { render } from '@splunk/react-page';
-
-    export * from '@splunk/react-page';
-    export default render;
-}
+declare module '@splunk/react-page/18';

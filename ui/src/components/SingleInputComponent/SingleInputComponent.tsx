@@ -19,7 +19,7 @@ const WaitSpinnerWrapper = styled(WaitSpinner)`
     margin-left: ${variables.spacingSmall};
 `;
 
-const StyledClearButton = styled(Button)`
+const StyledClearButton = styled(({ ...props }) => <Button {...props} />)`
     margin-left: ${variables.spacingSmall};
 `;
 

@@ -4,7 +4,7 @@ import Button from '@splunk/react-ui/Button';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 import styled from 'styled-components';
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(({ ...props }) => <Button {...props} />)`
     min-width: 80px;
 `;
 
