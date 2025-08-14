@@ -37,15 +37,33 @@ class RestMapConf(FileGenerator):
         super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "restmap.conf"
         self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        self.configuration_endpoints: List[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
+        self.inputs_endpoints: List[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
+        self.custom_endpoints: List[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
 
         if global_config.has_pages():
-            self.endpoints.extend(self._gc_schema.endpoints)
+            self.configuration_endpoints.extend(self._gc_schema.configuration_endpoints)
+            self.inputs_endpoints.extend(self._gc_schema.inputs_endpoints)
             self.namespace = self._gc_schema.namespace
-            self.endpoints.extend(
-                global_config.user_defined_handlers.endpoint_registration_entries
-            )
+        self.custom_endpoints.extend(
+            global_config.user_defined_handlers.endpoint_registration_entries
+        )
 
-        self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
+        self.configuration_endpoint_names = ", ".join(
+            sorted([ep.name for ep in self.configuration_endpoints])
+        )
+        self.inputs_endpoint_names = ", ".join(
+            sorted([ep.name for ep in self.inputs_endpoints])
+        )
+        self.endpoints.extend(self.configuration_endpoints)
+        self.endpoints.extend(self.inputs_endpoints)
+        self.endpoints.extend(self.custom_endpoints)
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self.endpoints:
@@ -57,8 +75,14 @@ class RestMapConf(FileGenerator):
         )
         rendered_content = self._template.render(
             endpoints=self.endpoints,
-            endpoint_names=self.endpoint_names,
+            configuration_endpoints=self.configuration_endpoints,
+            inputs_endpoints=self.inputs_endpoints,
+            configuration_endpoint_names=self.configuration_endpoint_names,
+            inputs_endpoint_names=self.inputs_endpoint_names,
             namespace=self.namespace,
+            configuration_capability=self._global_config.capabilities(config=True),
+            input_capability=self._global_config.capabilities(inputs=True),
+            custom_endpoints=self.custom_endpoints,
         )
         return [
             {

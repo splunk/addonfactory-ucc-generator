@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Any, Iterable, Optional, Set, List
 
 from splunk_add_on_ucc_framework.commands.openapi_generator import oas
@@ -73,7 +73,9 @@ class EndpointRegistrationEntry:
     name: str
     rh_name: str
     actions_list: List[str]
+    capabilities: Dict[str, str] = field(default_factory=dict)
     resourcePresent: bool = False
+    parentResource: str = "/"
 
     def actions(self) -> List[str]:
         """
@@ -91,7 +93,9 @@ class RestHandlerConfig:
     name: str
     endpoint: str
     handlerType: str
+    capabilities: Dict[str, str] = field(default_factory=dict)
     resourcePresent: bool = False
+    parentResource: str = "/"
     registerHandler: Optional[Dict[str, Any]] = None
     requestParameters: Optional[Dict[str, Dict[str, Any]]] = None
     responseParameters: Optional[Dict[str, Dict[str, Any]]] = None
@@ -308,6 +312,8 @@ class RestHandlerConfig:
             rh_name=file,
             actions_list=self.registerHandler["actions"],
             resourcePresent=self.resourcePresent,
+            parentResource=self.parentResource,
+            capabilities=self.capabilities,
         )
 
 

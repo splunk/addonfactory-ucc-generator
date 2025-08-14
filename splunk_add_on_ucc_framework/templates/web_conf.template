@@ -10,12 +10,20 @@ methods = POST, GET, DELETE
 
 {% for endpoint in custom_endpoints -%}
 [expose:{{ endpoint.name }}]
+{%if endpoint.parentResource != "/" %}
+pattern = {{endpoint.parentResource}}/{{ endpoint.name }}
+{%else%}
 pattern = {{ endpoint.name }}
+{%endif%}
 methods = {{ methods[endpoint.name] | join(', ') }}
 
 {% if endpoint.resourcePresent -%}
 [expose:{{ endpoint.name }}_specified]
+{%if endpoint.parentResource != "/" %}
+pattern = {{endpoint.parentResource}}/{{ endpoint.name }}/*
+{%else%}
 pattern = {{ endpoint.name }}/*
+{%endif%}
 methods = POST, GET, DELETE
 {% endif -%}
 {% endfor -%}

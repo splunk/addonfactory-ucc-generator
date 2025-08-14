@@ -175,7 +175,10 @@ class GlobalConfig:
                 for entity in content.get("entity", []):
                     if entity.get("type") in ("multipleSelect", "singleSelect"):
                         endpoint = entity.get("options", {}).get("endpointUrl")
-                        if endpoint:
+                        # only include those endpoint which starts with data
+                        # the other ones are covered if they are defined in options->
+                        # TODO; If add-ons uses any other endpoints apart from data then add it here.
+                        if endpoint and endpoint.startswith("data"):
                             urls.add(urlparse(endpoint).path)
             return urls
 
@@ -254,6 +257,13 @@ class GlobalConfig:
     @property
     def version(self) -> str:
         return self.meta["version"]
+
+    def capabilities(self, **kwargs: bool) -> Dict[str, str]:
+        if kwargs.get("config") and self.has_configuration():
+            return self._content["pages"]["configuration"].get("capabilities", {})
+        elif kwargs.get("inputs") and self.has_inputs():
+            return self._content["pages"]["inputs"].get("capabilities", {})
+        return {}
 
     @property
     def ucc_version(self) -> str:
