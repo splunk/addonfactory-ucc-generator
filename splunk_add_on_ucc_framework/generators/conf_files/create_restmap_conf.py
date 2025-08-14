@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Union, List, Optional
+from typing import Union, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -36,7 +36,7 @@ class RestMapConf(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "restmap.conf"
-        self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        self.endpoints: list[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
 
         if global_config.has_pages():
             self.endpoints.extend(self._gc_schema.endpoints)
@@ -47,7 +47,7 @@ class RestMapConf(FileGenerator):
 
         self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self.endpoints:
             return None
 

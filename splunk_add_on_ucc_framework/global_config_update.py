@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import logging
-from typing import Any, Dict, Tuple, List, Optional
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
 from splunk_add_on_ucc_framework.entity import (
@@ -27,7 +27,7 @@ from splunk_add_on_ucc_framework.tabs import resolve_tab
 logger = logging.getLogger("ucc_gen")
 
 
-def _version_tuple(version: str) -> Tuple[str, ...]:
+def _version_tuple(version: str) -> tuple[str, ...]:
     """
     Convert string into tuple to compare versions.
 
@@ -42,7 +42,7 @@ def _version_tuple(version: str) -> Tuple[str, ...]:
     return tuple(filled)
 
 
-def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _handle_biased_terms(conf_entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for entity in conf_entities:
         entity_option = entity.get("options")
         if entity_option and "whiteList" in entity_option:
@@ -275,7 +275,7 @@ def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
 def _dump_with_migrated_entities(
     global_config: GlobalConfig,
     path: str,
-    entity_type: List[Any],
+    entity_type: list[Any],
 ) -> None:
     _collapse_entities(
         global_config.content.get("pages", {}).get("inputs", {}).get("services"),
@@ -289,8 +289,8 @@ def _dump_with_migrated_entities(
 
 
 def _collapse_entities(
-    items: Optional[List[Dict[Any, Any]]],
-    entity_type: List[Any],
+    items: Optional[list[dict[Any, Any]]],
+    entity_type: list[Any],
 ) -> None:
     if items is None:
         return
@@ -300,14 +300,14 @@ def _collapse_entities(
             item["entity"][i] = collapse_entity(entity, entity_type)
 
 
-def _dump(content: Dict[Any, Any], path: str, is_yaml: bool) -> None:
+def _dump(content: dict[Any, Any], path: str, is_yaml: bool) -> None:
     if is_yaml:
         utils.dump_yaml_config(content, path)
     else:
         utils.dump_json_config(content, path)
 
 
-def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
+def _collapse_tab(tab: dict[str, Any]) -> dict[str, Any]:
     return resolve_tab(tab).short_form()
 
 
@@ -351,8 +351,8 @@ def _dump_enable_from_global_config(
                         + f" Removing 'enable' from actions in service: {actions}"
                     )
                     actions.remove("enable")
-                    service_table[
-                        "actions"
-                    ] = actions  # Update the actions in the service's table
+                    service_table["actions"] = (
+                        actions  # Update the actions in the service's table
+                    )
 
     global_config.update_schema_version("0.0.9")

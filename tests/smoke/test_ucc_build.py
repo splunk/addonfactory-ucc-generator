@@ -7,7 +7,7 @@ import json
 import pytest
 from os import path
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
 from tests.smoke import helpers
@@ -828,7 +828,7 @@ def _compare_expandable_tabs_and_entities(package_dir: str, output_dir: str) -> 
 
 
 def _compare_logging_tab(
-    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+    global_config: dict[Any, Any], static_config: dict[Any, Any]
 ) -> None:
     tab_exists = False
     num = 0
@@ -877,7 +877,7 @@ def _compare_logging_tab(
 
 
 def _compare_interval_entities(
-    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+    global_config: dict[Any, Any], static_config: dict[Any, Any]
 ) -> None:
     for lmbd in (
         lambda x: x["pages"]["configuration"]["tabs"],

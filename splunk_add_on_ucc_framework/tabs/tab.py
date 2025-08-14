@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 
-class Tab(Dict[str, Any]):
+class Tab(dict[str, Any]):
     @property
     def tab_type(self) -> Optional[str]:
         return None
 
-    def short_form(self) -> Dict[str, Any]:
+    def short_form(self) -> dict[str, Any]:
         return dict(self)
 
     @classmethod
-    def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
+    def from_definition(cls, definition: dict[str, Any]) -> Optional["Tab"]:
         return cls(definition)

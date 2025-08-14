@@ -2,7 +2,7 @@ import builtins
 import re
 from contextlib import nullcontext as does_not_raise
 from copy import deepcopy
-from typing import Dict, Any
+from typing import Any
 
 import pytest
 
@@ -84,7 +84,7 @@ def test_autocompletefields_children_support_integer_values():
         ),
         (
             "invalid_config_no_configuration_tabs.json",
-            "[] is too short",
+            "[] should be non-empty",
         ),
         (
             "invalid_config_no_name_field_in_configuration_tab_table.json",
@@ -213,7 +213,7 @@ def test_autocompletefields_children_support_integer_values():
         ),
         (
             "invalid_config_no_configuration_tabs.yaml",
-            "[] is too short",
+            "[] should be non-empty",
         ),
         (
             "invalid_config_no_name_field_in_configuration_tab_table.yaml",
@@ -641,7 +641,7 @@ def test_should_warn_on_empty_validators(schema_json):
     )
 
     # Special handling for checkbox group
-    checkbox_group: Dict[str, Any] = {
+    checkbox_group: dict[str, Any] = {
         "field": "apis",
         "label": "APIs/Interval (in seconds)",
         "type": "checkboxGroup",
@@ -716,7 +716,7 @@ def test_should_warn_on_empty_validators(schema_json):
             "field": "token",
         },
     ]
-    oauth_entity: Dict[str, Any] = {
+    oauth_entity: dict[str, Any] = {
         "type": "oauth",
         "field": "oauth",
         "label": "Not used",
