@@ -638,45 +638,6 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.levelname == expected_logs[log_line.message]
 
 
-def test_ucc_generate_with_everything_uccignore(caplog):
-    """
-    Checks the deprecation warning of .uccignore present in a repo with
-    its functionality still working.
-    """
-    # clean-up cached `additional_packaging` module when running all tests
-    sys.modules.pop("additional_packaging", "")
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything_uccignore",
-            "package",
-        )
-        # create `.uccignore` temporarily
-        ucc_file = path.join(path.dirname(package_folder), ".uccignore")
-        f = open(ucc_file, "w+")
-        f.write(
-            """**/**one.py
-bin/splunk_ta_uccexample_rh_example_input_two.py
-bin/wrong_pattern
-"""
-        )
-        f.close()
-        exp_msg = (
-            "The `.uccignore` feature has been deprecated from UCC. "
-            "To achieve the similar functionality use additional_packaging.py."
-            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
-        )
-        with pytest.raises(SystemExit):
-            build.generate(source=package_folder, output_directory=temp_dir)
-
-        assert exp_msg in caplog.text
-        # on successful assertion, we delete the file
-        os.remove(ucc_file)
-
-
 def test_ucc_generate_with_everything_cleanup_output_files():
     """
     Checks the functioning of addtional_packaging.py's `cleanup_output_files`  present in a repo.

@@ -571,14 +571,6 @@ def generate(
             global_config, gc_path, ta_name, dashboard_definition_json_path
         )
 
-        # Exit the build process if `.uccignore` is being found in the source directory.
-        if os.path.exists(os.path.join(source, os.pardir, ".uccignore")):
-            logger.error(
-                "The `.uccignore` feature has been deprecated from UCC. "
-                "To achieve the similar functionality use additional_packaging.py."
-                "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
-            )
-            sys.exit(1)
     utils.check_author_name(source, app_manifest)
 
     # Update files before overwriting
