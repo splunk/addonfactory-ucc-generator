@@ -12,6 +12,7 @@ proxy configuration, and logging level configuration.
 | description                                                       | string | To provide a brief summary of an configuration page.    |
 | [subDescription](../advanced/sub_description.md)                  | object | To provide broader description of an configuration page |
 | [tabs](#tabs-properties)<span class="required-asterisk">\*</span> | array  | To specify a list of tab.                               |
+| capabilities | object | Specifies the capabilities required for the given methods. The provided capabilities will be generated in restmap.conf. For more information, refer to the Splunk documentation on [restmap.conf](https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/restmapconf#restmap.conf.spec).|
 
 ### Tabs properties
 
@@ -72,7 +73,11 @@ Currently available tab components:
         {
             "type": "loggingTab"
         }
-    ]
+    ],
+    "capabilities": {
+        "put": "admin_all_objects",
+        "post": "list_storage_passwords"
+    }
 }
 ```
 

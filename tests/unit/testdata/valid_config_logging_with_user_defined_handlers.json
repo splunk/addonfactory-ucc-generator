@@ -42,7 +42,10 @@
                 }
             ],
             "title": "Configuration",
-            "description": "Set up your add-on"
+            "description": "Set up your add-on",
+            "capabilities": {
+            "post": "list_storage_passwords"
+        }
         }
     },
     "options": {
@@ -51,11 +54,15 @@
                 "name": "name1",
                 "endpoint": "endpoint1",
                 "handlerType": "EAI",
+                "resourcePresent": true,
                 "registerHandler": {
                     "file": "file1.py",
                     "actions": [
                         "list"
                     ]
+                },
+                "capabilities": {
+                    "post": "list_storage_passwords"
                 }
             },
             {
@@ -70,7 +77,8 @@
                         "remove",
                         "edit"
                     ]
-                }
+                },
+                "parentResource": "splunk_ta_uccexample"
             },
             {
                 "name": "name3",
