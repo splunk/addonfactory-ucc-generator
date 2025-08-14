@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.69.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.0...v5.69.1) (2025-08-05)
+
+
+### Bug Fixes
+
+* searchbnf.conf issue ([#1860](https://github.com/splunk/addonfactory-ucc-generator/issues/1860)) ([58f62c3](https://github.com/splunk/addonfactory-ucc-generator/commit/58f62c338775afc202aac7cb9b7776f8899d2fbd))
+
+
+### Reverts
+
+* merging of .conf files ([#1873](https://github.com/splunk/addonfactory-ucc-generator/issues/1873)) ([1c93133](https://github.com/splunk/addonfactory-ucc-generator/commit/1c9313371d3eee7519018a3adbf437b37be88821)), closes [#1800](https://github.com/splunk/addonfactory-ucc-generator/issues/1800) [#1832](https://github.com/splunk/addonfactory-ucc-generator/issues/1832)
+
 # [5.69.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.68.1...v5.69.0) (2025-07-22)
 
 
