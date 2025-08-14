@@ -487,7 +487,6 @@ def generate(
     verbose_file_summary_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
-    ui_source_map: bool = False,
     pip_custom_flag: Optional[str] = None,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
@@ -558,7 +557,6 @@ def generate(
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
-            ui_source_map,
             has_dashboard=global_config.has_dashboard(),
         )
     global_config_file = (
