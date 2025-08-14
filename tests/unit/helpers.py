@@ -1,7 +1,7 @@
 import functools
 import json
 import os
-from typing import Dict, Any
+from typing import Any
 from pathlib import Path
 import yaml
 import xmldiff.main
@@ -33,7 +33,7 @@ def get_testdata_file(file_name: str) -> str:
         return fp.read()
 
 
-def get_testdata(file_name: str) -> Dict[str, Any]:
+def get_testdata(file_name: str) -> dict[str, Any]:
     config = get_testdata_file(file_name)
     if file_name.endswith(".json"):
         return json.loads(config)

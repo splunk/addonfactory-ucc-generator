@@ -16,33 +16,33 @@
 exclude: (^tests/testdata/expected_addons|^tests/testdata/test_addons|^example|^splunk_add_on_ucc_framework/commands/imports.py)
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.6.0
     hooks:
     -   id: check-merge-conflict
     -   id: debug-statements
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.2
+    rev: v3.15.2
     hooks:
     -   id: pyupgrade
         args:
-        - --py37-plus
+        - --py39-plus
 -   repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 24.4.2
     hooks:
     -   id: black
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.4.1
+    rev: v1.10.0
     hooks:
     -   id: mypy
         exclude: (^docs/)
         additional_dependencies: ['types-PyYAML']
 -   repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 7.3.0
     hooks:
     -   id: flake8
         exclude: (^splunk_add_on_ucc_framework/commands/init_template/)
 -   repo: https://github.com/PyCQA/autoflake
-    rev: v2.1.1
+    rev: v2.3.1
     hooks:
     -   id: autoflake
 -   repo: https://github.com/igorshubovych/markdownlint-cli

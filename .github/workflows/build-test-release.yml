@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - uses: pre-commit/action@v3.0.1
 
   semgrep:
@@ -92,7 +92,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/automatic_doc_generation.yml
     with:
-      python-version: "3.7"
+      python-version: "3.9"
 
   build:
     needs:
@@ -103,7 +103,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
@@ -132,8 +132,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.7"
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
@@ -167,8 +165,6 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.7"
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
@@ -207,7 +203,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
@@ -261,7 +257,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - uses: actions/download-artifact@v4
         with:
           name: Splunk_TA_UCCExample-raw-output
@@ -310,7 +306,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
       - name: Package tests/expected_output_global_config_everything/Splunk_TA_UCCExample
         run: |
@@ -365,7 +361,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
@@ -487,7 +483,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
       - name: install UI deps
         uses: ./.github/actions/cached-ui-deps
       - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1

@@ -20,7 +20,7 @@ from os import listdir, makedirs, path, remove, sep
 from os.path import basename as bn
 from os.path import dirname, exists, isdir, join, isfile, abspath
 from splunk_add_on_ucc_framework.app_manifest import AppManifest
-from typing import Any, Dict
+from typing import Any
 import sys
 
 import addonfactory_splunk_conf_parser_lib as conf_parser
@@ -92,16 +92,13 @@ def get_app_manifest(source: str) -> app_manifest_lib.AppManifest:
         sys.exit(1)
 
 
-def recursive_overwrite(
-    src: str, dest: str, ui_source_map: bool = False, has_dashboard: bool = True
-) -> None:
+def recursive_overwrite(src: str, dest: str, has_dashboard: bool = True) -> None:
     """
     Method to copy from src to dest recursively.
 
     Args:
         src (str): Source of copy
         dest (str): Destination to copy
-        ui_source_map (bool): flag that decides if source map files should be copied
     """
     # TODO: move to shutil.copytree("src", "dst", dirs_exist_ok=True) when Python 3.8+.
     if isdir(src):
@@ -109,18 +106,14 @@ def recursive_overwrite(
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            recursive_overwrite(
-                join(src, f), join(dest, f), ui_source_map, has_dashboard
-            )
+            recursive_overwrite(join(src, f), join(dest, f), has_dashboard)
     else:
         if exists(dest):
             remove(dest)
 
         # EnterpriseViewOnlyPreset is the biggest UI dashboard library file
         # that is not used if dashbaord is not present.
-        if ((".js.map" not in dest) or ui_source_map) and (
-            has_dashboard or "Dashboard." not in dest
-        ):
+        if has_dashboard or "Dashboard." not in dest:
             shutil.copy(src, dest)
 
 
@@ -143,13 +136,13 @@ def get_os_path(path: str) -> str:
     return path.strip(sep)
 
 
-def dump_json_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_json_config(config: dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
         f.write("\n")
 
 
-def dump_yaml_config(config: Dict[Any, Any], file_path: str) -> None:
+def dump_yaml_config(config: dict[Any, Any], file_path: str) -> None:
     with open(file_path, "w") as f:
         yaml.dump(config, f, indent=4, sort_keys=False)
 

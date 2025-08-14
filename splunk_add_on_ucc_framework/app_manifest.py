@@ -15,7 +15,7 @@
 #
 
 import json
-from typing import Dict, List, Optional, Any
+from typing import Optional, Any
 
 APP_MANIFEST_SCHEMA_VERSION = "2.0.0"
 APP_MANIFEST_SUPPORTED_DEPLOYMENTS = frozenset(
@@ -69,20 +69,20 @@ class AppManifest:
     def get_license_uri(self) -> str:
         return self._manifest["info"]["license"]["uri"]
 
-    def get_authors(self) -> List[Dict[str, str]]:
+    def get_authors(self) -> list[dict[str, str]]:
         return self._manifest["info"]["author"]
 
     def _get_schema_version(self) -> Optional[str]:
         return self._manifest.get("schemaVersion")
 
-    def _get_supported_deployments(self) -> Optional[List[str]]:
+    def _get_supported_deployments(self) -> Optional[list[str]]:
         return self._manifest.get("supportedDeployments")
 
-    def _get_target_workloads(self) -> Optional[List[str]]:
+    def _get_target_workloads(self) -> Optional[list[str]]:
         return self._manifest.get("targetWorkloads")
 
     @property
-    def manifest(self) -> Dict[str, Any]:
+    def manifest(self) -> dict[str, Any]:
         return self._manifest
 
     def update_addon_version(self, version: str) -> None:

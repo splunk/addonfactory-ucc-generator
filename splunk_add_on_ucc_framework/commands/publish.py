@@ -23,14 +23,13 @@ import uuid
 import json
 import logging
 
-from typing import Dict, Tuple
 
 logger = logging.getLogger("ucc_gen")
 
 
 def encode_multipart_formdata(
-    fields: Dict[str, str], files: Dict[str, str]
-) -> Tuple[str, bytes]:
+    fields: dict[str, str], files: dict[str, str]
+) -> tuple[str, bytes]:
     """Encodes fields and files for multipart/form-data"""
     boundary = uuid.uuid4().hex
     lines = []

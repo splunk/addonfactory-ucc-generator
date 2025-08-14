@@ -16,7 +16,8 @@
 import argparse
 import re
 import sys
-from typing import Optional, Sequence
+from typing import Optional
+from collections.abc import Sequence
 import logging
 
 from splunk_add_on_ucc_framework.commands import build
@@ -137,13 +138,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="Custom flag that will be add to pip install command",
         type=str,
         default=False,
-        required=False,
-    )
-    build_parser.add_argument(
-        "--ui-source-map",
-        help="Adds front-end source-map files .js.map",
-        default=False,
-        action="store_true",
         required=False,
     )
 
@@ -292,12 +286,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     args = parser.parse_args(argv)
     if args.command == "build":
-        if args.ui_source_map:
-            logger.warning(
-                "The '--ui-source-map' parameter is deprecated and is scheduled for removal on 3rd June 2025. "
-                "It is recommended to discontinue using this parameter."
-            )
-
         build.generate(
             source=args.source,
             config_path=args.config,
@@ -307,7 +295,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             verbose_file_summary_report=args.verbose,
             pip_version=args.pip_version,
             pip_legacy_resolver=args.pip_legacy_resolver,
-            ui_source_map=args.ui_source_map,
             pip_custom_flag=args.pip_custom_flag,
         )
     if args.command == "package":

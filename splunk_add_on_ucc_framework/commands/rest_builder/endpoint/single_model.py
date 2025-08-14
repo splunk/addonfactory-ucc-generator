@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from string import Template
-from typing import List, Optional, TYPE_CHECKING, Any
+from typing import Optional, TYPE_CHECKING, Any
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
 
 class SingleModelEntityBuilder(RestEntityBuilder):
     def __init__(
-        self, name: Optional[str], fields: List["RestFieldBuilder"], **kwargs: Any
+        self, name: Optional[str], fields: list["RestFieldBuilder"], **kwargs: Any
     ) -> None:
         super().__init__(name, fields, **kwargs)
 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     )
 """
 
-    def actions(self) -> List[str]:
+    def actions(self) -> list[str]:
         return ["edit", "list", "remove", "create"]
 
     def generate_rh(self) -> str:

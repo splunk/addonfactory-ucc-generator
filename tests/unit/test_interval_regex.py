@@ -33,7 +33,7 @@ cron_regex = re.compile(CRON_REGEX)
         (False, "1."),
         (False, "5 0 * 8 * 1"),
         (False, "5 4 * * sun"),  # This syntax (sun) is not supported
-        (False, "@weekly")  # This syntax is not supported
+        (False, "@weekly"),  # This syntax is not supported
         # (False, "* 0/0 * * *")   # We don't handle this case
     ),
 )

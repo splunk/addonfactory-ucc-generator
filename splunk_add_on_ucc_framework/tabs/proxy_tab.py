@@ -16,7 +16,7 @@
 
 import logging
 import sys
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 from splunk_add_on_ucc_framework.tabs.tab import Tab
 
 
@@ -114,14 +114,14 @@ class ProxyTab(Tab):
         return "proxyTab"
 
     @classmethod
-    def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
+    def from_definition(cls, definition: dict[str, Any]) -> Optional["Tab"]:
         """
         This function checks if the definition has type == ProxyTab; if it does, it gets converted;
         otherwise, it returns None.
         """
         if definition.get("type") == "proxyTab":
             entity = []
-            entity_key_const_dict: Dict[str, Dict[str, Any]] = {
+            entity_key_const_dict: dict[str, dict[str, Any]] = {
                 "enable_proxy": DEFAULT_PROXY_ENABLE,
                 "proxy_type": DEFAULT_PROXY_TYPE,
                 "host": DEFAULT_HOST,

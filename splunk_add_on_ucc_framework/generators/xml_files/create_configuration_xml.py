@@ -16,7 +16,7 @@
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from xml.etree.ElementTree import Element, SubElement, tostring
 from splunk_add_on_ucc_framework.utils import pretty_print_xml
-from typing import Optional, List, Dict
+from typing import Optional
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
 
@@ -52,7 +52,7 @@ class ConfigurationXml(FileGenerator):
         view_as_string = tostring(view, encoding="unicode")
         return pretty_print_xml(view_as_string)
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self._global_config.has_configuration():
             return None
         file_path = self.get_file_output_path(
