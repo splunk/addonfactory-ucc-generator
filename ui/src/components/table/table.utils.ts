@@ -1,5 +1,8 @@
 import React from 'react';
-import { AcceptableFormRecord } from '../../types/components/shareableTypes';
+import {
+    AcceptableFormRecord,
+    AcceptableFormValueOrNull,
+} from '../../types/components/shareableTypes';
 import { isTrue } from '../../util/considerFalseAndTruthy';
 import { LABEL_FOR_DEFAULT_TABLE_CELL_VALUE } from './TableConsts';
 
@@ -8,7 +11,7 @@ export function isReadonlyRow(readonlyFieldId: string | undefined, row: Acceptab
 }
 
 // Helper to ensure non-primitive values are safely rendered
-function stringifyValue(value: unknown): React.ReactNode {
+function stringifyValue(value: AcceptableFormValueOrNull): string | React.ReactElement {
     if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
         return value.toString();
     }
