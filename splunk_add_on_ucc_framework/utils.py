@@ -106,9 +106,7 @@ def recursive_overwrite(src: str, dest: str, has_dashboard: bool = True) -> None
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            recursive_overwrite(
-                join(src, f), join(dest, f), ui_source_map, has_dashboard
-            )
+            recursive_overwrite(join(src, f), join(dest, f), has_dashboard)
     else:
         if exists(dest):
             remove(dest)
