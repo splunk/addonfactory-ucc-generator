@@ -18,6 +18,11 @@ custom handlers developed by the user.
           "file": "storage_buckets.py",
           "actions": ["list", "create", "remove", "edit"]
         },
+        "capabilities": {
+          "put": "admin_all_objects",
+          "post": "list_storage_passwords"
+        },
+        "parentResource": "splunk_ta_uccexample",
         "requestParameters": {
           "create": {
             "param_name": {
@@ -59,6 +64,8 @@ OpenApi entries will be generated for the handler with the specified request and
 | registerHandler    | If it is specified, UCC will add proper lines to `web.conf` and `restmap.conf`. You need to specify handler file name and EAI actions. Example: `{"file": "handler.py", "actions" ["create", "list"]}` |
 | requestParameters  | Request parameters for each action. The parameters are used in the OpenApi specification. See below.                                                                                                   |
 | resourcePresent | Specifies whether the collection should expose its resources as well via web.conf or not. Default value is False.|
+| capabilities |Specifies the capabilities required for the given methods. The provided capabilities will be generated in restmap.conf. For more information, refer to the Splunk documentation on [restmap.conf](https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/restmapconf#restmap.conf.spec).|
+| parentResource | Specifies parent Resource for the given endpoint, it will get added in the `match` attribute of restmap.conf. Default value is "/.|
 | responseParameters | Response parameters for each action. The parameters are used in the OpenApi specification. See below.                                                                                                  |
 
 `registerHandler` is needed to register the handler in the `web.conf` and `restmap.conf` files.
