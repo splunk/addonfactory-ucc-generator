@@ -42,7 +42,10 @@
                 }
             ],
             "title": "Configuration",
-            "description": "Set up your add-on"
+            "description": "Set up your add-on",
+            "capabilities": {
+            "post": "list_storage_passwords"
+        }
         }
     },
     "options": {
@@ -57,6 +60,9 @@
                     "actions": [
                         "list"
                     ]
+                },
+                "capabilities": {
+                    "post": "list_storage_passwords"
                 }
             },
             {
@@ -71,7 +77,8 @@
                         "remove",
                         "edit"
                     ]
-                }
+                },
+                "parentResource": "splunk_ta_uccexample"
             },
             {
                 "name": "name3",

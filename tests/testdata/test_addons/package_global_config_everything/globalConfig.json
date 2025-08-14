@@ -1099,6 +1099,10 @@
                         "linkText": "blog post"
                     }
                 ]
+            },
+            "capabilities": {
+                "put": "admin_all_objects",
+                "post": "list_storage_passwords"
             }
         },
         "inputs": {
@@ -2517,7 +2521,23 @@
                         "create",
                         "edit"
                     ]
+                },
+                "capabilities": {
+                    "put": "admin_all_objects",
+                    "post": "list_storage_passwords"
                 }
+            },
+            {
+                "name": "dependent_dropdown",
+                "endpoint": "dependent_dropdown",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "dependent_dropdown.py",
+                    "actions": [
+                        "list"
+                    ]
+                },
+                "parentResource": "splunk_ta_uccexample"
             }
         ]
     }

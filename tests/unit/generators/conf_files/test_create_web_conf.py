@@ -107,7 +107,7 @@ def test_web_conf_endpoints_with_user_defined_handlers(
         pattern = endpoint1/*
         methods = POST, GET, DELETE
         [expose:endpoint2]
-        pattern = endpoint2
+        pattern = splunk_ta_uccexample/endpoint2
         methods = GET, POST, DELETE
 
         """
