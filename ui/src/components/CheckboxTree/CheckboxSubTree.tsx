@@ -84,6 +84,7 @@ const CheckboxSubTree: React.FC<CheckboxSubTreeProps> = ({
                     onChange={toggleCollapse}
                     title={ParentCheckbox}
                     actions={selectionCounter}
+                    inset={false}
                 >
                     {childRows}
                 </StyledCollapsiblePanel>

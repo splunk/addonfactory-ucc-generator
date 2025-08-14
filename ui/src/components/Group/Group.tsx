@@ -24,7 +24,7 @@ const CollapsiblePanelWrapper = styled(CollapsiblePanel)`
         }
     }
     div[data-test='body'] > div {
-        padding: ${variables.spacingLarge} 0px;
+        padding: ${variables.spacingMedium} 0px;
     }
     background-color: transparent;
 `;
