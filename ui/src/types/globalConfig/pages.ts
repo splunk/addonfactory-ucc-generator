@@ -135,12 +135,6 @@ export const InputsPageTableSchema = z
         title: z.string(),
         description: z.string().optional(),
         subDescription: SubDescriptionSchema,
-        menu: z
-            .object({
-                type: z.literal('external'),
-                src: z.string(),
-            })
-            .optional(),
         table: TableSchema,
         groupsMenu: z
             .array(
