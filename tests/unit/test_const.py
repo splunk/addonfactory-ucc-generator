@@ -1,5 +1,6 @@
 import re
 import urllib.request
+import urllib.error
 
 from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 
