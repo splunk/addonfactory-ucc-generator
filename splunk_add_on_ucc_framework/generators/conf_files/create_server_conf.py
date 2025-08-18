@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from os.path import isfile, join
-from typing import Dict, List, Optional
+from typing import Optional
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
@@ -35,7 +35,7 @@ class ServerConf(FileGenerator):
         self.custom_conf.extend(list(self._gc_schema.configs_conf_file_names))
         self.custom_conf.extend(list(self._gc_schema.oauth_conf_file_names))
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self.custom_conf:
             return None
 

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List, NamedTuple, Type
+from typing import NamedTuple
 from .file_generator import FileGenerator
 
 from splunk_add_on_ucc_framework.generators.xml_files import (
@@ -45,11 +45,11 @@ __all__ = ["FileClass", "GEN_FILE_LIST"]
 
 class FileClass(NamedTuple):
     file_name: str
-    file_class: Type[FileGenerator]
-    file_path: List[str]
+    file_class: type[FileGenerator]
+    file_path: list[str]
 
 
-GEN_FILE_LIST: List[FileClass] = [
+GEN_FILE_LIST: list[FileClass] = [
     FileClass("app.conf", AppConf, ["default"]),
     FileClass("inputs.conf", InputsConf, ["default"]),
     FileClass("server.conf", ServerConf, ["default"]),

@@ -7,7 +7,7 @@ import json
 import pytest
 from os import path
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
 from tests.smoke import helpers
@@ -621,7 +621,6 @@ def test_ucc_build_verbose_mode(caplog):
         source=package_folder,
         output_directory=temp_dir,
         verbose_file_summary_report=True,
-        ui_source_map=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
@@ -751,31 +750,6 @@ def test_ucc_generate_only_one_tab():
     build.generate(source=package_folder)
 
 
-def test_ucc_generate_with_ui_source_map():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything",
-            "package",
-        )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, ui_source_map=True
-        )
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-
-        files_to_exist = [
-            ("appserver", "static", "js", "build", "entry_page.js"),
-            ("appserver", "static", "js", "build", "entry_page.js.map"),
-        ]
-        for f in files_to_exist:
-            expected_file_path = path.join(actual_folder, *f)
-            assert path.exists(expected_file_path)
-
-
 @pytest.mark.parametrize(
     "config, expected_file_count",
     [
@@ -785,7 +759,7 @@ def test_ucc_generate_with_ui_source_map():
         ),
         (
             "package_global_config_everything",
-            18,
+            9,
         ),
     ],
 )
@@ -799,9 +773,7 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
             config,
             "package",
         )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, ui_source_map=True
-        )
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
 
@@ -860,7 +832,7 @@ def _compare_expandable_tabs_and_entities(package_dir: str, output_dir: str) -> 
 
 
 def _compare_logging_tab(
-    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+    global_config: dict[Any, Any], static_config: dict[Any, Any]
 ) -> None:
     tab_exists = False
     num = 0
@@ -909,7 +881,7 @@ def _compare_logging_tab(
 
 
 def _compare_interval_entities(
-    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+    global_config: dict[Any, Any], static_config: dict[Any, Any]
 ) -> None:
     for lmbd in (
         lambda x: x["pages"]["configuration"]["tabs"],

@@ -16,7 +16,7 @@
 import logging
 from abc import ABC
 from os.path import realpath, sep, dirname, abspath
-from typing import Any, Dict, List, Union, Optional
+from typing import Any, Union, Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -69,13 +69,13 @@ class FileGenerator(ABC):
             global_config
         )
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         raise NotImplementedError()
 
     def _get_output_dir(self) -> str:
         return sep.join([realpath(self._output_dir), self._addon_name])
 
-    def get_file_output_path(self, output_piece: Union[List[str], str]) -> str:
+    def get_file_output_path(self, output_piece: Union[list[str], str]) -> str:
         if isinstance(output_piece, str):
             return sep.join([self._get_output_dir(), output_piece])
         elif isinstance(output_piece, list):
@@ -86,7 +86,7 @@ class FileGenerator(ABC):
         )
 
     def set_template_and_render(
-        self, template_file_path: List[str], file_name: str
+        self, template_file_path: list[str], file_name: str
     ) -> None:
         assert file_name.endswith(".template")
         select_autoescape(disabled_extensions=("template"))
@@ -107,8 +107,8 @@ class FileGenerator(ABC):
 
 def begin(
     global_config: GlobalConfig, input_dir: str, output_dir: str
-) -> List[Dict[str, str]]:
-    generated_files: List[Dict[str, str]] = []
+) -> list[dict[str, str]]:
+    generated_files: list[dict[str, str]] = []
     for item in fc.GEN_FILE_LIST:
         file_details = item.file_class(global_config, input_dir, output_dir).generate()
         if file_details is None:

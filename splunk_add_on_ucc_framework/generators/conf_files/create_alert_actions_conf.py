@@ -16,7 +16,7 @@
 import json
 import shutil
 from os import path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
@@ -67,8 +67,8 @@ class AlertActionsConf(FileGenerator):
             "radio": "list",
         }
 
-        self.alerts: Dict[str, Any] = {}
-        self.alerts_spec: Dict[str, Any] = {}
+        self.alerts: dict[str, Any] = {}
+        self.alerts_spec: dict[str, Any] = {}
 
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
@@ -129,8 +129,8 @@ class AlertActionsConf(FileGenerator):
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
-        conf_files: List[Dict[str, str]] = []
+    def generate(self) -> Optional[list[dict[str, str]]]:
+        conf_files: list[dict[str, str]] = []
         conf = self.generate_conf()
         conf_spec = self.generate_conf_spec()
         if conf is not None:
@@ -139,7 +139,7 @@ class AlertActionsConf(FileGenerator):
             conf_files.append(conf_spec)
         return None if conf_files == [] else conf_files
 
-    def generate_conf(self) -> Optional[Dict[str, str]]:
+    def generate_conf(self) -> Optional[dict[str, str]]:
         if not self.alerts:
             return None
 
@@ -154,7 +154,7 @@ class AlertActionsConf(FileGenerator):
             "content": rendered_content,
         }
 
-    def generate_conf_spec(self) -> Optional[Dict[str, str]]:
+    def generate_conf_spec(self) -> Optional[dict[str, str]]:
         if not self.alerts_spec:
             return None
 

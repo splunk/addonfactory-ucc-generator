@@ -1,7 +1,6 @@
 import os
 import stat
 from collections import namedtuple
-from typing import List
 from unittest import mock
 
 import pytest
@@ -561,7 +560,7 @@ def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
 
 
 def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
-    libs: List[OSDependentLibraryConfig] = [
+    libs: list[OSDependentLibraryConfig] = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib2", target="path2"),
     ]
@@ -569,7 +568,7 @@ def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
 
 
 def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, caplog):
-    libs: List[OSDependentLibraryConfig] = [
+    libs: list[OSDependentLibraryConfig] = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path2"),
@@ -586,7 +585,7 @@ def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, c
 
 
 def test_validate_conflicting_paths_empty_list():
-    libs: List[OSDependentLibraryConfig] = []
+    libs: list[OSDependentLibraryConfig] = []
     assert validate_conflicting_paths(libs)
 
 
