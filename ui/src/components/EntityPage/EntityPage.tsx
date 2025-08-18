@@ -89,7 +89,7 @@ function EntityPage({
                 <ColumnLayout.Column span={2} />
                 <ColumnLayout.Column span={8} style={{ maxWidth: '800px' }}>
                     <ShadowedDiv>
-                        <Heading style={{ paddingLeft: '30px' }} level={3}>
+                        <Heading style={{ padding: '10px 30px' }} level={3}>
                             {_(formLabel)}
                         </Heading>
                         <CustomComponentContext.Consumer>

@@ -72,7 +72,6 @@ export const GroupLabel = styled.div`
     &:hover:not([disabled]) {
         background-color: ${variables.neutral300};
     }
-    margin-bottom: ${variables.spacingSmall};
     button {
         ${CheckboxInHeader}
     }
