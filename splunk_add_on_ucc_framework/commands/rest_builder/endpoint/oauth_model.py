@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List, Any
+from typing import Any
 
 from splunk_add_on_ucc_framework import utils
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
@@ -28,7 +28,7 @@ class OAuthModelEndpointBuilder(RestEndpointBuilder):
         self._log_stanza = kwargs.get("log_stanza") or "logging"
         self._log_level_field = kwargs.get("log_level_field") or "loglevel"
 
-    def actions(self) -> List[str]:
+    def actions(self) -> list[str]:
         return ["edit"]
 
     def generate_rh(self) -> str:

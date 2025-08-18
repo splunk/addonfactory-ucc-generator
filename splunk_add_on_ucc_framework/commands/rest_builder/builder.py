@@ -15,7 +15,6 @@
 #
 import os
 import os.path as op
-from typing import Dict, List, Set
 
 from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
@@ -78,8 +77,8 @@ def _generate_import_declare_test(
 
 
 def group_libs_by_python_version_and_platform(
-    libraries: List[OSDependentLibraryConfig],
-) -> Dict[str, Dict[str, Set[str]]]:
+    libraries: list[OSDependentLibraryConfig],
+) -> dict[str, dict[str, set[str]]]:
     """Returns os specific paths grouped by python version and platform"""
     python_versions = {lib.python_version for lib in libraries}
     os_specific_paths = {}
@@ -90,8 +89,8 @@ def group_libs_by_python_version_and_platform(
     return os_specific_paths
 
 
-def get_paths_to_add(libraries: List[OSDependentLibraryConfig]) -> Dict[str, Set[str]]:
-    result: Dict[str, Set[str]] = {}
+def get_paths_to_add(libraries: list[OSDependentLibraryConfig]) -> dict[str, set[str]]:
+    result: dict[str, set[str]] = {}
     for library in libraries:
         lib_os = library.os
         target = os.path.normpath(library.target)
@@ -113,7 +112,7 @@ class _RestBuilderOutput:
         self._root_path = op.abspath(self._path)
         if not op.isdir(self._root_path):
             os.makedirs(self._root_path)
-        self._content: Dict[str, List[str]] = {}
+        self._content: dict[str, list[str]] = {}
 
     def put(self, subpath: str, file_name: str, content: str) -> None:
         path = op.join(self._root_path, subpath)

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import re
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework.tabs.tab import Tab
 
@@ -37,7 +37,7 @@ class LoggingTab(Tab):
     def tab_type(self) -> Optional[str]:
         return "loggingTab"
 
-    def short_form(self) -> Dict[str, Any]:
+    def short_form(self) -> dict[str, Any]:
         entity = self["entity"][0]
         levels = [i["value"] for i in entity["options"]["autoCompleteFields"]]
         new_definition = {"type": "loggingTab"}
@@ -59,7 +59,7 @@ class LoggingTab(Tab):
         return new_definition
 
     @classmethod
-    def from_definition(cls, definition: Dict[str, Any]) -> Optional["Tab"]:
+    def from_definition(cls, definition: dict[str, Any]) -> Optional["Tab"]:
         """
         This function checks if the definition either has type==loggingTab, or if it is a normal tab (which later will
         be converted), that satisfies the following conditions:
