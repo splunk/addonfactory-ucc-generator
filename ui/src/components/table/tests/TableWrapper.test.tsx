@@ -77,6 +77,7 @@ describe('TableWrapper - Configuration Page', () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
         renderTable();
 
+        const user = userEvent.setup();
         const numberOfItems = await screen.findByText('9 Items');
         expect(numberOfItems).toBeInTheDocument();
         const customHeader = screen
@@ -101,7 +102,7 @@ describe('TableWrapper - Configuration Page', () => {
           "222222",
         ]
     `);
-        await userEvent.click(screen.getByRole('button', { name: /Custom Text/i }));
+        await user.click(screen.getByRole('button', { name: /Custom Text/i }));
         expect(screen.getByRole('columnheader', { name: /Custom Text/i })).toHaveAttribute(
             'aria-sort',
             'ascending'
@@ -126,7 +127,7 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await userEvent.click(screen.getByRole('button', { name: /Custom Text/i }));
+        await user.click(screen.getByRole('button', { name: /Custom Text/i }));
         expect(screen.getByRole('columnheader', { name: /Custom Text/i })).toHaveAttribute(
             'aria-sort',
             'descending'
@@ -169,7 +170,8 @@ describe('TableWrapper - Configuration Page', () => {
 
     const getHeaderTitleForAction = async (headingName: string, buttonName: RegExp) => {
         const allDeleteButtons = await screen.findAllByRole('button', { name: buttonName });
-        await userEvent.click(allDeleteButtons[0]);
+        const user = userEvent.setup();
+        await user.click(allDeleteButtons[0]);
         return screen.getByRole('heading', { name: headingName });
     };
     const closeModal = async (user: UserEvent) => {
