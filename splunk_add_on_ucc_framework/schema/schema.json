@@ -666,7 +666,7 @@
           },
           "minItems": 1
         },
-        "capabilities":{
+        "capabilities": {
           "$ref": "#/definitions/capabilities"
         }
       },
@@ -2930,7 +2930,7 @@
           "description": "Specifies parentResource for the endpoint. It would be generated for match attribute in restmap.conf",
           "default": "/"
         },
-        "capabilities":{
+        "capabilities": {
           "$ref": "#/definitions/capabilities"
         },
         "endpoint": {
@@ -3350,26 +3350,26 @@
         "text"
       ]
     },
-    "capabilities":{
+    "capabilities": {
       "type": "object",
       "description": "Define capabilities for the users",
       "properties": {
-      "put":{
-        "type": "string",
-        "description": "Define capability when PUT method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/restmapconf#restmap.conf.spec"
-      },
-      "delete":{
-        "type": "string",
-        "description": "Define capability when DELETE method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/restmapconf#restmap.conf.spec"
-      },
-      "post":{
-        "type": "string",
-        "description": "Define capability when POST method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/restmapconf#restmap.conf.spec"
-      },
-      "get":{
-        "type": "string",
-        "description": "Define capability when GET method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/restmapconf#restmap.conf.spec"
-      }
+        "put": {
+          "type": "string",
+          "description": "Define capability when PUT method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "delete": {
+          "type": "string",
+          "description": "Define capability when DELETE method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "post": {
+          "type": "string",
+          "description": "Define capability when POST method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "get": {
+          "type": "string",
+          "description": "Define capability when GET method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        }
       }
     },
     "singleFieldToModify": {
@@ -4035,7 +4035,7 @@
         "inputsUniqueAcrossSingleService": {
           "$ref": "#/definitions/inputsUniqueAcrossSingleService"
         },
-         "capabilities":{
+        "capabilities": {
           "$ref": "#/definitions/capabilities"
         }
       },
@@ -4154,7 +4154,7 @@
         "inputsUniqueAcrossSingleService": {
           "$ref": "#/definitions/inputsUniqueAcrossSingleService"
         },
-         "capabilities":{
+        "capabilities": {
           "$ref": "#/definitions/capabilities"
         }
       },
