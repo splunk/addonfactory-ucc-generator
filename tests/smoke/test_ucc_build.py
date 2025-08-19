@@ -642,6 +642,8 @@ def test_ucc_generate_with_everything_cleanup_output_files():
     Checks the functioning of addtional_packaging.py's `cleanup_output_files`  present in a repo.
     Compares only the files that shouldn't be present in the output directory.
     """
+    # clean-up cached `additional_packaging` module when running all tests
+    sys.modules.pop("additional_packaging", "")
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
