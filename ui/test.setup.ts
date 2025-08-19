@@ -8,16 +8,6 @@ import './src/tests/expectExtenders';
 
 global.URL.createObjectURL = vi.fn();
 
-/*
- * Disabling `testing-library/no-unnecessary-act` here because our global test setup
- * may indirectly trigger React state updates in certain hooks/components during
- * initialization (e.g., MSW server setup, expect extenders, global mocks).
- * These can cause false positives for "unnecessary act" since they aren’t directly
- * related to test assertions, so we suppress the rule.
- */
-
-/* eslint-disable testing-library/no-unnecessary-act */
-
 /**
  * Configure test attributes
  */
