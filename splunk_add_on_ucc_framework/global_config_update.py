@@ -364,7 +364,7 @@ def _dump_enable_from_global_config(
 
 
 def _remove_oauth_field_from_oauth_entity(
-    entity: Dict[str, Any],
+    entity: dict[str, Any],
 ) -> None:
     """
     Remove the 'oauth_field' field from the oauth entity in globalConfig.
@@ -380,7 +380,7 @@ def _remove_oauth_field_from_oauth_entity(
 
 
 def _handle_removal_of_oauth_field_from_entities(
-    services_or_tabs: List[Dict[str, Any]],
+    services_or_tabs: list[dict[str, Any]],
 ) -> None:
     """
     Remove the 'oauth' field from entities in globalConfig.
