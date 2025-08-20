@@ -94,7 +94,6 @@ nav:
   - Custom search commands: "custom_search_commands.md"
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
-  - UCC ignore: "uccignore.md"
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI extensions:
