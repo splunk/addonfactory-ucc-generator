@@ -30,7 +30,6 @@ const defaultTableConfig: ITableConfig = {
     header: [],
     actions: [],
     moreInfo: [],
-    customRow: {},
 };
 
 const getTableConfigAndServices = (

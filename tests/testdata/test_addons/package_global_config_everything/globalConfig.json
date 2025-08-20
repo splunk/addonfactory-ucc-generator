@@ -38,18 +38,8 @@
                                     "src": "CustomInputCell",
                                     "type": "external"
                                 }
-                            },
-                            {
-                                "label": "AMD Test Custom Cell",
-                                "field": "amd_test_custom_cell",
-                                "customCell": {
-                                    "src": "amdCustomInputCell"
-                                }
                             }
                         ]
-                    },
-                    "hook": {
-                        "src": "amdCustomHook"
                     },
                     "entity": [
                         {
@@ -60,15 +50,6 @@
                             "options": {
                                 "src": "custom_control",
                                 "type": "external"
-                            }
-                        },
-                        {
-                            "type": "custom",
-                            "label": "Amd Example Custom Control",
-                            "field": "amd_custom_control_field",
-                            "help": " This is an example Amd multipleSelect for account entity",
-                            "options": {
-                                "src": "amdCustom_control"
                             }
                         },
                         {
@@ -865,76 +846,6 @@
                         }
                     ],
                     "title": "Custom table row"
-                },
-                {
-                    "name": "custom_amd_row_tab",
-                    "table": {
-                        "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
-                        ],
-                        "header": [
-                            {
-                                "label": "Name",
-                                "field": "name"
-                            },
-                            {
-                                "label": "Text Test",
-                                "field": "text_test"
-                            }
-                        ],
-                        "moreInfo": [
-                            {
-                                "field": "name",
-                                "label": "Name"
-                            },
-                            {
-                                "field": "text_test",
-                                "label": "Text Test"
-                            }
-                        ],
-                        "customRow": {
-                            "src": "amdCustom_input_row_replace"
-                        }
-                    },
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of ID should be between 1 and 50",
-                                    "minLength": 1,
-                                    "maxLength": 50
-                                },
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                }
-                            ],
-                            "field": "name",
-                            "help": "Enter a unique name for this account.",
-                            "required": true
-                        },
-                        {
-                            "field": "text_test",
-                            "label": "Text Test",
-                            "help": "This is a text test",
-                            "type": "text",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "required": true
-                        }
-                    ],
-                    "title": "AMD Custom table row"
                 },
                 {
                     "name": "tab_hidden_for_cloud",
