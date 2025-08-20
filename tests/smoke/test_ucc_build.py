@@ -637,82 +637,13 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.levelname == expected_logs[log_line.message]
 
 
-def test_ucc_generate_with_everything_uccignore(caplog):
-    """
-    Checks the deprecation warning of .uccignore present in a repo with
-    its functionality still working.
-    """
-    # clean-up cached `additional_packaging` module when running all tests
-    sys.modules.pop("additional_packaging", "")
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything_uccignore",
-            "package",
-        )
-        # create `.uccignore` temporarily
-        ucc_file = path.join(path.dirname(package_folder), ".uccignore")
-        f = open(ucc_file, "w+")
-        f.write(
-            """**/**one.py
-bin/splunk_ta_uccexample_rh_example_input_two.py
-bin/wrong_pattern
-"""
-        )
-        f.close()
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        expected_warning_msg = (
-            f"No files found for the specified pattern: "
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
-        )
-
-        edm_paths = {
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
-        }
-        removed = set(
-            caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
-        )
-        exp_msg = (
-            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
-            "To achieve the similar functionality use additional_packaging.py."
-            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
-        )
-        exp_info_msg = (
-            "additional_packaging.py is present but does not have `additional_packaging`."
-            " Skipping additional packaging."
-        )
-
-        assert exp_msg in caplog.text
-        assert exp_info_msg in caplog.text
-        assert expected_warning_msg in caplog.text
-        assert edm_paths == removed
-        # on successful assertion, we delete the file
-        os.remove(ucc_file)
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-        # when custom files are provided, default files shouldn't be shipped
-        files_should_be_absent = [
-            ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
-            ("bin", "example_input_one.py"),
-            ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
-        ]
-        for af in files_should_be_absent:
-            actual_file_path = path.join(actual_folder, *af)
-            assert not path.exists(actual_file_path)
-
-
 def test_ucc_generate_with_everything_cleanup_output_files():
     """
     Checks the functioning of addtional_packaging.py's `cleanup_output_files`  present in a repo.
     Compares only the files that shouldn't be present in the output directory.
     """
+    # clean-up cached `additional_packaging` module when running all tests
+    sys.modules.pop("additional_packaging", "")
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
