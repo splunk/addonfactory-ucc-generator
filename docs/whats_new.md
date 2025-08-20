@@ -12,6 +12,7 @@ This section describes the changes introduced in version 6.0.0 of addonfactory-u
 - Removed custom menu component from the UI
 - Removed AMD `require` for custom components
 - Removed `oauth_field` parameter in OAuth entities from the UI
+- Removed `placeholder` usage
 
 ### Dropped support for Python 3.7
 
@@ -123,3 +124,7 @@ As a result of this update, custom references must now include both the `src` an
 
 The `oauth_field` is no longer needed in oauth entities, as right now everything is based on `field` property itself.
 We advise to remove `oauth_field` property from `globalConfig.json` but if it will end up there, we will remove it during building process.
+
+### Removed placeholder
+
+The placeholder attribute has been removed. We recommend using the "help" attribute as an alternative.
