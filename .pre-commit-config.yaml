@@ -14,6 +14,12 @@
 # limitations under the License.
 #
 exclude: (^tests/testdata/expected_addons|^tests/testdata/test_addons|^example|^splunk_add_on_ucc_framework/commands/imports.py)
+
+# explicitly using python-version 3.9 because if developers have
+# lower versions of Python installed, pre-commit might default to the lowest compatible version.
+# If the libraries used by the hooks are not compatible with that lower version, an error would be thrown.
+default_language_version:
+  python: python3.9
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
