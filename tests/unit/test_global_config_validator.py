@@ -755,3 +755,16 @@ def test_config_validation_status_toggle_confirmation():
 
     with does_not_raise():
         validator.validate()
+
+
+def test_config_validation_when_placeholder_is_present(tmp_path):
+    tmp_file_gc = tmp_path / "globalConfig.json"
+
+    helpers.copy_testdata_gc_to_tmp_file(
+        tmp_file_gc, "invalid_config_placeholder_usage.json"
+    )
+    global_config = global_config_lib.GlobalConfig.from_file(str(tmp_file_gc))
+    validator = GlobalConfigValidator(helpers.get_path_to_source_dir(), global_config)
+
+    with pytest.raises(GlobalConfigValidatorException):
+        validator.validate()
