@@ -18,12 +18,20 @@ export const CheckboxContainer = styled.div`
 `;
 
 export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
-    // for collapsible button
+    // For collapsible toggle button
     & > div > button[data-test='toggle'][aria-controls] {
         border: 0;
         margin-right: ${variables.spacingSmall} !important;
-        all: unset;
         cursor: pointer;
+        background-color: transparent;
+        box-shadow: none;
+
+        &:hover:not([disabled]),
+        &:focus:not([disabled]),
+        &:active:not([disabled]) {
+            background-color: transparent;
+            box-shadow: none;
+        }
     }
 
     & > *:not(:last-child) {
@@ -42,11 +50,13 @@ export const StyledCollapsiblePanel = styled(CollapsiblePanel)`
             background-color: ${variables.neutral300};
             box-shadow: none;
         }
+        gap: 0;
     }
     background-color: transparent;
 `;
 
 export const RowContainer = styled.div`
+    padding: ${variables.spacingSmall} 0;
     margin: 0 0 0
         ${pick({
             enterprise: '30px',
@@ -62,7 +72,6 @@ export const GroupLabel = styled.div`
     &:hover:not([disabled]) {
         background-color: ${variables.neutral300};
     }
-
     button {
         ${CheckboxInHeader}
     }
