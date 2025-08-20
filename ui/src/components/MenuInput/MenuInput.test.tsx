@@ -80,7 +80,6 @@ const BASIC_INPUTS_CONFIG_GROUPED_SERVICES = {
                 label: '',
             },
         ],
-        customRow: {},
     },
 };
 
@@ -428,7 +427,6 @@ describe('multiple services', () => {
                             label: '',
                         },
                     ],
-                    customRow: {},
                 },
             });
             // the loading indicator from CustomMenu component

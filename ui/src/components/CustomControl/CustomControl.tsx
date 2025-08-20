@@ -43,13 +43,6 @@ class CustomControl extends React.Component<Props, State> {
                         resolve(Control);
                     }
                 );
-            } else {
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${appName}/js/build/custom/${module}`], (
-                    Control: CustomControlConstructor
-                ) => {
-                    resolve(Control);
-                });
             }
         });
 
