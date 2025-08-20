@@ -36,7 +36,7 @@ const ModalBody = styled(Modal.Body)`
 const FooterButtonGroup = styled('div')`
     display: grid;
     grid-template-columns: 0.35fr 1fr;
-    flex: 1 !important;
+    width: 100%;
 
     .footerBtn:first-child {
         justify-self: start;
