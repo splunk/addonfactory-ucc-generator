@@ -1,5 +1,41 @@
 # Changelog
 
+# [6.0.0-rc.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.0...v6.0.0-rc.1) (2025-08-21)
+
+
+### Bug Fixes
+
+* add  browser header for test case ([#1889](https://github.com/splunk/addonfactory-ucc-generator/issues/1889)) ([1a3383a](https://github.com/splunk/addonfactory-ucc-generator/commit/1a3383ae15c31a0f7010bec413c8776f3e31b2fa))
+* searchbnf.conf issue ([#1860](https://github.com/splunk/addonfactory-ucc-generator/issues/1860)) ([58f62c3](https://github.com/splunk/addonfactory-ucc-generator/commit/58f62c338775afc202aac7cb9b7776f8899d2fbd))
+
+
+### Features
+
+* **custom command:** test-ucc-ui as custom ui test command ([#1834](https://github.com/splunk/addonfactory-ucc-generator/issues/1834)) ([6855964](https://github.com/splunk/addonfactory-ucc-generator/commit/68559641bac87cba5f8b5d358dbc324ac56cc680))
+* custom menu removal ([df62075](https://github.com/splunk/addonfactory-ucc-generator/commit/df620752f598218f3e37a0b6867d1dfcff2fe691))
+* do not support auth_entity property in auth entities ([b3bc78d](https://github.com/splunk/addonfactory-ucc-generator/commit/b3bc78db02d2b1aafab7ecf6d40269aa33199703))
+* init commit with drop 37 and 38 in workflows ([5ab0d90](https://github.com/splunk/addonfactory-ucc-generator/commit/5ab0d90242cc2554bea4195a550df5d4d6d4f3be))
+* remove placeholder from test and docs ([030111e](https://github.com/splunk/addonfactory-ucc-generator/commit/030111eb61dddbc159a9fc969cf8a16f814290cd))
+* remove require js (amd) approach for custom elements ([46b39ba](https://github.com/splunk/addonfactory-ucc-generator/commit/46b39ba6ae6b1ebf1e1f777de133c76d1a7a6bb9))
+* remove support for --ui-source-map ([3bc7958](https://github.com/splunk/addonfactory-ucc-generator/commit/3bc79587bd946d9c312bf707a01485d71ac396ba))
+* remove support for .uccignore ([7c324cf](https://github.com/splunk/addonfactory-ucc-generator/commit/7c324cfb6e28e587073fe581d0fc48a06c405992))
+
+
+### Reverts
+
+* merging of .conf files ([#1873](https://github.com/splunk/addonfactory-ucc-generator/issues/1873)) ([1c93133](https://github.com/splunk/addonfactory-ucc-generator/commit/1c9313371d3eee7519018a3adbf437b37be88821)), closes [#1800](https://github.com/splunk/addonfactory-ucc-generator/issues/1800) [#1832](https://github.com/splunk/addonfactory-ucc-generator/issues/1832)
+
+
+### BREAKING CHANGES
+
+* remove placeholder from test and docs
+* remove support for .uccignore
+* remove require js (amd) approach for custom elements
+* do not support auth_entity property in auth entities
+* remove support for --ui-source-map
+* custom menu removal
+* init commit with drop 37 and 38 in workflows
+
 ## [5.69.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.0...v5.69.1) (2025-08-05)
 
 
