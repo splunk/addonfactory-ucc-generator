@@ -19,8 +19,7 @@
     "main",
     {
       "name": "rc/**",
-      "prerelease": true,
-      "channel": "rc"
+      "prerelease": true
     },
     {
       "name": "release/beta",
