@@ -1,5 +1,18 @@
 # Changelog
 
+# [5.70.0-rc.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.1...v5.70.0-rc.1) (2025-08-21)
+
+
+### Bug Fixes
+
+* add  browser header for test case ([#1889](https://github.com/splunk/addonfactory-ucc-generator/issues/1889)) ([068cad6](https://github.com/splunk/addonfactory-ucc-generator/commit/068cad639ff05b416c7db1b437ef8f913d3bbd11))
+
+
+### Features
+
+* **custom command:** test-ucc-ui as custom ui test command ([#1834](https://github.com/splunk/addonfactory-ucc-generator/issues/1834)) ([533fc6a](https://github.com/splunk/addonfactory-ucc-generator/commit/533fc6a55d39ccc4afa460a6a70cfedcdf2cc102))
+* do not support auth_entity property in auth entities ([#1879](https://github.com/splunk/addonfactory-ucc-generator/issues/1879)) ([26b25e0](https://github.com/splunk/addonfactory-ucc-generator/commit/26b25e0f445a01ddc1ec97246c6e9562a0b46306))
+
 ## [5.69.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.0...v5.69.1) (2025-08-05)
 
 
