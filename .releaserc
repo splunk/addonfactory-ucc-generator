@@ -15,10 +15,11 @@
 #
 {
   "branches": [
+    "+([0-9])?(.{+([0-9]),x}).x",
     "main",
     {
       "name": "rc/**",
-      "prerelease": true
+      "prerelease": "rc"
     },
     {
       "name": "release/beta",
