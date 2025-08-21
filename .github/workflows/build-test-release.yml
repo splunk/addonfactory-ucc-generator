@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
       - "develop"
+      - "rc/6.0.*"
   pull_request:
     branches:
       - "**"

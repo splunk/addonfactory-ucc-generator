@@ -18,6 +18,11 @@
     "+([0-9])?(.{+([0-9]),x}).x",
     "main",
     {
+      "name": "rc/**",
+      "prerelease": true,
+      "channel": "rc"
+    },
+    {
       "name": "release/beta",
       "prerelease": "beta",
       "channel": "beta"
