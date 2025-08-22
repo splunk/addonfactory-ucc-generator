@@ -4,7 +4,11 @@ import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { peerDependencies } from './package.json';
 
-const modulesNotToBundle = Object.keys(peerDependencies);
+// styles-components needs to be bundled with the library
+// as without that it throws error when test command used
+const modulesNotToBundle = Object.keys(peerDependencies).filter(
+    (dep) => dep !== 'styled-components'
+);
 
 export default defineConfig({
     plugins: [
@@ -22,10 +26,10 @@ export default defineConfig({
             formats: ['es'],
             fileName: 'index',
         },
-        emptyOutDir: true,
         commonjsOptions: {
             esmExternals: ['styled-components'],
         },
+        emptyOutDir: true,
         rollupOptions: {
             external: modulesNotToBundle,
             output: {
