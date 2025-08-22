@@ -19,7 +19,7 @@
     "main",
     {
       "name": "rc/**",
-      "prerelease": "devrc"
+      "prerelease": "rc"
     },
     {
       "name": "release/beta",
