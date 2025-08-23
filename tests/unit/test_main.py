@@ -314,6 +314,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": "--progress-bar on",
+                "build_custom_ui": False,
             },
         ),
     ],
