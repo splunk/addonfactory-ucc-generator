@@ -396,6 +396,58 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
+def yarn_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+    # installing dependencies
+    if ci:
+        subprocess.run(
+            ["yarn", "--cwd", str(ui_dir), "install", "--frozen-lockfile"], check=True
+        )
+    else:
+        subprocess.run(["yarn", "--cwd", str(ui_dir), "install"], check=True)
+    # building the code
+    subprocess.run(["yarn", "--cwd", str(ui_dir), "run", "build"], check=True)
+
+
+def npm_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+    # installing dependencies
+    if ci:
+        subprocess.run(["npm", "--prefix", str(ui_dir), "ci"], check=True)
+    else:
+        subprocess.run(["npm", "--prefix", str(ui_dir), "install"], check=True)
+    # building the code
+    subprocess.run(["npm", "--prefix", str(ui_dir), "run", "build"], check=True)
+
+
+def build_ui(source: str, output_directory: str) -> None:
+    ui_dir = os.path.join(source, "..", "ui")
+
+    if not os.path.isdir(ui_dir):
+        logger.error(f"UI directory does not exist {ui_dir}")
+        sys.exit(1)
+
+    # Check if node is installed
+    if not shutil.which("node"):
+        logger.error("Node.js is not installed. Not building custom code")
+        sys.exit(1)
+
+    try:
+        ci = os.environ.get("CI", "false") == "true"
+
+        # Check if yarn or npm is installed
+        if shutil.which("yarn") and os.path.isfile(ui_dir + "/yarn.lock"):
+            yarn_build_custom_ui_repo(ui_dir, ci)
+        elif shutil.which("npm") and os.path.isfile(ui_dir + "/package-lock.json"):
+            npm_build_custom_ui_repo(ui_dir, ci)
+        else:
+            logger.error(
+                "Neither yarn nor npm is present with lock file. Not building custom code"
+            )
+            sys.exit(1)
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Custom UI Build failed: {e}")
+
+
 def exception_handler(func: Any) -> Any:
     def inner_function(*args: Any, **kwargs: Any) -> Any:
         try:
@@ -430,6 +482,7 @@ def generate(
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     pip_custom_flag: Optional[str] = None,
+    build_custom_ui: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -660,6 +713,10 @@ def generate(
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api_object.json, openapi_file, indent=4)
+
+    if build_custom_ui:
+        logger.info("Building custom UI code")
+        build_ui(source, output_directory)
 
     summary_report(
         source,
