@@ -418,7 +418,7 @@ def npm_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
     subprocess.run(["npm", "--prefix", str(ui_dir), "run", "build"], check=True)
 
 
-def build_ui(source: str, output_directory: str) -> None:
+def build_ui(source: str) -> None:
     ui_dir = os.path.join(source, "..", "ui")
 
     if not os.path.isdir(ui_dir):
@@ -716,7 +716,9 @@ def generate(
 
     if build_custom_ui:
         logger.info("Building custom UI code")
-        build_ui(source, output_directory)
+        # should we share output dir (requires build Ui changes)
+        # or should be rely on UI repo to specify it?
+        build_ui(source)
 
     summary_report(
         source,
