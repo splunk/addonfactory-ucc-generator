@@ -573,7 +573,27 @@ export const getConfigWithAllTypesOfOauth = () => {
             configuration: {
                 ...globalConfig.pages.configuration,
                 title: globalConfig.pages.configuration?.title ?? '',
-                tabs: [{ entity: allEntityTypesConfig, ...defaultTableProps }],
+                tabs: [
+                    { entity: allEntityTypesConfig, ...defaultTableProps },
+                    {
+                        entity: allEntityTypesConfig,
+                        name: 'organization',
+                        table: {
+                            actions: ['edit', 'delete', 'clone'],
+                            header: [
+                                {
+                                    label: 'Name',
+                                    field: 'name',
+                                },
+                                {
+                                    label: 'Auth Type',
+                                    field: 'auth_type',
+                                },
+                            ],
+                        },
+                        title: 'Organization jest test',
+                    }
+                ],
             },
         },
     };
