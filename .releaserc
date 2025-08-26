@@ -21,6 +21,11 @@
       "name": "release/beta",
       "prerelease": "beta",
       "channel": "beta"
+    },
+    {
+      "name": "release/alpha",
+      "prerelease": "alpha",
+      "channel": "alpha"
     }
   ],
   "plugins": [
