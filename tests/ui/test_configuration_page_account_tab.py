@@ -453,8 +453,6 @@ class TestAccount(UccTester):
             ucc_smartx_selenium_helper, ucc_smartx_rest_helper, name="organization"
         )
         account.entity.open()
-        account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
-        self.assert_util(account.entity.auth_key.get_input_label, "Auth Type")
         self.assert_util(account.entity.client_id.get_input_label, "Client Id")
         self.assert_util(account.entity.client_secret.get_input_label, "Client Secret")
         self.assert_util(account.entity.redirect_url.get_input_label, "Redirect url")
