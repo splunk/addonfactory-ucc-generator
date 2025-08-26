@@ -48,7 +48,7 @@ class WebConf(FileGenerator):
         for action in actions:
             methods.extend(actions_to_methods.get(action, []))
 
-        return list(dict.fromkeys(methods))
+        return sorted(list(set(methods)))
 
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_pages():
