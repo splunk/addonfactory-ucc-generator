@@ -69,7 +69,7 @@ The new add-on is located in the `demo_addon_for_splunk` folder.
 ### Build the add-on
 
 ```bash
-ucc-gen build --source demo_addon_for_splunk/package 
+ucc-gen build --source demo_addon_for_splunk/package --ta-version <your ta version>
 ```
 
 ### Package the add-on
