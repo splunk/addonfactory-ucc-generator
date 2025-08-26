@@ -182,6 +182,7 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "splunk_ta_uccexample_rh_account.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
+            ("bin", "splunk_ta_uccexample_rh_organization.py"),
             ("bin", "splunk_ta_uccexample_rh_three_custom.py"),
             ("bin", "splunk_ta_uccexample_rh_example_input_four.py"),
             ("bin", "splunk_ta_uccexample_custom_rh.py"),
