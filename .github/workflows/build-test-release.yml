@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
       - "develop"
-      - "release/beta"
+      - "release/alpha"
   pull_request:
     branches:
       - "**"
