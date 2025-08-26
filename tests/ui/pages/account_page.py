@@ -136,9 +136,9 @@ class AccountPage(Page):
         """
         :param ucc_smartx_selenium_helper: smartx configuration fixture
         """
-        super().__init__(ucc_smartx_selenium_helper, ucc_smartx_rest_helper, open_page)
-        account_container = Selector(select='div[id="accountTab"]')
         self.name = name
+        super().__init__(ucc_smartx_selenium_helper, ucc_smartx_rest_helper, open_page)
+        account_container = Selector(select=f'div[id="{name}Tab"]')
 
         if ucc_smartx_selenium_helper:
             self.table = ConfigurationTable(
