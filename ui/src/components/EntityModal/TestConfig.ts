@@ -7,7 +7,7 @@ import { oAuthEntitySchema } from '../../types/globalConfig/entities';
 const defaultTableProps = {
     name: 'account',
     table: {
-        actions: ['edit', 'delete', 'clone'],
+        actions: ['edit', 'delete', 'clone'] as string[],
         header: [
             {
                 label: 'Name',
@@ -579,7 +579,7 @@ export const getConfigWithAllTypesOfOauth = () => {
                         entity: allEntityTypesConfig,
                         name: 'organization',
                         table: {
-                            actions: ['edit', 'delete', 'clone'],
+                            actions: ['edit', 'delete', 'clone'] as string[],
                             header: [
                                 {
                                     label: 'Name',
@@ -592,7 +592,7 @@ export const getConfigWithAllTypesOfOauth = () => {
                             ],
                         },
                         title: 'Organization jest test',
-                    }
+                    },
                 ],
             },
         },
