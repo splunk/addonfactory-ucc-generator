@@ -440,7 +440,7 @@ def build_ui(source: str) -> None:
             npm_build_custom_ui_repo(ui_dir, ci)
         else:
             logger.error(
-                "Neither yarn nor npm is present with lock file. Not building custom code"
+                "Neither yarn nor npm is present with related lock file. Not building custom code"
             )
             sys.exit(1)
 
