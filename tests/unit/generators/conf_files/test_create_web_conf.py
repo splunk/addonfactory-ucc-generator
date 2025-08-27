@@ -63,6 +63,10 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
         [expose:splunk_ta_uccexample_example_input_two_specified]
         pattern = splunk_ta_uccexample_example_input_two/*
         methods = POST, GET, DELETE
+
+        [expose:data/indexes]
+        pattern = data/indexes
+        methods = GET
         """
     ).lstrip()
 
@@ -94,20 +98,18 @@ def test_web_conf_endpoints_with_user_defined_handlers(
         [expose:splunk_ta_uccexample_settings_specified]
         pattern = splunk_ta_uccexample_settings/*
         methods = POST, GET, DELETE
+
         [expose:endpoint1]
         pattern = endpoint1
-        methods = POST, GET
+        methods = GET
 
         [expose:endpoint1_specified]
         pattern = endpoint1/*
         methods = POST, GET, DELETE
         [expose:endpoint2]
-        pattern = endpoint2
-        methods = POST, GET
+        pattern = splunk_ta_uccexample/endpoint2
+        methods = DELETE, GET, POST
 
-        [expose:endpoint2_specified]
-        pattern = endpoint2/*
-        methods = POST, GET, DELETE
         """
     ).lstrip()
     assert output_2 is not None

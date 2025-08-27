@@ -1179,6 +1179,10 @@
                         "linkText": "blog post"
                     }
                 ]
+            },
+            "capabilities": {
+                "put": "admin_all_objects",
+                "post": "list_storage_passwords"
             }
         },
         "inputs": {
@@ -2583,5 +2587,38 @@
                 }
             ]
         }
-    ]
+    ],
+    "options": {
+        "restHandlers": [
+            {
+                "name": "StorageBuckets",
+                "endpoint": "Splunk_TA_Example_buckets",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "storage_buckets.py",
+                    "actions": [
+                        "list",
+                        "create",
+                        "edit"
+                    ]
+                },
+                "capabilities": {
+                    "put": "admin_all_objects",
+                    "post": "list_storage_passwords"
+                }
+            },
+            {
+                "name": "dependent_dropdown",
+                "endpoint": "dependent_dropdown",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "dependent_dropdown.py",
+                    "actions": [
+                        "list"
+                    ]
+                },
+                "parentResource": "splunk_ta_uccexample"
+            }
+        ]
+    }
 }
