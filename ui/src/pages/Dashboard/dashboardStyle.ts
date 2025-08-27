@@ -353,6 +353,14 @@ export const GlobalDashboardStyle = createGlobalStyle`
         color: var(--muted-text-color);
     }
 
+    #data_ingestion_table_viz [data-test='table-container'] > div {
+        height: fit-content;
+        
+        [data-test="scroll-container"] {
+            overflow-y: hidden;
+        }
+    }
+
     #data_ingestion_table_viz [data-test='table-container'] td:first-child {
         cursor: pointer;
         color: #006eaa !important;

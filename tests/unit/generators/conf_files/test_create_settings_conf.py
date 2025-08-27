@@ -38,6 +38,11 @@ def test_init_no_settings_key(global_config_for_alerts, input_dir, output_dir):
     assert settings_conf.default_content == ""
 
 
+def test_init_tab_without_entity(global_config_only_custom_tab, input_dir, output_dir):
+    settings_conf = SettingsConf(global_config_only_custom_tab, input_dir, output_dir)
+    assert settings_conf.default_content == "[custom_tab]\n\n"
+
+
 def test_generate_conf(global_config_all_json, input_dir, output_dir):
     ta_name = global_config_all_json.product
     exp_fname = f"{global_config_all_json.namespace.lower()}_settings.conf"

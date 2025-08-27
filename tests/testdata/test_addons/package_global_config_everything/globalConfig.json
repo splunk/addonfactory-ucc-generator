@@ -1099,6 +1099,10 @@
                         "linkText": "blog post"
                     }
                 ]
+            },
+            "capabilities": {
+                "put": "admin_all_objects",
+                "post": "list_storage_passwords"
             }
         },
         "inputs": {
@@ -1116,8 +1120,8 @@
                         "clone": {
                             "message": "Some warning for account text clone"
                         },
-                        "delete": {
-                            "message": "Some warning for account text delete"
+                        "config": {
+                            "message": "Some warning for account text config"
                         }
                     },
                     "entity": [
@@ -2403,7 +2407,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.69.0+bba889d4e",
+        "version": "5.69.0+d6b58f8c0",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
@@ -2469,8 +2473,8 @@
             "fileName": "filter.py",
             "commandType": "dataset processing",
             "requiredSearchAssistant": true,
-            "description": "It filters records from the events stream returning only those which has :code:`contains` in them and replaces :code:`replace_array[0]` with :code:`replace_array[1]`.",
-            "syntax": "| filtercommand contains='value1' replace='value to be replaced,value to replace with'",
+            "description": "Filters records from the events stream.",
+            "syntax": "filtercommand contains=<string> replace=<string>",
             "usage": "public",
             "arguments": [
                 {
@@ -2539,5 +2543,38 @@
                 }
             ]
         }
-    ]
+    ],
+    "options": {
+        "restHandlers": [
+            {
+                "name": "StorageBuckets",
+                "endpoint": "Splunk_TA_Example_buckets",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "storage_buckets.py",
+                    "actions": [
+                        "list",
+                        "create",
+                        "edit"
+                    ]
+                },
+                "capabilities": {
+                    "put": "admin_all_objects",
+                    "post": "list_storage_passwords"
+                }
+            },
+            {
+                "name": "dependent_dropdown",
+                "endpoint": "dependent_dropdown",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "dependent_dropdown.py",
+                    "actions": [
+                        "list"
+                    ]
+                },
+                "parentResource": "splunk_ta_uccexample"
+            }
+        ]
+    }
 }

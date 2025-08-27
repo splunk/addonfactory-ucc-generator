@@ -92,7 +92,7 @@ class CustomCommandPy(FileGenerator):
                     if args
                     else f", validate=validators.{validate_type}()"
                 )
-            elif validate_type:
+            else:
                 validate_str = f", validate=validators.{validate_type}()"
 
         if arg["default"] is None:
