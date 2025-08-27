@@ -1,0 +1,1 @@
+# This is a dummy python file for user-defined endpoint `Splunk_TA_Example_buckets` defined in options.

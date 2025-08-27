@@ -43,19 +43,23 @@ def test_init(
         output_dir,
     )
     assert hasattr(restmap_conf, "endpoints")
-    assert hasattr(restmap_conf, "endpoint_names")
+    assert hasattr(restmap_conf, "configuration_endpoint_names")
+    assert hasattr(restmap_conf, "inputs_endpoint_names")
     assert hasattr(restmap_conf, "namespace")
 
 
 def test_restmap_endpoints(global_config_all_json, input_dir, output_dir):
     expected_content = "\n".join(
         [
-            "[admin:splunk_ta_uccexample]",
+            "[admin:splunk_ta_uccexample_configuration]",
             "match = /",
             "members = splunk_ta_uccexample_account, "
-            "splunk_ta_uccexample_example_input_one, "
-            "splunk_ta_uccexample_example_input_two, "
-            "splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings",
+            "splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings"
+            "",
+            "[admin:splunk_ta_uccexample_inputs]",
+            "match = /",
+            "members = splunk_ta_uccexample_example_input_one, "
+            "splunk_ta_uccexample_example_input_two"
             "",
             "[admin_external:splunk_ta_uccexample_oauth]",
             "handlertype = python",
@@ -107,10 +111,17 @@ def test_restmap_endpoints_with_user_defined_handlers(
 ):
     expected_content = dedent(
         """
-        [admin:splunk_ta_uccexample]
+        [admin:splunk_ta_uccexample_configuration]
         match = /
-        members = endpoint1, endpoint2, splunk_ta_uccexample_settings
-
+        members = splunk_ta_uccexample_settings
+        capability.post = list_storage_passwords
+        [admin:endpoint1]
+        match = /
+        members = endpoint1
+        capability.post = list_storage_passwords
+        [admin:endpoint2]
+        match = /splunk_ta_uccexample
+        members = endpoint2
         [admin_external:splunk_ta_uccexample_settings]
         handlertype = python
         python.version = python3
