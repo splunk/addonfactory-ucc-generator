@@ -748,10 +748,16 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint",
+                                        "label": "Endpoint",
+                                        "field": "endpoint",
+                                        "help": "Put here endpoint, ie. login.salesforce.com"
                                     }
                                 ],
-                                "auth_code_endpoint": "/services/oauth2/authorize",
-                                "access_token_endpoint": "/services/oauth2/token",
+                                "auth_code_endpoint": "/oauth/authorize",
+                                "access_token_endpoint": "/oauth/token",
                                 "oauth_timeout": 30,
                                 "oauth_state_enabled": false
                             }
@@ -2472,7 +2478,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.69.1+d31a2b981",
+        "version": "5.69.1+63509fc91",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [

@@ -611,3 +611,85 @@ describe('Verify if custom hook works correctly', () => {
         });
     });
 });
+
+describe('OAuth endpoint functionality', () => {
+    it('should construct correct OAuth endpoint and handle token exchange', async () => {
+        const mockConfig = getGlobalConfigMockFourInputServices();
+        mockConfig.meta.name = 'Demo_Addon_For_Splunk';
+        mockConfig.meta.restRoot = 'demo_addon_for_splunk';
+        const formRef = initializeFormRef(mockConfig);
+
+        await waitFor(() => {
+            expect(formRef.current).toBeTruthy();
+        });
+
+        const instance = formRef.current!;
+
+        // Mock server to capture the request
+        let capturedEndpoint = '';
+        let capturedBody = '';
+        server.use(
+            http.post('*', async ({ request }) => {
+                const url = new URL(request.url);
+                capturedEndpoint = url.pathname;
+                capturedBody = await request.text();
+                return HttpResponse.json({
+                    entry: [{
+                        content: {
+                            access_token: 'test_access_token',
+                            instance_url: 'https://test.salesforce.com',
+                            refresh_token: 'test_refresh_token'
+                        }
+                    }]
+                });
+            })
+        );
+
+        // Set up OAuth configuration
+        instance.datadict = {
+            endpoint: 'test.salesforce.com',
+            client_id: 'test_client_id',
+            client_secret: 'test_client_secret',
+            redirect_url: 'https://localhost:8000/redirect',
+            scope: 'read write'
+        };
+        instance.oauthConf = {
+            popupWidth: 800,
+            popupHeight: 600,
+            authTimeout: 180,
+            authCodeEndpoint: '/services/oauth2/authorize',
+            accessTokenEndpoint: '/services/oauth2/token',
+            authEndpointAccessTokenType: 'Bearer'
+        };
+
+        // Initialize state
+        instance.isError = false;
+        instance.isResponse = false;
+
+        const mockMessage = {
+            code: 'test_authorization_code',
+            error: undefined,
+            state: 'test_state'
+        };
+
+        // Trigger the OAuth token handler
+        instance.handleOauthToken(mockMessage);
+
+        await waitFor(() => {
+            // Verify correct endpoint construction
+            expect(capturedEndpoint).toBe('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth');
+
+            // Verify request body parameters
+            const params = new URLSearchParams(capturedBody);
+            expect(params.get('method')).toBe('POST');
+            expect(params.get('grant_type')).toBe('authorization_code');
+            expect(params.get('client_id')).toBe('test_client_id');
+            expect(params.get('code')).toBe('test_authorization_code');
+
+            // Verify successful token handling
+            expect(instance.datadict.access_token).toBe('test_access_token');
+            expect(instance.isResponse).toBe(true);
+            expect(instance.isError).toBe(false);
+        });
+    });
+});
