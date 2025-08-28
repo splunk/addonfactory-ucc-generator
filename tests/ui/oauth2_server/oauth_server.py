@@ -14,7 +14,7 @@ import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from string import Template
-from typing import Dict, Optional, Any
+from typing import Any, Dict, Optional, Tuple
 
 
 logger = logging.getLogger("oauth2_test_server")
@@ -232,7 +232,7 @@ class OAuth2RequestHandler(BaseHTTPRequestHandler):
         """Suppress logging."""
 
 
-def _generate_self_signed_cert() -> tuple[str, str]:
+def _generate_self_signed_cert() -> Tuple[str, str]:
     """Generate self-signed certificate. Returns (cert_file, key_file)."""
     temp_dir = tempfile.mkdtemp()
     cert_file = os.path.join(temp_dir, "cert.pem")
