@@ -285,6 +285,11 @@ jobs:
         with:
           name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
           path: test-results/*
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-ui-splunkd-logs-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
+          path: ./output/splunkd.log
       - uses: dorny/test-reporter@v2
         if: success() || failure()
         with:
