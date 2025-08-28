@@ -111,6 +111,14 @@ export const InputsPageRegular = z
         title: z.string(),
         services: z.array(TableFullServiceSchema),
         inputsUniqueAcrossSingleService: z.boolean().default(false).optional(),
+        capabilities: z
+            .object({
+                put: z.string().optional(),
+                post: z.string().optional(),
+                delete: z.string().optional(),
+                get: z.string().optional(),
+            })
+            .optional(),
     })
     // The strict method disallows a table field to distinguish between to inputs
     .strict();
@@ -158,6 +166,14 @@ export const InputsPageTableSchema = z
         readonlyFieldId: z.string().optional(),
         useInputToggleConfirmation: z.boolean().optional(),
         inputsUniqueAcrossSingleService: z.boolean().default(false).optional(),
+        capabilities: z
+            .object({
+                put: z.string().optional(),
+                post: z.string().optional(),
+                delete: z.string().optional(),
+                get: z.string().optional(),
+            })
+            .optional(),
     })
     .strict();
 
@@ -172,6 +188,14 @@ export const pages = z
                 description: z.string().optional(),
                 subDescription: SubDescriptionSchema,
                 tabs: z.array(TabSchema).min(1),
+                capabilities: z
+                    .object({
+                        put: z.string().optional(),
+                        post: z.string().optional(),
+                        delete: z.string().optional(),
+                        get: z.string().optional(),
+                    })
+                    .optional(),
             })
             .strict()
             .optional(),

@@ -24,6 +24,13 @@ from splunk_add_on_ucc_framework.commands.rest_builder.user_defined_rest_handler
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
+actions_to_methods = {
+    "edit": ["POST", "GET"],
+    "remove": ["DELETE"],
+    "list": ["GET"],
+    "create": ["POST"],
+}
+
 
 class WebConf(FileGenerator):
     __description__ = (
@@ -36,21 +43,38 @@ class WebConf(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
 
+    def get_methods_for_actions(self, actions: List[str]) -> List[str]:
+        methods = []
+        for action in actions:
+            methods.extend(actions_to_methods.get(action, []))
+
+        return sorted(list(set(methods)))
+
     def generate(self) -> Optional[List[Dict[str, str]]]:
         if not self._global_config.has_pages():
             return None
 
         endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        custom_endpoints: List[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
         endpoints.extend(self._gc_schema.endpoints)
-        endpoints.extend(
+        methods = {}
+        custom_endpoints.extend(
             self._global_config.user_defined_handlers.endpoint_registration_entries
         )
+
+        for endpoint in custom_endpoints:
+            methods[endpoint.name] = self.get_methods_for_actions(endpoint.actions())
         conf_file = "web.conf"
 
         file_path = self.get_file_output_path(["default", conf_file])
         rendered_content = self._render(
             "web_conf.template",
             endpoints=endpoints,
+            custom_endpoints=custom_endpoints,
+            methods=methods,
+            endpointUrl=self._global_config.endpointUrl,
         )
         return [
             {
