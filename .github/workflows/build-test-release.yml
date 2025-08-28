@@ -288,8 +288,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: test-ui-splunkd-logs-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
-          path: ./output/splunkd.log
+          name: test-ui-splunkd/splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
+          path: ./output/log/splunk/splunkd.log
       - uses: dorny/test-reporter@v2
         if: success() || failure()
         with:
