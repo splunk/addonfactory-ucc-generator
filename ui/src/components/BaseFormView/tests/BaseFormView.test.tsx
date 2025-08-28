@@ -634,13 +634,15 @@ describe('OAuth endpoint functionality', () => {
                 capturedEndpoint = url.pathname;
                 capturedBody = await request.text();
                 return HttpResponse.json({
-                    entry: [{
-                        content: {
-                            access_token: 'test_access_token',
-                            instance_url: 'https://test.salesforce.com',
-                            refresh_token: 'test_refresh_token'
-                        }
-                    }]
+                    entry: [
+                        {
+                            content: {
+                                access_token: 'test_access_token',
+                                instance_url: 'https://test.salesforce.com',
+                                refresh_token: 'test_refresh_token',
+                            },
+                        },
+                    ],
                 });
             })
         );
@@ -651,7 +653,7 @@ describe('OAuth endpoint functionality', () => {
             client_id: 'test_client_id',
             client_secret: 'test_client_secret',
             redirect_url: 'https://localhost:8000/redirect',
-            scope: 'read write'
+            scope: 'read write',
         };
         instance.oauthConf = {
             popupWidth: 800,
@@ -659,7 +661,7 @@ describe('OAuth endpoint functionality', () => {
             authTimeout: 180,
             authCodeEndpoint: '/services/oauth2/authorize',
             accessTokenEndpoint: '/services/oauth2/token',
-            authEndpointAccessTokenType: 'Bearer'
+            authEndpointAccessTokenType: 'Bearer',
         };
 
         // Initialize state
@@ -669,7 +671,7 @@ describe('OAuth endpoint functionality', () => {
         const mockMessage = {
             code: 'test_authorization_code',
             error: undefined,
-            state: 'test_state'
+            state: 'test_state',
         };
 
         // Trigger the OAuth token handler
@@ -678,17 +680,36 @@ describe('OAuth endpoint functionality', () => {
         await waitFor(() => {
             // Verify correct endpoint construction
             expect(capturedEndpoint).toBe('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth');
+        });
 
+        const params = new URLSearchParams(capturedBody);
+        await waitFor(() => {
             // Verify request body parameters
-            const params = new URLSearchParams(capturedBody);
             expect(params.get('method')).toBe('POST');
-            expect(params.get('grant_type')).toBe('authorization_code');
-            expect(params.get('client_id')).toBe('test_client_id');
-            expect(params.get('code')).toBe('test_authorization_code');
+        });
 
+        await waitFor(() => {
+            expect(params.get('grant_type')).toBe('authorization_code');
+        });
+
+        await waitFor(() => {
+            expect(params.get('client_id')).toBe('test_client_id');
+        });
+
+        await waitFor(() => {
+            expect(params.get('code')).toBe('test_authorization_code');
+        });
+
+        await waitFor(() => {
             // Verify successful token handling
             expect(instance.datadict.access_token).toBe('test_access_token');
+        });
+
+        await waitFor(() => {
             expect(instance.isResponse).toBe(true);
+        });
+
+        await waitFor(() => {
             expect(instance.isError).toBe(false);
         });
     });
