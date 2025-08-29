@@ -465,7 +465,7 @@ class TestAccount(UccTester):
     @pytest.mark.forwarder
     @pytest.mark.account
     def test_account_oauth_login(
-        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, oauth_server
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, oauth_server_port
     ):
         """Verifies oauth account field label"""
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
@@ -475,8 +475,11 @@ class TestAccount(UccTester):
         account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
         account.entity.client_id.set_value("demo")
         account.entity.client_secret.set_value("demo")
-        account.entity.endpoint_token.set_value(oauth_server.host_port)
-        account.entity.endpoint_authorize.set_value(oauth_server.host_port)
+        account.entity.endpoint_authorize.set_value(f"localhost:{oauth_server_port}")
+        # Use host.docker.internal to access host from container
+        account.entity.endpoint_token.set_value(
+            f"host.docker.internal:{oauth_server_port}"
+        )
 
         # Get current window handle before triggering OAuth flow
         original_window = ucc_smartx_selenium_helper.browser.current_window_handle

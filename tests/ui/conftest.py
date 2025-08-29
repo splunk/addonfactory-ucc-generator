@@ -57,9 +57,9 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
 
 
 @pytest.fixture
-def oauth_server():
+def oauth_server_port():
     """Pytest fixture for OAuth2 test server."""
-    server = OAuth2TestServer(use_https=True)  # Use random port
+    server = OAuth2TestServer(use_https=True, host="0.0.0.0")  # Use random port
     server.start()
-    yield server
+    yield server.port
     server.stop()
