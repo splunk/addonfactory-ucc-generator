@@ -153,27 +153,29 @@ class CodeGeneratorDiffChecker:
             logger.warning("\n\n".join(messages))
 
         messages.clear()
-        if self.same_stanza:
-            messages.append("-" * 120)
-            messages.append(
-                "Below are the stanzas that can be removed from your source directory as, UCC auto generates it"
-            )
-            messages.extend(
-                [f"{idx + 1}) {f}" for idx, f in enumerate(self.same_stanza.keys())]
-            )
-            messages.append("-" * 120)
-            logger.warning("\n\n".join(messages))
-        messages.clear()
 
-        if self.diff_stanza:
-            messages.append("-" * 120)
-            messages.append(self.DIFFERENT_STANZA_MESSAGE)
-            messages.extend(
-                [f"{idx + 1}) {f}" for idx, f in enumerate(self.diff_stanza.keys())]
-            )
-            messages.append("-" * 120)
-            logger.warning("\n\n".join(messages))
-        messages.clear()
+        # TODO: uncomment the below code when UCC provide functionality of merging .conf files
+        # if self.same_stanza:
+        #     messages.append("-" * 120)
+        #     messages.append(
+        #         "Below are the stanzas that can be removed from your source directory as, UCC auto generates it"
+        #     )
+        #     messages.extend(
+        #         [f"{idx + 1}) {f}" for idx, f in enumerate(self.same_stanza.keys())]
+        #     )
+        #     messages.append("-" * 120)
+        #     logger.warning("\n\n".join(messages))
+        # messages.clear()
+
+        # if self.diff_stanza:
+        #     messages.append("-" * 120)
+        #     messages.append(self.DIFFERENT_STANZA_MESSAGE)
+        #     messages.extend(
+        #         [f"{idx + 1}) {f}" for idx, f in enumerate(self.diff_stanza.keys())]
+        #     )
+        #     messages.append("-" * 120)
+        #     logger.warning("\n\n".join(messages))
+        # messages.clear()
 
         if self.different_files:
             messages.append("+" * 120)
