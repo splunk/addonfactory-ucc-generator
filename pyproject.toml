@@ -64,7 +64,7 @@ validate = ["splunk-appinspect"]
 mkdocs = "^1.6.1"
 pytest = "^7.2.1"
 pytest-splunk-addon = "^6.0.0"
-pytest-splunk-addon-ui-smartx = "^5.3.4"
+pytest-splunk-addon-ui-smartx = "5.4.0"
 pytest-rerunfailures = "^11.1.1"
 mkdocs-material = "^9.6.16"
 mkdocstrings = {version=">=0", extras=["python"]}
