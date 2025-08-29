@@ -694,6 +694,71 @@
                     "restHandlerClass": "CustomAccountValidator"
                 },
                 {
+                    "name": "organization",
+                    "title": "Organization",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Auth Type",
+                                "field": "auth_type"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "oauth",
+                            "field": "oauth",
+                            "label": "Not used",
+                            "options": {
+                                "auth_type": [
+                                    "oauth"
+                                ],
+                                "oauth": [
+                                    {
+                                        "oauth_field": "client_id",
+                                        "label": "Client Id",
+                                        "field": "client_id",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret",
+                                        "label": "Client Secret",
+                                        "field": "client_secret",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
+                                    },
+                                    {
+                                        "oauth_field": "redirect_url",
+                                        "label": "Redirect url",
+                                        "field": "redirect_url",
+                                        "help": "Copy and paste this URL into your app."
+                                    }
+                                ],
+                                "auth_code_endpoint": "/services/oauth2/authorize",
+                                "access_token_endpoint": "/services/oauth2/token",
+                                "oauth_timeout": 30,
+                                "oauth_state_enabled": false
+                            }
+                        }
+                    ]
+                },
+                {
                     "name": "custom_tab",
                     "title": "Custom_tab without entity",
                     "customTab": {
@@ -2407,7 +2472,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.69.0+d6b58f8c0",
+        "version": "5.69.1+d31a2b981",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
