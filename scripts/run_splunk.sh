@@ -24,7 +24,6 @@ fi
 
 docker run \
   -v "$REPO_ROOT_DIR/output/Splunk_TA_UCCExample:/opt/splunk/etc/apps/Splunk_TA_UCCExample" \
-  -v "$REPO_ROOT_DIR/output/log:/opt/splunk/var/log" \
   -p 8000:8000 \
   -p 8088:8088 \
   -p 8089:8089 \

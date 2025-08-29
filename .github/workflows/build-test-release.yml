@@ -285,11 +285,16 @@ jobs:
         with:
           name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
           path: test-results/*
-      - uses: actions/upload-artifact@v4
+      - name: Copy splunkd.log
+        if: failure()
+        run: |
+          docker cp splunk:/opt/splunk/var/log/splunk/splunkd.log ./splunkd.log
+      - name: Upload splunkd.log to GitHub Check
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: test-ui-splunkd/splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
-          path: ./output/log/splunk/splunkd.log
+          path: ./splunkd.log
       - uses: dorny/test-reporter@v2
         if: success() || failure()
         with:
