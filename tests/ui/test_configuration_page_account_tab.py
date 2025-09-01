@@ -1,8 +1,13 @@
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
+from selenium.webdriver.common.by import By
+
 from tests.ui.pages.account_page import AccountPage
 
 import pytest
 import copy
+
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 _ACCOUNT_CONFIG = {
@@ -489,9 +494,6 @@ class TestAccount(UccTester):
         account.entity.save()
 
         # Wait for new window to appear and switch to it
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
-
         wait = WebDriverWait(ucc_smartx_selenium_helper.browser, 5)
         wait.until(lambda driver: len(driver.window_handles) > len(original_windows))
 
@@ -501,14 +503,14 @@ class TestAccount(UccTester):
         ucc_smartx_selenium_helper.browser.switch_to.window(new_window)
 
         # Interact with OAuth login form
-        wait.until(EC.presence_of_element_located(("id", "email")))
+        wait.until(EC.presence_of_element_located((By.ID, "email")))
 
-        email_field = ucc_smartx_selenium_helper.browser.find_element("id", "email")
+        email_field = ucc_smartx_selenium_helper.browser.find_element(By.ID, "email")
         password_field = ucc_smartx_selenium_helper.browser.find_element(
-            "id", "password"
+            By.ID, "password"
         )
         submit_button = ucc_smartx_selenium_helper.browser.find_element(
-            "css selector", "button[type='submit']"
+            By.CSS_SELECTOR, "button[type='submit']"
         )
 
         # Fill and submit the OAuth login form
