@@ -84,7 +84,7 @@ def test_autocompletefields_children_support_integer_values():
         ),
         (
             "invalid_config_no_configuration_tabs.json",
-            "[] should be non-empty",
+            "[] is too short",
         ),
         (
             "invalid_config_no_name_field_in_configuration_tab_table.json",
@@ -213,7 +213,7 @@ def test_autocompletefields_children_support_integer_values():
         ),
         (
             "invalid_config_no_configuration_tabs.yaml",
-            "[] should be non-empty",
+            "[] is too short",
         ),
         (
             "invalid_config_no_name_field_in_configuration_tab_table.yaml",
