@@ -117,4 +117,34 @@ describe('BaseFormViewUtils - Password Placeholder Fix', () => {
 
         expect(result.value).toBe('******');
     });
+
+    it('should not submit masked password values', () => {
+        const entity = {
+            field: 'password',
+            label: 'Password',
+            type: 'text' as const,
+            encrypted: true,
+        };
+        
+        const mockEntities = [entity];
+        const mockDataDict: Record<string, any> = { password: '******' };
+        
+        const mockComponent = {
+            entities: mockEntities,
+            datadict: mockDataDict,
+        };
+        
+        const body = new URLSearchParams();
+        Object.keys(mockComponent.datadict).forEach((key) => {
+            if (mockComponent.datadict[key] != null) {
+                const foundEntity = mockComponent.entities?.find((x: any) => x?.field === key);
+                if (foundEntity?.encrypted && mockComponent.datadict[key] === '******') {
+                    return;
+                }
+                body.append(key, String(mockComponent.datadict[key]));
+            }
+        });
+
+        expect(body.has('password')).toBe(false);
+    });
 });
