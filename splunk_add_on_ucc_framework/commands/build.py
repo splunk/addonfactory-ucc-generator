@@ -642,15 +642,10 @@ def generate(
 
     # Update files before overwriting
     handle_package_files_update(source)
-    auto_gen_ignore_list: List[str] = []
     comparator = CodeGeneratorDiffChecker(
-        source,
-        os.path.join(output_directory, ta_name),
-        ta_name,
+        source, os.path.join(output_directory, ta_name)
     )
-    comparator.deduce_gen_and_custom_content(
-        logger, auto_gen_ignore_list, verbose_file_summary_report
-    )
+    comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 

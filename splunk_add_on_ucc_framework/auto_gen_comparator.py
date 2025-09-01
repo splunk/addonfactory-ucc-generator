@@ -16,7 +16,7 @@
 
 from os import walk, path
 from os.path import sep
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from logging import Logger
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
@@ -49,16 +49,16 @@ class CodeGeneratorDiffChecker:
         "with the output mentioned below."
     )
 
-    def __init__(self, src_dir: str, dst_dir: str, ta_name: str) -> None:
-        self.source_directory = src_dir
-        self.target_directory = dst_dir
+    def __init__(self, src_dir: str, dst_dir: str) -> None:
+        self.source_default_directory = f"{src_dir}/default"
+        self.target_default_directory = f"{dst_dir}/default"
         self.different_files: Dict[str, Any[Dict[str, str], List[Dict[str, str]]]] = {}
         self.common_files: Dict[str, str] = {}
         self.same_stanza: Dict[str, str] = {}
         self.diff_stanza: Dict[str, str] = {}
 
     def deduce_gen_and_custom_content(
-        self, logger: Logger, ignore_file_list: List[str] = None, verbose: bool = False
+        self, logger: Logger, ignore_file_list: Optional[List[str]] = None
     ) -> None:
         """
         Deduce that the files have same content or different
@@ -71,15 +71,17 @@ class CodeGeneratorDiffChecker:
         ignore_file_list.extend(["app.manifest", "README.txt"])
 
         src_all_files: Dict[str, str] = {}
-        for root, _, files in walk(self.source_directory):
+        for root, _, files in walk(self.source_default_directory):
             for file in files:
                 src_all_files[file] = sep.join([root, file])
 
         dest_all_files: Dict[str, str] = {}
-        for root, _, files in walk(self.target_directory):
+        for root, _, files in walk(self.target_default_directory):
             for file in files:
                 dest_all_files[file] = sep.join([root, file])
-        dest_all_files["default.meta"] = sep.join([self.target_directory, "metadata"])
+        dest_all_files["default.meta"] = sep.join(
+            [self.target_default_directory, "metadata"]
+        )
 
         for file_name in dest_all_files.keys():
             if file_name in src_all_files.keys():
