@@ -58,12 +58,14 @@ class CodeGeneratorDiffChecker:
         self.diff_stanza: Dict[str, str] = {}
 
     def deduce_gen_and_custom_content(
-        self, logger: Logger, ignore_file_list: List[str] = [], verbose: bool = False
+        self, logger: Logger, ignore_file_list: List[str] = None, verbose: bool = False
     ) -> None:
         """
         Deduce that the files have same content or different
         - For the same content, developer can remove it from the repository
         """
+        if ignore_file_list is None:
+            ignore_file_list = []
         # we add these two files as they are required to be present in source code
         # TODO: try to implement generation of these files from globalConfig
         ignore_file_list.extend(["app.manifest", "README.txt"])
