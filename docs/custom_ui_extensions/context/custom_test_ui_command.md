@@ -54,7 +54,7 @@ If you followed the UI Sub-Project Setup Guide, your `package.json` should look 
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "ucc-gen": "ucc-gen-ui ta_name=Splunk_TA_Name init_file_dir=src/ucc-ui.ts",
+    "build": "ucc-gen-ui ta_name=Splunk_TA_Name init_file_dir=src/ucc-ui.ts",
     "ucc-test": "test-ucc-ui"
   },
   "dependencies": {

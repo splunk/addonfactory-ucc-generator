@@ -37,6 +37,7 @@ It takes the following parameters:
 
     Example:  `--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"`
 
+* `--build-custom-ui` - [optional] Additional flag that will trigger build of custom UI repo (execute build script from `./ui` repository).
 
 ### Verbose mode
 
