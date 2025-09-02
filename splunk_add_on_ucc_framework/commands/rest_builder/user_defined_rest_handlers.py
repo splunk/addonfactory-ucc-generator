@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Optional
 from collections.abc import Iterable
 
@@ -74,6 +74,9 @@ class EndpointRegistrationEntry:
     name: str
     rh_name: str
     actions_list: list[str]
+    capabilities: dict[str, str] = field(default_factory=dict)
+    resourcePresent: bool = False
+    parentResource: str = "/"
 
     def actions(self) -> list[str]:
         """
@@ -91,6 +94,9 @@ class RestHandlerConfig:
     name: str
     endpoint: str
     handlerType: str
+    capabilities: dict[str, str] = field(default_factory=dict)
+    resourcePresent: bool = False
+    parentResource: str = "/"
     registerHandler: Optional[dict[str, Any]] = None
     requestParameters: Optional[dict[str, dict[str, Any]]] = None
     responseParameters: Optional[dict[str, dict[str, Any]]] = None
@@ -306,6 +312,9 @@ class RestHandlerConfig:
             name=self.endpoint,
             rh_name=file,
             actions_list=self.registerHandler["actions"],
+            resourcePresent=self.resourcePresent,
+            parentResource=self.parentResource,
+            capabilities=self.capabilities,
         )
 
 
