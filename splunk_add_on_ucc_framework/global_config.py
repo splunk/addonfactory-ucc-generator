@@ -17,6 +17,7 @@ import functools
 import json
 from typing import Optional, Any
 from dataclasses import dataclass, field, fields
+from urllib.parse import urlparse
 
 import yaml
 
@@ -167,6 +168,30 @@ class GlobalConfig:
         return []
 
     @property
+    def endpointUrl(self) -> list[str]:
+        def extract_urls(entities_list: list[Any]) -> set[str]:
+            urls = set()
+            for content in entities_list:
+                for entity in content.get("entity", []):
+                    if entity.get("type") in ("multipleSelect", "singleSelect"):
+                        endpoint = entity.get("options", {}).get("endpointUrl")
+                        # only include those endpoint which starts with data
+                        # the other ones are covered if they are defined in options->
+                        # TODO; If add-ons uses any other endpoints apart from data then add it here.
+                        if endpoint and endpoint.startswith("data"):
+                            urls.add(urlparse(endpoint).path)
+            return urls
+
+        urls = set()
+        if self.has_configuration():
+            urls.update(extract_urls(self.configuration))
+
+        if self.has_inputs():
+            urls.update(extract_urls(self.inputs))
+
+        return list(urls)
+
+    @property
     def pages(self) -> list[Any]:
         if "pages" in self._content:
             return self._content["pages"]
@@ -232,6 +257,13 @@ class GlobalConfig:
     @property
     def version(self) -> str:
         return self.meta["version"]
+
+    def capabilities(self, **kwargs: bool) -> dict[str, str]:
+        if kwargs.get("config") and self.has_configuration():
+            return self._content["pages"]["configuration"].get("capabilities", {})
+        elif kwargs.get("inputs") and self.has_inputs():
+            return self._content["pages"]["inputs"].get("capabilities", {})
+        return {}
 
     @property
     def ucc_version(self) -> str:

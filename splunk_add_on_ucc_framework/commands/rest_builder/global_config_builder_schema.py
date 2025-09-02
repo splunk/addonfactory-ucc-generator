@@ -57,8 +57,11 @@ class GlobalConfigBuilderSchema:
         self._settings_conf_file_names: list[str] = list()
         self._configs_conf_file_names: list[str] = list()
         self._oauth_conf_file_names: list[str] = list()
-        self._endpoints: dict[str, RestEndpointBuilder] = {}
+        self._configuration_endpoints: dict[str, RestEndpointBuilder] = {}
+        self._inputs_endpoints: dict[str, RestEndpointBuilder] = {}
         self._parse_builder_schema()
+        self._endpoints: dict[str, RestEndpointBuilder] = {}
+        self._preserve_endpoint_dict()
 
     @property
     def product(self) -> str:
@@ -85,8 +88,21 @@ class GlobalConfigBuilderSchema:
         return list(self._endpoints.values())
 
     @property
+    def configuration_endpoints(self) -> list[RestEndpointBuilder]:
+        return list(self._configuration_endpoints.values())
+
+    @property
+    def inputs_endpoints(self) -> list[RestEndpointBuilder]:
+        return list(self._inputs_endpoints.values())
+
+    @property
     def need_reload(self) -> bool:
         return False
+
+    def _preserve_endpoint_dict(self) -> dict[str, RestEndpointBuilder]:
+        self._endpoints.update(self._configuration_endpoints)
+        self._endpoints.update(self._inputs_endpoints)
+        return self._endpoints
 
     def _parse_builder_schema(self) -> None:
         self._builder_configs()
@@ -110,7 +126,7 @@ class GlobalConfigBuilderSchema:
                         log_stanza=log_details.get("name"),
                         log_level_field=log_details.get("entity", [{}])[0].get("field"),
                     )
-                    self._endpoints["oauth"] = oauth_endpoint
+                    self._configuration_endpoints["oauth"] = oauth_endpoint
                     if oauth_endpoint.conf_name not in self._oauth_conf_file_names:
                         self._oauth_conf_file_names.append(oauth_endpoint.conf_name)
 
@@ -152,7 +168,7 @@ class GlobalConfigBuilderSchema:
             else:
                 endpoint = SingleModelEndpointBuilder(**endpoint_params)
 
-            self._endpoints[name] = endpoint
+            self._configuration_endpoints[name] = endpoint
             content = self._get_oauth_enitities(config["entity"])
             fields, special_fields = self._parse_fields(content)
             entity = SingleModelEntityBuilder(
@@ -177,7 +193,7 @@ class GlobalConfigBuilderSchema:
             rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             need_reload=self.need_reload,
         )
-        self._endpoints["settings"] = endpoint
+        self._configuration_endpoints["settings"] = endpoint
         for setting in self.global_config.settings:
             if setting.get("entity") is not None:
                 content = self._get_oauth_enitities(setting["entity"])
@@ -212,7 +228,7 @@ class GlobalConfigBuilderSchema:
                     rest_handler_class=rest_handler_class,
                     need_reload=self.need_reload,
                 )
-                self._endpoints[name] = single_model_endpoint
+                self._inputs_endpoints[name] = single_model_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
                 fields, special_fields = self._parse_fields(content)
                 single_model_entity = SingleModelEntityBuilder(
@@ -232,7 +248,7 @@ class GlobalConfigBuilderSchema:
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
                 )
-                self._endpoints[name] = data_input_endpoint
+                self._inputs_endpoints[name] = data_input_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
                 fields, special_fields = self._parse_fields(content)
                 data_input_entity = DataInputEntityBuilder(

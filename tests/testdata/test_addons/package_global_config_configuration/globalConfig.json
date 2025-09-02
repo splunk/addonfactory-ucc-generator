@@ -386,6 +386,7 @@
             {
                 "name": "rest_handler_full",
                 "endpoint": "Splunk_TA_Example_full",
+                "resourcePresent": true,
                 "handlerType": "EAI",
                 "registerHandler": {
                     "file": "someFile.py",
