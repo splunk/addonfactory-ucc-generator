@@ -336,10 +336,6 @@ class OAuth2TestServer:
         """Get the authorization endpoint URL."""
         return f"{self.base_url}/oauth/authorize"
 
-    def is_running(self) -> bool:
-        """Check if the server is running."""
-        return self.server is not None and not self._stop_event.is_set()
-
     def clear_data(self) -> None:
         """Clear all stored authorization codes and tokens."""
         OAuth2RequestHandler.auth_codes.clear()
