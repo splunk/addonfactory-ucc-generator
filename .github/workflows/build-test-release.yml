@@ -13,6 +13,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
+env:
+  POETRY_VERSION: "2.1.4"
+  POETRY_EXPORT_PLUGIN_VERSION: "1.9.0"
 
 jobs:
   meta:
@@ -115,7 +118,7 @@ jobs:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
         if: "! github.event.pull_request.head.repo.fork "
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - run: poetry install
       - name: Build UCC
         run: |
@@ -142,7 +145,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - run: |
           poetry install
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
@@ -181,7 +184,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - run: |
           poetry install
           poetry run pytest tests/smoke
@@ -208,7 +211,7 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
@@ -263,7 +266,7 @@ jobs:
           name: Splunk_TA_UCCExample-raw-output
           path: output/
       - run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+          curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
           poetry install --only dev
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
@@ -307,7 +310,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.9"
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - name: Package tests/expected_output_global_config_everything/Splunk_TA_UCCExample
         run: |
           poetry install
@@ -366,7 +369,7 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
@@ -410,7 +413,7 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
@@ -486,7 +489,7 @@ jobs:
           python-version: "3.9"
       - name: install UI deps
         uses: ./.github/actions/cached-ui-deps
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
       - uses: actions/download-artifact@v4
         with:
           name: UCC-UI-build
