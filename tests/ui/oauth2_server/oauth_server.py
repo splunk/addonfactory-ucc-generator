@@ -262,10 +262,9 @@ def _generate_self_signed_cert() -> Tuple[str, str]:
 class OAuth2TestServer:
     """OAuth2 test server that can be run in a thread."""
 
-    def __init__(self, host: str = "localhost", port: int = 0, use_https: bool = True):
+    def __init__(self, host: str = "localhost", port: int = 0):
         self.host = host
         self.port = port
-        self.use_https = use_https
         self.server: Optional[HTTPServer] = None
         self.thread: Optional[threading.Thread] = None
         self._stop_event = threading.Event()
@@ -281,14 +280,11 @@ class OAuth2TestServer:
         if self.port == 0:
             self.port = self.server.server_address[1]
 
-        if self.use_https:
-            cert_file, key_file = _generate_self_signed_cert()
-            self._cert_dir = os.path.dirname(cert_file)
-            context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-            context.load_cert_chain(cert_file, key_file)
-            self.server.socket = context.wrap_socket(
-                self.server.socket, server_side=True
-            )
+        cert_file, key_file = _generate_self_signed_cert()
+        self._cert_dir = os.path.dirname(cert_file)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(cert_file, key_file)
+        self.server.socket = context.wrap_socket(self.server.socket, server_side=True)
 
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
@@ -328,8 +324,7 @@ class OAuth2TestServer:
     @property
     def base_url(self) -> str:
         """Get the base URL of the server."""
-        scheme = "https" if self.use_https else "http"
-        return f"{scheme}://{self.host_port}"
+        return f"https://{self.host_port}"
 
     @property
     def authorize_url(self) -> str:
@@ -352,7 +347,7 @@ class OAuth2TestServer:
 if __name__ == "__main__":
     logger.info("Starting OAuth2 Test Server (HTTPS)...")
 
-    with OAuth2TestServer(port=8888, use_https=True) as server:
+    with OAuth2TestServer(port=8888) as server:
         logger.info(f"Server running at: {server.base_url}")
         logger.info(
             f"Visit: {server.authorize_url}?client_id=demo&redirect_uri=http://localhost/callback&response_type=code"
