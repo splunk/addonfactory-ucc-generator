@@ -1,0 +1,44 @@
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \
+    dispatch, ReportingCommand, Configuration, Option, validators
+
+{% if import_map %}
+from {{ imported_file_name }} import reduce, map
+{% else %}
+from {{ imported_file_name }} import reduce
+{% endif %}
+
+@Configuration()
+class {{class_name}}Command(ReportingCommand):
+    {% if syntax or description%}
+    """
+
+    {% if syntax %}
+    ##Syntax
+    {{syntax}}
+    {% endif %}
+
+    {% if description %}
+    ##Description
+    {{description}}
+    {% endif %}
+
+    """
+    {% endif %}
+
+    {% for arg in list_arg %}
+    {{arg}}
+    {% endfor %}
+
+    {% if import_map %}
+    @Configuration()
+    def map(self, events):
+        return map(self, events)
+    {% endif %}
+
+    def reduce(self, events):
+        return reduce(self, events)
+
+dispatch({{class_name}}Command, sys.argv, sys.stdin, sys.stdout, __name__)
