@@ -9,7 +9,6 @@ There are 4 types of Custom search commands:
 - Transforming
 - Dataset processing
 
-> Note: Currently UCC supports only three types of custom search command, that are `Generating`, `Streaming` and `Dataset processing`.
 
 > Note: Eventing commands are being referred as Dataset processing commands [reference](https://dev.splunk.com/enterprise/docs/devtools/customsearchcommands/).
 
@@ -68,7 +67,7 @@ python.version = python3
 
 To generate a custom search command, the following attributes must be defined in globalConfig: `commandName`, `commandType`, `fileName`, and `arguments`. Based on the provided commandType, UCC will generate a template Python file and integrate the user-defined logic into it.
 
-If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `usage` attributes are mandatory, as they are essential for generating `searchbnf.conf` file.
+If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `usage` attributes are mandatory, as they are essential for generating `searchbnf.conf`. For more information about these attributes please refer to the [searchbnf.conf docs](https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/Searchbnfconf)
 
 **NOTE:**
     The user-defined Python file must include specific functions based on the command type:

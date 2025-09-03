@@ -22,6 +22,7 @@ import shutil
 import sys
 from pathlib import Path
 from typing import Optional, List, Any, Union
+from splunk_add_on_ucc_framework.auto_gen_comparator import CodeGeneratorDiffChecker
 import subprocess
 import colorama as c
 import fnmatch
@@ -60,6 +61,8 @@ from splunk_add_on_ucc_framework.commands.openapi_generator import (
     ucc_to_oas,
 )
 from splunk_add_on_ucc_framework.generators.file_generator import begin
+from splunk_add_on_ucc_framework.generators.conf_files.create_app_conf import AppConf
+from splunk_add_on_ucc_framework.utils import write_file
 from splunk_add_on_ucc_framework.package_files_update import handle_package_files_update
 
 logger = logging.getLogger("ucc_gen")
@@ -639,7 +642,10 @@ def generate(
 
     # Update files before overwriting
     handle_package_files_update(source)
-
+    comparator = CodeGeneratorDiffChecker(
+        source, os.path.join(output_directory, ta_name)
+    )
+    comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
@@ -669,6 +675,18 @@ def generate(
         logger.info(
             f"Updated {app_manifest_lib.APP_MANIFEST_FILE_NAME} file in the output folder"
         )
+    # NOTE: merging source and generated 'app.conf' as per previous design
+    app_conf = AppConf(
+        global_config=global_config, input_dir=source, output_dir=output_directory
+    ).generate()
+    # we need to explicitly call write method since we are not generating
+    # file in child classes
+    write_file(
+        app_conf[0]["file_name"],
+        app_conf[0]["file_path"],
+        app_conf[0]["content"],
+        merge_mode=app_conf[0]["merge_mode"],
+    )
     license_dir = os.path.abspath(os.path.join(source, os.pardir, "LICENSES"))
     if os.path.exists(license_dir):
         logger.info("Copy LICENSES directory")

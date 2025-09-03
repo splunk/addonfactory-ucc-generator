@@ -7,7 +7,7 @@ export const TableSchema = z.object({
             z.object({
                 field: z.string(),
                 label: z.string(),
-                mapping: z.record(z.any()).optional(),
+                mapping: z.record(z.string(), z.string()).optional(),
             })
         )
         .optional(),
@@ -15,11 +15,11 @@ export const TableSchema = z.object({
         z.object({
             field: z.string(),
             label: z.string(),
-            mapping: z.record(z.any()).optional(),
-            customCell: z.record(z.any()).optional(),
+            mapping: z.record(z.string(), z.string()).optional(),
+            customCell: z.record(z.string(), z.string()).optional(),
         })
     ),
-    customRow: z.record(z.any()).optional(),
+    customRow: z.record(z.string(), z.string()).optional(),
     actions: z.array(z.enum(['edit', 'delete', 'clone', 'search'])),
 });
 
@@ -68,12 +68,12 @@ export const TabSchema = z.object({
         actions: z.array(z.enum(['edit', 'delete', 'clone'])),
     }).optional(),
     style: z.enum(['page', 'dialog']).optional(),
-    hook: z.record(z.any()).optional(),
+    hook: z.record(z.string(), z.string()).optional(),
     conf: z.string().optional(),
     restHandlerName: z.string().optional(),
     restHandlerModule: z.string().optional(),
     restHandlerClass: z.string().optional(),
-    customTab: z.record(z.any()).optional(),
+    customTab: z.record(z.string(), z.string()).optional(),
     warning: WarningSchema,
     hideForPlatform: z.enum(['cloud', 'enterprise']).optional(),
     groups: GroupsSchema,
@@ -88,7 +88,7 @@ export const TableLessServiceSchema = z.object({
     options: HooksSchema,
     groups: GroupsSchema,
     style: z.enum(['page', 'dialog']).optional(),
-    hook: z.record(z.any()).optional(),
+    hook: z.record(z.string(), z.string()).optional(),
     conf: z.string().optional(),
     restHandlerName: z.string().optional(),
     restHandlerModule: z.string().optional(),
@@ -111,6 +111,14 @@ export const InputsPageRegular = z
         title: z.string(),
         services: z.array(TableFullServiceSchema),
         inputsUniqueAcrossSingleService: z.boolean().default(false).optional(),
+        capabilities: z
+            .object({
+                put: z.string().optional(),
+                post: z.string().optional(),
+                delete: z.string().optional(),
+                get: z.string().optional(),
+            })
+            .optional(),
     })
     // The strict method disallows a table field to distinguish between to inputs
     .strict();
@@ -158,6 +166,14 @@ export const InputsPageTableSchema = z
         readonlyFieldId: z.string().optional(),
         useInputToggleConfirmation: z.boolean().optional(),
         inputsUniqueAcrossSingleService: z.boolean().default(false).optional(),
+        capabilities: z
+            .object({
+                put: z.string().optional(),
+                post: z.string().optional(),
+                delete: z.string().optional(),
+                get: z.string().optional(),
+            })
+            .optional(),
     })
     .strict();
 
@@ -172,6 +188,14 @@ export const pages = z
                 description: z.string().optional(),
                 subDescription: SubDescriptionSchema,
                 tabs: z.array(TabSchema).min(1),
+                capabilities: z
+                    .object({
+                        put: z.string().optional(),
+                        post: z.string().optional(),
+                        delete: z.string().optional(),
+                        get: z.string().optional(),
+                    })
+                    .optional(),
             })
             .strict()
             .optional(),

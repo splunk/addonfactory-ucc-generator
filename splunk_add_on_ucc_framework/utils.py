@@ -109,14 +109,9 @@ def recursive_overwrite(
             makedirs(dest)
         files = listdir(src)
         for f in files:
-            if f.endswith(".conf"):
-                merge_conf_file(
-                    join(src, f), join(dest, f), merge_mode="item_overwrite"
-                )
-            else:
-                recursive_overwrite(
-                    join(src, f), join(dest, f), ui_source_map, has_dashboard
-                )
+            recursive_overwrite(
+                join(src, f), join(dest, f), ui_source_map, has_dashboard
+            )
     else:
         if exists(dest):
             remove(dest)

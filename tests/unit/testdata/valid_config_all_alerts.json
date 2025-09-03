@@ -121,6 +121,7 @@
         {
             "name": "test_alert_default",
             "label": "Test Alert Default",
+            "iconFileName": "dev_icon.png",
             "description": "Description for test Alert Action",
             "adaptiveResponse": {
                 "task": [
