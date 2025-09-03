@@ -249,7 +249,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.entities?.forEach((e) => {
             if (e.type === 'oauth') {
                 this.isOAuth = true;
-                if (props.page === PAGE_CONF && props.serviceName === 'account') {
+                if (props.page === PAGE_CONF) {
                     const authType: Array<AvaillableOAuthTypes> = e?.options?.auth_type;
                     this.isoauthState =
                         typeof e?.options?.oauth_state_enabled !== 'undefined'

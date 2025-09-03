@@ -443,6 +443,21 @@ class TestAccount(UccTester):
         self.assert_util(account.entity.redirect_url.get_input_label, "Redirect url")
 
     @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_oauth_fields_different_tab(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
+    ):
+        """Verifies oauth account field label"""
+        account = AccountPage(
+            ucc_smartx_selenium_helper, ucc_smartx_rest_helper, name="organization"
+        )
+        account.entity.open()
+        self.assert_util(account.entity.client_id.get_input_label, "Client Id")
+        self.assert_util(account.entity.client_secret.get_input_label, "Client Secret")
+        self.assert_util(account.entity.redirect_url.get_input_label, "Redirect url")
+
+    @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.account
     def test_account_help_text_entity(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper

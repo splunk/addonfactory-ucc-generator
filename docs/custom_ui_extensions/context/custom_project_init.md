@@ -79,7 +79,7 @@ Below are the recommended contents for these files.
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "ucc-gen": "ucc-gen-ui ta_name=Splunk_TA_Name init_file_dir=src/ucc-ui.ts"
+    "build": "ucc-gen-ui ta_name=Splunk_TA_Name init_file_dir=src/ucc-ui.ts"
   },
   "dependencies": {
     "@splunk/add-on-ucc-framework": "^5.65.0",
@@ -113,7 +113,9 @@ Below are the recommended contents for these files.
 
 #### Additionally
 
-We also recommend to do the following code adaptations.
+We also recommend using the `--build-custom-ui` flag with the [ucc-gen build](../../commands.md#ucc-gen-build) command, which automatically triggers the UI build process (if you use the default build name for building command).
+
+Alternatively, you can do the following code adaptations.
 
 1. To avoid committing large files or unnecessary dependencies, add the following line to your `.gitignore` file: ```ui/node_modules/```
 
@@ -166,7 +168,7 @@ Along with creating `build_ui.sh` script containing the following code:
         npm --prefix "$SCRIPT_DIR/../ui" install
     fi
 
-    npm --prefix "$SCRIPT_DIR/../ui" run ucc-gen
+    npm --prefix "$SCRIPT_DIR/../ui" run build
 
     ```
 </details>

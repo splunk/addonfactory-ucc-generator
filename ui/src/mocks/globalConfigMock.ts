@@ -54,6 +54,27 @@ const globalConfigMock = {
                     title: 'Accounts',
                 },
                 {
+                    name: 'organization',
+                    table: {
+                        actions: ['edit', 'delete', 'clone'],
+                        header: [
+                            {
+                                label: 'Name',
+                                field: 'name',
+                            },
+                        ],
+                    },
+                    entity: [
+                        {
+                            type: 'text',
+                            label: 'Name',
+                            field: 'name',
+                            required: true,
+                        },
+                    ],
+                    title: 'Organization',
+                },
+                {
                     name: 'logging',
                     entity: [
                         {

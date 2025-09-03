@@ -132,12 +132,14 @@ class AccountPage(Page):
         ucc_smartx_selenium_helper=None,
         ucc_smartx_rest_helper=None,
         open_page=True,
+        name="account",
     ):
         """
         :param ucc_smartx_selenium_helper: smartx configuration fixture
         """
+        self.name = name
         super().__init__(ucc_smartx_selenium_helper, ucc_smartx_rest_helper, open_page)
-        account_container = Selector(select='div[id="accountTab"]')
+        account_container = Selector(select=f'div[id="{name}Tab"]')
 
         if ucc_smartx_selenium_helper:
             self.table = ConfigurationTable(
@@ -171,10 +173,10 @@ class AccountPage(Page):
             f"{self.splunk_web_url}/en-US/app/{C.ADDON_NAME}/configuration"
         )
         tab = Tab(self.browser)
-        tab.open_tab("account")
+        tab.open_tab(self.name)
 
     def _get_account_endpoint(self):
         """
         Get rest endpoint for the configuration
         """
-        return f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/splunk_ta_uccexample_account"
+        return f"{self.splunk_mgmt_url}/servicesNS/nobody/{C.ADDON_NAME}/splunk_ta_uccexample_{self.name}"

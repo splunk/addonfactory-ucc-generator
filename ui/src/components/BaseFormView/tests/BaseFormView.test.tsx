@@ -409,6 +409,7 @@ describe('Verify if oauth loads correctly', () => {
         auth_type: string;
         stanza: string;
         mode: Mode;
+        serviceName?: string;
     }>([
         { auth_type: 'basic', stanza: 'test_basic_oauth', mode: 'config' },
         { auth_type: 'oauth', stanza: 'test_oauth_oauth', mode: 'config' },
@@ -420,13 +421,31 @@ describe('Verify if oauth loads correctly', () => {
         { auth_type: 'basic', stanza: 'test_basic_oauth', mode: 'edit' },
         { auth_type: 'oauth', stanza: 'test_oauth_oauth', mode: 'edit' },
         { auth_type: 'oauth_client_credentials', stanza: 'test_oauth_client_creds', mode: 'edit' },
+        {
+            auth_type: 'oauth',
+            stanza: 'test_oauth_oauth',
+            mode: 'edit',
+            serviceName: 'organization',
+        },
+        {
+            auth_type: 'basic',
+            stanza: 'test_basic_oauth',
+            mode: 'edit',
+            serviceName: 'organization',
+        },
+        {
+            auth_type: 'oauth_client_credentials',
+            stanza: 'test_oauth_client_creds',
+            mode: 'edit',
+            serviceName: 'organization',
+        },
     ])('load correctly oauth labels for - %s', async (authData) => {
         const mockConfig = getConfigWithAllTypesOfOauth();
 
         initializeFormRef(
             mockConfig,
             MOCK_CONTEXT_STATE_ACCOUNT,
-            'account',
+            authData.serviceName || 'account',
             authData.mode,
             authData.stanza,
             PAGE_CONF,
