@@ -1,5 +1,8 @@
-from pytest import fixture
+import shutil
+import os
+import pytest
 from splunk_add_on_ucc_framework.generators.python_files import CustomCommandPy
+from tests.unit.helpers import get_testdata_file_path
 from textwrap import dedent
 
 
@@ -7,7 +10,7 @@ def normalize_code(code: str) -> str:
     return dedent(code).replace("\\\n", " ").replace("\n", "").replace(" ", "")
 
 
-@fixture
+@pytest.fixture
 def custom_search_commands():
     return [
         {
@@ -36,6 +39,110 @@ def custom_search_commands():
                 {"name": "contains"},
                 {"name": "fieldname", "validate": {"type": "Fieldname"}},
             ],
+        }
+    ]
+
+
+@pytest.fixture
+def transforming_custom_search_command():
+    return [
+        {
+            "commandName": "transformingcommand",
+            "commandType": "transforming",
+            "fileName": "transforming_with_map.py",
+            "description": "This is a transforming command",
+            "syntax": "transformingcommand action=<action>",
+            "arguments": [
+                {
+                    "name": "action",
+                    "required": True,
+                    "validate": {"type": "Fieldname"},
+                },
+                {
+                    "name": "test",
+                },
+            ],
+        }
+    ]
+
+
+def test_for_transforming_command_with_error(
+    transforming_custom_search_command,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+):
+    global_config_all_json._content[
+        "customSearchCommand"
+    ] = transforming_custom_search_command
+
+    with pytest.raises(FileNotFoundError):
+        CustomCommandPy(global_config_all_json, input_dir, output_dir)
+
+
+def test_for_transforming_command(
+    transforming_custom_search_command,
+    global_config_all_json,
+    input_dir,
+    output_dir,
+):
+    file_path = get_testdata_file_path("transforming_with_map.py")
+    bin_dir = os.path.join(input_dir, "bin")
+    os.makedirs(bin_dir, exist_ok=True)
+
+    shutil.copy(file_path, bin_dir)
+    global_config_all_json._content[
+        "customSearchCommand"
+    ] = transforming_custom_search_command
+    custom_command_py = CustomCommandPy(global_config_all_json, input_dir, output_dir)
+
+    assert custom_command_py.commands_info == [
+        {
+            "imported_file_name": "transforming_with_map",
+            "file_name": "transformingcommand",
+            "class_name": "Transformingcommand",
+            "description": "This is a transforming command",
+            "syntax": "transformingcommand action=<action>",
+            "template": "transforming.template",
+            "list_arg": [
+                "action = Option(name='action', require=True, validate=validators.Fieldname())",
+                "test = Option(name='test', require=False)",
+            ],
+            "import_map": True,
+        }
+    ]
+
+
+def test_for_transforming_command_without_map(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    transforming_custom_search_command,
+):
+    file_path = get_testdata_file_path("transforming_without_map.py")
+    bin_dir = os.path.join(input_dir, "bin")
+    os.makedirs(bin_dir, exist_ok=True)
+
+    shutil.copy(file_path, bin_dir)
+    transforming_custom_search_command[0]["fileName"] = "transforming_without_map.py"
+    global_config_all_json._content[
+        "customSearchCommand"
+    ] = transforming_custom_search_command
+    custom_command_py = CustomCommandPy(global_config_all_json, input_dir, output_dir)
+
+    assert custom_command_py.commands_info == [
+        {
+            "imported_file_name": "transforming_without_map",
+            "file_name": "transformingcommand",
+            "class_name": "Transformingcommand",
+            "description": "This is a transforming command",
+            "syntax": "transformingcommand action=<action>",
+            "template": "transforming.template",
+            "list_arg": [
+                "action = Option(name='action', require=True, validate=validators.Fieldname())",
+                "test = Option(name='test', require=False)",
+            ],
+            "import_map": False,
         }
     ]
 
@@ -82,6 +189,7 @@ def test_init(
                 "contains = Option(name='contains', require=False)",
                 "fieldname = Option(name='fieldname', require=False, validate=validators.Fieldname())",
             ],
+            "import_map": False,
         }
     ]
 
