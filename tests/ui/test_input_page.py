@@ -2675,7 +2675,6 @@ class TestInputPage(UccTester):
 
         input_page.entity1.save_btn.click()
         input_page.table.wait_for_rows_to_appear(1)
-        print("\n----- get_table val is :", input_page.table.get_table())
 
         self.assert_util(
             input_page.table.get_table()[name],
