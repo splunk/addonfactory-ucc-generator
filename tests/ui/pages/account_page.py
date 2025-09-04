@@ -29,7 +29,8 @@ class AccountEntity(Entity):
         add_btn = Button(
             browser,
             Selector(
-                select=container.select + ' button[data-test="button"][label="Add"]'
+                select=container.select
+                + ' button[data-test="button"] span span[data-test="label"]'
             ),
         )
         entity_container = Selector(select='[data-test="modal"]')

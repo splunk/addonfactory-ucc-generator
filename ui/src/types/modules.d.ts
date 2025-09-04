@@ -228,3 +228,5 @@ declare module '@splunk/react-page' {
 }
 declare module '@splunk/ui-utils/i18n';
 declare module 'uuid';
+
+declare module '@splunk/react-page/18';
