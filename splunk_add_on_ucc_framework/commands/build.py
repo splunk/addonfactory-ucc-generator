@@ -22,6 +22,7 @@ import shutil
 import sys
 from pathlib import Path
 from typing import Optional, List, Any, Union
+from splunk_add_on_ucc_framework.auto_gen_comparator import CodeGeneratorDiffChecker
 import subprocess
 import colorama as c
 import fnmatch
@@ -641,7 +642,10 @@ def generate(
 
     # Update files before overwriting
     handle_package_files_update(source)
-
+    comparator = CodeGeneratorDiffChecker(
+        source, os.path.join(output_directory, ta_name)
+    )
+    comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
 
