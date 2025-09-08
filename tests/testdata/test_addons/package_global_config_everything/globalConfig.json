@@ -2551,6 +2551,42 @@
             ]
         },
         {
+            "commandName": "sumcommand",
+            "fileName": "sum.py",
+            "commandType": "transforming",
+            "requiredSearchAssistant": true,
+            "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
+            "syntax": "| sumcommand total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "sumtwocommand",
+            "fileName": "sum_without_map.py",
+            "commandType": "transforming",
+            "requiredSearchAssistant": true,
+            "description": "Computes sum(total, 1, N) and stores the result in 'total'",
+            "syntax": "| sumtwocommand total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
             "commandName": "countmatchescommand",
             "fileName": "countmatches.py",
             "commandType": "streaming",
