@@ -167,7 +167,8 @@ jobs:
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
             echo "Installing UCC package $UCC_WHL"
-            poetry add "./$UCC_WHL" --group dev && break
+            poetry remove splunk_add_on_ucc_framework || true
+            echo "./$UCC_WHL" > requirements_ucc.txt
             RETRY_COUNT=$((RETRY_COUNT+1))
           
             if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
