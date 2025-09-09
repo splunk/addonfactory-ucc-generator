@@ -107,7 +107,9 @@ jobs:
           python-version: "3.9"
 
       - name: Install Poetry 2.1.4
-        run: curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
+          python3 -m pip install poetry-plugin-export==1.9.0
 
       - name: Download UCC Artifact
         uses: actions/download-artifact@v4
