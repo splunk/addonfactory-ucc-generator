@@ -160,27 +160,12 @@ jobs:
           cp ../UCC/*.whl ./
           UCC_WHL=$(ls *.whl)
           
-          # Retry logic for poetry install
-          MAX_RETRIES=3
-          RETRY_COUNT=0
-          
-          until [ $RETRY_COUNT -ge $MAX_RETRIES ]
-          do
-            echo "Installing UCC package $UCC_WHL"
-            poetry remove splunk_add_on_ucc_framework || true
-            echo "./$UCC_WHL" > requirements_ucc.txt
-            RETRY_COUNT=$((RETRY_COUNT+1))
-          
-            if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
-              echo "Poetry install failed after $MAX_RETRIES attempts, exiting"
-              exit 1
-            fi
-          
-            echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
-            sleep 5
-          done
+          echo "Adding UCC package $UCC_WHL"
+          poetry remove splunk_add_on_ucc_framework
+          echo "./$UCC_WHL" > requirements_ucc.txt
           
           # Install splunktaucclib with retries
+          MAX_RETRIES=3
           RETRY_COUNT=0
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
