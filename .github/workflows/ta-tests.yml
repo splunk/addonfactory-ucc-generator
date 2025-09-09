@@ -161,7 +161,7 @@ jobs:
           rm splunk_add_on_ucc_framework-*.whl || true
           cp ../UCC/*.whl ./
           UCC_WHL=$(ls *.whl)
-          echo "$UCC_WHL" >> "$GITHUB_ENV"
+          echo "UCC_WHL=$UCC_WHL" >> "$GITHUB_ENV"
           
           echo "Adding UCC package $UCC_WHL"
           poetry remove splunk_add_on_ucc_framework
