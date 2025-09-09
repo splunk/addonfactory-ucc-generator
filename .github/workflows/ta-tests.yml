@@ -161,6 +161,7 @@ jobs:
           rm splunk_add_on_ucc_framework-*.whl || true
           cp ../UCC/*.whl ./
           UCC_WHL=$(ls *.whl)
+          echo "$UCC_WHL" >> "$GITHUB_ENV"
           
           echo "Adding UCC package $UCC_WHL"
           poetry remove splunk_add_on_ucc_framework
@@ -200,7 +201,12 @@ jobs:
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
-          poetry run ucc-gen build 2>&1 | tee build_output.log
+          set -x
+          
+          python3 -m venv .ucc_venv
+          ./.ucc_venv/bin/python3 -m pip install ./$UCC_WHL
+          
+          ./.ucc_venv/bin/ucc-gen build 2>&1 | tee build_output.log
           if tail -n 1 build_output.log | grep -q "^INFO: File creation summary: created: "; then
             echo "✓ Build completed successfully with expected output"
             cat build_output.log
