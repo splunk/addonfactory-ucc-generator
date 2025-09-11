@@ -1,6 +1,6 @@
 # `additional_packaging.py` file
 
-To extend the build process, you can create a `additional_packaging.py` file in the same file level where you have your globalConfig file.
+To extend the build process, create a `additional_packaging.py` file in the root directory of your source code — that is, the same level where your package directory is located.
 
 This file should have either of the below two functions:
 
