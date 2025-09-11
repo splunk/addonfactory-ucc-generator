@@ -305,5 +305,5 @@ jobs:
             | select(.name | test("build|spl2"))
             | "\(.name): \(.conclusion)"')"
           
-          echo $RESULTS
+          printf '%s\n' "$RESULTS"
           [[ $(printf '%s\n' "$RESULTS" | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
