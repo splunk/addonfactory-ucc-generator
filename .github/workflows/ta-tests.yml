@@ -201,8 +201,8 @@ jobs:
           
           # Add to commit
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
-            echo "Adding UCC, pyproject.toml and poetry.lock to commit"
-            git add pyproject.toml poetry.lock *.whl
+            echo "Adding UCC, requirements_ucc.txt, pyproject.toml and poetry.lock to commit"
+            git add pyproject.toml requirements_ucc.txt poetry.lock *.whl
           fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
