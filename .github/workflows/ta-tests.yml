@@ -257,7 +257,22 @@ jobs:
           git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
           git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
           git push --force origin $GIT_BRANCH
-
+      - name: Create a PR if it does not exist yet
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          # Check if a PR already exists
+          if gh pr view -R ${{ matrix.target_repo }} $GIT_BRANCH; then
+            echo "PR already exists, not creating a new one"
+            exit 0
+          fi
+          
+          echo "Creating a new draft PR from branch $GIT_BRANCH to ${{ github.event.inputs.target_branch }}"
+          gh pr create -R ${{ matrix.target_repo }} --title "CI: UCC build for ${{ github.event_name }} event" \
+              --body "This PR was created automatically to trigger the build-test-release pipeline." \
+              --base ${{ github.event.inputs.target_branch }} --head $GIT_BRANCH --draft
       - name: Obtain the workflow run ID
         if: success() && github.event.inputs.run_pipelines == 'true'
         id: get-workflow-run-id
