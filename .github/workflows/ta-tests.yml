@@ -167,6 +167,12 @@ jobs:
           poetry remove splunk_add_on_ucc_framework
           echo "./$UCC_WHL" > requirements_ucc.txt
           
+          # Adding "package-mode = false" to pyproject.toml if not present
+          if ! grep -q "package-mode = false" pyproject.toml; then
+            echo "Adding 'package-mode = false' to pyproject.toml"
+            sed -i '/name = .*/ s:$:\npackage-mode = false:' pyproject.toml
+          fi
+          
           # Install splunktaucclib with retries
           MAX_RETRIES=3
           RETRY_COUNT=0
