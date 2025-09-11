@@ -217,6 +217,32 @@ jobs:
             cat build_output.log
             exit 1
           fi
+      - name: Upgrade the release pipeline in Github Actions
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        run: |
+          set -x
+          
+          VERSION="$(cat .github/workflows/build-test-release.yml | grep reusable-build-test-release.yml | cut -d '@' -f 2)"
+          
+          # Version is in format e.g. "v1.2.3". We need at least "v5.1.0"
+          MAJOR_VERSION="$(echo $VERSION | cut -d '.' -f 1 | sed 's/^v//')"
+          MINOR_VERSION="$(echo $VERSION | cut -d '.' -f 2)"
+          
+          # If major and minor are not integers, exit
+          if ! [[ "$MAJOR_VERSION" =~ ^[0-9]+$ ]] || ! [[ "$MINOR_VERSION" =~ ^[0-9]+$ ]]; then
+            echo "✗ The reusable workflow version $VERSION is not in the expected format. No update performed."
+            exit 0
+          fi
+          
+          if (( MAJOR_VERSION < 5 )) || { (( MAJOR_VERSION == 5 )) && (( MINOR_VERSION < 1 )); }; then
+            echo "✗ The reusable workflow version $VERSION is too old. Upgrading to v5.1.0"
+            sed -i 's/reusable-build-test-release.yml@.*/reusable-build-test-release.yml@v5.1.0/' .github/workflows/build-test-release.yml
+            git add .github/workflows/build-test-release.yml
+            echo "Upgraded the reusable workflow version to v5.1.0"
+          else
+            echo "✓ The reusable workflow version $VERSION is up to date"
+          fi
       - name: Push changes to a temporary branch in order to trigger the pipeline
         if: success() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
