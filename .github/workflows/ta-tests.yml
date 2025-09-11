@@ -282,8 +282,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
         run: |
-          set -x
-          
           if [[ -z "$WORKFLOW_RUN_ID" ]]; then
             echo "No workflow run ID found, skipping wait"
             exit 0
@@ -302,4 +300,4 @@ jobs:
             | "\(.name): \(.conclusion)"')"
           
           echo $RESULTS
-          [[ $(echo $RESULTS | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
+          [[ $(printf '%s\n' "$RESULTS" | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
