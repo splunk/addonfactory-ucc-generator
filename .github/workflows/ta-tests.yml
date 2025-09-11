@@ -256,6 +256,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
         run: |
+          set -x
+          
           if [[ -z "$WORKFLOW_RUN_ID" ]]; then
             echo "No workflow run ID found, skipping wait"
             exit 0
@@ -264,9 +266,13 @@ jobs:
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
           gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID"
           
+          echo "Results JSON:"
+          RESULTS_JSON="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs)"
+          echo $RESULTS_JSON
+          
           echo "Results:"
-          RESULTS="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs \
-            -q '.jobs[] |  select(.conclusion != "skipped") | select(.name | test("build|spl2"))
+          RESULTS="$(echo $RESULTS_JSON | jq -r '.jobs[] |  select(.conclusion != "skipped")
+            | select(.name | test("build|spl2"))
             | "\(.name): \(.conclusion)"')"
           
           echo $RESULTS
