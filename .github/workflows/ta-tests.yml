@@ -294,7 +294,7 @@ jobs:
           fi
           
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID"
+          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" -i 60
           
           echo "Results JSON:"
           RESULTS_JSON="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs)"
