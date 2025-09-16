@@ -94,6 +94,8 @@ def mock_splunk_modules(monkeypatch):
         "",
     )
 
+    monkeypatch.setitem(sys.modules, "splunk.rest", MagicMock(return_value=None))
+
     ConfManager = namedtuple(
         "ConfManager",
         ["InvalidHostnameError", "InvalidPortError", "get_log_level", "get_proxy_dict"],
