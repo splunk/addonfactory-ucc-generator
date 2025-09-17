@@ -513,6 +513,7 @@ def test_package_command(mock_package, args, expected_parameters):
         (
             [
                 "publish",
+                "--stage",
                 "--app-id",
                 "123",
                 "--package-path",
@@ -527,6 +528,7 @@ def test_package_command(mock_package, args, expected_parameters):
                 "pass",
             ],
             {
+                "use_stage": True,
                 "app_id": 123,
                 "package_path": "dist/app.tar.gz",
                 "splunk_versions": "9.5",
@@ -554,6 +556,7 @@ def test_package_command(mock_package, args, expected_parameters):
                 "--make-visible",
             ],
             {
+                "use_stage": False,
                 "app_id": 456,
                 "package_path": "/tmp/app.tar.gz",
                 "splunk_versions": "9.1,9.2",
