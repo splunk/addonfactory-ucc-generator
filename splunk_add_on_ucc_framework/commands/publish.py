@@ -62,6 +62,7 @@ def encode_multipart_formdata(
 
 
 def upload_package(
+    base_url: str,
     app_id: int,
     package_path: str,
     splunk_versions: str,
@@ -70,7 +71,7 @@ def upload_package(
     username: str,
     password: str,
 ) -> str:
-    upload_url = f"https://splunkbase.splunk.com/api/v1/app/{app_id}/new_release/"
+    upload_url = f"{base_url}/app/{app_id}/new_release/"
 
     fields = {
         "filename": os.path.basename(package_path),
@@ -109,9 +110,9 @@ def upload_package(
 
 
 def check_package_validation(
-    package_upload_id: str, username: str, password: str
+    base_url: str, package_upload_id: str, username: str, password: str
 ) -> None:
-    url = f"https://splunkbase.splunk.com/api/v1/package/{package_upload_id}/"
+    url = f"{base_url}/package/{package_upload_id}/"
     auth_header = base64.b64encode(f"{username}:{password}".encode()).decode("utf-8")
     context = ssl.create_default_context(cafile=certifi.where())
 
@@ -129,6 +130,7 @@ def check_package_validation(
 
 
 def publish_package(
+    use_stage: bool,
     app_id: int,
     package_path: str,
     splunk_versions: str,
@@ -137,7 +139,12 @@ def publish_package(
     username: str,
     password: str,
 ) -> None:
+    if use_stage:
+        API_BASEURL = "https://classic.stage.splunkbase.splunk.com/api/v1"
+    else:
+        API_BASEURL = "https://splunkbase.splunk.com/api/v1"
     package_upload_id = upload_package(
+        API_BASEURL,
         app_id,
         package_path,
         splunk_versions,
@@ -147,4 +154,4 @@ def publish_package(
         password,
     )
     if package_upload_id:
-        check_package_validation(package_upload_id, username, password)
+        check_package_validation(API_BASEURL, package_upload_id, username, password)

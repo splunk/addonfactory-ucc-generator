@@ -261,6 +261,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "publish", description="Publish package to the Splunkbase"
     )
     publish_parser.add_argument(
+        "--stage",
+        dest="stage",
+        help="Whether to release the app on staging or production splunkbase.",
+        action="store_true",
+    )
+    publish_parser.add_argument(
         "--app-id",
         type=int,
         help="Splunkbase numerical app id listed in the URL of the app details page.",
@@ -334,6 +340,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         )
     if args.command == "publish":
         publish.publish_package(
+            use_stage=args.stage,
             app_id=args.app_id,
             package_path=args.package_path,
             splunk_versions=args.splunk_versions,
