@@ -83,6 +83,10 @@ def test_autocompletefields_children_support_integer_values():
             "generatetext.py is not present in `bin` directory. Please ensure the file exists.",
         ),
         (
+            "invalid_config_with_user_defined_rest_handlers.json",
+            "file1.py is not present in `bin` directory. Please ensure the file exists.",
+        ),
+        (
             "invalid_config_no_configuration_tabs.json",
             "[] is too short",
         ),

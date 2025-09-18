@@ -840,6 +840,19 @@ class GlobalConfigValidator:
                         exc_msg % ("input service", service["name"])
                     )
 
+    def _validate_user_defined_rest_handler_file(self) -> None:
+        if self._global_config.content.get("options"):
+            for restHandler in self._global_config.content["options"]["restHandlers"]:
+                if restHandler.get("registerHandler"):
+                    file_path = os.path.join(
+                        self._source_dir, "bin", restHandler["registerHandler"]["file"]
+                    )
+                    if not os.path.isfile(file_path):
+                        raise GlobalConfigValidatorException(
+                            f"{restHandler['registerHandler']['file']} is not present in "
+                            f"`{os.path.join(self._source_dir, 'bin')}` directory. Please ensure the file exists."
+                        )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         if self._global_config.has_pages():
@@ -858,6 +871,7 @@ class GlobalConfigValidator:
             self._validate_usage_of_placeholder()
         self._validate_alerts()
         self._validate_meta_default_view()
+        self._validate_user_defined_rest_handler_file()
 
 
 def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
