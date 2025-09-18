@@ -122,7 +122,10 @@ def check_package_validation(
     try:
         with urllib.request.urlopen(request, context=context) as response:
             response_data = json.loads(response.read().decode("utf-8"))
-            logger.info("Validation status: {}".format(response_data.get("message")))
+            if (response_data.get("result") == "pass"):
+                logger.info("Validation status: {}".format(response_data.get("message")))
+            else:
+                raise Exception(response_data.get("message"))
     except urllib.error.HTTPError as e:
         error_msg = e.read().decode()
         logger.error(f"Failed to retrieve package validation status. {error_msg}")
