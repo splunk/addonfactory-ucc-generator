@@ -25,7 +25,7 @@ from pathlib import Path
 
 from packaging.requirements import Requirement, InvalidRequirement
 from packaging.version import Version
-from typing import List, Optional, Set, Iterable, Dict
+from typing import Optional, Set, Iterable, Dict
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
@@ -178,7 +178,7 @@ def _check_libraries_required_for_ui(
             )
 
 
-def parse_excludes(excludes_path: Optional[str]) -> Optional[List[str]]:
+def parse_excludes(excludes_path: Optional[str]) -> Optional[list[str]]:
     if not excludes_path:
         return None
 
@@ -224,7 +224,7 @@ def install_python_libraries(
     ucc_lib_target: str,
     python_binary_name: str,
     includes_ui: bool = False,
-    os_libraries: Optional[List[OSDependentLibraryConfig]] = None,
+    os_libraries: Optional[list[OSDependentLibraryConfig]] = None,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
     pip_custom_flag: Optional[str] = None,
@@ -336,7 +336,7 @@ def install_libraries(
         sys.exit(1)
 
 
-def determine_record_separator(paths: List[str], dist_info: str) -> str:
+def determine_record_separator(paths: list[str], dist_info: str) -> str:
     """
     Determines the separator used in RECORD files for the given dist-info directory.
     As Windows can use both '/' and '\' as path separators, we need to check the RECORD files
@@ -464,7 +464,7 @@ def remove_execute_bit(installation_path: str) -> None:
 def install_os_dependent_libraries(
     ucc_lib_target: str,
     installer: str,
-    os_libraries: Optional[List[OSDependentLibraryConfig]],
+    os_libraries: Optional[list[OSDependentLibraryConfig]],
 ) -> Set[str]:
     cleanup_libraries: Set[str] = set()
 
@@ -523,7 +523,7 @@ Possible solutions, either:
     return cleanup_libraries
 
 
-def validate_conflicting_paths(libs: List[OSDependentLibraryConfig]) -> bool:
+def validate_conflicting_paths(libs: list[OSDependentLibraryConfig]) -> bool:
     name_target_pairs = [(lib.name, lib.target) for lib in libs]
     conflicts = {x for x in name_target_pairs if name_target_pairs.count(x) > 1}
     if conflicts:
