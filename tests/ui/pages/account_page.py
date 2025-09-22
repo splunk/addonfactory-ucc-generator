@@ -120,6 +120,16 @@ class AccountEntity(Entity):
                 + ' [data-name="example_textarea_field_basic_oauth"]'
             ),
         )
+        self.endpoint_token = TextBox(
+            browser,
+            Selector(select='[data-test="control-group"][data-name="endpoint_token"]'),
+        )
+        self.endpoint_authorize = TextBox(
+            browser,
+            Selector(
+                select='[data-test="control-group"][data-name="endpoint_authorize"]'
+            ),
+        )
 
 
 class AccountPage(Page):

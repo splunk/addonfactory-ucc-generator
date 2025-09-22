@@ -13,8 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
+import ast
+from pathlib import Path
 from typing import Any, Optional
-
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
@@ -29,8 +31,25 @@ class CustomCommandPy(FileGenerator):
         self.commands_info = []
         for command in global_config.custom_search_commands:
             argument_list: list[str] = []
+            import_map = False
             imported_file_name = command["fileName"].replace(".py", "")
             template = command["commandType"].replace(" ", "_") + ".template"
+            if command["commandType"] == "transforming":
+                module_path = Path(
+                    os.path.realpath(
+                        os.path.join(self._input_dir, "bin", command["fileName"])
+                    )
+                )
+
+                if not module_path.is_file():
+                    raise FileNotFoundError(
+                        f"Module path '{module_path}' does not point to a valid file."
+                    )
+                module_content = ast.parse(module_path.read_text(encoding="utf-8"))
+                for node in module_content.body:
+                    if isinstance(node, ast.FunctionDef) and node.name == "map":
+                        import_map = True
+
             for argument in command["arguments"]:
                 argument_dict = {
                     "name": argument["name"],
@@ -48,6 +67,7 @@ class CustomCommandPy(FileGenerator):
                     "syntax": command.get("syntax"),
                     "template": template,
                     "list_arg": argument_list,
+                    "import_map": import_map,
                 }
             )
 
@@ -109,6 +129,7 @@ class CustomCommandPy(FileGenerator):
                 description=command_info["description"],
                 syntax=command_info["syntax"],
                 list_arg=command_info["list_arg"],
+                import_map=command_info["import_map"],
             )
             generated_files.append(
                 {
