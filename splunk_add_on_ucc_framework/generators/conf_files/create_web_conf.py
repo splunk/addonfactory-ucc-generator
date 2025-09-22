@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Union, List, Optional
+from typing import Union, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -43,19 +43,19 @@ class WebConf(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
 
-    def get_methods_for_actions(self, actions: List[str]) -> List[str]:
+    def get_methods_for_actions(self, actions: list[str]) -> list[str]:
         methods = []
         for action in actions:
             methods.extend(actions_to_methods.get(action, []))
 
         return sorted(list(set(methods)))
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self._global_config.has_pages():
             return None
 
-        endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
-        custom_endpoints: List[
+        endpoints: list[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        custom_endpoints: list[
             Union[RestEndpointBuilder, EndpointRegistrationEntry]
         ] = []
         endpoints.extend(self._gc_schema.endpoints)

@@ -141,21 +141,25 @@
                             "options": {
                                 "auth_type": [
                                     "basic",
-                                    "oauth"
+                                    "oauth",
+                                    "oauth_client_credentials"
                                 ],
                                 "basic": [
                                     {
+                                        "oauth_field": "username",
                                         "label": "Username",
                                         "help": "Enter the username for this account.",
                                         "field": "username"
                                     },
                                     {
+                                        "oauth_field": "password",
                                         "label": "Password",
                                         "encrypted": true,
                                         "help": "Enter the password for this account.",
                                         "field": "password"
                                     },
                                     {
+                                        "oauth_field": "token",
                                         "label": "Security Token",
                                         "encrypted": true,
                                         "help": "Enter the security token.",
@@ -164,20 +168,38 @@
                                 ],
                                 "oauth": [
                                     {
+                                        "oauth_field": "client_id",
                                         "label": "Client Id",
                                         "field": "client_id",
                                         "help": "Enter the Client Id for this account."
                                     },
                                     {
+                                        "oauth_field": "client_secret",
                                         "label": "Client Secret",
                                         "field": "client_secret",
                                         "encrypted": true,
                                         "help": "Enter the Client Secret key for this account."
                                     },
                                     {
+                                        "oauth_field": "redirect_url",
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
+                                    }
+                                ],
+                                "oauth_client_credentials": [
+                                    {
+                                        "oauth_field": "client_id_oauth_credentials",
+                                        "label": "Client Id",
+                                        "field": "client_id_oauth_credentials",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret_oauth_credentials",
+                                        "label": "Client Secret",
+                                        "field": "client_secret_oauth_credentials",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
                                     }
                                 ],
                                 "auth_code_endpoint": "/services/oauth2/authorize",
@@ -797,6 +819,13 @@
                             "help": "This is an example checkbox for the input two entity"
                         },
                         {
+                            "type": "checkbox",
+                            "label": "Example Checkbox with bool",
+                            "field": "input_two_checkbox_bool",
+                            "help": "This is an example checkbox for the input two entity with bool default",
+                            "defaultValue": true
+                        },
+                        {
                             "type": "radio",
                             "label": "Example Radio",
                             "field": "input_two_radio",
@@ -881,7 +910,9 @@
                                         "options": {
                                             "isExpandable": true
                                         },
-                                        "fields": ["collectFolderMetadata"]
+                                        "fields": [
+                                            "collectFolderMetadata"
+                                        ]
                                     }
                                 ],
                                 "rows": [
@@ -893,7 +924,10 @@
                                             "validators": [
                                                 {
                                                     "type": "number",
-                                                    "range": [1, 1200]
+                                                    "range": [
+                                                        1,
+                                                        1200
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -959,7 +993,10 @@
                                             "validators": [
                                                 {
                                                     "type": "number",
-                                                    "range": [1, 1200]
+                                                    "range": [
+                                                        1,
+                                                        1200
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -1000,7 +1037,9 @@
                                             "isExpandable": true,
                                             "expand": true
                                         },
-                                        "fields": ["collectFolderCollaboration"]
+                                        "fields": [
+                                            "collectFolderCollaboration"
+                                        ]
                                     },
                                     {
                                         "label": "Group 3",
@@ -1008,7 +1047,9 @@
                                             "isExpandable": true,
                                             "expand": true
                                         },
-                                        "fields": ["collectFolderMetadata"]
+                                        "fields": [
+                                            "collectFolderMetadata"
+                                        ]
                                     }
                                 ],
                                 "rows": [
@@ -1081,7 +1122,10 @@
                                             "validators": [
                                                 {
                                                     "type": "number",
-                                                    "range": [1, 60]
+                                                    "range": [
+                                                        1,
+                                                        60
+                                                    ]
                                                 }
                                             ]
                                         }
@@ -1090,7 +1134,8 @@
                             }
                         }
                     ],
-                    "title": "Example Input Two"
+                    "title": "Example Input Two",
+                    "disableNewInput": true
                 }
             ],
             "title": "Inputs",
@@ -1176,7 +1221,13 @@
                 {
                     "name": "default"
                 }
-            ]
+            ],
+            "settings": {
+                "error_panel_log_lvl": [
+                    "ERROR",
+                    "CRITICAL"
+                ]
+            }
         }
     },
     "alerts": [
@@ -1300,30 +1351,56 @@
         "schemaVersion": "0.0.3",
         "os-dependentLibraries": [
             {
-              "name": "cryptography",
-              "version": "41.0.5",
-              "platform": "win_amd64",
-              "python_version": "37",
-              "os": "windows",
-              "target": "3rdparty/windows"
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "win_amd64",
+                "python_version": "37",
+                "os": "windows",
+                "target": "3rdparty/windows"
             },
             {
-              "name": "cryptography",
-              "version": "41.0.5",
-              "platform": "macosx_10_12_universal2",
-              "python_version": "37",
-              "os": "darwin",
-              "target": "3rdparty/darwin"
+                "name": "cryptography",
+                "version": "41.0.5",
+                "platform": "macosx_10_12_universal2",
+                "python_version": "37",
+                "os": "darwin",
+                "target": "3rdparty/darwin"
             },
             {
-              "name": "cryptography",
-              "version": "41.0.5",
-              "dependencies": true,
-              "platform": "manylinux2014_x86_64",
-              "python_version": "37",
-              "os": "linux",
-              "target": "3rdparty/linux"
+                "name": "cryptography",
+                "version": "41.0.5",
+                "dependencies": true,
+                "platform": "manylinux2014_x86_64",
+                "python_version": "37",
+                "os": "linux",
+                "target": "3rdparty/linux"
             }
         ]
-    }
+    },
+    "customSearchCommand": [
+        {
+            "commandName": "generatetextcommand",
+            "fileName": "generatetext.py",
+            "commandType": "generating",
+            "requiredSearchAssistant": true,
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": true,
+                    "validate": {
+                        "type": "Integer",
+                        "minimum": 5,
+                        "maximum": 10
+                    }
+                },
+                {
+                    "name": "text",
+                    "required": true
+                }
+            ]
+        }
+    ]
 }

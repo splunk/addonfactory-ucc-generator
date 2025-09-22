@@ -7,7 +7,7 @@ import sys
 from collections import namedtuple
 from pathlib import Path
 from textwrap import dedent
-from typing import Optional, Tuple
+from typing import Optional
 from unittest import mock
 
 import pytest
@@ -322,7 +322,7 @@ def test_remove_package_from_installed_path(tmp_path):
         module_name: str,
         module_top: Optional[str] = None,
         additional_records: Optional[list[str]] = None,
-    ) -> Tuple[Path, Path]:
+    ) -> tuple[Path, Path]:
         module_top = module_top or module_name
         additional_records = additional_records or []
 

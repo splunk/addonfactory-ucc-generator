@@ -25,7 +25,8 @@ from pathlib import Path
 
 from packaging.requirements import Requirement, InvalidRequirement
 from packaging.version import Version
-from typing import Optional, Set, Iterable, Dict
+from typing import Optional
+from collections.abc import Iterable
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
@@ -58,7 +59,7 @@ class InvalidArguments(Exception):
 def _subprocess_run(
     command: str,
     command_desc: Optional[str] = None,
-    env: Optional[Dict[str, str]] = None,
+    env: Optional[dict[str, str]] = None,
 ) -> "subprocess.CompletedProcess[bytes]":
     command_desc = command_desc or command
     try:
@@ -465,8 +466,8 @@ def install_os_dependent_libraries(
     ucc_lib_target: str,
     installer: str,
     os_libraries: Optional[list[OSDependentLibraryConfig]],
-) -> Set[str]:
-    cleanup_libraries: Set[str] = set()
+) -> set[str]:
+    cleanup_libraries: set[str] = set()
 
     if not os_libraries:
         logger.info("No os-dependentLibraries to install.")

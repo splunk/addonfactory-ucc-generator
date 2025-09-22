@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 import logging
-from typing import Any, Dict, Tuple, List, Optional
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib, utils
 from splunk_add_on_ucc_framework.entity import (
@@ -27,7 +27,7 @@ from splunk_add_on_ucc_framework.tabs import resolve_tab
 logger = logging.getLogger("ucc_gen")
 
 
-def _version_tuple(version: str) -> Tuple[str, ...]:
+def _version_tuple(version: str) -> tuple[str, ...]:
     """
     Convert string into tuple to compare versions.
 
@@ -42,7 +42,7 @@ def _version_tuple(version: str) -> Tuple[str, ...]:
     return tuple(filled)
 
 
-def _handle_biased_terms(conf_entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+def _handle_biased_terms(conf_entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
     for entity in conf_entities:
         entity_option = entity.get("options")
         if entity_option and "whiteList" in entity_option:
@@ -258,6 +258,11 @@ def handle_global_config_update(
         global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.9")
 
+    if _version_tuple(version) < _version_tuple("0.0.10"):
+        _remove_oauth_field_from_entites(global_config)
+        global_config.dump(global_config_path)
+        logger.info("Updated globalConfig schema to version 0.0.10")
+
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
@@ -275,7 +280,7 @@ def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
 def _dump_with_migrated_entities(
     global_config: GlobalConfig,
     path: str,
-    entity_type: List[Any],
+    entity_type: list[Any],
 ) -> None:
     _collapse_entities(
         global_config.content.get("pages", {}).get("inputs", {}).get("services"),
@@ -289,8 +294,8 @@ def _dump_with_migrated_entities(
 
 
 def _collapse_entities(
-    items: Optional[List[Dict[Any, Any]]],
-    entity_type: List[Any],
+    items: Optional[list[dict[Any, Any]]],
+    entity_type: list[Any],
 ) -> None:
     if items is None:
         return
@@ -300,14 +305,14 @@ def _collapse_entities(
             item["entity"][i] = collapse_entity(entity, entity_type)
 
 
-def _dump(content: Dict[Any, Any], path: str, is_yaml: bool) -> None:
+def _dump(content: dict[Any, Any], path: str, is_yaml: bool) -> None:
     if is_yaml:
         utils.dump_yaml_config(content, path)
     else:
         utils.dump_json_config(content, path)
 
 
-def _collapse_tab(tab: Dict[str, Any]) -> Dict[str, Any]:
+def _collapse_tab(tab: dict[str, Any]) -> dict[str, Any]:
     return resolve_tab(tab).short_form()
 
 
@@ -351,8 +356,60 @@ def _dump_enable_from_global_config(
                         + f" Removing 'enable' from actions in service: {actions}"
                     )
                     actions.remove("enable")
-                    service_table[
-                        "actions"
-                    ] = actions  # Update the actions in the service's table
+                    service_table["actions"] = (
+                        actions  # Update the actions in the service's table
+                    )
 
     global_config.update_schema_version("0.0.9")
+
+
+def _remove_oauth_field_from_oauth_entity(
+    entity: dict[str, Any],
+) -> None:
+    """
+    Remove the 'oauth_field' field from the oauth entity in globalConfig.
+    This is to ensure that the 'oauth_field' field is not used in entities anymore.
+    """
+    if entity and "field" in entity and "oauth_field" in entity:
+        logger.warning(
+            "The 'oauth_field' field is no longer supported in entities. "
+            "Please remove it from your globalConfig. Field: %s",
+            entity["field"],
+        )
+        del entity["oauth_field"]
+
+
+def _handle_removal_of_oauth_field_from_entities(
+    services_or_tabs: list[dict[str, Any]],
+) -> None:
+    """
+    Remove the 'oauth' field from entities in globalConfig.
+    This is to ensure that the 'oauth' field is not used in entities anymore.
+    """
+    for tab in services_or_tabs:
+        conf_entities = tab.get("entity")
+        if conf_entities is None:
+            continue
+
+        for entity in conf_entities:
+            if entity.get("field") == "oauth":
+                auth_types = entity["options"].get("auth_type", [])
+
+                for auth in auth_types:
+                    auth_entities = entity["options"].get(auth, [])
+                    for auth_entity in auth_entities:
+                        _remove_oauth_field_from_oauth_entity(auth_entity)
+
+
+def _remove_oauth_field_from_entites(
+    global_config: global_config_lib.GlobalConfig,
+) -> None:
+    """
+    Remove the 'oauth' field from entities in globalConfig.
+    This is to ensure that the 'oauth' field is not used in entities anymore.
+    """
+
+    _handle_removal_of_oauth_field_from_entities(global_config.inputs)
+    _handle_removal_of_oauth_field_from_entities(global_config.configuration)
+
+    global_config.update_schema_version("0.0.10")

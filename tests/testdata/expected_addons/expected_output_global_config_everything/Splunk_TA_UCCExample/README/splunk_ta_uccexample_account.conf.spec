@@ -3,7 +3,6 @@ access_token =
 account_checkbox = 
 account_multiple_select = 
 account_radio = 
-amd_custom_control_field = 
 auth_type = 
 basic_oauth_text = 
 client_id = 

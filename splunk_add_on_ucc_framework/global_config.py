@@ -15,7 +15,7 @@
 #
 import functools
 import json
-from typing import Optional, Any, List, Dict, Set
+from typing import Optional, Any
 from dataclasses import dataclass, field, fields
 from urllib.parse import urlparse
 
@@ -69,7 +69,7 @@ class OSDependentLibraryConfig:
 class GlobalConfig:
     def __init__(
         self,
-        content: Dict[str, Any],
+        content: dict[str, Any],
         is_yaml: bool,
     ) -> None:
         self._content = content
@@ -139,7 +139,7 @@ class GlobalConfig:
         )
 
     @staticmethod
-    def _expand_entities(items: Optional[List[Dict[Any, Any]]]) -> None:
+    def _expand_entities(items: Optional[list[dict[Any, Any]]]) -> None:
         if items is None:
             return
 
@@ -156,20 +156,20 @@ class GlobalConfig:
         return self._is_global_config_yaml
 
     @property
-    def inputs(self) -> List[Any]:
+    def inputs(self) -> list[Any]:
         if self.has_pages() and "inputs" in self._content["pages"]:
             return self._content["pages"]["inputs"]["services"]
         return []
 
     @property
-    def configuration(self) -> List[Any]:
+    def configuration(self) -> list[Any]:
         if self.has_pages() and "configuration" in self._content["pages"]:
             return self._content["pages"]["configuration"]["tabs"]
         return []
 
     @property
-    def endpointUrl(self) -> List[str]:
-        def extract_urls(entities_list: List[Any]) -> Set[str]:
+    def endpointUrl(self) -> list[str]:
+        def extract_urls(entities_list: list[Any]) -> set[str]:
             urls = set()
             for content in entities_list:
                 for entity in content.get("entity", []):
@@ -192,23 +192,23 @@ class GlobalConfig:
         return list(urls)
 
     @property
-    def pages(self) -> List[Any]:
+    def pages(self) -> list[Any]:
         if "pages" in self._content:
             return self._content["pages"]
         return []
 
     @property
-    def resolved_configuration(self) -> List[Any]:
+    def resolved_configuration(self) -> list[Any]:
         if self.has_pages() and "configuration" in self.pages:
             return [resolve_tab(tab) for tab in self.configuration]
         return []
 
     @property
-    def dashboard(self) -> Dict[str, Any]:
+    def dashboard(self) -> dict[str, Any]:
         return self._content.get("pages", {}).get("dashboard")
 
     @property
-    def settings(self) -> List[Any]:
+    def settings(self) -> list[Any]:
         settings = []
         for tab in self.configuration:
             if "table" not in tab:
@@ -216,14 +216,14 @@ class GlobalConfig:
         return settings
 
     @property
-    def logging_tab(self) -> Dict[str, Any]:
+    def logging_tab(self) -> dict[str, Any]:
         for tab in self.configuration:
             if LoggingTab.from_definition(tab) is not None:
                 return tab
         return {}
 
     @property
-    def configs(self) -> List[Any]:
+    def configs(self) -> list[Any]:
         configs = []
         for tab in self.configuration:
             if "table" in tab:
@@ -231,15 +231,15 @@ class GlobalConfig:
         return configs
 
     @property
-    def alerts(self) -> List[Dict[str, Any]]:
+    def alerts(self) -> list[dict[str, Any]]:
         return self._content.get("alerts", [])
 
     @property
-    def custom_search_commands(self) -> List[Dict[str, Any]]:
+    def custom_search_commands(self) -> list[dict[str, Any]]:
         return self._content.get("customSearchCommand", [])
 
     @property
-    def meta(self) -> Dict[str, Any]:
+    def meta(self) -> dict[str, Any]:
         return self._content["meta"]
 
     @property
@@ -258,7 +258,7 @@ class GlobalConfig:
     def version(self) -> str:
         return self.meta["version"]
 
-    def capabilities(self, **kwargs: bool) -> Dict[str, str]:
+    def capabilities(self, **kwargs: bool) -> dict[str, str]:
         if kwargs.get("config") and self.has_configuration():
             return self._content["pages"]["configuration"].get("capabilities", {})
         elif kwargs.get("inputs") and self.has_inputs():
@@ -274,7 +274,7 @@ class GlobalConfig:
         return self.meta.get("schemaVersion")
 
     @property
-    def os_libraries(self) -> Optional[List[OSDependentLibraryConfig]]:
+    def os_libraries(self) -> Optional[list[OSDependentLibraryConfig]]:
         if self._content["meta"].get("os-dependentLibraries"):
             return [
                 OSDependentLibraryConfig.from_dict(**lib)

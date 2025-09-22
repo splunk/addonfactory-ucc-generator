@@ -70,7 +70,9 @@ it('should not display tabs on cloud', async () => {
     const findTab = await screen.findAllByText('Tab hidden for enterprise');
 
     // Filter the one with the correct data-test attribute
-    const tabWithLabel = findTab.find((el) => el.getAttribute('data-test') === 'label');
+    const tabWithLabel = findTab.find(
+        (el) => el.getAttribute('data-title') === 'Tab hidden for enterprise'
+    );
     expect(tabWithLabel).toBeInTheDocument();
 });
 

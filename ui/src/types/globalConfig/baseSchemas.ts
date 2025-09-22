@@ -109,6 +109,11 @@ export const MarkdownMessageType = z.union([
     MarkdownMessagePlaintext.strict(),
 ]);
 
+export const CustomComponent = z.object({
+    src: z.string(),
+    type: z.literal('external'),
+});
+
 export const FieldToModify = z
     .object({
         fieldValue: z
