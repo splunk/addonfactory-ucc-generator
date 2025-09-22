@@ -262,7 +262,6 @@ def install_python_libraries(
             ucc_lib_target=ucc_lib_target,
             installer=python_binary_name,
             os_libraries=os_libraries,
-            excludes=excludes,
         )
 
         packages_to_remove = {
@@ -466,7 +465,6 @@ def install_os_dependent_libraries(
     ucc_lib_target: str,
     installer: str,
     os_libraries: Optional[List[OSDependentLibraryConfig]],
-    excludes: Optional[List[str]] = None,
 ) -> Set[str]:
     cleanup_libraries: Set[str] = set()
 
