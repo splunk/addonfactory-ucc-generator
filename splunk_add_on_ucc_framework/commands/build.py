@@ -248,13 +248,18 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
     return addon_version.strip()
 
 
-def _get_build_output_path(output_directory: Optional[str] = None) -> str:
+def _get_build_output_path(
+    output_directory: Optional[str] = None, overwrite: bool = False
+) -> tuple[str, bool]:
     if output_directory is None:
-        return os.path.join(os.getcwd(), "output")
+        # To preserve the previous behaviour where we used to clean output dir
+        # when output_directory was set to None
+        overwrite = True
+        return os.path.join(os.getcwd(), "output"), overwrite
     else:
         if not os.path.isabs(output_directory):
-            return os.path.join(os.getcwd(), output_directory)
-        return output_directory
+            return os.path.join(os.getcwd(), output_directory), overwrite
+        return os.path.join(output_directory), overwrite
 
 
 def _get_python_version_from_executable(python_binary_name: str) -> str:
@@ -484,6 +489,7 @@ def generate(
     pip_legacy_resolver: bool = False,
     pip_custom_flag: Optional[str] = None,
     build_custom_ui: bool = False,
+    overwrite: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -495,9 +501,6 @@ def generate(
             f"Failed to identify Python version for library installation. Error: {e}"
         )
         sys.exit(1)
-
-    output_directory = _get_build_output_path(output_directory)
-    logger.info(f"Output folder is {output_directory}")
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):
@@ -505,11 +508,20 @@ def generate(
             f"Source directory: '{source}' does not exist. Please verify that given source exists."
         )
         sys.exit(1)
-    shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
-    os.makedirs(os.path.join(output_directory))
-    logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
+    output_directory, overwrite = _get_build_output_path(output_directory, overwrite)
+    logger.info(f"Output folder is {output_directory}")
+    if not overwrite and os.path.exists(os.path.join(output_directory, ta_name)):
+        logger.error(
+            f"The location {os.path.join(output_directory,ta_name)} is already taken, use `--overwrite` "
+            "option to overwrite the content of existing directory."
+        )
+        sys.exit(1)
+    if overwrite:
+        shutil.rmtree(os.path.join(output_directory, ta_name), ignore_errors=True)
+        os.makedirs(os.path.join(output_directory, ta_name))
+        logger.info(f"Cleaned out directory {os.path.join(output_directory,ta_name)}")
     generated_files = []
 
     gc_path = _get_and_check_global_config_path(source, config_path)
