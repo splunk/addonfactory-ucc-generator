@@ -7,7 +7,7 @@ import sys
 from collections import namedtuple
 from pathlib import Path
 from textwrap import dedent
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 from unittest import mock
 
 import pytest
@@ -321,7 +321,7 @@ def test_remove_package_from_installed_path(tmp_path):
         lib: Path,
         module_name: str,
         module_top: Optional[str] = None,
-        additional_records: Optional[List[str]] = None,
+        additional_records: Optional[list[str]] = None,
     ) -> Tuple[Path, Path]:
         module_top = module_top or module_name
         additional_records = additional_records or []
@@ -673,7 +673,7 @@ def test_install_libraries_legacy_resolver_with_wrong_pip(caplog):
 
 
 def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
-    libs: List[OSDependentLibraryConfig] = [
+    libs: list[OSDependentLibraryConfig] = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib2", target="path2"),
     ]
@@ -681,7 +681,7 @@ def test_validate_conflicting_paths_no_conflict(os_dependent_library_config):
 
 
 def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, caplog):
-    libs: List[OSDependentLibraryConfig] = [
+    libs: list[OSDependentLibraryConfig] = [
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path1"),
         os_dependent_library_config(name="lib1", target="path2"),
@@ -698,7 +698,7 @@ def test_validate_conflicting_paths_with_conflict(os_dependent_library_config, c
 
 
 def test_validate_conflicting_paths_empty_list():
-    libs: List[OSDependentLibraryConfig] = []
+    libs: list[OSDependentLibraryConfig] = []
     assert validate_conflicting_paths(libs)
 
 
@@ -779,7 +779,7 @@ def test_install_libraries_multiple_pip_custom_flags(mock_subprocess_run):
 
 
 def test_parse_excludes(tmp_path):
-    def assert_excludes(content: str, asserted: Optional[List[str]]) -> None:
+    def assert_excludes(content: str, asserted: Optional[list[str]]) -> None:
         exclude_path = tmp_path / "exclude.txt"
         exclude_path.write_text(content)
         assert parse_excludes(str(exclude_path)) == asserted
@@ -809,7 +809,7 @@ def test_parse_excludes(tmp_path):
 
 
 def test_parse_excludes_invalid(tmp_path):
-    def parse_excludes_from_str(content: str) -> Optional[List[str]]:
+    def parse_excludes_from_str(content: str) -> Optional[list[str]]:
         exclude_path = tmp_path / "exclude.txt"
         exclude_path.write_text(content)
         return parse_excludes(str(exclude_path))
