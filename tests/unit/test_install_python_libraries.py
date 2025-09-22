@@ -1,7 +1,13 @@
+import glob
 import os
+import shutil
 import stat
+import subprocess
+import sys
 from collections import namedtuple
-from typing import List
+from pathlib import Path
+from textwrap import dedent
+from typing import List, Optional, Tuple
 from unittest import mock
 
 import pytest
@@ -24,6 +30,8 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     WrongSolnlibVersion,
     InvalidArguments,
     _pip_is_lib_installed,
+    parse_excludes,
+    determine_record_separator,
 )
 
 from splunk_add_on_ucc_framework import global_config as gc
@@ -34,6 +42,68 @@ class MockSubprocessResult:
         self.returncode = returncode
         self.stdout = stdout
         self.stderr = stderr
+
+
+@pytest.fixture
+def packages(tmp_path):
+    VERSION = "1.0.0"
+
+    def create_pkg(
+        name: str,
+        version: str = VERSION,
+        dependency: Optional[str] = None,
+        module_dir: Optional[str] = None,
+    ) -> str:
+        pkg_dir = tmp_path / name
+        pkg_dir.mkdir()
+        module_path = pkg_dir
+
+        if module_dir:
+            module_path = module_path / module_dir
+
+        module_path = module_path / name
+        module_path.mkdir(parents=True)
+
+        (module_path / "submodule").mkdir(parents=True)
+        (module_path / "submodule" / "__init__.py").write_text("")
+        (module_path / "submodule" / "other.py").write_text("")
+        (module_path / "__init__.py").write_text("")
+        pyproject = dedent(
+            f"""
+                    [build-system]
+                    requires = ["setuptools>=61", "wheel"]
+                    build-backend = "setuptools.build_meta"
+
+                    [project]
+                    name = "{name}"
+                    version = "{version}"
+                    dependencies = [{f'"{dependency}"' if dependency else ''}]
+                """.lstrip()
+        )
+        (pkg_dir / "pyproject.toml").write_text(pyproject)
+        subprocess.run(
+            f"{sys.executable} -m pip wheel --wheel {tmp_path} {pkg_dir}",
+            check=True,
+            shell=True,
+        )
+        shutil.rmtree(str(pkg_dir))
+        return glob.glob(f"{tmp_path}/{name}-*")[0]
+
+    pkg1 = create_pkg("test_pkg_1", module_dir="pkg_1_plus_2")
+    pkg2 = create_pkg(
+        "test_pkg_2",
+        dependency=f"test_pkg_1 @ file://{pkg1}",
+        module_dir="pkg_1_plus_2",
+    )
+    pkg3 = create_pkg("test_pkg_3", dependency=f"test_pkg_2 @ file://{pkg2}")
+    pkg4 = create_pkg("test_pkg_4", dependency=f"test_pkg_3 @ file://{pkg3}")
+
+    return {
+        "test_pkg_1": pkg1,
+        "test_pkg_2": pkg2,
+        "test_pkg_3": pkg3,
+        "test_pkg_4": pkg4,
+    }
 
 
 @mock.patch("subprocess.run", autospec=True)
@@ -247,29 +317,71 @@ def test_install_libraries_when_wrong_solnlib_is_present_but_has_oauth(tmp_path)
 
 
 def test_remove_package_from_installed_path(tmp_path):
+    def make_module(
+        lib: Path,
+        module_name: str,
+        module_top: Optional[str] = None,
+        additional_records: Optional[List[str]] = None,
+    ) -> Tuple[Path, Path]:
+        module_top = module_top or module_name
+        additional_records = additional_records or []
+
+        if module_top.endswith(".py"):
+            (lib / module_top).write_text("")
+            module_record = module_top
+        else:
+            (lib / module_top).mkdir(parents=True, exist_ok=True)
+            (lib / module_top / "__init__.py").write_text("")
+            module_record = f"{module_top}/__init__.py"
+
+        dist_info = f"{module_name}-1.0.0.dist-info"
+        (lib / dist_info).mkdir(parents=True, exist_ok=True)
+        (lib / dist_info / "RECORD").write_text(
+            f"{module_record},sha256=xyz,123\n"
+            f"{dist_info}/RECORD,sha256=xyz,123\n"
+            + "\n".join(f"{rec},sha256=xyz,123" for rec in additional_records)
+        )
+
+        return lib / module_top, lib / dist_info
+
     tmp_lib_path = tmp_path / "lib"
-    tmp_lib_path.mkdir()
-    tmp_lib_path_foo = tmp_lib_path / "foo"
-    tmp_lib_path_foo.mkdir()
-    tmp_lib_path_foo_dist_info = tmp_lib_path / "foo.dist_info"
-    tmp_lib_path_foo_dist_info.mkdir()
-    tmp_lib_path_bar = tmp_lib_path / "bar"
-    tmp_lib_path_bar.mkdir()
-    tmp_lib_path_baz = tmp_lib_path / "baz"
-    tmp_lib_path_baz.mkdir()
-    tmp_lib_path_qux = tmp_lib_path / "qux.txt"
-    tmp_lib_path_qux.write_text("some text")
+
+    foo_module, foo_dist_info = make_module(tmp_lib_path, "foo")
+    bar_module, bar_dist_info = make_module(tmp_lib_path, "bar", "bar_dir")
+    baz_module, baz_dist_info = make_module(tmp_lib_path, "baz")
+    qux_module, qux_dist_info = make_module(tmp_lib_path, "qux", "qux.py")
+
+    assert foo_module.is_dir()
+    assert foo_dist_info.exists()
+    assert bar_module.is_dir()
+    assert bar_dist_info.exists()
+    assert baz_module.is_dir()
+    assert baz_dist_info.exists()
+    assert qux_module.is_file()
+    assert qux_dist_info.exists()
 
     remove_packages(
         str(tmp_lib_path),
         ["foo", "bar", "qux"],
     )
 
-    assert not tmp_lib_path_foo.exists()
-    assert not tmp_lib_path_foo_dist_info.exists()
-    assert not tmp_lib_path_bar.exists()
-    assert tmp_lib_path_qux.exists()
-    assert tmp_lib_path_baz.exists()
+    assert not foo_module.is_dir()
+    assert not foo_dist_info.exists()
+    assert not bar_module.is_dir()
+    assert not bar_dist_info.exists()
+    assert baz_module.is_dir()
+    assert baz_dist_info.exists()
+    assert not qux_module.is_file()
+    assert not qux_dist_info.exists()
+
+    with pytest.raises(ValueError) as exc:
+        make_module(tmp_lib_path, "xyz", additional_records=["/absolute/path.py"])
+        remove_packages(
+            str(tmp_lib_path),
+            ["xyz"],
+        )
+
+    assert "Absolute paths are not allowed in RECORD files" in str(exc.value)
 
 
 def test_remove_execute_bit(tmp_path):
@@ -664,3 +776,139 @@ def test_install_libraries_multiple_pip_custom_flags(mock_subprocess_run):
             ),
         ]
     )
+
+
+def test_parse_excludes(tmp_path):
+    def assert_excludes(content: str, asserted: Optional[List[str]]) -> None:
+        exclude_path = tmp_path / "exclude.txt"
+        exclude_path.write_text(content)
+        assert parse_excludes(str(exclude_path)) == asserted
+
+    assert parse_excludes(None) is None
+    assert parse_excludes(str(tmp_path / "file_that_does_not_exist.txt")) is None
+    assert_excludes("", None)
+    assert_excludes("   \n\n\t", None)
+    assert_excludes("# comments\n# only", None)
+
+    assert_excludes("pkg1", ["pkg1"])
+    assert_excludes(" pkg1 ", ["pkg1"])
+    assert_excludes("pkg1 # comment", ["pkg1"])
+
+    assert_excludes(
+        dedent(
+            """
+            # comments
+            pkg1
+            pkg2
+            # another comment
+            pkg3 # with comment
+            """.lstrip()
+        ),
+        ["pkg1", "pkg2", "pkg3"],
+    )
+
+
+def test_parse_excludes_invalid(tmp_path):
+    def parse_excludes_from_str(content: str) -> Optional[List[str]]:
+        exclude_path = tmp_path / "exclude.txt"
+        exclude_path.write_text(content)
+        return parse_excludes(str(exclude_path))
+
+    for content in ("a\nb d", "a#b", "!@#$%"):
+        with pytest.raises(InvalidArguments):
+            parse_excludes_from_str(content)
+
+    for content in ("pkg==1", "pkg>=1.0", "pkg<=2.0", "pkg>1.0", "pkg<2.0", "pkg~=1.4"):
+        with pytest.raises(InvalidArguments):
+            parse_excludes_from_str(content)
+
+
+def test_determine_record_separator():
+    assert determine_record_separator([], "foo-1.0.0.dist-info") == "/"
+    assert determine_record_separator(["some/path"], "foo-1.0.0.dist-info") == "/"
+    assert (
+        determine_record_separator(
+            ["foo-1.0.0.dist-info/RECORD"], "foo-1.0.0.dist-info"
+        )
+        == "/"
+    )
+    assert (
+        determine_record_separator(
+            ["aaaa", "foo-1.0.0.dist-info/RECORD"], "foo-1.0.0.dist-info"
+        )
+        == "/"
+    )
+    assert (
+        determine_record_separator(
+            ["foo-1.0.0.dist-info\\RECORD"], "foo-1.0.0.dist-info"
+        )
+        == "\\"
+    )
+    assert (
+        determine_record_separator(
+            ["aaa", "foo-1.0.0.dist-info\\RECORD"], "foo-1.0.0.dist-info"
+        )
+        == "\\"
+    )
+
+
+def test_install_python_libraries_no_mocks_without_excludes(tmp_path, packages):
+    VERSION = "1.0.0"
+
+    target = tmp_path / "target"
+    package = tmp_path / "package"
+    lib = package / "lib"
+    lib.mkdir(parents=True)
+
+    (lib / "requirements.txt").write_text(
+        "test_pkg_4 @ file://" + packages["test_pkg_4"]
+    )
+
+    install_python_libraries(
+        source_path=str(package),
+        ucc_lib_target=str(target),
+        python_binary_name=sys.executable,
+    )
+
+    # all packages should be installed, as there are no excludes
+    for number in (3, 4):
+        package_name = f"test_pkg_{number}"
+        assert glob.glob(f"{target}/{package_name}-{VERSION}.dist-info")
+        assert glob.glob(f"{target}/{package_name}")
+
+    for number in (1, 2):
+        package_name = f"test_pkg_{number}"
+        assert glob.glob(f"{target}/{package_name}-{VERSION}.dist-info")
+        assert glob.glob(f"{target}/pkg_1_plus_2/{package_name}")
+
+
+def test_install_python_libraries_no_mocks_with_excludes(tmp_path, packages):
+    VERSION = "1.0.0"
+
+    target = tmp_path / "target"
+    package = tmp_path / "package"
+    lib = package / "lib"
+    lib.mkdir(parents=True)
+
+    (lib / "requirements.txt").write_text(
+        "test_pkg_4 @ file://" + packages["test_pkg_4"]
+    )
+
+    # Exclude test_pkg_2 and a non-existing package
+    (lib / "exclude.txt").write_text("test_pkg_2\nnon_existing_pkg\n")
+
+    install_python_libraries(
+        source_path=str(package),
+        ucc_lib_target=str(target),
+        python_binary_name=sys.executable,
+    )
+
+    for number in (1, 3, 4):
+        package_name = f"test_pkg_{number}"
+        assert glob.glob(f"{target}/{package_name}-{VERSION}.dist-info")
+
+    # pkg2 is excluded
+    assert not glob.glob(f"{target}/test_pkg_2-{VERSION}.dist-info")
+
+    assert glob.glob(f"{target}/pkg_1_plus_2/test_pkg_1")
+    assert not glob.glob(f"{target}/pkg_1_plus_2/test_pkg_2")

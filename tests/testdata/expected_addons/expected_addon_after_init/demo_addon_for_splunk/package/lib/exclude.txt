@@ -1,0 +1,3 @@
+# Exclude the following packages from being installed in the add-on
+# You can add here packages that are shipped with Splunk by default
+urllib3

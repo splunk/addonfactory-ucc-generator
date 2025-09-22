@@ -35,6 +35,7 @@ def test_ucc_init():
         ("package", "app.manifest"),
         ("package", "bin", "demo_input_helper.py"),
         ("package", "lib", "requirements.txt"),
+        ("package", "lib", "exclude.txt"),
         ("package", "LICENSES", "MIT License.txt"),
     ]
     helpers.compare_file_content(

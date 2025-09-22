@@ -178,6 +178,19 @@ def _generate_addon(
                 "solnlib\n",
             ]
         )
+
+    # Packages that will be excluded from installation
+    package_lib_requirements_exclude_path = os.path.join(
+        package_lib_path, "exclude.txt"
+    )
+
+    with open(package_lib_requirements_exclude_path, "w") as fp:
+        fp.writelines(
+            "# Exclude the following packages from being installed in the add-on\n"
+            "# You can add here packages that are shipped with Splunk by default\n"
+            "urllib3\n"
+        )
+
     return generated_addon_path
 
 
