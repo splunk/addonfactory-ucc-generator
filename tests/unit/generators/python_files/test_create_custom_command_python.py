@@ -72,9 +72,9 @@ def test_for_transforming_command_with_error(
     input_dir,
     output_dir,
 ):
-    global_config_all_json._content[
-        "customSearchCommand"
-    ] = transforming_custom_search_command
+    global_config_all_json._content["customSearchCommand"] = (
+        transforming_custom_search_command
+    )
 
     with pytest.raises(FileNotFoundError):
         CustomCommandPy(global_config_all_json, input_dir, output_dir)
@@ -91,9 +91,9 @@ def test_for_transforming_command(
     os.makedirs(bin_dir, exist_ok=True)
 
     shutil.copy(file_path, bin_dir)
-    global_config_all_json._content[
-        "customSearchCommand"
-    ] = transforming_custom_search_command
+    global_config_all_json._content["customSearchCommand"] = (
+        transforming_custom_search_command
+    )
     custom_command_py = CustomCommandPy(global_config_all_json, input_dir, output_dir)
 
     assert custom_command_py.commands_info == [
@@ -125,9 +125,9 @@ def test_for_transforming_command_without_map(
 
     shutil.copy(file_path, bin_dir)
     transforming_custom_search_command[0]["fileName"] = "transforming_without_map.py"
-    global_config_all_json._content[
-        "customSearchCommand"
-    ] = transforming_custom_search_command
+    global_config_all_json._content["customSearchCommand"] = (
+        transforming_custom_search_command
+    )
     custom_command_py = CustomCommandPy(global_config_all_json, input_dir, output_dir)
 
     assert custom_command_py.commands_info == [
