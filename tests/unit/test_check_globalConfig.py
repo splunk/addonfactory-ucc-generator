@@ -25,6 +25,7 @@ def test_build_addon_from_global_config(config_file, caplog):
         "valid_config.json",
         "valid_config_with_custom_dashboard.json",
         "valid_config_only_custom_dashboard.json",
+        "valid_config_logging_with_user_defined_handlers.json",
     ]:
         pytest.skip("As these files need external dependency.")
 

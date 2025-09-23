@@ -72,6 +72,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
 
     appName: string;
 
+    restRoot: string;
+
     groupEntities: string[];
 
     endpoint: string;
@@ -142,6 +144,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
+        this.restRoot = globalConfig.meta.restRoot;
         this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
@@ -1067,7 +1070,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
 
-        const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
+        const OAuthEndpoint = `${encodeURIComponent(this.restRoot)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         postRequest<{ entry: [{ content: any }] }>({
