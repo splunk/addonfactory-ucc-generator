@@ -748,10 +748,16 @@
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint",
+                                        "label": "Endpoint",
+                                        "field": "endpoint",
+                                        "help": "Put here endpoint, ie. login.salesforce.com"
                                     }
                                 ],
-                                "auth_code_endpoint": "/services/oauth2/authorize",
-                                "access_token_endpoint": "/services/oauth2/token",
+                                "auth_code_endpoint": "/oauth/authorize",
+                                "access_token_endpoint": "/oauth/token",
                                 "oauth_timeout": 30,
                                 "oauth_state_enabled": false
                             }

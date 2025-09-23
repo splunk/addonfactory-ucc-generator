@@ -2,6 +2,7 @@ from typing import Any, Iterator, List
 
 import pytest
 
+from tests.ui.oauth2_server.oauth_server import OAuth2TestServer
 from tests.ui.pages.account_page import AccountPage
 from tests.ui.test_configuration_page_account_tab import _ACCOUNT_CONFIG
 from pytest_splunk_addon_ui_smartx import utils as s_utils
@@ -53,3 +54,19 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
         log_msg = [f"{log.level}: {log.source} - {log.message}" for log in severe_logs]
         msg = "Severe logs found in browser console logs: \n" + "\n".join(log_msg)
         pytest.fail(msg, pytrace=True)
+
+
+@pytest.fixture(scope="session")
+def _oauth_server() -> Iterator[OAuth2TestServer]:
+    """Pytest fixture for OAuth2 test server."""
+    server = OAuth2TestServer(host="0.0.0.0")  # Use random port
+    server.start()
+    yield server
+    server.stop()
+
+
+@pytest.fixture
+def oauth_server_port(_oauth_server: OAuth2TestServer) -> int:
+    """Pytest fixture for OAuth2 test server."""
+    _oauth_server.clear_data()
+    return _oauth_server.port
