@@ -14,7 +14,7 @@ import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from string import Template
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 
 logger = logging.getLogger("oauth2_test_server")
@@ -32,8 +32,8 @@ token_url_pattern = re.compile(r".*/token(\?.*|$)")
 class OAuth2RequestHandler(BaseHTTPRequestHandler):
     """HTTP request handler for OAuth2 test server."""
 
-    auth_codes: Dict[str, Dict[str, Any]] = {}
-    access_tokens: Dict[str, Dict[str, Any]] = {}
+    auth_codes: dict[str, dict[str, Any]] = {}
+    access_tokens: dict[str, dict[str, Any]] = {}
 
     def do_GET(self) -> None:
         logger.debug("GET REQUEST: %s", self.path)
@@ -194,7 +194,7 @@ class OAuth2RequestHandler(BaseHTTPRequestHandler):
             200, "application/json", json.dumps(token_response, indent=2)
         )
 
-    def _send_redirect(self, redirect_uri: str, params: Dict[str, str]) -> None:
+    def _send_redirect(self, redirect_uri: str, params: dict[str, str]) -> None:
         """Send OAuth2 redirect response."""
         if not redirect_uri:
             return self._send_response(400, "text/plain", "Missing redirect_uri")
@@ -232,7 +232,7 @@ class OAuth2RequestHandler(BaseHTTPRequestHandler):
         """Suppress logging."""
 
 
-def _generate_self_signed_cert() -> Tuple[str, str]:
+def _generate_self_signed_cert() -> tuple[str, str]:
     """Generate self-signed certificate. Returns (cert_file, key_file)."""
     temp_dir = tempfile.mkdtemp()
     cert_file = os.path.join(temp_dir, "cert.pem")
