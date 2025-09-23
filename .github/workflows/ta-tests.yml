@@ -154,7 +154,7 @@ jobs:
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
-          poetry run ucc-gen build > build_output.log 2>&1
+          poetry run ucc-gen build | tee build_output.log
           if tail -n 1 build_output.log | grep -q "^INFO: File creation summary: created: "; then
             echo "✓ Build completed successfully with expected output"
             cat build_output.log
