@@ -49,7 +49,14 @@ fields = [
         encrypted=False,
         default=None,
         validator=None
-    ), 
+    ),
+    field.RestField(
+        'endpoint',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
     field.RestField(
         'access_token',
         required=False,
