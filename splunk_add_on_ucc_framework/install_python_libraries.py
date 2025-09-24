@@ -179,10 +179,7 @@ def _check_libraries_required_for_ui(
             )
 
 
-def parse_excludes(excludes_path: Optional[str]) -> Optional[list[str]]:
-    if not excludes_path:
-        return None
-
+def parse_excludes(excludes_path: str) -> Optional[list[str]]:
     if not os.path.isfile(excludes_path):
         return None
 

@@ -784,7 +784,6 @@ def test_parse_excludes(tmp_path):
         exclude_path.write_text(content)
         assert parse_excludes(str(exclude_path)) == asserted
 
-    assert parse_excludes(None) is None
     assert parse_excludes(str(tmp_path / "file_that_does_not_exist.txt")) is None
     assert_excludes("", None)
     assert_excludes("   \n\n\t", None)
