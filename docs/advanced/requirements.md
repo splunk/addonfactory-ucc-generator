@@ -59,6 +59,9 @@ The `exclude.txt` file should be placed in the same `package/lib/` directory as 
 
 The exclude file contains one package name per line. Comments are supported using the `#` symbol.
 
+Similarly to `requirements.txt`, a line that begins with `#` is treated as a comment and ignored.
+Whitespace followed by a `#` causes the `#` and the remainder of the line to be treated as a comment.
+
 ### Example
 
 ```txt
@@ -66,10 +69,10 @@ The exclude file contains one package name per line. Comments are supported usin
 urllib3
 certifi
 
-# Other packages to exclude
-setuptools
-pip
+setuptools # Exclude setuptools
 ```
+
+The above example will exclude the `urllib3`, `certifi`, and `setuptools` packages from the final add-on package.
 
 ## Build Process
 
