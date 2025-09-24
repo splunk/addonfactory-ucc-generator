@@ -164,8 +164,12 @@ jobs:
           echo "UCC_WHL=$UCC_WHL" >> "$GITHUB_ENV"
           
           echo "Adding UCC package $UCC_WHL"
-          poetry remove splunk_add_on_ucc_framework
-          echo "./$UCC_WHL" > requirements_ucc.txt
+          
+            # Remove existing splunk_add_on_ucc_framework if present
+          poetry remove splunk_add_on_ucc_framework || true
+          [[ -f requirements_ucc.txt ]] && cat requirements_ucc.txt | grep -v "splunk_add_on_ucc_framework" > requirements_ucc.txt
+          
+          echo "./$UCC_WHL" >> requirements_ucc.txt
           
           # Adding "package-mode = false" to pyproject.toml if not present
           if ! grep -q "package-mode = false" pyproject.toml; then
