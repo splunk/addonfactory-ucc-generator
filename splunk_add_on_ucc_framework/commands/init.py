@@ -188,7 +188,7 @@ def _generate_addon(
         fp.writelines(
             "# Exclude the following packages from being installed in the add-on\n"
             "# You can add here packages that are shipped with Splunk by default\n"
-            "urllib3\n"
+            "# Please add one dependency name per line, similarly to requirements.txt\n"
         )
 
     return generated_addon_path
