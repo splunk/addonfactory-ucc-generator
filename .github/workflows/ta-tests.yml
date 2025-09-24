@@ -303,7 +303,7 @@ jobs:
           echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
 
       - name: Wait for the workflow run to complete
-        if: success() && github.event.inputs.run_pipelines == 'true'
+        if: success()
         id: wait-for-workflow
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
