@@ -87,36 +87,30 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                         "auth_type": ["additional_oauth", "oauth_client_credentials"],
                         "additional_oauth": [
                             {
-                                "oauth_field": "username_additional_oauth",
                                 "label": "Username",
                                 "field": "username_additional_oauth",
                             },
                             {
-                                "oauth_field": "password_additional_oauth",
                                 "label": "Password",
                                 "field": "password_additional_oauth",
                                 "encrypted": True,
                             },
                             {
-                                "oauth_field": "certificate_additional_oauth",
                                 "label": "Certificate",
                                 "field": "certificate_additional_oauth",
                             },
                         ],
                         "oauth_client_credentials": [
                             {
-                                "oauth_field": "client_id_oauth_credentials",
                                 "label": "Client Id",
                                 "field": "client_id_oauth_credentials",
                             },
                             {
-                                "oauth_field": "client_secret_oauth_credentials",
                                 "label": "Client Secret",
                                 "field": "client_secret_oauth_credentials",
                                 "encrypted": True,
                             },
                             {
-                                "oauth_field": "endpoint_token_oauth_credentials",
                                 "label": "Token endpoint",
                                 "field": "endpoint_token_oauth_credentials",
                             },
@@ -133,34 +127,28 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                 {
                     "field": "username_additional_oauth",
                     "label": "Username",
-                    "oauth_field": "username_additional_oauth",
                 },
                 {
                     "encrypted": True,
                     "field": "password_additional_oauth",
                     "label": "Password",
-                    "oauth_field": "password_additional_oauth",
                 },
                 {
                     "field": "certificate_additional_oauth",
                     "label": "Certificate",
-                    "oauth_field": "certificate_additional_oauth",
                 },
                 {
                     "field": "client_id_oauth_credentials",
                     "label": "Client Id",
-                    "oauth_field": "client_id_oauth_credentials",
                 },
                 {
                     "encrypted": True,
                     "field": "client_secret_oauth_credentials",
                     "label": "Client Secret",
-                    "oauth_field": "client_secret_oauth_credentials",
                 },
                 {
                     "field": "endpoint_token_oauth_credentials",
                     "label": "Token endpoint",
-                    "oauth_field": "endpoint_token_oauth_credentials",
                 },
                 {"encrypted": True, "field": "access_token"},
                 {"encrypted": True, "field": "refresh_token"},
@@ -184,18 +172,15 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                         "auth_type": ["additional_oauth"],
                         "additional_oauth": [
                             {
-                                "oauth_field": "username_additional_oauth",
                                 "label": "Username",
                                 "field": "username_additional_oauth",
                             },
                             {
-                                "oauth_field": "password_additional_oauth",
                                 "label": "Password",
                                 "field": "password_additional_oauth",
                                 "encrypted": True,
                             },
                             {
-                                "oauth_field": "certificate_additional_oauth",
                                 "label": "Certificate",
                                 "field": "certificate_additional_oauth",
                             },
@@ -208,18 +193,15 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                 {
                     "field": "username_additional_oauth",
                     "label": "Username",
-                    "oauth_field": "username_additional_oauth",
                 },
                 {
                     "encrypted": True,
                     "field": "password_additional_oauth",
                     "label": "Password",
-                    "oauth_field": "password_additional_oauth",
                 },
                 {
                     "field": "certificate_additional_oauth",
                     "label": "Certificate",
-                    "oauth_field": "certificate_additional_oauth",
                 },
             ],
         ),
@@ -239,18 +221,15 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                         "auth_type": ["oauth_client_credentials"],
                         "oauth_client_credentials": [
                             {
-                                "oauth_field": "client_id_oauth_credentials",
                                 "label": "Client Id",
                                 "field": "client_id_oauth_credentials",
                             },
                             {
-                                "oauth_field": "client_secret_oauth_credentials",
                                 "label": "Client Secret",
                                 "field": "client_secret_oauth_credentials",
                                 "encrypted": True,
                             },
                             {
-                                "oauth_field": "endpoint_token_oauth_credentials",
                                 "label": "Token endpoint",
                                 "field": "endpoint_token_oauth_credentials",
                             },
@@ -267,18 +246,15 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                 {
                     "field": "client_id_oauth_credentials",
                     "label": "Client Id",
-                    "oauth_field": "client_id_oauth_credentials",
                 },
                 {
                     "encrypted": True,
                     "field": "client_secret_oauth_credentials",
                     "label": "Client Secret",
-                    "oauth_field": "client_secret_oauth_credentials",
                 },
                 {
                     "field": "endpoint_token_oauth_credentials",
                     "label": "Token endpoint",
-                    "oauth_field": "endpoint_token_oauth_credentials",
                 },
                 {"encrypted": True, "field": "access_token"},
                 {"encrypted": True, "field": "refresh_token"},
@@ -307,56 +283,47 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                         ],
                         "additional_oauth": [
                             {
-                                "oauth_field": "username_additional_oauth",
                                 "label": "Username",
                                 "field": "username_additional_oauth",
                             },
                             {
-                                "oauth_field": "password_additional_oauth",
                                 "label": "Password",
                                 "field": "password_additional_oauth",
                                 "encrypted": True,
                             },
                             {
-                                "oauth_field": "certificate_additional_oauth",
                                 "label": "Certificate",
                                 "field": "certificate_additional_oauth",
                             },
                         ],
                         "oauth_client_credentials": [
                             {
-                                "oauth_field": "client_id_oauth_credentials",
                                 "label": "Client Id",
                                 "field": "client_id_oauth_credentials",
                             },
                             {
-                                "oauth_field": "client_secret_oauth_credentials",
                                 "label": "Client Secret",
                                 "field": "client_secret_oauth_credentials",
                                 "encrypted": True,
                             },
                             {
-                                "oauth_field": "endpoint_token_oauth_credentials",
                                 "label": "Token endpoint",
                                 "field": "endpoint_token_oauth_credentials",
                             },
                         ],
                         "basic": [
                             {
-                                "oauth_field": "username",
                                 "label": "Username",
                                 "help": "Enter the username for this account.",
                                 "field": "username",
                             },
                             {
-                                "oauth_field": "password",
                                 "label": "Password",
                                 "encrypted": "true",
                                 "help": "Enter the password for this account.",
                                 "field": "password",
                             },
                             {
-                                "oauth_field": "security_token",
                                 "label": "Security Token",
                                 "encrypted": "true",
                                 "help": "Enter the security token.",
@@ -373,20 +340,17 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
             [
                 {"field": "name", "label": "Name", "required": True, "type": "text"},
                 {
-                    "oauth_field": "username",
                     "label": "Username",
                     "help": "Enter the username for this account.",
                     "field": "username",
                 },
                 {
-                    "oauth_field": "password",
                     "label": "Password",
                     "encrypted": "true",
                     "help": "Enter the password for this account.",
                     "field": "password",
                 },
                 {
-                    "oauth_field": "security_token",
                     "label": "Security Token",
                     "encrypted": "true",
                     "help": "Enter the security token.",
@@ -395,34 +359,28 @@ def test__builder_configs_for_oauth(mock_oauth_model, global_config_all_json):
                 {
                     "field": "username_additional_oauth",
                     "label": "Username",
-                    "oauth_field": "username_additional_oauth",
                 },
                 {
                     "encrypted": True,
                     "field": "password_additional_oauth",
                     "label": "Password",
-                    "oauth_field": "password_additional_oauth",
                 },
                 {
                     "field": "certificate_additional_oauth",
                     "label": "Certificate",
-                    "oauth_field": "certificate_additional_oauth",
                 },
                 {
                     "field": "client_id_oauth_credentials",
                     "label": "Client Id",
-                    "oauth_field": "client_id_oauth_credentials",
                 },
                 {
                     "encrypted": True,
                     "field": "client_secret_oauth_credentials",
                     "label": "Client Secret",
-                    "oauth_field": "client_secret_oauth_credentials",
                 },
                 {
                     "field": "endpoint_token_oauth_credentials",
                     "label": "Token endpoint",
-                    "oauth_field": "endpoint_token_oauth_credentials",
                 },
                 {"encrypted": True, "field": "access_token"},
                 {"encrypted": True, "field": "refresh_token"},

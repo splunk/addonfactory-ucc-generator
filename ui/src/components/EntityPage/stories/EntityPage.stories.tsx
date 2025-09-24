@@ -15,7 +15,7 @@ const meta = {
     },
     parameters: {
         snapshots: {
-            width: 1000,
+            width: 1200,
         },
     },
 } satisfies Meta<typeof EntityPage>;

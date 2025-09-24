@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, List, Set, Optional, Union
+from typing import Any, Optional, Union
 from dataclasses import dataclass
 from splunk_add_on_ucc_framework.commands.openapi_generator.object_to_json import Init
 
@@ -40,7 +40,7 @@ class ServerVariableObject(
 @dataclass
 class ServerObject(Init):  # https://spec.openapis.org/oas/latest.html#server-object
     url: str
-    variables: Dict[str, ServerVariableObject]
+    variables: dict[str, ServerVariableObject]
     description: Optional[str] = None
 
 
@@ -52,8 +52,8 @@ class SchemaObject(Init):  # https://spec.openapis.org/oas/latest.html#schema-ob
     # above is a theory
     # below is practice
     type: Optional[str] = None
-    properties: Optional[Dict[str, Any]] = None
-    items: Optional[Dict[str, str]] = None
+    properties: Optional[dict[str, Any]] = None
+    items: Optional[dict[str, str]] = None
 
 
 @dataclass
@@ -70,17 +70,17 @@ class EncodingObject(Init):
 class MediaTypeObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#media-type-object
-    schema: Optional[Union[SchemaObject, Dict[str, Any]]] = None
+    schema: Optional[Union[SchemaObject, dict[str, Any]]] = None
     example: Optional[Any] = None
-    examples: Optional[Dict[str, ExampleObject]] = None
-    encoding: Optional[Dict[str, EncodingObject]] = None
+    examples: Optional[dict[str, ExampleObject]] = None
+    encoding: Optional[dict[str, EncodingObject]] = None
 
 
 @dataclass
 class RequestBodyObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#request-body-object
-    content: Dict[str, Union[MediaTypeObject, Dict[str, Any]]]
+    content: dict[str, Union[MediaTypeObject, dict[str, Any]]]
     description: Optional[str] = None
     required: Optional[bool] = False
 
@@ -108,9 +108,9 @@ class LinkObject(Init):
 @dataclass
 class ResponseObject(Init):  # https://spec.openapis.org/oas/latest.html#response-object
     description: str
-    headers: Optional[Dict[str, HeaderObject]] = None
-    content: Optional[Dict[str, MediaTypeObject]] = None
-    links: Optional[Dict[str, LinkObject]] = None
+    headers: Optional[dict[str, HeaderObject]] = None
+    content: Optional[dict[str, MediaTypeObject]] = None
+    links: Optional[dict[str, LinkObject]] = None
 
 
 # @dataclass
@@ -133,18 +133,18 @@ class OperationObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#operation-object
     # responses: ResponsesObject = None
-    responses: Dict[str, ResponseObject]  # required by openapi3
-    tags: Optional[Set[str]] = None
+    responses: dict[str, ResponseObject]  # required by openapi3
+    tags: Optional[set[str]] = None
     summary: Optional[str] = None
     description: Optional[str] = None
     externalDocs: Optional[ExternalDocumentationObject] = None
     operationId: Optional[str] = None
-    parameters: Optional[List[Union[ParameterObject, Dict[str, Any]]]] = None
+    parameters: Optional[list[Union[ParameterObject, dict[str, Any]]]] = None
     requestBody: Optional[RequestBodyObject] = None
     callbacks: Optional[CallbackObjects] = None
     deprecated: Optional[bool] = False
     # security: List[SecurityRequirementObject] = None
-    security: Optional[List[Dict[str, Any]]] = None
+    security: Optional[list[dict[str, Any]]] = None
 
     servers: Optional[ServerObject] = None
 
@@ -164,7 +164,7 @@ class PathItemObject(
     # patch: OperationObject = None
     # trace: OperationObject = None
     servers: Optional[ServerObject] = None
-    parameters: Optional[List[Dict[str, Any]]] = None
+    parameters: Optional[list[dict[str, Any]]] = None
     description: Optional[str] = None
 
 
@@ -226,16 +226,16 @@ class TagObject(Init):
 class ComponentsObject(
     Init
 ):  # https://spec.openapis.org/oas/latest.html#components-object
-    schemas: Optional[Dict[str, SchemaObject]] = None
-    responses: Optional[Dict[str, ResponseObject]] = None
-    parameters: Optional[Dict[str, ParameterObject]] = None
-    examples: Optional[Dict[str, ExampleObject]] = None
-    requestBodies: Optional[Dict[str, RequestBodyObject]] = None
-    headers: Optional[Dict[str, HeaderObject]] = None
-    securitySchemes: Optional[Dict[str, SecuritySchemeObjects]] = None
-    links: Optional[Dict[str, LinkObjects]] = None
-    callbacks: Optional[Dict[str, CallbackObjects]] = None
-    pathItems: Optional[Dict[str, PathItemObject]] = None
+    schemas: Optional[dict[str, SchemaObject]] = None
+    responses: Optional[dict[str, ResponseObject]] = None
+    parameters: Optional[dict[str, ParameterObject]] = None
+    examples: Optional[dict[str, ExampleObject]] = None
+    requestBodies: Optional[dict[str, RequestBodyObject]] = None
+    headers: Optional[dict[str, HeaderObject]] = None
+    securitySchemes: Optional[dict[str, SecuritySchemeObjects]] = None
+    links: Optional[dict[str, LinkObjects]] = None
+    callbacks: Optional[dict[str, CallbackObjects]] = None
+    pathItems: Optional[dict[str, PathItemObject]] = None
 
 
 @dataclass
@@ -243,14 +243,14 @@ class OpenAPIObject(Init):  # https://spec.openapis.org/oas/latest.html#openapi-
     openapi: str
     info: InfoObject
     jsonSchemaDialect: Optional[str] = None
-    servers: Optional[List[ServerObject]] = None
-    webhooks: Optional[Dict[str, PathItemObject]] = None
+    servers: Optional[list[ServerObject]] = None
+    webhooks: Optional[dict[str, PathItemObject]] = None
     components: Optional[ComponentsObject] = None
-    tags: Optional[List[TagObject]] = None
+    tags: Optional[list[TagObject]] = None
     externalDocs: Optional[ExternalDocumentationObject] = None
     # paths: Optional[PathsObject] = None
     # security: List[SecurityRequirementObject] = None
     # despite above follows strict definition,
     # below needs to be used, to be implementable
-    paths: Optional[Dict[str, PathItemObject]] = None
-    security: Optional[List[Dict[str, Any]]] = None
+    paths: Optional[dict[str, PathItemObject]] = None
+    security: Optional[list[dict[str, Any]]] = None

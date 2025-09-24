@@ -1,7 +1,7 @@
 import importlib
 import sys
 from collections import defaultdict, namedtuple
-from typing import Dict, Any
+from typing import Any
 from unittest.mock import MagicMock
 
 import httplib2
@@ -52,13 +52,13 @@ class MConfigHandler:
     def getSessionKey(self) -> str:
         return "session"
 
-    def handleEdit(self, conf_info: Dict[str, Dict[str, Any]]) -> None:
+    def handleEdit(self, conf_info: dict[str, dict[str, Any]]) -> None:
         pass
 
     def setup(self) -> None:
         pass
 
-    def call_with_params(self, params: Dict[str, Any]) -> Dict[str, Dict[str, Any]]:
+    def call_with_params(self, params: dict[str, Any]) -> dict[str, dict[str, Any]]:
         self.callerArgs.data.clear()
 
         for key, value in params.items():
@@ -67,7 +67,7 @@ class MConfigHandler:
             else:
                 self.callerArgs.data[key] = [value]
 
-        conf_info: Dict[str, Dict[str, Any]] = defaultdict(dict)
+        conf_info: dict[str, dict[str, Any]] = defaultdict(dict)
         self.handleEdit(conf_info)
 
         return conf_info

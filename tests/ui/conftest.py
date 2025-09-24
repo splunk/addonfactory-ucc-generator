@@ -1,4 +1,5 @@
-from typing import Any, Iterator, List
+from typing import Any
+from collections.abc import Iterator
 
 import pytest
 
@@ -34,7 +35,7 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
     yield
 
     # sometimes RUM is down and we get a lot of severe logs
-    IGNORED: List[str] = [
+    IGNORED: list[str] = [
         "https://rum-ingest.us1.signalfx.com",
         "https://cdn.signalfx.com/o11y-gdi-rum",
         "http://localhost:8000/en-US/splunkd/__raw/services/dmc-conf/settings/settings?output_mode=json",

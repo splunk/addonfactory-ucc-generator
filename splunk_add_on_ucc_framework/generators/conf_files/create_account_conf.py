@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Tuple, List, Dict, Optional
+from typing import Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
@@ -29,7 +29,7 @@ class AccountConf(FileGenerator):
         self, global_config: GlobalConfig, input_dir: str, output_dir: str
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
-        self.account_fields: List[Tuple[str, List[str]]] = []
+        self.account_fields: list[tuple[str, list[str]]] = []
         if global_config.has_configuration():
             self.conf_spec_file = global_config.namespace.lower() + "_account.conf.spec"
             for account in global_config.configs:
@@ -43,7 +43,7 @@ class AccountConf(FileGenerator):
                     ("<name>", [f"{f._name} = " for f in fields])
                 )
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self.account_fields:
             return None
 

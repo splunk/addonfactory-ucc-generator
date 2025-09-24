@@ -19,23 +19,24 @@ const ModalWrapper = styled(Modal)`
 `;
 
 const ModalHeader = styled(Modal.Header)`
-    background-color: ${variables.neutral200};
+    background-color: ${variables.neutral50};
 `;
 
 const ModalFooter = styled(Modal.Footer)`
-    background-color: ${variables.neutral200};
+    background-color: ${variables.neutral50};
+    padding: 20px 40px;
 `;
 
 const ModalBody = styled(Modal.Body)`
-    background-color: ${variables.neutral200};
-    padding: 15px 30px;
+    background-color: ${variables.neutral50};
+    padding-right: 30px;
     height: 70vh;
 `;
 
 const FooterButtonGroup = styled('div')`
     display: grid;
     grid-template-columns: 0.35fr 1fr;
-    margin: 0px ${variables.spacingSmall};
+    width: 100%;
 
     .footerBtn:first-child {
         justify-self: start;
@@ -43,6 +44,7 @@ const FooterButtonGroup = styled('div')`
 
     .footerBtn:last-child {
         justify-self: end;
+        margin-right: 5px;
     }
 `;
 
@@ -119,10 +121,7 @@ export const DataIngestionModal = ({
     // TODO: returnFocus ADDON-78884
     return (
         <ModalWrapper returnFocus={() => {}} open={open} onRequestClose={handleRequestClose}>
-            <ModalHeader
-                onRequestClose={handleRequestClose}
-                title={`Data ingestion details (By ${title})`}
-            />
+            <ModalHeader title={`Data ingestion details (By ${title})`} />
             <ModalBody>
                 {children}
                 <div

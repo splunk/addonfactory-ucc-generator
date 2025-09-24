@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 from splunk_add_on_ucc_framework.commands.openapi_generator.object_to_json import Init
 
 
@@ -36,8 +36,8 @@ class TestObjectToJson:
 
         @dataclass
         class Out(Init):
-            v_out: List[str]
-            in_out: List[In]
+            v_out: list[str]
+            in_out: list[In]
 
         in1 = In(v_in="in1v")
         in2 = In(v_in="in2v")

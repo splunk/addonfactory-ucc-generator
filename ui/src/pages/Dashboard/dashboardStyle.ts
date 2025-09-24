@@ -239,7 +239,7 @@ export const GlobalDashboardStyle = createGlobalStyle`
         grid-row: 1;
         grid-column: 1;
         align-content: center;
-        margin-left: 2px;
+        margin-left: ${variables.spacingXSmall};
         width: 160px;
     }
 
@@ -313,7 +313,7 @@ export const GlobalDashboardStyle = createGlobalStyle`
         }
         /* Time selector */
         [data-test='input-title'] {
-            margin: 5px;
+            margin: 0px 5px;
             font-size: 14px;
         }
     }

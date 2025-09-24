@@ -16,7 +16,7 @@
 import os
 import ast
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
 
@@ -30,7 +30,7 @@ class CustomCommandPy(FileGenerator):
         super().__init__(global_config, input_dir, output_dir)
         self.commands_info = []
         for command in global_config.custom_search_commands:
-            argument_list: List[str] = []
+            argument_list: list[str] = []
             import_map = False
             imported_file_name = command["fileName"].replace(".py", "")
             template = command["commandType"].replace(" ", "_") + ".template"
@@ -72,8 +72,8 @@ class CustomCommandPy(FileGenerator):
             )
 
     def argument_generator(
-        self, argument_list: List[str], arg: Dict[str, Any]
-    ) -> List[str]:
+        self, argument_list: list[str], arg: dict[str, Any]
+    ) -> list[str]:
         validate_str = ""
         validate = arg.get("validate", {})
         if validate:
@@ -111,7 +111,7 @@ class CustomCommandPy(FileGenerator):
         argument_list.append(arg_str)
         return argument_list
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
+    def generate(self) -> Optional[list[dict[str, str]]]:
         if not self.commands_info:
             return None
 
