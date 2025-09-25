@@ -326,7 +326,7 @@ jobs:
           printf '%s\n' "$RESULTS"
           [[ $(printf '%s\n' "$RESULTS" | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
       - name: Cleanup temporary branch
-        if: success() && github.event.inputs.run_pipelines == 'true'
+        if: github.event.inputs.run_pipelines == 'true'
         working-directory: TA
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
