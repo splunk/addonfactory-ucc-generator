@@ -165,8 +165,12 @@ jobs:
           
             # Remove existing splunk_add_on_ucc_framework if present
           poetry remove splunk_add_on_ucc_framework || true
-          [[ -f requirements_ucc.txt ]] && cat requirements_ucc.txt | grep -v "splunk-add-on-ucc-framework" > requirements_ucc.txt.new
-          [[ -f requirements_ucc.txt.new ]] && mv requirements_ucc.txt.new requirements_ucc.txt
+          
+          if [[ -f requirements_ucc.txt ]]; then
+            echo "Modifying existing requirements_ucc.txt"
+            cat requirements_ucc.txt | grep -v "splunk-add-on-ucc-framework" > requirements_ucc.txt.new || true
+            mv requirements_ucc.txt.new requirements_ucc.txt
+          fi
           
           echo "./$UCC_WHL" >> requirements_ucc.txt
           
