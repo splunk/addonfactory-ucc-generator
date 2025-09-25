@@ -1,6 +1,33 @@
-[admin:{{ namespace }}]
+{% if configuration_endpoints -%}
+[admin:{{ namespace }}_configuration]
 match = /
-members = {{ endpoint_names }}
+members = {{ configuration_endpoint_names }}
+{% for key, value in configuration_capability.items()-%}
+capability.{{key}} = {{value}}
+{% endfor -%}
+{% endif -%}
+
+{% if inputs_endpoints -%}
+[admin:{{ namespace }}_inputs]
+match = /
+members = {{ inputs_endpoint_names }}
+{% for key, value in input_capability.items() -%}
+capability.{{key}} = {{value}}
+{% endfor -%}
+{% endif -%}
+
+{% for endpoint in custom_endpoints-%}
+[admin:{{ endpoint.name }}]
+{%if endpoint.parentResource != "/" %}
+match = /{{endpoint.parentResource}}
+{%else%}
+match = {{endpoint.parentResource}}
+{%endif%}
+members = {{ endpoint.name }}
+{% for key, value in endpoint.capabilities.items() -%}
+capability.{{key}} = {{value}}
+{% endfor -%}
+{% endfor -%}
 
 {% for endpoint in endpoints %}
 [admin_external:{{ endpoint.name }}]

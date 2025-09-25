@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, List, Any, Tuple
+from typing import Any
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
@@ -54,11 +54,14 @@ def _is_true(val: Any) -> bool:
 class GlobalConfigBuilderSchema:
     def __init__(self, global_config: global_config_lib.GlobalConfig):
         self.global_config = global_config
-        self._settings_conf_file_names: List[str] = list()
-        self._configs_conf_file_names: List[str] = list()
-        self._oauth_conf_file_names: List[str] = list()
-        self._endpoints: Dict[str, RestEndpointBuilder] = {}
+        self._settings_conf_file_names: list[str] = list()
+        self._configs_conf_file_names: list[str] = list()
+        self._oauth_conf_file_names: list[str] = list()
+        self._configuration_endpoints: dict[str, RestEndpointBuilder] = {}
+        self._inputs_endpoints: dict[str, RestEndpointBuilder] = {}
         self._parse_builder_schema()
+        self._endpoints: dict[str, RestEndpointBuilder] = {}
+        self._preserve_endpoint_dict()
 
     @property
     def product(self) -> str:
@@ -69,24 +72,37 @@ class GlobalConfigBuilderSchema:
         return self.global_config.namespace
 
     @property
-    def settings_conf_file_names(self) -> List[str]:
+    def settings_conf_file_names(self) -> list[str]:
         return self._settings_conf_file_names
 
     @property
-    def configs_conf_file_names(self) -> List[str]:
+    def configs_conf_file_names(self) -> list[str]:
         return self._configs_conf_file_names
 
     @property
-    def oauth_conf_file_names(self) -> List[str]:
+    def oauth_conf_file_names(self) -> list[str]:
         return self._oauth_conf_file_names
 
     @property
-    def endpoints(self) -> List[RestEndpointBuilder]:
+    def endpoints(self) -> list[RestEndpointBuilder]:
         return list(self._endpoints.values())
+
+    @property
+    def configuration_endpoints(self) -> list[RestEndpointBuilder]:
+        return list(self._configuration_endpoints.values())
+
+    @property
+    def inputs_endpoints(self) -> list[RestEndpointBuilder]:
+        return list(self._inputs_endpoints.values())
 
     @property
     def need_reload(self) -> bool:
         return False
+
+    def _preserve_endpoint_dict(self) -> dict[str, RestEndpointBuilder]:
+        self._endpoints.update(self._configuration_endpoints)
+        self._endpoints.update(self._inputs_endpoints)
+        return self._endpoints
 
     def _parse_builder_schema(self) -> None:
         self._builder_configs()
@@ -110,7 +126,7 @@ class GlobalConfigBuilderSchema:
                         log_stanza=log_details.get("name"),
                         log_level_field=log_details.get("entity", [{}])[0].get("field"),
                     )
-                    self._endpoints["oauth"] = oauth_endpoint
+                    self._configuration_endpoints["oauth"] = oauth_endpoint
                     if oauth_endpoint.conf_name not in self._oauth_conf_file_names:
                         self._oauth_conf_file_names.append(oauth_endpoint.conf_name)
 
@@ -152,7 +168,7 @@ class GlobalConfigBuilderSchema:
             else:
                 endpoint = SingleModelEndpointBuilder(**endpoint_params)
 
-            self._endpoints[name] = endpoint
+            self._configuration_endpoints[name] = endpoint
             content = self._get_oauth_enitities(config["entity"])
             fields, special_fields = self._parse_fields(content)
             entity = SingleModelEntityBuilder(
@@ -177,7 +193,7 @@ class GlobalConfigBuilderSchema:
             rest_handler_class=REST_HANDLER_DEFAULT_CLASS,
             need_reload=self.need_reload,
         )
-        self._endpoints["settings"] = endpoint
+        self._configuration_endpoints["settings"] = endpoint
         for setting in self.global_config.settings:
             if setting.get("entity") is not None:
                 content = self._get_oauth_enitities(setting["entity"])
@@ -212,7 +228,7 @@ class GlobalConfigBuilderSchema:
                     rest_handler_class=rest_handler_class,
                     need_reload=self.need_reload,
                 )
-                self._endpoints[name] = single_model_endpoint
+                self._inputs_endpoints[name] = single_model_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
                 fields, special_fields = self._parse_fields(content)
                 single_model_entity = SingleModelEntityBuilder(
@@ -232,7 +248,7 @@ class GlobalConfigBuilderSchema:
                     rest_handler_module=rest_handler_module,
                     rest_handler_class=rest_handler_class,
                 )
-                self._endpoints[name] = data_input_endpoint
+                self._inputs_endpoints[name] = data_input_endpoint
                 content = self._get_oauth_enitities(input_item["entity"])
                 fields, special_fields = self._parse_fields(content)
                 data_input_entity = DataInputEntityBuilder(
@@ -244,10 +260,10 @@ class GlobalConfigBuilderSchema:
                 data_input_endpoint.add_entity(data_input_entity)
 
     def _parse_fields(
-        self, fields_content: List[Dict[str, Any]]
-    ) -> Tuple[List[RestFieldBuilder], List[RestFieldBuilder]]:
-        fields: List[RestFieldBuilder] = []
-        special_fields: List[RestFieldBuilder] = []
+        self, fields_content: list[dict[str, Any]]
+    ) -> tuple[list[RestFieldBuilder], list[RestFieldBuilder]]:
+        fields: list[RestFieldBuilder] = []
+        special_fields: list[RestFieldBuilder] = []
         if fields_content:
             for field in fields_content:
                 rest_field = RestFieldBuilder(
@@ -272,8 +288,8 @@ class GlobalConfigBuilderSchema:
     """
 
     def _get_oauth_enitities(
-        self, content: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+        self, content: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         if content:
             for entity_element in content:
                 # Check if we have oauth type

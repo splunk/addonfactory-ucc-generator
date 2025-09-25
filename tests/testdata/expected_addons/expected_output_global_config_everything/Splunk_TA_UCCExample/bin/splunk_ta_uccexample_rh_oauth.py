@@ -3,18 +3,16 @@ This module will be used to get oauth token from auth code
 """
 import import_declare_test
 
-import urllib
-try:
-    from urllib import urlencode
-except:
-    from urllib.parse import urlencode
+import json
 from httplib2 import Http, ProxyInfo, socks
-import splunk.admin as admin
+from urllib.parse import urlencode, urlsplit
+
 from solnlib import log
 from solnlib import conf_manager
 from solnlib.conf_manager import InvalidHostnameError, InvalidPortError
 from solnlib.utils import is_true
-import json
+import splunk.admin as admin
+from splunk.rest import getcontext
 
 
 log.Logs.set_context()
@@ -85,7 +83,8 @@ class splunk_ta_uccexample_rh_oauth2_token(admin.MConfigHandler):
             logger.debug("oAUth url %s", url)
             proxy_info = self.getProxyDetails()
 
-            http = Http(proxy_info=proxy_info)
+            context = getcontext(urlsplit(url))
+            http = Http(proxy_info=proxy_info, context=context)
             method = self.callerArgs.data['method'][0]
 
             # Create payload from the arguments received

@@ -6,6 +6,7 @@ import {
     CommonEditableEntityFields,
     CommonEditableEntityOptions,
     CommonEntityFields,
+    CustomComponent,
     ModifyFieldsOnValue,
     PlatformEnum,
     StringOrTextWithLinks,
@@ -201,13 +202,9 @@ export const FileEntitySchema = CommonEditableEntityFields.extend({
 
 export const CustomEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('custom'),
-    options: z
-        .object({
-            type: z.literal('external'),
-            src: z.string(),
-            hideForPlatform: PlatformEnum.optional(),
-        })
-        .strict(),
+    options: CustomComponent.extend({
+        hideForPlatform: PlatformEnum.optional(),
+    }).strict(),
 }).strict();
 
 export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
@@ -221,6 +218,7 @@ export const SingleSelectSplunkSearchEntitySchema = CommonEntityFields.extend({
             items: z.array(ValueLabelPair),
         })
         .optional(),
+    required: z.boolean().default(false).optional(),
 }).strict();
 
 export const StrictIndexEntitySchema = z

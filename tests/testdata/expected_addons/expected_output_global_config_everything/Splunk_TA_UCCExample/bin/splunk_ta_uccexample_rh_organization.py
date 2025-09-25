@@ -24,37 +24,68 @@ special_fields = [
         required=True,
         encrypted=False,
         default=None,
-        validator=validator.AllOf(
-            validator.String(
-                max_len=50, 
-                min_len=1, 
-            ), 
-            validator.Pattern(
-                regex=r"""^[a-zA-Z]\w*$""", 
-            )
-        )
+        validator=None
     )
 ]
 
 fields = [
     field.RestField(
-        'text_test',
-        required=True,
+        'client_id',
+        required=False,
         encrypted=False,
         default=None,
-        validator=validator.String(
-            max_len=100, 
-            min_len=1, 
-        )
+        validator=None
+    ), 
+    field.RestField(
+        'client_secret',
+        required=False,
+        encrypted=True,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'redirect_url',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'endpoint',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
+    ),
+    field.RestField(
+        'access_token',
+        required=False,
+        encrypted=True,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'refresh_token',
+        required=False,
+        encrypted=True,
+        default=None,
+        validator=None
+    ), 
+    field.RestField(
+        'instance_url',
+        required=False,
+        encrypted=False,
+        default=None,
+        validator=None
     )
 ]
 model = RestModel(fields, name=None, special_fields=special_fields)
 
 
 endpoint = SingleModel(
-    'splunk_ta_uccexample_custom_amd_row_tab',
+    'splunk_ta_uccexample_organization',
     model,
-    config_name='custom_amd_row_tab',
+    config_name='organization',
     need_reload=False,
 )
 

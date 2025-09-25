@@ -6,7 +6,7 @@ Install the UCC framework and start building your first add-on. Then you can bui
 
 Make sure that the following software is installed on your machine:
 
-* Python 3.7 or later
+* Python 3.9 or later
 * Git
 
 > **Note:** Git is used to generate the add-on version from the Git tags. Alternatively, you can use the `--ta-version` parameter and specify the version by yourself.
@@ -69,7 +69,7 @@ The new add-on is located in the `demo_addon_for_splunk` folder.
 ### Build the add-on
 
 ```bash
-ucc-gen build --source demo_addon_for_splunk/package 
+ucc-gen build --source demo_addon_for_splunk/package --ta-version 1.0.0
 ```
 
 ### Package the add-on

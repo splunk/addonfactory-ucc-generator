@@ -22,7 +22,9 @@ on:
         description: "Branch of splunk/addonfactory-ucc-library to use (leave empty to use latest from PyPI)"
         required: false
         default: ""
-
+env:
+  POETRY_VERSION: "2.1.4"
+  POETRY_EXPORT_PLUGIN_VERSION: "1.9.0"
 jobs:
   build-ucc:
     runs-on: ubuntu-22.04
@@ -35,10 +37,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
 
-      - name: Install Poetry 1.5.1
-        run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - name: Install Poetry ${{env.POETRY_VERSION}}
+        run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
 
       - name: Install Poetry Dependencies
         working-directory: UCC
@@ -74,7 +76,9 @@ jobs:
               "splunk/splunk-add-on-for-microsoft-office-365",
               "splunk/splunk-add-on-for-salesforce",
               "splunk/splunk-add-on-for-servicenow",
-              "splunk/splunk-add-on-for-mysql"
+              "splunk/splunk-add-on-for-mysql",
+              "splunk/splunk-add-on-for-cisco-asa",
+              "splunk/splunk-add-on-for-unix-and-linux"
             ]' >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
           fi
@@ -98,10 +102,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.7"
+          python-version: "3.9"
 
-      - name: Install Poetry 1.5.1
-        run: curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+      - name: Install Poetry ${{env.POETRY_VERSION}}
+        run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
 
       - name: Download UCC Artifact
         uses: actions/download-artifact@v4
