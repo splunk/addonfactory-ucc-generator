@@ -33,7 +33,6 @@ const entityBasicOauthDisableonEdit = [
             auth_type: ['basic', 'additional_oauth'],
             basic: [
                 {
-                    oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'basic_oauth_text_jest_test',
@@ -45,7 +44,6 @@ const entityBasicOauthDisableonEdit = [
             ],
             additional_oauth: [
                 {
-                    oauth_field: 'some_text_jest_test_add_cred',
                     label: 'some_text Token additional oauth',
                     help: 'Enter some_text additional oauth',
                     field: 'basic_oauth_text_jest_test_add_cred',
@@ -77,7 +75,6 @@ const entityOauthOauthDisableonEdit = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'oauth_some_text_jest_test',
                     label: 'oauth some_text Token',
                     help: 'Enter some_text',
                     field: 'oauth_oauth_text_jest_test',
@@ -141,20 +138,17 @@ const accessTokenMock = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'client_id',
                     label: 'App Id',
                     field: 'client_id',
                     help: 'Enter Client Id.',
                 },
                 {
-                    oauth_field: 'client_secret',
                     label: 'App Secret',
                     field: 'client_secret',
                     encrypted: true,
                     help: 'Enter Client Secret.',
                 },
                 {
-                    oauth_field: 'redirect_url',
                     label: 'Redirect url',
                     field: 'redirect_url',
                     help: 'Please add this redirect URL in your app.',
@@ -201,7 +195,6 @@ const entityEnableFalseForOauthField = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'oauth_some_text_jest_test',
                     label: 'oauth some_text Token',
                     help: 'Enter some_text',
                     field: 'oauth_oauth_text_jest_test',
@@ -303,7 +296,6 @@ const entityBasicOauthFullyEnabledField = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'oauth_oauth_text_jest_test',
@@ -353,7 +345,6 @@ const entityBasicOauthDefaultValue = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'oauth_oauth_text_jest_test',
@@ -402,14 +393,12 @@ const entityOauthOauthSeparatedEndpoints = [
             auth_type: ['oauth'],
             oauth: [
                 {
-                    oauth_field: 'client_id',
                     label: 'Client Id',
                     field: 'client_id',
                     help: 'Enter the Client Id for this account.',
                     defaultValue: 'Client Id',
                 },
                 {
-                    oauth_field: 'client_secret',
                     label: 'Client Secret',
                     field: 'client_secret',
                     encrypted: true,
@@ -417,20 +406,17 @@ const entityOauthOauthSeparatedEndpoints = [
                     defaultValue: 'Client Secret',
                 },
                 {
-                    oauth_field: 'redirect_url',
                     label: 'Redirect url',
                     field: 'redirect_url',
                     help: 'Copy and paste this URL into your app.',
                     defaultValue: 'Redirect url',
                 },
                 {
-                    oauth_field: 'endpoint_token',
                     label: 'Token endpoint',
                     field: 'endpoint_token',
                     help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
                 },
                 {
-                    oauth_field: 'endpoint_authorize',
                     label: 'Authorize endpoint',
                     field: 'endpoint_authorize',
                     help: 'Put here endpoint used for authorization ie. login.salesforce.com',
@@ -474,14 +460,12 @@ const allEntityTypesConfig = [
             auth_type: ['basic', 'oauth', 'oauth_client_credentials'],
             oauth: [
                 {
-                    oauth_field: 'client_id',
                     label: 'Client Id',
                     field: 'client_id',
                     help: 'Enter the Client Id for this account.',
                     defaultValue: 'Client Id',
                 },
                 {
-                    oauth_field: 'client_secret',
                     label: 'Client Secret',
                     field: 'client_secret',
                     encrypted: true,
@@ -489,20 +473,17 @@ const allEntityTypesConfig = [
                     defaultValue: 'Client Secret',
                 },
                 {
-                    oauth_field: 'redirect_url',
                     label: 'Redirect url',
                     field: 'redirect_url',
                     help: 'Copy and paste this URL into your app.',
                     defaultValue: 'Redirect url',
                 },
                 {
-                    oauth_field: 'endpoint_token',
                     label: 'Token endpoint',
                     field: 'endpoint_token',
                     help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
                 },
                 {
-                    oauth_field: 'endpoint_authorize',
                     label: 'Authorize endpoint',
                     field: 'endpoint_authorize',
                     help: 'Put here endpoint used for authorization ie. login.salesforce.com',
@@ -510,7 +491,6 @@ const allEntityTypesConfig = [
             ],
             basic: [
                 {
-                    oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'basic_oauth_text_jest_test',
@@ -522,14 +502,12 @@ const allEntityTypesConfig = [
             ],
             oauth_client_credentials: [
                 {
-                    oauth_field: 'client_id_oauth_credentials',
                     defaultValue: 'Secret credentials Client Id',
                     label: 'Client Id',
                     field: 'client_id_oauth_credentials',
                     help: 'Enter the Client Id for this account.',
                 },
                 {
-                    oauth_field: 'client_secret_oauth_credentials',
                     label: 'Client Secret',
                     field: 'client_secret_oauth_credentials',
                     defaultValue: 'Secret Client Secret',
@@ -537,13 +515,11 @@ const allEntityTypesConfig = [
                     help: 'Enter the Client Secret key for this account.',
                 },
                 {
-                    oauth_field: 'endpoint_token_oauth_credentials',
                     label: 'Token endpoint',
                     field: 'endpoint_token_oauth_credentials',
                     help: 'Put here endpoint used for token acqusition ie. login.salesforce.com',
                 },
                 {
-                    oauth_field: 'oauth_credentials_some_disabled_field',
                     label: 'Disabled field',
                     defaultValue: 'Disabled field value',
                     field: 'oauth_credentials_some_disabled_field',
@@ -611,7 +587,6 @@ const manyTypesInOauth = [
             auth_type: ['basic', 'oauth'],
             basic: [
                 {
-                    oauth_field: 'some_text_jest_test',
                     label: 'some_text Token',
                     help: 'Enter some_text',
                     field: 'basic_oauth_text_jest_test',
@@ -659,14 +634,12 @@ const manyTypesInOauth = [
             ],
             oauth: [
                 {
-                    oauth_field: 'client_id',
                     label: 'Client Id',
                     field: 'client_id',
                     help: 'Enter the Client Id for this account.',
                     defaultValue: 'Client Id',
                 },
                 {
-                    oauth_field: 'client_secret',
                     label: 'Client Secret',
                     field: 'client_secret',
                     encrypted: true,

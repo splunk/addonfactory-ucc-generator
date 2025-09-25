@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Tuple, List, Dict, Optional
+from typing import Optional
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
@@ -29,7 +29,7 @@ class SettingsConf(FileGenerator):
         self, global_config: GlobalConfig, input_dir: str, output_dir: str
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
-        self.settings_stanzas: List[Tuple[str, List[str]]] = []
+        self.settings_stanzas: list[tuple[str, list[str]]] = []
         self.default_content: str = ""
 
         if global_config.has_configuration():
@@ -52,8 +52,8 @@ class SettingsConf(FileGenerator):
                     "settings"
                 ].generate_conf_with_default_values()
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
-        conf_files: List[Dict[str, str]] = []
+    def generate(self) -> Optional[list[dict[str, str]]]:
+        conf_files: list[dict[str, str]] = []
         conf = self.generate_conf()
         conf_spec = self.generate_conf_spec()
         if conf is not None:
@@ -62,7 +62,7 @@ class SettingsConf(FileGenerator):
             conf_files.append(conf_spec)
         return None if conf_files == [] else conf_files
 
-    def generate_conf(self) -> Optional[Dict[str, str]]:
+    def generate_conf(self) -> Optional[dict[str, str]]:
         if not self.default_content:
             return None
         file_path = self.get_file_output_path(["default", self.conf_file])
@@ -77,7 +77,7 @@ class SettingsConf(FileGenerator):
             "content": rendered_content,
         }
 
-    def generate_conf_spec(self) -> Optional[Dict[str, str]]:
+    def generate_conf_spec(self) -> Optional[dict[str, str]]:
         if not self.settings_stanzas:
             return None
 

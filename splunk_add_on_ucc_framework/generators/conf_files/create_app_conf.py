@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 from time import time
-from typing import Dict, List
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
@@ -54,7 +53,7 @@ class AppConf(FileGenerator):
         ).lower()
         self.build = str(int(time()))
 
-    def generate(self) -> List[Dict[str, str]]:
+    def generate(self) -> list[dict[str, str]]:
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="app_conf.template"

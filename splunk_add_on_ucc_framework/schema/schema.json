@@ -729,8 +729,7 @@
                 "description": "Used to map field values to more meaningful values."
               },
               "customCell": {
-                "type": "object",
-                "description": "Used to modify the default cell values."
+                "$ref": "#/definitions/CustomCell"
               }
             },
             "required": [
@@ -740,8 +739,7 @@
           }
         },
         "customRow": {
-          "type": "object",
-          "description": "Used to customise the moreInfo Component."
+          "$ref": "#/definitions/CustomRow"
         },
         "actions": {
           "type": "array",
@@ -2184,6 +2182,36 @@
       ],
       "additionalProperties": false
     },
+    "CustomComponent": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "external",
+          "type": "string",
+          "description": "Exactly: external"
+        },
+        "src": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "src"
+      ]
+    },
+    "Hook": {
+      "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "CustomRow": {
+      "description": "Used to customise the moreInfo Component.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "CustomCell": {
+      "description": "Used to modify the default cell values.",
+      "$ref": "#/definitions/CustomComponent"
+    },
     "CustomEntity": {
       "type": "object",
       "properties": {
@@ -2225,18 +2253,7 @@
           "description": "The initial input value."
         },
         "options": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "const": "external",
-              "type": "string",
-              "description": "Exactly: external"
-            },
-            "src": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
+          "$ref": "#/definitions/CustomComponent"
         }
       },
       "required": [
@@ -2392,8 +2409,7 @@
                 "description": "Used to map field values to more meaningful values."
               },
               "customCell": {
-                "type": "object",
-                "description": "Used to modify the default cell values."
+                "$ref": "#/definitions/CustomCell"
               }
             },
             "required": [
@@ -2403,8 +2419,7 @@
           }
         },
         "customRow": {
-          "type": "object",
-          "description": "Used to customise the moreInfo Component."
+          "$ref": "#/definitions/CustomRow"
         },
         "actions": {
           "type": "array",
@@ -2638,11 +2653,6 @@
     "DefaultOAuthFields": {
       "type": "object",
       "properties": {
-        "oauth_field": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "Must keep it as in examples. It is for mandatory fields as mentioned before."
-        },
         "label": {
           "type": "string",
           "maxLength": 100,
@@ -3129,12 +3139,11 @@
           "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
         },
         "hook": {
-          "type": "object",
-          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+          "$ref": "#/definitions/Hook"
         },
         "customTab": {
-          "type": "object",
-          "description": "This property allows you to enable the custom tab feature."
+          "description": "This property allows you to enable the custom tab feature.",
+          "$ref": "#/definitions/CustomComponent"
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
@@ -3855,8 +3864,7 @@
           "$ref": "#/definitions/SaveValidatorHook"
         },
         "hook": {
-          "type": "object",
-          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+          "$ref": "#/definitions/Hook"
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
@@ -3885,10 +3893,6 @@
         },
         "subDescription": {
           "$ref": "#/definitions/SubDescription"
-        },
-        "menu": {
-          "description": "This property allows you to enable the custom menu feature",
-          "type": "object"
         },
         "table": {
           "$ref": "#/definitions/InputsTable"
@@ -3967,8 +3971,7 @@
                 ]
               },
               "hook": {
-                "description": "It is used to add custom behaviour to forms.",
-                "type": "object"
+                "$ref": "#/definitions/Hook"
               },
               "conf": {
                 "type": "string",
@@ -4106,8 +4109,7 @@
                 ]
               },
               "hook": {
-                "description": "It is used to add custom behaviour to forms.",
-                "type": "object"
+                "$ref": "#/definitions/Hook"
               },
               "conf": {
                 "type": "string",

@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.7
+          python-version: 3.9
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Build Storybook
@@ -29,7 +29,7 @@ jobs:
           yarn run build-storybook --quiet --output-dir ../docs/storybook/
           cd ../
       - run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version 1.5.1
+          curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4 && poetry self add poetry-plugin-export@1.9.0
           poetry install
       - name: Deploy to GitHub Pages
         if: github.ref_name == 'main'

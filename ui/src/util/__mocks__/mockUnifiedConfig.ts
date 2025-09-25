@@ -48,10 +48,6 @@ export const mockUnifiedConfig: z.input<typeof GlobalConfigSchema> = {
                     groupTitle: 'CloudWatch',
                 },
             ],
-            menu: {
-                src: 'CustomMenu',
-                type: 'external',
-            },
             services: [
                 {
                     name: 'aws_billing_cur',

@@ -6,7 +6,7 @@ Install the UCC framework and start building your first add-on. Then you can bui
 
 Make sure that the following software is installed on your machine:
 
-* Python 3.7 or later
+* Python 3.9 or later
 * Git
 
 > **Note:** Git is used to generate the add-on version from the Git tags. Alternatively, you can use the `--ta-version` parameter and specify the version by yourself.

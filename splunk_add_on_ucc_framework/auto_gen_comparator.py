@@ -16,7 +16,7 @@
 
 from os import walk, path
 from os.path import sep
-from typing import List, Dict, Any, Optional
+from typing import Any, Optional
 from logging import Logger
 import addonfactory_splunk_conf_parser_lib as conf_parser
 
@@ -52,13 +52,13 @@ class CodeGeneratorDiffChecker:
     def __init__(self, src_dir: str, dst_dir: str) -> None:
         self.source_default_directory = f"{src_dir}/default"
         self.target_default_directory = f"{dst_dir}/default"
-        self.different_files: Dict[str, Any[Dict[str, str], List[Dict[str, str]]]] = {}
-        self.common_files: Dict[str, str] = {}
-        self.same_stanza: Dict[str, str] = {}
-        self.diff_stanza: Dict[str, str] = {}
+        self.different_files: dict[str, Any[dict[str, str], list[dict[str, str]]]] = {}
+        self.common_files: dict[str, str] = {}
+        self.same_stanza: dict[str, str] = {}
+        self.diff_stanza: dict[str, str] = {}
 
     def deduce_gen_and_custom_content(
-        self, logger: Logger, ignore_file_list: Optional[List[str]] = None
+        self, logger: Logger, ignore_file_list: Optional[list[str]] = None
     ) -> None:
         """
         Deduce that the files have same content or different
@@ -70,12 +70,12 @@ class CodeGeneratorDiffChecker:
         # TODO: try to implement generation of these files from globalConfig
         ignore_file_list.extend(["app.manifest", "README.txt"])
 
-        src_all_files: Dict[str, str] = {}
+        src_all_files: dict[str, str] = {}
         for root, _, files in walk(self.source_default_directory):
             for file in files:
                 src_all_files[file] = sep.join([root, file])
 
-        dest_all_files: Dict[str, str] = {}
+        dest_all_files: dict[str, str] = {}
         for root, _, files in walk(self.target_default_directory):
             for file in files:
                 dest_all_files[file] = sep.join([root, file])
@@ -145,7 +145,7 @@ class CodeGeneratorDiffChecker:
         """
         Print the common and different files in the console
         """
-        messages: List[str] = []
+        messages: list[str] = []
         if self.common_files:
             messages.append("-" * 120)
             messages.append(self.COMMON_FILES_MESSAGE_PART_1)
