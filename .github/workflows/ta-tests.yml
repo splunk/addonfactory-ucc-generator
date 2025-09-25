@@ -297,7 +297,7 @@ jobs:
               break
             fi
 
-            echo "Workflow run ID not found, retrying in 2 seconds..."
+            echo "Workflow run ID not found, retrying in 5 seconds..."
             sleep 5
           done
           
