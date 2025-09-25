@@ -286,6 +286,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
         run: |
+          echo "Waiting for the workflow run to be created..."
+          sleep 30  # Wait for a while to ensure the workflow run is created
+          
           for i in {1..30}; do
             echo "Attempt $i to get workflow run ID"
             WORKFLOW_RUN_ID=$(gh run -R ${{ matrix.target_repo }} list -b ucc/ci_tests_trigger_pipeline \
@@ -297,8 +300,8 @@ jobs:
               break
             fi
 
-            echo "Workflow run ID not found, retrying in 5 seconds..."
-            sleep 5
+            echo "Workflow run ID not found, retrying in 10 seconds..."
+            sleep 10
           done
           
           if [[ -z "$WORKFLOW_RUN_ID" ]]; then
@@ -320,8 +323,12 @@ jobs:
             exit 0
           fi
           
+          echo "Workflow run ID: $WORKFLOW_RUN_ID"
+          echo "Waiting for workflow run $WORKFLOW_RUN_ID to start..."
+          sleep 300  # Initial wait to allow the workflow to start properly
+          
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" -i 60
+          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" -i 120
           
           echo "Results JSON:"
           RESULTS_JSON="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs)"
