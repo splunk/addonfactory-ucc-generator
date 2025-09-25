@@ -294,8 +294,13 @@ jobs:
             fi
 
             echo "Workflow run ID not found, retrying in 2 seconds..."
-            sleep 2
+            sleep 5
           done
+          
+          if [[ -z "$WORKFLOW_RUN_ID" ]]; then
+              echo "Failed to obtain workflow run ID after multiple attempts, exiting"
+              exit 1
+          fi
           
           echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID" >> $GITHUB_ENV
           echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
