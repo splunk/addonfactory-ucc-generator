@@ -448,7 +448,8 @@
           "enum": [
             "generating",
             "streaming",
-            "dataset processing"
+            "dataset processing",
+            "transforming"
           ]
         },
         "requiredSearchAssistant": {
@@ -665,6 +666,9 @@
             ]
           },
           "minItems": 1
+        },
+        "capabilities": {
+          "$ref": "#/definitions/capabilities"
         }
       },
       "required": [
@@ -725,8 +729,7 @@
                 "description": "Used to map field values to more meaningful values."
               },
               "customCell": {
-                "type": "object",
-                "description": "Used to modify the default cell values."
+                "$ref": "#/definitions/CustomCell"
               }
             },
             "required": [
@@ -736,8 +739,7 @@
           }
         },
         "customRow": {
-          "type": "object",
-          "description": "Used to customise the moreInfo Component."
+          "$ref": "#/definitions/CustomRow"
         },
         "actions": {
           "type": "array",
@@ -2247,6 +2249,36 @@
       ],
       "additionalProperties": false
     },
+    "CustomComponent": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "external",
+          "type": "string",
+          "description": "Exactly: external"
+        },
+        "src": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "src"
+      ]
+    },
+    "Hook": {
+      "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "CustomRow": {
+      "description": "Used to customise the moreInfo Component.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "CustomCell": {
+      "description": "Used to modify the default cell values.",
+      "$ref": "#/definitions/CustomComponent"
+    },
     "CustomEntity": {
       "type": "object",
       "properties": {
@@ -2288,18 +2320,7 @@
           "description": "The initial input value."
         },
         "options": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "const": "external",
-              "type": "string",
-              "description": "Exactly: external"
-            },
-            "src": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
+          "$ref": "#/definitions/CustomComponent"
         }
       },
       "required": [
@@ -2458,8 +2479,7 @@
                 "description": "Used to map field values to more meaningful values."
               },
               "customCell": {
-                "type": "object",
-                "description": "Used to modify the default cell values."
+                "$ref": "#/definitions/CustomCell"
               }
             },
             "required": [
@@ -2469,8 +2489,7 @@
           }
         },
         "customRow": {
-          "type": "object",
-          "description": "Used to customise the moreInfo Component."
+          "$ref": "#/definitions/CustomRow"
         },
         "actions": {
           "type": "array",
@@ -2704,11 +2723,6 @@
     "DefaultOAuthFields": {
       "type": "object",
       "properties": {
-        "oauth_field": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "Must keep it as in examples. It is for mandatory fields as mentioned before."
-        },
         "label": {
           "type": "string",
           "maxLength": 100,
@@ -2990,6 +3004,19 @@
           "description": "The name of the handler.",
           "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
         },
+        "resourcePresent": {
+          "type": "boolean",
+          "description": "Specifies whether the collection should expose its resources as well via web.conf or not.",
+          "default": false
+        },
+        "parentResource": {
+          "type": "string",
+          "description": "Specifies parentResource for the endpoint. It would be generated for match attribute in restmap.conf",
+          "default": "/"
+        },
+        "capabilities": {
+          "$ref": "#/definitions/capabilities"
+        },
         "endpoint": {
           "type": "string",
           "description": "The endpoint for the custom rest handler.",
@@ -3185,12 +3212,11 @@
           "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
         },
         "hook": {
-          "type": "object",
-          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+          "$ref": "#/definitions/Hook"
         },
         "customTab": {
-          "type": "object",
-          "description": "This property allows you to enable the custom tab feature."
+          "description": "This property allows you to enable the custom tab feature.",
+          "$ref": "#/definitions/CustomComponent"
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
@@ -3406,6 +3432,28 @@
       "required": [
         "text"
       ]
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Define capabilities for the users",
+      "properties": {
+        "put": {
+          "type": "string",
+          "description": "Define capability when PUT method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "delete": {
+          "type": "string",
+          "description": "Define capability when DELETE method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "post": {
+          "type": "string",
+          "description": "Define capability when POST method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "get": {
+          "type": "string",
+          "description": "Define capability when GET method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        }
+      }
     },
     "singleFieldToModify": {
       "type": "object",
@@ -3889,8 +3937,7 @@
           "$ref": "#/definitions/SaveValidatorHook"
         },
         "hook": {
-          "type": "object",
-          "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more."
+          "$ref": "#/definitions/Hook"
         },
         "warning": {
           "$ref": "#/definitions/WarningMessage"
@@ -3919,10 +3966,6 @@
         },
         "subDescription": {
           "$ref": "#/definitions/SubDescription"
-        },
-        "menu": {
-          "description": "This property allows you to enable the custom menu feature",
-          "type": "object"
         },
         "table": {
           "$ref": "#/definitions/InputsTable"
@@ -4001,8 +4044,7 @@
                 ]
               },
               "hook": {
-                "description": "It is used to add custom behaviour to forms.",
-                "type": "object"
+                "$ref": "#/definitions/Hook"
               },
               "conf": {
                 "type": "string",
@@ -4069,6 +4111,9 @@
         },
         "inputsUniqueAcrossSingleService": {
           "$ref": "#/definitions/inputsUniqueAcrossSingleService"
+        },
+        "capabilities": {
+          "$ref": "#/definitions/capabilities"
         }
       },
       "required": [
@@ -4137,8 +4182,7 @@
                 ]
               },
               "hook": {
-                "description": "It is used to add custom behaviour to forms.",
-                "type": "object"
+                "$ref": "#/definitions/Hook"
               },
               "conf": {
                 "type": "string",
@@ -4185,6 +4229,9 @@
         },
         "inputsUniqueAcrossSingleService": {
           "$ref": "#/definitions/inputsUniqueAcrossSingleService"
+        },
+        "capabilities": {
+          "$ref": "#/definitions/capabilities"
         }
       },
       "required": [

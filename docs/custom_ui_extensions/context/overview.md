@@ -117,8 +117,8 @@ To initialize front-end code, you need to provide an `uccInit` function in the `
 **Key Properties:**
 
 - `ComponentNameFromGlobalConfig`: Matches the `src` defined in the `globalConfig.json` file.
-- `component`: Refers to a component that extends one of the available custom component types (`CustomHookBase`, `CustomControlBase`, `CustomTabBase`, `CustomMenuBase`, `CustomCellBase`, `CustomRowBase`).
-- `type`: Defines the component type. Available types `"hook"`, `"cell"`, `"row"`, `"control"`, `"tab"`, and `"menu"`.
+- `component`: Refers to a component that extends one of the available custom component types (`CustomHookBase`, `CustomControlBase`, `CustomTabBase`, `CustomCellBase`, `CustomRowBase`).
+- `type`: Defines the component type. Available types `"hook"`, `"cell"`, `"row"`, `"control"` and `"tab"`.
 
 ### Example: `ucc-ui.ts`
 
@@ -157,7 +157,7 @@ To streamline the build process, you may need to adjust the `package.json` file 
 module.exports = {
     //...
     "scripts": {
-        "ucc-gen": "ucc-gen-ui ta_name=Splunk_TA_Example init_file_dir=src/ucc-ui.ts",
+        "build": "ucc-gen-ui ta_name=Splunk_TA_Example init_file_dir=src/ucc-ui.ts",
     },
 }
 ```
@@ -174,7 +174,13 @@ The command accepts the following parameters:
 
 ## Smooth Build Process
 
-To ensure a smooth build process, follow these steps:
+To streamline the build process:
+
+- **Utilize the `--build-custom-ui` flag**
+
+The [ucc-gen build](../../commands.md#ucc-gen-build) command supports the `--build-custom-ui` flag, which automatically initiates the UI build.
+
+Alternatively, you can manually incorporate the following steps into your repository:
 
 - **Create a `build-ui.sh` Script**
 
@@ -203,7 +209,7 @@ else
     npm --prefix "$SCRIPT_DIR/../ui" install
 fi
 
-npm --prefix "$SCRIPT_DIR/../ui" run ucc-gen output=$(pwd)
+npm --prefix "$SCRIPT_DIR/../ui" run build output=$(pwd)
 ```
 
 - **Extend `additional_packaging.py` to Execute the Script**

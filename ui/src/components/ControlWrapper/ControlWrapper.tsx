@@ -3,6 +3,7 @@ import ControlGroup from '@splunk/react-ui/ControlGroup';
 import styled from 'styled-components';
 import { z } from 'zod';
 
+import { variables } from '@splunk/themes';
 import MarkdownMessage from '../MarkdownMessage/MarkdownMessage';
 import CONTROL_TYPE_MAP, { ComponentTypes } from '../../constants/ControlTypeMap';
 import { AnyEntity, UtilControlWrapper } from '../../types/components/BaseFormTypes';
@@ -12,13 +13,17 @@ import { Mode } from '../../constants/modes';
 import { mapTextToElements } from '../../util/textutils/textUtils';
 import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
 
-const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
+export const ControlGroupWrapper = styled(ControlGroup).attrs((props: { dataName: string }) => ({
     'data-name': props.dataName,
 }))`
     // label width + control width
-    width: calc(260px + 320px);
+    width: calc(280px + 320px);
     span[class*='ControlGroupStyles__StyledAsterisk-'] {
         color: red;
+    }
+    > *:first-child {
+        justify-content: flex-end;
+        padding-right: ${variables.spacingSmall};
     }
 `;
 
@@ -145,6 +150,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
         return (
             this.props.display && (
                 <ControlGroupWrapper
+                    labelPosition="left"
                     {...this?.props?.entity}
                     {...this.props?.modifiedEntitiesData}
                     help={helpText}

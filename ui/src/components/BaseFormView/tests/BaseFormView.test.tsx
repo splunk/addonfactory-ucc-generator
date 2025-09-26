@@ -409,6 +409,7 @@ describe('Verify if oauth loads correctly', () => {
         auth_type: string;
         stanza: string;
         mode: Mode;
+        serviceName?: string;
     }>([
         { auth_type: 'basic', stanza: 'test_basic_oauth', mode: 'config' },
         { auth_type: 'oauth', stanza: 'test_oauth_oauth', mode: 'config' },
@@ -420,13 +421,31 @@ describe('Verify if oauth loads correctly', () => {
         { auth_type: 'basic', stanza: 'test_basic_oauth', mode: 'edit' },
         { auth_type: 'oauth', stanza: 'test_oauth_oauth', mode: 'edit' },
         { auth_type: 'oauth_client_credentials', stanza: 'test_oauth_client_creds', mode: 'edit' },
+        {
+            auth_type: 'oauth',
+            stanza: 'test_oauth_oauth',
+            mode: 'edit',
+            serviceName: 'organization',
+        },
+        {
+            auth_type: 'basic',
+            stanza: 'test_basic_oauth',
+            mode: 'edit',
+            serviceName: 'organization',
+        },
+        {
+            auth_type: 'oauth_client_credentials',
+            stanza: 'test_oauth_client_creds',
+            mode: 'edit',
+            serviceName: 'organization',
+        },
     ])('load correctly oauth labels for - %s', async (authData) => {
         const mockConfig = getConfigWithAllTypesOfOauth();
 
         initializeFormRef(
             mockConfig,
             MOCK_CONTEXT_STATE_ACCOUNT,
-            'account',
+            authData.serviceName || 'account',
             authData.mode,
             authData.stanza,
             PAGE_CONF,
@@ -589,6 +608,109 @@ describe('Verify if custom hook works correctly', () => {
             expect(consoleHandler).toHaveBeenCalledWith(
                 '[Custom Hook] Something went wrong while calling onEditLoad. Error: Error Error handling test in Hook onEditLoad method'
             );
+        });
+    });
+});
+
+describe('OAuth endpoint functionality', () => {
+    it('should construct correct OAuth endpoint and handle token exchange', async () => {
+        const mockConfig = getGlobalConfigMockFourInputServices();
+        mockConfig.meta.name = 'Demo_Addon_For_Splunk';
+        mockConfig.meta.restRoot = 'demo_addon_for_splunk';
+        const formRef = initializeFormRef(mockConfig);
+
+        await waitFor(() => {
+            expect(formRef.current).toBeTruthy();
+        });
+
+        const instance = formRef.current!;
+
+        // Mock server to capture the request
+        let capturedEndpoint = '';
+        let capturedBody = '';
+        server.use(
+            http.post('*', async ({ request }) => {
+                const url = new URL(request.url);
+                capturedEndpoint = url.pathname;
+                capturedBody = await request.text();
+                return HttpResponse.json({
+                    entry: [
+                        {
+                            content: {
+                                access_token: 'test_access_token',
+                                instance_url: 'https://test.salesforce.com',
+                                refresh_token: 'test_refresh_token',
+                            },
+                        },
+                    ],
+                });
+            })
+        );
+
+        // Set up OAuth configuration
+        instance.datadict = {
+            endpoint: 'test.salesforce.com',
+            client_id: 'test_client_id',
+            client_secret: 'test_client_secret',
+            redirect_url: 'https://localhost:8000/redirect',
+            scope: 'read write',
+        };
+        instance.oauthConf = {
+            popupWidth: 800,
+            popupHeight: 600,
+            authTimeout: 180,
+            authCodeEndpoint: '/services/oauth2/authorize',
+            accessTokenEndpoint: '/services/oauth2/token',
+            authEndpointAccessTokenType: 'Bearer',
+        };
+
+        // Initialize state
+        instance.isError = false;
+        instance.isResponse = false;
+
+        const mockMessage = {
+            code: 'test_authorization_code',
+            error: undefined,
+            state: 'test_state',
+        };
+
+        // Trigger the OAuth token handler
+        instance.handleOauthToken(mockMessage);
+
+        await waitFor(() => {
+            // Verify correct endpoint construction
+            expect(capturedEndpoint).toBe('/servicesNS/nobody/-/demo_addon_for_splunk_oauth/oauth');
+        });
+
+        const params = new URLSearchParams(capturedBody);
+        await waitFor(() => {
+            // Verify request body parameters
+            expect(params.get('method')).toBe('POST');
+        });
+
+        await waitFor(() => {
+            expect(params.get('grant_type')).toBe('authorization_code');
+        });
+
+        await waitFor(() => {
+            expect(params.get('client_id')).toBe('test_client_id');
+        });
+
+        await waitFor(() => {
+            expect(params.get('code')).toBe('test_authorization_code');
+        });
+
+        await waitFor(() => {
+            // Verify successful token handling
+            expect(instance.datadict.access_token).toBe('test_access_token');
+        });
+
+        await waitFor(() => {
+            expect(instance.isResponse).toBe(true);
+        });
+
+        await waitFor(() => {
+            expect(instance.isError).toBe(false);
         });
     });
 });

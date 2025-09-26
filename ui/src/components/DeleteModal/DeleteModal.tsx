@@ -79,10 +79,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             style={{ width: '800px' }}
             onRequestClose={handleRequestCloseInternal}
         >
-            <Modal.Header
-                title={formTitle ? `Delete ${formTitle}` : getFormattedMessage(101)}
-                onRequestClose={handleRequestCloseInternal}
-            />
+            <Modal.Header title={formTitle ? `Delete ${formTitle}` : getFormattedMessage(101)} />
             <Modal.Body className="deletePrompt">
                 {errorMsg && (
                     <div>

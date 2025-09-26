@@ -54,6 +54,27 @@ const globalConfigMock = {
                     title: 'Accounts',
                 },
                 {
+                    name: 'organization',
+                    table: {
+                        actions: ['edit', 'delete', 'clone'],
+                        header: [
+                            {
+                                label: 'Name',
+                                field: 'name',
+                            },
+                        ],
+                    },
+                    entity: [
+                        {
+                            type: 'text',
+                            label: 'Name',
+                            field: 'name',
+                            required: true,
+                        },
+                    ],
+                    title: 'Organization',
+                },
+                {
                     name: 'logging',
                     entity: [
                         {
@@ -248,52 +269,4 @@ const globalConfigMock = {
 
 export function getGlobalConfigMock() {
     return GlobalConfigSchema.parse(globalConfigMock);
-}
-
-export function getGlobalConfigMockWithCustomMenuStylePage() {
-    const confWithCustomMenu = {
-        ...globalConfigMock,
-        pages: {
-            ...globalConfigMock.pages,
-            inputs: {
-                ...globalConfigMock.pages.inputs,
-                menu: {
-                    src: 'CustomMenu',
-                    type: 'external',
-                },
-                services: [
-                    {
-                        ...globalConfigMock.pages.inputs.services[0],
-                        style: 'page',
-                    },
-                ],
-            },
-        },
-    };
-
-    return GlobalConfigSchema.parse(confWithCustomMenu);
-}
-
-export function getGlobalConfigMockWithCustomMenuStyleDialog() {
-    const confWithCustomMenu = {
-        ...globalConfigMock,
-        pages: {
-            ...globalConfigMock.pages,
-            inputs: {
-                ...globalConfigMock.pages.inputs,
-                menu: {
-                    src: 'CustomMenu',
-                    type: 'external',
-                },
-                services: [
-                    {
-                        ...globalConfigMock.pages.inputs.services[0],
-                        style: 'dialog',
-                    },
-                ],
-            },
-        },
-    };
-
-    return GlobalConfigSchema.parse(confWithCustomMenu);
 }

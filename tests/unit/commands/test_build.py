@@ -219,7 +219,6 @@ def test_ta_name_mismatch(
             verbose_file_summary_report=False,
             pip_version="latest",
             pip_legacy_resolver=False,
-            ui_source_map=False,
         )
 
 
@@ -242,7 +241,6 @@ def test_uncaught_exception(mock_get_build_output_path, caplog):
         verbose_file_summary_report=False,
         pip_version="latest",
         pip_legacy_resolver=False,
-        ui_source_map=False,
     )
 
     whitespaces = [el for el in caplog.messages[-1].split("https")[1] if el.isspace()]
@@ -263,7 +261,6 @@ def test_source_directory_not_found(caplog):
             verbose_file_summary_report=False,
             pip_version="latest",
             pip_legacy_resolver=False,
-            ui_source_map=False,
         )
 
     assert expected_msg == caplog.messages[-1]

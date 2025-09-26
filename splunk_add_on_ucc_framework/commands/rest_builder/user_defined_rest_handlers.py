@@ -14,8 +14,9 @@
 # limitations under the License.
 #
 from copy import deepcopy
-from dataclasses import dataclass
-from typing import Dict, Any, Iterable, Optional, Set, List
+from dataclasses import dataclass, field
+from typing import Any, Optional
+from collections.abc import Iterable
 
 from splunk_add_on_ucc_framework.commands.openapi_generator import oas
 
@@ -72,9 +73,12 @@ class EndpointRegistrationEntry:
 
     name: str
     rh_name: str
-    actions_list: List[str]
+    actions_list: list[str]
+    capabilities: dict[str, str] = field(default_factory=dict)
+    resourcePresent: bool = False
+    parentResource: str = "/"
 
-    def actions(self) -> List[str]:
+    def actions(self) -> list[str]:
         """
         Method for consistency with RestEndpointBuilder.
         """
@@ -90,32 +94,35 @@ class RestHandlerConfig:
     name: str
     endpoint: str
     handlerType: str
-    registerHandler: Optional[Dict[str, Any]] = None
-    requestParameters: Optional[Dict[str, Dict[str, Any]]] = None
-    responseParameters: Optional[Dict[str, Dict[str, Any]]] = None
+    capabilities: dict[str, str] = field(default_factory=dict)
+    resourcePresent: bool = False
+    parentResource: str = "/"
+    registerHandler: Optional[dict[str, Any]] = None
+    requestParameters: Optional[dict[str, dict[str, Any]]] = None
+    responseParameters: Optional[dict[str, dict[str, Any]]] = None
 
     @property
-    def request_parameters(self) -> Dict[str, Dict[str, Any]]:
+    def request_parameters(self) -> dict[str, dict[str, Any]]:
         return self.requestParameters or {}
 
     @property
-    def response_parameters(self) -> Dict[str, Dict[str, Any]]:
+    def response_parameters(self) -> dict[str, dict[str, Any]]:
         return self.responseParameters or {}
 
     @property
-    def supported_actions(self) -> Set[str]:
+    def supported_actions(self) -> set[str]:
         actions = set((self.registerHandler or {}).get("actions", []))
         actions.update(self.request_parameters.keys())
         actions.update(self.response_parameters.keys())
         return actions
 
     def _eai_params_to_schema_object(
-        self, params: Optional[Dict[str, Any]]
-    ) -> Optional[Dict[str, Any]]:
+        self, params: Optional[dict[str, Any]]
+    ) -> Optional[dict[str, Any]]:
         if not params:
             return None
 
-        obj: Dict[str, Any] = {
+        obj: dict[str, Any] = {
             "type": "object",
             "properties": {},
         }
@@ -139,7 +146,7 @@ class RestHandlerConfig:
         if action not in self.supported_actions:
             return None
 
-        op_obj: Dict[str, Any] = {
+        op_obj: dict[str, Any] = {
             "description": description,
             "responses": {
                 "200": oas.ResponseObject(description=description),
@@ -180,7 +187,7 @@ class RestHandlerConfig:
                 "required": True,
             }
 
-        op_obj: Dict[str, Any] = {
+        op_obj: dict[str, Any] = {
             "description": description,
             "responses": {
                 "200": oas.ResponseObject(description=description),
@@ -226,10 +233,10 @@ class RestHandlerConfig:
     def _oas_object_eai_remove(self) -> Optional[oas.OperationObject]:
         return self._oas_object_eai_list_or_remove(f"Delete {self.name} item", "remove")
 
-    def _oas_objects_eai_normal(self) -> Dict[str, oas.PathItemObject]:
+    def _oas_objects_eai_normal(self) -> dict[str, oas.PathItemObject]:
         endpoint = self.endpoint.strip("/")
 
-        obj: Dict[str, Any] = {}
+        obj: dict[str, Any] = {}
         list_all = self._oas_object_eai_list_all()
 
         if list_all:
@@ -246,10 +253,10 @@ class RestHandlerConfig:
 
         return {}
 
-    def _oas_objects_eai_specified(self) -> Dict[str, oas.PathItemObject]:
+    def _oas_objects_eai_specified(self) -> dict[str, oas.PathItemObject]:
         endpoint = self.endpoint.strip("/")
 
-        obj_specified: Dict[str, Any] = {}
+        obj_specified: dict[str, Any] = {}
 
         list_one = self._oas_object_eai_list_one()
 
@@ -272,8 +279,8 @@ class RestHandlerConfig:
 
         return {}
 
-    def _oas_objects_eai(self) -> Dict[str, oas.PathItemObject]:
-        obj_dict: Dict[str, oas.PathItemObject] = {}
+    def _oas_objects_eai(self) -> dict[str, oas.PathItemObject]:
+        obj_dict: dict[str, oas.PathItemObject] = {}
 
         obj_dict.update(self._oas_objects_eai_normal())
         obj_dict.update(self._oas_objects_eai_specified())
@@ -281,7 +288,7 @@ class RestHandlerConfig:
         return obj_dict
 
     @property
-    def oas_paths(self) -> Dict[str, oas.PathItemObject]:
+    def oas_paths(self) -> dict[str, oas.PathItemObject]:
         if self.handlerType == "EAI":
             return self._oas_objects_eai()
         raise ValueError(f"Unsupported handler type: {self.handlerType}")
@@ -305,6 +312,9 @@ class RestHandlerConfig:
             name=self.endpoint,
             rh_name=file,
             actions_list=self.registerHandler["actions"],
+            resourcePresent=self.resourcePresent,
+            parentResource=self.parentResource,
+            capabilities=self.capabilities,
         )
 
 
@@ -313,10 +323,10 @@ class UserDefinedRestHandlers:
     Represents a logic for dealing with user-defined REST handlers
     """
 
-    def __init__(self, definitions: Iterable[Dict[str, Any]]) -> None:
-        self._definitions: List[RestHandlerConfig] = []
-        self._names: Set[str] = set()
-        self._endpoints: Set[str] = set()
+    def __init__(self, definitions: Iterable[dict[str, Any]]) -> None:
+        self._definitions: list[RestHandlerConfig] = []
+        self._names: set[str] = set()
+        self._endpoints: set[str] = set()
 
         for definition in definitions:
             rest_handler_config_definition = RestHandlerConfig(**definition)
@@ -340,7 +350,7 @@ class UserDefinedRestHandlers:
             self._definitions.append(rest_handler_config_definition)
 
     @property
-    def oas_paths(self) -> Dict[str, oas.PathItemObject]:
+    def oas_paths(self) -> dict[str, oas.PathItemObject]:
         paths = {}
 
         for definition in self._definitions:
@@ -349,7 +359,7 @@ class UserDefinedRestHandlers:
         return paths
 
     @property
-    def endpoint_registration_entries(self) -> List[EndpointRegistrationEntry]:
+    def endpoint_registration_entries(self) -> list[EndpointRegistrationEntry]:
         entries = []
 
         for definition in self._definitions:

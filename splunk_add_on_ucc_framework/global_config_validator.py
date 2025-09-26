@@ -17,7 +17,7 @@
 import json
 import os
 import re
-from typing import Any, Dict, List
+from typing import Any
 import logging
 import itertools
 from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
@@ -168,7 +168,7 @@ class GlobalConfigValidator:
                         )
 
     def _validate_string_validator(
-        self, entity_field: str, validator: Dict[str, Any]
+        self, entity_field: str, validator: dict[str, Any]
     ) -> None:
         """
         Validates string validator. maxLength should be greater or equal
@@ -181,7 +181,7 @@ class GlobalConfigValidator:
             )
 
     def _validate_number_validator(
-        self, entity_field: str, validator: Dict[str, Any]
+        self, entity_field: str, validator: dict[str, Any]
     ) -> None:
         """
         Validates number validator, both values in range should be numbers and
@@ -202,7 +202,7 @@ class GlobalConfigValidator:
             )
 
     def _validate_regex_validator(
-        self, entity_field: str, validator: Dict[str, Any]
+        self, entity_field: str, validator: dict[str, Any]
     ) -> None:
         """
         Validates regex validator, provided regex should at least be compilable.
@@ -215,14 +215,14 @@ class GlobalConfigValidator:
                 f"pattern provided in the 'pattern' field is not compilable."
             )
 
-    def _validate_interval(self, entity: Dict[str, Any]) -> None:
+    def _validate_interval(self, entity: dict[str, Any]) -> None:
         """
         Validate options of the 'interval' entity
         """
         if "range" in entity.get("options", {}):
             self._validate_number_validator(entity["field"], entity["options"])
 
-    def _validate_entity_validators(self, entity: Dict[str, Any]) -> None:
+    def _validate_entity_validators(self, entity: dict[str, Any]) -> None:
         """
         Validates entity validators.
         """
@@ -267,11 +267,11 @@ class GlobalConfigValidator:
                 self._validate_entity_validators(entity)
 
     @staticmethod
-    def _find_duplicates_in_list(_list: List[Any]) -> bool:
+    def _find_duplicates_in_list(_list: list[Any]) -> bool:
         return len(set(_list)) != len(_list)
 
     def _validate_children_duplicates(
-        self, children: List[Dict[str, Any]], entity_label: str
+        self, children: list[dict[str, Any]], entity_label: str
     ) -> None:
         """
         Validates duplicates under children key in autoCompleteFields
@@ -293,7 +293,7 @@ class GlobalConfigValidator:
             )
 
     def _validate_autoCompleteFields_duplicates(
-        self, options: Dict[str, Any], entity_label: str
+        self, options: dict[str, Any], entity_label: str
     ) -> None:
         """
         Validates duplicates in autoCompleteFields keys
@@ -360,7 +360,7 @@ class GlobalConfigValidator:
                         "Duplicates found for multi-level menu groups' names or titles."
                     )
 
-    def _validate_entity_duplicates(self, entity: List[Dict[str, Any]]) -> None:
+    def _validate_entity_duplicates(self, entity: list[dict[str, Any]]) -> None:
         """
         Validates duplicates in entity keys
         for fields under keys: field, label
@@ -383,7 +383,7 @@ class GlobalConfigValidator:
                 "Duplicates found for entity field or label"
             )
 
-    def _validate_tabs_duplicates(self, tabs: List[Tab]) -> None:
+    def _validate_tabs_duplicates(self, tabs: list[Tab]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
@@ -407,7 +407,7 @@ class GlobalConfigValidator:
                 "Duplicates found for tabs names, titles or types"
             )
 
-    def _validate_inputs_duplicates(self, inputs: Dict[str, Any]) -> None:
+    def _validate_inputs_duplicates(self, inputs: dict[str, Any]) -> None:
         """
         Validates duplicates in tab keys under configuration
         for fields under keys: name, title
@@ -537,11 +537,11 @@ class GlobalConfigValidator:
 
     def _is_circular_modification(
         self,
-        mods: List[Any],
-        visited: Dict[str, str],
-        all_entity_fields: List[Any],
+        mods: list[Any],
+        visited: dict[str, str],
+        all_entity_fields: list[Any],
         current_field: str,
-    ) -> Dict[str, str]:
+    ) -> dict[str, str]:
         """
         Checks if there is circular modification based on visited list and DFS algorithm
         """
@@ -585,9 +585,9 @@ class GlobalConfigValidator:
 
     def _check_if_circular_modification(
         self,
-        all_entity_fields: List[Any],
-        fields_with_mods: List[Any],
-        modifications: List[Any],
+        all_entity_fields: list[Any],
+        fields_with_mods: list[Any],
+        modifications: list[Any],
     ) -> None:
         visited = {field: "not_visited" for field in all_entity_fields}
         for start_field in fields_with_mods:
@@ -598,8 +598,8 @@ class GlobalConfigValidator:
 
     @staticmethod
     def _get_mods_data_for_single_entity(
-        entity: Dict[str, Any],
-    ) -> List[Any]:
+        entity: dict[str, Any],
+    ) -> list[Any]:
         """
         Get modification entity data as lists
         """
@@ -626,11 +626,11 @@ class GlobalConfigValidator:
 
     @staticmethod
     def _get_all_entities(
-        collections: List[Dict[str, Any]],
-    ) -> List[Any]:
+        collections: list[dict[str, Any]],
+    ) -> list[Any]:
         all_fields = []
 
-        tab_entities: List[Any] = [
+        tab_entities: list[Any] = [
             el.get("entity") for el in collections if el.get("entity")
         ]
         all_entities = list(itertools.chain.from_iterable(tab_entities))
@@ -647,11 +647,11 @@ class GlobalConfigValidator:
 
     def _get_all_modification_data(
         self,
-        collections: List[Dict[str, Any]],
-    ) -> List[Any]:
-        fields_with_mods: List[Any] = []
-        all_modifications: List[Any] = []
-        all_fields: List[str] = []
+        collections: list[dict[str, Any]],
+    ) -> list[Any]:
+        fields_with_mods: list[Any] = []
+        all_modifications: list[Any] = []
+        all_fields: list[str] = []
 
         entities = self._get_all_entities(collections)
         for entity in entities:
@@ -763,12 +763,12 @@ class GlobalConfigValidator:
                 )
 
     def _validate_if_entities_has_oauth_configured_correctly(
-        self, tabs: List[Dict[str, Any]]
+        self, tabs: list[dict[str, Any]]
     ) -> None:
         """
         Validates if entities has oauth configured correctly.
         """
-        grouped_entities: List[Any] = [
+        grouped_entities: list[Any] = [
             el.get("entity") for el in tabs if el.get("entity")
         ]
         all_entities = list(itertools.chain.from_iterable(grouped_entities))
@@ -841,6 +841,19 @@ class GlobalConfigValidator:
                         exc_msg % ("input service", service["name"])
                     )
 
+    def _validate_user_defined_rest_handler_file(self) -> None:
+        if self._global_config.content.get("options"):
+            for restHandler in self._global_config.content["options"]["restHandlers"]:
+                if restHandler.get("registerHandler"):
+                    file_path = os.path.join(
+                        self._source_dir, "bin", restHandler["registerHandler"]["file"]
+                    )
+                    if not os.path.isfile(file_path):
+                        raise GlobalConfigValidatorException(
+                            f"{restHandler['registerHandler']['file']} is not present in "
+                            f"`{os.path.join(self._source_dir, 'bin')}` directory. Please ensure the file exists."
+                        )
+
     def validate(self) -> None:
         self._validate_config_against_schema()
         if self._global_config.has_pages():
@@ -859,9 +872,10 @@ class GlobalConfigValidator:
             self._validate_usage_of_placeholder()
         self._validate_alerts()
         self._validate_meta_default_view()
+        self._validate_user_defined_rest_handler_file()
 
 
-def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
+def should_warn_on_empty_validators(entity: dict[str, Any]) -> bool:
     entity_type = entity.get("type")
 
     if entity_type in ENTITY_TYPES_WITHOUT_VALIDATORS:
@@ -877,7 +891,7 @@ def should_warn_on_empty_validators(entity: Dict[str, Any]) -> bool:
     return "validators" not in entity
 
 
-def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> bool:
+def _should_warn_on_empty_validators_checkbox_group(entity: dict[str, Any]) -> bool:
     for row in entity.get("options", {}).get("rows", []):
         row_validators = row.get("input", {}).get("validators")
 
@@ -887,7 +901,7 @@ def _should_warn_on_empty_validators_checkbox_group(entity: Dict[str, Any]) -> b
     return "validators" not in entity
 
 
-def _should_warn_on_empty_validators_oauth(entity: Dict[str, Any]) -> bool:
+def _should_warn_on_empty_validators_oauth(entity: dict[str, Any]) -> bool:
     options = entity.get("options", {})
 
     for auth_type in ("basic", "oauth"):

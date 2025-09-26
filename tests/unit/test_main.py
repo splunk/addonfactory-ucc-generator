@@ -20,7 +20,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -35,7 +35,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -50,7 +50,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -65,7 +65,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -80,7 +80,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -102,7 +102,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -126,7 +126,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -152,7 +152,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -179,7 +179,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -207,7 +207,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -237,7 +237,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "21.0.0",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -268,7 +268,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "21.0.0",
                 "pip_legacy_resolver": True,
                 "pip_custom_flag": False,
-                "ui_source_map": False,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -279,7 +279,6 @@ from splunk_add_on_ucc_framework import main
                 "2.2.0",
                 "--python-binary-name",
                 "python.exe",
-                "--ui-source-map",
             ],
             {
                 "source": "package",
@@ -291,7 +290,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
-                "ui_source_map": True,
+                "build_custom_ui": False,
             },
         ),
         (
@@ -302,7 +301,6 @@ from splunk_add_on_ucc_framework import main
                 "2.2.0",
                 "--python-binary-name",
                 "python.exe",
-                "--ui-source-map",
                 "--pip-custom-flag",
                 "--progress-bar on",
             ],
@@ -316,7 +314,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_version": "latest",
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": "--progress-bar on",
-                "ui_source_map": True,
+                "build_custom_ui": False,
             },
         ),
     ],
