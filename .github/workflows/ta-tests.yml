@@ -317,24 +317,28 @@ jobs:
             exit 0
           fi
           
+          WORKFLOW_URL="https://github.com/${{ matrix.target_repo }}/actions/runs/$WORKFLOW_RUN_ID"
+          echo "Workflow URL: $WORKFLOW_URL"
+          
           echo "Workflow run ID: $WORKFLOW_RUN_ID"
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to start..."
           sleep 300  # Initial wait to allow the workflow to start properly
           
           echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
-          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" -i 120
+          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" -i 120 2>&1 | tee watch_output.log
           
-          echo "Results JSON:"
           RESULTS_JSON="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs)"
-          echo $RESULTS_JSON
           
-          echo "Results:"
+          echo "Checking results of not-skipped jobs 'build' and 'spl2'"
           RESULTS="$(echo $RESULTS_JSON | jq -r '.jobs[] |  select(.conclusion != "skipped")
             | select(.name | test("build|spl2"))
             | "\(.name): \(.conclusion)"')"
           
-          printf '%s\n' "$RESULTS"
-          [[ $(printf '%s\n' "$RESULTS" | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] || exit 1
+          [[ $(printf '%s\n' "$RESULTS" | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] && exit 0
+          
+          echo "One or more jobs failed. Details:"
+          echo "$WORKFLOW_URL"
+          exit 1
       - name: Cleanup temporary branch
         if: always() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
