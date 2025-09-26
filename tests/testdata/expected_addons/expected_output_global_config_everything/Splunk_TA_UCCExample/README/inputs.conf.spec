@@ -21,7 +21,9 @@ use_existing_checkpoint = Data input already exists. Select `No` if you want to 
 [example_input_two://<name>]
 account = 
 apis = 
+example_date_field = This is an example date field (Default: 2025-05-20)
 example_help_link = 
+example_second_date_field = This is an example date field (Default: 2025-05-20)
 hard_disabled = 
 hide_in_ui = 
 index = An index is a type of data repository. Select the index in which you want to collect the events. (Default: default)
