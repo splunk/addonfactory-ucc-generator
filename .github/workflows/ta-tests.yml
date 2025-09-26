@@ -273,7 +273,7 @@ jobs:
           echo "Creating a new draft PR from branch $GIT_BRANCH to ${{ github.event.inputs.target_branch }}"
           gh pr create -R ${{ matrix.target_repo }} --title "CI: UCC build for ${{ github.event_name }} event" \
               --body "This PR was created automatically to trigger the build-test-release pipeline." \
-              --base ${{ github.event.inputs.target_branch }} --head $GIT_BRANCH --draft
+              --base ${{ github.event.inputs.target_branch }} --head $GIT_BRANCH --draft || true
       - name: Obtain the workflow run ID
         if: success() && github.event.inputs.run_pipelines == 'true'
         id: get-workflow-run-id
