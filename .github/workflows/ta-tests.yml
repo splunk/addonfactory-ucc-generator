@@ -22,6 +22,10 @@ on:
         description: "Branch of splunk/addonfactory-ucc-library to use (leave empty to use latest from PyPI)"
         required: false
         default: ""
+      run_pipelines:
+        description: "Trigger TA pipelines (true/false)"
+        required: false
+        default: "false"
 env:
   POETRY_VERSION: "2.1.4"
   POETRY_EXPORT_PLUGIN_VERSION: "1.9.0"
@@ -112,28 +116,72 @@ jobs:
         with:
           name: ucc-package-whl
           path: UCC
-
-      - name: Install Dependencies in Target Add-on
+      - name: Importing GPG key
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
+          git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
+          gpg_private_key: ${{ secrets.SA_GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SA_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          workdir: TA
+      - name: Prepare the Target Add-on
+        id: prepare
         working-directory: TA
         run: |
-          UCC_WHL=$(ls ../UCC/*.whl)
+          set -x
+          
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
           git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
           
-          # Retry logic for poetry install
-          MAX_RETRIES=3
-          RETRY_COUNT=0
+          # Use the special branch
+          if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
+            GIT_BRANCH="ucc/ci_tests_trigger_pipeline"
           
-          until [ $RETRY_COUNT -ge $MAX_RETRIES ]
-          do
-            poetry add ../UCC/$UCC_WHL --group dev && break
-            RETRY_COUNT=$((RETRY_COUNT+1))
-            echo "Poetry install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
-            sleep 5
-          done
+            git fetch origin
+          
+            if git ls-remote --exit-code --heads origin "$GIT_BRANCH"; then
+              echo "Branch $GIT_BRANCH already exists, checking it out"
+              git checkout "$GIT_BRANCH"
+              git reset --hard "origin/${{ github.event.inputs.target_branch }}"  # Reset to main branch
+              git rebase ${{ github.event.inputs.target_branch }} $GIT_BRANCH  # Rebase the branch onto main
+            else
+              echo "Branch $GIT_BRANCH does not exist, creating it"
+              git checkout -b "$GIT_BRANCH" "origin/${{ github.event.inputs.target_branch }}"
+            fi
+          
+            echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
+          fi
+          
+          rm splunk_add_on_ucc_framework-*.whl || true
+          cp ../UCC/*.whl ./
+          UCC_WHL=$(ls *.whl)
+          echo "UCC_WHL=$UCC_WHL" >> "$GITHUB_ENV"
+          
+          echo "Adding UCC package $UCC_WHL"
+          
+            # Remove existing splunk_add_on_ucc_framework if present
+          poetry remove splunk_add_on_ucc_framework || true
+          
+          if [[ -f requirements_ucc.txt ]]; then
+            echo "Modifying existing requirements_ucc.txt"
+            cat requirements_ucc.txt | grep -v "splunk-add-on-ucc-framework" > requirements_ucc.txt.new || true
+            mv requirements_ucc.txt.new requirements_ucc.txt
+          fi
+          
+          echo "./$UCC_WHL" >> requirements_ucc.txt
+          
+          # Adding "package-mode = false" to pyproject.toml if not present
+          if ! grep -q "package-mode = false" pyproject.toml; then
+            echo "Adding 'package-mode = false' to pyproject.toml"
+            sed -i '/name = .*/ s:$:\npackage-mode = false:' pyproject.toml
+          fi
           
           # Install splunktaucclib with retries
+          MAX_RETRIES=3
           RETRY_COUNT=0
           until [ $RETRY_COUNT -ge $MAX_RETRIES ]
           do
@@ -145,16 +193,33 @@ jobs:
               poetry add splunktaucclib@latest && break
             fi
             RETRY_COUNT=$((RETRY_COUNT+1))
+          
+            if [[ $RETRY_COUNT -eq $MAX_RETRIES ]]; then
+              echo "splunktaucclib install failed after $MAX_RETRIES attempts, exiting"
+              exit 1
+            fi
+          
             echo "splunktaucclib install failed, retry attempt $RETRY_COUNT of $MAX_RETRIES"
             sleep 5
           done
           
           mkdir -p package/lib
           poetry export --without-hashes -o package/lib/requirements.txt
+          
+          # Add to commit
+          if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
+            echo "Adding UCC, requirements_ucc.txt, pyproject.toml and poetry.lock to commit"
+            git add pyproject.toml requirements_ucc.txt poetry.lock *.whl
+          fi
       - name: Run ucc-gen build in Target Add-on
         working-directory: TA
         run: |
-          poetry run ucc-gen build > build_output.log 2>&1
+          set -x
+          
+          python3 -m venv .ucc_venv
+          ./.ucc_venv/bin/python3 -m pip install ./$UCC_WHL
+          
+          ./.ucc_venv/bin/ucc-gen build 2>&1 | tee build_output.log
           if tail -n 1 build_output.log | grep -q "^INFO: File creation summary: created: "; then
             echo "✓ Build completed successfully with expected output"
             cat build_output.log
@@ -165,3 +230,120 @@ jobs:
             cat build_output.log
             exit 1
           fi
+      - name: Upgrade the release pipeline in Github Actions
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        run: |
+          set -x
+          
+          VERSION="$(cat .github/workflows/build-test-release.yml | grep reusable-build-test-release.yml | cut -d '@' -f 2)"
+          
+          # Version is in format e.g. "v1.2.3". We need at least "v5.1.0"
+          MAJOR_VERSION="$(echo $VERSION | cut -d '.' -f 1 | sed 's/^v//')"
+          MINOR_VERSION="$(echo $VERSION | cut -d '.' -f 2)"
+          
+          # If major and minor are not integers, exit
+          if ! [[ "$MAJOR_VERSION" =~ ^[0-9]+$ ]] || ! [[ "$MINOR_VERSION" =~ ^[0-9]+$ ]]; then
+            echo "✗ The reusable workflow version $VERSION is not in the expected format. No update performed."
+            exit 0
+          fi
+          
+          if (( MAJOR_VERSION < 5 )) || { (( MAJOR_VERSION == 5 )) && (( MINOR_VERSION < 1 )); }; then
+            echo "✗ The reusable workflow version $VERSION is too old. Upgrading to v5.1.0"
+            sed -i 's/reusable-build-test-release.yml@.*/reusable-build-test-release.yml@v5.1.0/' .github/workflows/build-test-release.yml
+            git add .github/workflows/build-test-release.yml
+            echo "Upgraded the reusable workflow version to v5.1.0"
+          else
+            echo "✓ The reusable workflow version $VERSION is up to date"
+          fi
+      - name: Push changes to a temporary branch in order to trigger the pipeline
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        run: |
+          git config --global user.name "${{ secrets.SA_GH_USER_NAME }}"
+          git config --global user.email "${{ secrets.SA_GH_USER_EMAIL }}"
+          git commit -S -m "CI: UCC build for ${{ github.event_name }} event"
+          git push --force origin $GIT_BRANCH
+      - name: Create a PR if it does not exist yet
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          echo "Creating a new draft PR from branch $GIT_BRANCH to ${{ github.event.inputs.target_branch }}"
+          gh pr create -R ${{ matrix.target_repo }} --title "CI: UCC build for ${{ github.event_name }} event" \
+              --body "This PR was created automatically to trigger the build-test-release pipeline." \
+              --base ${{ github.event.inputs.target_branch }} --head $GIT_BRANCH --draft || true
+      - name: Obtain the workflow run ID
+        if: success() && github.event.inputs.run_pipelines == 'true'
+        id: get-workflow-run-id
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          echo "Waiting for the workflow run to be created..."
+          sleep 30  # Wait for a while to ensure the workflow run is created
+          
+          for i in {1..30}; do
+            echo "Attempt $i to get workflow run ID"
+            WORKFLOW_RUN_ID=$(gh run -R ${{ matrix.target_repo }} list -b ucc/ci_tests_trigger_pipeline \
+              --json databaseId --limit 1 --status in_progress --workflow build-test-release \
+              -q '.[0].databaseId | select( . != null )')
+
+            if [[ -n "$WORKFLOW_RUN_ID" ]]; then
+              echo "Found workflow run ID: $WORKFLOW_RUN_ID"
+              break
+            fi
+
+            echo "Workflow run ID not found, retrying in 10 seconds..."
+            sleep 10
+          done
+          
+          if [[ -z "$WORKFLOW_RUN_ID" ]]; then
+              echo "Failed to obtain workflow run ID after multiple attempts, exiting"
+              exit 1
+          fi
+          
+          echo "WORKFLOW_RUN_ID=$WORKFLOW_RUN_ID" >> $GITHUB_ENV
+          echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
+
+      - name: Wait for the workflow run to complete
+        if: success()
+        id: wait-for-workflow
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          if [[ -z "$WORKFLOW_RUN_ID" ]]; then
+            echo "No workflow run ID found, skipping wait"
+            exit 0
+          fi
+          
+          WORKFLOW_URL="https://github.com/${{ matrix.target_repo }}/actions/runs/$WORKFLOW_RUN_ID"
+          echo "Workflow URL: $WORKFLOW_URL"
+          
+          echo "Workflow run ID: $WORKFLOW_RUN_ID"
+          echo "Waiting for workflow run $WORKFLOW_RUN_ID to start..."
+          sleep 300  # Initial wait to allow the workflow to start properly
+          
+          echo "Waiting for workflow run $WORKFLOW_RUN_ID to complete..."
+          gh run watch -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" -i 120 2>&1 | tee watch_output.log
+          
+          RESULTS_JSON="$(gh run view -R ${{ matrix.target_repo }} "$WORKFLOW_RUN_ID" --json jobs)"
+          
+          echo "Checking results of not-skipped jobs 'build' and 'spl2'"
+          RESULTS="$(echo $RESULTS_JSON | jq -r '.jobs[] |  select(.conclusion != "skipped")
+            | select(.name | test("build|spl2"))
+            | "\(.name): \(.conclusion)"')"
+          
+          [[ $(printf '%s\n' "$RESULTS" | cut -d ':' -f 2 | cut -d ' ' -f 2 | sort | uniq) == "success" ]] && exit 0
+          
+          echo "One or more jobs failed. Details:"
+          echo "$WORKFLOW_URL"
+          exit 1
+      - name: Cleanup temporary branch
+        if: always() && github.event.inputs.run_pipelines == 'true'
+        working-directory: TA
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+        run: |
+          echo "Deleting temporary branch $GIT_BRANCH"
+          gh api -X DELETE repos/${{ matrix.target_repo }}/git/refs/heads/$GIT_BRANCH || true
