@@ -1,39 +1,30 @@
 import re
 import urllib.request
-import urllib.error
 
 from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 
 
 def test_command_list_up_to_date():
-    url = "https://docs.splunk.com/Documentation/Splunk/latest/SearchReference"
-    try:
-        with urllib.request.urlopen(url) as resp:
-            content = resp.read().decode()
-    except urllib.error.HTTPError:
-        # passing an imitation of browser header to make this a request from web browser
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/115.0.0.0 Safari/537.36"
-            )
-        }
-
-        req = urllib.request.Request(url, headers=headers)
-
-        with urllib.request.urlopen(req) as resp:
-            content = resp.read().decode()
-
-    match = re.search(r"Search\s+Commands.+?<ul.+?>(.+?)</ul>", content, re.S)
-    if match:
-        search_commands_ul = match.group(1)
-        search_commands = re.findall(
-            r"<li[^>]*>.*?<a[^>]*>\s*([^\s<]+)\s+?</a>", search_commands_ul, re.S
+    url = "https://help.splunk.com/en/splunk-enterprise/search/spl-search-reference/10.0/search-commands"
+    # passing an imitation of browser header to make this a request from web browser
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/115.0.0.0 Safari/537.36"
         )
-    else:
-        search_commands_ul = None
-        search_commands = []
+    }
+
+    req = urllib.request.Request(url, headers=headers)
+
+    with urllib.request.urlopen(req) as resp:
+        content = resp.read().decode()
+
+    search_commands = re.findall(
+        r'splunk-enterprise/search/spl-search-reference/[^/]+/search-commands/([^"&]+)',
+        content,
+    )
+    assert search_commands, "No search commands found on the Splunk documentation page"
 
     # These are the search commands for the serviceNow add-on. They are not present by default in Splunk instance
     not_global_commands = [
@@ -41,6 +32,8 @@ def test_command_list_up_to_date():
         "snoweventstream",
         "snowincident",
         "snowevent",
+        "3rd-party-custom-commands",
+        "awssnsalert",
     ]
     for command in not_global_commands:
         search_commands.remove(command)
