@@ -13,14 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import csv
+import glob
 import logging
 import os
-import shutil
+import re
 import stat
 import subprocess
 import sys
 from pathlib import Path
 
+from packaging.requirements import Requirement, InvalidRequirement
 from packaging.version import Version
 from typing import Optional
 from collections.abc import Iterable
@@ -176,6 +179,44 @@ def _check_libraries_required_for_ui(
             )
 
 
+def parse_excludes(excludes_path: str) -> Optional[list[str]]:
+    if not os.path.isfile(excludes_path):
+        return None
+
+    with open(excludes_path) as fp:
+        excludes = fp.read()
+
+    # https://pip.pypa.io/en/latest/reference/requirements-file-format/#comments
+    comment_start = re.compile(r"\s#")
+
+    excluded_libs = []
+
+    for exclude_str in excludes.splitlines():
+        exclude_str = comment_start.split(exclude_str, maxsplit=1)[0].strip()
+
+        if not exclude_str or exclude_str.startswith("#"):
+            continue
+
+        try:
+            exclude = Requirement(exclude_str)
+        except InvalidRequirement:
+            raise InvalidArguments(
+                f"Exclusion '{exclude_str}' is not a valid requirement."
+            )
+
+        if exclude.specifier or exclude.marker or exclude.url or exclude.extras:
+            raise InvalidArguments(
+                f"Exclusion '{exclude_str}' should not contain a version specifier, marker, URL, or extras."
+            )
+
+        excluded_libs.append(str(exclude))
+
+    if not excluded_libs:
+        return None
+
+    return excluded_libs
+
+
 def install_python_libraries(
     source_path: str,
     ucc_lib_target: str,
@@ -188,6 +229,9 @@ def install_python_libraries(
     includes_oauth: bool = False,
 ) -> None:
     path_to_requirements_file = os.path.join(source_path, "lib", "requirements.txt")
+    path_to_excludes = os.path.join(source_path, "lib", "exclude.txt")
+    excludes = parse_excludes(path_to_excludes)
+
     if os.path.isfile(path_to_requirements_file):
         logger.info(f"Installing requirements from {path_to_requirements_file}")
         if not os.path.exists(ucc_lib_target):
@@ -200,6 +244,9 @@ def install_python_libraries(
             pip_legacy_resolver=pip_legacy_resolver,
             pip_custom_flag=pip_custom_flag,
         )
+        if excludes:
+            logger.info(f"Excluding libraries: {', '.join(excludes)}")
+            remove_packages(installation_path=ucc_lib_target, package_names=excludes)
         if includes_ui:
             _check_libraries_required_for_ui(
                 python_binary_name, ucc_lib_target, path_to_requirements_file
@@ -287,13 +334,115 @@ def install_libraries(
         sys.exit(1)
 
 
+def determine_record_separator(paths: list[str], dist_info: str) -> str:
+    """
+    Determines the separator used in RECORD files for the given dist-info directory.
+    As Windows can use both '/' and '\' as path separators, we need to check the RECORD files
+    to determine which one is used.
+    If no RECORD files are found, defaults to '/'.
+    """
+    dist_info_dir_escaped = re.escape(dist_info)
+    record_pattern = re.compile(rf"^{dist_info_dir_escaped}([\\/])RECORD$")
+
+    for path in paths:
+        separator_match = record_pattern.match(path)
+
+        if separator_match:
+            return separator_match.group(1)
+
+    return "/"
+
+
+def _remove_package(installation_path: str, package_name: str) -> bool:
+    name_sub = re.compile(r"[^\w\d.]+", re.UNICODE)
+
+    # https://peps.python.org/pep-0491/
+    def sub(name: str) -> str:
+        return name_sub.sub("_", name)
+
+    # RECORD files are located in the *.dist-info directories
+    # Example content:
+    #     requests-2.32.5.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+    #     requests-2.32.5.dist-info/METADATA,sha256=ZbWgjagfSRVRPnYJZf8Ut1GPZbe7Pv4NqzZLvMTUDLA,4945
+    #     requests-2.32.5.dist-info/RECORD,,
+    #     requests/__init__.py,sha256=4xaAERmPDIBPsa2PsjpU9r06yooK-2mZKHTZAhWRWts,5072
+
+    exclude_safe = sub(package_name)
+    record_files = os.path.join(
+        installation_path, f"{exclude_safe}-*.dist-info", "RECORD"
+    )
+
+    is_deleted = False
+
+    for record in glob.glob(record_files):
+        top_level_dirs = set()
+
+        dist_info_dir = os.path.basename(os.path.dirname(record))
+
+        with open(record) as fp:
+            paths = [line[0] for line in csv.reader(fp)]
+
+        separator = determine_record_separator(paths, dist_info_dir)
+
+        for path in paths:
+            if os.path.isabs(path):
+                raise ValueError(
+                    f"Absolute paths are not allowed in RECORD files: {path}"
+                )
+            os.remove(os.path.join(installation_path, path))
+            top_level_dirs.add(path.split(separator)[0])
+
+        for directory in top_level_dirs:
+            for path, _, _ in os.walk(
+                os.path.join(installation_path, directory), topdown=False
+            ):
+                if not os.listdir(path):
+                    os.rmdir(path)
+
+        deleted_folders = set()
+        not_deleted_folders = set()
+
+        for folder in top_level_dirs:
+            if os.path.isdir(os.path.join(installation_path, folder)):
+                not_deleted_folders.add(folder)
+            else:
+                deleted_folders.add(folder)
+
+        deleted_folders_str = ", ".join(
+            f"{folder} (deleted)" for folder in deleted_folders
+        )
+        not_deleted_folders_str = ", ".join(
+            f"{folder} (not deleted)" for folder in not_deleted_folders
+        )
+
+        logger.info(
+            "Excluded package %s with directories: %s",
+            package_name,
+            ", ".join((deleted_folders_str, not_deleted_folders_str)),
+        )
+        is_deleted = True
+
+    return is_deleted
+
+
 def remove_packages(installation_path: str, package_names: Iterable[str]) -> None:
-    p = Path(installation_path)
+    package_names = set(package_names)
+
+    logger.info(f"Removing {len(package_names)} package(s): {', '.join(package_names)}")
+
+    successful_removes = set()
+
     for package_name in package_names:
-        for o in p.glob(f"{package_name}*"):
-            if o.is_dir():
-                logger.info(f"  removing directory {o} from {installation_path}")
-                shutil.rmtree(o)
+        if _remove_package(installation_path, package_name):
+            successful_removes.add(package_name)
+
+    remaining_packages = package_names - successful_removes
+
+    if remaining_packages:
+        logger.info(
+            f"Could not find directories for {len(remaining_packages)} packages(s) to delete: "
+            f"{', '.join(remaining_packages)}"
+        )
 
 
 def remove_execute_bit(installation_path: str) -> None:

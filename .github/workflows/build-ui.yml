@@ -10,7 +10,7 @@ jobs:
         working-directory: ui
         shell: bash
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Code linting
@@ -34,7 +34,7 @@ jobs:
         working-directory: ui
         shell: bash
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Build UCC library
