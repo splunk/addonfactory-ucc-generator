@@ -79,8 +79,8 @@ The above example will exclude the `urllib3`, `certifi`, and `setuptools` packag
 During the build process, UCC will:
 
 1. Install all packages listed in `requirements.txt` using pip
-1.Remove any packages listed in `exclude.txt` from the installed libraries
-1.Copy the remaining packages to the add-on's `lib` directory
+1. Remove any packages listed in `exclude.txt` from the installed libraries
+1. Copy the remaining packages to the add-on's `lib` directory
 
 ## Usage Notes
 
