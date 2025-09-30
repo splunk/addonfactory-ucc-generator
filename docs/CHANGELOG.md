@@ -1,5 +1,15 @@
 # Changelog
 
+# [6.0.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.70.0...v6.0.0) (2025-09-26)
+
+
+* feat!: Trigger UCC 6 release (#1920) ([939616f](https://github.com/splunk/addonfactory-ucc-generator/commit/939616f83a853dcaf44cf5a1c2ec1a89c077e36a)), closes [#1920](https://github.com/splunk/addonfactory-ucc-generator/issues/1920)
+
+
+### BREAKING CHANGES
+
+* Trigger UCC 6 release
+
 # [5.70.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.69.1...v5.70.0) (2025-09-25)
 
 
