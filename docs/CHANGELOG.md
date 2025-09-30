@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.0.0...v6.0.1) (2025-09-30)
+
+
+### Bug Fixes
+
+* include built UI files in the wheel package ([#1929](https://github.com/splunk/addonfactory-ucc-generator/issues/1929)) ([a9dea38](https://github.com/splunk/addonfactory-ucc-generator/commit/a9dea385e941e39627221cca0b7a8d64683cebc0))
+
 # [6.0.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v5.70.0...v6.0.0) (2025-09-26)
 
 
