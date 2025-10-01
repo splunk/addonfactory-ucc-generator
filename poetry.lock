@@ -2,13 +2,13 @@
 
 [[package]]
 name = "addonfactory-splunk-conf-parser-lib"
-version = "0.4.3"
+version = "1.0.0"
 description = "Splunk .conf files parser"
 optional = false
-python-versions = "<4.0,>=3.7"
+python-versions = "<4.0,>=3.9"
 files = [
-    {file = "addonfactory_splunk_conf_parser_lib-0.4.3-py3-none-any.whl", hash = "sha256:16a66c1829eec876c21b2d2ee2b2ef305bc23516837fc0e63d5e7512c06d357d"},
-    {file = "addonfactory_splunk_conf_parser_lib-0.4.3.tar.gz", hash = "sha256:847e2eb34b3be35d1e5d3d5a2cdaec1ccd33cc687b7bbd1f3f746184f16b1479"},
+    {file = "addonfactory_splunk_conf_parser_lib-1.0.0-py3-none-any.whl", hash = "sha256:a118f266ca9f6e79c8b0f344dc288a43de7c7a38c705d0c89d79324c33580677"},
+    {file = "addonfactory_splunk_conf_parser_lib-1.0.0.tar.gz", hash = "sha256:8254b5ea6fc8233da7527dc80461aa5b0555dfa3af73b8b937af26129f32323d"},
 ]
 
 [[package]]
@@ -1829,13 +1829,13 @@ files = [
 
 [[package]]
 name = "splunk-appinspect"
-version = "3.10.3"
+version = "4.0.2"
 description = "Automatic validation checks for Splunk Apps"
 optional = true
 python-versions = ">=3.7"
 files = [
-    {file = "splunk_appinspect-3.10.3-py3-none-any.whl", hash = "sha256:2f44a59755564cf08de89844d9eca00d4ddd03026900da8b4a49430ccdb0605a"},
-    {file = "splunk_appinspect-3.10.3.tar.gz", hash = "sha256:dc8d985cb0f11d2b6c7ce731a8d309644c081493bb026dc2ed28d9a3460c8861"},
+    {file = "splunk_appinspect-4.0.2-py3-none-any.whl", hash = "sha256:669c36e822ac9b78cb3bd16d3c6d68317877d704907b0d1f31d90e0b2703441d"},
+    {file = "splunk_appinspect-4.0.2.tar.gz", hash = "sha256:cdc0dfb123bb9bde2d85aecd5196ee48afa13dc030f13bd525a7656f97dc2f69"},
 ]
 
 [package.dependencies]
@@ -1844,7 +1844,7 @@ chardet = "3.0.4"
 click = ">=8.0.0"
 croniter = ">=0.3.34,<2.0.0"
 defusedxml = "0.7.1"
-jinja2 = ">=2.11.3,<4.0.0"
+jinja2 = ">=3.1.6,<4.0.0"
 lxml = ">=5.3.0,<6.0.0"
 mako = ">=1.0.12,<2.0.0"
 markdown = ">=3.1.1,<4.0.0"
@@ -2065,4 +2065,4 @@ validate = ["splunk-appinspect"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.14"
-content-hash = "d4245077e2168fb46c22347d280c107a7a1a8987a7e73c37cb14ab19628839b9"
+content-hash = "cc997d9a53e3fa73e7c8cee9c3d7a76b5d34c82d84756f94b3b8839cabd3d500"
