@@ -36,6 +36,9 @@ class RestMapConf(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "restmap.conf"
+        self.conf_spec_file = "restmap.conf.spec"
+        self.supportedPythonVersion = None
+        supported_versions = self._global_config.meta.get("supportedPythonVersion")
         self.endpoints: list[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
         self.configuration_endpoints: list[
             Union[RestEndpointBuilder, EndpointRegistrationEntry]
@@ -64,11 +67,24 @@ class RestMapConf(FileGenerator):
         self.endpoints.extend(self.configuration_endpoints)
         self.endpoints.extend(self.inputs_endpoints)
         self.endpoints.extend(self.custom_endpoints)
+        if supported_versions:
+            self.supportedPythonVersion = ", ".join(supported_versions)
 
-    def generate(self) -> Optional[list[dict[str, str]]]:
-        if not self.endpoints:
-            return None
+    def generate_conf_spec(self) -> Optional[dict[str, str]]:
+        if self.supportedPythonVersion:
+            file_path = self.get_file_output_path(["README", self.conf_spec_file])
+            self.set_template_and_render(
+                template_file_path=["README"], file_name="restmap_conf_spec.template"
+            )
+            rendered_content = self._template.render()
+            return {
+                "file_name": self.conf_spec_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        return None
 
+    def generate_conf(self) -> dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="restmap_conf.template"
@@ -83,11 +99,23 @@ class RestMapConf(FileGenerator):
             configuration_capability=self._global_config.capabilities(config=True),
             input_capability=self._global_config.capabilities(inputs=True),
             custom_endpoints=self.custom_endpoints,
+            supportedPythonVersion=self.supportedPythonVersion,
         )
-        return [
-            {
-                "file_name": self.conf_file,
-                "file_path": file_path,
-                "content": rendered_content,
-            }
-        ]
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
+
+    def generate(self) -> Optional[list[dict[str, str]]]:
+        if not self.endpoints:
+            return None
+
+        conf_files: list[dict[str, str]] = []
+        conf = self.generate_conf()
+        conf_spec = self.generate_conf_spec()
+        if conf is not None:
+            conf_files.append(conf)
+        if conf_spec is not None:
+            conf_files.append(conf_spec)
+        return conf_files

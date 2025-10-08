@@ -2676,6 +2676,13 @@
           "type": "boolean",
           "default": true,
           "description": "Ability to show the footer component on every page of add-on"
+        },
+        "supportedPythonVersion":{
+          "description": "This feature allows you to specify which python version your app would use.",
+          "type": "array",
+          "items": {
+                "type": "string"
+              }
         }
       },
       "required": [

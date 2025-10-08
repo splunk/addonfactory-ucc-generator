@@ -50,6 +50,10 @@ class InputsConf(FileGenerator):
 
         for service in global_config.inputs:
             default_values = None
+            self.supportedPythonVersion = None
+            supported_versions = self._global_config.meta.get("supportedPythonVersion")
+            if supported_versions:
+                self.supportedPythonVersion = ", ".join(supported_versions)
 
             # If the service has a conf property, it will be in a separate spec file
             # Otherwise, it will be in inputs.conf
@@ -125,6 +129,7 @@ class InputsConf(FileGenerator):
         rendered_content = self._template.render(
             input_names=self.inputs_conf_names,
             default_values=self.inputs_conf_params,
+            supportedPythonVersion=self.supportedPythonVersion,
         )
         return {
             "file_name": self.conf_file,
@@ -146,6 +151,7 @@ class InputsConf(FileGenerator):
         rendered_content = self._template.render(
             input_names=self.inputs_conf_names,
             input_stanzas=self.inputs_conf_spec,
+            supportedPythonVersion=self.supportedPythonVersion,
         )
         return {
             "file_name": spec_file,
