@@ -33,6 +33,9 @@ capability.{{key}} = {{value}}
 [admin_external:{{ endpoint.name }}]
 handlertype = python
 python.version = python3
+{% if supportedPythonVersion %}
+python.required = {{supportedPythonVersion}}
+{% endif %}
 handlerfile = {{ endpoint.rh_name }}.py
 handleractions = {{ endpoint.actions() | join(', ') }}
 handlerpersistentmode = true

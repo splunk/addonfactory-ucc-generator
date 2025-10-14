@@ -52,7 +52,7 @@ def test_commands_conf_generation(global_config_all_json, input_dir, output_dir)
         input_dir,
         output_dir,
     )
-    output = commands_conf.generate()
+    output = commands_conf.generate_conf()
 
     expected_content = dedent(
         """
@@ -60,12 +60,37 @@ def test_commands_conf_generation(global_config_all_json, input_dir, output_dir)
         filename = generatetextcommand.py
         chunked = true
         python.version = python3
+        python.required = 3.7, 3.13
         """
     ).lstrip()
-    assert output == [
-        {
-            "file_name": "commands.conf",
-            "file_path": f"{output_dir}/{ta_name}/default/commands.conf",
-            "content": expected_content,
-        }
-    ]
+    assert output == {
+        "file_name": "commands.conf",
+        "file_path": f"{output_dir}/{ta_name}/default/commands.conf",
+        "content": expected_content,
+    }
+
+
+def test_commands_conf_spec_generation(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
+    commands_conf = CommandsConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    output = commands_conf.generate_conf_spec()
+    expected_content = "\n".join(
+        [
+            "[default]",
+            "python.required = {3.7|3.9|3.13}",
+            "* For Python scripts only, selects which Python version to use.",
+            '* Set to "3.9" to use the Python 3.9 version.',
+            '* Set to "3.13" to use the Python 3.13 version.',
+            "* Optional.",
+            "* Default: not set",
+        ]
+    )
+    assert output == {
+        "file_name": "commands.conf.spec",
+        "file_path": f"{output_dir}/{ta_name}/README/commands.conf.spec",
+        "content": expected_content,
+    }
