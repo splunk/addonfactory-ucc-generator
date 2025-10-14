@@ -54,9 +54,9 @@ def test_init_without_search_assistance(
     output_dir,
     custom_search_command_without_search_assistance,
 ):
-    global_config_all_json._content[
-        "customSearchCommand"
-    ] = custom_search_command_without_search_assistance
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_without_search_assistance
+    )
     searchbnf_conf = SearchbnfConf(
         global_config_all_json,
         input_dir,

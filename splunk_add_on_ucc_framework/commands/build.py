@@ -14,14 +14,13 @@
 # limitations under the License.
 #
 import ast
-import glob
 import json
 import logging
 import os
 import shutil
 import sys
 from pathlib import Path
-from typing import Optional, List, Any, Union
+from typing import Optional, Any, Union
 from splunk_add_on_ucc_framework.auto_gen_comparator import CodeGeneratorDiffChecker
 import subprocess
 import colorama as c
@@ -228,63 +227,6 @@ def _get_num_of_args(
     return None
 
 
-def _get_ignore_list(
-    addon_name: str, ucc_ignore_path: str, output_directory: str
-) -> List[str]:
-    """
-    Return path of files/folders to be removed.
-
-    Args:
-        addon_name: Add-on name.
-        ucc_ignore_path: Path to '.uccignore'.
-        output_directory: Output directory path.
-
-    Returns:
-        list: List of paths to be removed from output directory.
-    """
-    if not os.path.exists(ucc_ignore_path):
-        return []
-    else:
-        logger.warning(
-            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
-            "To achieve the similar functionality use additional_packaging.py."
-            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
-        )
-        with open(ucc_ignore_path) as ignore_file:
-            ignore_list = ignore_file.readlines()
-        ignore_list = [
-            (
-                os.path.join(output_directory, addon_name, utils.get_os_path(path))
-            ).strip()
-            for path in ignore_list
-            if path.strip()
-        ]
-        return ignore_list
-
-
-def _remove_listed_files(ignore_list: List[str]) -> List[str]:
-    """
-    Return path of files/folders to removed in output folder.
-
-    Args:
-        ignore_list (list): List of files/folder patterns to be removed in output directory.
-    """
-    removed_list = []
-    for pattern in ignore_list:
-        paths = glob.glob(pattern, recursive=True)
-        if not paths:
-            logger.warning(f"No files found for the specified pattern: {pattern}")
-            continue
-        for path in paths:
-            if os.path.exists(path):
-                if os.path.isfile(path):
-                    os.remove(path)
-                elif os.path.isdir(path):
-                    shutil.rmtree(path, ignore_errors=True)
-                removed_list.append(path)
-    return removed_list
-
-
 def _get_addon_version(addon_version: Optional[str]) -> str:
     if not addon_version:
         try:
@@ -306,13 +248,18 @@ def _get_addon_version(addon_version: Optional[str]) -> str:
     return addon_version.strip()
 
 
-def _get_build_output_path(output_directory: Optional[str] = None) -> str:
+def _get_build_output_path(
+    output_directory: Optional[str] = None, overwrite: bool = False
+) -> tuple[str, bool]:
     if output_directory is None:
-        return os.path.join(os.getcwd(), "output")
+        # To preserve the previous behaviour where we used to clean output dir
+        # when output_directory was set to None
+        overwrite = True
+        return os.path.join(os.getcwd(), "output"), overwrite
     else:
         if not os.path.isabs(output_directory):
-            return os.path.join(os.getcwd(), output_directory)
-        return output_directory
+            return os.path.join(os.getcwd(), output_directory), overwrite
+        return os.path.join(output_directory), overwrite
 
 
 def _get_python_version_from_executable(python_binary_name: str) -> str:
@@ -455,6 +402,58 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
+def yarn_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+    # installing dependencies
+    if ci:
+        subprocess.run(
+            ["yarn", "--cwd", str(ui_dir), "install", "--frozen-lockfile"], check=True
+        )
+    else:
+        subprocess.run(["yarn", "--cwd", str(ui_dir), "install"], check=True)
+    # building the code
+    subprocess.run(["yarn", "--cwd", str(ui_dir), "run", "build"], check=True)
+
+
+def npm_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+    # installing dependencies
+    if ci:
+        subprocess.run(["npm", "--prefix", str(ui_dir), "ci"], check=True)
+    else:
+        subprocess.run(["npm", "--prefix", str(ui_dir), "install"], check=True)
+    # building the code
+    subprocess.run(["npm", "--prefix", str(ui_dir), "run", "build"], check=True)
+
+
+def build_ui(source: str) -> None:
+    ui_dir = os.path.join(source, "..", "ui")
+
+    if not os.path.isdir(ui_dir):
+        logger.error(f"UI directory does not exist {ui_dir}")
+        sys.exit(1)
+
+    # Check if node is installed
+    if not shutil.which("node"):
+        logger.error("Node.js is not installed. Not building custom code")
+        sys.exit(1)
+
+    try:
+        ci = os.environ.get("CI", "false") == "true"
+
+        # Check if yarn or npm is installed
+        if shutil.which("yarn") and os.path.isfile(ui_dir + "/yarn.lock"):
+            yarn_build_custom_ui_repo(ui_dir, ci)
+        elif shutil.which("npm") and os.path.isfile(ui_dir + "/package-lock.json"):
+            npm_build_custom_ui_repo(ui_dir, ci)
+        else:
+            logger.error(
+                "Neither yarn nor npm is present with lock file. Not building custom code"
+            )
+            sys.exit(1)
+
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Custom UI Build failed: {e}")
+
+
 def exception_handler(func: Any) -> Any:
     def inner_function(*args: Any, **kwargs: Any) -> Any:
         try:
@@ -488,8 +487,9 @@ def generate(
     verbose_file_summary_report: bool = False,
     pip_version: str = "latest",
     pip_legacy_resolver: bool = False,
-    ui_source_map: bool = False,
     pip_custom_flag: Optional[str] = None,
+    build_custom_ui: bool = False,
+    overwrite: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -501,9 +501,6 @@ def generate(
             f"Failed to identify Python version for library installation. Error: {e}"
         )
         sys.exit(1)
-
-    output_directory = _get_build_output_path(output_directory)
-    logger.info(f"Output folder is {output_directory}")
     addon_version = _get_addon_version(addon_version)
     logger.info(f"Add-on will be built with version '{addon_version}'")
     if not os.path.exists(source):
@@ -511,11 +508,20 @@ def generate(
             f"Source directory: '{source}' does not exist. Please verify that given source exists."
         )
         sys.exit(1)
-    shutil.rmtree(os.path.join(output_directory), ignore_errors=True)
-    os.makedirs(os.path.join(output_directory))
-    logger.info(f"Cleaned out directory {output_directory}")
     app_manifest = get_app_manifest(source)
     ta_name = app_manifest.get_addon_name()
+    output_directory, overwrite = _get_build_output_path(output_directory, overwrite)
+    logger.info(f"Output folder is {output_directory}")
+    if not overwrite and os.path.exists(os.path.join(output_directory, ta_name)):
+        logger.error(
+            f"The location {os.path.join(output_directory,ta_name)} is already taken, use `--overwrite` "
+            "option to overwrite the content of existing directory."
+        )
+        sys.exit(1)
+    if overwrite:
+        shutil.rmtree(os.path.join(output_directory, ta_name), ignore_errors=True)
+        os.makedirs(os.path.join(output_directory, ta_name))
+        logger.info(f"Cleaned out directory {os.path.join(output_directory,ta_name)}")
     generated_files = []
 
     gc_path = _get_and_check_global_config_path(source, config_path)
@@ -559,7 +565,6 @@ def generate(
         utils.recursive_overwrite(
             os.path.join(internal_root_dir, "package"),
             os.path.join(output_directory, ta_name),
-            ui_source_map,
             has_dashboard=global_config.has_dashboard(),
         )
     global_config_file = (
@@ -630,14 +635,6 @@ def generate(
             global_config, gc_path, ta_name, dashboard_definition_json_path
         )
 
-    ignore_list = _get_ignore_list(
-        ta_name,
-        os.path.abspath(os.path.join(source, os.pardir, ".uccignore")),
-        output_directory,
-    )
-    removed_list = _remove_listed_files(ignore_list)
-    if removed_list:
-        logger.info("Removed:\n{}".format("\n".join(removed_list)))
     utils.check_author_name(source, app_manifest)
 
     # Update files before overwriting
@@ -732,6 +729,12 @@ def generate(
             logger.info(f"Creating {output_openapi_folder} folder")
         with open(output_openapi_path, "w") as openapi_file:
             json.dump(open_api_object.json, openapi_file, indent=4)
+
+    if build_custom_ui:
+        logger.info("Building custom UI code")
+        # should we share output dir (requires build Ui changes)
+        # or should be rely on UI repo to specify it?
+        build_ui(source)
 
     summary_report(
         source,

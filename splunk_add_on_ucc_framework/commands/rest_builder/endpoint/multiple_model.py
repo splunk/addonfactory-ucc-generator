@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import List, Optional
+from typing import Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import indent
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.single_model import (
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     )
 """
 
-    def actions(self) -> List[str]:
+    def actions(self) -> list[str]:
         return ["edit", "list"]
 
     def generate_rh(self) -> str:

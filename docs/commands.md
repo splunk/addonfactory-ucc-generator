@@ -37,12 +37,8 @@ It takes the following parameters:
 
     Example:  `--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"`
 
-* `--ui-source-map` - [optional] if present generates front-end source maps (.js.map files), that helps with code debugging. </br> **NOTE:** The '--ui-source-map' parameter is deprecated and is scheduled for removal on 3rd June 2025. It is recommended to discontinue using this parameter.
-
-!!! warning "Deprecation --ui-source-map"
-
-    The `--ui-source-map` parameter is deprecated and is scheduled for removal on 3rd June 2025. It is recommended to discontinue using this parameter.
-
+* `--build-custom-ui` - [optional] Additional flag that will trigger build of custom UI repo (execute build script from `./ui` repository).
+* `--overwrite` - [optional] overwrites the already existing add-on directory. By default, you can't build an add-on to an already existing directory.
 
 ### Verbose mode
 

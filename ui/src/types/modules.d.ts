@@ -17,10 +17,6 @@ declare module '@splunk/splunk-utils/config' {
     export const versionLabel: string | undefined;
 }
 
-// https://requirejs.org/docs/whyamd.html#amd
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare function require(modules: string[], callback: (...modulesContent: any[]) => void): void;
-
 declare module '@splunk/splunk-utils/url' {
     export type Sharing = '' | 'app' | 'global' | 'system';
 
@@ -232,3 +228,5 @@ declare module '@splunk/react-page' {
 }
 declare module '@splunk/ui-utils/i18n';
 declare module 'uuid';
+
+declare module '@splunk/react-page/18';

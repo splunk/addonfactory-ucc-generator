@@ -1,8 +1,13 @@
 from pytest_splunk_addon_ui_smartx.base_test import UccTester
+from selenium.webdriver.common.by import By
+
 from tests.ui.pages.account_page import AccountPage
 
 import pytest
 import copy
+
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 _ACCOUNT_CONFIG = {
@@ -22,6 +27,10 @@ _ACCOUNT_CONFIG = {
     "example_help_link": "",
     "url": "https://test.example.com",
     "example_textarea_field_basic_oauth": "line1\nline2\nline3\nline4\nline5",
+}
+
+_ACCOUNT_CONFIG_OAUTH = {
+    "name": "TestAccountOauth2",
 }
 
 
@@ -458,6 +467,68 @@ class TestAccount(UccTester):
         self.assert_util(account.entity.redirect_url.get_input_label, "Redirect url")
 
     @pytest.mark.execute_enterprise_cloud_true
+    @pytest.mark.forwarder
+    @pytest.mark.account
+    def test_account_oauth_login(
+        self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper, oauth_server_port
+    ):
+        """Verifies oauth account field label"""
+        account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
+        account.entity.open()
+        account.entity.name.set_value(_ACCOUNT_CONFIG_OAUTH["name"])
+        account.entity.multiple_select.select("Option One")
+        account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
+        account.entity.client_id.set_value("demo")
+        account.entity.client_secret.set_value("demo")
+        account.entity.endpoint_authorize.set_value(f"localhost:{oauth_server_port}")
+        # Use host.docker.internal to access host from container
+        account.entity.endpoint_token.set_value(
+            f"host.docker.internal:{oauth_server_port}"
+        )
+
+        # Get current window handle before triggering OAuth flow
+        original_window = ucc_smartx_selenium_helper.browser.current_window_handle
+        original_windows = set(ucc_smartx_selenium_helper.browser.window_handles)
+
+        # Trigger OAuth flow - this will open a new window
+        account.entity.save()
+
+        # Wait for new window to appear and switch to it
+        wait = WebDriverWait(ucc_smartx_selenium_helper.browser, 5)
+        wait.until(lambda driver: len(driver.window_handles) > len(original_windows))
+
+        # Find and switch to the new window
+        all_windows = set(ucc_smartx_selenium_helper.browser.window_handles)
+        new_window = (all_windows - original_windows).pop()
+        ucc_smartx_selenium_helper.browser.switch_to.window(new_window)
+
+        # Interact with OAuth login form
+        wait.until(EC.presence_of_element_located((By.ID, "email")))
+
+        email_field = ucc_smartx_selenium_helper.browser.find_element(By.ID, "email")
+        password_field = ucc_smartx_selenium_helper.browser.find_element(
+            By.ID, "password"
+        )
+        submit_button = ucc_smartx_selenium_helper.browser.find_element(
+            By.CSS_SELECTOR, "button[type='submit']"
+        )
+
+        # Fill and submit the OAuth login form
+        email_field.send_keys("test@example.com")
+        password_field.send_keys("good")  # The test server expects "good" as password
+        submit_button.click()
+
+        # Wait for redirect back to original application
+        wait.until(lambda driver: len(driver.window_handles) == len(original_windows))
+
+        # Switch back to original window
+        ucc_smartx_selenium_helper.browser.switch_to.window(original_window)
+
+        # Wait for the OAuth flow to complete and verify no errors
+        wait.until(lambda driver: account.entity.is_error_closed())
+        self.assert_util(account.entity.is_error_closed, True)
+
+    @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.account
     def test_account_help_text_entity(
         self, ucc_smartx_selenium_helper, ucc_smartx_rest_helper
@@ -849,7 +920,6 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option One",
-                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -878,7 +948,6 @@ class TestAccount(UccTester):
                 "name": "TestAccount",
                 "auth type": "basic",
                 "test custom cell": "Option is not available",
-                "amd test custom cell": "AMD Option is not available",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -922,7 +991,6 @@ class TestAccount(UccTester):
                 "name": "TestAccount2",
                 "auth type": "basic",
                 "test custom cell": "Option One",
-                "amd test custom cell": "AMD Option One",
                 "actions": "Edit | Clone | Delete",
             },
         )
@@ -1107,7 +1175,6 @@ class TestAccount(UccTester):
             "Name",
             "Auth Type",
             "Test Custom Cell",
-            "AMD Test Custom Cell",
             "Actions",
         ]
         self.assert_util(list(account.table.get_headers()), expected_headers)
@@ -1317,7 +1384,6 @@ class TestAccount(UccTester):
                 "name": _ACCOUNT_CONFIG["name"],
                 "auth type": "basic",
                 "test custom cell": "Option Two",
-                "amd test custom cell": "AMD Option Two",
                 "actions": "Edit | Clone | Delete",
             },
         )

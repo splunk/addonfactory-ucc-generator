@@ -2,8 +2,6 @@ import React, { PureComponent } from 'react';
 import update from 'immutability-helper';
 import { v4 as uuidv4 } from 'uuid';
 
-import Message from '@splunk/react-ui/Message';
-
 import { z } from 'zod';
 import ControlWrapper from '../ControlWrapper/ControlWrapper';
 import Validator, { SaveValidator } from '../../util/Validator';
@@ -52,7 +50,7 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { OAuthEntity, SingleSelectEntitySchema } from '../../types/globalConfig/entities';
-import { mapEntityIntoBaseForViewEntityObject } from './BaseFormViewUtils';
+import { mapEntityIntoBaseForViewEntityObject, StyledMessage } from './BaseFormViewUtils';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -73,6 +71,8 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     currentInput: CurrentBaseFormInput;
 
     appName: string;
+
+    restRoot: string;
 
     groupEntities: string[];
 
@@ -144,6 +144,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         this.currentInput = {};
         const globalConfig = getUnifiedConfigs();
         this.appName = globalConfig.meta.name;
+        this.restRoot = globalConfig.meta.restRoot;
         this.groupEntities = [];
         this.endpoint =
             props.mode === MODE_EDIT || props.mode === MODE_CONFIG
@@ -968,9 +969,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     generateErrorMessage = () => {
         if (this.state.errorMsg) {
             return (
-                <Message appearance="fill" type="error">
+                <StyledMessage appearance="fill" type="error">
                     {this.state.errorMsg}
-                </Message>
+                </StyledMessage>
             );
         }
         return null;
@@ -979,9 +980,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     generateWarningMessage = () => {
         if (this.state.warningMsg) {
             return (
-                <Message appearance="fill" type="warning">
+                <StyledMessage appearance="fill" type="warning">
                     {this.state.warningMsg}
-                </Message>
+                </StyledMessage>
             );
         }
         return null;
@@ -1017,21 +1018,6 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         resolve(Hook);
                     }
                 );
-            } else {
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${this.appName}/js/build/custom/${module}`], (
-                    Hook: CustomHookConstructor
-                ) => {
-                    this.hook = new Hook(
-                        globalConfig,
-                        this.props.serviceName,
-                        this.state,
-                        this.props.mode,
-                        this.util,
-                        this.props.groupName
-                    );
-                    resolve(Hook);
-                });
             }
         });
         return myPromise;
@@ -1088,7 +1074,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
             }
         });
 
-        const OAuthEndpoint = `${encodeURIComponent(this.appName)}_oauth/oauth`;
+        const OAuthEndpoint = `${encodeURIComponent(this.restRoot)}_oauth/oauth`;
         // Internal handler call to get the access token and other values
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         postRequest<{ entry: [{ content: any }] }>({

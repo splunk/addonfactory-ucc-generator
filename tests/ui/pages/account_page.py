@@ -29,7 +29,8 @@ class AccountEntity(Entity):
         add_btn = Button(
             browser,
             Selector(
-                select=container.select + ' button[data-test="button"][label="Add"]'
+                select=container.select
+                + ' button[data-test="button"] span span[data-test="label"]'
             ),
         )
         entity_container = Selector(select='[data-test="modal"]')
@@ -117,6 +118,16 @@ class AccountEntity(Entity):
             Selector(
                 select=entity_container.select
                 + ' [data-name="example_textarea_field_basic_oauth"]'
+            ),
+        )
+        self.endpoint_token = TextBox(
+            browser,
+            Selector(select='[data-test="control-group"][data-name="endpoint_token"]'),
+        )
+        self.endpoint_authorize = TextBox(
+            browser,
+            Selector(
+                select='[data-test="control-group"][data-name="endpoint_authorize"]'
             ),
         )
 

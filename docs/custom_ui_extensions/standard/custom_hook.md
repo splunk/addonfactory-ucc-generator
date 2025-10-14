@@ -6,7 +6,7 @@ Hook is nothing more than a Javascript event handling on the events `onCreate`, 
 
 Hooks can be used inside the services and tabs that are placed next to the entity tag.
 
-The `type` key needs to be set as external to webpack the custom extensions. UCC  expects scripts marked as external to follow the ESM syntax for exporting and importing modules. Any other value, or not specifying type, will default to the old requireJS (AMD) import syntax. Aditionally, the custom javascript file and the imported modules will not get webpack-ed.
+The `type` key needs to be set as external to webpack the custom extensions. UCC  expects scripts marked as external to follow the ESM syntax for exporting and importing modules. Aditionally, the custom javascript file and the imported modules will not get webpack-ed.
 
 ### Properties
 

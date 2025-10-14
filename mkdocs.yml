@@ -58,6 +58,7 @@ plugins:
 
 nav:
   - About UCC: "index.md"
+  - What's new: "whats_new.md"
   - Getting started: "quickstart.md"
   - Commands: "commands.md"
   - ".conf files": "dot_conf_files.md"
@@ -93,7 +94,6 @@ nav:
   - Custom search commands: "custom_search_commands.md"
   - Table: "table.md"
   - Additional packaging: "additional_packaging.md"
-  - UCC ignore: "uccignore.md"
   - OpenAPI: "openapi.md"
   - UCC-related libraries: "ucc_related_libraries.md"
   - Custom UI extensions:
@@ -103,7 +103,6 @@ nav:
         - Custom control: "custom_ui_extensions/standard/custom_control.md"
         - Custom row: "custom_ui_extensions/standard/custom_row.md"
         - Custom cell: "custom_ui_extensions/standard/custom_cell.md"
-        - Custom menu: "custom_ui_extensions/standard/custom_menu.md"
         - Custom tab: "custom_ui_extensions/standard/custom_tab.md"
       - Context:
         - Overview: "custom_ui_extensions/context/overview.md"
@@ -121,6 +120,7 @@ nav:
       - Custom REST handler: "advanced/custom_rest_handler.md"
       - Groups feature: "advanced/groups_feature.md"
       - Save validator: "advanced/save_validator.md"
+      - Requirements: "advanced/requirements.md"
       - OS-dependent libraries: "advanced/os-dependent_libraries.md"
       - Sub description: "advanced/sub_description.md"
       - Custom warning: "advanced/custom_warning.md"

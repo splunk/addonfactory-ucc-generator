@@ -7,7 +7,9 @@ import json
 import pytest
 from os import path
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
+import subprocess
+import shutil
 
 from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
 from tests.smoke import helpers
@@ -638,7 +640,6 @@ def test_ucc_build_verbose_mode(caplog):
         source=package_folder,
         output_directory=temp_dir,
         verbose_file_summary_report=True,
-        ui_source_map=True,
     )
 
     app_server_lib_path = os.path.join(build.internal_root_dir, "package")
@@ -655,82 +656,13 @@ def test_ucc_build_verbose_mode(caplog):
         assert log_line.levelname == expected_logs[log_line.message]
 
 
-def test_ucc_generate_with_everything_uccignore(caplog):
-    """
-    Checks the deprecation warning of .uccignore present in a repo with
-    its functionality still working.
-    """
-    # clean-up cached `additional_packaging` module when running all tests
-    sys.modules.pop("additional_packaging", "")
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything_uccignore",
-            "package",
-        )
-        # create `.uccignore` temporarily
-        ucc_file = path.join(path.dirname(package_folder), ".uccignore")
-        f = open(ucc_file, "w+")
-        f.write(
-            """**/**one.py
-bin/splunk_ta_uccexample_rh_example_input_two.py
-bin/wrong_pattern
-"""
-        )
-        f.close()
-        build.generate(source=package_folder, output_directory=temp_dir)
-
-        expected_warning_msg = (
-            f"No files found for the specified pattern: "
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/wrong_pattern"
-        )
-
-        edm_paths = {
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/helper_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/example_input_one.py",
-            f"{temp_dir}/Splunk_TA_UCCExample/bin/splunk_ta_uccexample_rh_example_input_two.py",
-        }
-        removed = set(
-            caplog.text.split("Removed:", 1)[1].split("INFO")[0].strip().split("\n")
-        )
-        exp_msg = (
-            "The `.uccignore` feature has been deprecated from UCC and is planned to be removed after May 2025. "
-            "To achieve the similar functionality use additional_packaging.py."
-            "\nRefer: https://splunk.github.io/addonfactory-ucc-generator/additional_packaging/."
-        )
-        exp_info_msg = (
-            "additional_packaging.py is present but does not have `additional_packaging`."
-            " Skipping additional packaging."
-        )
-
-        assert exp_msg in caplog.text
-        assert exp_info_msg in caplog.text
-        assert expected_warning_msg in caplog.text
-        assert edm_paths == removed
-        # on successful assertion, we delete the file
-        os.remove(ucc_file)
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-        # when custom files are provided, default files shouldn't be shipped
-        files_should_be_absent = [
-            ("bin", "splunk_ta_uccexample_rh_example_input_one.py"),
-            ("bin", "example_input_one.py"),
-            ("bin", "splunk_ta_uccexample_rh_example_input_two.py"),
-        ]
-        for af in files_should_be_absent:
-            actual_file_path = path.join(actual_folder, *af)
-            assert not path.exists(actual_file_path)
-
-
 def test_ucc_generate_with_everything_cleanup_output_files():
     """
     Checks the functioning of addtional_packaging.py's `cleanup_output_files`  present in a repo.
     Compares only the files that shouldn't be present in the output directory.
     """
+    # clean-up cached `additional_packaging` module when running all tests
+    sys.modules.pop("additional_packaging", "")
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
             path.dirname(path.realpath(__file__)),
@@ -768,31 +700,6 @@ def test_ucc_generate_only_one_tab():
     build.generate(source=package_folder)
 
 
-def test_ucc_generate_with_ui_source_map():
-    with tempfile.TemporaryDirectory() as temp_dir:
-        package_folder = path.join(
-            path.dirname(path.realpath(__file__)),
-            "..",
-            "testdata",
-            "test_addons",
-            "package_global_config_everything",
-            "package",
-        )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, ui_source_map=True
-        )
-
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
-
-        files_to_exist = [
-            ("appserver", "static", "js", "build", "entry_page.js"),
-            ("appserver", "static", "js", "build", "entry_page.js.map"),
-        ]
-        for f in files_to_exist:
-            expected_file_path = path.join(actual_folder, *f)
-            assert path.exists(expected_file_path)
-
-
 @pytest.mark.parametrize(
     "config, expected_file_count",
     [
@@ -802,7 +709,7 @@ def test_ucc_generate_with_ui_source_map():
         ),
         (
             "package_global_config_everything",
-            18,
+            9,
         ),
     ],
 )
@@ -816,9 +723,7 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
             config,
             "package",
         )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, ui_source_map=True
-        )
+        build.generate(source=package_folder, output_directory=temp_dir)
 
         actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
 
@@ -835,6 +740,76 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
             f"Expected {expected_file_count} Dashboard.[hash].js files in {js_build_folder}, for {config}"
             f" but found {dashbaord_files_counter}."
         )
+
+
+def test_check_ucc_ui_files(tmp_path):
+    if path.exists(path.join(os.getcwd(), "dist")):
+        shutil.rmtree(path.join(os.getcwd(), "dist"))
+    subprocess.run(["poetry", "build"], capture_output=True, text=True)
+    dist_folder = path.join(tmp_path, "dist")
+
+    # Set the path to dist directory in current working directory
+    dist_dir = Path(path.join(os.getcwd(), "dist"))
+
+    # Get .whl file in that directory
+    whl_file = next(dist_dir.glob("*.whl"))
+    whl_file_path = path.join(dist_folder, whl_file)
+    subprocess.run(
+        ["pip", "install", whl_file_path, "--target", dist_folder],
+        capture_output=True,
+        text=True,
+    )
+
+    # Run the command to store all UI files
+    result = subprocess.run(
+        [
+            "ls",
+            "-a",
+            f"{dist_folder}/splunk_add_on_ucc_framework/package/appserver/static/js/build",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    file_list = result.stdout.strip().split("\n")
+
+    # Remove '.' and '..'
+    cleaned_files = file_list[2:]
+
+    def remove_hash(filename):
+        if filename.endswith(".js"):
+            return re.sub(r"\.[a-zA-Z0-9_-]+(?=\.js$)", "", filename)
+        return filename
+
+    # Create new list with hash removed
+    normalized_files = [remove_hash(f) for f in cleaned_files]
+
+    expected_js_files_list = [
+        "ArrowBroadUnderbarDown.js",
+        "assets",
+        "ConfigurationPage.js",
+        "Dashboard.consts.js",
+        "Dashboard.Custom.js",
+        "Dashboard.DashboardPage.js",
+        "Dashboard.DataIngestion.js",
+        "Dashboard.EnterpriseViewOnlyPreset.js",
+        "Dashboard.Error.js",
+        "Dashboard.Overview.js",
+        "Dashboard.Resource.js",
+        "Dashboard.utils.js",
+        "entry_page.js",
+        "ErrorBoundary.js",
+        "html2canvas.esm.js",
+        "index.es.js",
+        "InputPage.js",
+        "licenses.txt",
+        "Menu.js",
+        "purify.es.js",
+        "redirect_page.js",
+        "Search.js",
+        "Search.js",
+        "usePlatform.js",
+    ]
+    assert sorted(normalized_files) == sorted(expected_js_files_list)
 
 
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
@@ -877,7 +852,7 @@ def _compare_expandable_tabs_and_entities(package_dir: str, output_dir: str) -> 
 
 
 def _compare_logging_tab(
-    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+    global_config: dict[Any, Any], static_config: dict[Any, Any]
 ) -> None:
     tab_exists = False
     num = 0
@@ -926,7 +901,7 @@ def _compare_logging_tab(
 
 
 def _compare_interval_entities(
-    global_config: Dict[Any, Any], static_config: Dict[Any, Any]
+    global_config: dict[Any, Any], static_config: dict[Any, Any]
 ) -> None:
     for lmbd in (
         lambda x: x["pages"]["configuration"]["tabs"],

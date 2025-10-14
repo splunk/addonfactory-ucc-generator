@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Any, Dict, Optional, Sequence
+from typing import Any, Optional
+from collections.abc import Sequence
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     indent,
@@ -30,10 +31,10 @@ class BaseValidator:
     def _get_class_name(self) -> str:
         raise NotImplementedError()
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         raise NotImplementedError()
 
-    def _format_arguments(self, **kwargs: Dict[str, Any]) -> str:
+    def _format_arguments(self, **kwargs: dict[str, Any]) -> str:
         args = list(
             map(
                 lambda k_v: f"{k_v[0]}={k_v[1]}, ",
@@ -44,7 +45,7 @@ class BaseValidator:
         args.append("")
         return indent("\n".join(args))
 
-    def build(self, config: Dict[str, Any]) -> str:
+    def build(self, config: dict[str, Any]) -> str:
         return self._validation_template.format(
             class_name=self._get_class_name(),
             arguments=self._format_arguments(**self._get_arguments(config)),
@@ -55,7 +56,7 @@ class StringValidator(BaseValidator):
     def _get_class_name(self) -> str:
         return "String"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         return {
             "max_len": config.get("maxLength"),
             "min_len": config.get("minLength"),
@@ -66,7 +67,7 @@ class NumberValidator(BaseValidator):
     def _get_class_name(self) -> str:
         return "Number"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         ranges = config.get("range", [None, None])
         if config.get("isInteger") is None:
             return {
@@ -85,7 +86,7 @@ class RegexValidator(BaseValidator):
     def _get_class_name(self) -> str:
         return "Pattern"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         return {"regex": "r" + quote_regex(config.get("pattern"))}
 
 
@@ -93,7 +94,7 @@ class EmailValidator(BaseValidator):
     def _get_class_name(self) -> str:
         return "Pattern"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         regex = (
             r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}"
             r"[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
@@ -105,7 +106,7 @@ class Ipv4Validator(BaseValidator):
     def _get_class_name(self) -> str:
         return "Pattern"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         regex = r"^(?:(?:[0-1]?\d{1,2}|2[0-4]\d|25[0-5])(?:\.|$)){4}$"
         return {"regex": "r" + quote_regex(regex)}
 
@@ -114,7 +115,7 @@ class DateValidator(BaseValidator):
     def _get_class_name(self) -> str:
         return "Pattern"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         # iso8601 date time format
         regex = (
             r"^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))"
@@ -127,7 +128,7 @@ class UrlValidator(BaseValidator):
     def _get_class_name(self) -> str:
         return "Pattern"
 
-    def _get_arguments(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
         regex = (
             r"^(?:(?:https?|ftp|opc\.tcp):\/\/)?(?:\S+(?::\S*)?@)?"
             r"(?:(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])"
@@ -159,7 +160,7 @@ class ValidatorBuilder:
             validators=indent(validators_str),
         )
 
-    def build(self, configs: Optional[Sequence[Dict[str, Any]]]) -> Optional[str]:
+    def build(self, configs: Optional[Sequence[dict[str, Any]]]) -> Optional[str]:
         if configs is None:
             return None
         generated_validators = []

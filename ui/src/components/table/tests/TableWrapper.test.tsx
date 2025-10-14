@@ -76,8 +76,8 @@ describe('TableWrapper - Configuration Page', () => {
     it('sort items after filtering', async () => {
         setUnifiedConfig(getSimpleConfigWithMapping());
         renderTable();
-        const user = userEvent.setup();
 
+        const user = userEvent.setup();
         const numberOfItems = await screen.findByText('9 Items');
         expect(numberOfItems).toBeInTheDocument();
         const customHeader = screen
@@ -102,8 +102,11 @@ describe('TableWrapper - Configuration Page', () => {
           "222222",
         ]
     `);
-
-        await user.click(customHeader!);
+        await user.click(screen.getByRole('button', { name: /Custom Text/i }));
+        expect(screen.getByRole('columnheader', { name: /Custom Text/i })).toHaveAttribute(
+            'aria-sort',
+            'ascending'
+        );
 
         const allCustomTextsAsc = screen
             .getAllByTestId('cell')
@@ -124,7 +127,11 @@ describe('TableWrapper - Configuration Page', () => {
         ]
     `);
 
-        await user.click(customHeader!);
+        await user.click(screen.getByRole('button', { name: /Custom Text/i }));
+        expect(screen.getByRole('columnheader', { name: /Custom Text/i })).toHaveAttribute(
+            'aria-sort',
+            'descending'
+        );
 
         // No unique data-testid available to extract the columns in order
         // eslint-disable-next-line testing-library/no-node-access
@@ -163,7 +170,8 @@ describe('TableWrapper - Configuration Page', () => {
 
     const getHeaderTitleForAction = async (headingName: string, buttonName: RegExp) => {
         const allDeleteButtons = await screen.findAllByRole('button', { name: buttonName });
-        await userEvent.click(allDeleteButtons[0]);
+        const user = userEvent.setup();
+        await user.click(allDeleteButtons[0]);
         return screen.getByRole('heading', { name: headingName });
     };
     const closeModal = async (user: UserEvent) => {
