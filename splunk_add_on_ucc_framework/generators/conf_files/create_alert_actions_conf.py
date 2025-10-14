@@ -72,9 +72,6 @@ class AlertActionsConf(FileGenerator):
         self.supportedPythonVersion = None
 
         for alert in self._alert_settings:
-            supported_versions = self._global_config.meta.get("supportedPythonVersion")
-            if supported_versions:
-                self.supportedPythonVersion = ", ".join(supported_versions)
             alert_name = alert["short_name"]
             self.alerts[alert_name] = []
             self.alerts_spec[alert_name] = []
@@ -132,6 +129,11 @@ class AlertActionsConf(FileGenerator):
                 elif k not in deny_list:
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
+        if self.alerts or self.alerts_spec:
+            self.supportedPythonVersion = (
+                ", ".join(self._global_config.meta.get("supportedPythonVersion", []))
+                or None
+            )
 
     def generate(self) -> Optional[list[dict[str, str]]]:
         conf_files: list[dict[str, str]] = []
