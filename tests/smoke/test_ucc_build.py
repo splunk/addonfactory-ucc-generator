@@ -8,6 +8,8 @@ import pytest
 from os import path
 from pathlib import Path
 from typing import Any
+import subprocess
+import shutil
 
 from splunk_add_on_ucc_framework.entity.interval_entity import CRON_REGEX
 from tests.smoke import helpers
@@ -740,6 +742,76 @@ def test_ucc_dashboard_js_copying(config, expected_file_count):
             f"Expected {expected_file_count} Dashboard.[hash].js files in {js_build_folder}, for {config}"
             f" but found {dashbaord_files_counter}."
         )
+
+
+def test_check_ucc_ui_files(tmp_path):
+    if path.exists(path.join(os.getcwd(), "dist")):
+        shutil.rmtree(path.join(os.getcwd(), "dist"))
+    subprocess.run(["poetry", "build"], capture_output=True, text=True)
+    dist_folder = path.join(tmp_path, "dist")
+
+    # Set the path to dist directory in current working directory
+    dist_dir = Path(path.join(os.getcwd(), "dist"))
+
+    # Get .whl file in that directory
+    whl_file = next(dist_dir.glob("*.whl"))
+    whl_file_path = path.join(dist_folder, whl_file)
+    subprocess.run(
+        ["pip", "install", whl_file_path, "--target", dist_folder],
+        capture_output=True,
+        text=True,
+    )
+
+    # Run the command to store all UI files
+    result = subprocess.run(
+        [
+            "ls",
+            "-a",
+            f"{dist_folder}/splunk_add_on_ucc_framework/package/appserver/static/js/build",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    file_list = result.stdout.strip().split("\n")
+
+    # Remove '.' and '..'
+    cleaned_files = file_list[2:]
+
+    def remove_hash(filename):
+        if filename.endswith(".js"):
+            return re.sub(r"\.[a-zA-Z0-9_-]+(?=\.js$)", "", filename)
+        return filename
+
+    # Create new list with hash removed
+    normalized_files = [remove_hash(f) for f in cleaned_files]
+
+    expected_js_files_list = [
+        "ArrowBroadUnderbarDown.js",
+        "assets",
+        "ConfigurationPage.js",
+        "Dashboard.consts.js",
+        "Dashboard.Custom.js",
+        "Dashboard.DashboardPage.js",
+        "Dashboard.DataIngestion.js",
+        "Dashboard.EnterpriseViewOnlyPreset.js",
+        "Dashboard.Error.js",
+        "Dashboard.Overview.js",
+        "Dashboard.Resource.js",
+        "Dashboard.utils.js",
+        "entry_page.js",
+        "ErrorBoundary.js",
+        "html2canvas.esm.js",
+        "index.es.js",
+        "InputPage.js",
+        "licenses.txt",
+        "Menu.js",
+        "purify.es.js",
+        "redirect_page.js",
+        "Search.js",
+        "Search.js",
+        "usePlatform.js",
+    ]
+    assert sorted(normalized_files) == sorted(expected_js_files_list)
 
 
 def test_ucc_generate_with_all_alert_types(tmp_path, caplog):
