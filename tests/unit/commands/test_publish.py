@@ -49,7 +49,14 @@ class TestPackageUpload:
         mock_urlopen.return_value.__exit__ = MagicMock(return_value=None)
 
         pkg_id = upload_package(
-            "https://dummy_url", 1001, "tests/test_package.tgz", "9.5", "6.x", True, "user", "pass"
+            "https://dummy_url",
+            1001,
+            "tests/test_package.tgz",
+            "9.5",
+            "6.x",
+            True,
+            "user",
+            "pass",
         )
         assert pkg_id == ""
         mock_file.assert_called_once_with("tests/test_package.tgz", "rb")
@@ -76,7 +83,14 @@ class TestPackageUpload:
 
         with pytest.raises(urllib.error.HTTPError):
             upload_package(
-                "https://dummy_url", 1001, "tests/test_package.tgz", "9.5", "6.x", True, "user", "pass"
+                "https://dummy_url",
+                1001,
+                "tests/test_package.tgz",
+                "9.5",
+                "6.x",
+                True,
+                "user",
+                "pass",
             )
             mock_file.assert_called_once_with("tests/test_package.tgz", "rb")
             mock_logger.error.assert_called_with(
@@ -96,7 +110,9 @@ class TestPackageValidation:
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_response)
         mock_urlopen.return_value.__exit__ = MagicMock(return_value=None)
 
-        check_package_validation("https://dummy_url", "pkg123", "user", "pass")  # should not raise
+        check_package_validation(
+            "https://dummy_url", "pkg123", "user", "pass"
+        )  # should not raise
         mock_logger.info.assert_called_with("Validation status: Validation passed")
 
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
