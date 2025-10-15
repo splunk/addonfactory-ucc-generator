@@ -90,7 +90,7 @@ class TestPackageValidation:
     def test_check_package_validation_success(self, mock_urlopen, mock_logger):
         mock_response = MagicMock()
         mock_response.read.return_value = json.dumps(
-            {"message": "Validation passed"}
+            {"message": "Validation passed", "result": "pass"}
         ).encode("utf-8")
         mock_urlopen.return_value = mock_response
         mock_urlopen.return_value.__enter__ = MagicMock(return_value=mock_response)
