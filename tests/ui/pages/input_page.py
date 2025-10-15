@@ -14,6 +14,7 @@ from pytest_splunk_addon_ui_smartx.components.input_table import InputTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
 from pytest_splunk_addon_ui_smartx.components.controls.textarea import TextArea
+from selenium.webdriver.common.by import By
 
 from tests.ui import constants as C
 
@@ -33,10 +34,12 @@ class InteractAllPrompt(BaseComponent):
             browser, Selector(select=entity_container.select + ' [data-test="content"]')
         )
         self.confirm_btn = Button(
-            browser, Selector(select=entity_container.select + ' button[label="Yes"]')
+            browser,
+            Selector(by=By.XPATH, select='//span[@data-test="label" and text()="Yes"]'),
         )
         self.deny_btn = Button(
-            browser, Selector(select=entity_container.select + ' button[label="No"]')
+            browser,
+            Selector(by=By.XPATH, select='//span[@data-test="label" and text()="No"]'),
         )
         self.close_btn = Button(
             browser, Selector(select=entity_container.select + ' [data-test="close"]')

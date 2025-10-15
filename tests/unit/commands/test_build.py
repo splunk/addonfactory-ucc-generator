@@ -17,6 +17,7 @@ from splunk_add_on_ucc_framework.exceptions import (
 )
 
 from splunk_add_on_ucc_framework import __version__
+from tests.unit.helpers import get_path_to_source_dir
 
 CURRENT_PATH = os.getcwd()
 
@@ -74,7 +75,7 @@ input_value = {
     ],
 )
 def test_get_build_output_path(output_directory, expected_output_directory):
-    assert expected_output_directory == _get_build_output_path(output_directory)
+    assert expected_output_directory == _get_build_output_path(output_directory)[0]
 
 
 @patch("splunk_add_on_ucc_framework.commands.build.subprocess.run")
@@ -219,12 +220,42 @@ def test_ta_name_mismatch(
             verbose_file_summary_report=False,
             pip_version="latest",
             pip_legacy_resolver=False,
-            ui_source_map=False,
         )
 
 
+@patch("os.path.exists")
+@patch("splunk_add_on_ucc_framework.commands.build.get_app_manifest")
+def test_existing_output_dir(mock_get_app_manifest, mock_os_path, caplog):
+    mock_os_path.return_value = True
+
+    mock_app_manifest = MagicMock()
+    mock_app_manifest.get_addon_name.return_value = "ta_name_1"
+    mock_get_app_manifest.return_value = mock_app_manifest
+
+    with pytest.raises(SystemExit):
+        generate(
+            source="source/path",
+            addon_version="1.0.0",
+            output_directory="dummy_path",
+            python_binary_name="python3",
+            verbose_file_summary_report=False,
+            pip_version="latest",
+            pip_legacy_resolver=False,
+        )
+    output_dir = os.path.abspath(
+        os.path.join(get_path_to_source_dir(), os.pardir, "dummy_path", "ta_name_1")
+    )
+    expected_msg = (
+        f"The location {output_dir} is already taken, use `--overwrite` option to overwrite "
+        "the content of existing directory."
+    )
+    assert expected_msg in caplog.text
+
+
 @patch("splunk_add_on_ucc_framework.commands.build._get_build_output_path")
-def test_uncaught_exception(mock_get_build_output_path, caplog):
+@patch("os.path.exists")
+def test_uncaught_exception(mock_get_build_output_path, mock_os_path, caplog):
+    mock_os_path.return_value = True
     mock_get_build_output_path.side_effect = ValueError("Some exc msg")
 
     expected_msg_1 = "Uncaught exception occurred. Exception details:"
@@ -242,7 +273,6 @@ def test_uncaught_exception(mock_get_build_output_path, caplog):
         verbose_file_summary_report=False,
         pip_version="latest",
         pip_legacy_resolver=False,
-        ui_source_map=False,
     )
 
     whitespaces = [el for el in caplog.messages[-1].split("https")[1] if el.isspace()]
@@ -263,7 +293,6 @@ def test_source_directory_not_found(caplog):
             verbose_file_summary_report=False,
             pip_version="latest",
             pip_legacy_resolver=False,
-            ui_source_map=False,
         )
 
     assert expected_msg == caplog.messages[-1]

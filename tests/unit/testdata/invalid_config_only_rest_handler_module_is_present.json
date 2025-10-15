@@ -48,9 +48,6 @@
         "inputs": {
             "services": [
                 {
-                    "hook": {
-                        "src": "Hook"
-                    },
                     "name": "example_input_one",
                     "restHandlerModule": "custom_rest_handler_module",
                     "entity": [

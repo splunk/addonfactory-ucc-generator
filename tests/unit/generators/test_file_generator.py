@@ -153,6 +153,7 @@ def test_begin(
         {"inputs.conf.spec": f"{output_dir}/{ta_name}/README/inputs.conf.spec"},
         {"server.conf": f"{output_dir}/{ta_name}/default/server.conf"},
         {"restmap.conf": f"{output_dir}/{ta_name}/default/restmap.conf"},
+        {"restmap.conf.spec": f"{output_dir}/{ta_name}/README/restmap.conf.spec"},
         {"web.conf": f"{output_dir}/{ta_name}/default/web.conf"},
         {"alert_actions.conf": f"{output_dir}/{ta_name}/default/alert_actions.conf"},
         {
@@ -161,6 +162,7 @@ def test_begin(
         {"eventtypes.conf": f"{output_dir}/{ta_name}/default/eventtypes.conf"},
         {"tags.conf": f"{output_dir}/{ta_name}/default/tags.conf"},
         {"commands.conf": f"{output_dir}/{ta_name}/default/commands.conf"},
+        {"commands.conf.spec": f"{output_dir}/{ta_name}/README/commands.conf.spec"},
         {"searchbnf.conf": f"{output_dir}/{ta_name}/default/searchbnf.conf"},
         {
             "splunk_ta_uccexample_account.conf.spec": f"{output_dir}/{ta_name}/"

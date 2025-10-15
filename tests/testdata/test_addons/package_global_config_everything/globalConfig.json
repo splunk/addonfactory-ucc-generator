@@ -38,18 +38,8 @@
                                     "src": "CustomInputCell",
                                     "type": "external"
                                 }
-                            },
-                            {
-                                "label": "AMD Test Custom Cell",
-                                "field": "amd_test_custom_cell",
-                                "customCell": {
-                                    "src": "amdCustomInputCell"
-                                }
                             }
                         ]
-                    },
-                    "hook": {
-                        "src": "amdCustomHook"
                     },
                     "entity": [
                         {
@@ -60,15 +50,6 @@
                             "options": {
                                 "src": "custom_control",
                                 "type": "external"
-                            }
-                        },
-                        {
-                            "type": "custom",
-                            "label": "Amd Example Custom Control",
-                            "field": "amd_custom_control_field",
-                            "help": " This is an example Amd multipleSelect for account entity",
-                            "options": {
-                                "src": "amdCustom_control"
                             }
                         },
                         {
@@ -258,7 +239,6 @@
                                 },
                                 "basic": [
                                     {
-                                        "oauth_field": "username",
                                         "label": "Username",
                                         "help": "Enter the username for this account.",
                                         "field": "username",
@@ -374,21 +354,18 @@
                                         ]
                                     },
                                     {
-                                        "oauth_field": "password",
                                         "label": "Password",
                                         "encrypted": true,
                                         "help": "Enter the password for this account.",
                                         "field": "password"
                                     },
                                     {
-                                        "oauth_field": "security_token",
                                         "label": "Security Token",
                                         "encrypted": true,
                                         "help": "Enter the security token.",
                                         "field": "token"
                                     },
                                     {
-                                        "oauth_field": "some_text",
                                         "label": "Disabled on edit for oauth",
                                         "help": "Enter text for field disabled on edit, no special characters allowed",
                                         "field": "basic_oauth_text",
@@ -481,20 +458,17 @@
                                 ],
                                 "oauth_client_credentials": [
                                     {
-                                        "oauth_field": "client_id_oauth_credentials",
                                         "label": "Client Id",
                                         "field": "client_id_oauth_credentials",
                                         "help": "Enter the Client Id for this account."
                                     },
                                     {
-                                        "oauth_field": "client_secret_oauth_credentials",
                                         "label": "Client Secret",
                                         "field": "client_secret_oauth_credentials",
                                         "encrypted": true,
                                         "help": "Enter the Client Secret key for this account."
                                     },
                                     {
-                                        "oauth_field": "endpoint_token_oauth_credentials",
                                         "label": "Token endpoint",
                                         "field": "endpoint_token_oauth_credentials",
                                         "help": "Put here endpoint used for token acqusition ie. login.salesforce.com"
@@ -502,26 +476,22 @@
                                 ],
                                 "oauth": [
                                     {
-                                        "oauth_field": "client_id",
                                         "label": "Client Id",
                                         "field": "client_id",
                                         "help": "Enter the Client Id for this account."
                                     },
                                     {
-                                        "oauth_field": "client_secret",
                                         "label": "Client Secret",
                                         "field": "client_secret",
                                         "encrypted": true,
                                         "help": "Enter the Client Secret key for this account."
                                     },
                                     {
-                                        "oauth_field": "redirect_url",
                                         "label": "Redirect url",
                                         "field": "redirect_url",
                                         "help": "Copy and paste this URL into your app."
                                     },
                                     {
-                                        "oauth_field": "endpoint_token",
                                         "label": "Token endpoint",
                                         "field": "endpoint_token",
                                         "help": "Put here endpoint used for token acqusition ie. login.salesforce.com",
@@ -596,13 +566,11 @@
                                         ]
                                     },
                                     {
-                                        "oauth_field": "endpoint_authorize",
                                         "label": "Authorize endpoint",
                                         "field": "endpoint_authorize",
                                         "help": "Put here endpoint used for authorization ie. login.salesforce.com"
                                     },
                                     {
-                                        "oauth_field": "oauth_some_text",
                                         "label": "Disabled on edit for oauth",
                                         "help": "Enter text for field disabled on edit",
                                         "field": "oauth_oauth_text",
@@ -615,13 +583,11 @@
                                 ],
                                 "certificate_authorization": [
                                     {
-                                        "oauth_field": "username_cert",
                                         "label": "Username certificate",
                                         "help": "Enter the username certificate for this account.",
                                         "field": "username_cert"
                                     },
                                     {
-                                        "oauth_field": "security_token_cert",
                                         "label": "Security Token certificate",
                                         "encrypted": true,
                                         "help": "Enter the security certificate token.",
@@ -692,6 +658,77 @@
                     "title": "Account",
                     "restHandlerModule": "splunk_ta_uccexample_validate_account_rh",
                     "restHandlerClass": "CustomAccountValidator"
+                },
+                {
+                    "name": "organization",
+                    "title": "Organization",
+                    "table": {
+                        "actions": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ],
+                        "header": [
+                            {
+                                "label": "Name",
+                                "field": "name"
+                            },
+                            {
+                                "label": "Auth Type",
+                                "field": "auth_type"
+                            }
+                        ]
+                    },
+                    "entity": [
+                        {
+                            "type": "text",
+                            "label": "Name",
+                            "field": "name",
+                            "help": "Enter a unique name for this account.",
+                            "required": true
+                        },
+                        {
+                            "type": "oauth",
+                            "field": "oauth",
+                            "label": "Not used",
+                            "options": {
+                                "auth_type": [
+                                    "oauth"
+                                ],
+                                "oauth": [
+                                    {
+                                        "oauth_field": "client_id",
+                                        "label": "Client Id",
+                                        "field": "client_id",
+                                        "help": "Enter the Client Id for this account."
+                                    },
+                                    {
+                                        "oauth_field": "client_secret",
+                                        "label": "Client Secret",
+                                        "field": "client_secret",
+                                        "encrypted": true,
+                                        "help": "Enter the Client Secret key for this account."
+                                    },
+                                    {
+                                        "oauth_field": "redirect_url",
+                                        "label": "Redirect url",
+                                        "field": "redirect_url",
+                                        "help": "Copy and paste this URL into your app."
+                                    },
+                                    {
+                                        "oauth_field": "endpoint",
+                                        "label": "Endpoint",
+                                        "field": "endpoint",
+                                        "help": "Put here endpoint, ie. login.salesforce.com"
+                                    }
+                                ],
+                                "auth_code_endpoint": "/oauth/authorize",
+                                "access_token_endpoint": "/oauth/token",
+                                "oauth_timeout": 30,
+                                "oauth_state_enabled": false
+                            }
+                        }
+                    ]
                 },
                 {
                     "name": "custom_tab",
@@ -882,76 +919,6 @@
                     "title": "Custom table row"
                 },
                 {
-                    "name": "custom_amd_row_tab",
-                    "table": {
-                        "actions": [
-                            "edit",
-                            "delete",
-                            "clone"
-                        ],
-                        "header": [
-                            {
-                                "label": "Name",
-                                "field": "name"
-                            },
-                            {
-                                "label": "Text Test",
-                                "field": "text_test"
-                            }
-                        ],
-                        "moreInfo": [
-                            {
-                                "field": "name",
-                                "label": "Name"
-                            },
-                            {
-                                "field": "text_test",
-                                "label": "Text Test"
-                            }
-                        ],
-                        "customRow": {
-                            "src": "amdCustom_input_row_replace"
-                        }
-                    },
-                    "entity": [
-                        {
-                            "type": "text",
-                            "label": "Name",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "errorMsg": "Length of ID should be between 1 and 50",
-                                    "minLength": 1,
-                                    "maxLength": 50
-                                },
-                                {
-                                    "type": "regex",
-                                    "errorMsg": "Name must begin with a letter and consist exclusively of alphanumeric characters and underscores.",
-                                    "pattern": "^[a-zA-Z]\\w*$"
-                                }
-                            ],
-                            "field": "name",
-                            "help": "Enter a unique name for this account.",
-                            "required": true
-                        },
-                        {
-                            "field": "text_test",
-                            "label": "Text Test",
-                            "help": "This is a text test",
-                            "type": "text",
-                            "validators": [
-                                {
-                                    "type": "string",
-                                    "minLength": 1,
-                                    "maxLength": 100
-                                }
-                            ],
-                            "required": true
-                        }
-                    ],
-                    "title": "AMD Custom table row"
-                },
-                {
                     "name": "tab_hidden_for_cloud",
                     "table": {
                         "actions": [
@@ -1099,6 +1066,10 @@
                         "linkText": "blog post"
                     }
                 ]
+            },
+            "capabilities": {
+                "put": "admin_all_objects",
+                "post": "list_storage_passwords"
             }
         },
         "inputs": {
@@ -1116,8 +1087,8 @@
                         "clone": {
                             "message": "Some warning for account text clone"
                         },
-                        "delete": {
-                            "message": "Some warning for account text delete"
+                        "config": {
+                            "message": "Some warning for account text config"
                         }
                     },
                     "entity": [
@@ -1471,6 +1442,22 @@
                             "options": {
                                 "hideForPlatform": "cloud"
                             }
+                        },
+                        {
+                            "type": "date",
+                            "field": "example_date_field",
+                            "label": "Example field Date",
+                            "help": "This is an example date field",
+                            "required": true,
+                            "defaultValue": "2025-05-20"
+                        },
+                        {
+                            "type": "date",
+                            "field": "example_second_date_field",
+                            "label": "Example Second field Date ",
+                            "help": "This is an example date field",
+                            "required": true,
+                            "defaultValue": "2025-05-20"
                         },
                         {
                             "type": "text",
@@ -2403,12 +2390,15 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "5.69.0+e7e0eeb9c",
+        "version": "5.69.1+3b02fc06b",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.9",
         "supportedThemes": [
             "light",
             "dark"
+        ],
+        "supportedPythonVersion": [
+            "3.7, 3.13"
         ],
         "isVisible": true,
         "os-dependentLibraries": [
@@ -2482,6 +2472,42 @@
             ]
         },
         {
+            "commandName": "sumcommand",
+            "fileName": "sum.py",
+            "commandType": "transforming",
+            "requiredSearchAssistant": true,
+            "description": "The total produced is sum(sum(fieldname, 1, n), 1, N) where n = number of fields, N = number of records.",
+            "syntax": "| sumcommand total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
+            "commandName": "sumtwocommand",
+            "fileName": "sum_without_map.py",
+            "commandType": "transforming",
+            "requiredSearchAssistant": true,
+            "description": "Computes sum(total, 1, N) and stores the result in 'total'",
+            "syntax": "| sumtwocommand total=lines linecount",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "total",
+                    "validate": {
+                        "type": "Fieldname"
+                    },
+                    "required": true
+                }
+            ]
+        },
+        {
             "commandName": "countmatchescommand",
             "fileName": "countmatches.py",
             "commandType": "streaming",
@@ -2503,5 +2529,38 @@
                 }
             ]
         }
-    ]
+    ],
+    "options": {
+        "restHandlers": [
+            {
+                "name": "StorageBuckets",
+                "endpoint": "Splunk_TA_Example_buckets",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "storage_buckets.py",
+                    "actions": [
+                        "list",
+                        "create",
+                        "edit"
+                    ]
+                },
+                "capabilities": {
+                    "put": "admin_all_objects",
+                    "post": "list_storage_passwords"
+                }
+            },
+            {
+                "name": "dependent_dropdown",
+                "endpoint": "dependent_dropdown",
+                "handlerType": "EAI",
+                "registerHandler": {
+                    "file": "dependent_dropdown.py",
+                    "actions": [
+                        "list"
+                    ]
+                },
+                "parentResource": "splunk_ta_uccexample"
+            }
+        ]
+    }
 }

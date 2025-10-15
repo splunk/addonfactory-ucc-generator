@@ -1,9 +1,10 @@
+import React from 'react';
 import styled from 'styled-components';
 import Button from '@splunk/react-ui/Button';
 import variables from '@splunk/themes/variables';
 import WaitSpinner from '@splunk/react-ui/WaitSpinner';
 
-export const ActionButtonComponent = styled(Button)`
+export const ActionButtonComponent = styled(({ ...props }) => <Button {...props} />)`
     margin: 0px 1px;
     border: none;
     display: flex;
@@ -22,7 +23,7 @@ export const TableCaptionComponent = styled.div`
 
 export const TableSelectBoxWrapper = styled.span`
     button {
-        margin-left: 80px;
+        margin-left: 50px;
         min-width: 100px;
     }
 `;

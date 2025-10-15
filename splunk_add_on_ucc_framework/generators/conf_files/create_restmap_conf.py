@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from typing import Dict, Union, List, Optional
+from typing import Union, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
     RestEndpointBuilder,
@@ -36,34 +36,86 @@ class RestMapConf(FileGenerator):
     ) -> None:
         super().__init__(global_config, input_dir, output_dir)
         self.conf_file = "restmap.conf"
-        self.endpoints: List[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        self.conf_spec_file = "restmap.conf.spec"
+        self.supportedPythonVersion = None
+        supported_versions = self._global_config.meta.get("supportedPythonVersion")
+        self.endpoints: list[Union[RestEndpointBuilder, EndpointRegistrationEntry]] = []
+        self.configuration_endpoints: list[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
+        self.inputs_endpoints: list[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
+        self.custom_endpoints: list[
+            Union[RestEndpointBuilder, EndpointRegistrationEntry]
+        ] = []
 
         if global_config.has_pages():
-            self.endpoints.extend(self._gc_schema.endpoints)
+            self.configuration_endpoints.extend(self._gc_schema.configuration_endpoints)
+            self.inputs_endpoints.extend(self._gc_schema.inputs_endpoints)
             self.namespace = self._gc_schema.namespace
-            self.endpoints.extend(
-                global_config.user_defined_handlers.endpoint_registration_entries
+        self.custom_endpoints.extend(
+            global_config.user_defined_handlers.endpoint_registration_entries
+        )
+
+        self.configuration_endpoint_names = ", ".join(
+            sorted([ep.name for ep in self.configuration_endpoints])
+        )
+        self.inputs_endpoint_names = ", ".join(
+            sorted([ep.name for ep in self.inputs_endpoints])
+        )
+        self.endpoints.extend(self.configuration_endpoints)
+        self.endpoints.extend(self.inputs_endpoints)
+        self.endpoints.extend(self.custom_endpoints)
+        if supported_versions:
+            self.supportedPythonVersion = ", ".join(supported_versions)
+
+    def generate_conf_spec(self) -> Optional[dict[str, str]]:
+        if self.supportedPythonVersion:
+            file_path = self.get_file_output_path(["README", self.conf_spec_file])
+            self.set_template_and_render(
+                template_file_path=["README"], file_name="restmap_conf_spec.template"
             )
+            rendered_content = self._template.render()
+            return {
+                "file_name": self.conf_spec_file,
+                "file_path": file_path,
+                "content": rendered_content,
+            }
+        return None
 
-        self.endpoint_names = ", ".join(sorted([ep.name for ep in self.endpoints]))
-
-    def generate(self) -> Optional[List[Dict[str, str]]]:
-        if not self.endpoints:
-            return None
-
+    def generate_conf(self) -> dict[str, str]:
         file_path = self.get_file_output_path(["default", self.conf_file])
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="restmap_conf.template"
         )
         rendered_content = self._template.render(
             endpoints=self.endpoints,
-            endpoint_names=self.endpoint_names,
+            configuration_endpoints=self.configuration_endpoints,
+            inputs_endpoints=self.inputs_endpoints,
+            configuration_endpoint_names=self.configuration_endpoint_names,
+            inputs_endpoint_names=self.inputs_endpoint_names,
             namespace=self.namespace,
+            configuration_capability=self._global_config.capabilities(config=True),
+            input_capability=self._global_config.capabilities(inputs=True),
+            custom_endpoints=self.custom_endpoints,
+            supportedPythonVersion=self.supportedPythonVersion,
         )
-        return [
-            {
-                "file_name": self.conf_file,
-                "file_path": file_path,
-                "content": rendered_content,
-            }
-        ]
+        return {
+            "file_name": self.conf_file,
+            "file_path": file_path,
+            "content": rendered_content,
+        }
+
+    def generate(self) -> Optional[list[dict[str, str]]]:
+        if not self.endpoints:
+            return None
+
+        conf_files: list[dict[str, str]] = []
+        conf = self.generate_conf()
+        conf_spec = self.generate_conf_spec()
+        if conf is not None:
+            conf_files.append(conf)
+        if conf_spec is not None:
+            conf_files.append(conf_spec)
+        return conf_files

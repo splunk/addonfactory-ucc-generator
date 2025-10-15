@@ -13,7 +13,7 @@ interface Props {
     data: ControlData;
     field: string;
     handleChange: (field: string, newValue: AcceptableFormValueOrNullish) => void;
-    controlOptions: { src: string; type: string };
+    controlOptions: { src: string; type?: string };
     addCustomValidator: (field: string, validatorFunc: CustomValidatorFunc) => void;
     utilCustomFunctions: UtilBaseForm;
 }
@@ -27,7 +27,7 @@ class CustomControl extends React.Component<Props, State> {
 
     static loadCustomControl = (
         module: string,
-        type: string,
+        type: string | undefined,
         appName: string,
         context?: React.ContextType<typeof CustomComponentContext>
     ): Promise<CustomControlConstructor> =>
@@ -43,15 +43,10 @@ class CustomControl extends React.Component<Props, State> {
                         resolve(Control);
                     }
                 );
-            } else {
-                // eslint-disable-next-line import/no-dynamic-require, global-require
-                require([`app/${appName}/js/build/custom/${module}`], (
-                    Control: CustomControlConstructor
-                ) => {
-                    resolve(Control);
-                });
             }
         });
+
+    declare context: React.ContextType<typeof CustomComponentContext>;
 
     shouldRender: boolean;
 

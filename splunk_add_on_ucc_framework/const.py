@@ -33,7 +33,6 @@ SPLUNK_COMMANDS = [
     "arules",
     "associate",
     "autoregress",
-    "awssnsalert",
     "bin",
     "bucket",
     "bucketdir",

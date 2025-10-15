@@ -16,7 +16,7 @@
 import json
 import shutil
 from os import path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework.commands.modular_alert_builder import normalize
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
@@ -67,8 +67,9 @@ class AlertActionsConf(FileGenerator):
             "radio": "list",
         }
 
-        self.alerts: Dict[str, Any] = {}
-        self.alerts_spec: Dict[str, Any] = {}
+        self.alerts: dict[str, Any] = {}
+        self.alerts_spec: dict[str, Any] = {}
+        self.supportedPythonVersion = None
 
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
@@ -128,9 +129,14 @@ class AlertActionsConf(FileGenerator):
                 elif k not in deny_list:
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
+        if self.alerts or self.alerts_spec:
+            self.supportedPythonVersion = (
+                ", ".join(self._global_config.meta.get("supportedPythonVersion", []))
+                or None
+            )
 
-    def generate(self) -> Optional[List[Dict[str, str]]]:
-        conf_files: List[Dict[str, str]] = []
+    def generate(self) -> Optional[list[dict[str, str]]]:
+        conf_files: list[dict[str, str]] = []
         conf = self.generate_conf()
         conf_spec = self.generate_conf_spec()
         if conf is not None:
@@ -139,7 +145,7 @@ class AlertActionsConf(FileGenerator):
             conf_files.append(conf_spec)
         return None if conf_files == [] else conf_files
 
-    def generate_conf(self) -> Optional[Dict[str, str]]:
+    def generate_conf(self) -> Optional[dict[str, str]]:
         if not self.alerts:
             return None
 
@@ -147,14 +153,16 @@ class AlertActionsConf(FileGenerator):
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
         )
-        rendered_content = self._template.render(alerts=self.alerts)
+        rendered_content = self._template.render(
+            alerts=self.alerts, supportedPythonVersion=self.supportedPythonVersion
+        )
         return {
             "file_name": self.conf_file,
             "file_path": file_path,
             "content": rendered_content,
         }
 
-    def generate_conf_spec(self) -> Optional[Dict[str, str]]:
+    def generate_conf_spec(self) -> Optional[dict[str, str]]:
         if not self.alerts_spec:
             return None
 
@@ -163,7 +171,9 @@ class AlertActionsConf(FileGenerator):
             template_file_path=["README"],
             file_name="alert_actions_conf_spec.template",
         )
-        rendered_content = self._template.render(alerts=self.alerts_spec)
+        rendered_content = self._template.render(
+            alerts=self.alerts_spec, supportedPythonVersion=self.supportedPythonVersion
+        )
         return {
             "file_name": self.conf_spec_file,
             "file_path": file_path,

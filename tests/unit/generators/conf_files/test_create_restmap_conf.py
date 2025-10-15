@@ -43,47 +43,56 @@ def test_init(
         output_dir,
     )
     assert hasattr(restmap_conf, "endpoints")
-    assert hasattr(restmap_conf, "endpoint_names")
+    assert hasattr(restmap_conf, "configuration_endpoint_names")
+    assert hasattr(restmap_conf, "inputs_endpoint_names")
     assert hasattr(restmap_conf, "namespace")
 
 
 def test_restmap_endpoints(global_config_all_json, input_dir, output_dir):
     expected_content = "\n".join(
         [
-            "[admin:splunk_ta_uccexample]",
+            "[admin:splunk_ta_uccexample_configuration]",
             "match = /",
             "members = splunk_ta_uccexample_account, "
-            "splunk_ta_uccexample_example_input_one, "
-            "splunk_ta_uccexample_example_input_two, "
-            "splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings",
+            "splunk_ta_uccexample_oauth, splunk_ta_uccexample_settings"
+            "",
+            "[admin:splunk_ta_uccexample_inputs]",
+            "match = /",
+            "members = splunk_ta_uccexample_example_input_one, "
+            "splunk_ta_uccexample_example_input_two"
             "",
             "[admin_external:splunk_ta_uccexample_oauth]",
             "handlertype = python",
             "python.version = python3",
+            "python.required = 3.7, 3.13",
             "handlerfile = splunk_ta_uccexample_rh_oauth.py",
             "handleractions = edit",
             "handlerpersistentmode = true",
             "[admin_external:splunk_ta_uccexample_account]",
             "handlertype = python",
             "python.version = python3",
+            "python.required = 3.7, 3.13",
             "handlerfile = splunk_ta_uccexample_rh_account.py",
             "handleractions = edit, list, remove, create",
             "handlerpersistentmode = true",
             "[admin_external:splunk_ta_uccexample_settings]",
             "handlertype = python",
             "python.version = python3",
+            "python.required = 3.7, 3.13",
             "handlerfile = splunk_ta_uccexample_rh_settings.py",
             "handleractions = edit, list",
             "handlerpersistentmode = true",
             "[admin_external:splunk_ta_uccexample_example_input_one]",
             "handlertype = python",
             "python.version = python3",
+            "python.required = 3.7, 3.13",
             "handlerfile = splunk_ta_uccexample_rh_example_input_one.py",
             "handleractions = edit, list, remove, create",
             "handlerpersistentmode = true",
             "[admin_external:splunk_ta_uccexample_example_input_two]",
             "handlertype = python",
             "python.version = python3",
+            "python.required = 3.7, 3.13",
             "handlerfile = splunk_ta_uccexample_rh_example_input_two.py",
             "handleractions = edit, list, remove, create",
             "handlerpersistentmode = true",
@@ -96,10 +105,37 @@ def test_restmap_endpoints(global_config_all_json, input_dir, output_dir):
         input_dir,
         output_dir,
     )
-    output = restmap_conf.generate()
+    output = restmap_conf.generate_conf()
     assert output is not None
-    assert output[0]["file_name"] == "restmap.conf"
-    assert output[0]["content"] == expected_content
+    assert output["file_name"] == "restmap.conf"
+    assert output["content"] == expected_content
+
+
+def test_restmap_conf_spec_generation(global_config_all_json, input_dir, output_dir):
+    ta_name = global_config_all_json.product
+    restmap_conf_spec = RestMapConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    output = restmap_conf_spec.generate_conf_spec()
+
+    expected_content = "\n".join(
+        [
+            "[admin_external:<uniqueName>]",
+            "python.required = {3.7|3.9|3.13}",
+            "* For Python scripts only, selects which Python version to use.",
+            '* Set to "3.9" to use the Python 3.9 version.',
+            '* Set to "3.13" to use the Python 3.13 version.',
+            "* Optional.",
+            "* Default: not set",
+        ]
+    )
+    assert output == {
+        "file_name": "restmap.conf.spec",
+        "file_path": f"{output_dir}/{ta_name}/README/restmap.conf.spec",
+        "content": expected_content,
+    }
 
 
 def test_restmap_endpoints_with_user_defined_handlers(
@@ -107,10 +143,17 @@ def test_restmap_endpoints_with_user_defined_handlers(
 ):
     expected_content = dedent(
         """
-        [admin:splunk_ta_uccexample]
+        [admin:splunk_ta_uccexample_configuration]
         match = /
-        members = endpoint1, endpoint2, splunk_ta_uccexample_settings
-
+        members = splunk_ta_uccexample_settings
+        capability.post = list_storage_passwords
+        [admin:endpoint1]
+        match = /
+        members = endpoint1
+        capability.post = list_storage_passwords
+        [admin:endpoint2]
+        match = /splunk_ta_uccexample
+        members = endpoint2
         [admin_external:splunk_ta_uccexample_settings]
         handlertype = python
         python.version = python3
@@ -135,7 +178,7 @@ def test_restmap_endpoints_with_user_defined_handlers(
     restmap_conf = RestMapConf(
         global_config_logging_with_user_defined_handlers, input_dir, output_dir
     )
-    output = restmap_conf.generate()
+    output = restmap_conf.generate_conf()
     assert output is not None
-    assert output[0]["file_name"] == "restmap.conf"
-    assert output[0]["content"] == expected_content
+    assert output["file_name"] == "restmap.conf"
+    assert output["content"] == expected_content

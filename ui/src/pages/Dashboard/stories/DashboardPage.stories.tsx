@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { waitFor, within, expect } from '@storybook/test';
+import { waitForElementToBeRemoved, within } from '@storybook/test';
 import DashboardPage from '../DashboardPage';
 
 import { DASHBOARD_JSON_MOCKS } from '../tests/mockJs';
@@ -33,16 +33,13 @@ export const DashboardPageView: Story = {
     play: async ({ canvasElement }) => {
         const canvas = within(canvasElement);
 
-        await waitFor(
-            () => {
-                expect(canvas.queryByTestId('wait-spinner')).toBeNull();
-            },
-            { timeout: 5000 } // Wait for the loading spinner to disappear
-        );
-
-        await canvas.findByRole('heading', { name: 'Data Ingestion' }, { timeout: 5000 });
-        await canvas.findAllByText((match) => match.includes('Search sid not found'), undefined, {
-            timeout: 5000,
+        // Wait for spinner to disappear
+        await waitForElementToBeRemoved(() => canvas.getByTestId('wait-spinner'), {
+            timeout: 10000,
         });
+
+        // Check for the correct tab
+        await canvas.findByRole('tab', { name: /Data ingestion/i }, { timeout: 5000 });
+        await canvas.findAllByText(/Search sid not found/i, {}, { timeout: 10000 });
     },
 };

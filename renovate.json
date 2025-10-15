@@ -116,6 +116,12 @@
       "enabled": false
     },
     {
+      "description": "Ignore updates for Python in GitHub Actions",
+      "matchPackageNames": ["python"],
+      "matchManagers": ["github-actions"],
+      "enabled": false
+    },
+    {
       "description": "react-router-dom throws not-dismissible warnings",
       "matchPackageNames": ["react-router-dom"],
       "matchManagers": ["npm"],

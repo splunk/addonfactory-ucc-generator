@@ -22,6 +22,8 @@ def test_get_j2_env():
         "html_templates/mod_alert.html.template",
         "README/account_conf_spec.template",
         "README/alert_actions_conf_spec.template",
+        "README/restmap_conf_spec.template",
+        "README/commands_conf_spec.template",
         "README/inputs_conf_spec.template",
         "README/settings_conf_spec.template",
         "conf_files/alert_actions_conf.template",
@@ -36,6 +38,7 @@ def test_get_j2_env():
         "custom_command/dataset_processing.template",
         "custom_command/generating.template",
         "custom_command/streaming.template",
+        "custom_command/transforming.template",
         "conf_files/commands_conf.template",
         "conf_files/searchbnf_conf.template",
     ]

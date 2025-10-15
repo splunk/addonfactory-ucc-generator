@@ -19,7 +19,7 @@ class AlertActionWorkertest_alert(ModularAlertBase):
         if not self.get_param("name"):
             self.log_error('name is a mandatory parameter, but its value is None.')
             return False
-        
+
         if not self.get_param("description"):
             self.log_error('description is a mandatory parameter, but its value is None.')
             return False
@@ -39,13 +39,10 @@ class AlertActionWorkertest_alert(ModularAlertBase):
             if not self.validate_params():
                 return 3
             status = myAlertLogic.process_event(self, *args, **kwargs)
-        except (AttributeError, TypeError) as ae:
-            self.log_error("Error: {}. Please double check spelling and also verify that a compatible version of Splunk_SA_CIM is installed.".format(str(ae)))#ae.message replaced with str(ae)
-            return 4
         except Exception as e:
             msg = "Unexpected error: {}."
             if str(e):
-                self.log_error(msg.format(str(e)))#e.message replaced with str(ae)
+                self.log_error(msg.format(str(e)))
             else:
                 import traceback
                 self.log_error(msg.format(traceback.format_exc()))

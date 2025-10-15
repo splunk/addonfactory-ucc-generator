@@ -15,6 +15,25 @@ export const meta = z
         isVisible: z.boolean().default(true).optional(),
         supportedThemes: z.array(z.string()).optional(),
         showFooter: z.boolean().default(true).optional(),
+        supportedPythonVersion: z.array(z.string()).optional(),
+        defaultView: z
+            .enum(['inputs', 'configuration', 'dashboard', 'search'])
+            .default('configuration')
+            .optional(),
+        'os-dependentLibraries': z
+            .array(
+                z.object({
+                    name: z.string(),
+                    version: z.string(),
+                    dependencies: z.boolean().optional(),
+                    platform: z.string(),
+                    python_version: z.string(),
+                    target: z.string(),
+                    os: z.enum(['linux', 'windows', 'darwin']),
+                    ignore_requires_python: z.boolean().optional(),
+                })
+            )
+            .optional(),
     })
     .strict();
 

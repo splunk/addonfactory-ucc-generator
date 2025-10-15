@@ -18,7 +18,7 @@ import logging
 import os
 import sys
 
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any, Optional
 
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework import utils
@@ -195,9 +195,9 @@ resource_memory_query = (
 
 def generate_dashboard_content(
     addon_name: str,
-    input_names: List[str],
+    input_names: list[str],
     definition_json_name: str,
-    lic_usg_search_params: Optional[Tuple[str, str]],
+    lic_usg_search_params: Optional[tuple[str, str]],
     error_panel_log_lvl: str,
 ) -> str:
     determine_by = lic_usg_search_params[0] if lic_usg_search_params else "s"
@@ -384,8 +384,8 @@ def generate_dashboard(
 
 
 def _get_license_usage_search_params(
-    dashboard: Dict[Any, Any]
-) -> Optional[Tuple[str, str]]:
+    dashboard: dict[Any, Any]
+) -> Optional[tuple[str, str]]:
     determine_by_map = {"source": "s", "sourcetype": "st", "host": "h", "index": "idx"}
 
     try:
@@ -405,7 +405,7 @@ def _get_license_usage_search_params(
     return determine_by, lic_usg_condition
 
 
-def _get_error_panel_log_lvl(dashboard: Dict[Any, Any]) -> str:
+def _get_error_panel_log_lvl(dashboard: dict[Any, Any]) -> str:
     try:
         error_lvl = dashboard["settings"]["error_panel_log_lvl"]
     except KeyError:
@@ -416,7 +416,7 @@ def _get_error_panel_log_lvl(dashboard: Dict[Any, Any]) -> str:
     return ", ".join(error_lvl)
 
 
-def get_custom_json_content(custom_dashboard_path: str) -> Dict[Any, Any]:
+def get_custom_json_content(custom_dashboard_path: str) -> dict[Any, Any]:
     custom_dashboard = load_custom_json(custom_dashboard_path)
 
     if not custom_dashboard:
@@ -429,7 +429,7 @@ def get_custom_json_content(custom_dashboard_path: str) -> Dict[Any, Any]:
     return custom_dashboard
 
 
-def load_custom_json(json_path: str) -> Dict[Any, Any]:
+def load_custom_json(json_path: str) -> dict[Any, Any]:
     try:
         with open(json_path) as dashboard_file:
             custom_dashboard = json.load(dashboard_file)
