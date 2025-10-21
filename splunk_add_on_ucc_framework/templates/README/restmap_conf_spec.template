@@ -1,14 +1,7 @@
-{% for alert, params in alerts.items() %}
-[{{ alert }}]
-    {% for param in params %}
-{{ param }}
-    {% endfor %}
-{% if supportedPythonVersion %}
+[admin_external:<uniqueName>]
 python.required = {3.7|3.9|3.13}
 * For Python scripts only, selects which Python version to use.
 * Set to "3.9" to use the Python 3.9 version.
 * Set to "3.13" to use the Python 3.13 version.
 * Optional.
 * Default: not set
-{% endif %}
-{% endfor %}

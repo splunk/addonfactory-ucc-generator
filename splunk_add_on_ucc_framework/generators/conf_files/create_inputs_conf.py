@@ -97,6 +97,12 @@ class InputsConf(FileGenerator):
                 prop = f"{field_name} = {field_value}".rstrip()
                 spec_properties.append(prop)
 
+        if self.inputs_conf_spec or self.inputs_conf_names:
+            self.supportedPythonVersion = (
+                ", ".join(self._global_config.meta.get("supportedPythonVersion", []))
+                or None
+            )
+
     def _conf_file_name(self, conf_name: str) -> str:
         return f"{conf_name}.conf"
 
@@ -125,6 +131,7 @@ class InputsConf(FileGenerator):
         rendered_content = self._template.render(
             input_names=self.inputs_conf_names,
             default_values=self.inputs_conf_params,
+            supportedPythonVersion=self.supportedPythonVersion,
         )
         return {
             "file_name": self.conf_file,
@@ -146,6 +153,7 @@ class InputsConf(FileGenerator):
         rendered_content = self._template.render(
             input_names=self.inputs_conf_names,
             input_stanzas=self.inputs_conf_spec,
+            supportedPythonVersion=self.supportedPythonVersion,
         )
         return {
             "file_name": spec_file,

@@ -199,6 +199,8 @@ def test_ucc_generate_with_everything(caplog):
             ("bin", "splunk_ta_uccexample", "modalert_test_alert_default_helper.py"),
             ("README", "alert_actions.conf.spec"),
             ("README", "inputs.conf.spec"),
+            ("README", "restmap.conf.spec"),
+            ("README", "commands.conf.spec"),
             ("README", "some_conf.conf.spec"),
             ("README", "splunk_ta_uccexample_account.conf.spec"),
             ("README", "splunk_ta_uccexample_settings.conf.spec"),

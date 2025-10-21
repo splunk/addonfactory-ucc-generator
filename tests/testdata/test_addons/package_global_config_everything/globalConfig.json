@@ -2397,6 +2397,9 @@
             "light",
             "dark"
         ],
+        "supportedPythonVersion": [
+            "3.7, 3.13"
+        ],
         "isVisible": true,
         "os-dependentLibraries": [
             {

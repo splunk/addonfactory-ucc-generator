@@ -15,6 +15,7 @@ export const meta = z
         isVisible: z.boolean().default(true).optional(),
         supportedThemes: z.array(z.string()).optional(),
         showFooter: z.boolean().default(true).optional(),
+        supportedPythonVersion: z.array(z.string()).optional(),
         defaultView: z
             .enum(['inputs', 'configuration', 'dashboard', 'search'])
             .default('configuration')

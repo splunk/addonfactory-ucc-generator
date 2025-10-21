@@ -1,6 +1,9 @@
 {% for input_name in input_names %}
 {{ "[" ~ input_name ~ "]"}}
 python.version = python3
+{% if supportedPythonVersion %}
+python.required = {{supportedPythonVersion}}
+{% endif %}
 {% for item, value in default_values.get(input_name, {}).items() %}
 {{item}} = {{value}}
 {% endfor %}
