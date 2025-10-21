@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { mapEntityIntoBaseForViewEntityObject } from '../BaseFormViewUtils';
 import { MODE_EDIT, MODE_CONFIG } from '../../../constants/modes';
 import { BaseFormProps } from '../../../types/components/BaseFormTypes';
+import { NullishFormRecord } from '../../../types/components/shareableTypes';
 
 describe('BaseFormViewUtils - Password Placeholder Fix', () => {
     const mockProps: BaseFormProps = {
@@ -20,16 +21,12 @@ describe('BaseFormViewUtils - Password Placeholder Fix', () => {
             type: 'text' as const,
             encrypted: true,
         };
-        
+
         const currentInput = {
             password: '******',
         };
 
-        const result = mapEntityIntoBaseForViewEntityObject(
-            entity,
-            currentInput,
-            mockProps
-        );
+        const result = mapEntityIntoBaseForViewEntityObject(entity, currentInput, mockProps);
 
         expect(result.value).toBe('******');
     });
@@ -41,14 +38,10 @@ describe('BaseFormViewUtils - Password Placeholder Fix', () => {
             type: 'text' as const,
             encrypted: true,
         };
-        
+
         const currentInput = {};
 
-        const result = mapEntityIntoBaseForViewEntityObject(
-            entity,
-            currentInput,
-            mockProps
-        );
+        const result = mapEntityIntoBaseForViewEntityObject(entity, currentInput, mockProps);
 
         expect(result.value).toBe('');
     });
@@ -60,16 +53,12 @@ describe('BaseFormViewUtils - Password Placeholder Fix', () => {
             type: 'text' as const,
             encrypted: true,
         };
-        
+
         const currentInput = {
             password: '',
         };
 
-        const result = mapEntityIntoBaseForViewEntityObject(
-            entity,
-            currentInput,
-            mockProps
-        );
+        const result = mapEntityIntoBaseForViewEntityObject(entity, currentInput, mockProps);
 
         expect(result.value).toBe('');
     });
@@ -81,39 +70,31 @@ describe('BaseFormViewUtils - Password Placeholder Fix', () => {
             type: 'text' as const,
             encrypted: false,
         };
-        
+
         const currentInput = {
             username: 'testuser',
         };
 
-        const result = mapEntityIntoBaseForViewEntityObject(
-            entity,
-            currentInput,
-            mockProps
-        );
+        const result = mapEntityIntoBaseForViewEntityObject(entity, currentInput, mockProps);
 
         expect(result.value).toBe('testuser');
     });
 
     it('should work the same way in config mode', () => {
         const configProps: BaseFormProps = { ...mockProps, mode: MODE_CONFIG };
-        
+
         const entity = {
             field: 'password',
             label: 'Password',
             type: 'text' as const,
             encrypted: true,
         };
-        
+
         const currentInput = {
             password: '******',
         };
 
-        const result = mapEntityIntoBaseForViewEntityObject(
-            entity,
-            currentInput,
-            configProps
-        );
+        const result = mapEntityIntoBaseForViewEntityObject(entity, currentInput, configProps);
 
         expect(result.value).toBe('******');
     });
@@ -125,20 +106,27 @@ describe('BaseFormViewUtils - Password Placeholder Fix', () => {
             type: 'text' as const,
             encrypted: true,
         };
-        
+
         const mockEntities = [entity];
-        const mockDataDict: Record<string, any> = { password: '******' };
-        
+        const mockDataDict: NullishFormRecord = { password: '******' };
+
         const mockComponent = {
             entities: mockEntities,
             datadict: mockDataDict,
         };
-        
+
         const body = new URLSearchParams();
         Object.keys(mockComponent.datadict).forEach((key) => {
             if (mockComponent.datadict[key] != null) {
-                const foundEntity = mockComponent.entities?.find((x: any) => x?.field === key);
-                if (foundEntity?.encrypted && mockComponent.datadict[key] === '******') {
+                const foundEntity = mockComponent.entities?.find(
+                    (x) => 'field' in x && x?.field === key
+                );
+                if (
+                    foundEntity &&
+                    'encrypted' in foundEntity &&
+                    foundEntity?.encrypted &&
+                    mockComponent.datadict[key] === '******'
+                ) {
                     return;
                 }
                 body.append(key, String(mockComponent.datadict[key]));
