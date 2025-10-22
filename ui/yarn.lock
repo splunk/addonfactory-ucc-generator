@@ -70,7 +70,7 @@
     eslint-visitor-keys "^2.1.0"
     semver "^6.3.1"
 
-"@babel/generator@^7.22.5", "@babel/generator@^7.27.5", "@babel/generator@^7.28.0", "@babel/generator@^7.28.3", "@babel/generator@^7.7.2":
+"@babel/generator@^7.22.5", "@babel/generator@^7.27.5", "@babel/generator@^7.28.3", "@babel/generator@^7.7.2":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/generator/-/generator-7.28.3.tgz#9626c1741c650cbac39121694a0f2d7451b8ef3e"
   integrity sha512-3lSpxGgvnmZznmBkCRnVREPUFJv2wrv9iAoFDvADJc0ypmdOxdUtcLeBgBJ6zE0PMeTKnxeQzyk0xTBq4Ep7zw==
@@ -153,7 +153,7 @@
     "@babel/traverse" "^7.27.1"
     "@babel/types" "^7.27.1"
 
-"@babel/helper-module-transforms@^7.27.1", "@babel/helper-module-transforms@^7.27.3", "@babel/helper-module-transforms@^7.28.3":
+"@babel/helper-module-transforms@^7.27.1", "@babel/helper-module-transforms@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/helper-module-transforms/-/helper-module-transforms-7.28.3.tgz#a2b37d3da3b2344fe085dab234426f2b9a2fa5f6"
   integrity sha512-gytXUbs8k2sXS9PnQptz5o0QnpLL51SwASIORY6XaBKF88nsOT0Zw9szLqlSGQDP/4TljBAD5y98p2U1fqkdsw==
@@ -224,7 +224,7 @@
     "@babel/traverse" "^7.27.1"
     "@babel/types" "^7.27.1"
 
-"@babel/helpers@^7.27.6", "@babel/helpers@^7.28.3":
+"@babel/helpers@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/helpers/-/helpers-7.28.3.tgz#b83156c0a2232c133d1b535dd5d3452119c7e441"
   integrity sha512-PTNtvUQihsAsDHMOP5pfobP8C6CM4JWXmP8DrEIt46c3r2bf87Ua1zoqevsMo9g+tWDwgWrFP5EIxuBx5RudAw==
@@ -270,7 +270,7 @@
     "@babel/helper-skip-transparent-expression-wrappers" "^7.27.1"
     "@babel/plugin-transform-optional-chaining" "^7.27.1"
 
-"@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly@^7.27.1", "@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly@^7.28.3":
+"@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/plugin-bugfix-v8-static-class-fields-redefine-readonly/-/plugin-bugfix-v8-static-class-fields-redefine-readonly-7.28.3.tgz#373f6e2de0016f73caf8f27004f61d167743742a"
   integrity sha512-b6YTX108evsvE4YgWyQ921ZAFFQm3Bn+CA3+ZXlNVnPhx+UfsVURoPjfGAPCjBgrqo30yX/C2nZGX96DxvR9Iw==
@@ -483,7 +483,7 @@
     "@babel/helper-create-class-features-plugin" "^7.27.1"
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/plugin-transform-class-static-block@^7.27.1", "@babel/plugin-transform-class-static-block@^7.28.3":
+"@babel/plugin-transform-class-static-block@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-class-static-block/-/plugin-transform-class-static-block-7.28.3.tgz#d1b8e69b54c9993bc558203e1f49bfc979bfd852"
   integrity sha512-LtPXlBbRoc4Njl/oh1CeD/3jC+atytbnf/UqLoqTDcEYGUPj022+rvfkbDYieUrSj3CaV4yHDByPE+T2HwfsJg==
@@ -491,7 +491,7 @@
     "@babel/helper-create-class-features-plugin" "^7.28.3"
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/plugin-transform-classes@^7.28.0", "@babel/plugin-transform-classes@^7.28.3":
+"@babel/plugin-transform-classes@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-classes/-/plugin-transform-classes-7.28.3.tgz#598297260343d0edbd51cb5f5075e07dee91963a"
   integrity sha512-DoEWC5SuxuARF2KdKmGUq3ghfPMO6ZzR12Dnp5gubwbeWJo4dbNWXJPVlwvh4Zlq6Z7YVvL8VFxeSOJgjsx4Sg==
@@ -791,7 +791,7 @@
     "@babel/helper-annotate-as-pure" "^7.27.1"
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/plugin-transform-regenerator@^7.28.0", "@babel/plugin-transform-regenerator@^7.28.3":
+"@babel/plugin-transform-regenerator@^7.28.3":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-regenerator/-/plugin-transform-regenerator-7.28.3.tgz#b8eee0f8aed37704bbcc932fd0b1a0a34d0b7344"
   integrity sha512-K3/M/a4+ESb5LEldjQb+XSrpY0nF+ZBFlTCbSnKaYAMfD8v33O6PMs4uYnOk19HlcsI8WMu3McdFPTiQHF/1/A==
@@ -1014,7 +1014,7 @@
     "@babel/parser" "^7.27.2"
     "@babel/types" "^7.27.1"
 
-"@babel/traverse@^7.18.9", "@babel/traverse@^7.27.1", "@babel/traverse@^7.27.3", "@babel/traverse@^7.28.0", "@babel/traverse@^7.28.3", "@babel/traverse@^7.4.5", "@babel/traverse@^7.7.0":
+"@babel/traverse@^7.18.9", "@babel/traverse@^7.27.1", "@babel/traverse@^7.28.0", "@babel/traverse@^7.28.3", "@babel/traverse@^7.4.5", "@babel/traverse@^7.7.0":
   version "7.28.3"
   resolved "https://registry.npmjs.org/@babel/traverse/-/traverse-7.28.3.tgz#6911a10795d2cce43ec6a28cffc440cca2593434"
   integrity sha512-7w4kZYHneL3A6NP2nxzHvT3HCZ7puDZZjFMqDpBPECub79sTtSO5CGXDkKrTQq8ksAwfD/XI2MRFX23njdDaIQ==
@@ -1027,7 +1027,7 @@
     "@babel/types" "^7.28.2"
     debug "^4.3.1"
 
-"@babel/types@^7.0.0", "@babel/types@^7.18.9", "@babel/types@^7.20.7", "@babel/types@^7.22.5", "@babel/types@^7.25.4", "@babel/types@^7.27.1", "@babel/types@^7.27.3", "@babel/types@^7.28.0", "@babel/types@^7.28.2", "@babel/types@^7.3.3", "@babel/types@^7.4.4", "@babel/types@^7.7.0":
+"@babel/types@^7.0.0", "@babel/types@^7.18.9", "@babel/types@^7.20.7", "@babel/types@^7.22.5", "@babel/types@^7.25.4", "@babel/types@^7.27.1", "@babel/types@^7.27.3", "@babel/types@^7.28.2", "@babel/types@^7.3.3", "@babel/types@^7.4.4", "@babel/types@^7.7.0":
   version "7.28.2"
   resolved "https://registry.npmjs.org/@babel/types/-/types-7.28.2.tgz"
   integrity sha512-ruv7Ae4J5dUYULmeXw1gmb7rYRz57OWCPM57pHojnLq/3Z1CK2lNSLTCVjxVk1F/TZHwOZZrOWi0ur95BbLxNQ==
@@ -6997,7 +6997,7 @@ fb-watchman@^2.0.0, fb-watchman@^2.0.2:
   dependencies:
     bser "2.1.1"
 
-fdir@^6.2.0, fdir@^6.4.3, fdir@^6.4.4, fdir@^6.4.6, fdir@^6.5.0:
+fdir@^6.2.0, fdir@^6.4.3, fdir@^6.5.0:
   version "6.5.0"
   resolved "https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
   integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
@@ -13065,7 +13065,21 @@ vite-plugin-node-polyfills@^0.24.0:
     "@rollup/plugin-inject" "^5.0.5"
     node-stdlib-browser "^1.2.0"
 
-vite@7.1.5, "vite@^5.0.0 || ^6.0.0 || ^7.0.0-0":
+vite@7.1.11:
+  version "7.1.11"
+  resolved "https://registry.npmjs.org/vite/-/vite-7.1.11.tgz#4d006746112fee056df64985191e846ebfb6007e"
+  integrity sha512-uzcxnSDVjAopEUjljkWh8EIrg6tlzrjFUfMcR1EVsRDGwf/ccef0qQPRyOrROwhrTDaApueq+ja+KLPlzR/zdg==
+  dependencies:
+    esbuild "^0.25.0"
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+    postcss "^8.5.6"
+    rollup "^4.43.0"
+    tinyglobby "^0.2.15"
+  optionalDependencies:
+    fsevents "~2.3.3"
+
+"vite@^5.0.0 || ^6.0.0 || ^7.0.0-0":
   version "7.1.5"
   resolved "https://registry.npmjs.org/vite/-/vite-7.1.5.tgz#4dbcb48c6313116689be540466fc80faa377be38"
   integrity sha512-4cKBO9wR75r0BeIWWWId9XK9Lj6La5X846Zw9dFfzMRw38IlTk2iCcUt6hsyiDRcPidc55ZParFYDXi0nXOeLQ==
