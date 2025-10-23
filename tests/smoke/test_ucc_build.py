@@ -150,6 +150,7 @@ def test_ucc_generate_with_everything(caplog):
             ("appserver", "static", "test icon.png"),
             ("appserver", "static", "alerticon.png"),
             ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
+            ("appserver", "templates", "base.html"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
