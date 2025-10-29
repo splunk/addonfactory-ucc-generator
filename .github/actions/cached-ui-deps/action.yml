@@ -6,13 +6,19 @@ runs:
   steps:
     - uses: actions/setup-node@v6
       with:
-      # explicitly use node version 24
-        node-version: 24
         cache: 'yarn'
         cache-dependency-path: 'ui/yarn.lock'
+        node-version-file: 'ui/package.json'
         # required for publishing
         registry-url: 'https://registry.npmjs.org'
     - name: Install Dependencies
       working-directory: ui
-      run: yarn install --frozen-lockfile
+      # update nvm to 24 and use it
+      run: |
+        export NVM_DIR="$HOME/.nvm"
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+        source "$NVM_DIR/nvm.sh"
+        nvm install 24
+        nvm use 24
+        yarn install
       shell: bash
