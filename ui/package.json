@@ -179,7 +179,7 @@
     "@splunk/datasource-utils": "29.0.0"
   },
   "engines": {
-    "node": ">=20.11.0",
+    "node": "22.21.0",
     "yarn": "^1.22.22"
   },
   "msw": {
