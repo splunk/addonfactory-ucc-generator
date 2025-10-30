@@ -14,7 +14,11 @@
   ~ limitations under the License.
   ~
 -->
-<%! app_name = cherrypy.request.path_info.split('/')[3] %>\
+<%!
+from splunk.appserver.mrsparkle.lib import util
+
+app_name = cherrypy.request.path_info.split('/')[3]
+%>\
 <!DOCTYPE html>
 <html class="no-js" lang="">
     <head>
@@ -22,6 +26,7 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>${_('Loading')}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="shortcut icon" href="${util.getFaviconURL()}" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
         <base  >
     </head>
