@@ -148,6 +148,7 @@ It does not support:
 
 It accepts the following parameters:
 
+* `--stage` - [optional] flag to choose staging splunkbase to publish the app.
 * `--app-id` - [required] Splunkbase numerical app id listed in the URL of the app details page.
 * `--package-path` - [required] path to the package file (.tar.gz) to be published (must be a valid UCC package).
 * `--splunk-versions` - [required] comma-separated list of supported Splunk versions (e.g. "9.1,9.2").
