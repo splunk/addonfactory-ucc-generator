@@ -43,7 +43,7 @@ jobs:
         run: |
           git add \*.png
           git diff --staged --exit-code || (git commit -S -m "update screenshots" && git push)
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         name: "Upload test report"
         if: ${{ failure() }}
         with:

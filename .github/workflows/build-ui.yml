@@ -22,7 +22,7 @@ jobs:
       - name: Pack tarball
         run: npm pack
       - name: Upload tarball as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: UCC-UI-lib-tarball
           path: "ui/*.tgz"
@@ -44,7 +44,7 @@ jobs:
       - name: List deps into dependencies.txt
         run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/dependencies.txt
       - name: Upload dist with name UCC-UI-build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: UCC-UI-build
           path: ui/dist/build
