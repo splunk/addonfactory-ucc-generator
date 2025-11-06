@@ -33,6 +33,7 @@ docker run \
   -e "SPLUNK_PASSWORD=Chang3d!" \
   -e "SPLUNK_HEC_TOKEN=4a8a737d-5452-426c-a6f7-106dca4e813f" \
   -e "SPLUNK_DISABLE_POPUPS=true" \
+  -e "SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com" \
   -d \
   --pull=always \
   --name splunk splunk/splunk:${1:-"latest"}

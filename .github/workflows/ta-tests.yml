@@ -31,7 +31,7 @@ env:
   POETRY_EXPORT_PLUGIN_VERSION: "1.9.0"
 jobs:
   build-ucc:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout UCC Framework Repository
         uses: actions/checkout@v5
@@ -62,7 +62,7 @@ jobs:
 
   determine-repos:
     # This job determines the repositories to run tests on based on the event type and inputs
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       repos: ${{ steps.set-repos.outputs.repos }}
     steps:
@@ -93,7 +93,7 @@ jobs:
       matrix:
         target_repo: ${{ fromJSON(needs.determine-repos.outputs.repos) }}
     continue-on-error: true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Target Add-on Repository
         uses: actions/checkout@v5

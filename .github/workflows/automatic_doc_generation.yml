@@ -8,7 +8,7 @@ on:
 
 jobs:
   generate-docs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       isPR: ${{ github.event.pull_request.base.ref == 'develop' || github.event.pull_request.base.ref == 'main' }}
     steps:

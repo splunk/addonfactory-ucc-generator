@@ -19,6 +19,7 @@ import sys
 logger = logging.getLogger("ucc_gen")
 
 
+# Tested in the CI during the build process of test add-on.
 def validate(file_path: str) -> None:
     try:
         from splunk_appinspect import main
