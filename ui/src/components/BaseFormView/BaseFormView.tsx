@@ -750,11 +750,17 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
         const body = new URLSearchParams();
         Object.keys(this.datadict).forEach((key) => {
             if (this.datadict[key] != null) {
-                // Custom logic for only sending file content in payload, not file name and file size.
+                const entity = this.entities?.find((x) => x?.field === key);
                 if (
-                    typeof this.datadict[key] === 'object' &&
-                    this.entities?.find((x) => x?.field === key)?.type === 'file'
+                    entity &&
+                    'encrypted' in entity &&
+                    entity.encrypted &&
+                    this.datadict[key] === '******'
                 ) {
+                    return;
+                }
+                // Custom logic for only sending file content in payload, not file name and file size.
+                if (typeof this.datadict[key] === 'object' && entity?.type === 'file') {
                     const { fileContent } = this.datadict?.[key] as { fileContent: string };
                     body.append(key, fileContent);
                 } else if (this.datadict) {
