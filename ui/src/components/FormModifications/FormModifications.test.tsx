@@ -16,10 +16,11 @@ import {
     thirdModificationField,
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
-import { EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
+import { BaseFormState, EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
 import { getModificationForEntity } from './FormModifications';
+import {AcceptableFormValueOrNullish} from "@/types/components/shareableTypes.ts";
 
 const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
@@ -290,9 +291,14 @@ it('verify no modifications', async () => {
 });
 
 it('check mode for getModificationForEntity', () => {
-    const state: any = {
+    const state: BaseFormState = {
         data: {
-            [editOnlyModificationField.field]: { value: 'a' },
+            [editOnlyModificationField.field]: {
+                value: 'a',
+                disabled: false,
+                error: false,
+                display: true,
+            },
         },
     };
 
