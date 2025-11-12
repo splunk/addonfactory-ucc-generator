@@ -307,11 +307,12 @@ it('check mode for getModificationForEntity', () => {
     expect(modificationEdit?.fieldsToModify).toHaveLength(1);
     expect(modificationEdit?.fieldsToModify[0].fieldId).toBe(firstStandardTextField.field);
 
-    const modification = getModificationForEntity(
+    // create mode should not return modification, when only edit mode is specified
+    const modificationCreate = getModificationForEntity(
         editOnlyModificationField,
         state,
         'create',
         'configuration'
     );
-    expect(modification).toBeUndefined();
+    expect(modificationCreate).toBeUndefined();
 });
