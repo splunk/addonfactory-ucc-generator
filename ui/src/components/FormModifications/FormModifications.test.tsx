@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { setUnifiedConfig } from '../../util/util';
 import {
+    editOnlyModificationField,
     firstModificationField,
     firstStandardTextField,
     getConfigWithModifications,
@@ -18,6 +19,7 @@ import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
 import { EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
+import { getModificationForEntity } from './FormModifications';
 
 const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
@@ -285,4 +287,31 @@ it('verify no modifications', async () => {
     await userEvent.type(componentMakingRegexpMods, secondValueToInput);
 
     verifyAllProps(componentParentElement, componentInput, firstStandardTextField);
+});
+
+it('check mode for getModificationForEntity', () => {
+    const state: any = {
+        data: {
+            [editOnlyModificationField.field]: { value: 'a' },
+        },
+    };
+
+    const modificationEdit = getModificationForEntity(
+        editOnlyModificationField,
+        state,
+        'edit',
+        'configuration'
+    );
+    expect(modificationEdit).toBeDefined();
+    expect(modificationEdit?.fieldValue).toBe('a');
+    expect(modificationEdit?.fieldsToModify).toHaveLength(1);
+    expect(modificationEdit?.fieldsToModify[0].fieldId).toBe(firstStandardTextField.field);
+
+    const modification = getModificationForEntity(
+        editOnlyModificationField,
+        state,
+        'create',
+        'configuration'
+    );
+    expect(modification).toBeUndefined();
 });
