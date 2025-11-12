@@ -20,7 +20,6 @@ import { BaseFormState, EntitiesAllowingModifications } from '../../types/compon
 import { invariant } from '../../util/invariant';
 import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
 import { getModificationForEntity } from './FormModifications';
-import {AcceptableFormValueOrNullish} from "@/types/components/shareableTypes.ts";
 
 const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
