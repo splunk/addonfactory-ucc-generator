@@ -11,22 +11,22 @@ on:
 
 jobs:
   compare-coverage:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       contents: read
     steps:
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.9"
 
       - name: Install Poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4 && poetry self add poetry-plugin-export@1.9.0
+          curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
 
       - name: Checkout develop branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: develop
 
@@ -39,7 +39,7 @@ jobs:
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/develop-coverage.json tests/unit
 
       - name: Checkout PR branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install dependencies
         run: |
@@ -50,7 +50,7 @@ jobs:
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/pr-coverage.json tests/unit
 
       - name: Process coverage data and comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { default: compareDiff } = await import('${{ github.workspace }}/.github/scripts/code-coverage.mjs')

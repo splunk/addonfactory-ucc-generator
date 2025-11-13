@@ -69,6 +69,7 @@ class AlertActionsConf(FileGenerator):
 
         self.alerts: dict[str, Any] = {}
         self.alerts_spec: dict[str, Any] = {}
+        self.supportedPythonVersion = None
 
         for alert in self._alert_settings:
             alert_name = alert["short_name"]
@@ -128,6 +129,11 @@ class AlertActionsConf(FileGenerator):
                 elif k not in deny_list:
                     value = f"{str(k).strip()} = {str(v).strip()}"
                     self.alerts[alert_name].append(value)
+        if self.alerts or self.alerts_spec:
+            self.supportedPythonVersion = (
+                ", ".join(self._global_config.meta.get("supportedPythonVersion", []))
+                or None
+            )
 
     def generate(self) -> Optional[list[dict[str, str]]]:
         conf_files: list[dict[str, str]] = []
@@ -147,7 +153,9 @@ class AlertActionsConf(FileGenerator):
         self.set_template_and_render(
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
         )
-        rendered_content = self._template.render(alerts=self.alerts)
+        rendered_content = self._template.render(
+            alerts=self.alerts, supportedPythonVersion=self.supportedPythonVersion
+        )
         return {
             "file_name": self.conf_file,
             "file_path": file_path,
@@ -163,7 +171,9 @@ class AlertActionsConf(FileGenerator):
             template_file_path=["README"],
             file_name="alert_actions_conf_spec.template",
         )
-        rendered_content = self._template.render(alerts=self.alerts_spec)
+        rendered_content = self._template.render(
+            alerts=self.alerts_spec, supportedPythonVersion=self.supportedPythonVersion
+        )
         return {
             "file_name": self.conf_spec_file,
             "file_path": file_path,

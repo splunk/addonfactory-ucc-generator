@@ -21,6 +21,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -36,6 +37,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -51,6 +53,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -66,10 +69,11 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
-            ["-v", "--source", "package", "--ta-version", "2.1.0"],
+            ["-v", "--source", "package", "--ta-version", "2.1.0", "--overwrite"],
             {
                 "source": "package",
                 "config_path": None,
@@ -81,6 +85,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": True,
             },
         ),
         (
@@ -103,6 +108,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -127,6 +133,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -153,6 +160,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -180,6 +188,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -208,6 +217,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -238,6 +248,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -269,6 +280,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": True,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -291,6 +303,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
         (
@@ -315,6 +328,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_legacy_resolver": False,
                 "pip_custom_flag": "--progress-bar on",
                 "build_custom_ui": False,
+                "overwrite": False,
             },
         ),
     ],

@@ -17,11 +17,19 @@ order_by = The datetime field by which to query results in ascending order for i
 singleSelectTest = 
 start_date = The datetime after which to query and index records, in this format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.
 use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data collection. (Default: yes)
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [example_input_two://<name>]
 account = 
 apis = 
+example_date_field = This is an example date field (Default: 2025-05-20)
 example_help_link = 
+example_second_date_field = This is an example date field (Default: 2025-05-20)
 hard_disabled = 
 hide_in_ui = 
 index = An index is a type of data repository. Select the index in which you want to collect the events. (Default: default)
@@ -33,29 +41,83 @@ input_two_text_hidden_for_enterprise = Should be hidden for enterprise
 interval = Time interval of the data input, in seconds.
 start_date = The date and time, in "YYYY-MM-DDThh:mm:ss.000z" format, after which to query and index records.  The default is 90 days before today.
 use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data collection. (Default: yes)
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [example_input_three://<name>]
 event_filters = 
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [example_input_four://<name>]
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [service_hidden_for_cloud://<name>]
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [service_hidden_for_enterprise://<name>]
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [service_inside_menu_one://<name>]
 interval = Time interval of the data input, in seconds.
 text_with_validators = 
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [service_inside_menu_two://<name>]
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [service_inside_menu_three://<name>]
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set
 
 [service_inside_menu_four://<name>]
 interval = Time interval of the data input, in seconds.
+python.required = {3.7|3.9|3.13}
+* For Python scripts only, selects which Python version to use.
+* Set to "3.9" to use the Python 3.9 version.
+* Set to "3.13" to use the Python 3.13 version.
+* Optional.
+* Default: not set

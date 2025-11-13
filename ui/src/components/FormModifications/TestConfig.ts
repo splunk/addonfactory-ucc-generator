@@ -145,6 +145,25 @@ export const thirdModificationField = {
     help: 'Third Modification field - checkbox - help',
 } satisfies z.infer<typeof CheckboxEntitySchema>;
 
+export const editOnlyModificationField = {
+    type: 'text',
+    label: 'Edit Only Modification field - text - label',
+    field: 'edit_only_modification_field',
+    help: 'Edit Only Modification field - text - help',
+    modifyFieldsOnValue: [
+        {
+            fieldValue: 'a',
+            mode: 'edit',
+            fieldsToModify: [
+                {
+                    fieldId: 'standard_text1',
+                    disabled: true,
+                },
+            ],
+        },
+    ],
+} satisfies z.infer<typeof TextEntitySchema>;
+
 export const regexpModificationField = {
     type: 'text',
     label: 'Regexp Modification field - text - label',

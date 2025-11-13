@@ -1872,6 +1872,73 @@
       ],
       "additionalProperties": false
     },
+    "DateEntity": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "date",
+          "type": "string",
+          "description": "Exactly: date"
+        },
+        "field": {
+          "$ref": "#/definitions/Field"
+        },
+        "label": {
+          "$ref": "#/definitions/entityLabel"
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "The initial input value."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "tooltip": {
+          "$ref": "#/definitions/tooltip"
+        },
+        "required": {
+          "$ref": "#/definitions/required"
+        },
+        "encrypted": {
+          "$ref": "#/definitions/encrypted"
+        },
+        "options": {
+          "type": "object",
+          "description": "To specify an additional attribute for a particular type of entity, such as items for a radio bar.",
+          "properties": {
+            "display": {
+              "$ref": "#/definitions/display"
+            },
+            "disableonEdit": {
+              "$ref": "#/definitions/disableonEdit"
+            },
+            "enable": {
+              "$ref": "#/definitions/enable"
+            },
+            "requiredWhenVisible": {
+              "$ref": "#/definitions/requiredWhenVisible"
+            },
+            "hideForPlatform": {
+              "$ref": "#/definitions/HideForPlatform"
+            },
+            "locale": {
+              "type": "string",
+              "description": "Locale set by language and localization specifiers. Default: 'en_US', some other examples 'en-GB', 'fr-FR', 'zh-CN', 'ja-JP', 'es-ES'"
+            }
+          },
+          "additionalProperties": false
+        },
+        "modifyFieldsOnValue": {
+          "$ref": "#/definitions/modifyFieldsOnValue"
+        }
+      },
+      "required": [
+        "field",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
     "FileEntity": {
       "type": "object",
       "properties": {
@@ -2291,6 +2358,9 @@
             "$ref": "#/definitions/CheckboxEntity"
           },
           {
+            "$ref": "#/definitions/DateEntity"
+          },
+          {
             "$ref": "#/definitions/RadioEntity"
           },
           {
@@ -2606,6 +2676,13 @@
           "type": "boolean",
           "default": true,
           "description": "Ability to show the footer component on every page of add-on"
+        },
+        "supportedPythonVersion":{
+          "description": "This feature allows you to specify which python version your app would use.",
+          "type": "array",
+          "items": {
+                "type": "string"
+              }
         }
       },
       "required": [
@@ -2722,6 +2799,9 @@
         },
         {
           "$ref": "#/definitions/CheckboxEntity"
+        },
+        {
+          "$ref": "#/definitions/DateEntity"
         },
         {
           "$ref": "#/definitions/RadioEntity"

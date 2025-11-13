@@ -1341,6 +1341,7 @@
         "version": "1.0.0",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.3",
+        "supportedPythonVersion":["3.7, 3.13"],
         "os-dependentLibraries": [
             {
                 "name": "cryptography",
