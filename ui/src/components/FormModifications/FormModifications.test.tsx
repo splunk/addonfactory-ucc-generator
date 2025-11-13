@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { setUnifiedConfig } from '../../util/util';
 import {
+    editOnlyModificationField,
     firstModificationField,
     firstStandardTextField,
     getConfigWithModifications,
@@ -15,9 +16,10 @@ import {
     thirdModificationField,
 } from './TestConfig';
 import EntityModal, { EntityModalProps } from '../EntityModal/EntityModal';
-import { EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
+import { BaseFormState, EntitiesAllowingModifications } from '../../types/components/BaseFormTypes';
 import { invariant } from '../../util/invariant';
 import { StringOrTextWithLinks } from '../../types/globalConfig/baseSchemas';
+import { getModificationForEntity } from './FormModifications';
 
 const handleRequestClose = vi.fn();
 const setUpConfigWithDefaultValue = () => {
@@ -285,4 +287,37 @@ it('verify no modifications', async () => {
     await userEvent.type(componentMakingRegexpMods, secondValueToInput);
 
     verifyAllProps(componentParentElement, componentInput, firstStandardTextField);
+});
+
+it('check mode for getModificationForEntity', () => {
+    const state: BaseFormState = {
+        data: {
+            [editOnlyModificationField.field]: {
+                value: 'a',
+                disabled: false,
+                error: false,
+                display: true,
+            },
+        },
+    };
+
+    const modificationEdit = getModificationForEntity(
+        editOnlyModificationField,
+        state,
+        'edit',
+        'configuration'
+    );
+    expect(modificationEdit).toBeDefined();
+    expect(modificationEdit?.fieldValue).toBe('a');
+    expect(modificationEdit?.fieldsToModify).toHaveLength(1);
+    expect(modificationEdit?.fieldsToModify[0].fieldId).toBe(firstStandardTextField.field);
+
+    // create mode should not return modification, when only edit mode is specified
+    const modificationCreate = getModificationForEntity(
+        editOnlyModificationField,
+        state,
+        'create',
+        'configuration'
+    );
+    expect(modificationCreate).toBeUndefined();
 });

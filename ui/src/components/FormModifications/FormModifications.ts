@@ -100,7 +100,7 @@ const ifRegexpMatchesValue = (
     }
 };
 
-const getModificationForEntity = (
+export const getModificationForEntity = (
     entity: EntitiesAllowingModifications,
     stateShallowCopy: BaseFormState,
     mode: Mode,
@@ -118,8 +118,8 @@ const getModificationForEntity = (
                 getValueMapTruthyFalse(currentFieldValue, page) ===
                     getValueMapTruthyFalse(mod.fieldValue, page) ||
                 // or if the mod value is a regex pattern and it matches the current field value
-                (ifRegexpMatchesValue(currentFieldValue, mod.fieldValue) &&
-                    (!mod.mode || mod.mode === mode)))
+                ifRegexpMatchesValue(currentFieldValue, mod.fieldValue)) &&
+            (!mod.mode || mod.mode === mode)
         );
     });
 
