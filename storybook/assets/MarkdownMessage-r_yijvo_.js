@@ -1,0 +1,3 @@
+import{j as o}from"./jsx-runtime-1FKYbnEZ.js";import{R as s}from"./index-prPvd6Su.js";import{q as k}from"./omit-CSe7u5nZ.js";import{L as r}from"./Link-BguIxQc6.js";const x=k.span`
+    color: ${e=>e.color};
+`;function d(e){function l(t,n){let i=[];for(let a=0;a<t.length;a+=1){const c=n(t[a]);i=i.concat(c)}return i}function m(){let t=e.text;return e.markdownType==="link"?t=o.jsx(r,{to:e.link,children:e.text}):e.markdownType==="hybrid"?(t=l(t.split(e.token),n=>[n,o.jsx(r,{to:e.link,children:e.linkText},n)]),t.pop()):e.markdownType==="text"&&(t=o.jsx(x,{color:e.color,children:e.text})),t}return o.jsx("div",{"data-test":"msg-markdown",children:m()})}const h=s.memo(d);d.__docgenInfo={description:"",methods:[],displayName:"MarkdownMessage"};export{h as M};

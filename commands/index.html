@@ -1,0 +1,2817 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Splunk">
+      
+      
+        <link rel="canonical" href="https://splunk.github.io/addonfactory-ucc-generator/commands/">
+      
+      
+        <link rel="prev" href="../quickstart/">
+      
+      
+        <link rel="next" href="../dot_conf_files/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Commands - UCC Framework</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings4.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings5.css">
+    
+      <link rel="stylesheet" href="../css/print-site-enum-headings6.css">
+    
+      <link rel="stylesheet" href="../css/print-site.css">
+    
+      <link rel="stylesheet" href="../css/print-site-material.css">
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#commands" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      <!-- Source:
+https://github.com/squidfunk/mkdocs-material/blob/master/src/templates/partials/header.html
+-->
+
+
+
+  
+
+
+<!-- Header -->
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="Header"
+  >
+
+    <!-- Link to home -->
+    <a
+      href=".."
+      title="UCC Framework"
+      class="md-header__button md-logo"
+      aria-label="UCC Framework"
+      data-md-component="logo"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+
+    <!-- Button to open drawer -->
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+
+    <!-- Header title -->
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UCC Framework
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Commands
+            
+          </span>
+        </div>
+      </div>
+    </div>
+
+    
+      <a href="../print_page/" title="Print Site" class="md-header__button md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 3H6v4h12m1 5a1 1 0 0 1-1-1 1 1 0 0 1 1-1 1 1 0 0 1 1 1 1 1 0 0 1-1 1m-3 7H8v-5h8m3-6H5a3 3 0 0 0-3 3v6h4v4h12v-4h4v-6a3 3 0 0 0-3-3"/></svg>
+      </a>
+    
+
+    <!-- Color palette toggle -->
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+
+    <!-- User preference: color palette -->
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+
+    <!-- Site language selector -->
+    
+
+    <!-- Button to open search modal -->
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+
+      <!-- Search interface -->
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    <!-- Repository information -->
+    
+      <div class="md-header__source">
+        <a href="https://github.com/splunk/addonfactory-ucc-generator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Splunk Add-on UCC Framework
+  </div>
+</a>
+      </div>
+    
+  </nav>
+
+  <!-- Navigation tabs (sticky) -->
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="UCC Framework" class="md-nav__button md-logo" aria-label="UCC Framework" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UCC Framework
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/splunk/addonfactory-ucc-generator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Splunk Add-on UCC Framework
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About UCC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats_new/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    What's new
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Commands
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Commands
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen build
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ucc-gen build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verbose-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verbose mode
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-init" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen init
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-import-from-aob" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen import-from-aob
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen package
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen validate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-publish" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen publish
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dot_conf_files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    .conf files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated_files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generated files
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../inputs/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Inputs
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Inputs
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inputs/tabs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tabs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inputs/multilevel_menu/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multi-level menu
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inputs/helper/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Helper module
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../options/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Options
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Options
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options/rest_handlers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Rest Handlers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../configurations/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configurations/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configurations/proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboard
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../alert_actions/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Alert actions
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            Alert actions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alert_actions/alert_scripts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Alert action scripts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alert_actions/adaptive_response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Adaptive response
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../entity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    Entity
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            Entity
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Components
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity/validators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validators
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity/modifyFieldsOnValue/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Modify fields On change
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity/help_message/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Help property
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity/userPlayground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    User Playground
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_search_commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom search commands
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../table/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Table
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional_packaging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Additional packaging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OpenAPI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ucc_related_libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    UCC-related libraries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+        
+          
+          <label class="md-nav__link" for="__nav_18" id="__nav_18_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Custom UI extensions
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_18">
+            <span class="md-nav__icon md-icon"></span>
+            Custom UI extensions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_18_1" id="__nav_18_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Standard
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_18_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_18_1">
+            <span class="md-nav__icon md-icon"></span>
+            Standard
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/standard/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/standard/custom_hook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom hook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/standard/custom_control/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom control
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/standard/custom_row/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom row
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/standard/custom_cell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom cell
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/standard/custom_tab/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom tab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_18_2" id="__nav_18_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Context
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_18_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_18_2">
+            <span class="md-nav__icon md-icon"></span>
+            Context
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_project_init/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Initialize UI project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_test_ui_command/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Test UI project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_cell_context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom cell
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_tab_context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Tab
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_control_context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Control
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_hook_context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Hook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom_ui_extensions/context/custom_row_context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom Row
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+        
+          
+          <label class="md-nav__link" for="__nav_19" id="__nav_19_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_19">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/custom_mapping/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom mapping
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/dependent_dropdown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dependent dropdown
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/oauth_support/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OAuth support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/custom_rest_handler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom REST handler
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/groups_feature/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Groups feature
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/save_validator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Save validator
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/requirements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Requirements
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/os-dependent_libraries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    OS-dependent libraries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/sub_description/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sub description
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/custom_warning/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom warning
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Troubleshooting
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Metadata
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storybook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Storybook
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_25" >
+        
+          
+          <label class="md-nav__link" for="__nav_25" id="__nav_25_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    UI Tests
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_25_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_25">
+            <span class="md-nav__icon md-icon"></span>
+            UI Tests
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_25_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_25_1" id="__nav_25_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Configuration Page
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_25_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_25_1">
+            <span class="md-nav__icon md-icon"></span>
+            Configuration Page
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_config_page_general/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    General
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_config_page_account/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Account
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_config_page_custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Custom
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_config_page_logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_config_page_proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Proxy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_alert_actions_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Alert Action Page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ui_tests_inputs_page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Input Page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen build
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ucc-gen build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#verbose-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Verbose mode
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-init" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen init
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-import-from-aob" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen import-from-aob
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen package
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-validate" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen validate
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ucc-gen-publish" class="md-nav__link">
+    <span class="md-ellipsis">
+      ucc-gen publish
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h1>
+<p>These are the commands that are available in UCC framework.</p>
+<h2 id="ucc-gen-build"><code>ucc-gen build</code><a class="headerlink" href="#ucc-gen-build" title="Permanent link">&para;</a></h2>
+<p>The <code>ucc-gen build</code> command builds the add-on. As of now, running <code>ucc-gen</code> does the same thing as running <code>ucc-gen build</code>,
+but eventually calling <code>ucc-gen</code> without specifying a subcommand will be
+deprecated.</p>
+<p>It takes the following parameters:</p>
+<ul>
+<li><code>--source</code> - [optional] folder containing the <code>app.manifest</code> and app
+    source. The default is <code>package</code>.</li>
+<li><code>--config</code> - [optional] path to the configuration file. It defaults to
+    the globalConfig file in the parent directory of the source provided.
+    Only <em>.json</em> and <em>.yaml</em> files are accepted.</li>
+<li><code>--ta-version</code> - [optional] override current version of TA. The default
+    version is version specified in <code>globalConfig.json</code> or <code>globalConfig.yaml</code>.
+    A Splunkbase compatible version of SEMVER is used by default.</li>
+<li><code>-o</code> / <code>--output</code> - [optional] output folder to store the build add-on.
+   By default, it is saved in the <code>current directory/output</code> folder.
+    Absolute paths are accepted as well.</li>
+<li><code>--python-binary-name</code> - [optional] Python binary name to use when
+    installing Python libraries. The default is <code>python3</code>.</li>
+<li><code>-v</code> / <code>--verbose</code> - [optional] shows detailed information about
+    created/copied/modified/conflict files after build is complete.
+    This option is in the experimental mode. The default is <code>False</code>.</li>
+<li><code>--pip-version</code> - [optional] pip version that is used to install python libraries. The default is <code>latest</code>.</li>
+<li><code>--pip-legacy-resolver</code> - [optional] Use old pip dependency resolver by adding flag &lsquo;&ndash;use-deprecated=legacy-resolver&rsquo;
+    to pip install command. The default is<code>False</code>.
+    </br> <strong>NOTE:</strong> This flag is <strong>deprecated</strong> and will be removed from pip in the future.
+    Instead of using this flag, the correct solution would be to fix the packages your project depends on to work properly with the new resolver. Additionally, this flag is not compatible with pip version <code>23.2</code>. Use <code>23.2.1</code> instead.</li>
+<li>
+<p><code>--pip-custom-flag</code> - [optional] Additional flag(s) that will be added to the <code>pip install</code> command.
+    By default, all the following flags are added to the <code>pip install</code> command: <code>--no-compile</code>, <code>--prefer-binary</code> and <code>--ignore-installed</code>.
+    If <code>--pip-custom-flag</code> is specified these three arguments will be missing so if you still want them in your command add them to the <code>--pip-custom-flag</code> argument.</p>
+<p>Example:  <code>--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"</code></p>
+</li>
+<li>
+<p><code>--build-custom-ui</code> - [optional] Additional flag that will trigger build of custom UI repo (execute build script from <code>./ui</code> repository).</p>
+</li>
+<li><code>--overwrite</code> - [optional] overwrites the already existing add-on directory. By default, you can&rsquo;t build an add-on to an already existing directory.</li>
+</ul>
+<h3 id="verbose-mode">Verbose mode<a class="headerlink" href="#verbose-mode" title="Permanent link">&para;</a></h3>
+<p>The verbose mode is available for <code>v5.35.0</code> and later.</p>
+<p>Running <code>ucc-gen build -v</code> or <code>ucc-gen build --verbose</code> prints additional information about
+what was exactly created / copied / modified / conflicted after the build is complete. It does
+not scan the <code>lib</code> folder due to the nature of the folder.</p>
+<p>See the following description of what each state means:</p>
+<ul>
+<li><code>created</code>: the file is not in the original package and was created during the build process.</li>
+<li><code>copied</code>: the file is in the original package and was copied during the build process.</li>
+<li><code>modified</code>: the file is in the original package and was modified during the build process.</li>
+<li><code>conflict</code>: the file is in the original package and was copied during the build process, but may be generated by UCC itself, so incorrect usage can stop the add-on from working.</li>
+</ul>
+<h2 id="ucc-gen-init"><code>ucc-gen init</code><a class="headerlink" href="#ucc-gen-init" title="Permanent link">&para;</a></h2>
+<p><code>ucc-gen init</code> initializes the add-on. This is available on <code>v5.19.0</code> and later.
+The <code>ucc-gen init</code> command initializes the add-on and bootstraps some code in the
+modular input which you, as a developer, can extend for your needs.</p>
+<p>Apart from standard files needed for the add-on, it also adds search head
+clustering files in the <code>default/server.conf</code> file and reload triggers in the
+<code>default/app.conf</code> file. Those files will be soon generated automatically by the
+<code>ucc-gen build</code> command itself.
+during the add-on development.</p>
+<p>It takes the following parameters:</p>
+<ul>
+<li><code>--addon-name</code> - [required] add-on name. See the
+    <a href="https://dev.splunk.com/enterprise/docs/releaseapps/splunkbase/namingguidelines/">official naming convention guide</a>.</li>
+<li><code>--addon-rest-root</code> - [optional] add-on REST root, defaults to <code>--addon-name</code> if not provided.</li>
+<li><code>--addon-display-name</code> - [required] add-on &ldquo;official&rdquo; name.</li>
+<li><code>--addon-input-name</code> - [required] name of the generated input.</li>
+<li><code>--addon-version</code> - [optional] version of the generated add-on, with <code>0.0.1</code> by default.</li>
+<li><code>--overwrite</code> - [optional] overwrites the already existing folder. By default, you can&rsquo;t generate a new add-on to an already existing folder.</li>
+<li><code>--add-license</code> - [optional] Adds license agreement such as <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License 2.0</a>, <a href="https://mit-license.org/">MIT License</a>, or
+<a href="https://www.splunk.com/en_us/legal/splunk-pre-release-software-license-agreement.html">SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT</a> in your <code>package/LICENSES</code> directory. If not mentioned an empty License.txt will be generated.</li>
+<li><code>--include-author</code> - [optional] Allows you to specify the author of the add-on during initialization. The author&rsquo;s name will appear in <code>app.manifest</code> under <code>info -&gt; author -&gt; name</code> and in <code>app.conf</code> (after building your add-on) under <code>launcher -&gt; author</code> field.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The add-on will not build if the input for <code>--add-license</code> is not one of the following: <code>Apache License 2.0</code>, <code>MIT License</code>, or <code>SPLUNK PRE-RELEASE SOFTWARE LICENSE AGREEMENT</code>. If you want to keep another license in your add-on, place it in <code>package/LICENSES</code> directory and it will be shipped</p>
+</blockquote>
+<h2 id="ucc-gen-import-from-aob"><code>ucc-gen import-from-aob</code><a class="headerlink" href="#ucc-gen-import-from-aob" title="Permanent link">&para;</a></h2>
+<p>Import from AoB (Add-on Builder), from <code>v5.24.0</code> and later. It is in the
+<strong>experimental</strong> state as of now, meaning that running this command may not
+produce a 100% UCC compatible add-on, but we are going to work on future
+improvements for the script itself.</p>
+<blockquote>
+<p><strong>Note:</strong> the <code>import-from-aob</code> command does not currently support Windows.</p>
+</blockquote>
+<p>The import functionality is based on the
+<a href="https://github.com/tmartin14/ucc_migration_test">ucc_migration_test</a> bash
+script.
+One of the ways you can use it is to download an AoB-based add-on from
+Splunkbase, unarchive the folder, and then use
+<code>ucc-gen import-from-aob --addon-name &lt;unarchived-folder-name&gt;</code>. Or you can
+run the same command against your locally developed add-on, but it should be
+exported from AoB.</p>
+<p>It accepts the following parameters:</p>
+<ul>
+<li><code>--addon-name</code> - [required] add-on name.</li>
+</ul>
+<h2 id="ucc-gen-package"><code>ucc-gen package</code><a class="headerlink" href="#ucc-gen-package" title="Permanent link">&para;</a></h2>
+<p><code>ucc-gen package</code> can be used for <code>v5.30.0</code> and later. It packages the add-on so it can be installed.
+It mimics the basics of the <code>slim package</code> command. This command can be used for most of the simple cases.</p>
+<p>It does not support:</p>
+<ul>
+<li>the <code>.slimignore</code> file.</li>
+<li>the <a href="https://dev.splunk.com/enterprise/docs/releaseapps/packageapps/packagingtoolkit/#Dependencies-section">dependencies section</a>.</li>
+</ul>
+<p>It accepts the following parameters:</p>
+<ul>
+<li><code>--path</code> - [required] path to the built add-on (should include the <code>app.manifest</code> file).</li>
+<li><code>-o</code> / <code>--output</code> - [optional] output folder to store the packaged add-on.
+    By default, it will be saved in the <code>current directory</code> folder.
+    It accepts absolute paths as well.</li>
+</ul>
+<h2 id="ucc-gen-validate"><code>ucc-gen validate</code><a class="headerlink" href="#ucc-gen-validate" title="Permanent link">&para;</a></h2>
+<p>The <code>ucc-gen validate</code> command is available starting from version <code>v5.68.0</code> and is used to validate
+Splunk apps and add-ons during development. It leverages <code>Splunk AppInspect</code> under the hood to ensure your add-on meets Splunk&rsquo;s standards and best practices.</p>
+<p>To use this command, you must have AppInspect installed on your system.
+You can install the required dependencies using the following command:</p>
+<ul>
+<li>pip install splunk-add-on-ucc-framework[validate]</li>
+</ul>
+<p>It accepts the following parameters:</p>
+<ul>
+<li><code>--addon-path</code> - [required] Specifies the path to the built add-on that you want to validate.</li>
+</ul>
+<h2 id="ucc-gen-publish"><code>ucc-gen publish</code><a class="headerlink" href="#ucc-gen-publish" title="Permanent link">&para;</a></h2>
+<p><code>ucc-gen publish</code> command is available starting from version <code>v5.68.0</code> and is used to upload a packaged add-on (.tar.gz) to Splunkbase.
+One of the main use case of this command is to automate the process of the add-on release through the workflow.</p>
+<p>It does not support:</p>
+<ul>
+<li>Updating the package file for the same version which was uploaded earlier</li>
+<li>Updating the metadata like <code>splunk_versions</code> and <code>cim_versions</code></li>
+</ul>
+<p>It accepts the following parameters:</p>
+<ul>
+<li><code>--app-id</code> - [required] Splunkbase numerical app id listed in the URL of the app details page.</li>
+<li><code>--package-path</code> - [required] path to the package file (.tar.gz) to be published (must be a valid UCC package).</li>
+<li><code>--splunk-versions</code> - [required] comma-separated list of supported Splunk versions (e.g. &ldquo;9.1,9.2&rdquo;).</li>
+<li><code>--cim-versions</code> - [required] comma-separated list of supported CIM versions (e.g. &ldquo;5.x,6.x&rdquo;).</li>
+<li><code>--username</code> - [required] Username of the splunkbase account.</li>
+<li><code>--password</code> - [required] Password of the splunkbase account.</li>
+<li><code>--make-visible</code> - [optional] flag to make the uploaded release publicly visible immediately upon successful validation.</li>
+</ul>
+<p>Caution: Packages uploaded with <code>--make-visible</code> flag cannot be deleted or updated later.</p>
+<blockquote>
+<p><strong>Note:</strong> For any reason if the user wants to update the build package for particular version which was uploaded earlier, they&rsquo;ll have to delete the previously uploaded build first from the Splunkbase UI (This is only possible if the package was previously uploaded without <code>--make-visible</code> flag).</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "navigation.indexes"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
+      
+        <script src="../js/print-site.js"></script>
+      
+    
+  </body>
+</html>
