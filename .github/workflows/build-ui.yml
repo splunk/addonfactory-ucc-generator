@@ -4,7 +4,7 @@ on:
 
 jobs:
   ui-code-check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
@@ -28,7 +28,7 @@ jobs:
           path: "ui/*.tgz"
 
   build-ui:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
