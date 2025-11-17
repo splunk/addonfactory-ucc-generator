@@ -142,6 +142,7 @@ def handle_global_config_update(
         "0.0.7",
         "0.0.8",
         "0.0.9",
+        "0.0.10",
     }
 
     if version not in allowed_versions_of_schema_version:
