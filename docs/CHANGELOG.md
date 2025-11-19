@@ -1,5 +1,21 @@
 # Changelog
 
+# [6.1.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.0.1...v6.1.0) (2025-11-13)
+
+
+### Bug Fixes
+
+* include built UI files in the wheel package ([#1927](https://github.com/splunk/addonfactory-ucc-generator/issues/1927)) ([0e83b49](https://github.com/splunk/addonfactory-ucc-generator/commit/0e83b490468bfb19bff3bb0634ad172caa5a044e))
+* **UI:** respect allowed "mode" in "modifyFieldsOnValue" ([#1951](https://github.com/splunk/addonfactory-ucc-generator/issues/1951)) ([b2bf2d1](https://github.com/splunk/addonfactory-ucc-generator/commit/b2bf2d192b112f062e1d61870b8dc0cfeaaf5f64))
+
+
+### Features
+
+* add a new flag overwrite for build command ([#1916](https://github.com/splunk/addonfactory-ucc-generator/issues/1916)) ([1dab3ae](https://github.com/splunk/addonfactory-ucc-generator/commit/1dab3ae00d9e5f79517db949026dda5c67ccdd4c)), closes [#1913](https://github.com/splunk/addonfactory-ucc-generator/issues/1913)
+* **date:** date picker as a new component ([#1857](https://github.com/splunk/addonfactory-ucc-generator/issues/1857)) ([e6a8be2](https://github.com/splunk/addonfactory-ucc-generator/commit/e6a8be2da7bc09fc9118e21943925dc59a9b72c9))
+* provide support for python.required ([#1932](https://github.com/splunk/addonfactory-ucc-generator/issues/1932)) ([16bd281](https://github.com/splunk/addonfactory-ucc-generator/commit/16bd2812cd836715790b01f797437edf83259bd5))
+* support custom favicons ([#1864](https://github.com/splunk/addonfactory-ucc-generator/issues/1864)) ([dd6e7f9](https://github.com/splunk/addonfactory-ucc-generator/commit/dd6e7f95b5544d8ebe774fc25686352f8859ed37))
+
 ## [6.0.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.0.0...v6.0.1) (2025-09-30)
 
 
