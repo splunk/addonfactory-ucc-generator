@@ -50,7 +50,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^15.0.6",
     "@vitejs/plugin-react": "^4.7.0",
-    "@vitest/coverage-istanbul": "^3.2.4",
+    "@vitest/coverage-istanbul": "^4.0.0",
     "glob": "11.1.0",
     "immutability-helper": "^3.1.1",
     "js-yaml": "4.1.1",
