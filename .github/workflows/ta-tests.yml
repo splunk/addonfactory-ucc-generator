@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout UCC Framework Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: UCC
 
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Target Add-on Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
