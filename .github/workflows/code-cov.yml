@@ -26,7 +26,7 @@ jobs:
           curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
 
       - name: Checkout develop branch
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: develop
 
@@ -39,7 +39,7 @@ jobs:
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=json:/tmp/coverage/develop-coverage.json tests/unit
 
       - name: Checkout PR branch
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install dependencies
         run: |
