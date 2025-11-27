@@ -61,7 +61,10 @@ export const mapEntityIntoBaseForViewEntityObject = (
         if (props.mode === MODE_EDIT) {
             tempEntity.value =
                 typeof currentInput?.[e.field] !== 'undefined' ? currentInput?.[e.field] : null;
-            tempEntity.value = e.encrypted ? '' : tempEntity.value;
+            // For encrypted fields, preserve masked values (like "******") to show user that value exists
+            if (e.encrypted && !currentInput?.[e.field]) {
+                tempEntity.value = '';
+            }
             tempEntity.display =
                 typeof e?.options?.display !== 'undefined' ? e.options.display : true;
             if (oauthType) {
@@ -114,7 +117,10 @@ export const mapEntityIntoBaseForViewEntityObject = (
                 typeof currentInput?.[e.field] !== 'undefined'
                     ? currentInput?.[e.field]
                     : e.defaultValue;
-            tempEntity.value = e.encrypted ? '' : tempEntity.value;
+            // For encrypted fields, preserve masked values (like "******") to show user that value exists
+            if (e.encrypted && !currentInput?.[e.field]) {
+                tempEntity.value = '';
+            }
             tempEntity.display =
                 typeof e?.options?.display !== 'undefined' ? e.options.display : true;
             if (oauthType) {
