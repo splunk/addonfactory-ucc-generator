@@ -5,6 +5,8 @@ from copy import deepcopy
 from typing import Any
 
 import pytest
+import os
+import json
 
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import dashboard
@@ -552,13 +554,17 @@ def test_validate_against_schema_regardless_of_the_default_encoding(
     validator._validate_config_against_schema()
 
 
-def test_check_list_of_entities_to_skip_empty_validators_check(schema_json):
+def test_check_list_of_entities_to_skip_empty_validators_check(base_schema_dir_path):
     # This test checks if the ENTITY_TYPES_WITHOUT_VALIDATORS set is up to date with the schema
     def_pattern = re.compile(r"#/definitions/(\w+)")
+    file_path = os.path.join(base_schema_dir_path, "common", "entity.json")
+    with open(file_path) as file:
+        content = file.read()
+        schema_json = json.loads(content)
 
     any_of_entity_types = set()
 
-    for any_of in schema_json["definitions"]["AnyOfEntity"]["items"]["anyOf"]:
+    for any_of in schema_json["items"]["anyOf"]:
         match = def_pattern.search(any_of["$ref"])
         assert match, any_of
 
@@ -579,7 +585,7 @@ def test_check_list_of_entities_to_skip_empty_validators_check(schema_json):
     )
 
 
-def test_should_warn_on_empty_validators(schema_json):
+def test_should_warn_on_empty_validators():
     # Radio cannot have validators at all, so no warning should be raised
     assert not should_warn_on_empty_validators(
         {
