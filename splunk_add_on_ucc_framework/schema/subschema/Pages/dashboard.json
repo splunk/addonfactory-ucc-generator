@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subschema/Pages/dashboard.json",
+  "title": "DashboardPage",
+  "type": "object",
+  "definitions": {
+    "DashboardPanel": {
+      "type": "object",
+      "description": "Dashboard panel that provides operational insights and monitoring information for the add-on.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Identifier for the dashboard panel"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "panels": {
+      "type": "array",
+      "description": "List of panels to be generated. Supported for now: 'Overview', 'Data ingestion', 'Errors in the add-on'.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/DashboardPanel"
+      }
+    },
+    "troubleshooting_url": {
+      "type": "string",
+      "description": "Link to external TA documentation used for redirection on error dashboard page",
+      "format": "uri"
+    },
+    "settings": {
+      "type": "object",
+      "description": "Additional settings for monitoring dashboard.",
+      "properties": {
+        "custom_tab_name": {
+          "type": "string"
+        },
+        "custom_license_usage": {
+          "type": "object",
+          "description": "Settings for creating custom search query for license usage.",
+          "properties": {
+            "determine_by": {
+              "type": "string",
+              "description": "Specify what to use (source or sourcetype) to search events in license usage.",
+              "enum": [
+                "source",
+                "sourcetype",
+                "host",
+                "index"
+              ]
+            },
+            "search_condition": {
+              "type": "array",
+              "description": "Elements that will be used as a query condition.",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "determine_by",
+            "search_condition"
+          ],
+          "additionalProperties": false
+        },
+        "error_panel_log_lvl": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ERROR",
+                  "CRITICAL"
+                ]
+              }
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "panels"
+  ],
+  "description": "The dashboard page provides some additional information about the add-on operations to increase the visibility into what the add-on is actually doing under the hood.",
+  "additionalProperties": false
+}

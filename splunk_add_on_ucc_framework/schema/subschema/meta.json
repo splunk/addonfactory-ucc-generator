@@ -1,0 +1,168 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "subschema/meta.json",
+    "title": "Meta",
+    "type": "object",
+    "properties": {
+        "displayName": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Name displayed for end user."
+        },
+        "name": {
+            "type": "string",
+            "pattern": "^(?!^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$)(?!.*\\.(tar(\\.gz)?|tgz|spl)$)[A-Za-z_.-][A-Za-z0-9_.-]*[A-Za-z0-9_-]$",
+            "description": "Name used for API endpoints and all code references separating separating endpoints from any other app."
+        },
+        "restRoot": {
+            "type": "string",
+            "pattern": "^[\\w-]+$",
+            "description": "String used to create API endpoints."
+        },
+        "apiVersion": {
+            "type": "string",
+            "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$"
+        },
+        "version": {
+            "type": "string",
+            "description": "Build version"
+        },
+        "schemaVersion": {
+            "type": "string",
+            "pattern": "^(?:\\d{1,3}\\.){2}\\d{1,3}$",
+            "description": "Version of json schema used in build process."
+        },
+        "_uccVersion": {
+            "type": "string",
+            "description": "Version of UCC used during build process. Do not use."
+        },
+        "hideUCCVersion": {
+            "type": "boolean",
+            "description": "Hide the label 'Made with UCC' on the Configuration page"
+        },
+        "checkForUpdates": {
+            "type": "boolean",
+            "default": true,
+            "description": "Ability to configure app.conf->package.check_for_updates from globalConfig file."
+        },
+        "defaultView": {
+            "type": "string",
+            "description": "Define which view should be loaded on TA load.",
+            "anyOf": [
+                {
+                    "const": "inputs"
+                },
+                {
+                    "const": "configuration"
+                },
+                {
+                    "const": "dashboard"
+                },
+                {
+                    "const": "search"
+                }
+            ]
+        },
+        "os-dependentLibraries": {
+            "type": "array",
+            "description": "This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Name of the library we want to download."
+                    },
+                    "version": {
+                        "type": "string",
+                        "description": "Specific version of the given library."
+                    },
+                    "dependencies": {
+                        "type": "boolean",
+                        "description": "(Optional) Parameter which determines whether the --no-deps flag will be used when installing the package from pip."
+                    },
+                    "platform": {
+                        "type": "string",
+                        "description": "Platform for downloading the specified library."
+                    },
+                    "python_version": {
+                        "type": "string",
+                        "description": "Python version compatible with the library."
+                    },
+                    "target": {
+                        "type": "string",
+                        "description": " Path where the selected library will be unpacked."
+                    },
+                    "os": {
+                        "description": "Name of the operating system which the library is intended for. linux/windows/darwin",
+                        "anyOf": [
+                            {
+                                "const": "linux",
+                                "type": "string",
+                                "description": "Exactly: linux"
+                            },
+                            {
+                                "const": "windows",
+                                "type": "string",
+                                "description": "Exactly: windows"
+                            },
+                            {
+                                "const": "darwin",
+                                "type": "string",
+                                "description": "Exactly: darwin"
+                            }
+                        ]
+                    },
+                    "ignore_requires_python": {
+                        "type": "boolean",
+                        "description": "(Optional) Parameter which determines whether the --ignore-requires-python flag will be used when installing the package from pip."
+                    }
+                },
+                "required": [
+                    "name",
+                    "version",
+                    "platform",
+                    "python_version",
+                    "target",
+                    "os"
+                ]
+            }
+        },
+        "supportedThemes": {
+            "description": "This feature allows you to choose theme based on the given option i.e. light and dark",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "light",
+                    "dark"
+                ]
+            }
+        },
+        "isVisible": {
+            "type": "boolean",
+            "default": true,
+            "description": "Ability to configure app.conf->ui.is_visible from globalConfig file."
+        },
+        "showFooter": {
+            "type": "boolean",
+            "default": true,
+            "description": "Ability to show the footer component on every page of add-on"
+        },
+        "supportedPythonVersion": {
+            "description": "This feature allows you to specify which python version your app would use.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": [
+        "displayName",
+        "name",
+        "restRoot",
+        "version"
+    ],
+    "description": "Metadata regarding build",
+    "additionalProperties": false
+}

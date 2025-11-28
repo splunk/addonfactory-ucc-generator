@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "subschema/Pages/pages.json",
+    "title": "Pages",
+    "type": "object",
+    "description": "Definition of addon pages (configuration, inputs, dashboard)",
+    "properties": {
+        "configuration": {
+            "$ref": "./configuration.json"
+        },
+        "inputs": {
+            "$ref": "./inputs.json"
+        },
+        "dashboard": {
+            "$ref": "./dashboard.json"
+        }
+    },
+    "additionalProperties": false
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subschema/Alerts/alertCheckboxEntity.json",
+  "title": "AlertCheckboxEntity",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "checkbox",
+      "type": "string",
+      "description": "Exactly: checkbox"
+    },
+    "field": {
+      "$ref": "../../common/common.json#/definitions/Field"
+    },
+    "label": {
+      "type": "string",
+      "description": "Text displayed next to entity Field"
+    },
+    "defaultValue": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "description": "The initial input value."
+    },
+    "help": {
+      "$ref": "../../common/common.json#/definitions/help"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "To specify whether the field is required or not.",
+      "default": false
+    }
+  },
+  "required": [
+    "field",
+    "label",
+    "type"
+  ],
+  "additionalProperties": false
+}
