@@ -1214,8 +1214,8 @@ class TestAccount(UccTester):
             account.entity.auth_key.get_value, _ACCOUNT_CONFIG["auth_type"]
         )
         self.assert_util(account.entity.username.get_value, _ACCOUNT_CONFIG["username"])
-        self.assert_util(account.entity.password.get_value, "")
-        self.assert_util(account.entity.security_token.get_value, "")
+        self.assert_util(account.entity.password.get_value, "******")
+        self.assert_util(account.entity.security_token.get_value, "******")
 
     @pytest.mark.execute_enterprise_cloud_true
     @pytest.mark.account

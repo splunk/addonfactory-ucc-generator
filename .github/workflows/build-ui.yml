@@ -4,13 +4,13 @@ on:
 
 jobs:
   ui-code-check:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
         shell: bash
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Code linting
@@ -28,13 +28,13 @@ jobs:
           path: "ui/*.tgz"
 
   build-ui:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
         shell: bash
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Build UCC library
