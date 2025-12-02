@@ -4,7 +4,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { z } from 'zod';
 import BaseFormView from '../components/BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../util/util';
-import schema from '../../../splunk_add_on_ucc_framework/schema/schema.json';
 import { generateGlobalConfig } from './generateGlobalConfig';
 import {
     AnyOfEntitySchema,
@@ -106,10 +105,9 @@ const meta: Meta<StoryArgs> = {
                 description: 'Any Entity array',
                 properties: {
                     entity: {
-                        $ref: '#/definitions/AnyOfEntity',
+                        $ref: './common/entity.json',
                     },
                 },
-                definitions: schema.definitions,
             },
         },
     },
