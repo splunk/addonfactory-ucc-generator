@@ -26,6 +26,7 @@ from splunk_add_on_ucc_framework.commands import import_from_aob
 from splunk_add_on_ucc_framework.commands import package
 from splunk_add_on_ucc_framework.commands import validate
 from splunk_add_on_ucc_framework.commands import publish
+from splunk_add_on_ucc_framework.commands import reverse
 
 logger = logging.getLogger("ucc_gen")
 
@@ -247,6 +248,30 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="add-on name",
         required=True,
     )
+
+    reverse_parser = subparsers.add_parser(
+        "reverse",
+        description="Reverse engineer a UCC project from a built add-on package"
+    )
+    reverse_parser.add_argument(
+        "--addon-path",
+        type=str,
+        help="path to the built add-on (directory, .tar.gz, .tgz, or .spl file)",
+        required=True,
+    )
+    reverse_parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        help="output path for the extracted project (default: <addon_name>_source)",
+        default=None,
+    )
+    reverse_parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        default=False,
+        help="overwrite existing output directory",
+    )
     validate_parser = subparsers.add_parser(
         "validate", description="Used to validate Splunk app using Splunk appinspect"
     )
@@ -331,6 +356,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.command == "import-from-aob":
         import_from_aob.import_from_aob(
             addon_name=args.addon_name,
+        )
+    if args.command == "reverse":
+        reverse.reverse(
+            addon_path=args.addon_path,
+            output_directory=args.output,
+            overwrite=args.overwrite,
         )
     if args.command == "publish":
         publish.publish_package(
