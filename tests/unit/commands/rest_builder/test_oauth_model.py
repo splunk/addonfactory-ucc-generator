@@ -139,6 +139,9 @@ def test_generated_oauth_endpoint(monkeypatch, tmp_path, mocked_http):
     file = tmp_path / "oauth_rh.py"
     file.write_text(builder.generate_rh())
 
+    # monkeypatch "socks" in httplib2 to avoid ImportError during import
+    monkeypatch.setattr(httplib2, "socks", MagicMock())
+
     # prepend the path to the file to sys.path
     monkeypatch.setattr(sys, "path", [str(tmp_path)] + sys.path)
 
