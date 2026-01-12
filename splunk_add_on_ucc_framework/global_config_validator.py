@@ -21,15 +21,18 @@ from typing import Any
 import logging
 import itertools
 from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
-
-import jsonschema
-
 from splunk_add_on_ucc_framework import dashboard as dashboard_lib
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 from splunk_add_on_ucc_framework.tabs import Tab
 from splunk_add_on_ucc_framework.exceptions import GlobalConfigValidatorException
 
+
+from pathlib import Path
+from jsonschema import Draft7Validator
+from referencing import Registry, Resource
+
 logger = logging.getLogger("ucc_gen")
+
 
 # The entity types that do not allow to add validators (so the warning will not appear)
 ENTITY_TYPES_WITHOUT_VALIDATORS = {
@@ -45,8 +48,9 @@ ENTITY_TYPES_WITHOUT_VALIDATORS = {
 
 class GlobalConfigValidator:
     """
-    GlobalConfigValidator implements different validation for globalConfig file.
-    Custom validation should be implemented here.
+    GlobalConfigValidator validates a global configuration file
+    against split JSON schemas with relative $refs using a registry.
+    This implementation keeps all relative $refs as-is.
     """
 
     def __init__(
@@ -55,25 +59,58 @@ class GlobalConfigValidator:
         global_config: global_config_lib.GlobalConfig,
         source: str = "",
     ):
-        self._internal_root_dir = internal_root_dir
-        self._source_dir = source
+        self._internal_root_dir = Path(internal_root_dir)
+        self._schema_dir = self._internal_root_dir / "schema"
         self._global_config = global_config
         self._config = global_config.content
+        self._source_dir = source
+        self._registry = self._build_registry()
         self.resolved_configuration = global_config.resolved_configuration
+
+    def _build_registry(self) -> Registry:
+        """
+        Load all JSON schema files into a referencing.Registry.
+        Each schema is registered using its path relative to the schema root directory.
+        """
+        registry = Registry()
+        for json_path in self._schema_dir.rglob("*.json"):
+            try:
+                schema_data = json.loads(json_path.read_text())
+                resource = Resource.from_contents(schema_data)
+
+                # Use the path relative to the schema root as the URI
+                schema_id = str(json_path.relative_to(self._schema_dir))
+
+                # Register in the registry
+                registry = registry.with_resource(uri=schema_id, resource=resource)
+
+            except Exception as e:
+                print(f"Skipping schema {json_path}: {e}")
+
+        return registry
 
     def _validate_config_against_schema(self) -> None:
         """
-        Validates config against JSON schema.
-        Raises jsonschema.ValidationError if config is not valid.
+        Validate the configuration against the root schema (schema.json)
+        using the registry to resolve all relative $refs.
         """
-        schema_path = os.path.join(self._internal_root_dir, "schema", "schema.json")
-        with open(schema_path, encoding="utf-8") as f_schema:
-            schema_raw = f_schema.read()
-            schema = json.loads(schema_raw)
-        try:
-            return jsonschema.validate(instance=self._config, schema=schema)
-        except jsonschema.ValidationError as e:
-            raise GlobalConfigValidatorException(e.message)
+        root_schema_path = self._schema_dir / "schema.json"
+        root_schema = json.loads(root_schema_path.read_text())
+
+        # Draft7Validator can use the registry directly to resolve $refs
+        validator = Draft7Validator(root_schema, registry=self._registry)
+
+        errors = sorted(validator.iter_errors(self._config), key=lambda e: e.path)
+        if errors:
+            for error in errors:
+                print(
+                    "Validation error:",
+                    {
+                        "path": list(error.path),
+                        "message": error.message,
+                    },
+                )
+            raise GlobalConfigValidatorException(error.message)
 
     def _validate_configuration_tab_table_has_name_field(self) -> None:
         """

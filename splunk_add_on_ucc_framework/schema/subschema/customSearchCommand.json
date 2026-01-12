@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subschema/customSearchCommand.json",
+  "title": "customSearchCommand",
+  "type": "object",
+  "description": "Support for custom Search Command.",
+  "definitions": {
+    "arguments": {
+      "type": "object",
+      "description": "Arguments used for custom search command",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the argument"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies if the argument is required or not"
+        },
+        "validate": {
+          "$ref": "#/definitions/CustomSearchCommandValidator"
+        },
+        "defaultValue": {
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "description": "Provide default value to the arguments passed for custom search command"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "CustomSearchCommandValidator": {
+      "type": "object",
+      "description": "It is used to validate the values of arguments for custom search command",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/CustomIntegerValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomFloatValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomRegularExpressionValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomFieldnameValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomBooleanValidator"
+        }
+      ]
+    },
+    "CustomIntegerValidator": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "description": "Minimum value used for validation"
+        },
+        "maximum": {
+          "type": "number",
+          "description": "Maximum value used for validation"
+        },
+        "type": {
+          "const": "Integer",
+          "type": "string",
+          "description": "This is integer Validator for custom search command, provide at least one of `minimumValue` or `maximumValue`"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomFloatValidator": {
+      "type": "object",
+      "properties": {
+        "minimumValue": {
+          "type": "number",
+          "description": "Minimum value used for validation"
+        },
+        "maximumValue": {
+          "type": "number",
+          "description": "Maximum value used for validation"
+        },
+        "type": {
+          "const": "Float",
+          "type": "string",
+          "description": "This is Float Validator for custom search command, provide at least one of `minimumValue` or `maximumValue` for validation purpose."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomRegularExpressionValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "RegularExpression",
+          "type": "string",
+          "description": "This is RegularExpression Validator which validates if the input value is a valid regular expression pattern or not."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomFieldnameValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Fieldname",
+          "type": "string",
+          "description": "Validates field name option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomBooleanValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Boolean",
+          "type": "string",
+          "description": "Validates Boolean option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "commandName": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+$",
+      "maxLength": 100,
+      "description": "Name of the custom Search Command."
+    },
+    "fileName": {
+      "type": "string",
+      "pattern": "^\\w+\\.py$",
+      "description": "Name of the file which contains logic for custom search command. The file should be a python file only."
+    },
+    "commandType": {
+      "type": "string",
+      "description": "Type of the custom search command. There are 4 types of command i.e generating, streaming, transforming and dataset processing",
+      "enum": [
+        "generating",
+        "streaming",
+        "dataset processing",
+        "transforming"
+      ]
+    },
+    "requiredSearchAssistant": {
+      "type": "boolean",
+      "default": false,
+      "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the custom search command. It is an required attribute for searchbnf.conf."
+    },
+    "syntax": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Syntax for the custom search command. It is an required attribute for searchbnf.conf."
+    },
+    "usage": {
+      "type": "string",
+      "description": "Specifies what will be the usage of custom search command. It is an required attribute for searchbnf.conf.",
+      "enum": [
+        "public",
+        "private",
+        "deprecated"
+      ]
+    },
+    "arguments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/arguments"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "commandName",
+    "fileName",
+    "commandType",
+    "arguments"
+  ],
+  "additionalProperties": false
+}

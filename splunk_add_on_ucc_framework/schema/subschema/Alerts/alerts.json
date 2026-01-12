@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subschema/Alerts/alerts.json",
+  "title": "Alerts",
+  "type": "object",
+  "definitions": {
+    "Technology": {
+      "type": "object",
+      "description": "Defines the technology or technologies that the modular action supports.",
+      "properties": {
+        "version": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\d+(?:\\.\\d+)*$"
+          },
+          "minItems": 1,
+          "description": "Array of supported version numbers."
+        },
+        "product": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Name of the product or technology."
+        },
+        "vendor": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Name of the vendor or organization."
+        }
+      },
+      "required": [
+        "version",
+        "product",
+        "vendor"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "description": "The alert action can help a user to take action on the alerts that have been triggered. ",
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$",
+      "maxLength": 100,
+      "description": "Alphanumeric name that would be used to generate the Python file for the alert action."
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "User-friendly name of the alert action that would be seen in the Trigger Actions."
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the alert action."
+    },
+    "iconFileName": {
+      "type": "string",
+      "maxLength": 100,
+      "default": "alerticon.png",
+      "description": "The name of the icon to be shown in the Alert Action UI. It has to be present in <YOUR_ADD-ON_NAME>/appserver/static/ directory."
+    },
+    "adaptiveResponse": {
+      "type": "object",
+      "description": "Define only if the alert action will be visible for AR in Splunk Enterprise Security app. Refer documentation for complete details.",
+      "properties": {
+        "task": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "The function or functions performed by the modular action."
+        },
+        "supportsAdhoc": {
+          "type": "boolean",
+          "default": false,
+          "description": "Specifies if the modular action supports adhoc invocations."
+        },
+        "supportsCloud": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies if the modular actions supports the “cloud” model."
+        },
+        "subject": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "The object or objects that the modular action’s task(s) can be performed on (i.e. “endpoint.file”)."
+        },
+        "category": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "The category or categories the modular action belongs to."
+        },
+        "technology": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Technology"
+          },
+          "minItems": 1,
+          "description": "The technology or technologies that the modular action supports."
+        },
+        "drilldownUri": {
+          "type": "string",
+          "description": "Specifies a custom target for viewing the events outputted as a result of the action. Custom target can specify app and/or view depending on syntax."
+        },
+        "sourcetype": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9:-_]+$",
+          "maxLength": 50,
+          "description": "The sourcetype in which the result of the AR alert action would be written to. The value is updated in the alert action script. If you don’t specify any value you can update your alert action script manually once it is generated."
+        }
+      },
+      "required": [
+        "task",
+        "subject",
+        "category",
+        "technology"
+      ]
+    },
+    "entity": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "$ref": "./alertTextEntity.json"
+          },
+          {
+            "$ref": "./alertTextAreaEntity.json"
+          },
+          {
+            "$ref": "./alertCheckboxEntity.json"
+          },
+          {
+            "$ref": "./alertSingleSelectEntity.json"
+          },
+          {
+            "$ref": "./alertRadioEntity.json"
+          },
+          {
+            "$ref": "./alertSingleSelectSplunkSearchEntity.json"
+          }
+        ]
+      }
+    },
+    "customScript": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "A Python script that would have validation and logic for alert action execution. The script should be present at <YOUR_ADD-ON_NAME>/bin/. Refer documentation for more information."
+    }
+  },
+  "required": [
+    "name",
+    "label",
+    "description"
+  ],
+  "additionalProperties": false
+}

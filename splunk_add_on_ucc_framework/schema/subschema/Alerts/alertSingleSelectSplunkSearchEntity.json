@@ -1,0 +1,86 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "subschema/Alerts/alertSingleSelectSplunkSearchEntity.json",
+    "title": "AlertSingleSelectSplunkSearchEntity",
+    "type": "object",
+    "description": "Alerts configuration. The alert action can help a user to take action on the alerts that have been triggered. The knowledge from Splunk can be sent to an outside service or to pull additional or detailed information related to the trigger details.",
+    "properties": {
+        "field": {
+            "type": "string",
+            "pattern": "^\\w+$",
+            "description": "Field identifier used in scripts to access the user input value. Referenced as param.<field_mentioned> in alert_actions.conf."
+        },
+        "label": {
+            "type": "string",
+            "maxLength": 30,
+            "description": "Display text shown in the alert action user interface."
+        },
+        "type": {
+            "const": "singleSelectSplunkSearch",
+            "type": "string",
+            "description": "Exactly: singleSelectSplunkSearch"
+        },
+        "help": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Help text displayed under the field to provide context about the field's usage."
+        },
+        "defaultValue": {
+            "description": "The initial input value.",
+            "oneOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string",
+                    "maxLength": 250
+                },
+                {
+                    "type": "boolean"
+                }
+            ]
+        },
+        "required": {
+            "type": "boolean",
+            "default": false,
+            "description": "Specifies whether the field is required or not."
+        },
+        "search": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "A Splunk SPL query that returns results for the dropdown options. Can query REST API, lookup tables, or indexed data."
+        },
+        "valueField": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Field name to use for dropdown option values. In some cases, you can use the same field for both label and value. In other cases, you might need human-readable labels from one field and corresponding values from another field. Note: Applicable when a search property is defined."
+        },
+        "labelField": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Field name to use for dropdown option labels. Labels from this field are visible in the dropdown interface. Note: Applicable when a search property is defined."
+        },
+        "options": {
+            "type": "object",
+            "description": "Configuration options for static dropdown choices displayed in the alert action UI.",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "description": "Array of predefined options with labels and values for user selection.",
+                    "items": {
+                        "$ref": "../../common/common.json#/definitions/ValueLabelPair"
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "field",
+        "label",
+        "type",
+        "search",
+        "valueField",
+        "labelField"
+    ],
+    "additionalProperties": false
+}

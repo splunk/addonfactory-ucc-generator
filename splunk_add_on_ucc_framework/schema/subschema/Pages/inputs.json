@@ -1,0 +1,401 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subschema/Pages/inputs.json",
+  "title": "InputsPage",
+  "type": "object",
+  "description": "The input page stores configuration information for data collection. Multiple inputs can be created on the Inputs page.",
+  "definitions": {
+    "inputsUniqueAcrossSingleService": {
+      "description": "Defines if inputs in different services can share same name.",
+      "type": "boolean",
+      "default": false
+    },
+    "useInputToggleConfirmation": {
+      "type": "boolean",
+      "description": "When true displays additional confirmation modal when toggling single input status.",
+      "default": false
+    },
+    "InputsTable": {
+      "type": "object",
+      "properties": {
+        "moreInfo": {
+          "type": "array",
+          "description": "Specifies the list of fields that will be displayed in row form when the user clicks the Row Expand button.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "pattern": "^\\w+$",
+                "description": "Used to dispaly the data in a column."
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 30,
+                "description": "Title of the column."
+              },
+              "mapping": {
+                "type": "object",
+                "description": "Used to map field values to more meaningful values."
+              }
+            },
+            "required": [
+              "field",
+              "label"
+            ]
+          }
+        },
+        "header": {
+          "type": "array",
+          "description": "Specifies the list of columns in the table.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "pattern": "^\\w+$",
+                "description": "Name of the field where the column data will be displayed."
+              },
+              "label": {
+                "type": "string",
+                "maxLength": 30,
+                "description": "Text displayed next to entity field"
+              },
+              "mapping": {
+                "type": "object",
+                "description": "Used to map field values to more meaningful values."
+              },
+              "customCell": {
+                "$ref": "../../common/common.json#/definitions/CustomCell"
+              }
+            },
+            "required": [
+              "field",
+              "label"
+            ]
+          }
+        },
+        "customRow": {
+          "$ref": "../../common/common.json#/definitions/CustomRow"
+        },
+        "actions": {
+          "type": "array",
+          "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "edit",
+              "delete",
+              "clone",
+              "search"
+            ]
+          }
+        }
+      },
+      "required": [
+        "header",
+        "actions"
+      ],
+      "description": "Displays input stanzas in a tabular format.",
+      "additionalProperties": false
+    },
+    "InputPageSingleTable": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Title of Input Page"
+        },
+        "description": {
+          "description": "It provides a brief summary of an inputs page.",
+          "type": "string",
+          "maxLength": 200
+        },
+        "subDescription": {
+          "$ref": "../../common/common.json#/definitions/SubDescription"
+        },
+        "table": {
+          "$ref": "#/definitions/InputsTable"
+        },
+        "groupsMenu": {
+          "type": "array",
+          "description": "This property allows you to enable the multi-level menu feature.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "groupName": {
+                "type": "string",
+                "pattern": "^[0-9a-zA-Z][\\w-]*$",
+                "maxLength": 50,
+                "description": "id of group that will be used for group association."
+              },
+              "groupTitle": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Name of group that will be displayed inside menu."
+              },
+              "groupServices": {
+                "type": "array",
+                "description": "List of services that is inside group.",
+                "items": {
+                  "type": "string",
+                  "description": "Name of the service.",
+                  "pattern": "^[0-9a-zA-Z][\\w-]*$",
+                  "maxLength": 50
+                }
+              }
+            },
+            "required": [
+              "groupTitle",
+              "groupName"
+            ]
+          }
+        },
+        "services": {
+          "type": "array",
+          "description": "It specifies a list of modular inputs.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "It defines the particular service name.",
+                "type": "string",
+                "pattern": "^[0-9a-zA-Z][\\w-]*$",
+                "maxLength": 50
+              },
+              "title": {
+                "description": "It shows the title of the service.",
+                "type": "string",
+                "maxLength": 100
+              },
+              "subTitle": {
+                "description": "It shows the subtitle (or additional information) of the service.",
+                "type": "string",
+                "maxLength": 50
+              },
+              "entity": {
+                "$ref": "../../common/entity.json"
+              },
+              "options": {
+                "$ref": "../../common/common.json#/definitions/SaveValidatorHook"
+              },
+              "groups": {
+                "$ref": "../../common/common.json#/definitions/Groups"
+              },
+              "style": {
+                "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
+                "type": "string",
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
+              },
+              "hook": {
+                "$ref": "../../common/common.json#/definitions/Hook"
+              },
+              "conf": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Configuration name for a rest handler."
+              },
+              "restHandlerName": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. (Do NOT use with restHandlerModule) "
+              },
+              "restHandlerModule": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerClass) "
+              },
+              "restHandlerClass": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
+              },
+              "inputHelperModule": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "A module that contains `validate_input` and `stream_events` methods. By default it is not used."
+              },
+              "warning": {
+                "$ref": "../../common/common.json#/definitions/WarningMessage"
+              },
+              "disableNewInput": {
+                "type": "boolean",
+                "description": "Defines whether a newly created input of a service should be disabled by default.",
+                "default": false
+              },
+              "hideForPlatform": {
+                "$ref": "../../common/common.json#/definitions/HideForPlatform"
+              },
+              "formTitle": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Custom modal title that replaces the default 'Add inputname' text in the header. When specified, the header will display 'Add' followed by the formTitle value"
+              }
+            },
+            "not": {
+              "required": [
+                "table"
+              ]
+            },
+            "required": [
+              "name",
+              "title",
+              "entity"
+            ]
+          }
+        },
+        "hideFieldId": {
+          "type": "string"
+        },
+        "readonlyFieldId": {
+          "type": "string"
+        },
+        "useInputToggleConfirmation": {
+          "$ref": "#/definitions/useInputToggleConfirmation"
+        },
+        "inputsUniqueAcrossSingleService": {
+          "$ref": "#/definitions/inputsUniqueAcrossSingleService"
+        },
+        "capabilities": {
+          "$ref": "../../common/common.json#/definitions/capabilities"
+        }
+      },
+      "required": [
+        "title",
+        "table",
+        "services"
+      ],
+      "description": "Input Page definition where there is only one single tabel listing all services.",
+      "additionalProperties": false
+    },
+    "InputPageTablePerService": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Title of Input Page"
+        },
+        "services": {
+          "description": "Specifies a list of modular inputs.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "It defines the particular service name.",
+                "pattern": "^[0-9a-zA-Z][0-9a-zA-Z_-]*$",
+                "maxLength": 50
+              },
+              "title": {
+                "description": "It shows the title of the service.",
+                "type": "string",
+                "maxLength": 100
+              },
+              "subTitle": {
+                "type": "string",
+                "description": "It shows the subtitle (or additional information) of the service.",
+                "maxLength": 50
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "table": {
+                "$ref": "#/definitions/InputsTable"
+              },
+              "useInputToggleConfirmation": {
+                "$ref": "#/definitions/useInputToggleConfirmation"
+              },
+              "entity": {
+                "$ref": "../../common/entity.json"
+              },
+              "options": {
+                "$ref": "../../common/common.json#/definitions/SaveValidatorHook"
+              },
+              "groups": {
+                "$ref": "../../common/common.json#/definitions/Groups"
+              },
+              "style": {
+                "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
+                "type": "string",
+                "enum": [
+                  "page",
+                  "dialog"
+                ]
+              },
+              "hook": {
+                "$ref": "../../common/common.json#/definitions/Hook"
+              },
+              "conf": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerName": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerModule": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "restHandlerClass": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "inputHelperModule": {
+                "type": "string",
+                "maxLength": 100
+              }
+            },
+            "required": [
+              "name",
+              "title",
+              "table",
+              "entity"
+            ]
+          },
+          "hideForPlatform": {
+            "$ref": "../../common/common.json#/definitions/HideForPlatform"
+          },
+          "formTitle": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Custom modal title that replaces the default 'Add selectedInputTab' text in the header. When specified, the header will display 'Add' followed by the formTitle value"
+          }
+        },
+        "hideFieldId": {
+          "type": "string"
+        },
+        "readonlyFieldId": {
+          "type": "string"
+        },
+        "inputsUniqueAcrossSingleService": {
+          "$ref": "#/definitions/inputsUniqueAcrossSingleService"
+        },
+        "capabilities": {
+          "$ref": "../../common/common.json#/definitions/capabilities"
+        }
+      },
+      "required": [
+        "title",
+        "services"
+      ],
+      "description": "Input Page definition where there are tabs for each service with separate table listing input service entries.",
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/InputPageSingleTable"
+    },
+    {
+      "$ref": "#/definitions/InputPageTablePerService"
+    }
+  ]
+}

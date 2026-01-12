@@ -1,0 +1,1590 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "common/entity.json",
+    "title": "AnyOfEntity",
+    "type": "array",
+    "description": "It is a list of fields and their properties.",
+    "definitions": {
+        "DefaultOAuthFields": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Text displayed next to entity field"
+                },
+                "field": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Must keep it as in examples. It is for mandatory fields as mentioned before."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "The initial input value."
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                },
+                "validators": {
+                    "$ref": "./validator.json"
+                }
+            },
+            "additionalProperties": false
+        },
+        "OAuthFields": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/DefaultOAuthFields"
+                },
+                {
+                    "$ref": "#/definitions/CheckboxGroupEntity"
+                },
+                {
+                    "$ref": "#/definitions/CheckboxTreeEntity"
+                },
+                {
+                    "$ref": "#/definitions/TextEntity"
+                },
+                {
+                    "$ref": "#/definitions/TextareaEntity"
+                },
+                {
+                    "$ref": "#/definitions/SingleSelectEntity"
+                },
+                {
+                    "$ref": "#/definitions/MultipleSelectEntity"
+                },
+                {
+                    "$ref": "#/definitions/CheckboxEntity"
+                },
+                {
+                    "$ref": "#/definitions/DateEntity"
+                },
+                {
+                    "$ref": "#/definitions/RadioEntity"
+                },
+                {
+                    "$ref": "#/definitions/LinkEntity"
+                },
+                {
+                    "$ref": "#/definitions/FileEntity"
+                }
+            ]
+        },
+        "CheckboxGroupEntity": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Text displayed next to entity field"
+                },
+                "type": {
+                    "const": "checkboxGroup",
+                    "type": "string",
+                    "description": "Exactly: checkboxGroup"
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "delimiter": {
+                            "$ref": "./common.json#/definitions/delimiter"
+                        },
+                        "groups": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "description": "Text displayed next to entity field"
+                                    },
+                                    "options": {
+                                        "type": "object",
+                                        "properties": {
+                                            "isExpandable": {
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "expand": {
+                                                "type": "boolean",
+                                                "default": false
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    "fields": {
+                                        "type": "array",
+                                        "minItems": 1,
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": [
+                                    "label",
+                                    "fields"
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        "rows": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "checkbox": {
+                                        "type": "object",
+                                        "properties": {
+                                            "label": {
+                                                "type": "string",
+                                                "description": "Text displayed next to entity field"
+                                            },
+                                            "defaultValue": {
+                                                "type": "boolean",
+                                                "description": "The initial input value."
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    "input": {
+                                        "type": "object",
+                                        "properties": {
+                                            "defaultValue": {
+                                                "type": "number",
+                                                "description": "The initial input value."
+                                            },
+                                            "required": {
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "validators": {
+                                                "type": "array",
+                                                "items": {
+                                                    "anyOf": [
+                                                        {
+                                                            "$ref": "./validator.json#/definitions/NumberValidator"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                },
+                                "required": [
+                                    "field"
+                                ],
+                                "additionalProperties": false
+                            },
+                            "minItems": 1
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        }
+                    },
+                    "required": [
+                        "rows"
+                    ],
+                    "additionalProperties": false
+                },
+                "validators": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "./validator.json#/definitions/RegexValidator"
+                            }
+                        ]
+                    }
+                },
+                "required": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "CheckboxTreeEntity": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Text displayed next to entity field"
+                },
+                "type": {
+                    "const": "checkboxTree",
+                    "type": "string",
+                    "description": "Exactly: checkboxTree"
+                },
+                "disabled": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "delimiter": {
+                            "$ref": "./common.json#/definitions/delimiter"
+                        },
+                        "groups": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "label": {
+                                        "type": "string",
+                                        "description": "Text displayed next to entity field"
+                                    },
+                                    "options": {
+                                        "type": "object",
+                                        "properties": {
+                                            "isExpandable": {
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "expand": {
+                                                "type": "boolean",
+                                                "default": false
+                                            },
+                                            "disabled": {
+                                                "type": "boolean",
+                                                "default": false
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    "fields": {
+                                        "type": "array",
+                                        "minItems": 1,
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "uniqueItems": true
+                                    }
+                                },
+                                "required": [
+                                    "label",
+                                    "fields"
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        "rows": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "field": {
+                                        "type": "string"
+                                    },
+                                    "checkbox": {
+                                        "type": "object",
+                                        "properties": {
+                                            "label": {
+                                                "type": "string",
+                                                "description": "Text displayed next to entity field"
+                                            },
+                                            "defaultValue": {
+                                                "type": "boolean",
+                                                "description": "The initial input value."
+                                            },
+                                            "disabled": {
+                                                "type": "boolean",
+                                                "default": false
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                },
+                                "required": [
+                                    "field"
+                                ],
+                                "additionalProperties": false
+                            },
+                            "minItems": 1
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        }
+                    },
+                    "required": [
+                        "rows"
+                    ],
+                    "additionalProperties": false
+                },
+                "validators": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "./validator.json#/definitions/RegexValidator"
+                            }
+                        ]
+                    }
+                },
+                "required": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "RadioEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "radio",
+                    "type": "string",
+                    "description": "Exactly: radio"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "The initial input value."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "items": {
+                            "type": "array",
+                            "description": "An array of options with a label and a value.",
+                            "items": {
+                                "$ref": "./common.json#/definitions/ValueLabelPair"
+                            }
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "required": [
+                        "items"
+                    ],
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "DateEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "date",
+                    "type": "string",
+                    "description": "Exactly: date"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "The initial input value."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "options": {
+                    "type": "object",
+                    "description": "To specify an additional attribute for a particular type of entity, such as items for a radio bar.",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        },
+                        "locale": {
+                            "type": "string",
+                            "description": "Locale set by language and localization specifiers. Default: 'en_US', some other examples 'en-GB', 'fr-FR', 'zh-CN', 'ja-JP', 'es-ES'"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "FileEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "file",
+                    "type": "string",
+                    "description": "Exactly: file"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "The initial input value."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "validators": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "./validator.json#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/RegexValidator"
+                            }
+                        ]
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "maxFileSize": {
+                            "type": "number",
+                            "default": 500,
+                            "description": "It sets the maximum file size in KB that a user can upload."
+                        },
+                        "fileSupportMessage": {
+                            "type": "string",
+                            "description": "It displays a message inside a file component."
+                        },
+                        "supportedFileTypes": {
+                            "type": "array",
+                            "description": "It is a list of the file types that the user can upload.",
+                            "items": {
+                                "type": "string"
+                            },
+                            "uniqueItems": true
+                        },
+                        "useBase64Encoding": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "It defines used encoding for files. If true base64 will be used, if false utf-8 is applied."
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "OAuthEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "oauth",
+                    "type": "string",
+                    "description": "Exactly: oauth"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "type": "boolean",
+                    "description": "Specifies whether the field is required or not.",
+                    "default": true
+                },
+                "encrypted": {
+                    "type": "boolean",
+                    "description": "Should be true if the user wants that particular field encrypted, otherwise, there is no need to have this parameter.",
+                    "default": false
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "auth_type": {
+                            "type": "array",
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "const": "basic",
+                                        "type": "string",
+                                        "description": "Exactly: basic"
+                                    },
+                                    {
+                                        "const": "oauth",
+                                        "type": "string",
+                                        "description": "Exactly: oauth"
+                                    },
+                                    {
+                                        "const": "oauth_client_credentials",
+                                        "type": "string",
+                                        "description": "Exactly: oauth_client_credentials"
+                                    },
+                                    {
+                                        "type": "string",
+                                        "description": "Any different value that is not one of the above will be treated as a custom auth type."
+                                    }
+                                ]
+                            },
+                            "additionalProperties": false
+                        },
+                        "oauth_type_labels": {
+                            "type": "object",
+                            "description": "It is used to set the label for each authentication type in the auth_type dropdown.",
+                            "properties": {
+                                "basic": {
+                                    "type": "string",
+                                    "default": "Basic Authentication",
+                                    "description": "Label for Basic Authentication type."
+                                },
+                                "oauth": {
+                                    "type": "string",
+                                    "default": "OAuth 2.0 with Authorization Code Grant (interactive)",
+                                    "description": "Label for OAuth 2.0 with Authorization Code Grant (interactive) authentication type."
+                                },
+                                "oauth_client_credentials": {
+                                    "type": "string",
+                                    "default": "OAuth 2.0 with Client Credentials Grant (non-interactive)",
+                                    "description": "Label for OAuth 2.0 with Client Credentials Grant (non-interactive) authentication type."
+                                }
+                            },
+                            "additionalProperties": true
+                        },
+                        "basic": {
+                            "type": "array",
+                            "description": "Must be present only if the auth_type is [“basic”]. Will have a list of fields for you to add in the basic authentication flow.",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "oauth": {
+                            "type": "array",
+                            "description": "OAuth 2.0 with Authorization Code Grant (interactive). Will have a list of fields for you to add in the oauth authentication flow.",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "oauth_client_credentials": {
+                            "type": "array",
+                            "description": "OAuth 2.0 with Client Credentials Grant (non-interactive). Will have a list of fields for you to add in the oauth authentication flow.",
+                            "items": {
+                                "$ref": "#/definitions/OAuthFields"
+                            }
+                        },
+                        "auth_label": {
+                            "type": "string",
+                            "maxLength": 250,
+                            "description": "Allows the user to have the custom label for the Auth Type dropdown."
+                        },
+                        "oauth_popup_width": {
+                            "type": "number",
+                            "default": 600,
+                            "description": "Width in pixels of the pop-up window that will open for oauth authentication"
+                        },
+                        "oauth_popup_height": {
+                            "type": "number",
+                            "default": 600,
+                            "description": "Height in pixels of the pop-up window that will open for oauth authentication"
+                        },
+                        "oauth_timeout": {
+                            "type": "number",
+                            "description": "Timeout in seconds for oauth authentication ",
+                            "default": 180
+                        },
+                        "auth_code_endpoint": {
+                            "type": "string",
+                            "maxLength": 350,
+                            "description": "Must be present and its value should be the endpoint value for getting the auth_code using the app."
+                        },
+                        "access_token_endpoint": {
+                            "type": "string",
+                            "maxLength": 350,
+                            "description": "Must be present and its value should be the endpoint value for getting the access_token using the auth_code received."
+                        },
+                        "auth_endpoint_token_access_type": {
+                            "type": "string",
+                            "maxLength": 350,
+                            "description": "Optional parameter that is mapped into the value of the token_access_type query param in the authorization url."
+                        },
+                        "oauth_state_enabled": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Used to include the state for oauth authentication"
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        },
+                        "additionalProperties": true
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "auth_type": {
+                                        "type": "array",
+                                        "contains": {
+                                            "const": "basic",
+                                            "type": "string",
+                                            "description": "Exactly: basic"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "basic"
+                                ]
+                            }
+                        },
+                        {
+                            "if": {
+                                "properties": {
+                                    "auth_type": {
+                                        "type": "array",
+                                        "contains": {
+                                            "const": "oauth",
+                                            "type": "string",
+                                            "description": "Exactly: oauth"
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "required": [
+                                    "oauth"
+                                ]
+                            }
+                        }
+                    ],
+                    "required": [
+                        "auth_type"
+                    ]
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "TextEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "text",
+                    "type": "string",
+                    "description": "Exactly: text"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "description": "The initial input value.",
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "validators": {
+                    "$ref": "./validator.json"
+                },
+                "options": {
+                    "type": "object",
+                    "description": "To specify an additional attribute for a particular type of entity, such as items for a radio bar.",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "TextareaEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "textarea",
+                    "type": "string",
+                    "description": "Exactly: textarea"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "The initial input value."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "validators": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "./validator.json#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/RegexValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "rowsMin": {
+                            "type": "number",
+                            "default": 12,
+                            "description": "Maximum number of rows to display."
+                        },
+                        "rowsMax": {
+                            "type": "number",
+                            "default": 8,
+                            "description": "Minimum number of rows to display."
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "SingleSelectEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "singleSelect",
+                    "type": "string",
+                    "description": "Exactly: singleSelect"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "description": "The initial input value.",
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "validators": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "./validator.json#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/RegexValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "disableSearch": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "It determines whether to show the filter box. When false, the children are automatically filtered based on the label."
+                        },
+                        "createSearchChoice": {
+                            "type": "boolean",
+                            "description": "It allows the user to add arbitrary values.",
+                            "default": false
+                        },
+                        "referenceName": {
+                            "type": "string",
+                            "description": "Dropdown options will be generated via an API call to the service’s restHandler."
+                        },
+                        "endpointUrl": {
+                            "type": "string",
+                            "description": "Dropdown options will be generated via an API call to that endpoint."
+                        },
+                        "allowList": {
+                            "type": "string",
+                            "description": "It only accepts options that match the regex based on the name attribute when received via an API call using endpointUrl and referenceName. It is applied before denyList."
+                        },
+                        "denyList": {
+                            "type": "string",
+                            "description": "It filters options that don’t match the regex based on the name attribute when received via an API call using endpointUrl and referenceName."
+                        },
+                        "labelField": {
+                            "type": "string",
+                            "description": "If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used.```item.content?.[labelField]``` "
+                        },
+                        "valueField": {
+                            "type": "string",
+                            "description": "If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as value for each item.```item.content?.[valueField]```"
+                        },
+                        "autoCompleteFields": {
+                            "$ref": "./common.json#/definitions/AutoCompleteFields"
+                        },
+                        "dependencies": {
+                            "type": "array",
+                            "description": "It is used to update the options via an API call when the value of any field in the dependencies list is updated.",
+                            "items": {
+                                "type": "string"
+                            },
+                            "uniqueItems": true
+                        },
+                        "items": {
+                            "type": "array",
+                            "description": "An array of options with a label and a value.",
+                            "items": {
+                                "$ref": "./common.json#/definitions/ValueLabelPair"
+                            }
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "MultipleSelectEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "multipleSelect",
+                    "type": "string",
+                    "description": "Exactly: multipleSelect"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "The initial input value."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "validators": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "./validator.json#/definitions/StringValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/RegexValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/EmailValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/Ipv4Validator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/UrlValidator"
+                            },
+                            {
+                                "$ref": "./validator.json#/definitions/DateValidator"
+                            }
+                        ]
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "disableSearch": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "It determines whether to show the filter box. When false, the children are automatically filtered based on the label."
+                        },
+                        "createSearchChoice": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "It allows the user to add arbitrary values."
+                        },
+                        "referenceName": {
+                            "type": "string",
+                            "description": "Dropdown options will be generated via an API call to the service’s restHandler."
+                        },
+                        "endpointUrl": {
+                            "type": "string",
+                            "description": "Dropdown options will be generated via an API call to that endpoint."
+                        },
+                        "allowList": {
+                            "type": "string",
+                            "description": "It only accepts options that match the regex based on the name attribute when received via an API call using endpointUrl and referenceName. It is applied before denyList."
+                        },
+                        "denyList": {
+                            "type": "string",
+                            "description": "It filters options that don’t match the regex based on the name attribute when received via an API call using endpointUrl and referenceName."
+                        },
+                        "labelField": {
+                            "type": "string",
+                            "description": "If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used.```item.content?.[labelField]``` "
+                        },
+                        "valueField": {
+                            "type": "string",
+                            "description": "If you use endpointUrl and your data are not simple text data, you can specify here which property of retrieved object should be used as value for each item.```item.content?.[valueField]```"
+                        },
+                        "autoCompleteFields": {
+                            "$ref": "./common.json#/definitions/AutoCompleteFields"
+                        },
+                        "dependencies": {
+                            "type": "array",
+                            "description": "It is used to update the options via an API call when the value of any field in the dependencies list is updated.",
+                            "items": {
+                                "type": "string"
+                            },
+                            "uniqueItems": true
+                        },
+                        "items": {
+                            "type": "array",
+                            "description": "An array of options with a label and a value.",
+                            "items": {
+                                "$ref": "./common.json#/definitions/ValueLabelPair"
+                            }
+                        },
+                        "delimiter": {
+                            "type": "string",
+                            "maxLength": 1,
+                            "description": "It delimits each value of the field with a predefined character."
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "CheckboxEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "checkbox",
+                    "type": "string",
+                    "description": "Exactly: checkbox"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "anyOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ],
+                    "description": "The initial input value."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "disableonEdit": {
+                            "$ref": "./common.json#/definitions/disableonEdit"
+                        },
+                        "enable": {
+                            "$ref": "./common.json#/definitions/enable"
+                        },
+                        "requiredWhenVisible": {
+                            "$ref": "./common.json#/definitions/requiredWhenVisible"
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "modifyFieldsOnValue": {
+                    "$ref": "./common.json#/definitions/modifyFieldsOnValue"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "IndexEntity": {
+            "type": "object",
+            "description": "Index selection component that provides a dropdown of available Splunk indexes with built-in validation.",
+            "properties": {
+                "type": {
+                    "const": "index"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "Display label for the index selection field."
+                },
+                "defaultValue": {
+                    "type": "string",
+                    "description": "Default index to select when the form loads."
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                }
+            },
+            "required": [
+                "type",
+                "field",
+                "label"
+            ],
+            "additionalProperties": false
+        },
+        "LinkEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "helpLink",
+                    "type": "string",
+                    "description": "Exactly: helpLink"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "display": {
+                            "$ref": "./common.json#/definitions/display"
+                        },
+                        "text": {
+                            "type": "string",
+                            "description": "It is a message to be displayed."
+                        },
+                        "link": {
+                            "type": "string",
+                            "description": "It is a link where the user will be redirected."
+                        },
+                        "hideForPlatform": {
+                            "$ref": "./common.json#/definitions/HideForPlatform"
+                        },
+                        "links": {
+                            "$ref": "./common.json#/definitions/links"
+                        }
+                    },
+                    "required": [
+                        "text"
+                    ],
+                    "additionalProperties": false
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                }
+            },
+            "required": [
+                "field",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "CustomEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "custom",
+                    "type": "string",
+                    "description": "Exactly: custom"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                },
+                "encrypted": {
+                    "$ref": "./common.json#/definitions/encrypted"
+                },
+                "defaultValue": {
+                    "oneOf": [
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ],
+                    "description": "The initial input value."
+                },
+                "options": {
+                    "$ref": "./common.json#/definitions/CustomComponent"
+                }
+            },
+            "required": [
+                "field",
+                "label",
+                "type",
+                "options"
+            ],
+            "additionalProperties": false
+        },
+        "IntervalEntity": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "const": "interval",
+                    "description": "Exactly: interval"
+                },
+                "field": {
+                    "$ref": "./common.json#/definitions/Field"
+                },
+                "label": {
+                    "$ref": "./common.json#/definitions/entityLabel"
+                },
+                "defaultValue": {
+                    "$ref": "./common.json#/definitions/IntervalValue"
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "range": {
+                            "$ref": "./common.json#/definitions/RangeValue"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                        "range"
+                    ]
+                },
+                "help": {
+                    "$ref": "./common.json#/definitions/help"
+                },
+                "tooltip": {
+                    "$ref": "./common.json#/definitions/tooltip"
+                },
+                "required": {
+                    "$ref": "./common.json#/definitions/required"
+                }
+            },
+            "required": [
+                "type",
+                "field",
+                "label"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "items": {
+        "anyOf": [
+            {
+                "$ref": "#/definitions/CheckboxGroupEntity"
+            },
+            {
+                "$ref": "#/definitions/CheckboxTreeEntity"
+            },
+            {
+                "$ref": "#/definitions/TextEntity"
+            },
+            {
+                "$ref": "#/definitions/TextareaEntity"
+            },
+            {
+                "$ref": "#/definitions/SingleSelectEntity"
+            },
+            {
+                "$ref": "#/definitions/MultipleSelectEntity"
+            },
+            {
+                "$ref": "#/definitions/CheckboxEntity"
+            },
+            {
+                "$ref": "#/definitions/DateEntity"
+            },
+            {
+                "$ref": "#/definitions/RadioEntity"
+            },
+            {
+                "$ref": "#/definitions/LinkEntity"
+            },
+            {
+                "$ref": "#/definitions/FileEntity"
+            },
+            {
+                "$ref": "#/definitions/OAuthEntity"
+            },
+            {
+                "$ref": "#/definitions/CustomEntity"
+            },
+            {
+                "$ref": "#/definitions/IntervalEntity"
+            },
+            {
+                "$ref": "#/definitions/IndexEntity"
+            }
+        ]
+    }
+}

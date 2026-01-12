@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "subschema/Alerts/alertSingleSelectEntity.json",
+  "title": "AlertSingleSelectEntity",
+  "type": "object",
+  "properties": {
+    "type": {
+      "const": "singleSelect",
+      "type": "string",
+      "description": "Exactly: singleSelect"
+    },
+    "field": {
+      "$ref": "../../common/common.json#/definitions/Field"
+    },
+    "label": {
+      "type": "string",
+      "description": "Text displayed next to entity field"
+    },
+    "defaultValue": {
+      "description": "The initial input value.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    "help": {
+      "$ref": "../../common/common.json#/definitions/help"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "To specify whether the field is required or not.",
+      "default": false
+    },
+    "options": {
+      "type": "object",
+      "description": "Static choices that a user can select in the alert action UI.",
+      "properties": {
+        "items": {
+          "type": "array",
+          "description": "An array of options with a label and a value.",
+          "items": {
+            "$ref": "../../common/common.json#/definitions/ValueLabelPair"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "field",
+    "label",
+    "type",
+    "options"
+  ],
+  "additionalProperties": false
+}

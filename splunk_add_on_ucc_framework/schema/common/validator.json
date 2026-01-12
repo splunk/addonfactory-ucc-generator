@@ -1,0 +1,180 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "common/validator.json",
+    "title": "Any Validator Schemas",
+    "type": "array",
+    "description": "It is used to validate the values of fields using various validators.",
+    "definitions": {
+        "NumberValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "const": "number",
+                    "type": "string",
+                    "description": "Exactly: number"
+                },
+                "range": {
+                    "$ref": "./common.json#/definitions/RangeValue"
+                },
+                "isInteger": {
+                    "type": "boolean",
+                    "description": "Specifies if the number should be an integer (true) or can be a float (false). Default value is false.",
+                    "default": false
+                }
+            },
+            "required": [
+                "type",
+                "range"
+            ],
+            "additionalProperties": false
+        },
+        "RegexValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "const": "regex",
+                    "type": "string",
+                    "description": "Exactly: regex"
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "Regular expression pattern to validate against."
+                }
+            },
+            "required": [
+                "type",
+                "pattern"
+            ],
+            "additionalProperties": false
+        },
+        "StringValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "const": "string",
+                    "type": "string",
+                    "description": "Exactly: string"
+                },
+                "minLength": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Specifies the minimum number of characters allowed."
+                },
+                "maxLength": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Specifies the maximum number of characters allowed."
+                }
+            },
+            "required": [
+                "type",
+                "minLength",
+                "maxLength"
+            ],
+            "additionalProperties": false
+        },
+        "EmailValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "const": "email",
+                    "type": "string",
+                    "description": "Exactly: email"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "Ipv4Validator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "const": "ipv4",
+                    "type": "string",
+                    "description": "Exactly: ipv4"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "UrlValidator": {
+            "type": "object",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "const": "url",
+                    "type": "string",
+                    "description": "Exactly: url"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "DateValidator": {
+            "type": "object",
+            "description": "It is validated if the field’s value is a date in the ISO 8601 format. It uses the regex from moment.js.",
+            "properties": {
+                "errorMsg": {
+                    "$ref": "./common.json#/definitions/errorMsg"
+                },
+                "type": {
+                    "description": "Exactly: date",
+                    "type": "string",
+                    "const": "date"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        }
+    },
+    "items": {
+        "anyOf": [
+            {
+                "$ref": "#/definitions/NumberValidator"
+            },
+            {
+                "$ref": "#/definitions/StringValidator"
+            },
+            {
+                "$ref": "#/definitions/RegexValidator"
+            },
+            {
+                "$ref": "#/definitions/EmailValidator"
+            },
+            {
+                "$ref": "#/definitions/Ipv4Validator"
+            },
+            {
+                "$ref": "#/definitions/UrlValidator"
+            },
+            {
+                "$ref": "#/definitions/DateValidator"
+            }
+        ]
+    }
+}

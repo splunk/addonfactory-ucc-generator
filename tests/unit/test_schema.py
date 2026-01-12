@@ -1,14 +1,61 @@
-import functools
+import json
+import pytest
+from pathlib import Path
+from jsonschema import Draft7Validator
+from referencing import Registry, Resource
+from jsonschema.exceptions import ValidationError
 from typing import Any
 
-import jsonschema
-import pytest
-from jsonschema.exceptions import ValidationError
+
+# Build registry once for all tests
+@pytest.fixture(scope="session")
+def schema_registry():
+    """Load all schema files into a registry (matches production logic)."""
+    schema_dir = Path("splunk_add_on_ucc_framework/schema")
+    registry = Registry()
+
+    for json_path in schema_dir.rglob("*.json"):
+        schema_data = json.loads(json_path.read_text())
+        resource = Resource.from_contents(schema_data)
+
+        # Path relative to schema root, EXACTLY like runtime
+        schema_id = str(json_path.relative_to(schema_dir))
+
+        registry = registry.with_resource(uri=schema_id, resource=resource)
+
+    return registry
 
 
+# Load root schema.json
+@pytest.fixture(scope="session")
+def root_schema():
+    schema_dir = Path("splunk_add_on_ucc_framework/schema")
+    return json.loads((schema_dir / "schema.json").read_text())
+
+
+# Create validator fixture
 @pytest.fixture
-def schema_validate(schema_json):
-    return functools.partial(jsonschema.validate, schema=schema_json)
+def schema_validate(root_schema, schema_registry):
+    """
+    Returns a function that validates config against the root schema
+    using the registry (matches the updated validator).
+    """
+    validator = Draft7Validator(root_schema, registry=schema_registry)
+
+    def validate_func(instance):
+        errors = sorted(validator.iter_errors(instance), key=lambda e: e.path)
+        if errors:
+            for error in errors:
+                print(
+                    "\nVALIDATION ERROR:",
+                    {
+                        "path": list(error.path),
+                        "message": error.message,
+                    },
+                )
+            raise ValidationError("schema validation failed")
+
+    return validate_func
 
 
 @pytest.fixture
@@ -26,7 +73,8 @@ def config(global_config_all_json_content):
 
 
 def test_logging_component_short(schema_validate, config):
-    schema_validate(config.with_tab({"type": "loggingTab"}))
+    payload = config.with_tab({"type": "loggingTab"})
+    schema_validate(payload)
 
 
 def test_logging_component_long(schema_validate, config):
