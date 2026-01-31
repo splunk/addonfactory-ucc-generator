@@ -730,8 +730,11 @@ class GlobalConfigValidator:
 
             if (command.get("requiredSearchAssistant", False) is False) and (
                 command.get("description")
+                or command.get("shortdesc")
                 or command.get("usage")
                 or command.get("syntax")
+                or command.get("tags")
+                or command.get("examples")
             ):
                 logger.warning(
                     "requiredSearchAssistant is set to false "

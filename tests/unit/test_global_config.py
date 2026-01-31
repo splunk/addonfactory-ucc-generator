@@ -76,8 +76,10 @@ def test_global_config_custom_search_commands(global_config_all_json):
             "commandType": "generating",
             "requiredSearchAssistant": True,
             "description": "This command generates COUNT occurrences of a TEXT string.",
+            "shortdesc": "Command for generating string events.",
             "syntax": "generatetextcommand count=<event_count> text=<string>",
             "usage": "public",
+            "tags": "text generator",
             "arguments": [
                 {
                     "name": "count",
@@ -85,6 +87,16 @@ def test_global_config_custom_search_commands(global_config_all_json):
                     "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
                 },
                 {"name": "text", "required": True},
+            ],
+            "examples": [
+                {
+                    "search": '| generatetextcommand count=5 text="example string"',
+                    "comment": 'Generates 5 events with text="example string"',
+                },
+                {
+                    "search": '| generatetextcommand count=10 text="another example string"',
+                    "comment": 'Generates 10 events with text="another example string"',
+                },
             ],
         }
     ]
