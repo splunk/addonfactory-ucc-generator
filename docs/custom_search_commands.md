@@ -63,7 +63,10 @@ python.version = python3
 | requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command. Default: false. |
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
 | description                                           | string  | Provide description of the custom search command.   |
+| shortdesc                                             | string  | A one sentence description of the search command, used for searchbnf.conf |
 | syntax                                                | string  | Provide syntax for custom search command   |
+| tags                                                  | string  | One or more words that users might type into the search bar which are similar to the command name. |
+| examples                                              | array[objects]  | List of example search strings, used for searchbnf.conf |
 
 To generate a custom search command, the following attributes must be defined in globalConfig: `commandName`, `commandType`, `fileName`, and `arguments`. Based on the provided commandType, UCC will generate a template Python file and integrate the user-defined logic into it.
 
@@ -133,6 +136,26 @@ For example:
 
 ```
 
+## Examples (for search command usage)
+
+| Property                                         | Type   | Description                                      |
+| ------------------------------------------------ | ------ | ------------------------------------------------ |
+| search<span class="required-asterisk">\*</span>  | string | Example search command                           |
+| comment<span class="required-asterisk">\*</span> | string | Provide description of the example search string |
+
+Each search command can have multiple examples, which are shown displayed in the search assistant. The Compact mode, only shows the first example. In the Full mode, the top three examples are displayed.
+
+For example:
+
+```json
+"examples": [
+    {
+        "search": "generatetextcommand count=5 text=\"Hallo There\"",
+        "comment": "Generates 5 \"Hallo There\" events enumerated starting by 1"
+    }
+]
+```
+
 ## Example
 
 ``` json
@@ -160,6 +183,12 @@ For example:
                 {
                     "name": "text",
                     "required": true
+                }
+            ],
+            "examples": [
+                {
+                    "search": "generatetextcommand count=5 text=\"Hallo There\"",
+                    "comment": "Generates 5 \"Hallo There\" events enumerated starting by 1"
                 }
             ]
         },
