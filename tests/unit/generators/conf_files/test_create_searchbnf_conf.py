@@ -29,6 +29,54 @@ def custom_search_command_without_optional_search_assistance_params():
     ]
 
 
+@fixture
+def custom_search_command_syntax_autogeneration():
+    return [
+        {
+            "commandName": "generatetextcommand",
+            "commandType": "generating",
+            "fileName": "generatetext.py",
+            "requiredSearchAssistant": True,
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": True,
+                    "validate": {"type": "Integer", "minimum": 1, "maximum": 10},
+                    "default": 5,
+                },
+                {"name": "test", "required": True, "validate": {"type": "Fieldname"}},
+                {
+                    "name": "percent",
+                    "validate": {"type": "Float", "minimum": "85.5"},
+                    "syntaxGeneration": False,
+                },
+                {
+                    "name": "animals",
+                    "validate": {"type": "Set", "values": ["cat", "dog", "wombat"]},
+                },
+                {
+                    "name": "last",
+                    "validate": {
+                        "type": "Match",
+                        "name": "Day duration",
+                        "pattern": "^[0-9]+(d|m|y)?$",
+                    },
+                    "syntax": "<int>(d|m|y)?",
+                },
+                {
+                    "name": "urgency",
+                    "validate": {
+                        "type": "Map",
+                        "map": {"high": 3, "medium": 2, "low": 1},
+                    },
+                },
+            ],
+        }
+    ]
+
+
 def test_init_without_custom_command(
     global_config_only_configuration,
     input_dir,
@@ -119,6 +167,37 @@ def test_init_without_optional_search_assistance_params(
     ]
 
 
+def test_init_search_command_syntax_autogeneration(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    custom_search_command_syntax_autogeneration,
+):
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_syntax_autogeneration
+    )
+    searchbnf_conf = SearchbnfConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    assert searchbnf_conf.searchbnf_info == [
+        {
+            "command_name": "generatetextcommand",
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": (
+                "generatetextcommand count=<int> test=<string> "
+                "(animals=(cat|dog|wombat))? (last=<int>(d|m|y)?)? "
+                "(urgency=(high|medium|low))?"
+            ),
+            "usage": "public",
+            "examples": [],
+            "shortdesc": None,
+            "tags": None,
+        }
+    ]
+
+
 def test_generate_conf_without_custom_command(
     global_config_only_configuration,
     input_dir,
@@ -188,6 +267,41 @@ def test_generate_conf_without_optional_search_assistance_params(
         """
         [generatetextcommand-command]
         syntax = generatetextcommand count=<event_count> text=<string>
+        description = This command generates COUNT occurrences of a TEXT string.
+        usage = public
+        """
+    ).lstrip()
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+            "content": expected_content,
+        }
+    ]
+
+
+def test_generate_conf_with_search_command_syntax_autogeneration(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    custom_search_command_syntax_autogeneration,
+):
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_syntax_autogeneration
+    )
+    ta_name = global_config_all_json.product
+    searchbnf_conf = SearchbnfConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    output = searchbnf_conf.generate()
+    exp_fname = "searchbnf.conf"
+    expected_content = dedent(
+        """
+        [generatetextcommand-command]
+        syntax = generatetextcommand count=<int> test=<string> """
+        + """(animals=(cat|dog|wombat))? (last=<int>(d|m|y)?)? (urgency=(high|medium|low))?
         description = This command generates COUNT occurrences of a TEXT string.
         usage = public
         """

@@ -31,11 +31,59 @@ class SearchbnfConf(FileGenerator):
         if global_config.has_custom_search_commands():
             for command in global_config.custom_search_commands:
                 if command.get("requiredSearchAssistant", False):
+                    if "syntax" in command:
+                        syntax = command["syntax"]
+                    else:
+                        params_syntax = []
+                        for param in command["arguments"]:
+                            if param.get("syntaxGeneration", True):
+                                validator = param.get("validate", {}).get("type", None)
+                                if "syntax" in param:
+                                    param_syntax = f"{param['name']}={param['syntax']}"
+                                elif validator and validator in (
+                                    "Set",
+                                    "Integer",
+                                    "Float",
+                                    "Boolean",
+                                    "List",
+                                    "Duration",
+                                    "Map",
+                                ):
+                                    if validator in ("Integer", "Float", "Duration"):
+                                        param_syntax = f"{param['name']}=<int>"
+                                    if validator == "Boolean":
+                                        param_syntax = f"{param['name']}=<bool>"
+                                    if validator == "Set":
+                                        param_syntax = f"{param['name']}=({'|'.join(param['validate']['values'])})"
+                                    if validator == "List":
+                                        param_syntax = (
+                                            f"{param['name']}=<string>(,<string>)*"
+                                        )
+                                    if validator == "Map":
+                                        param_syntax = f"{param['name']}=({'|'.join(param['validate']['map'].keys())})"
+                                else:
+                                    param_syntax = f"{param['name']}=<string>"
+                                if param.get("required", False):
+                                    params_syntax.append(param_syntax)
+                                else:
+                                    params_syntax.append(f"({param_syntax})?")
+
+                        syntax = f"{command['commandName']} {' '.join(params_syntax)}"
+                        if len(syntax) > 120:
+                            syntax = syntax.split(" ")
+                            syntax_lines = [syntax[0]]
+                            for part in syntax[1:]:
+                                if len(syntax_lines[-1]) < 100:
+                                    syntax_lines[-1] += f" {part}"
+                                else:
+                                    syntax_lines.append(part)
+                            syntax = " \\\n".join(syntax_lines)
+
                     searchbnf_dict = {
                         "command_name": command["commandName"],
                         "description": command["description"],
                         "shortdesc": command.get("shortdesc", None),
-                        "syntax": command["syntax"],
+                        "syntax": syntax,
                         "usage": command["usage"],
                         "tags": command.get("tags", None),
                         "examples": command.get("examples", []),
