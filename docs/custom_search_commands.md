@@ -86,9 +86,9 @@ If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `u
 | name<span class="required-asterisk">\*</span>                         | string | Name of the argument  |
 | defaultValue                                                          | string/number | Default value of the argument.  |
 | required                                                              | boolean |  Specify if the argument is required or not. |
-| validate                                                              | object | Specify validation for the argument. It can be any of `Integer`, `Float`, `Boolean`, `RegularExpression` or `FieldName`. |
+| validate                                                              | object | Specify validation for the argument. It can be any of `Integer`, `Float`, `Boolean`, `RegularExpression`, `FieldName`, `Set`, `Match`, `List`, `Map`, `Duration`. |
 
-UCC currently supports five types of validations provided by `splunklib` library:
+UCC currently supports some types of validations provided by `splunklib` library:
 
 - IntegerValidator
     + you can optionally define `minimum` and `maximum` properties.
@@ -98,10 +98,26 @@ UCC currently supports five types of validations provided by `splunklib` library
     + no additional properties required.
 - RegularExpressionValidator
     + no additional properties required.
+    + validates if the argument value is a valid regex expression.
 - FieldnameValidator
     + no additional properties required.
+- SetValidator
+    + the property `values` is required, which is a list of allowed strings.
+    + validates if the values list contains the argument value.
+- MatchValidator
+    + the properties `name` and `pattern` is required, where the name is only used for error messages and the pattern must be a valid regex pattern.
+    + validates of the argument value matches the specified regex expression.
+- ListValidator
+    + no additional properties required.
+    + validates if the argument value is a valid list and passes the parsed list to the property.
+- MapValidator
+    + the property `map` is required, where the map must be a dictionary of key value pairs where the key must be a string and the value must either be a string, a number or a boolean.
+    + validates if the argument matches a key of the dictionary and passes the corresponding value to the property.
+- DurationValidator
+    + no additional properties required.
 
-For more information, refer [splunklib API docs](https://splunk-python-sdk.readthedocs.io/en/latest/searchcommands.html)
+
+For more information, refer [splunklib API docs](https://splunk-python-sdk.readthedocs.io/en/latest/searchcommands.html) or [validators.py source](https://github.com/splunk/splunk-sdk-python/blob/develop/splunklib/searchcommands/validators.py).
 
 For example:
 
@@ -131,9 +147,38 @@ For example:
             "minimum": "85.5"
         }
 
+    },
+    {
+        "name": "animals",
+        "validate": {
+            "type": "Set",
+            "values": [
+                "cat",
+                "dog",
+                "wombat"
+            ]
+        }
+    },
+    {
+        "name": "name",
+        "validate": {
+            "type": "Match",
+            "name": "Name pattern",
+            "pattern": "^[A-Z][a-z]+$"
+        }
+    },
+    {
+        "name": "urgency",
+        "validate": {
+            "type": "Map",
+            "map": {
+                "high": 3,
+                "medium": 2,
+                "low": 1
+            }
+        }
     }
 ]
-
 ```
 
 ## Examples (for search command usage)
