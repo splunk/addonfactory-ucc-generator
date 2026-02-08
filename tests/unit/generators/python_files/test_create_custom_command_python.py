@@ -67,6 +67,33 @@ def transforming_custom_search_command():
 
 
 @pytest.fixture
+def transforming_custom_search_command_with_multiline_description():
+    return [
+        {
+            "commandName": "generatetext",
+            "commandType": "generating",
+            "fileName": "generatetextcommand.py",
+            "description": [
+                "This is a transforming command",
+                "This might be additional information.",
+                "Here we can mention something like wombats are cool.",
+            ],
+            "syntax": "generatetext action=<action>",
+            "arguments": [
+                {
+                    "name": "action",
+                    "required": True,
+                    "validate": {"type": "Fieldname"},
+                },
+                {
+                    "name": "test",
+                },
+            ],
+        }
+    ]
+
+
+@pytest.fixture
 def custom_search_command_validators():
     return [
         {
@@ -336,6 +363,60 @@ class GeneratetextcommandCommand(GeneratingCommand):
        return generate(self)
 
 dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
+    '''
+    assert output is not None
+    assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
+    assert output[0]["file_name"] == exp_fname
+    assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"
+
+
+def test_generate_python_with_multiline_description(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    transforming_custom_search_command_with_multiline_description,
+):
+    exp_fname = "generatetext.py"
+    ta_name = global_config_all_json.meta["name"]
+
+    global_config_all_json._content["customSearchCommand"] = (
+        transforming_custom_search_command_with_multiline_description
+    )
+    custom_command_py = CustomCommandPy(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    output = custom_command_py.generate()
+    expected_content = '''
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \\
+    dispatch, GeneratingCommand, Configuration, Option, validators
+from generatetextcommand import generate
+
+@Configuration()
+class GeneratetextCommand(GeneratingCommand):
+    """
+
+    ##Syntax
+    generatetext action=<action>
+
+    ##Description
+    This is a transforming command
+    This might be additional information.
+    Here we can mention something like wombats are cool.
+
+    """
+    action = Option(name='action', require=True, validate=validators.Fieldname())
+    test = Option(name='test', require=False)
+
+
+    def generate(self):
+       return generate(self)
+
+dispatch(GeneratetextCommand, sys.argv, sys.stdin, sys.stdout, __name__)
     '''
     assert output is not None
     assert normalize_code(output[0]["content"]) == normalize_code(expected_content)

@@ -79,9 +79,13 @@ class SearchbnfConf(FileGenerator):
                                     syntax_lines.append(part)
                             syntax = " \\\n".join(syntax_lines)
 
+                    description = command["description"]
+                    if isinstance(description, list):
+                        description = " \\\n".join(description)
+
                     searchbnf_dict = {
                         "command_name": command["commandName"],
-                        "description": command["description"],
+                        "description": description,
                         "shortdesc": command.get("shortdesc", None),
                         "syntax": syntax,
                         "usage": command["usage"],

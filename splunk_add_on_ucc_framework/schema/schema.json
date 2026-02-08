@@ -458,7 +458,17 @@
           "description": "Specifies if search assistant is required or not. If yes then searchbnf.conf will be generated."
         },
         "description": {
-          "type": "string",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
           "description": "Description of the custom search command. It is an required attribute for searchbnf.conf."
         },
         "shortdesc": {

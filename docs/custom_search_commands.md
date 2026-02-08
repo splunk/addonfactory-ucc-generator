@@ -62,7 +62,7 @@ python.version = python3
 | arguments<span class="required-asterisk">\*</span>    | array[objects]  | Arguments which can be passed to custom search command. |
 | requiredSearchAssistant                               | boolean | Specifies whether search assistance is required for the custom search command. Default: false. |
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
-| description                                           | string  | Provide description of the custom search command.   |
+| description                                           | string or array[string] | Provide description of the custom search command. To increase the readability of a comprehensive description in json, it is possible to split it in an array of strings. |
 | shortdesc                                             | string  | A one sentence description of the search command, used for searchbnf.conf |
 | syntax                                                | string  | Syntax for custom search commands will be automatically generated based on the command name and the parameters. If the syntax attribute is specified, the provided string is used instead. |
 | tags                                                  | string  | One or more words that users might type into the search bar which are similar to the command name. |

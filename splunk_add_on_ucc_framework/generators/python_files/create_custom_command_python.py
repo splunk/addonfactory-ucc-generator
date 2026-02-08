@@ -58,12 +58,16 @@ class CustomCommandPy(FileGenerator):
                     "default": argument.get("defaultValue"),
                 }
                 self.argument_generator(argument_list, argument_dict)
+
+            description = command.get("description")
+            if description and isinstance(description, list):
+                description = "\n    ".join(description)
             self.commands_info.append(
                 {
                     "imported_file_name": imported_file_name,
                     "file_name": command["commandName"],
                     "class_name": command["commandName"].title(),
-                    "description": command.get("description"),
+                    "description": description,
                     "syntax": command.get("syntax"),
                     "template": template,
                     "list_arg": argument_list,
