@@ -267,6 +267,7 @@ def handle_global_config_update(
     # Make sure as you add new migrations here that you also update
     # allowed_versions_of_schema_version above
 
+
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:
     for i, tab in enumerate(
         global_config.content.get("pages", {}).get("configuration", {}).get("tabs", [])
