@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn } from '@storybook/test';
 import FileInputComponent from '../FileInputComponent';
 import { withControlGroup } from '../../../../.storybook/withControlGroup';

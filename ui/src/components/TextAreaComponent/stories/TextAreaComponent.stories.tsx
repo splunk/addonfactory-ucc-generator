@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { useState } from 'react';
 import { fn } from '@storybook/test';
 import TextAreaComponent from '../TextAreaComponent';
@@ -44,7 +44,7 @@ export const Base: Story = {
 export const UnEncrypted: Story = {
     args: {
         handleChange: fn(),
-        value: `visbile text 
+        value: `visbile text
 multiple lanes`,
         field: 'field',
         error: false,
@@ -57,7 +57,7 @@ multiple lanes`,
 export const Encrypted: Story = {
     args: {
         handleChange: fn(),
-        value: `none visbile text 
+        value: `none visbile text
 multiple lanes`,
         field: 'field',
         error: false,

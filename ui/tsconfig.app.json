@@ -12,12 +12,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
-    /*
-     * It should be "bundler", but SUI throws errors
-     * for "nodenext" requires specifying explicit extensions (.js)
-     */
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
