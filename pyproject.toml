@@ -58,7 +58,7 @@ defusedxml = "^0.7.1"
 colorama = "^0.4.6"
 packaging = ">=25.0"
 splunk-appinspect = { version = "^4.0.0", extras = ["validate"], optional = true }
-certifi = "^2025.6.15"
+certifi = "^2026.0.0"
 
 [tool.poetry.extras]
 validate = ["splunk-appinspect"]
