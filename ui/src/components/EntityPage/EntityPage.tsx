@@ -30,11 +30,11 @@ export interface EntityPageProps {
 
 const ShadowedDiv = styled.div`
     box-shadow: ${variables.embossShadow};
-    padding: ${variables.spacing};
+    padding: ${variables.spacingLarge};
 `;
 
 const ButtonRow = styled.div`
-    margin-top: ${variables.spacingHalf};
+    margin-top: ${variables.spacingSmall};
     text-align: right;
 `;
 function EntityPage({
