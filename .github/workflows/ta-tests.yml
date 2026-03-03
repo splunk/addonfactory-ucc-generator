@@ -55,7 +55,7 @@ jobs:
         run: poetry build
 
       - name: Upload UCC Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ucc-package-whl
           path: UCC/dist/*.whl
@@ -112,13 +112,13 @@ jobs:
         run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
 
       - name: Download UCC Artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ucc-package-whl
           path: UCC
       - name: Importing GPG key
         if: success() && github.event.inputs.run_pipelines == 'true'
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
           git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}

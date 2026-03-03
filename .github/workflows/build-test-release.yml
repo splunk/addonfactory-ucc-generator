@@ -37,7 +37,7 @@ jobs:
           fossa report attribution --format text --timeout 7200 > /tmp/THIRDPARTY
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: THIRDPARTY
           path: /tmp/THIRDPARTY
@@ -106,12 +106,12 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.9"
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: UCC-UI-build
           path: built-ui/
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         if: "! github.event.pull_request.head.repo.fork "
         with:
           name: THIRDPARTY
@@ -123,7 +123,7 @@ jobs:
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry build
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: UCC-build
           path: dist/
@@ -176,7 +176,7 @@ jobs:
           - "3.14"
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: UCC-UI-build
           path: built-ui/
@@ -208,7 +208,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.9"
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: UCC-UI-build
           path: built-ui/
@@ -222,11 +222,11 @@ jobs:
           RUM_ACCESS_TOKEN: ${{ secrets.RUM_ACCESS_TOKEN}}
       - run: poetry run ucc-gen package --path output/Splunk_TA_UCCExample
       - run: poetry run ucc-gen validate --addon-path output/Splunk_TA_UCCExample
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: Splunk_TA_UCCExample-raw-output
           path: output/*
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: Splunk_TA_UCCExample-packaged
           path: Splunk_TA_UCCExample*.tar.gz
@@ -263,7 +263,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.9"
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: Splunk_TA_UCCExample-raw-output
           path: output/
@@ -281,7 +281,7 @@ jobs:
           until curl -k -s -u admin:Chang3d! https://localhost:8089/services/server/info\?output_mode\=json | jq '.entry[0].content.kvStoreStatus' | grep -o "ready" ; do echo -n "Waiting for KVStore to become ready-" && sleep 5 ; done
         timeout-minutes: 5
       - run: poetry run pytest tests/ui --test-group-count 10 --test-group ${{ matrix.test-group }} --test-group-random-seed 123456 --headless --junitxml=test-results/junit.xml
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
@@ -291,7 +291,7 @@ jobs:
         run: |
           docker cp splunk:/opt/splunk/var/log/splunk/splunkd.log ./splunkd.log
       - name: Upload splunkd.log to GitHub Check
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: test-ui-splunkd-splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
@@ -349,7 +349,7 @@ jobs:
           - "cloud"
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: Splunk_TA_UCCExample-packaged
           path: build/package
@@ -362,7 +362,7 @@ jobs:
           password: ${{secrets.SPL_COM_PASSWORD}}
           app_path: build/package
           included_tags: ${{ matrix.tags }}
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: appinspect-api-html-report-${{ matrix.tags }}
@@ -385,7 +385,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: UCC-UI-build
           path: built-ui/
@@ -466,11 +466,11 @@ jobs:
       - name: install UI deps
         uses: ./.github/actions/cached-ui-deps
       - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: UCC-UI-build
           path: built-ui/
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: THIRDPARTY
       - run: cp -f THIRDPARTY NOTICE
