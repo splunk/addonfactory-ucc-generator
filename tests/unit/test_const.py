@@ -1,9 +1,13 @@
 import re
 import urllib.request
 
+import pytest
 from splunk_add_on_ucc_framework.const import SPLUNK_COMMANDS
 
 
+@pytest.mark.skip(
+    reason="This test relies on the structure of the Splunk documentation page and may break if the page is updated."
+)
 def test_command_list_up_to_date():
     url = "https://help.splunk.com/en/splunk-enterprise/search/spl-search-reference/10.0/search-commands"
     # passing an imitation of browser header to make this a request from web browser
