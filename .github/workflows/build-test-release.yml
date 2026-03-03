@@ -34,7 +34,7 @@ jobs:
       - run: |
           curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
           fossa analyze --debug
-          fossa report attribution --format text > /tmp/THIRDPARTY
+          fossa report attribution --format text --timeout 7200 > /tmp/THIRDPARTY
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
       - uses: actions/upload-artifact@v6
