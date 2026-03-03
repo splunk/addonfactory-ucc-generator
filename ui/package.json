@@ -162,6 +162,7 @@
     "axios": "^1.12.0",
     "jspdf": "^4.0.0",
     "http-proxy-middleware": "^3.0.5",
+    "js-yaml": "^4.1.1",
     "@splunk/dashboard-event-handlers": "29.4.0",
     "@splunk/dashboard-inputs": "29.4.0",
     "@splunk/dashboard-search": "29.4.0",
