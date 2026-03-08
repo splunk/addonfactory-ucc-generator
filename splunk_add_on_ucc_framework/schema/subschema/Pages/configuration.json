@@ -1,0 +1,472 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "subschema/Pages/configuration.json",
+    "title": "ConfigurationPage",
+    "type": "object",
+    "definitions": {
+        "PredefinedLoggingTab": {
+            "type": "object",
+            "description": "Predefined Logging tab configuration, can be used to reduce length of config",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "loggingTab",
+                    "description": "Exactly: loggingTab"
+                },
+                "name": {
+                    "type": "string",
+                    "pattern": "^[\\/\\w]+$",
+                    "default": "Logging",
+                    "description": "Tab name.",
+                    "maxLength": 250
+                },
+                "title": {
+                    "type": "string",
+                    "default": "Logging",
+                    "description": "Tab title.",
+                    "maxLength": 50
+                },
+                "label": {
+                    "$ref": "../../common/common.json#/definitions/entityLabel"
+                },
+                "field": {
+                    "$ref": "../../common/common.json#/definitions/Field",
+                    "default": "loglevel"
+                },
+                "levels": {
+                    "type": "array",
+                    "default": [
+                        "DEBUG",
+                        "INFO",
+                        "WARNING",
+                        "ERROR",
+                        "CRITICAL"
+                    ],
+                    "description": "List of all possible log levels.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "defaultLevel": {
+                    "type": "string",
+                    "default": "INFO",
+                    "description": "Default log level at the beginning."
+                },
+                "help": {
+                    "$ref": "../../common/common.json#/definitions/help"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "PredefinedProxyTab": {
+            "type": "object",
+            "description": "Predefined Proxy tab configuration, can be used to reduce length of config",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "const": "proxyTab",
+                    "description": "Exactly: proxyTab"
+                },
+                "name": {
+                    "type": "string",
+                    "pattern": "^[\\/\\w]+$",
+                    "default": "Proxy",
+                    "description": "Tab name.",
+                    "maxLength": 250
+                },
+                "title": {
+                    "type": "string",
+                    "default": "Proxy",
+                    "description": "Tab title.",
+                    "maxLength": 50
+                },
+                "enable_proxy": {
+                    "type": "object",
+                    "default": {
+                        "type": "checkbox",
+                        "label": "Enable",
+                        "field": "proxy_enabled"
+                    },
+                    "description": "Checkbox for enabling proxy"
+                },
+                "proxy_type": {
+                    "oneOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "object",
+                            "default": {
+                                "type": "singleSelect",
+                                "label": "Proxy Type",
+                                "required": false,
+                                "options": {
+                                    "disableSearch": true,
+                                    "autoCompleteFields": [
+                                        {
+                                            "value": "http",
+                                            "label": "http"
+                                        },
+                                        {
+                                            "value": "socks4",
+                                            "label": "socks4"
+                                        },
+                                        {
+                                            "value": "socks5",
+                                            "label": "socks5"
+                                        }
+                                    ]
+                                },
+                                "defaultValue": "http",
+                                "field": "proxy_type"
+                            }
+                        }
+                    ],
+                    "description": "Proxy type. Available values: http, socks4, socks5"
+                },
+                "host": {
+                    "type": "object",
+                    "default": {
+                        "type": "text",
+                        "label": "Host",
+                        "validators": [
+                            {
+                                "type": "string",
+                                "errorMsg": "Max host length is 4096",
+                                "minLength": 0,
+                                "maxLength": 4096
+                            },
+                            {
+                                "type": "regex",
+                                "errorMsg": "Proxy Host should not have special characters",
+                                "pattern": "^[a-zA-Z]\\w*$"
+                            }
+                        ],
+                        "field": "proxy_url"
+                    },
+                    "description": "Host of the proxy"
+                },
+                "port": {
+                    "type": "object",
+                    "default": {
+                        "type": "text",
+                        "label": "Port",
+                        "validators": [
+                            {
+                                "type": "number",
+                                "range": [
+                                    1,
+                                    65535
+                                ],
+                                "isInteger": true
+                            }
+                        ],
+                        "field": "proxy_port"
+                    },
+                    "description": "Port of the proxy"
+                },
+                "username": {
+                    "oneOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "object",
+                            "default": {
+                                "type": "text",
+                                "label": "Username",
+                                "validators": [
+                                    {
+                                        "type": "string",
+                                        "errorMsg": "Max length of username is 50",
+                                        "minLength": 0,
+                                        "maxLength": 50
+                                    }
+                                ],
+                                "field": "proxy_username"
+                            }
+                        }
+                    ],
+                    "description": "Username used to access the proxy server."
+                },
+                "password": {
+                    "oneOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "object",
+                            "default": {
+                                "type": "text",
+                                "label": "Password",
+                                "validators": [
+                                    {
+                                        "type": "string",
+                                        "errorMsg": "Max length of password is 8192",
+                                        "minLength": 0,
+                                        "maxLength": 8192
+                                    }
+                                ],
+                                "encrypted": true,
+                                "field": "proxy_password"
+                            }
+                        }
+                    ],
+                    "description": "Password assigned for the username"
+                },
+                "dns_resolution": {
+                    "oneOf": [
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "object",
+                            "default": {
+                                "type": "checkbox",
+                                "label": "DNS resolution",
+                                "field": "proxy_rdns"
+                            }
+                        }
+                    ],
+                    "description": "Specifies whether DNS resolution should be used or not."
+                },
+                "options": {
+                    "$ref": "../../common/common.json#/definitions/SaveValidatorHook"
+                },
+                "hook": {
+                    "$ref": "../../common/common.json#/definitions/Hook"
+                },
+                "warning": {
+                    "$ref": "../../common/common.json#/definitions/WarningMessage"
+                },
+                "help": {
+                    "$ref": "../../common/common.json#/definitions/help"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "additionalProperties": false
+        },
+        "ConfigurationTable": {
+            "type": "object",
+            "properties": {
+                "moreInfo": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$",
+                                "description": "Used to display the data in a column."
+                            },
+                            "label": {
+                                "type": "string",
+                                "maxLength": 30,
+                                "description": "Title of the column."
+                            },
+                            "mapping": {
+                                "type": "object",
+                                "description": "Used to map field values to more meaningful values."
+                            }
+                        },
+                        "required": [
+                            "field",
+                            "label"
+                        ]
+                    },
+                    "description": "Specifies the list of fields that will be displayed in row form when the user clicks the Row Expand button."
+                },
+                "header": {
+                    "type": "array",
+                    "description": "Specifies the list of columns in the table",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "field": {
+                                "type": "string",
+                                "pattern": "^\\w+$",
+                                "description": "Name of the field where the column data will be displayed."
+                            },
+                            "label": {
+                                "type": "string",
+                                "maxLength": 30,
+                                "description": "The title of the column"
+                            },
+                            "mapping": {
+                                "type": "object",
+                                "description": "Used to map field values to more meaningful values."
+                            },
+                            "customCell": {
+                                "$ref": "../../common/common.json#/definitions/CustomCell"
+                            }
+                        },
+                        "required": [
+                            "field",
+                            "label"
+                        ]
+                    }
+                },
+                "customRow": {
+                    "$ref": "../../common/common.json#/definitions/CustomRow"
+                },
+                "actions": {
+                    "type": "array",
+                    "description": "Specifies what type of action can be performed on the stanza. The supported types are edit, clone, and delete.",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "edit",
+                            "delete",
+                            "clone"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "header",
+                "actions"
+            ],
+            "description": "Configuration of single tab",
+            "additionalProperties": false
+        },
+        "TabContent": {
+            "type": "object",
+            "description": "Content for separated Tab",
+            "properties": {
+                "entity": {
+                    "$ref": "../../common/entity.json"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Tab identificator",
+                    "pattern": "^[\\/\\w]+$",
+                    "maxLength": 250
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Displayed title",
+                    "maxLength": 50
+                },
+                "options": {
+                    "$ref": "../../common/common.json#/definitions/SaveValidatorHook"
+                },
+                "table": {
+                    "$ref": "#/definitions/ConfigurationTable"
+                },
+                "style": {
+                    "description": "By specifying this property in the global configuration file, the forms can either be opened as a new page or in a dialog.",
+                    "type": "string",
+                    "enum": [
+                        "page",
+                        "dialog"
+                    ]
+                },
+                "conf": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Configuration name for a rest handler."
+                },
+                "restHandlerName": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Specify rest Handler name that extends the default behaviour of the UCC-generated REST handlers. (Do NOT use with restHandlerModule) "
+                },
+                "restHandlerModule": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Specify rest Module name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerClass) "
+                },
+                "restHandlerClass": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Specify rest Class name that extends the default behaviour of the UCC-generated REST handlers. (Use with restHandlerModule)"
+                },
+                "hook": {
+                    "$ref": "../../common/common.json#/definitions/Hook"
+                },
+                "customTab": {
+                    "description": "This property allows you to enable the custom tab feature.",
+                    "$ref": "../../common/common.json#/definitions/CustomComponent"
+                },
+                "warning": {
+                    "$ref": "../../common/common.json#/definitions/WarningMessage"
+                },
+                "hideForPlatform": {
+                    "$ref": "../../common/common.json#/definitions/HideForPlatform"
+                },
+                "groups": {
+                    "$ref": "../../common/common.json#/definitions/Groups"
+                },
+                "formTitle": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Custom modal title that replaces the default 'Add selectedTab' text. When specified, the modal will display 'Add' followed by the formTitle value"
+                }
+            },
+            "anyOf": [
+                {
+                    "required": [
+                        "entity",
+                        "name",
+                        "title"
+                    ]
+                },
+                {
+                    "required": [
+                        "customTab",
+                        "name",
+                        "title"
+                    ]
+                }
+            ],
+            "additionalProperties": false
+        }
+    },
+    "properties": {
+        "title": {
+            "type": "string",
+            "description": "Title of Configuration page",
+            "maxLength": 60
+        },
+        "description": {
+            "type": "string",
+            "description": "Description under title of Configuration page",
+            "maxLength": 200
+        },
+        "subDescription": {
+            "$ref": "../../common/common.json#/definitions/SubDescription"
+        },
+        "tabs": {
+            "description": "Array of forms to be displayed in separate tabs",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/TabContent"
+                    },
+                    {
+                        "$ref": "#/definitions/PredefinedLoggingTab"
+                    },
+                    {
+                        "$ref": "#/definitions/PredefinedProxyTab"
+                    }
+                ]
+            },
+            "minItems": 1
+        },
+        "capabilities": {
+            "$ref": "../../common/common.json#/definitions/capabilities"
+        }
+    },
+    "required": [
+        "title",
+        "tabs"
+    ],
+    "description": "Page for account configuration, proxy configuration, and logging level configuration.",
+    "additionalProperties": false
+}

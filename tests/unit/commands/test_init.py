@@ -307,15 +307,11 @@ def test_init_when_empty_string_passed_for_author(mock_generate_addon, caplog):
 
 
 def test_valid_regex():
-    file_path = f"{helpers.get_path_to_source_dir()}/schema/schema.json"
+    file_path = f"{helpers.get_path_to_source_dir()}/schema/subschema/meta.json"
     with open(file_path) as file:
         content = file.read()
         schema_json_content = json.loads(content)
-    restRoot_regex = schema_json_content["definitions"]["Meta"]["properties"][
-        "restRoot"
-    ]["pattern"]
-    name_regex = schema_json_content["definitions"]["Meta"]["properties"]["name"][
-        "pattern"
-    ]
+    restRoot_regex = schema_json_content["properties"]["restRoot"]["pattern"]
+    name_regex = schema_json_content["properties"]["name"]["pattern"]
     assert init.ADDON_REST_ROOT_RE_STR == restRoot_regex
     assert init.ADDON_NAME_RE_STR == name_regex

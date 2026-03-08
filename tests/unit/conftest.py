@@ -176,11 +176,5 @@ def monkeypatch(monkeypatch):
 
 
 @pytest.fixture
-def schema_path():
-    return Path(module_init_path).parent / "schema" / "schema.json"
-
-
-@pytest.fixture
-def schema_json(schema_path):
-    with schema_path.open() as fp:
-        return json.load(fp)
+def base_schema_dir_path():
+    return Path(module_init_path).parent / "schema"

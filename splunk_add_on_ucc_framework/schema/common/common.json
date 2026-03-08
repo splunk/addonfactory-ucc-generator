@@ -1,0 +1,622 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "common/common.json",
+  "title": "Common Schemas",
+  "type": "object",
+  "definitions": {
+    "Field": {
+      "type": "string",
+      "description": "Unique identifier for an input field used in forms and data handling.",
+      "pattern": "(?!^(?:persistentQueueSize|queueSize|start_by_shell|output_mode|output_field|owner|app|sharing)$)(?:^\\w+$)"
+    },
+    "SubDescription": {
+      "type": "object",
+      "description": "Extended description section that provides detailed information about a page or section with optional embedded links.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Main description text. Use \\n to add line breaks.",
+          "maxLength": 1500
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "links": {
+      "type": "array",
+      "description": "Array of link definitions that can be embedded within description text using placeholder slugs.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Unique identifier used as a placeholder in text. Surround with double square brackets [[slug]] in the text to create the link.",
+            "maxLength": 50,
+            "pattern": "^\\w+$",
+            "minLength": 1
+          },
+          "linkText": {
+            "type": "string",
+            "description": "Display text for the link that replaces the slug placeholder.",
+            "maxLength": 500,
+            "minLength": 1
+          },
+          "link": {
+            "description": "URL or path destination for the link.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "slug",
+          "linkText",
+          "link"
+        ]
+      }
+    },
+    "ValueLabelPair": {
+      "type": "object",
+      "description": "Option item with a display label and corresponding value for form controls.",
+      "properties": {
+        "value": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "maxLength": 250
+            },
+            {
+              "type": "boolean"
+            }
+          ],
+          "description": "The actual value to be stored when this option is selected."
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Text displayed to the user for this option."
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "help": {
+      "anyOf": [
+        {
+          "type": "string",
+          "description": "Help text gives context about a fields input, such as how the input will be used. It is displayed directly below an input field."
+        },
+        {
+          "$ref": "#/definitions/helpWithLinks"
+        }
+      ]
+    },
+    "helpWithLinks": {
+      "type": "object",
+      "description": "Property to provide structured help message",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text used for the help message, you can put \n to add a breakline."
+        },
+        "links": {
+          "$ref": "#/definitions/links"
+        },
+        "link": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "SaveValidatorHook": {
+      "type": "object",
+      "description": "Apply customized validation",
+      "properties": {
+        "saveValidator": {
+          "type": "string",
+          "maxLength": 3000,
+          "description": "Allows you to pass a Javascript function as a string to apply customized validation to form data."
+        }
+      },
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Define capabilities for the users",
+      "properties": {
+        "put": {
+          "type": "string",
+          "description": "Define capability when PUT method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "delete": {
+          "type": "string",
+          "description": "Define capability when DELETE method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "post": {
+          "type": "string",
+          "description": "Define capability when POST method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        },
+        "get": {
+          "type": "string",
+          "description": "Define capability when GET method will be executed. For more information visit Splunk doc : https://docs.splunk.com/Documentation/Splunk/latest/Admin/restmapconf#restmap.conf.spec"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "put"
+          ]
+        },
+        {
+          "required": [
+            "delete"
+          ]
+        },
+        {
+          "required": [
+            "post"
+          ]
+        },
+        {
+          "required": [
+            "get"
+          ]
+        }
+      ],
+      "additionalProperties": false
+    },
+    "CustomComponent": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "external",
+          "type": "string",
+          "description": "Exactly: external"
+        },
+        "src": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "src"
+      ]
+    },
+    "Hook": {
+      "description": "It is used to add custom behaviour to forms. Visit the Custom Hook page to learn more.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "CustomRow": {
+      "description": "Used to customise the moreInfo Component.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "CustomCell": {
+      "description": "Used to modify the default cell values.",
+      "$ref": "#/definitions/CustomComponent"
+    },
+    "WarningMessage": {
+      "type": "object",
+      "description": "It is used to add the custom warning message for each of the modes of ‘create’, ‘edit’, ‘config’, and ‘clone’. The message is displayed on the form.",
+      "properties": {
+        "create": {
+          "$ref": "#/definitions/WarningMessageObject"
+        },
+        "edit": {
+          "$ref": "#/definitions/WarningMessageObject"
+        },
+        "clone": {
+          "$ref": "#/definitions/WarningMessageObject"
+        },
+        "config": {
+          "$ref": "#/definitions/WarningMessageObject"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WarningMessageObject": {
+      "type": "object",
+      "description": "Object for individual warning messages displayed in forms.",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Text content of the warning message. Use \\n to add line breaks.",
+          "maxLength": 500
+        },
+        "alwaysDisplay": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the message remains visible even after user input changes. When false, the message disappears after any input modification."
+        }
+      },
+      "required": [
+        "message"
+      ]
+    },
+    "HideForPlatform": {
+      "description": "Defines for which platform element should be hidden from UI perspective.",
+      "anyOf": [
+        {
+          "const": "cloud"
+        },
+        {
+          "const": "enterprise"
+        }
+      ]
+    },
+    "delimiter": {
+      "type": "string",
+      "maxLength": 20,
+      "description": "It delimits each value of the field with a predefined character."
+    },
+    "errorMsg": {
+      "type": "string",
+      "description": "Custom error message.",
+      "maxLength": 400
+    },
+    "RangeValue": {
+      "type": "array",
+      "description": "Range of allowed values as a two-element array [min, max].",
+      "items": {
+        "type": "number"
+      }
+    },
+    "disableonEdit": {
+      "type": "boolean",
+      "description": "When the form is in edit mode, the field becomes unable to be edited.",
+      "default": false
+    },
+    "entityLabel": {
+      "type": "string",
+      "description": "Text displayed next to entity field"
+    },
+    "tooltip": {
+      "type": "string",
+      "description": "Displays a tooltip beside the label."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "To specify whether the field is required or not.",
+      "default": false
+    },
+    "encrypted": {
+      "type": "boolean",
+      "description": "To encrypt that particular field.",
+      "default": false
+    },
+    "display": {
+      "type": "boolean",
+      "description": "It chooses whether or not to display the field.",
+      "default": true
+    },
+    "enable": {
+      "type": "boolean",
+      "description": "The enable property sets whether a field is enabled or not.",
+      "default": true
+    },
+    "requiredWhenVisible": {
+      "type": "boolean",
+      "description": "It makes the field required on the UI when it appears. It is used only for visibility.",
+      "default": false
+    },
+    "fieldToModify": {
+      "type": "object",
+      "description": "Defines a trigger condition and the resulting field modifications when that condition is met.",
+      "properties": {
+        "fieldValue": {
+          "description": "Trigger value that activates the field modifications. Use [[any_other_value]] to trigger for any value other than explicitly specified ones.",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "pattern": {
+                  "type": "string",
+                  "description": "Regex pattern that will be used to match against component value"
+                }
+              }
+            }
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "description": "Restricts modifications to a specific form mode. If omitted, modifications apply to all modes.",
+          "enum": [
+            "create",
+            "edit",
+            "config",
+            "clone"
+          ]
+        },
+        "fieldsToModify": {
+          "type": "array",
+          "description": "Array of field modifications to apply when the trigger condition is met.",
+          "items": {
+            "$ref": "#/definitions/singleFieldToModify"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "fieldValue",
+        "fieldsToModify"
+      ]
+    },
+    "markdownMessageText": {
+      "type": "object",
+      "properties": {
+        "markdownType": {
+          "const": "text",
+          "type": "string",
+          "description": "Exactly: text"
+        },
+        "text": {
+          "type": "string",
+          "description": "Declare message content"
+        },
+        "color": {
+          "type": "string",
+          "description": "Specify color of displayied text. Accepts all CSS colors"
+        }
+      },
+      "required": [
+        "markdownType",
+        "text"
+      ]
+    },
+    "markdownMessageHybrid": {
+      "type": "object",
+      "properties": {
+        "markdownType": {
+          "const": "hybrid",
+          "type": "string",
+          "description": "Exactly: hybrid"
+        },
+        "text": {
+          "type": "string",
+          "description": "Declare message content"
+        },
+        "token": {
+          "type": "string",
+          "description": "Declare string that will be swapped into link"
+        },
+        "linkText": {
+          "type": "string",
+          "description": "Declare string that will put in place of token"
+        },
+        "link": {
+          "type": "string",
+          "description": "Declare url that will use for redirection"
+        }
+      },
+      "required": [
+        "markdownType",
+        "text",
+        "token",
+        "link",
+        "linkText"
+      ]
+    },
+    "markdownMessageLink": {
+      "type": "object",
+      "properties": {
+        "markdownType": {
+          "const": "link",
+          "type": "string",
+          "description": "Exactly: link"
+        },
+        "text": {
+          "type": "string",
+          "description": "Declare message content"
+        },
+        "link": {
+          "type": "string",
+          "description": "Declare url used for redirection"
+        }
+      },
+      "required": [
+        "markdownType",
+        "text",
+        "link"
+      ]
+    },
+    "markdownMessagePlainText": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Declare message content"
+        }
+      },
+      "required": [
+        "text"
+      ]
+    },
+    "markdownMessage": {
+      "description": "Message that will be displayed as additional information",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/markdownMessageText"
+        },
+        {
+          "$ref": "#/definitions/markdownMessageHybrid"
+        },
+        {
+          "$ref": "#/definitions/markdownMessageLink"
+        },
+        {
+          "$ref": "#/definitions/markdownMessagePlainText"
+        }
+      ]
+    },
+    "singleFieldToModify": {
+      "type": "object",
+      "description": "Configuration for modifying a specific field's properties based on another field's value.",
+      "properties": {
+        "fieldId": {
+          "type": "string",
+          "description": "Identifier of the field to be modified when the trigger condition is met."
+        },
+        "display": {
+          "type": "boolean",
+          "description": "Controls whether the target field is visible (true) or hidden (false)."
+        },
+        "value": {
+          "description": "Sets the value of the target field when the trigger condition is met.",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Controls whether the target field is disabled (true) or enabled (false)."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Controls whether the target field is required (true) or optional (false)."
+        },
+        "help": {
+          "$ref": "#/definitions/help"
+        },
+        "label": {
+          "type": "string",
+          "description": "Sets the display label text for the target field."
+        },
+        "markdownMessage": {
+          "$ref": "#/definitions/markdownMessage"
+        },
+        "hideForPlatform": {
+          "$ref": "#/definitions/HideForPlatform"
+        }
+      },
+      "required": [
+        "fieldId"
+      ]
+    },
+    "modifyFieldsOnValue": {
+      "type": "array",
+      "description": "Dynamic field modification system that changes field properties based on the current value of the parent field.",
+      "items": {
+        "$ref": "#/definitions/fieldToModify"
+      }
+    },
+    "AutoCompleteFields": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "$ref": "#/definitions/entityLabel"
+              },
+              "children": {
+                "type": "array",
+                "description": "An array of options with a label and a value.",
+                "items": {
+                  "$ref": "#/definitions/ValueLabelPair"
+                }
+              }
+            },
+            "required": [
+              "label",
+              "children"
+            ]
+          }
+        },
+        {
+          "type": "array",
+          "description": "An array of options with a label and a value.",
+          "items": {
+            "$ref": "#/definitions/ValueLabelPair"
+          }
+        }
+      ]
+    },
+    "IntervalValue": {
+      "description": "Valid interval values: -1, positive numbers (seconds), or CRON expressions for scheduling.",
+      "anyOf": [
+        {
+          "type": "number",
+          "const": -1
+        },
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^((?:-1|\\d+(?:\\.\\d+)?)|(([\\*\\d{1,2}\\,\\-\\/]+\\s){4}[\\*\\d{1,2}\\,\\-\\/]+))$"
+        }
+      ]
+    },
+    "Groups": {
+      "type": "array",
+      "description": "It is used to divide forms into distinct sections, each comprising relevant fields.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "type": "object",
+            "properties": {
+              "isExpandable": {
+                "type": "boolean",
+                "description": "Used to hide/show fields of the group.",
+                "default": false
+              },
+              "expand": {
+                "type": "boolean",
+                "description": "Used  to show all fields of the group while opening the form.",
+                "default": false
+              }
+            }
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Displays the title of a specific group."
+          },
+          "fields": {
+            "type": "array",
+            "description": "specifies the list of fields in a group. All fields must be present in the entity.",
+            "items": {
+              "type": "string",
+              "pattern": "^\\w+$"
+            }
+          }
+        },
+        "required": [
+          "label",
+          "fields"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
