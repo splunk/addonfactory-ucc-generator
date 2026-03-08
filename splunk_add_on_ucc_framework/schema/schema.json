@@ -461,6 +461,10 @@
           "type": "string",
           "description": "Description of the custom search command. It is an required attribute for searchbnf.conf."
         },
+        "shortdesc": {
+          "type": "string",
+          "description": "Short description or the custom search command, used as shortdesc in searchbnf.conf"
+        },
         "syntax": {
           "type": "string",
           "maxLength": 100,
@@ -475,10 +479,21 @@
             "deprecated"
           ]
         },
+        "tags": {
+          "type": "string",
+          "description": "One or more words that users might type into the search bar which are similar to the command name."
+        },
         "arguments": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/arguments"
+          },
+          "minItems": 1
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/searchExample"
           },
           "minItems": 1
         }
@@ -526,6 +541,25 @@
       ],
       "additionalProperties": false
     },
+    "searchExample": {
+      "type": "object",
+      "description": "Search example used for searchbnf.conf",
+      "properties": {
+        "search": {
+          "type": "string",
+          "description": "Example search string"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Comment for the search string which is used for searchbnf.conf"
+        }
+      },
+      "required": [
+        "search",
+        "comment"
+      ],
+      "additionalProperties": false
+    },
     "CustomSearchCommandValidator": {
       "type": "object",
       "description": "It is used to validate the values of arguments for custom search command",
@@ -544,6 +578,21 @@
         },
         {
           "$ref": "#/definitions/CustomBooleanValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomSetValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomMatchValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomListValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomMapValidator"
+        },
+        {
+          "$ref": "#/definitions/CustomDurationValidator"
         }
       ]
     },
@@ -626,6 +675,111 @@
           "const": "Boolean",
           "type": "string",
           "description": "Validates Boolean option values."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomSetValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Set",
+          "type": "string",
+          "description": "Validates value against a set of allowed values."
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of allowed values."
+        }
+      },
+      "required": [
+        "type",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "CustomMatchValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Match",
+          "type": "string",
+          "description": "Validates option values by regex pattern"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name for the pattern, which is used for the error message."
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Regular expression pattern to validate against."
+        }
+      },
+      "required": [
+        "type",
+        "pattern"
+      ],
+      "additionalProperties": false
+    },
+    "CustomListValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "List",
+          "type": "string",
+          "description": "Validates a list of strings."
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "CustomMapValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Map",
+          "type": "string",
+          "description": "Validates map option values where the value must be a valid key which is replaced by the value.."
+        },
+        "map": {
+          "type": "object",
+          "description": "Map which is used to validate and translate option values.",
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "map"
+      ],
+      "additionalProperties": false
+    },
+    "CustomDurationValidator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "Duration",
+          "type": "string",
+          "description": "Validates duration option values."
         }
       },
       "required": [
