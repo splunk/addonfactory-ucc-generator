@@ -69,6 +69,25 @@ logger = logging.getLogger("ucc_gen")
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
 
+def _inject_app_name_in_base_html(ta_name: str, outputdir: str) -> None:
+    """
+    Replace __APP_NAME__ placeholder in base.html with the actual add-on name.
+
+    Args:
+        ta_name: Add-on name.
+        outputdir: output directory.
+    """
+    base_html_path = os.path.join(
+        outputdir, ta_name, "appserver", "templates", "base.html"
+    )
+    if not os.path.isfile(base_html_path):
+        return
+    with open(base_html_path) as f:
+        content = f.read()
+    with open(base_html_path, "w") as f:
+        f.write(content.replace("__APP_NAME__", ta_name.lower()))
+
+
 def _modify_and_replace_token_for_oauth_templates(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ) -> None:
@@ -92,8 +111,9 @@ def _modify_and_replace_token_for_oauth_templates(
             s = f.read()
 
         with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-            s = s.replace("${ta.name}", ta_name.lower())
-            s = s.replace("${ta.version}", global_config.version)
+            s = s.replace("__APP_NAME__", ta_name.lower())
+            s = s.replace("__TA_NAME__", ta_name.lower())
+            s = s.replace("__TA_VERSION__", global_config.version)
             f.write(s)
 
         redirect_js_dest = (
@@ -613,6 +633,7 @@ def generate(
             global_config,
             output_directory,
         )
+        _inject_app_name_in_base_html(ta_name, output_directory)
     if global_config.has_inputs():
         logger.info("Generating inputs code")
         _add_modular_input(ta_name, global_config, output_directory, gc_path)
