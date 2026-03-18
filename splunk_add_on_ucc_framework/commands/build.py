@@ -85,7 +85,9 @@ def _inject_app_name_in_base_html(ta_name: str, outputdir: str) -> None:
     with open(base_html_path) as f:
         content = f.read()
     with open(base_html_path, "w") as f:
-        f.write(content.replace("__APP_NAME__", ta_name.lower()))
+        # Splunk static app URLs are keyed by the real app name from the package.
+        # Lowercasing here breaks asset resolution for mixed-case app names.
+        f.write(content.replace("__APP_NAME__", ta_name))
 
 
 def _modify_and_replace_token_for_oauth_templates(
@@ -111,7 +113,7 @@ def _modify_and_replace_token_for_oauth_templates(
             s = f.read()
 
         with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-            s = s.replace("__APP_NAME__", ta_name.lower())
+            s = s.replace("__APP_NAME__", ta_name)
             s = s.replace("__TA_NAME__", ta_name.lower())
             s = s.replace("__TA_VERSION__", global_config.version)
             f.write(s)

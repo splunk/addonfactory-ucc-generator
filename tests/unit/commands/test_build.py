@@ -3,12 +3,15 @@ from random import randint
 from unittest.mock import MagicMock, patch
 import pytest
 import platform
+from types import SimpleNamespace
 
 from splunk_add_on_ucc_framework.commands.build import (
     _add_modular_input,
     _get_build_output_path,
     _get_python_version_from_executable,
     _get_and_check_global_config_path,
+    _inject_app_name_in_base_html,
+    _modify_and_replace_token_for_oauth_templates,
     generate,
     _get_num_of_args,
 )
@@ -137,6 +140,92 @@ def test_get_python_version_from_executable_nonexisting_command():
 
     with pytest.raises(CouldNotIdentifyPythonVersionException):
         _get_python_version_from_executable(target_python_version)
+
+
+def test_inject_app_name_in_base_html_preserves_app_name_case(tmp_path):
+    ta_name = "Splunk_TA_UCCExample"
+    base_html_path = (
+        tmp_path / ta_name / "appserver" / "templates" / "base.html"
+    )
+    base_html_path.parent.mkdir(parents=True)
+    base_html_path.write_text(
+        '<script type="module" src="/en-US/static/app/__APP_NAME__/js/build/entry_page.js"></script>'
+    )
+
+    _inject_app_name_in_base_html(ta_name, str(tmp_path))
+
+    assert (
+        base_html_path.read_text()
+        == '<script type="module" src="/en-US/static/app/Splunk_TA_UCCExample/js/build/entry_page.js"></script>'
+    )
+
+
+def test_inject_app_name_in_base_html_skips_when_template_is_missing(tmp_path):
+    ta_name = "Splunk_TA_UCCExample"
+
+    _inject_app_name_in_base_html(ta_name, str(tmp_path))
+
+    assert not (tmp_path / ta_name / "appserver" / "templates" / "base.html").exists()
+
+
+def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(
+    tmp_path,
+):
+    ta_name = "Splunk_TA_UCCExample"
+    build_dir = tmp_path / ta_name / "appserver"
+    templates_dir = build_dir / "templates"
+    js_dir = build_dir / "static" / "js" / "build"
+    templates_dir.mkdir(parents=True)
+    js_dir.mkdir(parents=True)
+
+    redirect_html_path = templates_dir / "redirect.html"
+    redirect_html_path.write_text(
+        '<script src="/en-US/static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js"></script>'
+    )
+    (js_dir / "redirect_page.js").write_text("console.log('redirect');")
+
+    global_config = SimpleNamespace(
+        version="1.2.3",
+        has_oauth=lambda: True,
+    )
+
+    _modify_and_replace_token_for_oauth_templates(
+        ta_name, global_config, str(tmp_path)
+    )
+
+    expected_redirect_html_path = templates_dir / "splunk_ta_uccexample_redirect.html"
+    assert expected_redirect_html_path.read_text() == (
+        '<script src="/en-US/static/app/Splunk_TA_UCCExample/js/build/'
+        'splunk_ta_uccexample_redirect_page.1.2.3.js"></script>'
+    )
+
+
+def test_modify_and_replace_token_for_oauth_templates_removes_files_when_oauth_disabled(
+    tmp_path,
+):
+    ta_name = "Splunk_TA_UCCExample"
+    build_dir = tmp_path / ta_name / "appserver"
+    templates_dir = build_dir / "templates"
+    js_dir = build_dir / "static" / "js" / "build"
+    templates_dir.mkdir(parents=True)
+    js_dir.mkdir(parents=True)
+
+    redirect_html_path = templates_dir / "redirect.html"
+    redirect_js_path = js_dir / "redirect_page.js"
+    redirect_html_path.write_text("redirect")
+    redirect_js_path.write_text("console.log('redirect');")
+
+    global_config = SimpleNamespace(
+        version="1.2.3",
+        has_oauth=lambda: False,
+    )
+
+    _modify_and_replace_token_for_oauth_templates(
+        ta_name, global_config, str(tmp_path)
+    )
+
+    assert not redirect_html_path.exists()
+    assert not redirect_js_path.exists()
 
 
 @pytest.mark.parametrize(
