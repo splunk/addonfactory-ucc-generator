@@ -176,7 +176,9 @@
     "@splunk/dashboard-ui": "29.4.0",
     "@splunk/dashboard-utils": "29.4.0",
     "@splunk/dashboard-validation": "29.4.0",
-    "@splunk/datasource-utils": "29.4.0"
+    "@splunk/datasource-utils": "29.4.0",
+    "ajv": "^8.18.0",
+    "diff": "^5.2.2"
   },
   "engines": {
     "node": "22.22.0",
