@@ -1,5 +1,17 @@
 # Changelog
 
+# [6.2.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.1.0...v6.2.0) (2026-03-04)
+
+
+### Bug Fixes
+
+* add 0.0.10 as a known schemaVersion ([#1981](https://github.com/splunk/addonfactory-ucc-generator/issues/1981)) ([0b02c70](https://github.com/splunk/addonfactory-ucc-generator/commit/0b02c70df7a8373fcb866b948d37b60e32acde7f))
+
+
+### Features
+
+* preserve masked value for encrypted filed on edit mode. ([#1945](https://github.com/splunk/addonfactory-ucc-generator/issues/1945)) ([8dd7f30](https://github.com/splunk/addonfactory-ucc-generator/commit/8dd7f30ca3395cd24ce59ffebd4a9636d8b05f80))
+
 # [6.1.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.0.1...v6.1.0) (2025-11-13)
 
 
