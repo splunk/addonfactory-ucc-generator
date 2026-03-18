@@ -182,7 +182,9 @@
     "@splunk/dashboard-types/ajv": "^8.18.0",
     "table/ajv": "^8.18.0",
     "@rushstack/node-core-library/ajv": "^8.18.0",
-    "diff": "^5.2.2"
+    "diff": "^5.2.2",
+    "minimatch": "^10.2.2",
+    "test-exclude": "^8.0.0"
   },
   "engines": {
     "node": "22.22.0",
