@@ -177,7 +177,11 @@
     "@splunk/dashboard-utils": "29.4.0",
     "@splunk/dashboard-validation": "29.4.0",
     "@splunk/datasource-utils": "29.4.0",
-    "ajv": "^8.18.0",
+    "@splunk/dashboard-definition/ajv": "^8.18.0",
+    "@splunk/dashboard-validation/ajv": "^8.18.0",
+    "@splunk/dashboard-types/ajv": "^8.18.0",
+    "table/ajv": "^8.18.0",
+    "@rushstack/node-core-library/ajv": "^8.18.0",
     "diff": "^5.2.2"
   },
   "engines": {
