@@ -630,12 +630,6 @@ def generate(
     if global_config.has_pages():
         builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
         builder_obj.build()
-        _modify_and_replace_token_for_oauth_templates(
-            ta_name,
-            global_config,
-            output_directory,
-        )
-        _inject_app_name_in_base_html(ta_name, output_directory)
     if global_config.has_inputs():
         logger.info("Generating inputs code")
         _add_modular_input(ta_name, global_config, output_directory, gc_path)
@@ -668,6 +662,17 @@ def generate(
     comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
+
+    # Apply template placeholder replacement on the final copied output.
+    # Running this before recursive_overwrite causes package templates to
+    # overwrite the transformed files and leaves placeholders behind.
+    if global_config.has_pages():
+        _modify_and_replace_token_for_oauth_templates(
+            ta_name,
+            global_config,
+            output_directory,
+        )
+        _inject_app_name_in_base_html(ta_name, output_directory)
 
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME

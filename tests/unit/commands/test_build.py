@@ -1,5 +1,6 @@
 import os
 from random import randint
+from typing import cast
 from unittest.mock import MagicMock, patch
 import pytest
 import platform
@@ -18,6 +19,7 @@ from splunk_add_on_ucc_framework.commands.build import (
 from splunk_add_on_ucc_framework.exceptions import (
     CouldNotIdentifyPythonVersionException,
 )
+from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 from splunk_add_on_ucc_framework import __version__
 from tests.unit.helpers import get_path_to_source_dir
@@ -144,9 +146,7 @@ def test_get_python_version_from_executable_nonexisting_command():
 
 def test_inject_app_name_in_base_html_preserves_app_name_case(tmp_path):
     ta_name = "Splunk_TA_UCCExample"
-    base_html_path = (
-        tmp_path / ta_name / "appserver" / "templates" / "base.html"
-    )
+    base_html_path = tmp_path / ta_name / "appserver" / "templates" / "base.html"
     base_html_path.parent.mkdir(parents=True)
     base_html_path.write_text(
         '<script type="module" src="/en-US/static/app/__APP_NAME__/js/build/entry_page.js"></script>'
@@ -184,14 +184,15 @@ def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(
     )
     (js_dir / "redirect_page.js").write_text("console.log('redirect');")
 
-    global_config = SimpleNamespace(
-        version="1.2.3",
-        has_oauth=lambda: True,
+    global_config = cast(
+        global_config_lib.GlobalConfig,
+        SimpleNamespace(
+            version="1.2.3",
+            has_oauth=lambda: True,
+        ),
     )
 
-    _modify_and_replace_token_for_oauth_templates(
-        ta_name, global_config, str(tmp_path)
-    )
+    _modify_and_replace_token_for_oauth_templates(ta_name, global_config, str(tmp_path))
 
     expected_redirect_html_path = templates_dir / "splunk_ta_uccexample_redirect.html"
     assert expected_redirect_html_path.read_text() == (
@@ -215,14 +216,15 @@ def test_modify_and_replace_token_for_oauth_templates_removes_files_when_oauth_d
     redirect_html_path.write_text("redirect")
     redirect_js_path.write_text("console.log('redirect');")
 
-    global_config = SimpleNamespace(
-        version="1.2.3",
-        has_oauth=lambda: False,
+    global_config = cast(
+        global_config_lib.GlobalConfig,
+        SimpleNamespace(
+            version="1.2.3",
+            has_oauth=lambda: False,
+        ),
     )
 
-    _modify_and_replace_token_for_oauth_templates(
-        ta_name, global_config, str(tmp_path)
-    )
+    _modify_and_replace_token_for_oauth_templates(ta_name, global_config, str(tmp_path))
 
     assert not redirect_html_path.exists()
     assert not redirect_js_path.exists()
