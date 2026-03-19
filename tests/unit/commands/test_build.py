@@ -149,14 +149,14 @@ def test_inject_app_name_in_base_html_preserves_app_name_case(tmp_path):
     base_html_path = tmp_path / ta_name / "appserver" / "templates" / "base.html"
     base_html_path.parent.mkdir(parents=True)
     base_html_path.write_text(
-        '<script type="module" src="/en-US/static/app/__APP_NAME__/js/build/entry_page.js"></script>'
+        '<script type="module" src="static/app/__APP_NAME__/js/build/entry_page.js"></script>'
     )
 
     _inject_app_name_in_base_html(ta_name, str(tmp_path))
 
     assert (
         base_html_path.read_text()
-        == '<script type="module" src="/en-US/static/app/Splunk_TA_UCCExample/js/build/entry_page.js"></script>'
+        == '<script type="module" src="static/app/Splunk_TA_UCCExample/js/build/entry_page.js"></script>'
     )
 
 
@@ -180,7 +180,7 @@ def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(
 
     redirect_html_path = templates_dir / "redirect.html"
     redirect_html_path.write_text(
-        '<script src="/en-US/static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js"></script>'
+        '<script src="static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js"></script>'
     )
     (js_dir / "redirect_page.js").write_text("console.log('redirect');")
 
@@ -196,7 +196,7 @@ def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(
 
     expected_redirect_html_path = templates_dir / "splunk_ta_uccexample_redirect.html"
     assert expected_redirect_html_path.read_text() == (
-        '<script src="/en-US/static/app/Splunk_TA_UCCExample/js/build/'
+        '<script src="static/app/Splunk_TA_UCCExample/js/build/'
         'splunk_ta_uccexample_redirect_page.1.2.3.js"></script>'
     )
 

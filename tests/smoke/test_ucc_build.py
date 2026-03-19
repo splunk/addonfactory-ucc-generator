@@ -291,58 +291,91 @@ def test_ucc_generate_with_configuration():
             "package_global_config_configuration",
             "package",
         )
-        build.generate(
-            source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
+        base_html_testdata = (
+            Path(package_folder) / "appserver" / "templates" / "base.html"
         )
+        base_html_original = base_html_testdata.read_text()
+        base_html_testdata.write_text(
+            """\
+<%!
+from splunk.appserver.mrsparkle.lib import util
 
-        expected_folder = path.join(
-            path.dirname(__file__),
-            "..",
-            "testdata",
-            "expected_addons",
-            "expected_output_global_config_configuration",
-            "Splunk_TA_UCCExample",
+app_name = cherrypy.request.path_info.split('/')[3]
+%>\
+<!DOCTYPE html>
+<html class="no-js" lang="">
+    <head></head>
+    <body>
+        <script src="${make_url('/config?autoload=1')}" crossorigin="use-credentials"></script>
+        <script>
+            __splunkd_partials__ = ${json_decode(splunkd)};
+        </script>
+        <% page_path = "/static/app/" + app_name + "/js/build/entry_page.js" %>
+        <script type="module" src="${make_url(page_path)}"></script>
+    </body>
+</html>
+"""
         )
-        actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+        try:
+            build.generate(
+                source=package_folder, output_directory=temp_dir, addon_version="1.1.1"
+            )
 
-        # app.manifest and appserver/static/js/build/globalConfig.json
-        # should be included too, but they may introduce flaky tests as
-        # their content depends on the git commit.
-        _compare_app_conf(expected_folder, actual_folder)
-        # Expected add-on package folder does not have "lib" in it.
-        files_to_be_equal = [
-            ("README.txt",),
-            ("default", "restmap.conf"),
-            ("default", "splunk_ta_uccexample_settings.conf"),
-            ("default", "web.conf"),
-            ("default", "server.conf"),
-            ("default", "data", "ui", "nav", "default.xml"),
-            ("default", "data", "ui", "views", "configuration.xml"),
-            ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
-            ("bin", "import_declare_test.py"),
-            ("bin", "splunk_ta_uccexample_rh_account.py"),
-            ("bin", "splunk_ta_uccexample_rh_oauth.py"),
-            ("bin", "splunk_ta_uccexample_rh_settings.py"),
-            ("README", "splunk_ta_uccexample_account.conf.spec"),
-            ("README", "splunk_ta_uccexample_settings.conf.spec"),
-            ("metadata", "default.meta"),
-            ("appserver", "static", "openapi.json"),
-            ("appserver", "templates", "base.html"),
-        ]
-        helpers.compare_file_content(
-            files_to_be_equal,
-            expected_folder,
-            actual_folder,
-        )
-        files_to_exist = [
-            ("static", "appIcon.png"),
-            ("static", "appIcon_2x.png"),
-            ("static", "appIconAlt.png"),
-            ("static", "appIconAlt_2x.png"),
-        ]
-        for f in files_to_exist:
-            actual_file_path = path.join(actual_folder, *f)
-            assert path.exists(actual_file_path)
+            expected_folder = path.join(
+                path.dirname(__file__),
+                "..",
+                "testdata",
+                "expected_addons",
+                "expected_output_global_config_configuration",
+                "Splunk_TA_UCCExample",
+            )
+            actual_folder = path.join(temp_dir, "Splunk_TA_UCCExample")
+
+            # app.manifest and appserver/static/js/build/globalConfig.json
+            # should be included too, but they may introduce flaky tests as
+            # their content depends on the git commit.
+            _compare_app_conf(expected_folder, actual_folder)
+            # Expected add-on package folder does not have "lib" in it.
+            files_to_be_equal = [
+                ("README.txt",),
+                ("default", "restmap.conf"),
+                ("default", "splunk_ta_uccexample_settings.conf"),
+                ("default", "web.conf"),
+                ("default", "server.conf"),
+                ("default", "data", "ui", "nav", "default.xml"),
+                ("default", "data", "ui", "views", "configuration.xml"),
+                ("default", "data", "ui", "views", "splunk_ta_uccexample_redirect.xml"),
+                ("bin", "import_declare_test.py"),
+                ("bin", "splunk_ta_uccexample_rh_account.py"),
+                ("bin", "splunk_ta_uccexample_rh_oauth.py"),
+                ("bin", "splunk_ta_uccexample_rh_settings.py"),
+                ("README", "splunk_ta_uccexample_account.conf.spec"),
+                ("README", "splunk_ta_uccexample_settings.conf.spec"),
+                ("metadata", "default.meta"),
+                ("appserver", "static", "openapi.json"),
+                ("appserver", "templates", "base.html"),
+            ]
+            helpers.compare_file_content(
+                files_to_be_equal,
+                expected_folder,
+                actual_folder,
+            )
+            files_to_exist = [
+                ("static", "appIcon.png"),
+                ("static", "appIcon_2x.png"),
+                ("static", "appIconAlt.png"),
+                ("static", "appIconAlt_2x.png"),
+            ]
+            for f in files_to_exist:
+                actual_file_path = path.join(actual_folder, *f)
+                assert path.exists(actual_file_path)
+
+            updated_base_html = base_html_testdata.read_text()
+            assert "cherrypy.request.path_info" not in updated_base_html
+            assert "${make_url(" not in updated_base_html
+            assert "__APP_NAME__" in updated_base_html
+        finally:
+            base_html_testdata.write_text(base_html_original)
 
 
 def test_ucc_generate_for_conf_only_TA():
