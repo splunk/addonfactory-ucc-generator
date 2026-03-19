@@ -34,8 +34,11 @@ class SearchbnfConf(FileGenerator):
                     searchbnf_dict = {
                         "command_name": command["commandName"],
                         "description": command["description"],
+                        "shortdesc": command.get("shortdesc", None),
                         "syntax": command["syntax"],
                         "usage": command["usage"],
+                        "tags": command.get("tags", None),
+                        "examples": command.get("examples", []),
                     }
                     self.searchbnf_info.append(searchbnf_dict)
 
