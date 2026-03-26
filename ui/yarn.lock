@@ -992,7 +992,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.27.1"
     "@babel/plugin-transform-react-pure-annotations" "^7.27.1"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.14.0", "@babel/runtime@^7.17.8", "@babel/runtime@^7.21.5", "@babel/runtime@^7.27.6", "@babel/runtime@^7.28.4", "@babel/runtime@^7.28.6", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.14.0", "@babel/runtime@^7.17.8", "@babel/runtime@^7.21.5", "@babel/runtime@^7.27.0", "@babel/runtime@^7.27.6", "@babel/runtime@^7.28.4", "@babel/runtime@^7.28.6", "@babel/runtime@^7.9.2":
   version "7.28.6"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.28.6.tgz#d267a43cb1836dc4d182cce93ae75ba954ef6d2b"
   integrity sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==
@@ -2972,7 +2972,7 @@
     "@splunk/ui-utils" "^1.12.0"
     prop-types "^15.8.1"
 
-"@splunk/react-icons@^5.0.0", "@splunk/react-icons@^5.2.0", "@splunk/react-icons@^5.5.0", "@splunk/react-icons@^5.6.0", "@splunk/react-icons@^5.8.0":
+"@splunk/react-icons@^5.0.0", "@splunk/react-icons@^5.1.0", "@splunk/react-icons@^5.2.0", "@splunk/react-icons@^5.5.0", "@splunk/react-icons@^5.6.0", "@splunk/react-icons@^5.8.0":
   version "5.8.0"
   resolved "https://registry.npmjs.org/@splunk/react-icons/-/react-icons-5.8.0.tgz#d9a4ec496690fe76123dc5fcb4cb9218d955e91f"
   integrity sha512-E0ZNOCnpwrINWtWAWs+UXnw57z7mamesyt5JIMejkwjE67o+NDz4r+9dzN8ii8l4MHZB24xwxMJDfombHjl/Fg==
@@ -6263,7 +6263,7 @@ decamelize@^1.1.0, decamelize@^1.2.0:
   resolved "https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
   integrity sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==
 
-decimal.js-light@^2.5.1:
+decimal.js-light@^2.2.3, decimal.js-light@^2.5.1:
   version "2.5.1"
   resolved "https://registry.npmjs.org/decimal.js-light/-/decimal.js-light-2.5.1.tgz#134fd32508f19e208f4fb2f8dac0d2626a867934"
   integrity sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg==
