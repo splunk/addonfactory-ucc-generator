@@ -2930,7 +2930,22 @@
     "@splunk/ui-utils" "^1.6.0"
     lodash "^4.17.14"
 
-"@splunk/react-events-viewer@^28.0.0", "@splunk/react-events-viewer@^28.4.0":
+"@splunk/react-events-viewer@^28.0.0":
+  version "28.0.0"
+  resolved "https://registry.npmjs.org/@splunk/react-events-viewer/-/react-events-viewer-28.0.0.tgz"
+  integrity sha512-1uz51mA08bpzh+Xlmf5hF7kuE9XKBogNxvbs2df12Uy8wVf37DMOK3nOVPs76wOIYe23oUrFBjf13BkrFaLepw==
+  dependencies:
+    "@babel/runtime" "^7.27.0"
+    "@splunk/moment" "^0.7.0"
+    "@splunk/react-icons" "^5.1.0"
+    "@splunk/react-ui" "^5.1.0"
+    "@splunk/splunk-utils" "^3.2.0"
+    "@splunk/themes" "^1.1.0"
+    "@splunk/ui-utils" "^1.10.0"
+    lodash "^4.17.21"
+    prop-types "^15.8.1"
+
+"@splunk/react-events-viewer@^28.4.0":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/react-events-viewer/-/react-events-viewer-28.4.0.tgz#ab0c2b2b78a380b8c8daa4644fc41750762492ec"
   integrity sha512-5wwghjXDhHSVQkDbWWb1kHXX2gminBg8odm6x7wXaxepYQB/c8BMUW24y4ve/oqRm8BJdmt6Ze1nuub6fe1VhA==
@@ -2967,14 +2982,14 @@
     prop-types "^15.6.2"
 
 "@splunk/react-page@^8.0.0":
-  version "8.2.1"
-  resolved "https://registry.npmjs.org/@splunk/react-page/-/react-page-8.2.1.tgz#a1f36bd6ebaaf817c9caea7f5bffdcfc364d5b64"
-  integrity sha512-IRH3jFpaDlx4hjB1SCa7+mTptVmBWaRyH7ttIl2KUxpy+PZQrifHSfoDsBvO2ZyNb4GLOBUDtus7jFz+YMLgAQ==
+  version "8.0.0"
+  resolved "https://registry.npmjs.org/@splunk/react-page/-/react-page-8.0.0.tgz"
+  integrity sha512-7hwCCcX0kloUPX7zvocQMYE190ZeaOgALy3/sGP8qcnV8UK2jioJ4LJcN9BNgevPH60Jr4VyTAx2XMexUCMN6Q==
   dependencies:
-    "@splunk/react-ui" "^5.8.0"
-    "@splunk/splunk-utils" "^3.4.0"
-    "@splunk/themes" "^1.5.0"
-    "@splunk/ui-utils" "^1.12.0"
+    "@splunk/react-ui" "^5.0.0"
+    "@splunk/splunk-utils" "^3.2.0"
+    "@splunk/themes" "^1.0.0"
+    "@splunk/ui-utils" "^1.9.0"
     prop-types "^15.6.2"
     scriptjs "^2.5.8"
 
@@ -3016,7 +3031,29 @@
     prop-types "^15.6.2"
     react-flip-move "^3.0.1"
 
-"@splunk/react-ui@^5.0.0", "@splunk/react-ui@^5.1.0", "@splunk/react-ui@^5.7.0", "@splunk/react-ui@^5.8.0":
+"@splunk/react-ui@^5.0.0", "@splunk/react-ui@^5.1.0":
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-5.2.0.tgz"
+  integrity sha512-uvLpcBj569b6AkJKAaXnYExSRQpphbw4zCa+8FwuGToPkY1lxRcpPYH72FCttmqxC5msmgMjdui9TlWYSvhVUw==
+  dependencies:
+    "@dnd-kit/core" "^6.1.0"
+    "@dnd-kit/modifiers" "^7.0.0"
+    "@dnd-kit/sortable" "^8.0.0"
+    "@dnd-kit/utilities" "^3.2.2"
+    "@react-spring/web" "^9.7.5"
+    "@splunk/react-icons" "^5.2.0"
+    "@splunk/themes" "^1.2.0"
+    "@splunk/ui-utils" "^1.10.0"
+    decimal.js-light "^2.2.3"
+    lodash "^4.17.14"
+    moment "^2.29.4"
+    prop-types "^15.6.2"
+    react-markdown "^8.0.7"
+    remark-gfm "^1.0.0"
+    tinycolor2 "^1.4.1"
+    use-typed-event-listener "^3.0.0"
+
+"@splunk/react-ui@^5.7.0":
   version "5.8.0"
   resolved "https://registry.npmjs.org/@splunk/react-ui/-/react-ui-5.8.0.tgz#c87238740e6a9aabdef1cd3ac892ef7c63830762"
   integrity sha512-GFssRwTM1NPOyL5ibsXqg78is0Krbex8mnKK+r6pWn/WUc8g6vsXfAiUM929kQ1vFIv6l7Ywj8+pXKWW/0f/2A==
@@ -3049,7 +3086,17 @@
     lodash "^4.17.14"
     rxjs "^5.4.2"
 
-"@splunk/splunk-utils@^3.0.0", "@splunk/splunk-utils@^3.1.0", "@splunk/splunk-utils@^3.2.0", "@splunk/splunk-utils@^3.3.0", "@splunk/splunk-utils@^3.4.0":
+"@splunk/splunk-utils@^3.0.0", "@splunk/splunk-utils@^3.1.0", "@splunk/splunk-utils@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/@splunk/splunk-utils/-/splunk-utils-3.2.0.tgz"
+  integrity sha512-cysY2Tm+JznegFDCMPC+SvuJPVB0elMiVKqldKkQGwreZaGXRGFYJsEeWadWglDZ3f36xDtFuNwZkCDth+29lw==
+  dependencies:
+    "@splunk/ui-utils" "^1.8.0"
+    lodash "^4.17.14"
+    querystring "^0.2.1"
+    scriptjs "^2.5.8"
+
+"@splunk/splunk-utils@^3.3.0", "@splunk/splunk-utils@^3.4.0":
   version "3.4.0"
   resolved "https://registry.npmjs.org/@splunk/splunk-utils/-/splunk-utils-3.4.0.tgz#f0918b938c93964ed422aafbf9e8b709129a9843"
   integrity sha512-RZDp9U+UCgS2A41zRBVvHvgMTYPsRxDv1BdKzKc78KH5xG3qwnpxwbYNoLhMhc9h0Wd+FTkL07qxj7TWbzxr2w==
@@ -3059,7 +3106,16 @@
     querystring "^0.2.1"
     scriptjs "^2.5.8"
 
-"@splunk/themes@^1.0.0", "@splunk/themes@^1.2.0", "@splunk/themes@^1.4.1", "@splunk/themes@^1.5.0":
+"@splunk/themes@^1.0.0", "@splunk/themes@^1.1.0", "@splunk/themes@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/@splunk/themes/-/themes-1.2.0.tgz"
+  integrity sha512-z59iBDeDSu+cyCXk/J9lm/bjVAweIA3QwNUHewkhy0J9F4XrkpN1dv/8UvSOezoGId5Zj9bPWnMzBn5Z/l8yIQ==
+  dependencies:
+    color-blend "^2.0.9"
+    lodash "^4.17.14"
+    tinycolor2 "^1.4.1"
+
+"@splunk/themes@^1.4.1", "@splunk/themes@^1.5.0":
   version "1.5.0"
   resolved "https://registry.npmjs.org/@splunk/themes/-/themes-1.5.0.tgz#f04439c5cf0bf3cd50aeaa13404f0b8d49dd4c40"
   integrity sha512-s+JJaNZE6SfKUFWZhwOXtWGgACvLPsaJJ0tonFbPn6MDaTfV130Yn6XmJGztF6cS34YL4ateVPtsz9W164fVmw==
@@ -10492,9 +10548,9 @@ numeral@^2.0.6:
   integrity sha512-qaKRmtYPZ5qdw4jWJD6bxEf1FJEqllJrwxCLIm0sQU/A7v2/czigzOb+C2uSiFsa9lBUzeH7M1oK+Q+OLxL3kA==
 
 nwsapi@^2.2.16:
-  version "2.2.23"
-  resolved "https://registry.npmjs.org/nwsapi/-/nwsapi-2.2.23.tgz#59712c3a88e6de2bb0b6ccc1070397267019cf6c"
-  integrity sha512-7wfH4sLbt4M0gCDzGE6vzQBo0bfTKjU7Sfpqy/7gs1qBfYz2vEJH6vXcBKpO3+6Yu1telwd0t9HpyOoLEQQbIQ==
+  version "2.2.21"
+  resolved "https://registry.npmjs.org/nwsapi/-/nwsapi-2.2.21.tgz"
+  integrity sha512-o6nIY3qwiSXl7/LuOU0Dmuctd34Yay0yeuZRLFmDPrrdHpXKFndPj3hM+YEPVHYC5fx2otBx4Ilc/gyYSAUaIA==
 
 nyc@^15.1.0:
   version "15.1.0"
