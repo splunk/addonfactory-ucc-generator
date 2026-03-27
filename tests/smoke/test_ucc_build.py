@@ -787,9 +787,7 @@ def test_check_ucc_ui_files(tmp_path):
     normalized_files = [remove_hash(f) for f in cleaned_files]
 
     expected_js_files_list = [
-        "ArrowBroadUnderbarDown.js",
         "assets",
-        "ChevronUp.js",
         "ConfigurationPage.js",
         "Dashboard.consts.js",
         "Dashboard.Custom.js",
@@ -809,6 +807,7 @@ def test_check_ucc_ui_files(tmp_path):
         "Menu.js",
         "purify.es.js",
         "redirect_page.js",
+        "Search.js",
         "Search.js",
         "usePlatform.js",
     ]
