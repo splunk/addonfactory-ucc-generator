@@ -36,9 +36,9 @@
       "enabled": false
     },
     {
-      "description": "Ignore Python version updates",
+      "description": "Ignore Python version updates in pyproject.toml",
       "matchManagers": ["poetry"],
-      "matchPackageNames": ["python"],
+      "matchDepNames": ["python"],
       "enabled": false
     },
     {

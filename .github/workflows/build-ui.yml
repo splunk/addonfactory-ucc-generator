@@ -10,7 +10,7 @@ jobs:
         working-directory: ui
         shell: bash
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Code linting
@@ -22,7 +22,7 @@ jobs:
       - name: Pack tarball
         run: npm pack
       - name: Upload tarball as artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: UCC-UI-lib-tarball
           path: "ui/*.tgz"
@@ -34,7 +34,7 @@ jobs:
         working-directory: ui
         shell: bash
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Build UCC library
@@ -44,7 +44,7 @@ jobs:
       - name: List deps into dependencies.txt
         run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/dependencies.txt
       - name: Upload dist with name UCC-UI-build
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: UCC-UI-build
           path: ui/dist/build
