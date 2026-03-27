@@ -49,8 +49,9 @@ def test_package_files_update_replaces_legacy_base_template(tmp_path, caplog):
     handle_package_files_update(str(tmp_path))
 
     assert '<script src="../../config?autoload=1"' in template_path.read_text()
+    assert "window.$C.BUILD_NUMBER" in template_path.read_text()
     assert (
-        '<script type="module" src="../../static/app/__APP_NAME__/js/build/entry_page.js"></script>'
+        "'../../static/app/__APP_NAME__/js/build/entry_page.js'"
         in template_path.read_text()
     )
     assert "cherrypy.request.path_info" not in template_path.read_text()
@@ -70,8 +71,9 @@ def test_package_files_update_replaces_legacy_redirect_template(tmp_path, caplog
     handle_package_files_update(str(tmp_path))
 
     assert '<script src="../../config?autoload=1"' in template_path.read_text()
+    assert "window.$C.BUILD_NUMBER" in template_path.read_text()
     assert (
-        "../../static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js"
+        "'../../static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js'"
         in template_path.read_text()
     )
     assert "cherrypy.request.path_info" not in template_path.read_text()
@@ -100,3 +102,29 @@ def test_package_files_update_leaves_custom_template_unchanged(tmp_path, caplog)
 
 def test_package_files_update_noop_when_templates_are_absent(tmp_path):
     handle_package_files_update(str(tmp_path))
+
+
+def test_base_template_cache_busting_script():
+    from pathlib import Path
+
+    template = Path(
+        "splunk_add_on_ucc_framework/package/appserver/templates/base.html"
+    ).read_text()
+
+    # BUILD_NUMBER is used for the cache buster path segment
+    assert "window.$C.BUILD_NUMBER" in template
+    # BUILD_PUSH_NUMBER is only appended when BUILD_NUMBER is present
+    assert "_b && window.$C.BUILD_PUSH_NUMBER" in template
+    # fallback to no cache buster when $C is unavailable
+    assert "? '/@' + window.$C.BUILD_NUMBER : ''" in template
+    assert "? '.' + window.$C.BUILD_PUSH_NUMBER : ''" in template
+    # i18n.js URL is built using the cache buster
+    assert "_loadScript('../../static' + _b + _p + '/js/i18n.js')" in template
+    # i18ncatalog loads after i18n.js
+    assert (
+        ".then(function () { return _loadScript('../../i18ncatalog?autoload=1'); })"
+        in template
+    )
+    # entry_page.js loads last, as a module
+    assert "'../../static/app/__APP_NAME__/js/build/entry_page.js'" in template
+    assert "'module'" in template

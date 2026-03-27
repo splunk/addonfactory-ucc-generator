@@ -22,14 +22,30 @@
         <title>Loading</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script src="../../config?autoload=1" crossorigin="use-credentials"></script>
-        <script src="../../static/js/i18n.js"></script>
-        <script src="../../i18ncatalog?autoload=1"></script>
     </head>
 
     <body>
-        <script
-            type="module"
-            src="../../static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js"
-        ></script>
+        <script>
+            var _b = window.$C && window.$C.BUILD_NUMBER ? '/@' + window.$C.BUILD_NUMBER : '';
+            var _p = _b && window.$C.BUILD_PUSH_NUMBER ? '.' + window.$C.BUILD_PUSH_NUMBER : '';
+            function _loadScript(src, type) {
+                return new Promise(function (resolve, reject) {
+                    var s = document.createElement('script');
+                    if (type) s.type = type;
+                    s.src = src;
+                    s.onload = resolve;
+                    s.onerror = reject;
+                    document.head.appendChild(s);
+                });
+            }
+            _loadScript('../../static' + _b + _p + '/js/i18n.js')
+                .then(function () { return _loadScript('../../i18ncatalog?autoload=1'); })
+                .then(function () {
+                    return _loadScript(
+                        '../../static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js',
+                        'module'
+                    );
+                });
+        </script>
     </body>
 </html>
