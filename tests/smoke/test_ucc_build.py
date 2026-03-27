@@ -808,7 +808,7 @@ def test_check_ucc_ui_files(tmp_path):
         "purify.es.js",
         "redirect_page.js",
         "Search.js",
-        "toUpper.js",
+        "Search.js",
         "usePlatform.js",
     ]
     assert sorted(normalized_files) == sorted(expected_js_files_list)
