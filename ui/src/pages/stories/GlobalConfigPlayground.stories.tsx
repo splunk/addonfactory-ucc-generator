@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import SplunkThemeProvider from '@splunk/themes/SplunkThemeProvider';
 import TabBar, { TabBarChangeHandler } from '@splunk/react-ui/TabBar';
 import React, { useCallback, useState } from 'react';

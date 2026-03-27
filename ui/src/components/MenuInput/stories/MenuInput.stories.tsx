@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { useState, useEffect } from 'react';
 import { z } from 'zod';
-import { fn, userEvent, waitFor, within } from '@storybook/test';
+import { fn, userEvent, waitFor, within } from 'storybook/test';
 import MenuInput from '../MenuInput';
 import { setUnifiedConfig } from '../../../util/util';
 import { GlobalConfig, GlobalConfigSchema } from '../../../types/globalConfig/globalConfig';
