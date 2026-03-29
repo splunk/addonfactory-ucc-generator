@@ -296,7 +296,7 @@ jobs:
         with:
           name: test-ui-splunkd-splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
           path: ./splunkd.log
-      - uses: dorny/test-reporter@v2
+      - uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
           name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
