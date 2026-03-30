@@ -180,8 +180,7 @@
     "table/ajv": "^8.18.0",
     "@rushstack/node-core-library/ajv": "^8.18.0",
     "diff": "^5.2.2",
-    "crypto-js": "^4.2.0",
-    "minimatch": "^10.0.0"
+    "crypto-js": "^4.2.0"
   },
   "engines": {
     "node": "22.22.0",
