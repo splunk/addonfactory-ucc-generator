@@ -2393,11 +2393,11 @@
     "@sinonjs/commons" "^3.0.1"
 
 "@splunk/async-dynamic-options-evaluator@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/async-dynamic-options-evaluator/-/async-dynamic-options-evaluator-28.5.2.tgz#dd3a70ea21bcbc0df40242c5486cc0a2bc213a61"
-  integrity sha512-UgieUJO6iO2Whly2XpbbIqbslQdM8OxzzO7vWm0Q/mLlaC/g99rQRxY4m2Jc1VT/YRKzsxrUjgFv0UHUx/FoOg==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/async-dynamic-options-evaluator/-/async-dynamic-options-evaluator-28.5.3.tgz#89c58acc4c05caceebd36f99a25bc955c60d513b"
+  integrity sha512-+0PLyfhWUGmCmPR/wQvhcG6eqlQ+mkqXxy3jMhXIsqR3zKsJsigUlAksJK4dFIrlIs/aDTvxSI2hM2uM+c6MCg==
   dependencies:
-    "@splunk/visualization-encoding" "^28.5.2"
+    "@splunk/visualization-encoding" "^28.5.3"
 
 "@splunk/babel-preset@^4.0.0":
   version "4.0.0"
@@ -2411,9 +2411,9 @@
     "@babel/preset-react" "^7.0.0"
 
 "@splunk/charting-bundle@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/charting-bundle/-/charting-bundle-28.5.2.tgz#5f17b22dc8a38f97186728b238b7288cfd8b05ee"
-  integrity sha512-Lox5fS7mBsWGBfYyMwwHOvz7bfhpyWq178yiJ21r8BKZApmsD5L53FZYWJXGHa65/W62aiZp69t6h33/hEoe6g==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/charting-bundle/-/charting-bundle-28.5.3.tgz#2e2c7366d2ad2e6bf3939b6d6ce27391528dbd4f"
+  integrity sha512-bxyZm+AMbrJxnOCSSyAelZCbz3DwqGSfqmT/xP6SIcGG07FOQVoQaBkoPhsuuYkWXTnpyKgu8l/i8K5XmSAXPQ==
 
 "@splunk/dashboard-action-buttons@29.4.0":
   version "29.4.0"
@@ -2716,9 +2716,9 @@
     lodash "^4.17.14"
 
 "@splunk/react-events-viewer@^28.0.0", "@splunk/react-events-viewer@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/react-events-viewer/-/react-events-viewer-28.5.2.tgz#2dd7c9055c73dd11a0d3bf30468e8ee795a7ec27"
-  integrity sha512-AKt2Oy3fRuwQCzsn8u+E0LsdvYucWBlBuDYG3LIvLm0aW3gVG2Oym5u4bgLcfAVUa6AOxhCxI5WCyLKJk8Lubw==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/react-events-viewer/-/react-events-viewer-28.5.3.tgz#f0b4ac574cd758e3d55182e50011b41c8dc4e527"
+  integrity sha512-cyfXNHKfQpnUJoDXlatTcobIVUxL/fl0Z5QqPMBvHJJCdiDpRJeeZUhoELeXdMXy0YU78jHi/8K/pXylIBUrCQ==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@splunk/moment" "^0.7.0"
@@ -2731,9 +2731,9 @@
     prop-types "^15.8.1"
 
 "@splunk/react-field-summary@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/react-field-summary/-/react-field-summary-28.5.2.tgz#1b807c694946ab4334b8b4f8e5b5a69e270bdd44"
-  integrity sha512-hMXB8bDymeU5z/9c307Mr5gVJ7kdeLBJDhYULqzmB4bQLuT6qQuAICCju5/wgY7RMIhAAFR/M7UzV2C5fFAOSg==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/react-field-summary/-/react-field-summary-28.5.3.tgz#0c3535e143afd56801213211b1c4fc0c4bc03538"
+  integrity sha512-3OeOF+PdpmUSDkrteVxw3IzudFBQjvUqkm+mCU7cm7YjAbakRGqslZ+CbZlYM8TAkEfc0LOjpZlHYsDkrr45RQ==
   dependencies:
     "@babel/runtime" "^7.28.6"
     "@splunk/react-icons" "^5.5.0"
@@ -2871,9 +2871,9 @@
     lodash "^4.17.21"
 
 "@splunk/visualization-canvas@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualization-canvas/-/visualization-canvas-28.5.2.tgz#a1f84887921fec58e9d98eec43e4434edd504432"
-  integrity sha512-hHDSGnBzgyoL2bQgDdGeJMijsVryFJmrLEUsXU5u7kRefGKSXyXPW/2EJOmE/y91nP+LaQVgQLqLozq/4Rj8EA==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualization-canvas/-/visualization-canvas-28.5.3.tgz#15d6d6b58c4c943a5afe735936f2daff543a57c5"
+  integrity sha512-jcHbPKFO6OjMhfT7/uz6lJQRcqhD0l8TnrHb2BxFLTEY3tuLdyczjCd2KtiSuFOuomuminF12vqmCMjOTeXkpQ==
   dependencies:
     "@splunk/react-icons" "^5.5.0"
     "@splunk/react-ui" "^5.7.1"
@@ -2895,16 +2895,16 @@
     "@splunk/ui-utils" "^1.12.0"
 
 "@splunk/visualization-color-palettes@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualization-color-palettes/-/visualization-color-palettes-28.5.2.tgz#3d7599bd30d2b4d9c4ea5e18f56b4eab96638faf"
-  integrity sha512-rfGDk82W1x3w2grcbi0ZL3lyQEK6K5S1UIWibkURqu4E6Fd7Zxui6qf78LDdDZO4jN7WerA+Hfb8gZEjSvmS+g==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualization-color-palettes/-/visualization-color-palettes-28.5.3.tgz#1de7764d9ace984231f296e45681e50b14646e0b"
+  integrity sha512-RPtxevJfJXlt4FWLzcf8qMwWhsLubkZ/Bban2tyeSoeAHkdLrrEayFgAk2I2SkeFMk+G6NVCqJfpdgYIp0/geg==
   dependencies:
     "@splunk/ui-utils" "^1.12.0"
 
 "@splunk/visualization-context@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualization-context/-/visualization-context-28.5.2.tgz#a1f74380380c3ab4aa4a5bf53e115e7a0a456b15"
-  integrity sha512-lYzM2wCOH0YC9eM4TxU/Ojovn9lPD/sF8b7eBjEk+v8xntEHJF55/PGCQo8mbJPEbLucIEwFdVgSlHCdefKbhg==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualization-context/-/visualization-context-28.5.3.tgz#2b4e87784bba125e7896a76857afe9b6f14c29af"
+  integrity sha512-DCV0M2RQImT1IgkLBMlbmjKO+X7BEuGKPgiR8RJljcOKI9vgVXx3kjlXJVDdADy1Rm4wy/BjzLzWs1iUkSzEJQ==
   dependencies:
     "@splunk/ui-utils" "^1.12.0"
     uuid-v4 "^0.1.0"
@@ -2921,13 +2921,13 @@
     nearley "^2.20.1"
     numbro "2.5.0"
 
-"@splunk/visualization-encoding@^28.4.0", "@splunk/visualization-encoding@^28.5.2":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualization-encoding/-/visualization-encoding-28.5.2.tgz#060b398607f11f1ed3b5a43d9c2ca80812cc3b94"
-  integrity sha512-NFmhc5ssk4p6vfNgkyoxIA4AMr1OefA3bplwRO+YI3I3sjHlPeAfpJdw3MNWCJyKOHflJ8tYXkyFadGD+uXdGQ==
+"@splunk/visualization-encoding@^28.4.0", "@splunk/visualization-encoding@^28.5.3":
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualization-encoding/-/visualization-encoding-28.5.3.tgz#64e6c6f33da0d29e89f6550070b109119d828d2e"
+  integrity sha512-eKNCUEo1YFHZeItU7DiJNoeJrHXqNJKgCWWAfUejLpowOdmlye6xOzA8KUfWZu3aA7cOmgZK2D4sdCiULEDXKA==
   dependencies:
     "@splunk/moment" "^0.7.0"
-    "@splunk/visualization-schemas" "^28.5.2"
+    "@splunk/visualization-schemas" "^28.5.3"
     chroma-js "^3.1.2"
     lodash "^4.17.23"
     nearley "^2.20.1"
@@ -2942,9 +2942,9 @@
     "@splunk/ui-utils" "^1.12.0"
 
 "@splunk/visualization-icons@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualization-icons/-/visualization-icons-28.5.2.tgz#8385dce43b7807736943afb56384db2ee10b0be8"
-  integrity sha512-h/uBwKNSK5a4Kd2X4E8jb8qGBIJNQwbDUU3WPhtm/R8q9bjbrXF8G+vRQlYS8rjThaGbZGR41o76VITMentWOA==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualization-icons/-/visualization-icons-28.5.3.tgz#c7274de89041646259df7283c549038509d18529"
+  integrity sha512-tewThjL274vTy9H4stXmk7ByZmV9dAC2ZmOyyHAK2B5ioy4zAPfXfF9I8RlaNXWtCkYnz4gw57gAwv0zeNgF+g==
   dependencies:
     "@splunk/react-icons" "^5.5.0"
     "@splunk/ui-utils" "^1.12.0"
@@ -2958,7 +2958,7 @@
     "@splunk/visualization-schemas" "^28.4.0"
     lodash "^4.17.21"
 
-"@splunk/visualization-schemas@28.4.0", "@splunk/visualization-schemas@^28.4.0", "@splunk/visualization-schemas@^28.5.2":
+"@splunk/visualization-schemas@28.4.0", "@splunk/visualization-schemas@^28.4.0", "@splunk/visualization-schemas@^28.5.3":
   version "28.4.0"
   resolved "https://registry.npmjs.org/@splunk/visualization-schemas/-/visualization-schemas-28.4.0.tgz#5870312e52beb8e4aa33ba2a557e93b41f5ec688"
   integrity sha512-+3cCofhx5OByRk1wf6UxC5/0x9vCb3BQuRrAaUakqQdpo8g4dnO/8IRsPt0ru2TqNZEG8E/hoHxxfE47xNrUlg==
@@ -2967,9 +2967,9 @@
     "@types/json-schema" "^7.0.15"
 
 "@splunk/visualization-themes@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualization-themes/-/visualization-themes-28.5.2.tgz#9cba64487bfc419a6632ba9dc5bd4f142944f78e"
-  integrity sha512-JhEKKa+wlqwP1/p1qYTU70C13KFThg84x8n0Qq/ex+FaXy3/+ju86L3lm5wTbBYqIX1IUWMvDcV4JP+rDuARJg==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualization-themes/-/visualization-themes-28.5.3.tgz#4547b56e55236b89ede76e69bc1028839e076dc5"
+  integrity sha512-x0aqS5UStT4GsjTcWneou5nSBqc6/TPy38Cg/Duy1es6ywjCLomfmWMvmZkytBhgKNs4qJFUuAHhdj7xA9wM1A==
   dependencies:
     "@splunk/themes" "^1.5.0"
     lodash "^4.17.23"
@@ -2994,9 +2994,9 @@
     xmlserializer "^0.6.1"
 
 "@splunk/visualizations-shared@^28.4.0":
-  version "28.5.2"
-  resolved "https://registry.npmjs.org/@splunk/visualizations-shared/-/visualizations-shared-28.5.2.tgz#f34188ebff5f846fd6ad50f20bcd99cace3bc7c1"
-  integrity sha512-leLCGfMimG/gEkdpdwgmgjB9dw1cCy106Hqmud5r9FSKiK7M079utbAFGFbNq2k3f0q3dxznC5bN3XoRWVTNkQ==
+  version "28.5.3"
+  resolved "https://registry.npmjs.org/@splunk/visualizations-shared/-/visualizations-shared-28.5.3.tgz#150f485de0d5eb2f13a764969bc400efef5388da"
+  integrity sha512-O6pY2XNHDRAa6tfEJJdb8ZLgYYrFJ01z8uemSl/QtVKSV0ZTYNjN18L4GTMlGQsC105JgyqRoIBM/ZvJL7h6qA==
   dependencies:
     "@loki/create-async-callback" "^0.35.1"
     "@splunk/moment" "^0.7.0"
@@ -3004,8 +3004,8 @@
     "@splunk/react-ui" "^5.7.1"
     "@splunk/themes" "^1.5.0"
     "@splunk/ui-utils" "^1.12.0"
-    "@splunk/visualization-encoding" "^28.5.2"
-    "@splunk/visualization-schemas" "^28.5.2"
+    "@splunk/visualization-encoding" "^28.5.3"
+    "@splunk/visualization-schemas" "^28.5.3"
     element-resize-detector "^1.2.4"
     lodash "^4.17.23"
     numeral "^2.0.6"
@@ -4430,14 +4430,14 @@ axe-core@^4.10.0, axe-core@^4.2.0:
   resolved "https://registry.npmjs.org/axe-core/-/axe-core-4.11.1.tgz#052ff9b2cbf543f5595028b583e4763b40c78ea7"
   integrity sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==
 
-axios@^1.13.6, axios@^1.6.1:
-  version "1.13.6"
-  resolved "https://registry.npmjs.org/axios/-/axios-1.13.6.tgz#c3f92da917dc209a15dd29936d20d5089b6b6c98"
-  integrity sha512-ChTCHMouEe2kn713WHbQGcuYrr6fXTBiu460OTwWrWob16g1bXn4vtz07Ope7ewMozJAnEquLk5lWQWtBig9DQ==
+axios@^1.14.0, axios@^1.6.1:
+  version "1.14.0"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.14.0.tgz#7c29f4cf2ea91ef05018d5aa5399bf23ed3120eb"
+  integrity sha512-3Y8yrqLSwjuzpXuZ0oIYZ/XGgLwUIBU3uLvbcpb0pidD9ctpShJd43KSlEEkVQg6DS0G9NKyzOvBfUtDKEyHvQ==
   dependencies:
     follow-redirects "^1.15.11"
     form-data "^4.0.5"
-    proxy-from-env "^1.1.0"
+    proxy-from-env "^2.1.0"
 
 axobject-query@^4.1.0:
   version "4.1.0"
@@ -5257,12 +5257,7 @@ crypto-browserify@^3.12.1:
     randombytes "^2.1.0"
     randomfill "^1.0.4"
 
-crypto-js@^3.1.9-1:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
-  integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
-
-crypto-js@^4.0.0:
+crypto-js@^3.1.9-1, crypto-js@^4.0.0, crypto-js@^4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
   integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
@@ -10147,10 +10142,10 @@ protocol-buffers-schema@^3.3.1:
   resolved "https://registry.npmjs.org/protocol-buffers-schema/-/protocol-buffers-schema-3.6.0.tgz#77bc75a48b2ff142c1ad5b5b90c94cd0fa2efd03"
   integrity sha512-TdDRD+/QNdrCGCE7v8340QyuXd4kIWIgapsE2+n/SaGiSSbomYl4TjHlvIoCWRpE7wFt02EpB35VVA2ImcBVqw==
 
-proxy-from-env@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
-  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
+proxy-from-env@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-2.1.0.tgz#a7487568adad577cfaaa7e88c49cab3ab3081aba"
+  integrity sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==
 
 public-encrypt@^4.0.3:
   version "4.0.3"
@@ -12281,10 +12276,10 @@ vite-plugin-dts@4.5.3:
     local-pkg "^1.0.0"
     magic-string "^0.30.17"
 
-vite-plugin-node-polyfills@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.npmjs.org/vite-plugin-node-polyfills/-/vite-plugin-node-polyfills-0.25.0.tgz#dccbb76b3c81a4981a89403feabc1b74d2dc60d4"
-  integrity sha512-rHZ324W3LhfGPxWwQb2N048TThB6nVvnipsqBUJEzh3R9xeK9KI3si+GMQxCuAcpPJBVf0LpDtJ+beYzB3/chg==
+vite-plugin-node-polyfills@^0.26.0:
+  version "0.26.0"
+  resolved "https://registry.npmjs.org/vite-plugin-node-polyfills/-/vite-plugin-node-polyfills-0.26.0.tgz#9043c65b3d3146c00382eab1d1254d1990e85879"
+  integrity sha512-BAe5YzJf368XGev02hDvioidx4uVH8dqEJlG73bjQSxM26/AQnGcKFomq9n3vGq5yqpSHKN4h1XQNxx9l98mBg==
   dependencies:
     "@rollup/plugin-inject" "^5.0.5"
     node-stdlib-browser "^1.3.1"
