@@ -1,4 +1,4 @@
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 import { GlobalConfig, Mode } from '../publicApi';
 import { StandardPages } from '../types/components/shareableTypes';
 import { Platforms } from '../types/globalConfig/pages';
