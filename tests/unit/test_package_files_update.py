@@ -51,7 +51,7 @@ def test_package_files_update_replaces_legacy_base_template(tmp_path, caplog):
     assert '<script src="../../config?autoload=1"' in template_path.read_text()
     assert "window.$C.BUILD_NUMBER" in template_path.read_text()
     assert (
-        "'../../static/app/__APP_NAME__/js/build/entry_page.js'"
+        "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js'"
         in template_path.read_text()
     )
     assert "cherrypy.request.path_info" not in template_path.read_text()
@@ -73,7 +73,7 @@ def test_package_files_update_replaces_legacy_redirect_template(tmp_path, caplog
     assert '<script src="../../config?autoload=1"' in template_path.read_text()
     assert "window.$C.BUILD_NUMBER" in template_path.read_text()
     assert (
-        "'../../static/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js'"
+        "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/__TA_NAME___redirect_page.__TA_VERSION__.js'"
         in template_path.read_text()
     )
     assert "cherrypy.request.path_info" not in template_path.read_text()
@@ -126,5 +126,5 @@ def test_base_template_cache_busting_script():
         in template
     )
     # entry_page.js loads last, as a module
-    assert "'../../static/app/__APP_NAME__/js/build/entry_page.js'" in template
+    assert "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js'" in template
     assert "'module'" in template
