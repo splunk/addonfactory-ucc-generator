@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { useState } from 'react';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 import { http, HttpResponse } from 'msw';
 import SingleInputComponent from '../SingleInputComponent';
 import { setUnifiedConfig } from '../../../util/util';

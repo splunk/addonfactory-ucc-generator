@@ -1,7 +1,7 @@
 import React from 'react';
 import SUIDate, { DateChangeHandler } from '@splunk/react-ui/Date';
 
-interface DatePickerComponentProps {
+export interface DatePickerComponentProps {
     value: string;
     handleChange: (field: string, value: string) => void;
     field: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Decorator } from '@storybook/react';
+import { Decorator } from '@storybook/react-vite';
 import { ControlGroupWrapper } from '../src/components/ControlWrapper/ControlWrapper';
 
 export const withControlGroup: Decorator = (StoryFn, { name }) => {
