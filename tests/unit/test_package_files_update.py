@@ -126,5 +126,8 @@ def test_base_template_cache_busting_script():
         in template
     )
     # entry_page.js loads last, as a module
-    assert "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js'" in template
+    assert (
+        "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js'"
+        in template
+    )
     assert "'module'" in template
