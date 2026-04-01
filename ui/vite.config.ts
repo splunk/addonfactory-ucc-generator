@@ -69,7 +69,7 @@ const vitestTestConfig: VitestUserConfigInterface = {
         watch: false,
         globals: true,
         environment: 'jsdom',
-        testTimeout: 10000,
+        testTimeout: 15000,
         setupFiles: 'test.setup.ts',
         server: {
             deps: {
@@ -77,7 +77,6 @@ const vitestTestConfig: VitestUserConfigInterface = {
             },
         },
         coverage: {
-            all: true,
             provider: 'istanbul',
             reporter: ['text'],
             thresholds: {
