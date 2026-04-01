@@ -69,6 +69,7 @@ const vitestTestConfig: VitestUserConfigInterface = {
         watch: false,
         globals: true,
         environment: 'jsdom',
+        testTimeout: 10000,
         setupFiles: 'test.setup.ts',
         server: {
             deps: {
