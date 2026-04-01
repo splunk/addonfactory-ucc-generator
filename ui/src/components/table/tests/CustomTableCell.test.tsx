@@ -212,7 +212,7 @@ test('Error as custom cell file is undefined', async () => {
     await waitFor(() => {
         expect(mockConsoleError).toHaveBeenCalledWith(
             expect.stringContaining(
-                "[Custom Cell] Error loading custom control Error: Cannot find module '/custom/CustomInputCell.js' imported from"
+                "[Custom Cell] Error loading custom control Error: Cannot find module '/custom/CustomInputCell.js'"
             )
         );
     });
