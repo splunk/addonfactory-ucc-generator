@@ -14,55 +14,85 @@
 # limitations under the License.
 #
 import logging
-import os
-import re
-from collections import namedtuple
 from pathlib import Path
-from typing import Optional
+from typing import Callable
 
 logger = logging.getLogger("ucc_gen")
-FileUpdater = namedtuple("FileUpdater", ["path_segments", "function"])
+
+internal_root_dir = Path(__file__).resolve().parent
 
 
-_base_html_pattern = re.compile(
-    r"<script\s+src=\"\${make_url\(page_path\)}\"\s*>\s*</script>"
-)
+def _load_canonical_template(template_name: str) -> str:
+    return (
+        internal_root_dir / "package" / "appserver" / "templates" / template_name
+    ).read_text()
 
 
-def _handle_base_html_update(content: str) -> Optional[str]:
-    matches = _base_html_pattern.findall(content)
+def _is_legacy_base_html(content: str) -> bool:
+    legacy_markers = (
+        "cherrypy.request.path_info",
+        "${make_url('/config?autoload=1')}",
+        "__splunkd_partials__ = ${json_decode(splunkd)};",
+        '<script type="module" src="${make_url(page_path)}"></script>',
+        '<script src="${make_url(page_path)}"></script>',
+        'page_path = "/static/app/" + app_name + "/js/build/entry_page.js"',
+    )
+    return any(marker in content for marker in legacy_markers)
 
-    if not matches:
-        return None
 
-    for result in matches:
-        content = content.replace(
-            result, '<script type="module" src="${make_url(page_path)}"></script>'
+def _is_legacy_redirect_html(content: str) -> bool:
+    legacy_markers = (
+        "cherrypy.request.path_info",
+        "${make_url('/config?autoload=1')}",
+        "__splunkd_partials__ = ${json_decode(splunkd)};",
+        "${ta.name}",
+        "${ta.version}",
+        'page_path = "/static/app/" + app_name + "/js/build/${ta.name}_redirect_page.${ta.version}.js"',
+    )
+    return any(marker in content for marker in legacy_markers)
+
+
+def _migrate_template_if_needed(
+    package_dir: str,
+    relative_path: str,
+    template_name: str,
+    detector: Callable[[str], bool],
+) -> None:
+    file_path = Path(package_dir) / relative_path
+    if not file_path.is_file():
+        return
+
+    current_content = file_path.read_text()
+    if current_content == _load_canonical_template(template_name):
+        return
+
+    if detector(current_content):
+        file_path.write_text(_load_canonical_template(template_name))
+        logger.info(
+            "File '%s' exists in the package directory and was updated to the "
+            "current static UCC template to remove legacy Mako/CherryPy usage.",
+            relative_path,
         )
+        return
 
-    return content
+    logger.warning(
+        "File '%s' exists in the package directory and uses a custom template. "
+        "UCC left it unchanged because it could not be safely migrated "
+        "automatically.",
+        relative_path,
+    )
 
 
 def handle_package_files_update(path: str) -> None:
-    files_to_update = [
-        FileUpdater(("appserver", "templates", "base.html"), _handle_base_html_update)
-    ]
-
-    for file_updater in files_to_update:
-        relative_path = os.path.join(*file_updater.path_segments)
-        file_path = os.path.join(path, *file_updater.path_segments)
-
-        if not os.path.isfile(file_path):
-            continue
-
-        path_obj = Path(file_path)
-        original_content = path_obj.read_text()
-        output_content = file_updater.function(original_content)
-
-        if output_content is None or original_content == output_content:
-            continue
-
-        path_obj.write_text(output_content)
-        logger.info(
-            f"File '{relative_path}' exists in the package directory and its content needed to be updated by UCC."
-        )
+    _migrate_template_if_needed(
+        path,
+        "appserver/templates/base.html",
+        "base.html",
+        _is_legacy_base_html,
+    )
+    _migrate_template_if_needed(
+        path,
+        "appserver/templates/redirect.html",
+        "redirect.html",
+        _is_legacy_redirect_html,
+    )
