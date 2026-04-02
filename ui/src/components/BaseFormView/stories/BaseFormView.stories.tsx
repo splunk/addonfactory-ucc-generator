@@ -1,6 +1,6 @@
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
-import { fn, userEvent, within } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn, userEvent, within } from 'storybook/test';
 
 import BaseFormView from '../BaseFormView';
 import {

@@ -34,6 +34,11 @@ afterAll(() => server.close());
  * Failing tests if there is some console error during tests
  */
 
+// Capture the real console.error once, before any spies are installed,
+// to avoid infinite recursion when vitest 4 reuses spy references.
+// eslint-disable-next-line no-console
+const originalConsoleError = console.error;
+
 // eslint-disable-next-line import/no-mutable-exports
 export let consoleError: MockInstance<{
     (...data: unknown[]): void;
@@ -41,14 +46,8 @@ export let consoleError: MockInstance<{
 }>;
 
 beforeEach(() => {
-    // eslint-disable-next-line no-console
-    const originalConsoleError = console.error;
     consoleError = vi.spyOn(console, 'error');
     consoleError.mockImplementation((...args: Parameters<typeof console.error>) => {
         originalConsoleError(...args);
-        // todo: will be resolved in the future
-        // throw new Error(
-        //     'Console error was called. Call consoleError.mockImplementation(() => {}) if this is expected.'
-        // );
     });
 });
