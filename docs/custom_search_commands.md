@@ -143,7 +143,7 @@ For example:
 | search<span class="required-asterisk">\*</span>  | string | Example search command                           |
 | comment<span class="required-asterisk">\*</span> | string | Provide description of the example search string |
 
-Each search command can have multiple examples, which are shown displayed in the search assistant. The Compact mode, only shows the first example. In the Full mode, the top three examples are displayed.
+Each search command can have multiple examples, which are displayed in the search assistant. The Compact mode, only shows the first example. In the Full mode, the top three examples are displayed.
 
 For example:
 
