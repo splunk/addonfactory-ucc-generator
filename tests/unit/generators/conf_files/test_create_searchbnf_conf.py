@@ -29,6 +29,22 @@ def custom_search_command_without_optional_search_assistance_params():
     ]
 
 
+@fixture
+def custom_search_command_with_empty_examples_list():
+    return [
+        {
+            "commandName": "generatetextcommand",
+            "commandType": "generating",
+            "fileName": "generatetext.py",
+            "requiredSearchAssistant": True,
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "examples": [],
+        }
+    ]
+
+
 def test_init_without_custom_command(
     global_config_only_configuration,
     input_dir,
@@ -119,6 +135,33 @@ def test_init_without_optional_search_assistance_params(
     ]
 
 
+def test_init_with_empty_examples_list(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    custom_search_command_with_empty_examples_list,
+):
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_with_empty_examples_list
+    )
+    searchbnf_conf = SearchbnfConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    assert searchbnf_conf.searchbnf_info == [
+        {
+            "command_name": "generatetextcommand",
+            "description": "This command generates COUNT occurrences of a TEXT string.",
+            "syntax": "generatetextcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "examples": [],
+            "shortdesc": None,
+            "tags": None,
+        }
+    ]
+
+
 def test_generate_conf_without_custom_command(
     global_config_only_configuration,
     input_dir,
@@ -175,6 +218,40 @@ def test_generate_conf_without_optional_search_assistance_params(
 ):
     global_config_all_json._content["customSearchCommand"] = (
         custom_search_command_without_optional_search_assistance_params
+    )
+    ta_name = global_config_all_json.product
+    searchbnf_conf = SearchbnfConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    output = searchbnf_conf.generate()
+    exp_fname = "searchbnf.conf"
+    expected_content = dedent(
+        """
+        [generatetextcommand-command]
+        syntax = generatetextcommand count=<event_count> text=<string>
+        description = This command generates COUNT occurrences of a TEXT string.
+        usage = public
+        """
+    ).lstrip()
+    assert output == [
+        {
+            "file_name": exp_fname,
+            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
+            "content": expected_content,
+        }
+    ]
+
+
+def test_generate_conf_with_empty_examples_list(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    custom_search_command_with_empty_examples_list,
+):
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_with_empty_examples_list
     )
     ta_name = global_config_all_json.product
     searchbnf_conf = SearchbnfConf(
