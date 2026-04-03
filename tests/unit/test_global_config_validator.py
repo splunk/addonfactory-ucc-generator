@@ -473,7 +473,7 @@ def test_validate_custom_search_command(
                 }
             ],
             "requiredSearchAssistant is set to false "
-            "but attributes required for 'searchbnf.conf' is defined which is not required.",
+            "but attributes required for 'searchbnf.conf' are defined which are not required.",
         ),
     ],
 )
