@@ -463,7 +463,7 @@
         },
         "shortdesc": {
           "type": "string",
-          "description": "Short description or the custom search command, used as shortdesc in searchbnf.conf"
+          "description": "Short description of the custom search command, used as shortdesc in searchbnf.conf"
         },
         "syntax": {
           "type": "string",
