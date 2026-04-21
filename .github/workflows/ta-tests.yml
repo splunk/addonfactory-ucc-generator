@@ -141,8 +141,8 @@ jobs:
           set -x
           
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
-          git config --global --add url."https://${{ steps.app-token.outputs.token }}@github.com".insteadOf https://github.com
-          git config --global --add url."https://${{ steps.app-token.outputs.token }}@github.com".insteadOf ssh://git@github.com
+          git config --global --add url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com".insteadOf https://github.com
+          git config --global --add url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com".insteadOf ssh://git@github.com
           
           # Use the special branch
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
