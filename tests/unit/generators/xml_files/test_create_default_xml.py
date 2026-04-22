@@ -126,6 +126,26 @@ def test_generate_nav_default_view_is_none(
     assert diff == ""
 
 
+def test_generate_nav_default_xml_with_nav_color(default_xml_object):
+    result = default_xml_object.generate_nav_default_xml(
+        include_inputs=True,
+        include_dashboard=False,
+        include_configuration=True,
+        default_view="configuration",
+        nav_color="#65A637",
+    )
+
+    expected_result = """<?xml version="1.0" ?>
+    <nav color="#65A637">
+        <view name="inputs"/>
+        <view default="true" name="configuration"/>
+        <view name="search"/>
+    </nav>
+    """
+    diff = compare_xml_content(result, expected_result)
+    assert diff == ""
+
+
 def test_generate_nav_default_xml_only_configuration(default_xml_object):
     result = default_xml_object.generate_nav_default_xml(
         include_inputs=False,
@@ -261,6 +281,28 @@ def test_init(
         input_dir,
         output_dir,
     )
+    diff = compare_xml_content(default_xml.default_xml_content, expected_result)
+    assert diff == ""
+
+
+def test_init_with_nav_color(global_config_all_json, input_dir, output_dir):
+    global_config_all_json.meta["defaultView"] = "configuration"
+    global_config_all_json.meta["navColor"] = "#65A637"
+
+    default_xml = DefaultXml(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+
+    expected_result = """<?xml version="1.0" ?>
+        <nav color="#65A637">
+            <view name="inputs"/>
+            <view default="true" name="configuration"/>
+            <view name="dashboard"/>
+            <view name="search"/>
+        </nav>
+        """
     diff = compare_xml_content(default_xml.default_xml_content, expected_result)
     assert diff == ""
 
