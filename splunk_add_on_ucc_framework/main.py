@@ -256,6 +256,34 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="Path of the Splunk app.",
         required=True,
     )
+    validate_parser.add_argument(
+        "--output-file",
+        type=str,
+        help="Write detailed AppInspect validation output to a file.",
+        required=False,
+        default=None,
+    )
+    validate_parser.add_argument(
+        "--log-level",
+        type=str,
+        help="Set the AppInspect logging level, for example DEBUG, INFO, WARNING, ERROR, or CRITICAL.",
+        required=False,
+        default=None,
+    )
+    validate_parser.add_argument(
+        "--log-file",
+        type=str,
+        help="Write AppInspect logs to a file.",
+        required=False,
+        default=None,
+    )
+    validate_parser.add_argument(
+        "--max-messages",
+        type=str,
+        help="Limit the number of AppInspect messages per check, or use all.",
+        required=False,
+        default=None,
+    )
 
     publish_parser = subparsers.add_parser(
         "publish", description="Publish package to the Splunkbase"
@@ -315,7 +343,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)
     if args.command == "validate":
-        validate.validate(file_path=args.addon_path)
+        validate.validate(
+            file_path=args.addon_path,
+            output_file=args.output_file,
+            log_level=args.log_level,
+            log_file=args.log_file,
+            max_messages=args.max_messages,
+        )
     if args.command == "init":
         init.init(
             addon_name=args.addon_name,

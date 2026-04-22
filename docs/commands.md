@@ -135,6 +135,10 @@ You can install the required dependencies using the following command:
 It accepts the following parameters:
 
 * `--addon-path` - [required] Specifies the path to the built add-on that you want to validate.
+* `--output-file` - [optional] Writes detailed AppInspect validation output to a file.
+* `--log-level` - [optional] Sets the AppInspect logging level, for example `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`.
+* `--log-file` - [optional] Writes AppInspect logs to a file.
+* `--max-messages` - [optional] Limits the number of AppInspect messages per check, or accepts `all` to include every message.
 
 ## `ucc-gen publish`
 
