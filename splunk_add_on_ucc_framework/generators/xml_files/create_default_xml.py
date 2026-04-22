@@ -52,6 +52,7 @@ class DefaultXml(FileGenerator):
                     include_dashboard=global_config.has_dashboard(),
                     include_configuration=global_config.has_configuration(),
                     default_view=global_config.meta.get("defaultView"),
+                    nav_color=global_config.meta.get("navColor"),
                 )
 
     def generate_nav_default_xml(
@@ -60,13 +61,15 @@ class DefaultXml(FileGenerator):
         include_dashboard: bool,
         include_configuration: bool,
         default_view: Optional[str],
+        nav_color: Optional[str] = None,
     ) -> str:
         """
         Generates `default/data/ui/nav/default.xml` file.
 
         The validation is being done in `_validate_meta_default_view` function from `global_config_validator.py` file.
         """
-        nav = Element("nav")
+        nav_attributes = {"color": nav_color} if nav_color else {}
+        nav = Element("nav", attrib=nav_attributes)
         if default_view is None:
             # we do this calculation as all the below properties are now optional
             if include_configuration:

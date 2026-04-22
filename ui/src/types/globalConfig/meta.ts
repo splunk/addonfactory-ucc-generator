@@ -20,6 +20,10 @@ export const meta = z
             .enum(['inputs', 'configuration', 'dashboard', 'search'])
             .default('configuration')
             .optional(),
+        navColor: z
+            .string()
+            .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/)
+            .optional(),
         'os-dependentLibraries': z
             .array(
                 z.object({
