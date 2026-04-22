@@ -2591,6 +2591,11 @@
             }
           ]
         },
+        "navColor": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "Optional color for the app icon background in default/data/ui/nav/default.xml."
+        },
         "os-dependentLibraries": {
           "type": "array",
           "description": "This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process.",

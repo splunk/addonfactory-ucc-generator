@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<nav>
+<nav color="#65A637">
     <view name="inputs"/>
     <view default="true" name="configuration"/>
     <view name="dashboard"/>
