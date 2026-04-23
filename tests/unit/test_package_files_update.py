@@ -131,3 +131,4 @@ def test_base_template_cache_busting_script():
         in template
     )
     assert "'module'" in template
+    assert "../../static/app/__APP_NAME__/customfavicon/favicon.ico" in template

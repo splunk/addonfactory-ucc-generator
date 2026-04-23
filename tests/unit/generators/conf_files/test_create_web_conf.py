@@ -67,6 +67,8 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
         [expose:data/indexes]
         pattern = data/indexes
         methods = GET
+        [settings]
+        customFavicon = customfavicon/favicon.ico
         """
     ).lstrip()
 
@@ -110,6 +112,8 @@ def test_web_conf_endpoints_with_user_defined_handlers(
         pattern = splunk_ta_uccexample/endpoint2
         methods = DELETE, GET, POST
 
+        [settings]
+        customFavicon = customfavicon/favicon.ico
         """
     ).lstrip()
     assert output_2 is not None
