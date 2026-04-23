@@ -2,9 +2,17 @@ from splunk_add_on_ucc_framework.generators.conf_files import AppConf
 from textwrap import dedent
 from tests.unit.helpers import get_testdata_file_path
 import os
+import shutil
 from time import time
 
 INPUT_DIR = os.path.join(get_testdata_file_path("app.manifest"), os.pardir)
+TEST_ADDONS_DIR = os.path.join(
+    os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+    ),
+    "testdata",
+    "test_addons",
+)
 
 
 def test_init_check_for_updates_false(
@@ -92,3 +100,26 @@ def test_generate_conf(
             "merge_mode": "item_overwrite",
         }
     ]
+
+
+def test_generate_conf_preserves_source_is_visible_true_for_conf_only_addon(
+    global_config_for_conf_only_TA,
+    output_dir,
+    tmp_path,
+):
+    source_input_dir = os.path.join(
+        TEST_ADDONS_DIR,
+        "package_conf_only_TA",
+        "package",
+    )
+    input_dir = tmp_path / "package"
+    shutil.copytree(source_input_dir, input_dir)
+    app_conf_path = input_dir / "default" / "app.conf"
+    app_conf_path.write_text(
+        app_conf_path.read_text().replace("is_visible = false", "is_visible = true")
+    )
+    app_conf = AppConf(global_config_for_conf_only_TA, str(input_dir), output_dir)
+    output = app_conf.generate()
+
+    assert output is not None
+    assert "is_visible = true" in output[0]["content"]
