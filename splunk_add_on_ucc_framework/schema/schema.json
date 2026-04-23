@@ -2234,6 +2234,26 @@
                   "oauth"
                 ]
               }
+            },
+            {
+              "if": {
+                "properties": {
+                  "auth_type": {
+                    "type": "array",
+                    "contains": {
+                      "const": "oauth_client_credentials",
+                      "type": "string",
+                      "description": "Exactly: oauth_client_credentials"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "oauth_client_credentials",
+                  "access_token_endpoint"
+                ]
+              }
             }
           ],
           "required": [
