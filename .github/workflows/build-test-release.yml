@@ -460,6 +460,13 @@ jobs:
           # Very important: semantic-release won't trigger a tagged
           # build if this is not set false
           persist-credentials: false
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.GH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
       - uses: actions/setup-python@v6
         with:
           python-version: "3.9"
@@ -488,7 +495,7 @@ jobs:
           extra_plugins: |
             semantic-release-replace-plugin
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         run: |
           poetry build
