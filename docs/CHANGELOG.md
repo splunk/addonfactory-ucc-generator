@@ -1,5 +1,24 @@
 # Changelog
 
+# [6.3.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.2.0...v6.3.0) (2026-04-02)
+
+
+### Bug Fixes
+
+* apply Splunk BUILD_NUMBER cache busting to entry_page.js ([813c7c3](https://github.com/splunk/addonfactory-ucc-generator/commit/813c7c396226d1501bd33f20179336b89aef912c))
+* migrate legacy package templates to static html equivalents ([57fe298](https://github.com/splunk/addonfactory-ucc-generator/commit/57fe2986636715ad3b6a5fc21f9fa7c82bfbe268))
+* preserve app name casing in generated template asset paths ([fde15d1](https://github.com/splunk/addonfactory-ucc-generator/commit/fde15d18b67244fcc09db4b1c5ea44017415aa76))
+* replace <base href> with explicit relative paths in templates ([7a0a17a](https://github.com/splunk/addonfactory-ucc-generator/commit/7a0a17a5cdfb9acc673742f9747a7972b9b567b0))
+* replace mako template bootstrapping with static runtime loader ([689de4f](https://github.com/splunk/addonfactory-ucc-generator/commit/689de4f68cdba6c917feb3218c8285889e3f0b64))
+* resolve LFS merge conflict and black formatting after develop merge ([5e75088](https://github.com/splunk/addonfactory-ucc-generator/commit/5e75088298288c62b88caab14d7540138c3ee2e3))
+* restore i18n.js cache busting via window.$C.BUILD_NUMBER ([fd60793](https://github.com/splunk/addonfactory-ucc-generator/commit/fd60793da4cb2cb5df2a98b27ed2614d0eed4cd2))
+
+
+### Features
+
+* remove Mako and CherryPy ([b008bb7](https://github.com/splunk/addonfactory-ucc-generator/commit/b008bb78a5b661db87768295c44b5121bd6e4e5f))
+* remove Mako and CherryPy ([#1998](https://github.com/splunk/addonfactory-ucc-generator/issues/1998)) ([0531328](https://github.com/splunk/addonfactory-ucc-generator/commit/05313289ed0828c695d5212551bc4d20e53d7db8))
+
 # [6.2.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.1.0...v6.2.0) (2026-03-04)
 
 

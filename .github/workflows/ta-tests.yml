@@ -95,12 +95,19 @@ jobs:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.GH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
       - name: Checkout Target Add-on Repository
         uses: actions/checkout@v6
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
-          token: ${{ secrets.GH_TOKEN_ADMIN }}
+          token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.inputs.target_branch }}
 
       - name: Set up Python
@@ -134,8 +141,8 @@ jobs:
           set -x
           
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
-          git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
-          git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
+          git config --global --add url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com".insteadOf https://github.com
+          git config --global --add url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com".insteadOf ssh://git@github.com
           
           # Use the special branch
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
@@ -268,7 +275,7 @@ jobs:
         if: success() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           echo "Creating a new draft PR from branch $GIT_BRANCH to ${{ github.event.inputs.target_branch }}"
           gh pr create -R ${{ matrix.target_repo }} --title "CI: UCC build for ${{ github.event_name }} event" \
@@ -278,7 +285,7 @@ jobs:
         if: success() && github.event.inputs.run_pipelines == 'true'
         id: get-workflow-run-id
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           echo "Waiting for the workflow run to be created..."
           sleep 30  # Wait for a while to ensure the workflow run is created
@@ -310,7 +317,7 @@ jobs:
         if: success()
         id: wait-for-workflow
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           if [[ -z "$WORKFLOW_RUN_ID" ]]; then
             echo "No workflow run ID found, skipping wait"
@@ -343,7 +350,7 @@ jobs:
         if: always() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           echo "Deleting temporary branch $GIT_BRANCH"
           gh api -X DELETE repos/${{ matrix.target_repo }}/git/refs/heads/$GIT_BRANCH || true
