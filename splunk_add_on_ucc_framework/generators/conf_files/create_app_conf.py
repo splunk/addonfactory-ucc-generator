@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 from time import time
+import os
+from typing import Optional
+
+import addonfactory_splunk_conf_parser_lib as conf_parser
 
 from splunk_add_on_ucc_framework.generators.file_generator import FileGenerator
 from splunk_add_on_ucc_framework.global_config import GlobalConfig
@@ -48,10 +52,32 @@ class AppConf(FileGenerator):
             self.supported_themes = ", ".join(global_config.meta["supportedThemes"])
 
         self.addon_version = global_config.version
-        self.is_visible = str(
-            global_config.meta.get("isVisible", global_config.has_pages())
-        ).lower()
+        self.is_visible = self._resolve_is_visible(global_config, input_dir)
         self.build = str(int(time()))
+
+    @staticmethod
+    def _get_source_app_conf_is_visible(input_dir: str) -> Optional[str]:
+        app_conf_path = os.path.join(input_dir, "default", "app.conf")
+
+        if not os.path.isfile(app_conf_path):
+            return None
+
+        parser = conf_parser.TABConfigParser()
+        parser.read(app_conf_path)
+        app_conf_content = parser.item_dict()
+
+        return app_conf_content.get("ui", {}).get("is_visible")
+
+    def _resolve_is_visible(self, global_config: GlobalConfig, input_dir: str) -> str:
+        is_visible = global_config.meta.get("isVisible")
+        if is_visible is not None:
+            return str(is_visible).lower()
+
+        source_is_visible = self._get_source_app_conf_is_visible(input_dir)
+        if source_is_visible is not None:
+            return source_is_visible.lower()
+
+        return str(global_config.has_pages()).lower()
 
     def generate(self) -> list[dict[str, str]]:
         file_path = self.get_file_output_path(["default", self.conf_file])
