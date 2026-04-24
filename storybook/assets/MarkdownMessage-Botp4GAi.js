@@ -1,0 +1,3 @@
+import{R as k,j as o,q as m}from"./iframe-dpjTMnOC.js";import{L as r}from"./Link-DETRhvtj.js";const x=m.span`
+    color: ${e=>e.color};
+`;function d(e){function l(t,n){let a=[];for(let i=0;i<t.length;i+=1){const s=n(t[i]);a=a.concat(s)}return a}function c(){let t=e.text;return e.markdownType==="link"?t=o.jsx(r,{to:e.link,children:e.text}):e.markdownType==="hybrid"?(t=l(t.split(e.token),n=>[n,o.jsx(r,{to:e.link,children:e.linkText},n)]),t.pop()):e.markdownType==="text"&&(t=o.jsx(x,{color:e.color,children:e.text})),t}return o.jsx("div",{"data-test":"msg-markdown",children:c()})}const M=k.memo(d);d.__docgenInfo={description:"",methods:[],displayName:"MarkdownMessage"};export{M};

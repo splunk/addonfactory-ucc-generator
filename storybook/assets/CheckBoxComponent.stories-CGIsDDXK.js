@@ -1,0 +1,8 @@
+import{r as i,j as a}from"./iframe-dpjTMnOC.js";import{C as e}from"./ControlWrapper-BM5zRGNC.js";import{w as p}from"./withControlGroup-BbgsCEf2.js";import"./index-nuYtCEEu.js";import"./Date-XutZtAHB.js";import"./id-Db1E8M8a.js";import"./ScrollContainerContext-DogtmX69.js";import"./Box-DE7m460s.js";import"./ChevronLeft-0NIlqeDI.js";import"./ChevronRight-CAKwgwce.js";import"./Popover-D3MLdcR2.js";import"./ExclamationTriangle-CApgSVdg.js";import"./Tooltip-D0dtXLIo.js";import"./InformationCircle-B-WxxbMa.js";import"./MarkdownMessage-Botp4GAi.js";import"./Link-DETRhvtj.js";import"./Divider-BI7HZr8y.js";import"./CollapsiblePanel-DVzU4Rpc.js";import"./pick-JbkSLyfC.js";import"./Menu-BaV4-Toi.js";import"./Dropdown-BSmjb7Ht.js";import"./textUtils-D6rK6Eep.js";import"./Number-EeQbK4AB.js";import"./api-CjZPq5JP.js";import"./url-cmzogVIW.js";import"./url-DGkq2p2F.js";import"./util-DakudGGz.js";import"./messageUtil-DTEwCut0.js";import"./DatePickerComponent-DH2M6FjX.js";import"./script-DFaIqjR1.js";import"./Group-Bp5WCcDP.js";const{fn:n}=__STORYBOOK_MODULE_TEST__,z={component:e,title:"CheckBoxComponent",decorators:[p],render:t=>{const[o,m]=i.useState(t.value?1:0);return a.jsx(e,{...t,value:o,handleChange:()=>{m(o?0:1),t.handleChange(t.field,o?0:1)}})}},r={args:{handleChange:n(),value:0,field:"field text",disabled:!1}};r.parameters={...r.parameters,docs:{...r.parameters?.docs,source:{originalSource:`{
+  args: {
+    handleChange: fn(),
+    value: 0,
+    field: 'field text',
+    disabled: false
+  }
+}`,...r.parameters?.docs?.source}}};const A=["Base"];export{r as Base,A as __namedExportsOrder,z as default};
