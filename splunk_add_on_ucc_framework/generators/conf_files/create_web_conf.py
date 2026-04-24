@@ -36,7 +36,9 @@ actions_to_methods = {
 class WebConf(FileGenerator):
     __description__ = (
         "Generates `web.conf` to expose the endpoints generated in "
-        "`restmap.conf` which is generated based on configurations from globalConfig."
+        "`restmap.conf` which is generated based on configurations from globalConfig. "
+        "If `appserver/static/customfavicon/favicon.ico` exists in the source "
+        "package, UCC also adds `settings.customFavicon = customfavicon/favicon.ico`."
     )
 
     def __init__(
