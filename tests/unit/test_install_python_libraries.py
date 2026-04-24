@@ -4,7 +4,6 @@ import shutil
 import stat
 import subprocess
 import sys
-from collections import namedtuple
 from pathlib import Path
 from textwrap import dedent
 from typing import Optional
@@ -15,12 +14,10 @@ import pytest
 import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
-from splunk_add_on_ucc_framework import (
-    install_python_libraries as install_python_libraries_module,
-)
 from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
     SplunktaucclibNotFound,
+    _is_distribution_installed,
     install_libraries,
     install_python_libraries,
     remove_execute_bit,
@@ -29,7 +26,6 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     WrongSplunktaucclibVersion,
     WrongSolnlibVersion,
     InvalidArguments,
-    _pip_is_lib_installed,
     parse_excludes,
     determine_record_separator,
 )
@@ -258,7 +254,7 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(
         f"Please add it there and make sure it is at least version 6.6.0."
     )
 
-    expected_caplog = "Command result:  WARNING: Package(s) not found: splunktaucclib"
+    expected_caplog = f"Command result: Package splunktaucclib not found in installation target {tmp_ucc_lib_target}"
 
     with pytest.raises(SplunktaucclibNotFound) as exc:
         install_python_libraries(
@@ -292,6 +288,42 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(
         )
     assert expected_msg in str(exc.value)
     assert expected_caplog in caplog.text
+
+
+@mock.patch("subprocess.run", autospec=True)
+@mock.patch(
+    "splunk_add_on_ucc_framework.install_python_libraries.install_libraries",
+    autospec=True,
+)
+def test_install_libraries_detects_splunktaucclib_from_target_metadata_when_pip_show_fails(
+    mock_install_libraries,
+    mock_subprocess_run,
+    tmp_path,
+):
+    mock_install_libraries.return_value = None
+    mock_subprocess_run.side_effect = [
+        MockSubprocessResult(1, b"", b"WARNING: Package(s) not found: splunktaucclib"),
+        MockSubprocessResult(1, b"", b"WARNING: Package(s) not found: splunktaucclib"),
+    ]
+
+    tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_ucc_lib_target.mkdir()
+    tmp_lib_path = tmp_path / "lib"
+    tmp_lib_path.mkdir()
+    (tmp_lib_path / "requirements.txt").write_text("splunktaucclib\n")
+
+    dist_info = tmp_ucc_lib_target / "splunktaucclib-8.0.0.dist-info"
+    dist_info.mkdir()
+    (dist_info / "METADATA").write_text(
+        "Metadata-Version: 2.1\nName: splunktaucclib\nVersion: 8.0.0\n"
+    )
+
+    install_python_libraries(
+        source_path=str(tmp_path),
+        ucc_lib_target=str(tmp_ucc_lib_target),
+        python_binary_name="python3",
+        includes_ui=True,
+    )
 
 
 def test_install_libraries_when_wrong_solnlib_is_present_but_has_oauth(tmp_path):
@@ -435,16 +467,6 @@ def test_install_python_libraries_invalid_os_libraries(
         )
 
 
-@mock.patch(
-    "subprocess.run", autospec=True, side_effect=OSError("test oserror message")
-)
-def test_is_pip_lib_installed_oserror(sub_process_mock, caplog):
-    expected_msg = "Command execution failed with error message: test oserror message"
-    with pytest.raises(CouldNotInstallRequirements):
-        _pip_is_lib_installed("i", "t", "l")
-    assert expected_msg in caplog.text
-
-
 @mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
@@ -463,25 +485,27 @@ def test_install_libraries_valid_os_libraries(
     mock_subprocess_run.side_effect = [
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
-        MockSubprocessResult(
-            0, b"Version: 41.0.5"
-        ),  # mock subprocess.run from _pip_is_lib_installed
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
-        MockSubprocessResult(
-            0, b"Version: 41.0.5"
-        ),  # mock subprocess.run from _pip_is_lib_installed
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
-        MockSubprocessResult(
-            0, b"Version: 1.5.1"
-        ),  # mock subprocess.run from _pip_is_lib_installed
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
         MockSubprocessResult(0),  # mock subprocess.run from _pip_install
     ]
     tmp_ucc_lib_target = tmp_path / "ucc-lib-target"
+    tmp_ucc_lib_target.mkdir()
     tmp_lib_path = tmp_path / "lib"
     tmp_lib_path.mkdir()
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib\n")
+    cryptography_dist_info = tmp_ucc_lib_target / "cryptography-41.0.5.dist-info"
+    cryptography_dist_info.mkdir()
+    (cryptography_dist_info / "METADATA").write_text(
+        "Metadata-Version: 2.1\nName: cryptography\nVersion: 41.0.5\n"
+    )
+    cffi_dist_info = tmp_ucc_lib_target / "cffi-1.5.1.dist-info"
+    cffi_dist_info.mkdir()
+    (cffi_dist_info / "METADATA").write_text(
+        "Metadata-Version: 2.1\nName: cffi\nVersion: 1.5.1\n"
+    )
 
     install_python_libraries(
         str(tmp_path),
@@ -541,14 +565,12 @@ def test_install_libraries_valid_os_libraries(
     )
 
 
-@mock.patch("subprocess.run", autospec=True)
 @mock.patch(
     "splunk_add_on_ucc_framework.install_python_libraries.remove_packages",
     autospec=True,
 )
 def test_install_libraries_version_mismatch(
     mock_remove_packages,
-    mock_subprocess_run,
     caplog,
     tmp_path,
 ):
@@ -564,16 +586,6 @@ def test_install_libraries_version_mismatch(
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib\n")
 
-    version_mismatch_shell_cmd = "python3 -m pip show --version cryptography"
-    mock_subprocess_run.side_effect = (
-        lambda command, shell=True, env=None, capture_output=True: (
-            MockSubprocessResult(1)
-            if command == version_mismatch_shell_cmd
-            and ucc_lib_target == env["PYTHONPATH"]
-            else MockSubprocessResult(0, b"Version: 40.0.0")
-        )
-    )
-
     with pytest.raises(CouldNotInstallRequirements):
         install_python_libraries(
             source_path=str(tmp_path),
@@ -582,9 +594,7 @@ def test_install_libraries_version_mismatch(
             os_libraries=global_config.os_libraries,
         )
 
-    version_mismatch_log = (
-        f"Command ({version_mismatch_shell_cmd}) returned 1 status code"
-    )
+    version_mismatch_log = f"Command result: Package cryptography not found in installation target {ucc_lib_target}"
     error_description = """
 OS dependent library cryptography = 41.0.5 SHOULD be defined in requirements.txt.
 When the os dependent library is installed without its dependencies it has to be listed in requirements.txt.
@@ -704,20 +714,17 @@ def test_validate_conflicting_paths_empty_list():
 
 def test_is_pip_lib_installed_wrong_arguments():
     with pytest.raises(InvalidArguments):
-        _pip_is_lib_installed("i", "t", "l", allow_higher_version=True)
+        _is_distribution_installed("t", "l", allow_higher_version=True)
 
 
-def test_is_pip_lib_installed_do_not_write_bytecode(monkeypatch):
-    Result = namedtuple("Result", ["returncode", "stdout", "stderr"])
+def test_is_pip_lib_installed_reads_version_from_target_metadata(tmp_path):
+    dist_info = tmp_path / "libname-1.0.0.dist-info"
+    dist_info.mkdir()
+    (dist_info / "METADATA").write_text(
+        "Metadata-Version: 2.1\nName: libname\nVersion: 1.0.0\n"
+    )
 
-    def run(command, env):
-        assert command == "python3 -m pip show --version libname"
-        assert env["PYTHONPATH"] == "target"
-        assert env["PYTHONDONTWRITEBYTECODE"] == "1"
-        return Result(0, b"Version: 1.0.0", b"")
-
-    monkeypatch.setattr(install_python_libraries_module, "_subprocess_run", run)
-    assert _pip_is_lib_installed("python3", "target", "libname")
+    assert _is_distribution_installed(str(tmp_path), "libname")
 
 
 @mock.patch("subprocess.run", autospec=True)
