@@ -161,3 +161,17 @@ def test_rest_handler_without_ui(schema_validate, config):
     }
 
     schema_validate(config)
+
+
+@pytest.mark.parametrize("value", ["#65A637", "#abc"])
+def test_meta_nav_color_valid(schema_validate, config, value):
+    config["meta"]["navColor"] = value
+    schema_validate(config)
+
+
+@pytest.mark.parametrize("value", ["65A637", "#abcd", "#12345g"])
+def test_meta_nav_color_invalid(schema_validate, config, value):
+    config["meta"]["navColor"] = value
+
+    with pytest.raises(ValidationError):
+        schema_validate(config)

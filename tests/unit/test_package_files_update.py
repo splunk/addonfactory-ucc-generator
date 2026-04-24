@@ -51,7 +51,12 @@ def test_package_files_update_replaces_legacy_base_template(tmp_path, caplog):
     assert '<script src="../../config?autoload=1"' in template_path.read_text()
     assert "window.$C.BUILD_NUMBER" in template_path.read_text()
     assert (
-        "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js'"
+        "'../../static' + _b + _p + '/app/{{ app_name }}/js/build/entry_page.js'"
+        in template_path.read_text()
+    )
+    assert "{% if include_custom_favicon %}" in template_path.read_text()
+    assert (
+        "../../static/app/{{ app_name }}/customfavicon/favicon.ico"
         in template_path.read_text()
     )
     assert "cherrypy.request.path_info" not in template_path.read_text()
@@ -127,7 +132,9 @@ def test_base_template_cache_busting_script():
     )
     # entry_page.js loads last, as a module
     assert (
-        "'../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js'"
+        "'../../static' + _b + _p + '/app/{{ app_name }}/js/build/entry_page.js'"
         in template
     )
     assert "'module'" in template
+    assert "{% if include_custom_favicon %}" in template
+    assert "../../static/app/{{ app_name }}/customfavicon/favicon.ico" in template

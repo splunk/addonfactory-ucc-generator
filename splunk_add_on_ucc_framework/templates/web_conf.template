@@ -34,3 +34,7 @@ methods = POST, GET, DELETE
 pattern = {{url}}
 methods = GET
 {% endfor -%}
+{% if include_custom_favicon %}
+[settings]
+customFavicon = customfavicon/favicon.ico
+{% endif %}

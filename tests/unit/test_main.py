@@ -523,6 +523,50 @@ def test_package_command(mock_package, args, expected_parameters):
     "args,expected_parameters",
     [
         (
+            ["validate", "--addon-path", "output/foo"],
+            {
+                "file_path": "output/foo",
+                "output_file": None,
+                "log_level": None,
+                "log_file": None,
+                "max_messages": None,
+            },
+        ),
+        (
+            [
+                "validate",
+                "--addon-path",
+                "output/foo",
+                "--output-file",
+                "/tmp/validation_report.txt",
+                "--log-level",
+                "WARNING",
+                "--log-file",
+                "/tmp/validation_log.txt",
+                "--max-messages",
+                "all",
+            ],
+            {
+                "file_path": "output/foo",
+                "output_file": "/tmp/validation_report.txt",
+                "log_level": "WARNING",
+                "log_file": "/tmp/validation_log.txt",
+                "max_messages": "all",
+            },
+        ),
+    ],
+)
+@mock.patch("splunk_add_on_ucc_framework.commands.validate.validate")
+def test_validate_command(mock_validate, args, expected_parameters):
+    main.main(args)
+
+    mock_validate.assert_called_with(**expected_parameters)
+
+
+@pytest.mark.parametrize(
+    "args,expected_parameters",
+    [
+        (
             [
                 "publish",
                 "--app-id",

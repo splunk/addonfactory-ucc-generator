@@ -28,6 +28,7 @@ import fnmatch
 import filecmp
 import platform
 import traceback
+import jinja2
 
 from urllib.parse import quote
 
@@ -69,12 +70,13 @@ logger = logging.getLogger("ucc_gen")
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
 
-def _inject_app_name_in_base_html(ta_name: str, outputdir: str) -> None:
+def _render_base_html(ta_name: str, source: str, outputdir: str) -> None:
     """
-    Replace __APP_NAME__ placeholder in base.html with the actual add-on name.
+    Render the managed base.html template with the actual add-on name.
 
     Args:
         ta_name: Add-on name.
+        source: source package directory.
         outputdir: output directory.
     """
     base_html_path = os.path.join(
@@ -82,12 +84,32 @@ def _inject_app_name_in_base_html(ta_name: str, outputdir: str) -> None:
     )
     if not os.path.isfile(base_html_path):
         return
-    with open(base_html_path) as f:
-        content = f.read()
+
+    include_custom_favicon = os.path.isfile(
+        os.path.join(
+            source,
+            "appserver",
+            "static",
+            "customfavicon",
+            "favicon.ico",
+        )
+    )
+
+    template_env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(
+            os.path.join(internal_root_dir, "package", "appserver", "templates")
+        ),
+        trim_blocks=True,
+        lstrip_blocks=True,
+        keep_trailing_newline=True,
+    )
+    rendered_content = template_env.get_template("base.html").render(
+        app_name=ta_name,
+        include_custom_favicon=include_custom_favicon,
+    )
+
     with open(base_html_path, "w") as f:
-        # Splunk static app URLs are keyed by the real app name from the package.
-        # Lowercasing here breaks asset resolution for mixed-case app names.
-        f.write(content.replace("__APP_NAME__", ta_name))
+        f.write(rendered_content)
 
 
 def _modify_and_replace_token_for_oauth_templates(
@@ -672,7 +694,7 @@ def generate(
             global_config,
             output_directory,
         )
-        _inject_app_name_in_base_html(ta_name, output_directory)
+        _render_base_html(ta_name, source, output_directory)
 
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME

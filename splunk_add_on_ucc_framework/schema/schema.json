@@ -2234,6 +2234,26 @@
                   "oauth"
                 ]
               }
+            },
+            {
+              "if": {
+                "properties": {
+                  "auth_type": {
+                    "type": "array",
+                    "contains": {
+                      "const": "oauth_client_credentials",
+                      "type": "string",
+                      "description": "Exactly: oauth_client_credentials"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "oauth_client_credentials",
+                  "access_token_endpoint"
+                ]
+              }
             }
           ],
           "required": [
@@ -2590,6 +2610,11 @@
               "const": "search"
             }
           ]
+        },
+        "navColor": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "Optional color for the app icon background in default/data/ui/nav/default.xml."
         },
         "os-dependentLibraries": {
           "type": "array",

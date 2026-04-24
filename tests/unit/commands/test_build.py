@@ -11,7 +11,7 @@ from splunk_add_on_ucc_framework.commands.build import (
     _get_build_output_path,
     _get_python_version_from_executable,
     _get_and_check_global_config_path,
-    _inject_app_name_in_base_html,
+    _render_base_html,
     _modify_and_replace_token_for_oauth_templates,
     generate,
     _get_num_of_args,
@@ -144,28 +144,62 @@ def test_get_python_version_from_executable_nonexisting_command():
         _get_python_version_from_executable(target_python_version)
 
 
-def test_inject_app_name_in_base_html_preserves_app_name_case(tmp_path):
+def test_render_base_html_preserves_app_name_case(tmp_path):
     ta_name = "Splunk_TA_UCCExample"
+    source = tmp_path / "source"
+    (source / "appserver" / "static" / "customfavicon").mkdir(parents=True)
+    (source / "appserver" / "static" / "customfavicon" / "favicon.ico").write_text(
+        "icon"
+    )
     base_html_path = tmp_path / ta_name / "appserver" / "templates" / "base.html"
     base_html_path.parent.mkdir(parents=True)
-    base_html_path.write_text(
-        '<script type="module" src="static/app/__APP_NAME__/js/build/entry_page.js"></script>'
-    )
+    base_html_path.write_text("placeholder")
 
-    _inject_app_name_in_base_html(ta_name, str(tmp_path))
+    _render_base_html(ta_name, str(source), str(tmp_path))
 
-    assert (
-        base_html_path.read_text()
-        == '<script type="module" src="static/app/Splunk_TA_UCCExample/js/build/entry_page.js"></script>'
-    )
+    rendered = base_html_path.read_text()
+    assert "Splunk_TA_UCCExample/js/build/entry_page.js" in rendered
+    assert "Splunk_TA_UCCExample/customfavicon/favicon.ico" in rendered
+    assert "{{ app_name }}" not in rendered
+    assert "{% if include_custom_favicon %}" not in rendered
 
 
-def test_inject_app_name_in_base_html_skips_when_template_is_missing(tmp_path):
+def test_render_base_html_skips_when_template_is_missing(tmp_path):
     ta_name = "Splunk_TA_UCCExample"
 
-    _inject_app_name_in_base_html(ta_name, str(tmp_path))
+    _render_base_html(ta_name, str(tmp_path), str(tmp_path))
 
     assert not (tmp_path / ta_name / "appserver" / "templates" / "base.html").exists()
+
+
+def test_render_base_html_omits_favicon_when_asset_is_missing(tmp_path):
+    ta_name = "Splunk_TA_UCCExample"
+    source = tmp_path / "source"
+    source.mkdir()
+    base_html_path = tmp_path / ta_name / "appserver" / "templates" / "base.html"
+    base_html_path.parent.mkdir(parents=True)
+    base_html_path.write_text("placeholder")
+
+    _render_base_html(ta_name, str(source), str(tmp_path))
+
+    rendered = base_html_path.read_text()
+    assert "Splunk_TA_UCCExample/js/build/entry_page.js" in rendered
+    assert "customfavicon/favicon.ico" not in rendered
+
+
+def test_render_base_html_overwrites_copied_template(tmp_path):
+    ta_name = "Splunk_TA_UCCExample"
+    source = tmp_path / "source"
+    source.mkdir()
+    base_html_path = tmp_path / ta_name / "appserver" / "templates" / "base.html"
+    base_html_path.parent.mkdir(parents=True)
+    base_html_path.write_text("<html><body>totally custom</body></html>\n")
+
+    _render_base_html(ta_name, str(source), str(tmp_path))
+
+    rendered = base_html_path.read_text()
+    assert "totally custom" not in rendered
+    assert "Splunk_TA_UCCExample/js/build/entry_page.js" in rendered
 
 
 def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(

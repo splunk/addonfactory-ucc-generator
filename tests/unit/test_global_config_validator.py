@@ -4,6 +4,7 @@ from contextlib import nullcontext as does_not_raise
 from copy import deepcopy
 from typing import Any
 
+import jsonschema
 import pytest
 
 import tests.unit.helpers as helpers
@@ -772,3 +773,28 @@ def test_config_validation_when_placeholder_is_present(tmp_path):
 
     with pytest.raises(GlobalConfigValidatorException):
         validator.validate()
+
+
+def test_schema_requires_access_token_endpoint_for_oauth_client_credentials(
+    schema_json,
+    global_config_all_json_content,
+):
+    oauth_entity = next(
+        entity
+        for entity in global_config_all_json_content["pages"]["configuration"]["tabs"][
+            0
+        ]["entity"]
+        if entity["type"] == "oauth"
+    )
+    del oauth_entity["options"]["access_token_endpoint"]
+
+    oauth_schema = {
+        "$schema": schema_json["$schema"],
+        "$ref": "#/definitions/OAuthEntity",
+        "definitions": schema_json["definitions"],
+    }
+
+    with pytest.raises(jsonschema.ValidationError) as exc_info:
+        jsonschema.validate(instance=oauth_entity, schema=oauth_schema)
+
+    assert exc_info.value.message == "'access_token_endpoint' is a required property"
