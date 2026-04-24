@@ -373,7 +373,7 @@ app_name = cherrypy.request.path_info.split('/')[3]
             updated_base_html = base_html_testdata.read_text()
             assert "cherrypy.request.path_info" not in updated_base_html
             assert "${make_url(" not in updated_base_html
-            assert "__APP_NAME__" in updated_base_html
+            assert "{{ app_name }}" in updated_base_html
         finally:
             base_html_testdata.write_text(base_html_original)
 
