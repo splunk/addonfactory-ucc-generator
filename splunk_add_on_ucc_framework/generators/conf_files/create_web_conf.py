@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import os
 from typing import Union, Optional
 
 from splunk_add_on_ucc_framework.commands.rest_builder.endpoint.base import (
@@ -35,7 +36,9 @@ actions_to_methods = {
 class WebConf(FileGenerator):
     __description__ = (
         "Generates `web.conf` to expose the endpoints generated in "
-        "`restmap.conf` which is generated based on configurations from globalConfig."
+        "`restmap.conf` which is generated based on configurations from globalConfig. "
+        "If `appserver/static/customfavicon/favicon.ico` exists in the source "
+        "package, UCC also adds `settings.customFavicon = customfavicon/favicon.ico`."
     )
 
     def __init__(
@@ -67,6 +70,15 @@ class WebConf(FileGenerator):
         for endpoint in custom_endpoints:
             methods[endpoint.name] = self.get_methods_for_actions(endpoint.actions())
         conf_file = "web.conf"
+        include_custom_favicon = os.path.isfile(
+            os.path.join(
+                self._input_dir,
+                "appserver",
+                "static",
+                "customfavicon",
+                "favicon.ico",
+            )
+        )
 
         file_path = self.get_file_output_path(["default", conf_file])
         rendered_content = self._render(
@@ -75,6 +87,7 @@ class WebConf(FileGenerator):
             custom_endpoints=custom_endpoints,
             methods=methods,
             endpointUrl=self._global_config.endpointUrl,
+            include_custom_favicon=include_custom_favicon,
         )
         return [
             {

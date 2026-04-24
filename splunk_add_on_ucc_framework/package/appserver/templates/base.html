@@ -21,6 +21,12 @@
         <meta http-equiv="x-ua-compatible" content="ie=edge" />
         <title>Loading</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+{% if include_custom_favicon %}
+        <link
+            rel="shortcut icon"
+            href="../../static/app/{{ app_name }}/customfavicon/favicon.ico"
+        />
+{% endif %}
         <script src="../../config?autoload=1" crossorigin="use-credentials"></script>
     </head>
 
@@ -42,7 +48,7 @@
                 .then(function () { return _loadScript('../../i18ncatalog?autoload=1'); })
                 .then(function () {
                     return _loadScript(
-                        '../../static' + _b + _p + '/app/__APP_NAME__/js/build/entry_page.js',
+                        '../../static' + _b + _p + '/app/{{ app_name }}/js/build/entry_page.js',
                         'module'
                     );
                 });
