@@ -66,6 +66,90 @@ def transforming_custom_search_command():
     ]
 
 
+@pytest.fixture
+def transforming_custom_search_command_with_multiline_description():
+    return [
+        {
+            "commandName": "generatetext",
+            "commandType": "generating",
+            "fileName": "generatetextcommand.py",
+            "description": [
+                "This is a transforming command",
+                "This might be additional information.",
+                "Here we can mention something like wombats are cool.",
+            ],
+            "syntax": "generatetext action=<action>",
+            "arguments": [
+                {
+                    "name": "action",
+                    "required": True,
+                    "validate": {"type": "Fieldname"},
+                },
+                {
+                    "name": "test",
+                },
+            ],
+        }
+    ]
+
+
+@pytest.fixture
+def custom_search_command_validators():
+    return [
+        {
+            "commandName": "testcommand",
+            "commandType": "generating",
+            "fileName": "test.py",
+            "requiredSearchAssistant": True,
+            "description": "This is test command",
+            "syntax": "testcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": True,
+                    "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
+                },
+                {
+                    "name": "max_word",
+                    "validate": {"type": "Integer", "maximum": 100},
+                },
+                {
+                    "name": "age",
+                    "validate": {"type": "Integer", "minimum": 18},
+                },
+                {"name": "text", "required": True, "defaultValue": "test_text"},
+                {"name": "contains"},
+                {"name": "fieldname", "validate": {"type": "Fieldname"}},
+                {
+                    "name": "animals",
+                    "validate": {"type": "Set", "values": ["cat", "dog", "wombat"]},
+                },
+                {
+                    "name": "name",
+                    "validate": {
+                        "type": "Match",
+                        "name": "Name pattern",
+                        "pattern": "^[A-Z][a-z]+$",
+                    },
+                },
+                {
+                    "name": "urgency",
+                    "validate": {
+                        "type": "Map",
+                        "map": {"high": 3, "medium": 2.2, "low": "one"},
+                    },
+                },
+                {
+                    "name": "volume",
+                    "validate": {"type": "Float", "minimum": 2.2, "maximum": 197.45},
+                    "required": True,
+                },
+            ],
+        }
+    ]
+
+
 def test_for_transforming_command_with_error(
     transforming_custom_search_command,
     global_config_all_json,
@@ -144,6 +228,37 @@ def test_for_transforming_command_without_map(
             ],
             "import_map": False,
         }
+    ]
+
+
+def test_for_search_command_validators(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    custom_search_command_validators,
+):
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_validators
+    )
+    custom_command_py = CustomCommandPy(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+
+    assert custom_command_py.commands_info[0]["list_arg"] == [
+        "count = Option(name='count', require=True, "
+        "validate=validators.Integer(minimum=5, maximum=10))",
+        "max_word = Option(name='max_word', require=False, validate=validators.Integer(maximum=100))",
+        "age = Option(name='age', require=False, validate=validators.Integer(minimum=18))",
+        "text = Option(name='text', require=True, default='test_text')",
+        "contains = Option(name='contains', require=False)",
+        "fieldname = Option(name='fieldname', require=False, validate=validators.Fieldname())",
+        "animals = Option(name='animals', require=False, validate=validators.Set('cat', 'dog', 'wombat'))",
+        "name = Option(name='name', require=False, validate=validators.Match('Name pattern', '^[A-Z][a-z]+$'))",
+        "urgency = Option(name='urgency', require=False, "
+        "validate=validators.Map(**{'high': 3, 'medium': 2.2, 'low': 'one'}))",
+        "volume = Option(name='volume', require=True, validate=validators.Float(minimum=2.2, maximum=197.45))",
     ]
 
 
@@ -240,11 +355,68 @@ class GeneratetextcommandCommand(GeneratingCommand):
     """
     count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10))
     text = Option(name='text', require=True)
+    animals = Option(name='animals', require=False, validate=validators.Set('cat', 'dog', 'wombat'))
+    name = Option(name='name', require=False, validate=validators.Match('Name pattern', '^[A-Z][a-z]+$'))
+    urgency = Option(name='urgency', require=False, validate=validators.Map(**{'high': 3, 'medium': 2.2, 'low': 'one'}))
 
     def generate(self):
        return generate(self)
 
 dispatch(GeneratetextcommandCommand, sys.argv, sys.stdin, sys.stdout, __name__)
+    '''
+    assert output is not None
+    assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
+    assert output[0]["file_name"] == exp_fname
+    assert output[0]["file_path"] == f"{output_dir}/{ta_name}/bin/{exp_fname}"
+
+
+def test_generate_python_with_multiline_description(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    transforming_custom_search_command_with_multiline_description,
+):
+    exp_fname = "generatetext.py"
+    ta_name = global_config_all_json.meta["name"]
+
+    global_config_all_json._content["customSearchCommand"] = (
+        transforming_custom_search_command_with_multiline_description
+    )
+    custom_command_py = CustomCommandPy(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+    output = custom_command_py.generate()
+    expected_content = '''
+import sys
+import import_declare_test
+
+from splunklib.searchcommands import \\
+    dispatch, GeneratingCommand, Configuration, Option, validators
+from generatetextcommand import generate
+
+@Configuration()
+class GeneratetextCommand(GeneratingCommand):
+    """
+
+    ##Syntax
+    generatetext action=<action>
+
+    ##Description
+    This is a transforming command
+    This might be additional information.
+    Here we can mention something like wombats are cool.
+
+    """
+    action = Option(name='action', require=True, validate=validators.Fieldname())
+    test = Option(name='test', require=False)
+
+
+    def generate(self):
+       return generate(self)
+
+dispatch(GeneratetextCommand, sys.argv, sys.stdin, sys.stdout, __name__)
     '''
     assert output is not None
     assert normalize_code(output[0]["content"]) == normalize_code(expected_content)
