@@ -1222,14 +1222,14 @@ selenium = "3.141"
 
 [[package]]
 name = "packaging"
-version = "26.1"
+version = "26.2"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "packaging-26.1-py3-none-any.whl", hash = "sha256:5d9c0669c6285e491e0ced2eee587eaf67b670d94a19e94e3984a481aba6802f"},
-    {file = "packaging-26.1.tar.gz", hash = "sha256:f042152b681c4bfac5cae2742a55e103d27ab2ec0f3d88037136b6bfe7c9c5de"},
+    {file = "packaging-26.2-py3-none-any.whl", hash = "sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e"},
+    {file = "packaging-26.2.tar.gz", hash = "sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661"},
 ]
 
 [[package]]
@@ -1536,14 +1536,14 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "6.0.1"
+version = "6.0.2"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 groups = ["dev"]
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-6.0.1-py3-none-any.whl", hash = "sha256:a174efdbda03ecafaea243936e6d06c872941b0efedd1ea060431a8b2946df85"},
-    {file = "pytest_splunk_addon_ui_smartx-6.0.1.tar.gz", hash = "sha256:336e0b98d79db1b6d7134ee83a1615b7150bf8d9dd11fa4fc838ca7b53c24e44"},
+    {file = "pytest_splunk_addon_ui_smartx-6.0.2-py3-none-any.whl", hash = "sha256:8f22698f802968b4b1e809dc52336f90eb5fbcca32ebdc1076087ee1f3859ff6"},
+    {file = "pytest_splunk_addon_ui_smartx-6.0.2.tar.gz", hash = "sha256:d9a841d1d4af47a64869fa167840630bf85eef206353fd194069122973aed6d8"},
 ]
 
 [package.dependencies]
@@ -2350,4 +2350,4 @@ validate = ["splunk-appinspect"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<3.14"
-content-hash = "bee928b01ec791457447c3283b56dfd022bef87ad0491a15a912bb2fdfb36f41"
+content-hash = "f8be3bce5b2d7f3d0c21bfb4cf5f8834821289bf7138ef6701710313a5b6bb8b"
