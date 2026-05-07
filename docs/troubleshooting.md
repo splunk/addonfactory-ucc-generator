@@ -1,5 +1,13 @@
 # Troubleshooting
 
+## Redact before sharing diagnostics
+
+Before sharing logs, screenshots, coverage artifacts, or copied `_internal` search results, remove sensitive values first:
+
+* redact tokens, passwords, OAuth client secrets, cookie values, session IDs, and private endpoint details
+* review `htmlcov`, UI test output, Storybook artifacts, and browser captures before attaching them to issues or PRs
+* treat Splunk diagnostic snippets as shareable only after confirming they do not expose customer-like data or local credentials
+
 ## General troubleshooting
 
 To be able to troubleshoot the Python part of the add-on, you can use `remote_pdb`. This can be used for the local development when you have locally installed the Splunk instance and add-on there.

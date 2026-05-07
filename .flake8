@@ -1,4 +1,6 @@
 [flake8]
 max-line-length = 120
+max-complexity = 15
+extend-select = N
 per-file-ignores =
     tests/unit/generators/test_doc_generator.py: E501

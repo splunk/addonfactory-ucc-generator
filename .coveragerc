@@ -6,4 +6,5 @@ omit =
     splunk_add_on_ucc_framework/templates/input.module-template
 
 [report]
+# Repo-wide baseline; changed-line coverage is enforced separately in CI.
 fail_under = 84.70

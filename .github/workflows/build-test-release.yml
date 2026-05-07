@@ -501,6 +501,12 @@ jobs:
           poetry build
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        name: Restore UI Node version
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: "ui/package.json"
+          registry-url: "https://registry.npmjs.org"
+      - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         name: Publish NPM
         run: |
           cd ui          

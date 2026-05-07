@@ -61,10 +61,20 @@ poetry run pytest tests/smoke --cov splunk_add_on_ucc_framework --cov-report htm
 
 A report is created in `htmlcov/index.html`.
 
+The repository also enforces a hardened changed-line policy for framework code in CI. To reproduce it locally after fetching the base branch:
+
+```bash
+poetry run pytest tests/unit --cov splunk_add_on_ucc_framework --cov-report xml:coverage.xml
+poetry run python scripts/check_changed_line_coverage.py --coverage-xml coverage.xml --base-ref origin/develop --source-root splunk_add_on_ucc_framework
+```
+
+The baseline repo-wide threshold remains in `.coveragerc`; the hardened gate requires changed executable lines under `splunk_add_on_ucc_framework/` to stay fully covered.
+
 ### UI validation
 
 ```bash
 cd ui
+yarn run lint
 yarn run test
 cd ..
 ```
@@ -109,6 +119,17 @@ To run it locally:
 ```bash
 pre-commit run --all-files
 ```
+
+Python linting enforces explicit naming conventions through `pep8-naming` and a cyclomatic complexity cap of `15` through Flake8. UI linting in `ui/` enforces TypeScript naming conventions and a complexity limit of `12` for production code.
+
+## Secret handling
+
+Use a defined secret-handling system instead of ad hoc local files:
+
+- Store GitHub tokens, PyPI credentials, npm tokens, and release credentials in GitHub Actions secrets.
+- Keep local Splunk credentials, OAuth client secrets, browser session material, and other test credentials in untracked local environment files or shell environment variables.
+- Never commit secrets, paste them into docs, or include them in screenshots, Storybook captures, PR comments, issue bodies, or generated troubleshooting snippets.
+- Treat `output/`, `htmlcov/`, test artifacts, and copied Splunk logs as reviewable before sharing. Redact tokens, passwords, cookie values, session IDs, client secrets, and private endpoints first.
 
 
 ## Building TA with the Local Version of UCC

@@ -25,6 +25,8 @@
 - Run UI library tests (run from `ui/`): `yarn run test`
 - Run tests with coverage report: `poetry run pytest tests/unit --cov splunk_add_on_ucc_framework --cov-report html`
 - Run smoke tests with coverage report: `poetry run pytest tests/smoke --cov splunk_add_on_ucc_framework --cov-report html`
+- Generate XML coverage for hardened changed-line checks: `poetry run pytest tests/unit --cov splunk_add_on_ucc_framework --cov-report xml:coverage.xml`
+- Validate changed Python lines stay fully covered after fetching the base branch: `poetry run python scripts/check_changed_line_coverage.py --coverage-xml coverage.xml --base-ref origin/develop --source-root splunk_add_on_ucc_framework`
 - Coverage HTML output path: `htmlcov/index.html`
 - Make sure unit tests coverage does not decrease after changes made
 - Before running UI tests locally, build a sample add-on and start Splunk via `./scripts/run_splunk.sh` as documented in `docs/contributing.md`.
@@ -45,9 +47,11 @@
 
 - Run all Python lint/type hooks with: `pre-commit run --all-files`
 - Pre-commit is authoritative for Python checks and includes: `black`, `mypy`, `flake8`, `pyupgrade`, `autoflake`, and `markdownlint`.
+- Python naming is enforced through `flake8` with `pep8-naming`; Python cyclomatic complexity is capped at `15`.
 - Python formatting/lint baseline: Flake8 max line length is `120` (see `.flake8`).
 - Use Python 3.9+ compatible syntax for Python changes (`pyupgrade --py39-plus` is enforced).
-- For UI changes in `ui/`, run from `ui/`: `yarn run eslint` and `yarn run format:verify` (or `yarn run eslint:fix` / `yarn run format` when intentionally rewriting formatting).
+- For UI changes in `ui/`, run from `ui/`: `yarn run lint` and `yarn run format:verify` (or `yarn run eslint:fix` / `yarn run format` when intentionally rewriting formatting).
+- UI linting enforces type/variable naming conventions and a complexity limit of `12` for production code.
 - `yarn run setup` in `ui/` is a prerequisite before other UI yarn tasks.
 
 ## Git Workflow
@@ -68,6 +72,13 @@
 - If you need custom `.conf` behavior, prefer providing source `.conf` files in the add-on `default` source location instead of patching generated output.
 - Avoid committing local runtime/cache artifacts such as `.venv/`, `.pytest_cache/`, `.mypy_cache/`, `htmlcov/`, and transient local output unless intentionally updating reproducible fixtures.
 - When changing commands, release flow, or test workflows, update `docs/commands.md` and/or `docs/contributing.md` in the same PR.
+
+## Security & Diagnostics
+
+- Keep GitHub tokens, PyPI credentials, npm tokens, Splunk credentials, OAuth client secrets, and browser/test session material in CI secret storage or untracked local environment files only.
+- Never commit secrets or paste them into documentation, screenshots, Storybook artifacts, PR comments, issue bodies, or troubleshooting snippets.
+- Redact tokens, passwords, client secrets, session IDs, cookie values, and private endpoint details before sharing `htmlcov`, UI test output, Storybook captures, Splunk logs, or copied `_internal` search results.
+- Reusable repo-local agent assets live under `.agents/skills/build-test` and `.agents/skills/release-docs`; route repeatable agent work there instead of duplicating workflow steps in PR comments.
 
 ## Operational Rules
 
