@@ -150,7 +150,6 @@ def test_ucc_generate_with_everything(caplog):
             ("appserver", "static", "test icon.png"),
             ("appserver", "static", "alerticon.png"),
             ("appserver", "static", "js", "build", "custom", "custom_tab.js"),
-            ("appserver", "templates", "base.html"),
             ("default", "alert_actions.conf"),
             ("default", "eventtypes.conf"),
             ("default", "inputs.conf"),
@@ -222,6 +221,12 @@ def test_ucc_generate_with_everything(caplog):
         for f in files_to_exist:
             actual_file_path = path.join(actual_folder, *f)
             assert path.exists(actual_file_path)
+
+        # base.html version is dynamic (git-derived), so check the cache-buster
+        # pattern rather than comparing against a static fixture.
+        actual_base_html = Path(actual_folder) / "appserver" / "templates" / "base.html"
+        base_html_content = actual_base_html.read_text()
+        assert "entry_page.js?v=" in base_html_content
 
         # when custom files are provided, default files shouldn't be shipped
         files_should_be_absent = [
