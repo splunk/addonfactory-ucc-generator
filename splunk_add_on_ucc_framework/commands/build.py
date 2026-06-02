@@ -70,7 +70,9 @@ logger = logging.getLogger("ucc_gen")
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
 
-def _render_base_html(ta_name: str, source: str, outputdir: str) -> None:
+def _render_base_html(
+    ta_name: str, source: str, outputdir: str, ta_version: Optional[str] = None
+) -> None:
     """
     Render the managed base.html template with the actual add-on name.
 
@@ -78,6 +80,7 @@ def _render_base_html(ta_name: str, source: str, outputdir: str) -> None:
         ta_name: Add-on name.
         source: source package directory.
         outputdir: output directory.
+        ta_version: Add-on version used as a cache-buster query string on entry_page.js.
     """
     base_html_path = os.path.join(
         outputdir, ta_name, "appserver", "templates", "base.html"
@@ -106,6 +109,7 @@ def _render_base_html(ta_name: str, source: str, outputdir: str) -> None:
     rendered_content = template_env.get_template("base.html").render(
         app_name=ta_name,
         include_custom_favicon=include_custom_favicon,
+        ta_version=ta_version,
     )
 
     with open(base_html_path, "w") as f:
@@ -140,12 +144,12 @@ def _modify_and_replace_token_for_oauth_templates(
             s = s.replace("__TA_VERSION__", global_config.version)
             f.write(s)
 
-        redirect_js_dest = (
-            os.path.join(outputdir, ta_name, "appserver", "static", "js", "build", "")
-            + ta_name.lower()
-            + "_redirect_page."
-            + global_config.version
-            + ".js"
+        js_build_dir = os.path.join(
+            outputdir, ta_name, "appserver", "static", "js", "build"
+        )
+        redirect_js_dest = os.path.join(
+            js_build_dir,
+            ta_name.lower() + "_redirect_page." + global_config.version + ".js",
         )
         redirect_html_dest = os.path.join(
             outputdir,
@@ -154,6 +158,11 @@ def _modify_and_replace_token_for_oauth_templates(
             "templates",
             ta_name.lower() + "_redirect.html",
         )
+        # Remove stale versioned redirect JS files left by previous installs.
+        stale_prefix = ta_name.lower() + "_redirect_page."
+        for existing in os.listdir(js_build_dir):
+            if existing.startswith(stale_prefix) and existing.endswith(".js"):
+                os.remove(os.path.join(js_build_dir, existing))
         os.rename(redirect_js_src, redirect_js_dest)
         os.rename(redirect_html_src, redirect_html_dest)
     else:
@@ -694,7 +703,7 @@ def generate(
             global_config,
             output_directory,
         )
-        _render_base_html(ta_name, source, output_directory)
+        _render_base_html(ta_name, source, output_directory, ta_version=addon_version)
 
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME

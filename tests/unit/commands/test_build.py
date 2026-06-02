@@ -202,6 +202,56 @@ def test_render_base_html_overwrites_copied_template(tmp_path):
     assert "Splunk_TA_UCCExample/js/build/entry_page.js" in rendered
 
 
+def test_render_base_html_includes_version_cache_buster(tmp_path):
+    ta_name = "Splunk_TA_UCCExample"
+    source = tmp_path / "source"
+    source.mkdir()
+    base_html_path = tmp_path / ta_name / "appserver" / "templates" / "base.html"
+    base_html_path.parent.mkdir(parents=True)
+    base_html_path.write_text("placeholder")
+
+    _render_base_html(ta_name, str(source), str(tmp_path), ta_version="2.0.0")
+
+    rendered = base_html_path.read_text()
+    assert "entry_page.js?v=2.0.0" in rendered
+
+
+def test_modify_and_replace_token_for_oauth_templates_removes_stale_redirect_js(
+    tmp_path,
+):
+    ta_name = "Splunk_TA_UCCExample"
+    build_dir = tmp_path / ta_name / "appserver"
+    templates_dir = build_dir / "templates"
+    js_dir = build_dir / "static" / "js" / "build"
+    templates_dir.mkdir(parents=True)
+    js_dir.mkdir(parents=True)
+
+    # Simulate stale file left over from a previous version install
+    stale_js = js_dir / "splunk_ta_uccexample_redirect_page.1.0.0.js"
+    stale_js.write_text("old redirect")
+
+    redirect_html_path = templates_dir / "redirect.html"
+    redirect_html_path.write_text(
+        '<script src="__TA_NAME___redirect_page.__TA_VERSION__.js"></script>'
+    )
+    (js_dir / "redirect_page.js").write_text("console.log('redirect');")
+
+    global_config = cast(
+        global_config_lib.GlobalConfig,
+        SimpleNamespace(
+            version="1.0.1",
+            has_oauth=lambda: True,
+        ),
+    )
+
+    _modify_and_replace_token_for_oauth_templates(ta_name, global_config, str(tmp_path))
+
+    assert (
+        not stale_js.exists()
+    ), "stale redirect JS from prior version should be removed"
+    assert (js_dir / "splunk_ta_uccexample_redirect_page.1.0.1.js").exists()
+
+
 def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(
     tmp_path,
 ):

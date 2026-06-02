@@ -48,7 +48,7 @@
                 .then(function () { return _loadScript('../../i18ncatalog?autoload=1'); })
                 .then(function () {
                     return _loadScript(
-                        '../../static' + _b + _p + '/app/{{ app_name }}/js/build/entry_page.js',
+                        '../../static' + _b + _p + '/app/{{ app_name }}/js/build/entry_page.js{% if ta_version %}?v={{ ta_version }}{% endif %}',
                         'module'
                     );
                 });
