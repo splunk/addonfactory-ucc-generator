@@ -17,20 +17,7 @@ def test_interval_min_definition():
             "denyList": "^_.*$",
             "createSearchChoice": True,
         },
-        "validators": [
-            {
-                "type": "regex",
-                "errorMsg": "Index names must begin with a letter or a number and must contain only letters, "
-                "numbers, underscores or hyphens.",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\\\_\\\\-]*$",
-            },
-            {
-                "type": "string",
-                "errorMsg": "Length of index name should be between 1 and 80.",
-                "minLength": 1,
-                "maxLength": 80,
-            },
-        ],
+        "validators": [{"type": "index_name"}],
     }
 
 
@@ -59,18 +46,5 @@ def test_interval_max_definition():
             "denyList": "^_.*$",
             "createSearchChoice": True,
         },
-        "validators": [
-            {
-                "type": "regex",
-                "errorMsg": "Index names must begin with a letter or a number and must contain only letters, numbers, "
-                "underscores or hyphens.",
-                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\\\_\\\\-]*$",
-            },
-            {
-                "type": "string",
-                "errorMsg": "Length of index name should be between 1 and 80.",
-                "minLength": 1,
-                "maxLength": 80,
-            },
-        ],
+        "validators": [{"type": "index_name"}],
     }

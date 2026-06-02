@@ -112,19 +112,6 @@ export const migrateIndexTypeEntity = (
             denyList: '^_.*$',
             createSearchChoice: true,
         },
-        validators: [
-            {
-                type: 'regex',
-                pattern: '^[a-zA-Z0-9][a-zA-Z0-9\\_\\-]*$',
-                errorMsg:
-                    'Index names must begin with a letter or a number and must contain only letters, numbers, underscores or hyphens.',
-            },
-            {
-                type: 'string',
-                minLength: 1,
-                maxLength: 80,
-                errorMsg: 'Length of index name should be between 1 and 80.',
-            },
-        ],
+        validators: [{ type: 'index_name' }],
     };
 };
