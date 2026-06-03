@@ -1217,6 +1217,9 @@
               },
               {
                 "$ref": "#/definitions/DateValidator"
+              },
+              {
+                "$ref": "#/definitions/IndexNameValidator"
               }
             ]
           }
