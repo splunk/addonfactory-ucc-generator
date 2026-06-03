@@ -1,7 +1,7 @@
 from splunk_add_on_ucc_framework.entity import IndexEntity
 
 
-def test_interval_min_definition():
+def test_index_min_definition():
     definition = {"type": "index", "field": "index", "label": "Index"}
     index = IndexEntity.from_definition(definition)
 
@@ -21,7 +21,7 @@ def test_interval_min_definition():
     }
 
 
-def test_interval_max_definition():
+def test_index_max_definition():
     definition = {
         "type": "index",
         "field": "index",

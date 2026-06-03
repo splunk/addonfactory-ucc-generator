@@ -3331,6 +3331,24 @@
       ],
       "additionalProperties": false
     },
+    "IndexNameValidator": {
+      "type": "object",
+      "description": "Validates that the field value is a valid Splunk index name.",
+      "properties": {
+        "errorMsg": {
+          "$ref": "#/definitions/errorMsg"
+        },
+        "type": {
+          "const": "index_name",
+          "type": "string",
+          "description": "Exactly: index_name"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
     "AnyValidator": {
       "type": "array",
       "description": "It is used to validate the values of fields using various validators.",
@@ -3356,6 +3374,9 @@
           },
           {
             "$ref": "#/definitions/DateValidator"
+          },
+          {
+            "$ref": "#/definitions/IndexNameValidator"
           }
         ]
       }
