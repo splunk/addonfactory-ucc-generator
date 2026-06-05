@@ -1,5 +1,21 @@
 # Changelog
 
+# [6.4.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.3.0...v6.4.0) (2026-04-24)
+
+
+### Bug Fixes
+
+* add x-access-token prefix for GitHub App token in URL substitution ([3243a22](https://github.com/splunk/addonfactory-ucc-generator/commit/3243a225234acaa68a0d0f4cfdc57d309e275c63))
+* **app-conf:** preserve source is_visible setting ([#2028](https://github.com/splunk/addonfactory-ucc-generator/issues/2028)) ([33c287a](https://github.com/splunk/addonfactory-ucc-generator/commit/33c287a4d4bbe549f9cb8db22a0de9a0bed9cf0b)), closes [#1953](https://github.com/splunk/addonfactory-ucc-generator/issues/1953)
+* **schema:** require access token endpoint for oauth client credentials ([#2030](https://github.com/splunk/addonfactory-ucc-generator/issues/2030)) ([bccf288](https://github.com/splunk/addonfactory-ucc-generator/commit/bccf288f8ea8c3a451669756dd7ddd7d85d1cbac)), closes [#1950](https://github.com/splunk/addonfactory-ucc-generator/issues/1950)
+
+
+### Features
+
+* **nav:** add configurable default.xml nav color ([#2024](https://github.com/splunk/addonfactory-ucc-generator/issues/2024)) ([38a26ea](https://github.com/splunk/addonfactory-ucc-generator/commit/38a26eac550cd032b007d451fed0af6e871b2953)), closes [#2021](https://github.com/splunk/addonfactory-ucc-generator/issues/2021)
+* **ui:** wire custom favicon contract ([#2032](https://github.com/splunk/addonfactory-ucc-generator/issues/2032)) ([514181c](https://github.com/splunk/addonfactory-ucc-generator/commit/514181c5ef978e49bde9440a1667ce4db5841f64)), closes [#1730](https://github.com/splunk/addonfactory-ucc-generator/issues/1730)
+* **validate:** expose detailed AppInspect output options ([#2025](https://github.com/splunk/addonfactory-ucc-generator/issues/2025)) ([78f3500](https://github.com/splunk/addonfactory-ucc-generator/commit/78f3500fbe18b950cb8a22a3c892df7908b71a7c)), closes [#1976](https://github.com/splunk/addonfactory-ucc-generator/issues/1976) [hi#level](https://github.com/hi/issues/level)
+
 # [6.3.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.2.0...v6.3.0) (2026-04-02)
 
 
