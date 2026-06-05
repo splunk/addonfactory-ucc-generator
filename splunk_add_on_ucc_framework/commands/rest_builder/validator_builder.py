@@ -141,6 +141,17 @@ class UrlValidator(BaseValidator):
         return {"regex": "r" + quote_regex(regex)}
 
 
+class IndexNameValidator(BaseValidator):
+    def _get_class_name(self) -> str:
+        return "IndexName"
+
+    def _get_arguments(self, config: dict[str, Any]) -> dict[str, Any]:
+        return {}
+
+    def build(self, config: dict[str, Any]) -> str:
+        return "validator.IndexName()"
+
+
 class ValidatorBuilder:
     _validation_config_map = {
         "string": StringValidator,
@@ -150,6 +161,7 @@ class ValidatorBuilder:
         "ipv4": Ipv4Validator,
         "date": DateValidator,
         "url": UrlValidator,
+        "index_name": IndexNameValidator,
         # file validator does not need any generated code, everything is
         # validated in the UI
     }
