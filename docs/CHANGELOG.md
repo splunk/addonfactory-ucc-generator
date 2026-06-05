@@ -1,5 +1,17 @@
 # Changelog
 
+# [6.5.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.4.0...v6.5.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* **deps:** bump lodash to 4.18.1 and protocol-buffers-schema to 3.6.1 ([#2043](https://github.com/splunk/addonfactory-ucc-generator/issues/2043)) ([2e49efc](https://github.com/splunk/addonfactory-ucc-generator/commit/2e49efc586e8c2f6e9576c1828cf8df8038850f1))
+
+
+### Features
+
+* **ADDON-87180:** introduce dedicated `index_name` validator type ([#2042](https://github.com/splunk/addonfactory-ucc-generator/issues/2042)) ([8e1bf67](https://github.com/splunk/addonfactory-ucc-generator/commit/8e1bf6717abe645a94ea56944e80a3194f5c1610))
+
 # [6.4.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.3.0...v6.4.0) (2026-04-24)
 
 
