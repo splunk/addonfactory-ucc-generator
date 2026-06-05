@@ -1216,10 +1216,7 @@
                             "label": "Index",
                             "validators": [
                                 {
-                                    "type": "string",
-                                    "errorMsg": "Length of index name should be between 1 and 80.",
-                                    "minLength": 1,
-                                    "maxLength": 80
+                                    "type": "index_name"
                                 }
                             ],
                             "defaultValue": "default",
