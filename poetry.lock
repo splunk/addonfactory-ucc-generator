@@ -2349,5 +2349,5 @@ validate = ["splunk-appinspect"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.9,<3.14"
-content-hash = "bee928b01ec791457447c3283b56dfd022bef87ad0491a15a912bb2fdfb36f41"
+python-versions = ">=3.9,<3.15"
+content-hash = "42f26d9562a0054415e1cad9f38a1677cb0879ddb75a7209b66311128a65c0bc"
