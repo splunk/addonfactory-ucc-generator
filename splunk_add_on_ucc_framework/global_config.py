@@ -15,6 +15,7 @@
 #
 import functools
 import json
+import time
 from typing import Optional, Any
 from dataclasses import dataclass, field, fields
 from urllib.parse import urlparse
@@ -76,6 +77,7 @@ class GlobalConfig:
         self._is_global_config_yaml = is_yaml
         rest_handlers = self._content.get("options", {}).get("restHandlers", [])
         self.user_defined_handlers = UserDefinedRestHandlers(rest_handlers)
+        self._build_time = str(int(time.time()))
 
     @classmethod
     def from_file(cls, global_config_path: str) -> "GlobalConfig":
@@ -294,6 +296,10 @@ class GlobalConfig:
 
     def add_ucc_version(self, version: str) -> None:
         self.content.setdefault("meta", {})["_uccVersion"] = version
+
+    @property
+    def build_time(self) -> str:
+        return self._build_time
 
     def has_pages(self) -> bool:
         return bool(self.pages)

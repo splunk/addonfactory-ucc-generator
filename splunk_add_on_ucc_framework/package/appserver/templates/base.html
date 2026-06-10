@@ -32,8 +32,6 @@
 
     <body>
         <script>
-            var _b = window.$C && window.$C.BUILD_NUMBER ? '/@' + window.$C.BUILD_NUMBER : '';
-            var _p = _b && window.$C.BUILD_PUSH_NUMBER ? '.' + window.$C.BUILD_PUSH_NUMBER : '';
             function _loadScript(src, type) {
                 return new Promise(function (resolve, reject) {
                     var s = document.createElement('script');
@@ -44,11 +42,11 @@
                     document.head.appendChild(s);
                 });
             }
-            _loadScript('../../static' + _b + _p + '/js/i18n.js')
+            _loadScript('../../static/@{{ app_build_number }}/js/i18n.js')
                 .then(function () { return _loadScript('../../i18ncatalog?autoload=1'); })
                 .then(function () {
                     return _loadScript(
-                        '../../static' + _b + _p + '/app/{{ app_name }}/js/build/entry_page.js',
+                        '../../static/@{{ app_build_number }}/app/{{ app_name }}/js/build/entry_page.js',
                         'module'
                     );
                 });

@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from time import time
 import os
 from typing import Optional
 
@@ -53,7 +52,7 @@ class AppConf(FileGenerator):
 
         self.addon_version = global_config.version
         self.is_visible = self._resolve_is_visible(global_config, input_dir)
-        self.build = str(int(time()))
+        self.build = global_config.build_time
 
     @staticmethod
     def _get_source_app_conf_is_visible(input_dir: str) -> Optional[str]:
