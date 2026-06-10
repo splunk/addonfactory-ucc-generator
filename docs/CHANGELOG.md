@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.0...v6.5.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* replace runtime JS cache busting with build-time timestamp ([#2053](https://github.com/splunk/addonfactory-ucc-generator/issues/2053)) ([d36af9c](https://github.com/splunk/addonfactory-ucc-generator/commit/d36af9c8b363dcc891f2b2baff39738aa33e9fdf))
+
 # [6.5.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.4.0...v6.5.0) (2026-06-05)
 
 
