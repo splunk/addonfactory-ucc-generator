@@ -6,6 +6,7 @@ import logging
 import json
 import pytest
 from os import path
+import freezegun
 from pathlib import Path
 from typing import Any
 import subprocess
@@ -118,6 +119,7 @@ def test_ucc_generate_with_config_param():
         check_ucc_versions(temp)
 
 
+@freezegun.freeze_time("2026-06-10 00:00:00")
 def test_ucc_generate_with_everything(caplog):
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(
@@ -281,6 +283,7 @@ def test_ucc_generate_with_multiple_inputs_tabs():
     build.generate(source=package_folder)
 
 
+@freezegun.freeze_time("2026-06-10 00:00:00")
 def test_ucc_generate_with_configuration():
     with tempfile.TemporaryDirectory() as temp_dir:
         package_folder = path.join(

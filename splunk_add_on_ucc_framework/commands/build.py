@@ -70,12 +70,15 @@ logger = logging.getLogger("ucc_gen")
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
 
-def _render_base_html(ta_name: str, source: str, outputdir: str) -> None:
+def _render_base_html(
+    ta_name: str, build_time: str, source: str, outputdir: str
+) -> None:
     """
     Render the managed base.html template with the actual add-on name.
 
     Args:
         ta_name: Add-on name.
+        build_time: Add-on's build time.
         source: source package directory.
         outputdir: output directory.
     """
@@ -106,6 +109,7 @@ def _render_base_html(ta_name: str, source: str, outputdir: str) -> None:
     rendered_content = template_env.get_template("base.html").render(
         app_name=ta_name,
         include_custom_favicon=include_custom_favicon,
+        app_build_number=build_time,
     )
 
     with open(base_html_path, "w") as f:
@@ -138,6 +142,7 @@ def _modify_and_replace_token_for_oauth_templates(
             s = s.replace("__APP_NAME__", ta_name)
             s = s.replace("__TA_NAME__", ta_name.lower())
             s = s.replace("__TA_VERSION__", global_config.version)
+            s = s.replace("__APP_BUILD_NUMBER__", global_config.build_time)
             f.write(s)
 
         redirect_js_dest = (
@@ -694,7 +699,7 @@ def generate(
             global_config,
             output_directory,
         )
-        _render_base_html(ta_name, source, output_directory)
+        _render_base_html(ta_name, global_config.build_time, source, output_directory)
 
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME
