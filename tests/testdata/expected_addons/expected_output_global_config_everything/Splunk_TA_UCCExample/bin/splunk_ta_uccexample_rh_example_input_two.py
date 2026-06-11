@@ -47,15 +47,7 @@ fields = [
         required=True,
         encrypted=False,
         default='default',
-        validator=validator.AllOf(
-            validator.Pattern(
-                regex=r"""^[a-zA-Z0-9][a-zA-Z0-9\\_\\-]*$""",
-            ),
-            validator.String(
-                max_len=80,
-                min_len=1,
-            )
-        )
+        validator=validator.IndexName()
     ), 
     field.RestField(
         'account',

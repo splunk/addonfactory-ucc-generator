@@ -61,6 +61,10 @@ from tests.unit.helpers import get_testdata_file
             get_testdata_file("validator_builder_result_url"),
         ),
         (
+            [{"type": "index_name"}],
+            get_testdata_file("validator_builder_result_index_name"),
+        ),
+        (
             [
                 {
                     "type": "regex",

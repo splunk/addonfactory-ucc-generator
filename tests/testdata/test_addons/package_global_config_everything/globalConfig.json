@@ -1216,10 +1216,7 @@
                             "label": "Index",
                             "validators": [
                                 {
-                                    "type": "string",
-                                    "errorMsg": "Length of index name should be between 1 and 80.",
-                                    "minLength": 1,
-                                    "maxLength": 80
+                                    "type": "index_name"
                                 }
                             ],
                             "defaultValue": "default",
@@ -2386,7 +2383,7 @@
     "meta": {
         "name": "Splunk_TA_UCCExample",
         "restRoot": "splunk_ta_uccexample",
-        "version": "6.2.0+38a26eac5",
+        "version": "6.5.0+367e327ba",
         "displayName": "Splunk UCC test Add-on",
         "schemaVersion": "0.0.10",
         "supportedThemes": [
