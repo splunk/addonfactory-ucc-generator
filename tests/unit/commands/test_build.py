@@ -155,7 +155,7 @@ def test_render_base_html_preserves_app_name_case(tmp_path):
     base_html_path.parent.mkdir(parents=True)
     base_html_path.write_text("placeholder")
 
-    _render_base_html(ta_name, str(source), str(tmp_path))
+    _render_base_html(ta_name, "123456789", str(source), str(tmp_path))
 
     rendered = base_html_path.read_text()
     assert "Splunk_TA_UCCExample/js/build/entry_page.js" in rendered
@@ -167,7 +167,7 @@ def test_render_base_html_preserves_app_name_case(tmp_path):
 def test_render_base_html_skips_when_template_is_missing(tmp_path):
     ta_name = "Splunk_TA_UCCExample"
 
-    _render_base_html(ta_name, str(tmp_path), str(tmp_path))
+    _render_base_html(ta_name, "123456789", str(tmp_path), str(tmp_path))
 
     assert not (tmp_path / ta_name / "appserver" / "templates" / "base.html").exists()
 
@@ -180,7 +180,7 @@ def test_render_base_html_omits_favicon_when_asset_is_missing(tmp_path):
     base_html_path.parent.mkdir(parents=True)
     base_html_path.write_text("placeholder")
 
-    _render_base_html(ta_name, str(source), str(tmp_path))
+    _render_base_html(ta_name, "123456789", str(source), str(tmp_path))
 
     rendered = base_html_path.read_text()
     assert "Splunk_TA_UCCExample/js/build/entry_page.js" in rendered
@@ -195,7 +195,7 @@ def test_render_base_html_overwrites_copied_template(tmp_path):
     base_html_path.parent.mkdir(parents=True)
     base_html_path.write_text("<html><body>totally custom</body></html>\n")
 
-    _render_base_html(ta_name, str(source), str(tmp_path))
+    _render_base_html(ta_name, "123456789", str(source), str(tmp_path))
 
     rendered = base_html_path.read_text()
     assert "totally custom" not in rendered
@@ -223,6 +223,7 @@ def test_modify_and_replace_token_for_oauth_templates_preserves_app_name_case(
         SimpleNamespace(
             version="1.2.3",
             has_oauth=lambda: True,
+            build_time="123456789",
         ),
     )
 
