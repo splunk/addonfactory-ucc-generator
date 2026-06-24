@@ -71,6 +71,11 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.target_repo }}" ]]; then
             echo "repos=[\"${{ github.event.inputs.target_repo }}\"]" >> $GITHUB_OUTPUT
           else
+            # splunk/splunk-add-on-for-cisco-asa is temporarily disabled: its
+            # additional_packaging.py rmdir()s default/data/spl2 after deleting a
+            # hardcoded file list, which fails because cisco_asa_schema_1_1.json
+            # (added in the TA's 6.0.1 release) isn't in that list. Re-enable
+            # once the TA switches to shutil.rmtree or updates the list.
             echo "repos<<EOF" >> $GITHUB_OUTPUT
             echo '[
               "splunk/splunk-add-on-for-amazon-web-services",
@@ -81,7 +86,6 @@ jobs:
               "splunk/splunk-add-on-for-salesforce",
               "splunk/splunk-add-on-for-servicenow",
               "splunk/splunk-add-on-for-mysql",
-              "splunk/splunk-add-on-for-cisco-asa",
               "splunk/splunk-add-on-for-unix-and-linux"
             ]' >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
