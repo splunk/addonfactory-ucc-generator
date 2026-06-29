@@ -39,6 +39,16 @@ export const OAuthOptionsBaseSchema = z.object({
         .catchall(z.string())
         .optional(),
     auth_label: z.string().optional(),
+    auth_type_filter: z
+        .record(
+            z.string(),
+            z.object({
+                hideForVersionAbove: z.number().optional(),
+                hideForVersionBelow: z.number().optional(),
+                dependsOnField: z.string().optional(),
+            })
+        )
+        .optional(),
     oauth_popup_width: z.number().optional(),
     oauth_popup_height: z.number().optional(),
     oauth_timeout: z.number().optional(),

@@ -2159,6 +2159,28 @@
               "maxLength": 250,
               "description": "Allows the user to have the custom label for the Auth Type dropdown."
             },
+            "auth_type_filter": {
+              "type": "object",
+              "description": "Conditionally hide auth type options based on another field value. Key is the auth type to hide, value defines the condition.",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "hideForVersionAbove": {
+                    "type": "number",
+                    "description": "Hide this auth type when dependsOnField value is above this number."
+                  },
+                  "hideForVersionBelow": {
+                    "type": "number",
+                    "description": "Hide this auth type when dependsOnField value is below this number."
+                  },
+                  "dependsOnField": {
+                    "type": "string",
+                    "description": "The field name whose value controls the visibility of this auth type."
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
             "oauth_popup_width": {
               "type": "number",
               "default": 600,
