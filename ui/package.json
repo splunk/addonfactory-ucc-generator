@@ -6,7 +6,7 @@
     "url": "git+https://github.com/splunk/addonfactory-ucc-generator.git",
     "directory": "ui"
   },
-  "version": "6.5.0",
+  "version": "6.5.1",
   "license": "Apache-2.0",
   "author": "Splunk Inc.",
   "homepage": "https://splunk.github.io/addonfactory-ucc-generator",
@@ -183,7 +183,9 @@
     "crypto-js": "^4.2.0",
     "vitest/vite": "^7.3.1",
     "lodash": "^4.18.1",
-    "protocol-buffers-schema": "^3.6.1"
+    "protocol-buffers-schema": "^3.6.1",
+    "fast-uri": "^3.1.2",
+    "@xmldom/xmldom": "^0.8.13"
   },
   "engines": {
     "node": "22.22.0",
