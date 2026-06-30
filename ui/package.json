@@ -150,7 +150,7 @@
     "d3-color": "^3.1.0",
     "d3-interpolate": "^3.0.1",
     "glob-parent": "^5.1.2",
-    "postcss": "^8.5.8",
+    "postcss": "^8.5.10",
     "semver": "^7.7.4",
     "strip-ansi": "^6.0.1",
     "string-width": "^4.2.3",
