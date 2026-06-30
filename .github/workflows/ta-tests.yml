@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout UCC Framework Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: UCC
 
@@ -107,7 +107,7 @@ jobs:
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - name: Checkout Target Add-on Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
