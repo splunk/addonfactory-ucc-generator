@@ -81,14 +81,14 @@ lxml = ["lxml"]
 
 [[package]]
 name = "certifi"
-version = "2026.4.22"
+version = "2026.6.17"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.7"
 groups = ["main", "dev"]
 files = [
-    {file = "certifi-2026.4.22-py3-none-any.whl", hash = "sha256:3cb2210c8f88ba2318d29b0388d1023c8492ff72ecdde4ebdaddbb13a31b1c4a"},
-    {file = "certifi-2026.4.22.tar.gz", hash = "sha256:8d455352a37b71bf76a79caa83a3d6c25afee4a385d632127b6afb3963f1c580"},
+    {file = "certifi-2026.6.17-py3-none-any.whl", hash = "sha256:2227dcbaafe0d2f59279d1762ddddc37783ed4354594f194ffc31d20f41fc3db"},
+    {file = "certifi-2026.6.17.tar.gz", hash = "sha256:024c88eeec92ca068db80f02b8b07c9cef7b9fe261d1d535abfd5abd6f6af432"},
 ]
 
 [[package]]
@@ -901,15 +901,15 @@ source = ["Cython (>=3.0.11,<3.1.0)"]
 
 [[package]]
 name = "mako"
-version = "1.3.10"
+version = "1.3.12"
 description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
 optional = true
 python-versions = ">=3.8"
 groups = ["main"]
 markers = "extra == \"validate\""
 files = [
-    {file = "mako-1.3.10-py3-none-any.whl", hash = "sha256:baef24a52fc4fc514a0887ac600f9f1cff3d82c61d4d700a1fa84d597b88db59"},
-    {file = "mako-1.3.10.tar.gz", hash = "sha256:99579a6f39583fa7e5630a28c3c1f440e4e97a414b80372649c0ce338da2ea28"},
+    {file = "mako-1.3.12-py3-none-any.whl", hash = "sha256:8f61569480282dbf557145ce441e4ba888be453c30989f879f0d652e39f53ea9"},
+    {file = "mako-1.3.12.tar.gz", hash = "sha256:9f778e93289bd410bb35daadeb4fc66d95a746f0b75777b942088b7fd7af550a"},
 ]
 
 [package.dependencies]
@@ -1237,14 +1237,14 @@ selenium = "3.141"
 
 [[package]]
 name = "packaging"
-version = "26.1"
+version = "26.2"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "packaging-26.1-py3-none-any.whl", hash = "sha256:5d9c0669c6285e491e0ced2eee587eaf67b670d94a19e94e3984a481aba6802f"},
-    {file = "packaging-26.1.tar.gz", hash = "sha256:f042152b681c4bfac5cae2742a55e103d27ab2ec0f3d88037136b6bfe7c9c5de"},
+    {file = "packaging-26.2-py3-none-any.whl", hash = "sha256:5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e"},
+    {file = "packaging-26.2.tar.gz", hash = "sha256:ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661"},
 ]
 
 [[package]]
@@ -1551,14 +1551,14 @@ xmltodict = ">=0.13.0,<0.14.0"
 
 [[package]]
 name = "pytest-splunk-addon-ui-smartx"
-version = "6.0.1"
+version = "6.0.2"
 description = "Library to support testing Splunk Add-on UX"
 optional = false
 python-versions = "<4.0,>=3.7"
 groups = ["dev"]
 files = [
-    {file = "pytest_splunk_addon_ui_smartx-6.0.1-py3-none-any.whl", hash = "sha256:a174efdbda03ecafaea243936e6d06c872941b0efedd1ea060431a8b2946df85"},
-    {file = "pytest_splunk_addon_ui_smartx-6.0.1.tar.gz", hash = "sha256:336e0b98d79db1b6d7134ee83a1615b7150bf8d9dd11fa4fc838ca7b53c24e44"},
+    {file = "pytest_splunk_addon_ui_smartx-6.0.2-py3-none-any.whl", hash = "sha256:8f22698f802968b4b1e809dc52336f90eb5fbcca32ebdc1076087ee1f3859ff6"},
+    {file = "pytest_splunk_addon_ui_smartx-6.0.2.tar.gz", hash = "sha256:d9a841d1d4af47a64869fa167840630bf85eef206353fd194069122973aed6d8"},
 ]
 
 [package.dependencies]
@@ -2056,15 +2056,15 @@ files = [
 
 [[package]]
 name = "splunk-appinspect"
-version = "4.2.0"
+version = "4.2.1"
 description = "Automatic validation checks for Splunk Apps"
 optional = true
 python-versions = ">=3.7"
 groups = ["main"]
 markers = "extra == \"validate\""
 files = [
-    {file = "splunk_appinspect-4.2.0-py3-none-any.whl", hash = "sha256:b95d15f94850eb2319f1990b405065b59a9ea3e7dcab099b14ba7c5d93e826ae"},
-    {file = "splunk_appinspect-4.2.0.tar.gz", hash = "sha256:93c7801b143ef03a4b2da91f32e7c9a51399d8cb0aa1f834f187cbb72c2771bc"},
+    {file = "splunk_appinspect-4.2.1-py3-none-any.whl", hash = "sha256:fb66f55d5a8cd05f4628906c05216028d0c69f687267a91c6b4edcac25fb01eb"},
+    {file = "splunk_appinspect-4.2.1.tar.gz", hash = "sha256:33e8651809780d60789a71a5b8ed35bdc4fc6e6aff7a6a52e406b266587daeff"},
 ]
 
 [package.dependencies]
@@ -2365,4 +2365,4 @@ validate = ["splunk-appinspect"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<3.14"
-content-hash = "8b77b97da48b46b568dbf198c1f3ebc7075043c4660f7d87629b56446b8d82ea"
+content-hash = "1fb16b43d8c52ca138a8225586863a399efe2a38a9a401ad87a5e4f4eeb995ae"
