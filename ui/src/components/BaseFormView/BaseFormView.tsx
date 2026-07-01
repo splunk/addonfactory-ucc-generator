@@ -50,7 +50,7 @@ import { GlobalConfig } from '../../types/globalConfig/globalConfig';
 import { CustomHookConstructor, CustomHookInstance } from '../../types/components/CustomHookBase';
 import { CustomElementsMap } from '../../types/CustomTypes';
 import { OAuthEntity, SingleSelectEntitySchema } from '../../types/globalConfig/entities';
-import { mapEntityIntoBaseForViewEntityObject, StyledMessage } from './BaseFormViewUtils';
+import { mapEntityIntoBaseForViewEntityObject, StyledMessage, filterAuthTypes } from './BaseFormViewUtils';
 
 function onCustomHookError(params: { methodName: string; error?: CustomHookError }) {
     // eslint-disable-next-line no-console
@@ -130,6 +130,10 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     customWarningMessage: { message: string; alwaysDisplay?: boolean };
 
     fieldsWithModifications: EntitiesAllowingModifications[];
+
+    authTypeFilter?: Record<string, { hideForVersionAbove?: number; hideForVersionBelow?: number; dependsOnField?: string }>;
+
+    allAuthTypes?: string[];
 
     inputsUniqueAcrossSingleService?: boolean;
 
@@ -266,20 +270,45 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             authType.find((oauth) => oauth === this.currentInput?.auth_type) ||
                             authType[0];
 
-                        const tempEntity = {
-                            disabled: false,
-                            error: false,
-                            display: true,
-                            value: currentInputOauth,
-                        };
-
-                        temState.auth_type = tempEntity;
-
                         const defaultOauthLabels: Record<string, string> = {
                             basic: 'Basic Authentication',
                             oauth: 'OAuth 2.0 - Authorization Code Grant Type',
                             oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
                         };
+
+                        // Store for dynamic re-filtering when dependsOnField changes
+                        this.allAuthTypes = authType;
+                        this.authTypeFilter = e?.options?.auth_type_filter;
+                        const initialFilteredAuthTypes = filterAuthTypes(
+                            authType,
+                            e?.options?.auth_type_filter,
+                            temState
+                        );
+                        const initialAutoCompleteFields = initialFilteredAuthTypes.map((oauthConf) =>
+                            typeof oauthConf === 'object'
+                                ? oauthConf
+                                : {
+                                      label:
+                                          e?.options?.oauth_type_labels?.[oauthConf] ||
+                                          defaultOauthLabels[oauthConf] ||
+                                          oauthConf,
+                                      value: oauthConf,
+                                  }
+                        );
+
+                        const validInitialAuth = initialFilteredAuthTypes.includes(currentInputOauth)
+                            ? currentInputOauth
+                            : initialFilteredAuthTypes[0] || currentInputOauth;
+
+                        const tempEntity = {
+                            disabled: false,
+                            error: false,
+                            display: true,
+                            value: validInitialAuth,
+                            autoCompleteFields: initialAutoCompleteFields,
+                        };
+
+                        temState.auth_type = tempEntity;
 
                         // Defining Entity for auth_type in entitylist of globalConfig
                         const entity: z.TypeOf<typeof SingleSelectEntitySchema> = {
@@ -288,7 +317,9 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             label: 'Auth Type',
                             options: {
                                 hideClearBtn: true,
-                                autoCompleteFields: authType.map((oauthConf) =>
+                                autoCompleteFields: (() => {
+                                    return initialFilteredAuthTypes;
+                                })().map((oauthConf) =>
                                     typeof oauthConf === 'object'
                                         ? oauthConf
                                         : {
@@ -860,6 +891,58 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                 });
             }
 
+            // Re-filter auth type options when a field used in auth_type_filter changes
+            if (this.allAuthTypes && this.authTypeFilter) {
+                const isDependentField = Object.values(this.authTypeFilter).some(
+                    (rule) => rule.dependsOnField === field
+                );
+                if (isDependentField) {
+                    const newState = { ...prevState.data, [field]: { value: targetValue } };
+                    const filtered = filterAuthTypes(this.allAuthTypes, this.authTypeFilter, newState);
+                    const defaultOauthLabels: Record<string, string> = {
+                        basic: 'Basic Authentication',
+                        oauth: 'OAuth 2.0 - Authorization Code Grant Type',
+                        oauth_client_credentials: 'OAuth 2.0 - Client Credentials Grant Type',
+                    };
+                    const newAutoCompleteFields = filtered.map((oauthConf) => ({
+                        label: defaultOauthLabels[oauthConf] || oauthConf,
+                        value: oauthConf,
+                    }));
+                    // Store filtered options in state so React re-renders the dropdown
+                    const currentAuthType = String(prevState.data?.auth_type?.value ?? '');
+                    // Check if any auth type should become default when it becomes visible
+                    const newlyVisibleDefault = Object.keys(this.authTypeFilter).find(
+                        (authKey) =>
+                            (this.authTypeFilter![authKey] as { defaultWhenVisible?: boolean }).defaultWhenVisible &&
+                            filtered.includes(authKey)
+                    );
+                    const newAuthType = newlyVisibleDefault
+                        ? newlyVisibleDefault
+                        : filtered.includes(currentAuthType)
+                        ? currentAuthType
+                        : filtered[0] ?? null;
+                    changes['auth_type'] = {
+                        value: { $set: newAuthType },
+                        autoCompleteFields: { $set: newAutoCompleteFields },
+                    };
+                    // Update auth field visibility (username/password vs client_id/secret)
+                    // when auth type is programmatically changed by the filter
+                    if (newAuthType && newAuthType !== currentAuthType) {
+                        Object.keys(this.authMap).forEach((authMapType) => {
+                            if (authMapType === newAuthType) {
+                                this.authMap[authMapType].forEach((fieldName) => {
+                                    changes[fieldName] = { display: { $set: true } };
+                                });
+                            } else {
+                                this.authMap[authMapType].forEach((fieldName) => {
+                                    changes[fieldName] = { display: { $set: false } };
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+
             if (this.dependencyMap.has(field)) {
                 const value = this.dependencyMap.get(field);
                 Object.keys(value || {}).forEach((loadField) => {
@@ -1170,9 +1253,21 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                             if (e.field === fieldName) {
                                 const temState = this.state?.data?.[e.field];
 
+                                // If state has filtered autoCompleteFields, use them
+                                const entityWithFilteredOptions =
+                                    temState?.autoCompleteFields && 'options' in e
+                                        ? ({
+                                              ...e,
+                                              options: {
+                                                  ...(e as { options?: Record<string, unknown> }).options,
+                                                  autoCompleteFields: temState.autoCompleteFields,
+                                              },
+                                          } as typeof e)
+                                        : e;
+
                                 return (
                                     <ControlWrapper
-                                        key={e.field}
+                                        key={`${e.field}-${temState?.autoCompleteFields?.length ?? 0}`}
                                         utilityFuncts={this.utilControlWrapper}
                                         value={temState?.value}
                                         display={
@@ -1181,7 +1276,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                                 : true
                                         }
                                         error={temState?.error || false}
-                                        entity={e}
+                                        entity={entityWithFilteredOptions}
                                         serviceName={this.props.serviceName}
                                         mode={this.props.mode}
                                         disabled={temState?.disabled || false}
@@ -1270,14 +1365,26 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                         if (!temState) {
                             return null;
                         }
+
+                        const entityWithFilteredOpts =
+                            temState?.autoCompleteFields && 'options' in e
+                                ? ({
+                                      ...e,
+                                      options: {
+                                          ...(e as { options?: Record<string, unknown> }).options,
+                                          autoCompleteFields: temState.autoCompleteFields,
+                                      },
+                                  } as typeof e)
+                                : e;
+
                         return (
                             <ControlWrapper
-                                key={e.field}
+                                key={`${e.field}-${temState?.autoCompleteFields?.length ?? 0}`}
                                 utilityFuncts={this.utilControlWrapper}
                                 value={temState.value}
                                 display={temState.display}
                                 error={temState.error}
-                                entity={e}
+                                entity={entityWithFilteredOpts}
                                 serviceName={this.props.serviceName}
                                 mode={this.props.mode}
                                 disabled={temState.disabled}

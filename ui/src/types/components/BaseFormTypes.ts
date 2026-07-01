@@ -58,6 +58,7 @@ export interface BaseFormStateData {
         display: boolean;
         markdownMessage?: MarkdownMessageProps;
         dependencyValues?: string;
+        autoCompleteFields?: Array<{ label: string; value: string }>;
         modifiedEntitiesData?: {
             help?: string;
             label?: string;
@@ -145,6 +146,7 @@ export interface ChangeRecord {
     display?: { $set: boolean };
     value?: { $set: AcceptableFormValueOrNullish };
     dependencyValues?: { $set: NullishFormRecord };
+    autoCompleteFields?: { $set: Array<{ label: string; value: string }> | undefined };
 }
 
 /**
