@@ -15,6 +15,7 @@
 #
 import csv
 import glob
+import importlib.metadata
 import logging
 import os
 import re
@@ -56,6 +57,24 @@ class InvalidArguments(Exception):
     pass
 
 
+def _normalize_distribution_key(name: str) -> str:
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def _get_installed_distribution_version(target: str, libname: str) -> Optional[str]:
+    normalized_name = _normalize_distribution_key(libname)
+
+    for distribution in importlib.metadata.distributions(path=[target]):
+        distribution_name = distribution.metadata.get("Name")
+        if (
+            distribution_name
+            and _normalize_distribution_key(distribution_name) == normalized_name
+        ):
+            return distribution.version
+
+    return None
+
+
 def _subprocess_run(
     command: str,
     command_desc: Optional[str] = None,
@@ -91,8 +110,7 @@ def _pip_install(installer: str, command: str, command_desc: str) -> None:
         raise CouldNotInstallRequirements(e) from e
 
 
-def _pip_is_lib_installed(
-    installer: str,
+def _is_distribution_installed(
     target: str,
     libname: str,
     version: Optional[str] = None,
@@ -103,46 +121,30 @@ def _pip_is_lib_installed(
             "Parameter 'allow_higher_version' can not be set to True if 'version' parameter is not provided"
         )
 
-    lib_installed_cmd = f"{installer} -m pip show --version {libname}"
+    installed_version = _get_installed_distribution_version(
+        target=target, libname=libname
+    )
 
-    try:
-        my_env = os.environ.copy()
-        my_env["PYTHONPATH"] = target
+    if not installed_version:
+        logger.error(
+            f"Command result: Package {libname} not found in installation target {target}"
+        )
+        return False
 
-        # Disable writing of .pyc files (__pycache__)
-        my_env["PYTHONDONTWRITEBYTECODE"] = "1"
+    if version:
+        logger.info(f"Command result: Name: {libname}\nVersion: {installed_version}")
+        if allow_higher_version:
+            return Version(installed_version) >= Version(version)
+        return Version(installed_version) == Version(version)
 
-        result = _subprocess_run(command=lib_installed_cmd, env=my_env)
-        if result.returncode != 0 or "Version:" not in result.stdout.decode("utf-8"):
-            logger.error(
-                f"Command result: {result.stdout.decode()} {result.stderr.decode()}"
-            )
-            return False
-
-        if version:
-            pip_show_result = result.stdout.decode("utf-8").splitlines()
-            result_row = next(el for el in pip_show_result if el.startswith("Version:"))
-            result_version = result_row.split("Version:")[1].strip()
-            if allow_higher_version:
-                logger.info(
-                    f"Command result: {result.stdout.decode()} {result.stderr.decode()}"
-                )
-                return Version(result_version) >= Version(version)
-            return Version(result_version) == Version(version)
-        else:
-            return result.returncode == 0
-
-    except OSError as exc:
-        logger.error(f"Command execution failed with error message: {str(exc)}")
-        raise CouldNotInstallRequirements from exc
+    return True
 
 
 def _check_libraries_required_for_oauth(
     python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
 ) -> None:
     for lib, version in LIBS_REQUIRED_FOR_OAUTH.items():
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
+        if not _is_distribution_installed(
             target=ucc_lib_target,
             libname=lib,
             version=version,
@@ -158,8 +160,7 @@ def _check_libraries_required_for_ui(
     python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
 ) -> None:
     for lib, version in LIBS_REQUIRED_FOR_UI.items():
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
+        if not _is_distribution_installed(
             target=ucc_lib_target,
             libname=lib,
         ):
@@ -167,8 +168,7 @@ def _check_libraries_required_for_ui(
                 f"This add-on has an UI, so the {lib} is required but not found in "
                 f"{path_to_requirements_file}. Please add it there and make sure it is at least version {version}."
             )
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
+        if not _is_distribution_installed(
             target=ucc_lib_target,
             libname=lib,
             version=version,
@@ -474,8 +474,7 @@ def install_os_dependent_libraries(
 
     validate_conflicting_paths(os_libraries)
     for os_lib in os_libraries:
-        if os_lib.dependencies is False and not _pip_is_lib_installed(
-            installer=installer,
+        if os_lib.dependencies is False and not _is_distribution_installed(
             target=ucc_lib_target,
             libname=os_lib.name,
             version=os_lib.version,
