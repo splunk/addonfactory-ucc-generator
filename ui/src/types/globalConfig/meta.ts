@@ -9,6 +9,7 @@ export const meta = z
         version: z.string(),
         schemaVersion: z.string().optional(),
         _uccVersion: z.string().optional(),
+        _confSpl2ConverterVersion: z.string().optional(),
         hideUCCVersion: z.boolean().optional(),
         checkForUpdates: z.boolean().default(true).optional(),
         searchViewDefault: z.boolean().default(false).optional(),

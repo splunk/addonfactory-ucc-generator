@@ -163,6 +163,11 @@ def test_rest_handler_without_ui(schema_validate, config):
     schema_validate(config)
 
 
+def test_meta_conf_spl2_converter_version(schema_validate, config):
+    config["meta"]["_confSpl2ConverterVersion"] = "0.13.2"
+    schema_validate(config)
+
+
 @pytest.mark.parametrize("value", ["#65A637", "#abc"])
 def test_meta_nav_color_valid(schema_validate, config, value):
     config["meta"]["navColor"] = value
