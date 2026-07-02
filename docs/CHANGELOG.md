@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.5.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.1...v6.5.2) (2026-07-02)
+
+
+### Bug Fixes
+
+* extend globalConfig spec for SPL2 converter version ([#2055](https://github.com/splunk/addonfactory-ucc-generator/issues/2055)) ([f8d73d6](https://github.com/splunk/addonfactory-ucc-generator/commit/f8d73d67345248c3d62b9838fe142bf4973024d9))
+* **security:** prevent OS command injection in os-dependentLibraries (VULN-87310) ([#2066](https://github.com/splunk/addonfactory-ucc-generator/issues/2066)) ([fc869e9](https://github.com/splunk/addonfactory-ucc-generator/commit/fc869e996c3994c503d5573fbc97b7c192c30f0a))
+
 ## [6.5.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.0...v6.5.1) (2026-06-10)
 
 
