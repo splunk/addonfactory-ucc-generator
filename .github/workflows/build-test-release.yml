@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: pre-commit/action@v3.0.1
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: actions/download-artifact@v8
@@ -142,7 +142,7 @@ jobs:
           - "3.14"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
@@ -180,7 +180,7 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
@@ -205,7 +205,7 @@ jobs:
       - build-ui
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: actions/download-artifact@v8
@@ -260,7 +260,7 @@ jobs:
           - "10"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: actions/download-artifact@v8
@@ -319,7 +319,7 @@ jobs:
           - "splunk_appinspect"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
@@ -382,7 +382,7 @@ jobs:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - uses: actions/download-artifact@v8
@@ -467,7 +467,7 @@ jobs:
           client-id: ${{ secrets.GH_APP_CLIENT_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - name: install UI deps
