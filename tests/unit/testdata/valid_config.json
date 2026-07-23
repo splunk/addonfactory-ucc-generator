@@ -1377,8 +1377,10 @@
             "commandType": "generating",
             "requiredSearchAssistant": true,
             "description": "This command generates COUNT occurrences of a TEXT string.",
+            "shortdesc": "Command for generating string events.",
             "syntax": "generatetextcommand count=<event_count> text=<string>",
             "usage": "public",
+            "tags": "text generator",
             "arguments": [
                 {
                     "name": "count",
@@ -1392,6 +1394,16 @@
                 {
                     "name": "text",
                     "required": true
+                }
+            ],
+            "examples": [
+                {
+                    "search": "| generatetextcommand count=5 text=\"example string\"",
+                    "comment": "Generates 5 events with text=\"example string\""
+                },
+                {
+                    "search": "| generatetextcommand count=10 text=\"another example string\"",
+                    "comment": "Generates 10 events with text=\"another example string\""
                 }
             ]
         }
