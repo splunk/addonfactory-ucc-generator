@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import DL from '@splunk/react-ui/DefinitionList';
 import { getExpansionRowData } from '../TableExpansionRowData';
 import { LABEL_FOR_DEFAULT_TABLE_CELL_VALUE } from '../TableConsts';
 import { AcceptableFormValueOrNullish } from '../../../types/components/shareableTypes';
@@ -41,6 +42,22 @@ it('correctly processes non-empty moreInfo and returns expected React elements',
     expect(getTermByText('Age')).toBeInTheDocument();
     expect(getDefinitionByText('30')).toBeInTheDocument();
 });
+
+it('does not wrap expansion row data in a nested definition list', () => {
+    const row = { long_more_info_label: 'example value' };
+    const longLabelMoreInfo = [
+        { label: 'Long More Info Label (minutes)', field: 'long_more_info_label' },
+    ];
+
+    const { container } = render(
+        <DL termWidth="250px">{getExpansionRowData(row, longLabelMoreInfo)}</DL>
+    );
+
+    expect(container.querySelectorAll('dl')).toHaveLength(1);
+    expect(getTermByText('Long More Info Label (minutes)')).toBeInTheDocument();
+    expect(getDefinitionByText('example value')).toBeInTheDocument();
+});
+
 it('excludes fields when not present in row and no default value is provided', async () => {
     const row = { name: 'Jane Doe', country: 'Canada' };
     render(<div>{getExpansionRowData(row, moreInfo)}</div>);
