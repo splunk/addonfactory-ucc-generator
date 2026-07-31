@@ -117,6 +117,16 @@ def test_global_config_custom_search_commands(global_config_all_json):
                     "comment": 'Generates 10 events with text="another example string"',
                 },
             ],
+            "examples": [
+                {
+                    "search": '| generatetextcommand count=5 text="example string"',
+                    "comment": 'Generates 5 events with text="example string"',
+                },
+                {
+                    "search": '| generatetextcommand count=10 text="another example string"',
+                    "comment": 'Generates 10 events with text="another example string"',
+                },
+            ],
         }
     ]
     assert expected_result == custom_search_commands

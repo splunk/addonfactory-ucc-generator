@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 import Footer from '../Footer';
 import { getGlobalConfigMock } from '../../../mocks/globalConfigMock';

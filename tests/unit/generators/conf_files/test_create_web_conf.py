@@ -1,3 +1,4 @@
+import os
 from textwrap import dedent
 from splunk_add_on_ucc_framework.generators.conf_files import WebConf
 
@@ -19,6 +20,10 @@ def test_generate_conf_for_conf_only_addon(
 
 def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
     ta_name = global_config_all_json.product
+    favicon_dir = input_dir + "/appserver/static/customfavicon"
+    os.makedirs(favicon_dir)
+    with open(favicon_dir + "/favicon.ico", "w") as f:
+        f.write("icon")
     web_conf = WebConf(
         global_config_all_json,
         input_dir,
@@ -67,6 +72,8 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
         [expose:data/indexes]
         pattern = data/indexes
         methods = GET
+        [settings]
+        customFavicon = customfavicon/favicon.ico
         """
     ).lstrip()
 
@@ -82,6 +89,10 @@ def test_web_conf_endpoints(global_config_all_json, input_dir, output_dir):
 def test_web_conf_endpoints_with_user_defined_handlers(
     global_config_logging_with_user_defined_handlers, input_dir, output_dir
 ):
+    favicon_dir = input_dir + "/appserver/static/customfavicon"
+    os.makedirs(favicon_dir)
+    with open(favicon_dir + "/favicon.ico", "w") as f:
+        f.write("icon")
     web_conf = WebConf(
         global_config_logging_with_user_defined_handlers,
         input_dir,
@@ -110,7 +121,25 @@ def test_web_conf_endpoints_with_user_defined_handlers(
         pattern = splunk_ta_uccexample/endpoint2
         methods = DELETE, GET, POST
 
+        [settings]
+        customFavicon = customfavicon/favicon.ico
         """
     ).lstrip()
     assert output_2 is not None
     assert output_2[0]["content"] == expected_content
+
+
+def test_web_conf_omits_custom_favicon_when_asset_is_missing(
+    global_config_all_json, input_dir, output_dir
+):
+    web_conf = WebConf(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+
+    output = web_conf.generate()
+
+    assert output is not None
+    assert "[settings]" not in output[0]["content"]
+    assert "customFavicon" not in output[0]["content"]

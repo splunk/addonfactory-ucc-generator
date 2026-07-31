@@ -1,5 +1,8 @@
 import type { StorybookConfig } from '@storybook/react-vite';
+import { createRequire } from 'module';
 import * as path from 'path';
+
+const require = createRequire(import.meta.url);
 
 const config: StorybookConfig = {
     stories: [
@@ -18,17 +21,12 @@ const config: StorybookConfig = {
     ],
     addons: [
         '@storybook/addon-links',
-        '@storybook/addon-essentials',
-        '@storybook/addon-interactions',
         '@storybook/addon-a11y',
         '@kickstartds/storybook-addon-jsonschema',
     ],
     framework: {
         name: '@storybook/react-vite',
         options: {},
-    },
-    core: {
-        builder: '@storybook/builder-vite', // 👈 The builder enabled here.
     },
     staticDirs: ['../src/public', './assets'],
     viteFinal: async (config) => {
@@ -41,10 +39,10 @@ const config: StorybookConfig = {
                 alias: {
                     ...alias,
                     'msw/native': require.resolve(
-                        path.resolve(__dirname, '../node_modules/msw/lib/native/index.mjs')
+                        path.resolve(import.meta.dirname, '../node_modules/msw/lib/native/index.mjs')
                     ),
                     'msw/node': require.resolve(
-                        path.resolve(__dirname, '../node_modules/msw/lib/node/index.mjs')
+                        path.resolve(import.meta.dirname, '../node_modules/msw/lib/node/index.mjs')
                     ),
                 },
                 optimizeDeps: {

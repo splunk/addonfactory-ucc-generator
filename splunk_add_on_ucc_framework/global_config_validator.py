@@ -1,5 +1,5 @@
 #
-# Copyright 2025 Splunk Inc.
+# Copyright 2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -738,7 +738,7 @@ class GlobalConfigValidator:
             ):
                 logger.warning(
                     "requiredSearchAssistant is set to false "
-                    "but attributes required for 'searchbnf.conf' is defined which is not required."
+                    "but attributes required for 'searchbnf.conf' are defined which are not required."
                 )
             if (command.get("requiredSearchAssistant", False) is True) and not (
                 command.get("description")

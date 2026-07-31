@@ -34,6 +34,11 @@ export const DateValidator = z.object({
     type: z.literal('date'),
 });
 
+export const IndexNameValidator = z.object({
+    errorMsg: z.string().optional(),
+    type: z.literal('index_name'),
+});
+
 export const AnyOfValidators = z.discriminatedUnion('type', [
     NumberValidator,
     StringValidator,
@@ -42,4 +47,5 @@ export const AnyOfValidators = z.discriminatedUnion('type', [
     Ipv4Validator,
     UrlValidator,
     DateValidator,
+    IndexNameValidator,
 ]);

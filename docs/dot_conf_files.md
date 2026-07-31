@@ -35,6 +35,16 @@ file and sets `python.version` to `python3`.
 ## `web.conf`
 
 `ucc-gen` generates information about the exposed endpoints from the add-on.
+If the source package contains `appserver/static/customfavicon/favicon.ico`,
+`ucc-gen` also adds:
+
+```ini
+[settings]
+customFavicon = customfavicon/favicon.ico
+```
+
+This enables a custom favicon for generated UCC pages. The favicon asset must be
+placed at `appserver/static/customfavicon/favicon.ico` in the source add-on.
 
 ## `restmap.conf`
 

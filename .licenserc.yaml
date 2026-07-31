@@ -48,3 +48,4 @@ header:
     - "splunk_add_on_ucc_framework/commands/imports.py"
     - "scripts/rum-script.html"
     - "mypy.ini"
+    - "srs.yaml"

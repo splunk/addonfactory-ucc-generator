@@ -58,7 +58,9 @@ export async function fetchWithErrorHandling<TData>(
         }
         return await response.json();
     } catch (error) {
-        const isAborted = error instanceof DOMException && error.name === 'AbortError';
+        const isAborted =
+            (error instanceof DOMException || error instanceof Error) &&
+            error.name === 'AbortError';
         if (handleError && !isAborted) {
             const errorMsg = parseErrorMsg(error);
             generateToast(errorMsg, 'error');

@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import DL from '@splunk/react-ui/DefinitionList';
 import { getExpansionRowData } from '../TableExpansionRowData';
 import { LABEL_FOR_DEFAULT_TABLE_CELL_VALUE } from '../TableConsts';
 import { AcceptableFormValueOrNullish } from '../../../types/components/shareableTypes';
@@ -20,6 +21,10 @@ const getTermByText = (content: string) =>
     screen.getAllByRole('term').find((term) => term.textContent === content);
 const getDefinitionByText = (content: string) =>
     screen.getAllByRole('definition').find((definition) => definition.textContent === content);
+const renderExpansionRowData = (
+    row: Record<string, AcceptableFormValueOrNullish>,
+    rowMoreInfo = moreInfo
+) => render(<DL termWidth="250px">{getExpansionRowData(row, rowMoreInfo)}</DL>);
 
 it('returns an empty array when moreInfo is undefined or empty', () => {
     const result = getExpansionRowData({}, []);
@@ -28,7 +33,7 @@ it('returns an empty array when moreInfo is undefined or empty', () => {
 
 it('correctly processes non-empty moreInfo and returns expected React elements', async () => {
     const row = { name: 'John Doe', age: 30, country: 'USA', disabled: false };
-    render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+    renderExpansionRowData(row);
 
     expect(screen.getAllByRole('definition')).toHaveLength(moreInfo.length);
 
@@ -41,9 +46,23 @@ it('correctly processes non-empty moreInfo and returns expected React elements',
     expect(getTermByText('Age')).toBeInTheDocument();
     expect(getDefinitionByText('30')).toBeInTheDocument();
 });
+
+it('does not wrap expansion row data in a nested definition list', () => {
+    const row = { long_more_info_label: 'example value' };
+    const longLabelMoreInfo = [
+        { label: 'Long More Info Label (minutes)', field: 'long_more_info_label' },
+    ];
+
+    renderExpansionRowData(row, longLabelMoreInfo);
+
+    expect(screen.getAllByTestId('definition-list')).toHaveLength(1);
+    expect(getTermByText('Long More Info Label (minutes)')).toBeInTheDocument();
+    expect(getDefinitionByText('example value')).toBeInTheDocument();
+});
+
 it('excludes fields when not present in row and no default value is provided', async () => {
     const row = { name: 'Jane Doe', country: 'Canada' };
-    render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+    renderExpansionRowData(row);
 
     const userAge = screen.queryByText('30');
     const ageTag = screen.queryByText('Age');
@@ -67,7 +86,7 @@ it.each([
         country: string;
     }) => {
         const row = { name, country, disabled };
-        render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+        renderExpansionRowData(row);
 
         const nameText = screen.queryByText(name);
         const countryText = screen.queryByText(country);
@@ -97,7 +116,7 @@ it.each([
         country: AcceptableFormValueOrNullish;
     }) => {
         const row = { name, country, disabled };
-        render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+        renderExpansionRowData(row);
 
         const nameText = screen.queryByText(name);
 
@@ -120,7 +139,7 @@ it.each([
 
 it('display status correctly', async () => {
     const row = { name: 'Jane Doe', country: 'Canada' };
-    render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+    renderExpansionRowData(row);
 
     const userAge = screen.queryByText('30');
     const ageTag = screen.queryByText('Age');
@@ -131,7 +150,7 @@ it('display status correctly', async () => {
 
 it('includes fields with their default value when specified and field in row is empty or missing', () => {
     const row = { age: 25 };
-    render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+    renderExpansionRowData(row);
 
     expect(getDefinitionByText('Unknown')).toBeInTheDocument();
     expect(getDefinitionByText('N/A')).toBeInTheDocument();
@@ -139,7 +158,7 @@ it('includes fields with their default value when specified and field in row is 
 
 it('handles non-string values correctly, converting them to strings', () => {
     const row = { name: 'Alice', age: null, country: undefined };
-    render(<div>{getExpansionRowData(row, moreInfo)}</div>);
+    renderExpansionRowData(row);
 
     expect(getDefinitionByText('Alice')).toBeInTheDocument();
     expect(getDefinitionByText('N/A')).toBeInTheDocument();

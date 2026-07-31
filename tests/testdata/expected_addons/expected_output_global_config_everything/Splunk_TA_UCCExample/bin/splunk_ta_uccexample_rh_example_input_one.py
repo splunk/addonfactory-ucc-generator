@@ -82,10 +82,7 @@ fields = [
         required=True,
         encrypted=False,
         default='default',
-        validator=validator.String(
-            max_len=80, 
-            min_len=1, 
-        )
+        validator=validator.IndexName()
     ), 
     field.RestField(
         'account',

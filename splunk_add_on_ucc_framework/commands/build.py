@@ -1,5 +1,5 @@
 #
-# Copyright 2025 Splunk Inc.
+# Copyright 2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import fnmatch
 import filecmp
 import platform
 import traceback
+import jinja2
 
 from urllib.parse import quote
 
@@ -69,6 +70,52 @@ logger = logging.getLogger("ucc_gen")
 internal_root_dir = os.path.dirname(os.path.dirname(__file__))
 
 
+def _render_base_html(
+    ta_name: str, build_time: str, source: str, outputdir: str
+) -> None:
+    """
+    Render the managed base.html template with the actual add-on name.
+
+    Args:
+        ta_name: Add-on name.
+        build_time: Add-on's build time.
+        source: source package directory.
+        outputdir: output directory.
+    """
+    base_html_path = os.path.join(
+        outputdir, ta_name, "appserver", "templates", "base.html"
+    )
+    if not os.path.isfile(base_html_path):
+        return
+
+    include_custom_favicon = os.path.isfile(
+        os.path.join(
+            source,
+            "appserver",
+            "static",
+            "customfavicon",
+            "favicon.ico",
+        )
+    )
+
+    template_env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(
+            os.path.join(internal_root_dir, "package", "appserver", "templates")
+        ),
+        trim_blocks=True,
+        lstrip_blocks=True,
+        keep_trailing_newline=True,
+    )
+    rendered_content = template_env.get_template("base.html").render(
+        app_name=ta_name,
+        include_custom_favicon=include_custom_favicon,
+        app_build_number=build_time,
+    )
+
+    with open(base_html_path, "w") as f:
+        f.write(rendered_content)
+
+
 def _modify_and_replace_token_for_oauth_templates(
     ta_name: str, global_config: global_config_lib.GlobalConfig, outputdir: str
 ) -> None:
@@ -92,8 +139,10 @@ def _modify_and_replace_token_for_oauth_templates(
             s = f.read()
 
         with open(os.path.join(html_template_path, "redirect.html"), "w") as f:
-            s = s.replace("${ta.name}", ta_name.lower())
-            s = s.replace("${ta.version}", global_config.version)
+            s = s.replace("__APP_NAME__", ta_name)
+            s = s.replace("__TA_NAME__", ta_name.lower())
+            s = s.replace("__TA_VERSION__", global_config.version)
+            s = s.replace("__APP_BUILD_NUMBER__", global_config.build_time)
             f.write(s)
 
         redirect_js_dest = (
@@ -608,11 +657,6 @@ def generate(
     if global_config.has_pages():
         builder_obj = RestBuilder(scheme, os.path.join(output_directory, ta_name))
         builder_obj.build()
-        _modify_and_replace_token_for_oauth_templates(
-            ta_name,
-            global_config,
-            output_directory,
-        )
     if global_config.has_inputs():
         logger.info("Generating inputs code")
         _add_modular_input(ta_name, global_config, output_directory, gc_path)
@@ -645,6 +689,17 @@ def generate(
     comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
     logger.info("Copied package directory")
+
+    # Apply template placeholder replacement on the final copied output.
+    # Running this before recursive_overwrite causes package templates to
+    # overwrite the transformed files and leaves placeholders behind.
+    if global_config.has_pages():
+        _modify_and_replace_token_for_oauth_templates(
+            ta_name,
+            global_config,
+            output_directory,
+        )
+        _render_base_html(ta_name, global_config.build_time, source, output_directory)
 
     default_meta_conf_path = os.path.join(
         output_directory, ta_name, "metadata", meta_conf_lib.DEFAULT_META_FILE_NAME

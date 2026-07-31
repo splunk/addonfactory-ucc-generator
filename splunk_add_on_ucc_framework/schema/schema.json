@@ -1371,6 +1371,9 @@
               },
               {
                 "$ref": "#/definitions/DateValidator"
+              },
+              {
+                "$ref": "#/definitions/IndexNameValidator"
               }
             ]
           }
@@ -2388,6 +2391,26 @@
                   "oauth"
                 ]
               }
+            },
+            {
+              "if": {
+                "properties": {
+                  "auth_type": {
+                    "type": "array",
+                    "contains": {
+                      "const": "oauth_client_credentials",
+                      "type": "string",
+                      "description": "Exactly: oauth_client_credentials"
+                    }
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "oauth_client_credentials",
+                  "access_token_endpoint"
+                ]
+              }
             }
           ],
           "required": [
@@ -2718,6 +2741,10 @@
           "type": "string",
           "description": "Version of UCC used during build process. Do not use."
         },
+        "_confSpl2ConverterVersion": {
+          "type": "string",
+          "description": "Version of conf-spl2-converter used when generating SPL2 templates. Do not use."
+        },
         "hideUCCVersion": {
           "type": "boolean",
           "description": "Hide the label 'Made with UCC' on the Configuration page"
@@ -2744,6 +2771,11 @@
               "const": "search"
             }
           ]
+        },
+        "navColor": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "Optional color for the app icon background in default/data/ui/nav/default.xml."
         },
         "os-dependentLibraries": {
           "type": "array",
@@ -3460,6 +3492,24 @@
       ],
       "additionalProperties": false
     },
+    "IndexNameValidator": {
+      "type": "object",
+      "description": "Validates that the field value is a valid Splunk index name.",
+      "properties": {
+        "errorMsg": {
+          "$ref": "#/definitions/errorMsg"
+        },
+        "type": {
+          "const": "index_name",
+          "type": "string",
+          "description": "Exactly: index_name"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
     "AnyValidator": {
       "type": "array",
       "description": "It is used to validate the values of fields using various validators.",
@@ -3485,6 +3535,9 @@
           },
           {
             "$ref": "#/definitions/DateValidator"
+          },
+          {
+            "$ref": "#/definitions/IndexNameValidator"
           }
         ]
       }

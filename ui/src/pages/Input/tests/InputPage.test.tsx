@@ -37,9 +37,10 @@ it('click on menu item inside group should add input query to URL', async () => 
     expect(mockNavigateFn).not.toHaveBeenCalled();
 
     await userEvent.click(screen.getByRole('menuitem', { name: 'Billing' }));
-    await userEvent.click(
-        screen.getByRole('menuitem', { name: 'Billing (Cost and Usage Report) (Recommended)' })
-    );
+    const submenuItem = await screen.findByRole('menuitem', {
+        name: /Billing \(Cost and Usage Report\).*\(Recommended\)/,
+    });
+    await userEvent.click(submenuItem);
 
     expect(mockNavigateFn).toHaveBeenCalledWith({
         search: `service=aws_billing_cur&action=create&input=aws_billing_menu`,
