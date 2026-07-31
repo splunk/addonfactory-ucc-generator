@@ -28,12 +28,19 @@ jobs:
           cd ui
           yarn run build-storybook --quiet --output-dir ../docs/storybook/
           cd ../
-      - run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
-          poetry install --with docs
+      - name: Install docs tooling in a standalone venv
+        run: |
+          python -m venv .docs-venv
+          .docs-venv/bin/pip install --upgrade pip
+          .docs-venv/bin/pip install .
+          .docs-venv/bin/pip install \
+            'mkdocs~=1.6' \
+            'mkdocs-material~=9.6' \
+            'mkdocstrings[python]' \
+            'mkdocs-print-site-plugin~=2.3'
       - name: Deploy to GitHub Pages
         if: github.ref_name == 'main'
-        run: poetry run mkdocs gh-deploy --force --strict
+        run: .docs-venv/bin/mkdocs gh-deploy --force --strict
       - name: Build Docs
         if: github.ref_name != 'main'
-        run: poetry run mkdocs build --strict
+        run: .docs-venv/bin/mkdocs build --strict
