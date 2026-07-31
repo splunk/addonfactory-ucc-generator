@@ -93,17 +93,17 @@ class CustomCommandPy(FileGenerator):
                     else f", validate=validators.{validate_type}()"
                 )
             elif validate_type == "Set":
-                allowed_values = ', '.join(repr(v) for v in validate.get("values"))
-                validate_str = (
-                    f", validate=validators.Set({allowed_values})"
-                )
+                allowed_values = ", ".join(repr(v) for v in validate.get("values"))
+                validate_str = f", validate=validators.Set({allowed_values})"
             elif validate_type == "Map":
                 option_map = validate.get("map")
                 validate_str = f", validate=validators.Map(**{repr(option_map)})"
             elif validate_type == "Match":
                 name = validate.get("name")
                 pattern = validate.get("pattern")
-                validate_str = f", validate=validators.Match({repr(name)}, {repr(pattern)})"
+                validate_str = (
+                    f", validate=validators.Match({repr(name)}, {repr(pattern)})"
+                )
             else:
                 validate_str = f", validate=validators.{validate_type}()"
 
