@@ -105,7 +105,7 @@ UCC currently supports some types of validations provided by `splunklib` library
     + the property `values` is required, which is a list of allowed strings.
     + validates if the values list contains the argument value.
 - MatchValidator
-    + the properties `name` and `pattern` is required, where the name is only used for error messages and the pattern must be a valid regex pattern.
+    + the properties `name` and `pattern` are required, where the name is only used for error messages and the pattern must be a valid regex pattern.
     + validates of the argument value matches the specified regex expression.
 - ListValidator
     + no additional properties required.

@@ -723,6 +723,7 @@
       },
       "required": [
         "type",
+        "name",
         "pattern"
       ],
       "additionalProperties": false
