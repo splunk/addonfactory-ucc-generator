@@ -47,6 +47,12 @@ jobs:
             npm version ${{ github.event.inputs.version_type }} --no-git-tag-version --allow-same-version
           fi
 
+      - name: Configure npm registry auth
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: 'ui/package.json'
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Publish NPM package
         run: |
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
