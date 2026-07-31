@@ -103,7 +103,7 @@ class CustomCommandPy(FileGenerator):
             elif validate_type == "Match":
                 name = validate.get("name")
                 pattern = validate.get("pattern")
-                validate_str = f", validate=validators.Match('{name}', '{pattern}')"
+                validate_str = f", validate=validators.Match({repr(name)}, {repr(pattern)})"
             else:
                 validate_str = f", validate=validators.{validate_type}()"
 
