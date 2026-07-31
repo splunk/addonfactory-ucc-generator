@@ -730,17 +730,18 @@ class GlobalConfigValidator:
 
             if (command.get("requiredSearchAssistant", False) is False) and (
                 command.get("description")
+                or command.get("shortdesc")
                 or command.get("usage")
                 or command.get("syntax")
+                or command.get("tags")
+                or command.get("examples")
             ):
                 logger.warning(
                     "requiredSearchAssistant is set to false "
                     "but attributes required for 'searchbnf.conf' is defined which is not required."
                 )
             if (command.get("requiredSearchAssistant", False) is True) and not (
-                command.get("description")
-                and command.get("usage")
-                and command.get("syntax")
+                command.get("description") and command.get("usage")
             ):
                 raise GlobalConfigValidatorException(
                     "One of the attributes among `description`, `usage`, `syntax`"
