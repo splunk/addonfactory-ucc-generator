@@ -93,9 +93,9 @@ class CustomCommandPy(FileGenerator):
                     else f", validate=validators.{validate_type}()"
                 )
             elif validate_type == "Set":
-                allowed_values = validate.get("values")
+                allowed_values = ', '.join(repr(v) for v in validate.get("values"))
                 validate_str = (
-                    f", validate=validators.Set({str(allowed_values).strip('[]')})"
+                    f", validate=validators.Set({allowed_values})"
                 )
             elif validate_type == "Map":
                 option_map = validate.get("map")
