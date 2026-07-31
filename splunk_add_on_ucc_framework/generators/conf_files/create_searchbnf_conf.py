@@ -51,15 +51,15 @@ class SearchbnfConf(FileGenerator):
                                 ):
                                     if validator in ("Integer", "Float", "Duration"):
                                         param_syntax = f"{param['name']}=<int>"
-                                    if validator == "Boolean":
+                                    elif validator == "Boolean":
                                         param_syntax = f"{param['name']}=<bool>"
-                                    if validator == "Set":
+                                    elif validator == "Set":
                                         param_syntax = f"{param['name']}=({'|'.join(param['validate']['values'])})"
-                                    if validator == "List":
+                                    elif validator == "List":
                                         param_syntax = (
                                             f"{param['name']}=<string>(,<string>)*"
                                         )
-                                    if validator == "Map":
+                                    elif validator == "Map":
                                         param_syntax = f"{param['name']}=({'|'.join(param['validate']['map'].keys())})"
                                 else:
                                     param_syntax = f"{param['name']}=<string>"
