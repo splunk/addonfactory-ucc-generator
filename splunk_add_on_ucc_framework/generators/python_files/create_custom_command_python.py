@@ -99,7 +99,7 @@ class CustomCommandPy(FileGenerator):
                 )
             elif validate_type == "Map":
                 option_map = validate.get("map")
-                validate_str = f", validate=validators.Map(**{str(option_map)})"
+                validate_str = f", validate=validators.Map(**{repr(option_map)})"
             elif validate_type == "Match":
                 name = validate.get("name")
                 pattern = validate.get("pattern")
