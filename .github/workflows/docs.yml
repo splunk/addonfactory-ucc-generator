@@ -30,7 +30,7 @@ jobs:
           cd ../
       - run: |
           curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
-          poetry install
+          poetry install --with docs
       - name: Deploy to GitHub Pages
         if: github.ref_name == 'main'
         run: poetry run mkdocs gh-deploy --force --strict

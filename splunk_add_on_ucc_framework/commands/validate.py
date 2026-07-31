@@ -14,10 +14,14 @@
 # limitations under the License.
 #
 import logging
+import shutil
+import subprocess
 import sys
 from typing import Optional
 
 logger = logging.getLogger("ucc_gen")
+
+APPINSPECT_BINARY = "splunk-appinspect"
 
 
 def build_validate_args(
@@ -49,21 +53,23 @@ def validate(
     log_file: Optional[str] = None,
     max_messages: Optional[str] = None,
 ) -> None:
-    try:
-        from splunk_appinspect import main
-    except ModuleNotFoundError:
+    binary = shutil.which(APPINSPECT_BINARY)
+    if binary is None:
         logger.error(
-            "UCC validate dependencies are not installed. Please install them using the command -> "
-            "`pip install splunk-add-on-ucc-framework[validate]`."
+            "'%s' executable was not found on PATH. "
+            "Install it separately, e.g. `pipx install splunk-appinspect` "
+            "or `pip install splunk-appinspect`.",
+            APPINSPECT_BINARY,
         )
         sys.exit(1)
-    else:
-        main.validate(
-            build_validate_args(
-                file_path=file_path,
-                output_file=output_file,
-                log_level=log_level,
-                log_file=log_file,
-                max_messages=max_messages,
-            )
-        )
+
+    args = build_validate_args(
+        file_path=file_path,
+        output_file=output_file,
+        log_level=log_level,
+        log_file=log_file,
+        max_messages=max_messages,
+    )
+    result = subprocess.run([binary, "inspect", *args])
+    if result.returncode != 0:
+        sys.exit(result.returncode)
