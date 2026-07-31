@@ -117,6 +117,7 @@ UCC currently supports some types of validations provided by `splunklib` library
     + validates if the argument matches a key of the dictionary and passes the corresponding value to the property.
 - DurationValidator
     + no additional properties required.
+    + validates durtion with the syntax hh:mm:ss and returns the amount of seconds.
 
 
 For more information, refer [splunklib API docs](https://splunk-python-sdk.readthedocs.io/en/latest/searchcommands.html) or [validators.py source](https://github.com/splunk/splunk-sdk-python/blob/develop/splunklib/searchcommands/validators.py).

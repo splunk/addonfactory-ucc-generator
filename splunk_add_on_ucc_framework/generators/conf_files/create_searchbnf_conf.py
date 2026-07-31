@@ -49,8 +49,12 @@ class SearchbnfConf(FileGenerator):
                                     "Duration",
                                     "Map",
                                 ):
-                                    if validator in ("Integer", "Float", "Duration"):
+                                    if validator == "Integer":
                                         param_syntax = f"{param['name']}=<int>"
+                                    elif validator == "Float":
+                                        param_syntax = f"{param['name']}=<float>"
+                                    elif validator == "Duration":
+                                        param_syntax = f"{param['name']}=<hh>:<mm>:<ss>"
                                     elif validator == "Boolean":
                                         param_syntax = f"{param['name']}=<bool>"
                                     elif validator == "Set":
