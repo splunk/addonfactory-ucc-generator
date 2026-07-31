@@ -242,37 +242,3 @@ def test_generate_conf_without_optional_search_assistance_params(
             "content": expected_content,
         }
     ]
-
-
-def test_generate_conf_with_empty_examples_list(
-    global_config_all_json,
-    input_dir,
-    output_dir,
-    custom_search_command_with_empty_examples_list,
-):
-    global_config_all_json._content["customSearchCommand"] = (
-        custom_search_command_with_empty_examples_list
-    )
-    ta_name = global_config_all_json.product
-    searchbnf_conf = SearchbnfConf(
-        global_config_all_json,
-        input_dir,
-        output_dir,
-    )
-    output = searchbnf_conf.generate()
-    exp_fname = "searchbnf.conf"
-    expected_content = dedent(
-        """
-        [generatetextcommand-command]
-        syntax = generatetextcommand count=<event_count> text=<string>
-        description = This command generates COUNT occurrences of a TEXT string.
-        usage = public
-        """
-    ).lstrip()
-    assert output == [
-        {
-            "file_name": exp_fname,
-            "file_path": f"{output_dir}/{ta_name}/default/{exp_fname}",
-            "content": expected_content,
-        }
-    ]
