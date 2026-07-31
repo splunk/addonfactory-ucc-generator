@@ -461,6 +461,10 @@
           "type": "string",
           "description": "Description of the custom search command. It is an required attribute for searchbnf.conf."
         },
+        "shortdesc": {
+          "type": "string",
+          "description": "Short description of the custom search command, used as shortdesc in searchbnf.conf"
+        },
         "syntax": {
           "type": "string",
           "maxLength": 100,
@@ -475,10 +479,21 @@
             "deprecated"
           ]
         },
+        "tags": {
+          "type": "string",
+          "description": "One or more words that users might type into the search bar which are similar to the command name."
+        },
         "arguments": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/arguments"
+          },
+          "minItems": 1
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/searchExample"
           },
           "minItems": 1
         }
@@ -523,6 +538,25 @@
       },
       "required": [
         "name"
+      ],
+      "additionalProperties": false
+    },
+    "searchExample": {
+      "type": "object",
+      "description": "Search example used for searchbnf.conf",
+      "properties": {
+        "search": {
+          "type": "string",
+          "description": "Example search string"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Comment for the search string which is used for searchbnf.conf"
+        }
+      },
+      "required": [
+        "search",
+        "comment"
       ],
       "additionalProperties": false
     },
