@@ -64,13 +64,13 @@ python.version = python3
 | usage                                                 | string  | Defines the usage of custom search command. It can be one of `public`, `private` and `deprecated`.  |
 | description                                           | string  | Provide description of the custom search command.   |
 | shortdesc                                             | string  | A one sentence description of the search command, used for searchbnf.conf |
-| syntax                                                | string  | Provide syntax for custom search command   |
+| syntax                                                | string  | Syntax for custom search commands will be automatically generated based on the command name and the parameters. If the syntax attribute is specified, the provided string is used instead. |
 | tags                                                  | string  | One or more words that users might type into the search bar which are similar to the command name. |
 | examples                                              | array[objects]  | List of example search strings, used for searchbnf.conf |
 
 To generate a custom search command, the following attributes must be defined in globalConfig: `commandName`, `commandType`, `fileName`, and `arguments`. Based on the provided commandType, UCC will generate a template Python file and integrate the user-defined logic into it.
 
-If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `usage` attributes are mandatory, as they are essential for generating `searchbnf.conf`. For more information about these attributes please refer to the [searchbnf.conf docs](https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/Searchbnfconf)
+If `requiredSearchAssistant` is set to True, `description`, and `usage` attributes are mandatory, as they are essential for generating `searchbnf.conf`. The command syntax is automatically derived from the command specification. For more information about these attributes please refer to the [searchbnf.conf docs](https://docs.splunk.com/Documentation/Splunk/9.4.2/Admin/Searchbnfconf)
 
 **NOTE:**
     The user-defined Python file must include specific functions based on the command type:
@@ -87,6 +87,8 @@ If `requiredSearchAssistant` is set to True, the `syntax`, `description`, and `u
 | defaultValue                                                          | string/number | Default value of the argument.  |
 | required                                                              | boolean |  Specify if the argument is required or not. |
 | validate                                                              | object | Specify validation for the argument. It can be any of `Integer`, `Float`, `Boolean`, `RegularExpression`, `FieldName`, `Set`, `Match`, `List`, `Map`, `Duration`. |
+| syntax | string | Syntax for arguments is automatically generated based on the validation. If the syntax attribute for an argument is specified, the syntax value is used for the parameter value instead. The syntax string must only specify the value not the argument name. |
+| syntaxGeneration | boolean | Specifies if the parameter should be added to the syntax. If `syntaxGeneration` is false, the parameter is omitted. Default: true. |
 
 UCC currently supports some types of validations provided by `splunklib` library:
 
@@ -145,8 +147,8 @@ For example:
         "validate": {
             "type": "Float",
             "minimum": "85.5"
-        }
-
+        },
+        "syntaxGeneration": false
     },
     {
         "name": "animals",
@@ -160,12 +162,13 @@ For example:
         }
     },
     {
-        "name": "name",
+        "name": "last",
         "validate": {
             "type": "Match",
-            "name": "Name pattern",
-            "pattern": "^[A-Z][a-z]+$"
-        }
+            "name": "Day duration",
+            "pattern": "^[0-9]+(d|m|y)?$"
+        },
+        "syntax": "<int>(d|m|y)?"
     },
     {
         "name": "urgency",

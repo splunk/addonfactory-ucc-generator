@@ -467,7 +467,6 @@
         },
         "syntax": {
           "type": "string",
-          "maxLength": 100,
           "description": "Syntax for the custom search command. It is an required attribute for searchbnf.conf."
         },
         "usage": {
@@ -534,6 +533,15 @@
             ]
           },
           "description": "Provide default value to the arguments passed for custom search command"
+        },
+        "syntaxGeneration": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate parameter syntax"
+        },
+        "syntax": {
+          "type": "string",
+          "description": "Syntax string for the value of the parameter"
         }
       },
       "required": [
