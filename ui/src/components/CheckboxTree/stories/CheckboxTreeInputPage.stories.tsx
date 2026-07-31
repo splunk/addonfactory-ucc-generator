@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
-import { within, userEvent, expect } from '@storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import BaseFormView from '../../BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../../../util/util';
 import { serverHandlers } from '../mocks/CheckboxTreeMocks';

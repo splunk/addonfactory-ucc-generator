@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
     DateValidator,
     EmailValidator,
+    IndexNameValidator,
     Ipv4Validator,
     NumberValidator,
     RegexValidator,
@@ -146,5 +147,6 @@ export const AllValidators = z.array(
         Ipv4Validator.strict(),
         UrlValidator.strict(),
         DateValidator.strict(),
+        IndexNameValidator.strict(),
     ])
 );

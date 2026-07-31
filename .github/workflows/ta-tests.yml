@@ -34,12 +34,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout UCC Framework Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: UCC
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.9"
 
@@ -55,7 +55,7 @@ jobs:
         run: poetry build
 
       - name: Upload UCC Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ucc-package-whl
           path: UCC/dist/*.whl
@@ -71,6 +71,11 @@ jobs:
           if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.target_repo }}" ]]; then
             echo "repos=[\"${{ github.event.inputs.target_repo }}\"]" >> $GITHUB_OUTPUT
           else
+            # splunk/splunk-add-on-for-cisco-asa is temporarily disabled: its
+            # additional_packaging.py rmdir()s default/data/spl2 after deleting a
+            # hardcoded file list, which fails because cisco_asa_schema_1_1.json
+            # (added in the TA's 6.0.1 release) isn't in that list. Re-enable
+            # once the TA switches to shutil.rmtree or updates the list.
             echo "repos<<EOF" >> $GITHUB_OUTPUT
             echo '[
               "splunk/splunk-add-on-for-amazon-web-services",
@@ -81,7 +86,6 @@ jobs:
               "splunk/splunk-add-on-for-salesforce",
               "splunk/splunk-add-on-for-servicenow",
               "splunk/splunk-add-on-for-mysql",
-              "splunk/splunk-add-on-for-cisco-asa",
               "splunk/splunk-add-on-for-unix-and-linux"
             ]' >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
@@ -95,16 +99,23 @@ jobs:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.GH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
       - name: Checkout Target Add-on Repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: ${{ matrix.target_repo }}
           path: TA
-          token: ${{ secrets.GH_TOKEN_ADMIN }}
+          token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.event.inputs.target_branch }}
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.9"
 
@@ -112,13 +123,13 @@ jobs:
         run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}} && poetry self add poetry-plugin-export@${{env.POETRY_EXPORT_PLUGIN_VERSION}}
 
       - name: Download UCC Artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ucc-package-whl
           path: UCC
       - name: Importing GPG key
         if: success() && github.event.inputs.run_pipelines == 'true'
-        uses: crazy-max/ghaction-import-gpg@v6
+        uses: crazy-max/ghaction-import-gpg@v7
         with:
           git_committer_name: ${{ secrets.SA_GH_USER_NAME }}
           git_committer_email: ${{ secrets.SA_GH_USER_EMAIL }}
@@ -134,8 +145,8 @@ jobs:
           set -x
           
           # https://github.com/python-poetry/poetry/issues/7491#issuecomment-1423763839
-          git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf https://github.com
-          git config --global --add url."https://${{ secrets.GH_TOKEN_ADMIN }}@github.com".insteadOf ssh://git@github.com
+          git config --global --add url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com".insteadOf https://github.com
+          git config --global --add url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com".insteadOf ssh://git@github.com
           
           # Use the special branch
           if [[ "${{ github.event.inputs.run_pipelines }}" == "true" ]]; then
@@ -220,12 +231,12 @@ jobs:
           ./.ucc_venv/bin/python3 -m pip install ./$UCC_WHL
           
           ./.ucc_venv/bin/ucc-gen build 2>&1 | tee build_output.log
-          if tail -n 1 build_output.log | grep -q "^INFO: File creation summary: created: "; then
+          if grep -q "^INFO: File creation summary: created: " build_output.log; then
             echo "✓ Build completed successfully with expected output"
             cat build_output.log
           else
             echo "✗ Build did not complete with expected output"
-            echo "Last line of output should start with 'INFO: File creation summary: created: '"
+            echo "Output should contain a line starting with 'INFO: File creation summary: created: '"
             echo "Full output:"
             cat build_output.log
             exit 1
@@ -268,7 +279,7 @@ jobs:
         if: success() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           echo "Creating a new draft PR from branch $GIT_BRANCH to ${{ github.event.inputs.target_branch }}"
           gh pr create -R ${{ matrix.target_repo }} --title "CI: UCC build for ${{ github.event_name }} event" \
@@ -278,7 +289,7 @@ jobs:
         if: success() && github.event.inputs.run_pipelines == 'true'
         id: get-workflow-run-id
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           echo "Waiting for the workflow run to be created..."
           sleep 30  # Wait for a while to ensure the workflow run is created
@@ -310,7 +321,7 @@ jobs:
         if: success()
         id: wait-for-workflow
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           if [[ -z "$WORKFLOW_RUN_ID" ]]; then
             echo "No workflow run ID found, skipping wait"
@@ -343,7 +354,7 @@ jobs:
         if: always() && github.event.inputs.run_pipelines == 'true'
         working-directory: TA
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           echo "Deleting temporary branch $GIT_BRANCH"
           gh api -X DELETE repos/${{ matrix.target_repo }}/git/refs/heads/$GIT_BRANCH || true

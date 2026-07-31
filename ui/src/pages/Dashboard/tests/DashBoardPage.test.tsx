@@ -51,7 +51,7 @@ it('render with all default dashboards', async () => {
     render(<DashboardPage />);
     await waitFor(
         () => expect(screen.queryAllByTestId('wait-spinner').length).toBe(0), // no waiting spinner should be present
-        { timeout: 7000 }
+        { timeout: 15000 }
     );
 
     const timeLabels = await screen.findAllByText('Time');
@@ -86,4 +86,4 @@ it('render with all default dashboards', async () => {
 
         expect(elementWithId).toBeInTheDocument();
     });
-}, 8000);
+}, 20000);

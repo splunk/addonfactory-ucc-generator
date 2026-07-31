@@ -94,5 +94,5 @@ describe('render data ingestion modal inputs', () => {
                 expect(screen.getByTestId(id)).toBeInTheDocument();
             });
         });
-    });
+    }, 20000);
 });

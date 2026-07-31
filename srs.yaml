@@ -1,0 +1,21 @@
+# SRS configuration file
+# Generated from .fossa.yml
+#
+
+scan:
+  scanners:
+  - vuln
+  - license
+  skip-files:
+  - splunk_add_on_ucc_framework/commands/init_template/{{cookiecutter.addon_name}}/package/lib/pyproject.toml
+  - splunk_add_on_ucc_framework/commands/init_template/{{cookiecutter.addon_name}}/package/lib/setup.cfg
+  - splunk_add_on_ucc_framework/commands/init_template/{{cookiecutter.addon_name}}/package/lib/setup.py
+  - tests/testdata/expected_addons/expected_addon_after_init/demo_addon_for_splunk/package/lib/pyproject.toml
+  - tests/testdata/expected_addons/expected_addon_after_init/demo_addon_for_splunk/package/lib/setup.cfg
+  - tests/testdata/expected_addons/expected_addon_after_init/demo_addon_for_splunk/package/lib/setup.py
+  - tests/testdata/test_addons/package_global_config_configuration/package/lib/pyproject.toml
+  - tests/testdata/test_addons/package_global_config_configuration/package/lib/setup.cfg
+  - tests/testdata/test_addons/package_global_config_configuration/package/lib/setup.py
+  - tests/testdata/test_addons/package_global_config_everything/package/lib/pyproject.toml
+  - tests/testdata/test_addons/package_global_config_everything/package/lib/setup.cfg
+  - tests/testdata/test_addons/package_global_config_everything/package/lib/setup.py

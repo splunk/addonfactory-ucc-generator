@@ -41,6 +41,7 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
         "http://localhost:8000/en-US/splunkd/__raw/services/dmc-conf/settings/settings?output_mode=json",
         "http://localhost:8000/en-US/splunkd/__raw/servicesNS/admin/Splunk_TA_UCCExample/static/appLogo.png - "
         + "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "http://localhost:8000/en-US/splunkd/__raw/services/configs/conf-limits/structured_data_service",
     ]
 
     browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)

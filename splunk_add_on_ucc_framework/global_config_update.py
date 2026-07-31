@@ -1,5 +1,5 @@
 #
-# Copyright 2025 Splunk Inc.
+# Copyright 2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -142,6 +142,7 @@ def handle_global_config_update(
         "0.0.7",
         "0.0.8",
         "0.0.9",
+        "0.0.10",
     }
 
     if version not in allowed_versions_of_schema_version:
@@ -262,6 +263,9 @@ def handle_global_config_update(
         _remove_oauth_field_from_entites(global_config)
         global_config.dump(global_config_path)
         logger.info("Updated globalConfig schema to version 0.0.10")
+
+    # Make sure as you add new migrations here that you also update
+    # allowed_versions_of_schema_version above
 
 
 def _dump_with_migrated_tabs(global_config: GlobalConfig, path: str) -> None:

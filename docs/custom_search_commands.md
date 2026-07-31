@@ -107,7 +107,7 @@ UCC currently supports some types of validations provided by `splunklib` library
     + the property `values` is required, which is a list of allowed strings.
     + validates if the values list contains the argument value.
 - MatchValidator
-    + the properties `name` and `pattern` is required, where the name is only used for error messages and the pattern must be a valid regex pattern.
+    + the properties `name` and `pattern` are required, where the name is only used for error messages and the pattern must be a valid regex pattern.
     + validates of the argument value matches the specified regex expression.
 - ListValidator
     + no additional properties required.
@@ -192,6 +192,26 @@ For example:
 | comment<span class="required-asterisk">\*</span> | string | Provide description of the example search string |
 
 Each search command can have multiple examples, which are shown displayed in the search assistant. The Compact mode, only shows the first example. In the Full mode, the top three examples are displayed.
+
+For example:
+
+```json
+"examples": [
+    {
+        "search": "generatetextcommand count=5 text=\"Hallo There\"",
+        "comment": "Generates 5 \"Hallo There\" events enumerated starting by 1"
+    }
+]
+```
+
+## Examples (for search command usage)
+
+| Property                                         | Type   | Description                                      |
+| ------------------------------------------------ | ------ | ------------------------------------------------ |
+| search<span class="required-asterisk">\*</span>  | string | Example search command                           |
+| comment<span class="required-asterisk">\*</span> | string | Provide description of the example search string |
+
+Each search command can have multiple examples, which are displayed in the search assistant. The Compact mode, only shows the first example. In the Full mode, the top three examples are displayed.
 
 For example:
 

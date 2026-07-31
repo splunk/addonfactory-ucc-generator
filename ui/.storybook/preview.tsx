@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/react-vite';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import { serverHandlers } from '../src/mocks/server-handlers';
 import { http, HttpResponse } from 'msw';

@@ -25,7 +25,7 @@ export function getExpansionRow(colSpan, row, moreInfo, customRow, customCompone
                         })}
                     </>
                 ) : (
-                    <DL termWidth={250}>{getExpansionRowData(row, moreInfo)}</DL>
+                    <DL termWidth="250px">{getExpansionRowData(row, moreInfo)}</DL>
                 )}
             </TableCellWrapper>
         </Table.Row>

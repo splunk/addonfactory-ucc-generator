@@ -1,5 +1,5 @@
 import React from 'react';
-import DL, { Term as DT, Description as DD } from '@splunk/react-ui/DefinitionList';
+import { Term as DT, Description as DD } from '@splunk/react-ui/DefinitionList';
 import { _ } from '@splunk/ui-utils/i18n';
 
 import { getTableCellValue } from './table.utils';
@@ -26,5 +26,5 @@ export function getExpansionRowData(row, moreInfo) {
             return definitionList;
         }, []) || [];
 
-    return definitionLists.length > 0 ? <DL>{definitionLists}</DL> : [];
+    return definitionLists;
 }

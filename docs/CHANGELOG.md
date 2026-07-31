@@ -1,5 +1,79 @@
 # Changelog
 
+## [6.5.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.1...v6.5.2) (2026-07-02)
+
+
+### Bug Fixes
+
+* extend globalConfig spec for SPL2 converter version ([#2055](https://github.com/splunk/addonfactory-ucc-generator/issues/2055)) ([f8d73d6](https://github.com/splunk/addonfactory-ucc-generator/commit/f8d73d67345248c3d62b9838fe142bf4973024d9))
+* **security:** prevent OS command injection in os-dependentLibraries (VULN-87310) ([#2066](https://github.com/splunk/addonfactory-ucc-generator/issues/2066)) ([fc869e9](https://github.com/splunk/addonfactory-ucc-generator/commit/fc869e996c3994c503d5573fbc97b7c192c30f0a))
+
+## [6.5.1](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.0...v6.5.1) (2026-06-10)
+
+
+### Bug Fixes
+
+* replace runtime JS cache busting with build-time timestamp ([#2053](https://github.com/splunk/addonfactory-ucc-generator/issues/2053)) ([d36af9c](https://github.com/splunk/addonfactory-ucc-generator/commit/d36af9c8b363dcc891f2b2baff39738aa33e9fdf))
+
+# [6.5.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.4.0...v6.5.0) (2026-06-05)
+
+
+### Bug Fixes
+
+* **deps:** bump lodash to 4.18.1 and protocol-buffers-schema to 3.6.1 ([#2043](https://github.com/splunk/addonfactory-ucc-generator/issues/2043)) ([2e49efc](https://github.com/splunk/addonfactory-ucc-generator/commit/2e49efc586e8c2f6e9576c1828cf8df8038850f1))
+
+
+### Features
+
+* **ADDON-87180:** introduce dedicated `index_name` validator type ([#2042](https://github.com/splunk/addonfactory-ucc-generator/issues/2042)) ([8e1bf67](https://github.com/splunk/addonfactory-ucc-generator/commit/8e1bf6717abe645a94ea56944e80a3194f5c1610))
+
+# [6.4.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.3.0...v6.4.0) (2026-04-24)
+
+
+### Bug Fixes
+
+* add x-access-token prefix for GitHub App token in URL substitution ([3243a22](https://github.com/splunk/addonfactory-ucc-generator/commit/3243a225234acaa68a0d0f4cfdc57d309e275c63))
+* **app-conf:** preserve source is_visible setting ([#2028](https://github.com/splunk/addonfactory-ucc-generator/issues/2028)) ([33c287a](https://github.com/splunk/addonfactory-ucc-generator/commit/33c287a4d4bbe549f9cb8db22a0de9a0bed9cf0b)), closes [#1953](https://github.com/splunk/addonfactory-ucc-generator/issues/1953)
+* **schema:** require access token endpoint for oauth client credentials ([#2030](https://github.com/splunk/addonfactory-ucc-generator/issues/2030)) ([bccf288](https://github.com/splunk/addonfactory-ucc-generator/commit/bccf288f8ea8c3a451669756dd7ddd7d85d1cbac)), closes [#1950](https://github.com/splunk/addonfactory-ucc-generator/issues/1950)
+
+
+### Features
+
+* **nav:** add configurable default.xml nav color ([#2024](https://github.com/splunk/addonfactory-ucc-generator/issues/2024)) ([38a26ea](https://github.com/splunk/addonfactory-ucc-generator/commit/38a26eac550cd032b007d451fed0af6e871b2953)), closes [#2021](https://github.com/splunk/addonfactory-ucc-generator/issues/2021)
+* **ui:** wire custom favicon contract ([#2032](https://github.com/splunk/addonfactory-ucc-generator/issues/2032)) ([514181c](https://github.com/splunk/addonfactory-ucc-generator/commit/514181c5ef978e49bde9440a1667ce4db5841f64)), closes [#1730](https://github.com/splunk/addonfactory-ucc-generator/issues/1730)
+* **validate:** expose detailed AppInspect output options ([#2025](https://github.com/splunk/addonfactory-ucc-generator/issues/2025)) ([78f3500](https://github.com/splunk/addonfactory-ucc-generator/commit/78f3500fbe18b950cb8a22a3c892df7908b71a7c)), closes [#1976](https://github.com/splunk/addonfactory-ucc-generator/issues/1976) [hi#level](https://github.com/hi/issues/level)
+
+# [6.3.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.2.0...v6.3.0) (2026-04-02)
+
+
+### Bug Fixes
+
+* apply Splunk BUILD_NUMBER cache busting to entry_page.js ([813c7c3](https://github.com/splunk/addonfactory-ucc-generator/commit/813c7c396226d1501bd33f20179336b89aef912c))
+* migrate legacy package templates to static html equivalents ([57fe298](https://github.com/splunk/addonfactory-ucc-generator/commit/57fe2986636715ad3b6a5fc21f9fa7c82bfbe268))
+* preserve app name casing in generated template asset paths ([fde15d1](https://github.com/splunk/addonfactory-ucc-generator/commit/fde15d18b67244fcc09db4b1c5ea44017415aa76))
+* replace <base href> with explicit relative paths in templates ([7a0a17a](https://github.com/splunk/addonfactory-ucc-generator/commit/7a0a17a5cdfb9acc673742f9747a7972b9b567b0))
+* replace mako template bootstrapping with static runtime loader ([689de4f](https://github.com/splunk/addonfactory-ucc-generator/commit/689de4f68cdba6c917feb3218c8285889e3f0b64))
+* resolve LFS merge conflict and black formatting after develop merge ([5e75088](https://github.com/splunk/addonfactory-ucc-generator/commit/5e75088298288c62b88caab14d7540138c3ee2e3))
+* restore i18n.js cache busting via window.$C.BUILD_NUMBER ([fd60793](https://github.com/splunk/addonfactory-ucc-generator/commit/fd60793da4cb2cb5df2a98b27ed2614d0eed4cd2))
+
+
+### Features
+
+* remove Mako and CherryPy ([b008bb7](https://github.com/splunk/addonfactory-ucc-generator/commit/b008bb78a5b661db87768295c44b5121bd6e4e5f))
+* remove Mako and CherryPy ([#1998](https://github.com/splunk/addonfactory-ucc-generator/issues/1998)) ([0531328](https://github.com/splunk/addonfactory-ucc-generator/commit/05313289ed0828c695d5212551bc4d20e53d7db8))
+
+# [6.2.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.1.0...v6.2.0) (2026-03-04)
+
+
+### Bug Fixes
+
+* add 0.0.10 as a known schemaVersion ([#1981](https://github.com/splunk/addonfactory-ucc-generator/issues/1981)) ([0b02c70](https://github.com/splunk/addonfactory-ucc-generator/commit/0b02c70df7a8373fcb866b948d37b60e32acde7f))
+
+
+### Features
+
+* preserve masked value for encrypted filed on edit mode. ([#1945](https://github.com/splunk/addonfactory-ucc-generator/issues/1945)) ([8dd7f30](https://github.com/splunk/addonfactory-ucc-generator/commit/8dd7f30ca3395cd24ce59ffebd4a9636d8b05f80))
+
 # [6.1.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.0.1...v6.1.0) (2025-11-13)
 
 

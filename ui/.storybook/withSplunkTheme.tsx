@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { createGlobalStyle } from 'styled-components';
-import { Decorator } from '@storybook/react';
+import { Decorator } from '@storybook/react-vite';
 import { AnimationToggleProvider } from '@splunk/react-ui/AnimationToggle';
 import { SplunkThemeProvider } from '@splunk/themes';
 import { BrowserRouter as Router } from 'react-router-dom';

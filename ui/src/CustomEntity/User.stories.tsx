@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { z } from 'zod';
 import BaseFormView from '../components/BaseFormView/BaseFormView';
