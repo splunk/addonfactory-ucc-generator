@@ -6,7 +6,7 @@ version = "1.0.0"
 description = "Splunk .conf files parser"
 optional = false
 python-versions = "<4.0,>=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "addonfactory_splunk_conf_parser_lib-1.0.0-py3-none-any.whl", hash = "sha256:a118f266ca9f6e79c8b0f344dc288a43de7c7a38c705d0c89d79324c33580677"},
     {file = "addonfactory_splunk_conf_parser_lib-1.0.0.tar.gz", hash = "sha256:8254b5ea6fc8233da7527dc80461aa5b0555dfa3af73b8b937af26129f32323d"},
@@ -18,7 +18,7 @@ version = "26.1.0"
 description = "Classes Without Boilerplate"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "attrs-26.1.0-py3-none-any.whl", hash = "sha256:c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309"},
     {file = "attrs-26.1.0.tar.gz", hash = "sha256:d03ceb89cb322a8fd706d4fb91940737b6642aa36998fe130a9bc96c985eff32"},
@@ -423,43 +423,16 @@ files = [
 python-dateutil = "*"
 
 [[package]]
-name = "cssselect"
-version = "1.3.0"
-description = "cssselect parses CSS3 Selectors and translates them to XPath 1.0"
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "cssselect-1.3.0-py3-none-any.whl", hash = "sha256:56d1bf3e198080cc1667e137bc51de9cadfca259f03c2d4e09037b3e01e30f0d"},
-    {file = "cssselect-1.3.0.tar.gz", hash = "sha256:57f8a99424cfab289a1b6a816a43075a4b00948c86b4dcf3ef4ee7e15f7ab0c7"},
-]
-
-[[package]]
 name = "defusedxml"
 version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
-
-[[package]]
-name = "deprecation"
-version = "2.1.0"
-description = "A library to handle automated deprecations"
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "deprecation-2.1.0-py2.py3-none-any.whl", hash = "sha256:a10811591210e1fb0e768a8c25517cabeabcba6f0bf96564f8ff45189f90b14a"},
-    {file = "deprecation-2.1.0.tar.gz", hash = "sha256:72b3bde64e5d778694b0cf68178aed03d15e15477116add3fb773e581f9518ff"},
-]
-
-[package.dependencies]
-packaging = "*"
 
 [[package]]
 name = "dunamai"
@@ -475,21 +448,6 @@ files = [
 
 [package.dependencies]
 packaging = ">=20.9"
-
-[[package]]
-name = "elementpath"
-version = "4.8.0"
-description = "XPath 1.0/2.0/3.0/3.1 parsers and selectors for ElementTree and lxml"
-optional = false
-python-versions = ">=3.8"
-groups = ["dev"]
-files = [
-    {file = "elementpath-4.8.0-py3-none-any.whl", hash = "sha256:5393191f84969bcf8033b05ec4593ef940e58622ea13cefe60ecefbbf09d58d9"},
-    {file = "elementpath-4.8.0.tar.gz", hash = "sha256:5822a2560d99e2633d95f78694c7ff9646adaa187db520da200a8e9479dc46ae"},
-]
-
-[package.extras]
-dev = ["Sphinx", "coverage", "flake8", "lxml", "lxml-stubs", "memory-profiler", "memray", "mypy", "tox", "xmlschema (>=3.3.2)"]
 
 [[package]]
 name = "exceptiongroup"
@@ -511,48 +469,6 @@ typing-extensions = {version = ">=4.6.0", markers = "python_version < \"3.13\""}
 test = ["pytest (>=6)"]
 
 [[package]]
-name = "execnet"
-version = "2.1.2"
-description = "execnet: rapid multi-Python deployment"
-optional = false
-python-versions = ">=3.8"
-groups = ["dev"]
-files = [
-    {file = "execnet-2.1.2-py3-none-any.whl", hash = "sha256:67fba928dd5a544b783f6056f449e5e3931a5c378b128bc18501f7ea79e296ec"},
-    {file = "execnet-2.1.2.tar.gz", hash = "sha256:63d83bfdd9a23e35b9c6a3261412324f964c2ec8dcd8d3c6916ee9373e0befcd"},
-]
-
-[package.extras]
-testing = ["hatch", "pre-commit", "pytest", "tox"]
-
-[[package]]
-name = "faker"
-version = "18.13.0"
-description = "Faker is a Python package that generates fake data for you."
-optional = false
-python-versions = ">=3.7"
-groups = ["dev"]
-files = [
-    {file = "Faker-18.13.0-py3-none-any.whl", hash = "sha256:801d1a2d71f1fc54d332de2ab19de7452454309937233ea2f7485402882d67b3"},
-    {file = "Faker-18.13.0.tar.gz", hash = "sha256:84bcf92bb725dd7341336eea4685df9a364f16f2470c4d29c1d7e6c5fd5a457d"},
-]
-
-[package.dependencies]
-python-dateutil = ">=2.4"
-
-[[package]]
-name = "filelock"
-version = "3.19.1"
-description = "A platform independent file lock."
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "filelock-3.19.1-py3-none-any.whl", hash = "sha256:d38e30481def20772f5baf097c122c3babc4fcdb7e14e57049eb9d88c6dc017d"},
-    {file = "filelock-3.19.1.tar.gz", hash = "sha256:66eda1888b0171c998b35be2bcc0f6d75c388a7ce20c3f3f37aa8e96c2dddf58"},
-]
-
-[[package]]
 name = "freezegun"
 version = "1.5.5"
 description = "Let your Python tests travel through time"
@@ -566,18 +482,6 @@ files = [
 
 [package.dependencies]
 python-dateutil = ">=2.7"
-
-[[package]]
-name = "future"
-version = "1.0.0"
-description = "Clean single-source support for Python 3 and 2"
-optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-groups = ["dev"]
-files = [
-    {file = "future-1.0.0-py3-none-any.whl", hash = "sha256:929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216"},
-    {file = "future-1.0.0.tar.gz", hash = "sha256:bd2968309307861edae1458a4f8a4f3598c03be43b97521076aebf5d94c07b05"},
-]
 
 [[package]]
 name = "ghp-import"
@@ -611,21 +515,6 @@ files = [
 
 [package.dependencies]
 colorama = ">=0.4"
-
-[[package]]
-name = "httplib2"
-version = "0.31.2"
-description = "A comprehensive HTTP client library."
-optional = false
-python-versions = ">=3.6"
-groups = ["dev"]
-files = [
-    {file = "httplib2-0.31.2-py3-none-any.whl", hash = "sha256:dbf0c2fa3862acf3c55c078ea9c0bc4481d7dc5117cae71be9514912cf9f8349"},
-    {file = "httplib2-0.31.2.tar.gz", hash = "sha256:385e0869d7397484f4eab426197a4c020b606edd43372492337c0b4010ae5d24"},
-]
-
-[package.dependencies]
-pyparsing = ">=3.1,<4"
 
 [[package]]
 name = "idna"
@@ -703,7 +592,7 @@ version = "4.25.1"
 description = "An implementation of JSON Schema validation for Python"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "jsonschema-4.25.1-py3-none-any.whl", hash = "sha256:3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63"},
     {file = "jsonschema-4.25.1.tar.gz", hash = "sha256:e4a9655ce0da0c0b67a085847e00a3a51449e1157f4f75e9fb5aa545e122eb85"},
@@ -725,7 +614,7 @@ version = "2025.9.1"
 description = "The JSON Schema meta-schemas and vocabularies, exposed as a Registry"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "jsonschema_specifications-2025.9.1-py3-none-any.whl", hash = "sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe"},
     {file = "jsonschema_specifications-2025.9.1.tar.gz", hash = "sha256:b540987f239e745613c7a9176f3edb72b832a4ac465cf02712288397832b5e8d"},
@@ -733,21 +622,6 @@ files = [
 
 [package.dependencies]
 referencing = ">=0.31.0"
-
-[[package]]
-name = "junitparser"
-version = "2.8.0"
-description = "Manipulates JUnit/xUnit Result XML files"
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "junitparser-2.8.0-py2.py3-none-any.whl", hash = "sha256:e1a7d41e0c92ca032c46eed07a6268c478f90ec1f411ea8a76b69f245e57cfb6"},
-    {file = "junitparser-2.8.0.tar.gz", hash = "sha256:a8d4290ab9fb93f2015e0dbef61ef93b7ea110e99099087a453f55c8e1481adf"},
-]
-
-[package.dependencies]
-future = "*"
 
 [[package]]
 name = "lxml"
@@ -835,11 +709,8 @@ files = [
     {file = "lxml-5.4.0-cp36-cp36m-win_amd64.whl", hash = "sha256:7ce1a171ec325192c6a636b64c94418e71a1964f56d002cc28122fceff0b6121"},
     {file = "lxml-5.4.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:795f61bcaf8770e1b37eec24edf9771b307df3af74d1d6f27d812e15a9ff3872"},
     {file = "lxml-5.4.0-cp37-cp37m-manylinux_2_12_i686.manylinux2010_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:29f451a4b614a7b5b6c2e043d7b64a15bd8304d7e767055e8ab68387a8cacf4e"},
-    {file = "lxml-5.4.0-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:891f7f991a68d20c75cb13c5c9142b2a3f9eb161f1f12a9489c82172d1f133c0"},
     {file = "lxml-5.4.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4aa412a82e460571fad592d0f93ce9935a20090029ba08eca05c614f99b0cc92"},
-    {file = "lxml-5.4.0-cp37-cp37m-manylinux_2_28_aarch64.whl", hash = "sha256:ac7ba71f9561cd7d7b55e1ea5511543c0282e2b6450f122672a2694621d63b7e"},
     {file = "lxml-5.4.0-cp37-cp37m-manylinux_2_28_x86_64.whl", hash = "sha256:c5d32f5284012deaccd37da1e2cd42f081feaa76981f0eaa474351b68df813c5"},
-    {file = "lxml-5.4.0-cp37-cp37m-musllinux_1_2_aarch64.whl", hash = "sha256:ce31158630a6ac85bddd6b830cffd46085ff90498b397bd0a259f59d27a12188"},
     {file = "lxml-5.4.0-cp37-cp37m-musllinux_1_2_x86_64.whl", hash = "sha256:31e63621e073e04697c1b2d23fcb89991790eef370ec37ce4d5d469f40924ed6"},
     {file = "lxml-5.4.0-cp37-cp37m-win32.whl", hash = "sha256:be2ba4c3c5b7900246a8f866580700ef0d538f2ca32535e991027bdaba944063"},
     {file = "lxml-5.4.0-cp37-cp37m-win_amd64.whl", hash = "sha256:09846782b1ef650b321484ad429217f5154da4d6e786636c38e434fa32e94e49"},
@@ -1221,21 +1092,6 @@ mkdocstrings = ">=0.30"
 typing-extensions = {version = ">=4.0", markers = "python_version < \"3.11\""}
 
 [[package]]
-name = "msedge-selenium-tools"
-version = "3.141.4"
-description = "An updated EdgeDriver implementation for Selenium 3 with newly-added support for Microsoft Edge (Chromium)."
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "msedge-selenium-tools-3.141.4.tar.gz", hash = "sha256:e1d397b2830c6c6f282cc0da2c6745631ab039c9dcd92dcf51b30f135c96caf2"},
-    {file = "msedge_selenium_tools-3.141.4-py3-none-any.whl", hash = "sha256:92583d2b14cedc557ac72fba5b47c71582f852e65c80352bfa47ea41b0cef6a0"},
-]
-
-[package.dependencies]
-selenium = "3.141"
-
-[[package]]
 name = "packaging"
 version = "26.2"
 description = "Core utilities for Python packages"
@@ -1377,21 +1233,6 @@ pyyaml = "*"
 extra = ["pygments (>=2.19.1)"]
 
 [[package]]
-name = "pyparsing"
-version = "3.3.2"
-description = "pyparsing - Classes and methods to define and execute parsing grammars"
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "pyparsing-3.3.2-py3-none-any.whl", hash = "sha256:850ba148bd908d7e2411587e247a1e4f0327839c40e2e5e6d05a007ecc69911d"},
-    {file = "pyparsing-3.3.2.tar.gz", hash = "sha256:c777f4d763f140633dcb6d8a3eda953bf7a214dc4eff598413c070bcdc117cbc"},
-]
-
-[package.extras]
-diagrams = ["jinja2", "railroad-diagrams"]
-
-[[package]]
 name = "pytest"
 version = "7.4.4"
 description = "pytest: simple powerful testing with Python"
@@ -1435,61 +1276,6 @@ pytest = ">=6.2.5"
 testing = ["fields", "hunter", "process-tests", "pytest-xdist", "virtualenv"]
 
 [[package]]
-name = "pytest-html"
-version = "4.2.0"
-description = "pytest plugin for generating HTML reports"
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "pytest_html-4.2.0-py3-none-any.whl", hash = "sha256:ff5caf3e17a974008e5816edda61168e6c3da442b078a44f8744865862a85636"},
-    {file = "pytest_html-4.2.0.tar.gz", hash = "sha256:b6a88cba507500d8709959201e2e757d3941e859fd17cfd4ed87b16fc0c67912"},
-]
-
-[package.dependencies]
-jinja2 = ">=3"
-pytest = ">=7"
-pytest-metadata = ">=2"
-
-[package.extras]
-docs = ["pip-tools (>=6.13)"]
-test = ["assertpy (>=1.1)", "beautifulsoup4 (>=4.11.1)", "black (>=22.1)", "flake8 (>=4.0.1)", "pre-commit (>=2.17)", "pytest-mock (>=3.7)", "pytest-rerunfailures (>=11.1.2)", "pytest-xdist (>=2.4)", "selenium (>=4.3)", "tox (>=3.24.5)"]
-
-[[package]]
-name = "pytest-metadata"
-version = "3.1.1"
-description = "pytest plugin for test session metadata"
-optional = false
-python-versions = ">=3.8"
-groups = ["dev"]
-files = [
-    {file = "pytest_metadata-3.1.1-py3-none-any.whl", hash = "sha256:c8e0844db684ee1c798cfa38908d20d67d0463ecb6137c72e91f418558dd5f4b"},
-    {file = "pytest_metadata-3.1.1.tar.gz", hash = "sha256:d2a29b0355fbc03f168aa96d41ff88b1a3b44a3b02acbe491801c98a048017c8"},
-]
-
-[package.dependencies]
-pytest = ">=7.0.0"
-
-[package.extras]
-test = ["black (>=22.1.0)", "flake8 (>=4.0.1)", "pre-commit (>=2.17.0)", "tox (>=3.24.5)"]
-
-[[package]]
-name = "pytest-ordering"
-version = "0.6"
-description = "pytest plugin to run your tests in a specific order"
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "pytest-ordering-0.6.tar.gz", hash = "sha256:561ad653626bb171da78e682f6d39ac33bb13b3e272d406cd555adb6b006bda6"},
-    {file = "pytest_ordering-0.6-py2-none-any.whl", hash = "sha256:27fba3fc265f5d0f8597e7557885662c1bdc1969497cd58aff6ed21c3b617de2"},
-    {file = "pytest_ordering-0.6-py3-none-any.whl", hash = "sha256:3f314a178dbeb6777509548727dc69edf22d6d9a2867bf2d310ab85c403380b6"},
-]
-
-[package.dependencies]
-pytest = "*"
-
-[[package]]
 name = "pytest-rerunfailures"
 version = "11.1.2"
 description = "pytest plugin to re-run tests to eliminate flaky failures"
@@ -1521,78 +1307,6 @@ files = [
 pytest = ">=2.5"
 
 [[package]]
-name = "pytest-splunk-addon"
-version = "6.0.0"
-description = "A Dynamic test tool for Splunk Apps and Add-ons"
-optional = false
-python-versions = "<4.0,>=3.7"
-groups = ["dev"]
-files = [
-    {file = "pytest_splunk_addon-6.0.0-py3-none-any.whl", hash = "sha256:599912bbb61e76219a8dc3267d8609f6dc4d8923babb6733e142442d3d2a1ff5"},
-    {file = "pytest_splunk_addon-6.0.0.tar.gz", hash = "sha256:1b478491e7d9eef689a93538a59428a5bed2471f11c71dc46a6df76be3a5e42e"},
-]
-
-[package.dependencies]
-addonfactory-splunk-conf-parser-lib = "*"
-defusedxml = ">=0.7.1,<0.8.0"
-Faker = ">=18.0.0,<19.0.0"
-filelock = ">=3.0,<4.0"
-jsonschema = ">=v4.17.3,<5.0.0"
-junitparser = ">=2.2.0,<3.0.0"
-pytest = ">5.4.0,<8"
-pytest-ordering = ">=0.6,<0.7"
-pytest-xdist = ">=3.5.0,<4.0.0"
-requests = ">=2.31.0,<3.0.0"
-splunk-sdk = ">=1.6"
-splunksplwrapper = ">=1.1.1,<2.0.0"
-urllib3 = "<2"
-xmlschema = ">=2.5.1,<3.0.0"
-xmltodict = ">=0.13.0,<0.14.0"
-
-[[package]]
-name = "pytest-splunk-addon-ui-smartx"
-version = "6.0.2"
-description = "Library to support testing Splunk Add-on UX"
-optional = false
-python-versions = "<4.0,>=3.7"
-groups = ["dev"]
-files = [
-    {file = "pytest_splunk_addon_ui_smartx-6.0.2-py3-none-any.whl", hash = "sha256:8f22698f802968b4b1e809dc52336f90eb5fbcca32ebdc1076087ee1f3859ff6"},
-    {file = "pytest_splunk_addon_ui_smartx-6.0.2.tar.gz", hash = "sha256:d9a841d1d4af47a64869fa167840630bf85eef206353fd194069122973aed6d8"},
-]
-
-[package.dependencies]
-cssselect = "*"
-filelock = "*"
-lxml = ">=5.1.0,<6.0.0"
-msedge-selenium-tools = "*"
-pytest-html = "*"
-selenium = "*"
-urllib3 = ">=1.21.1,<2.0.0"
-webdriver-manager = "*"
-
-[[package]]
-name = "pytest-xdist"
-version = "3.8.0"
-description = "pytest xdist plugin for distributed testing, most importantly across multiple CPUs"
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "pytest_xdist-3.8.0-py3-none-any.whl", hash = "sha256:202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88"},
-    {file = "pytest_xdist-3.8.0.tar.gz", hash = "sha256:7e578125ec9bc6050861aa93f2d59f1d8d085595d6551c2c90b6f4fad8d3a9f1"},
-]
-
-[package.dependencies]
-execnet = ">=2.1"
-pytest = ">=7.0.0"
-
-[package.extras]
-psutil = ["psutil (>=3.0)"]
-setproctitle = ["setproctitle"]
-testing = ["filelock"]
-
-[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 description = "Extensions to the standard Python datetime module"
@@ -1607,21 +1321,6 @@ markers = {main = "extra == \"validate\""}
 
 [package.dependencies]
 six = ">=1.5"
-
-[[package]]
-name = "python-dotenv"
-version = "1.2.1"
-description = "Read key-value pairs from a .env file and set them as environment variables"
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-files = [
-    {file = "python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61"},
-    {file = "python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6"},
-]
-
-[package.extras]
-cli = ["click (>=5.0)"]
 
 [[package]]
 name = "python-magic"
@@ -1781,7 +1480,7 @@ version = "0.36.2"
 description = "JSON Referencing + Python"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "referencing-0.36.2-py3-none-any.whl", hash = "sha256:e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0"},
     {file = "referencing-0.36.2.tar.gz", hash = "sha256:df2e89862cd09deabbdba16944cc3f10feb6b3e6f18e902f7cc25609a34775aa"},
@@ -1820,7 +1519,7 @@ version = "0.27.1"
 description = "Python bindings to Rust's persistent data structures (rpds)"
 optional = false
 python-versions = ">=3.9"
-groups = ["main", "dev"]
+groups = ["main"]
 files = [
     {file = "rpds_py-0.27.1-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:68afeec26d42ab3b47e541b272166a0b4400313946871cba3ed3a4fc0cab1cef"},
     {file = "rpds_py-0.27.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:74e5b2f7bb6fa38b1b10546d27acbacf2a022a8b5543efb06cfebc72a59c85be"},
@@ -1980,21 +1679,6 @@ files = [
 ]
 
 [[package]]
-name = "selenium"
-version = "3.141.0"
-description = "Python bindings for Selenium"
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "selenium-3.141.0-py2.py3-none-any.whl", hash = "sha256:2d7131d7bc5a5b99a2d9b04aaf2612c411b03b8ca1b1ee8d3de5845a9be2cb3c"},
-    {file = "selenium-3.141.0.tar.gz", hash = "sha256:deaf32b60ad91a4611b98d8002757f29e6f2c2d5fcaf202e1c9ad06d6772300d"},
-]
-
-[package.dependencies]
-urllib3 = "*"
-
-[[package]]
 name = "semver"
 version = "3.0.4"
 description = "Python helper for Semantic Versioning (https://semver.org)"
@@ -2090,37 +1774,6 @@ structlog = ">=23.1.0,<=24.4.0"
 mcp = ["fastmcp (>=3.4.4,<4) ; python_full_version >= \"3.10.0\""]
 
 [[package]]
-name = "splunk-sdk"
-version = "2.1.1"
-description = "The Splunk Software Development Kit for Python."
-optional = false
-python-versions = "*"
-groups = ["dev"]
-files = [
-    {file = "splunk-sdk-2.1.1.tar.gz", hash = "sha256:46300d52f09e0aed7e5962ce2ba08ef54421ffb3a538c6af6164dcbf9f075faa"},
-]
-
-[package.dependencies]
-deprecation = "*"
-
-[[package]]
-name = "splunksplwrapper"
-version = "1.1.4"
-description = "Package to interact with Splunk"
-optional = false
-python-versions = ">=3.7,<4.0"
-groups = ["dev"]
-files = [
-    {file = "splunksplwrapper-1.1.4-py3-none-any.whl", hash = "sha256:65d62fe00a89b0f0ef849f37b15db068d293ed2fc430a1b74ca8c9bc34436f67"},
-    {file = "splunksplwrapper-1.1.4.tar.gz", hash = "sha256:d8b319080b0260cc47723fe95afeddbdda35f6cb43fdb6249bbcb3c20c03aa77"},
-]
-
-[package.dependencies]
-defusedxml = ">=0.7.1,<0.8.0"
-httplib2 = ">=0.20.0"
-splunk-sdk = ">=1.6.20"
-
-[[package]]
 name = "structlog"
 version = "24.4.0"
 description = "Structured Logging for Python"
@@ -2204,11 +1857,11 @@ description = "Backported and Experimental Type Hints for Python 3.9+"
 optional = false
 python-versions = ">=3.9"
 groups = ["main", "dev"]
-markers = "python_version < \"3.13\""
 files = [
     {file = "typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548"},
     {file = "typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466"},
 ]
+markers = {main = "python_version < \"3.13\"", dev = "python_version < \"3.11\""}
 
 [[package]]
 name = "urllib3"
@@ -2271,23 +1924,6 @@ files = [
 watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
-name = "webdriver-manager"
-version = "4.0.2"
-description = "Library provides the way to automatically manage drivers for different browsers"
-optional = false
-python-versions = ">=3.7"
-groups = ["dev"]
-files = [
-    {file = "webdriver_manager-4.0.2-py2.py3-none-any.whl", hash = "sha256:75908d92ecc45ff2b9953614459c633db8f9aa1ff30181cefe8696e312908129"},
-    {file = "webdriver_manager-4.0.2.tar.gz", hash = "sha256:efedf428f92fd6d5c924a0d054e6d1322dd77aab790e834ee767af392b35590f"},
-]
-
-[package.dependencies]
-packaging = "*"
-python-dotenv = "*"
-requests = "*"
-
-[[package]]
 name = "xmldiff"
 version = "2.7.0"
 description = "Creates diffs of XML files"
@@ -2305,38 +1941,6 @@ setuptools = "*"
 
 [package.extras]
 devenv = ["black", "coverage", "flake8", "zest.releaser[recommended]"]
-
-[[package]]
-name = "xmlschema"
-version = "2.5.1"
-description = "An XML Schema validator and decoder"
-optional = false
-python-versions = ">=3.7"
-groups = ["dev"]
-files = [
-    {file = "xmlschema-2.5.1-py3-none-any.whl", hash = "sha256:ec2b2a15c8896c1fcd14dcee34ca30032b99456c3c43ce793fdb9dca2fb4b869"},
-    {file = "xmlschema-2.5.1.tar.gz", hash = "sha256:4f7497de6c8b6dc2c28ad7b9ed6e21d186f4afe248a5bea4f54eedab4da44083"},
-]
-
-[package.dependencies]
-elementpath = ">=4.1.5,<5.0.0"
-
-[package.extras]
-codegen = ["elementpath (>=4.1.5,<5.0.0)", "jinja2"]
-dev = ["Sphinx", "coverage", "elementpath (>=4.1.5,<5.0.0)", "flake8", "jinja2", "lxml", "lxml-stubs", "memory-profiler", "mypy", "sphinx-rtd-theme", "tox"]
-docs = ["Sphinx", "elementpath (>=4.1.5,<5.0.0)", "jinja2", "sphinx-rtd-theme"]
-
-[[package]]
-name = "xmltodict"
-version = "0.13.0"
-description = "Makes working with XML feel like you are working with JSON"
-optional = false
-python-versions = ">=3.4"
-groups = ["dev"]
-files = [
-    {file = "xmltodict-0.13.0-py2.py3-none-any.whl", hash = "sha256:aa89e8fd76320154a40d19a0df04a4695fb9dc5ba977cbb68ab3e4eb225e7852"},
-    {file = "xmltodict-0.13.0.tar.gz", hash = "sha256:341595a488e3e01a85a9d8911d8912fd922ede5fecc4dce437eb4b6c8d037e56"},
-]
 
 [[package]]
 name = "zipp"
@@ -2365,4 +1969,4 @@ validate = ["splunk-appinspect"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<3.14"
-content-hash = "1fb16b43d8c52ca138a8225586863a399efe2a38a9a401ad87a5e4f4eeb995ae"
+content-hash = "8b2afd6c01e7a96b436b8f40a7c35e0acd06f1567c2c2c7db4619e4a3fa7b51a"

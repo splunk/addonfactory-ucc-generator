@@ -1,0 +1,1 @@
+pytest-splunk-addon-ui-smartx @ git+https://github.com/splunk/addon-factory-smartx-ui-test-library.git@user/kkedziak/drop-eol-python-versions
