@@ -518,14 +518,14 @@ colorama = ">=0.4"
 
 [[package]]
 name = "httplib2"
-version = "0.32.0"
+version = "0.31.2"
 description = "A comprehensive HTTP client library."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.6"
 groups = ["dev"]
 files = [
-    {file = "httplib2-0.32.0-py3-none-any.whl", hash = "sha256:dc6705cacdf3fb0a2aba7629fa33c90fd93e30035db0c157325826be177e4816"},
-    {file = "httplib2-0.32.0.tar.gz", hash = "sha256:48a0ef30a42db65d8f3399045e1d09ab0ba66e3b9efc360d07f80ea55d286025"},
+    {file = "httplib2-0.31.2-py3-none-any.whl", hash = "sha256:dbf0c2fa3862acf3c55c078ea9c0bc4481d7dc5117cae71be9514912cf9f8349"},
+    {file = "httplib2-0.31.2.tar.gz", hash = "sha256:385e0869d7397484f4eab426197a4c020b606edd43372492337c0b4010ae5d24"},
 ]
 
 [package.dependencies]
@@ -1999,4 +1999,4 @@ validate = ["splunk-appinspect"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<3.14"
-content-hash = "455f2fc4f06971cca1fa8943ee62d62a066594d0d4e437c7debc4b72bc584828"
+content-hash = "44a2ba621814a2f2e412029a78c7c4f108eb7086917bc444acbd6c73a39218bb"
