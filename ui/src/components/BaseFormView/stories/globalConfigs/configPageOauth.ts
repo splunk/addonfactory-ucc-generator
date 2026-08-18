@@ -214,6 +214,101 @@ export const PAGE_CONFIG_BOTH_OAUTH = {
     },
 };
 
+/**
+ * Story config for testing auth_type_filter feature.
+ * Simulates Salesforce TA use case:
+ *   - API version field controls which auth types are visible
+ *   - When sfdc_api_version > 64.0 → hide Basic Authentication
+ *   - When sfdc_api_version <= 64.0 → show all 3 auth types
+ */
+export const PAGE_CONFIG_AUTH_TYPE_FILTER = {
+    pages: {
+        configuration: {
+            tabs: [
+                {
+                    name: 'account',
+                    table: {
+                        actions: ['edit', 'delete', 'clone'],
+                        header: [
+                            { label: 'Name', field: 'name' },
+                            { label: 'Auth Type', field: 'auth_type' },
+                        ],
+                    },
+                    entity: [
+                        {
+                            type: 'text',
+                            label: 'Name',
+                            field: 'name',
+                            required: true,
+                            validators: [
+                                { type: 'string', minLength: 1, maxLength: 50, errorMsg: 'Name must be 1-50 chars' },
+                            ],
+                        },
+                        {
+                            type: 'singleSelect',
+                            label: 'Salesforce API Version',
+                            field: 'sfdc_api_version',
+                            defaultValue: '66.0',
+                            options: {
+                                items: [
+                                    { label: '66.0', value: '66.0' },
+                                    { label: '65.0', value: '65.0' },
+                                    { label: '64.0', value: '64.0' },
+                                    { label: '63.0', value: '63.0' },
+                                ],
+                            },
+                        },
+                        {
+                            type: 'oauth',
+                            field: 'oauth',
+                            label: 'Not used',
+                            options: {
+                                auth_type: ['oauth_client_credentials', 'oauth', 'basic'],
+                                auth_type_filter: {
+                                    basic: {
+                                        hideForVersionAbove: 64.0,
+                                        dependsOnField: 'sfdc_api_version',
+                                    },
+                                },
+                                basic: [
+                                    { label: 'Username', field: 'username' },
+                                    { label: 'Password', field: 'password', encrypted: true },
+                                    { label: 'Security Token', field: 'token', encrypted: true },
+                                ],
+                                oauth: [
+                                    { label: 'Client Id', field: 'client_id' },
+                                    { label: 'Client Secret', field: 'client_secret', encrypted: true },
+                                    { label: 'Redirect url', field: 'redirect_url' },
+                                ],
+                                oauth_client_credentials: [
+                                    { label: 'Client Id', field: 'client_id_oauth_credentials' },
+                                    { label: 'Client Secret', field: 'client_secret_oauth_credentials', encrypted: true },
+                                ],
+                                auth_code_endpoint: '/services/oauth2/authorize',
+                                access_token_endpoint: '/services/oauth2/token',
+                                oauth_timeout: 30,
+                                oauth_state_enabled: false,
+                            },
+                        },
+                    ],
+                    title: 'Account',
+                },
+            ],
+            title: 'Configuration',
+            description: 'Test auth_type_filter — change API version to see Basic Auth hide/show',
+        },
+        inputs: { services: [], title: 'Inputs', description: '' },
+    },
+    meta: {
+        name: 'Splunk_TA_UCCExample',
+        restRoot: 'splunk_ta_uccexample',
+        version: '5.41.0',
+        displayName: 'Auth Type Filter Test',
+        schemaVersion: '0.0.3',
+        _uccVersion: '5.41.0',
+    },
+};
+
 export const getConfigOauthBasic = () => {
     const configCp = JSON.parse(JSON.stringify(PAGE_CONFIG_BOTH_OAUTH));
     if (configCp.pages.configuration.tabs[0].entity[2].options?.auth_type) {

@@ -6,6 +6,7 @@ import { setUnifiedConfig } from '../../../util/util';
 import globalConfig from './globalConfig.json';
 import ConfigurationPage from '../ConfigurationPage';
 import { mockServerResponse, mockServerResponseWithContent } from '../../../mocks/server-response';
+import { PAGE_CONFIG_AUTH_TYPE_FILTER } from '../../../components/BaseFormView/stories/globalConfigs/configPageOauth';
 
 const meta = {
     component: ConfigurationPage,
@@ -163,6 +164,23 @@ export const LongTabNameStory: Story = {
         snapshots: {
             width: 1000,
             height: 600,
+        },
+    },
+};
+
+export const AuthTypeFilterTest: StoryObj = {
+    args: {
+        globalConfig: PAGE_CONFIG_AUTH_TYPE_FILTER,
+    },
+    parameters: {
+        docs: {
+            description: {
+                story: 'Tests auth_type_filter feature. Open Add Account form and change API version to 63.0 or 64.0 to see Basic Authentication appear. Change to 65.0 or 66.0 to hide it.',
+            },
+        },
+        snapshots: {
+            width: 1200,
+            height: 800,
         },
     },
 };

@@ -12,6 +12,63 @@ import { AcceptableFormValueOrNullish } from '../../types/components/shareableTy
 import { OAuthEntity } from '../../types/globalConfig/entities';
 import { shouldHideForPlatform } from '../../util/pageContext';
 
+/**
+ * Filters auth type options based on auth_type_filter config and current
+ * field values. Allows add-ons to hide specific auth types when another
+ * field's value exceeds or falls below a threshold.
+ *
+ * Example globalConfig.json usage:
+ *   "auth_type": ["oauth_client_credentials", "oauth", "basic"],
+ *   "auth_type_filter": {
+ *       "basic": { "hideForVersionAbove": 64.0, "dependsOnField": "sfdc_api_version" }
+ *   }
+ *
+ * @param authTypes - full list of auth type keys from globalConfig
+ * @param authTypeFilter - filter rules keyed by auth type
+ * @param currentValues - current form field values to evaluate against
+ * @returns filtered list of auth type keys
+ */
+export const filterAuthTypes = (
+    authTypes: string[],
+    authTypeFilter?: Record<
+        string,
+        {
+            hideForVersionAbove?: number;
+            hideForVersionBelow?: number;
+            dependsOnField?: string;
+        }
+    >,
+    currentValues?: Record<string, unknown>
+): string[] => {
+    if (!authTypeFilter || !currentValues) return authTypes;
+
+    return authTypes.filter((authType) => {
+        const rule = authTypeFilter[authType];
+        if (!rule || !rule.dependsOnField) return true;
+
+        const rawField = currentValues[rule.dependsOnField];
+        // State values are stored as objects { value: ... } or as raw primitives
+        const rawValue =
+            rawField && typeof rawField === 'object' && 'value' in (rawField as object)
+                ? (rawField as { value: unknown }).value
+                : rawField;
+        // If value is null/undefined/empty, cannot evaluate — show all options
+        if (rawValue === null || rawValue === undefined || rawValue === '') return true;
+        const fieldValue = parseFloat(String(rawValue));
+        // eslint-disable-next-line no-console
+        console.debug('[filterAuthTypes]', rule.dependsOnField, '=', rawValue, '→', fieldValue);
+        if (isNaN(fieldValue)) return true;
+
+        if (rule.hideForVersionAbove !== undefined && fieldValue > rule.hideForVersionAbove) {
+            return false;
+        }
+        if (rule.hideForVersionBelow !== undefined && fieldValue < rule.hideForVersionBelow) {
+            return false;
+        }
+        return true;
+    });
+};
+
 export const mapEntityIntoBaseForViewEntityObject = (
     e: OAuthEntity | AnyEntity,
     currentInput: CurrentBaseFormInput,
