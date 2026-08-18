@@ -62,9 +62,8 @@ certifi = "^2026.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.1"
-pytest-splunk-addon = "^6.0.0"
-pytest-splunk-addon-ui-smartx = "6.0.2"
 pytest-rerunfailures = "^11.1.1"
+httplib2 = "^0.31.2"
 pytest-cov = "^6.0.0"
 covdefaults = "^2.3.0"
 xmldiff = "^2.7.0"
