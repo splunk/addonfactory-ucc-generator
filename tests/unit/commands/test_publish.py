@@ -14,7 +14,11 @@ from splunk_add_on_ucc_framework.commands.publish import (
 class TestPackageUpload:
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
-    @patch("builtins.open", new_callable=mock_open, read_data=b"file binary content")
+    @patch(
+        "splunk_add_on_ucc_framework.commands.publish.open",
+        new_callable=mock_open,
+        read_data=b"file binary content",
+    )
     def test_upload_package_success(self, mock_file, mock_urlopen, mock_logger):
         mock_response = MagicMock()
         mock_response.read.return_value = json.dumps({"id": "pkg123"}).encode("utf-8")
@@ -39,7 +43,11 @@ class TestPackageUpload:
 
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
-    @patch("builtins.open", new_callable=mock_open, read_data=b"file binary content")
+    @patch(
+        "splunk_add_on_ucc_framework.commands.publish.open",
+        new_callable=mock_open,
+        read_data=b"file binary content",
+    )
     def test_upload_package_no_id(self, mock_file, mock_urlopen, mock_logger):
         mock_response = MagicMock()
         mock_response.read.return_value = json.dumps({}).encode("utf-8")
@@ -58,7 +66,11 @@ class TestPackageUpload:
 
     @patch("splunk_add_on_ucc_framework.commands.publish.logger")
     @patch("urllib.request.urlopen")
-    @patch("builtins.open", new_callable=mock_open, read_data=b"file binary content")
+    @patch(
+        "splunk_add_on_ucc_framework.commands.publish.open",
+        new_callable=mock_open,
+        read_data=b"file binary content",
+    )
     def test_upload_package_http_error(self, mock_file, mock_urlopen, mock_logger):
         headers = HTTPMessage()
         headers.add_header("Content-Type", "application/json")

@@ -1,3 +1,5 @@
+pytest_plugins = ["pytest_splunk_addon_ui_smartx.splunk"]
+
 from typing import Any
 from collections.abc import Iterator
 

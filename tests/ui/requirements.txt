@@ -1,0 +1,1 @@
+pytest-splunk-addon-ui-smartx==7.0.0
