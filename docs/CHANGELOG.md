@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.5.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.2...v6.5.3) (2026-07-24)
+
+
+### Bug Fixes
+
+* ADDON-89355 prevent clipped 'more info labels' in input table ([#2075](https://github.com/splunk/addonfactory-ucc-generator/issues/2075)) ([560b335](https://github.com/splunk/addonfactory-ucc-generator/commit/560b3354e21acf6e317e8bfc425b957720f06996))
+
 ## [6.5.2](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.1...v6.5.2) (2026-07-02)
 
 
