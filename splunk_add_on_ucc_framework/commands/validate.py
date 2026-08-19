@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import logging
+import pathlib
 import shutil
 import subprocess
 import sys
@@ -60,6 +61,20 @@ def validate(
             "Install it separately, e.g. `pipx install splunk-appinspect` "
             "or `pip install splunk-appinspect`.",
             APPINSPECT_BINARY,
+        )
+        sys.exit(1)
+
+    # On Windows, shutil.which prepends CWD to the search path, so a planted
+    # splunk-appinspect.exe inside an add-on directory would be picked up.
+    # Reject any binary whose parent resolves to the current working directory.
+    if pathlib.Path(binary).resolve().parent == pathlib.Path.cwd().resolve():
+        logger.error(
+            "Refusing to run '%s': the resolved executable ('%s') is located "
+            "in the current working directory, which may indicate a planted "
+            "binary. Install splunk-appinspect to a directory on PATH, "
+            "e.g. via `pipx install splunk-appinspect`.",
+            APPINSPECT_BINARY,
+            binary,
         )
         sys.exit(1)
 

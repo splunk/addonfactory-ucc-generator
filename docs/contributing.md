@@ -169,10 +169,14 @@ This command will generate a packaged TA (.tar.gz file) that you can install int
 
 Documentation changes are also welcome!
 
-To verify changes locally:
+To verify changes locally, create a standalone docs venv (mkdocs is no longer part of the Poetry dev dependencies):
 
 ```bash
-poetry run mkdocs serve -a localhost:8001
+python -m venv .docs-venv
+.docs-venv/bin/pip install --upgrade pip
+.docs-venv/bin/pip install .
+.docs-venv/bin/pip install -r docs/requirements.txt
+.docs-venv/bin/mkdocs serve -a localhost:8001
 ```
 
 ## Documentation guidelines
