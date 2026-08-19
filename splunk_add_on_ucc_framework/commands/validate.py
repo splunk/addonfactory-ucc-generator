@@ -65,9 +65,10 @@ def validate(
         sys.exit(1)
 
     # On Windows, shutil.which prepends CWD to the search path, so a planted
-    # splunk-appinspect.exe inside an add-on directory would be picked up.
-    # Reject any binary whose parent resolves to the current working directory.
-    if pathlib.Path(binary).resolve().parent == pathlib.Path.cwd().resolve():
+    # splunk-appinspect.exe (or a CWD symlink to one) inside an add-on directory
+    # would be picked up. Compare the *unresolved* parent to avoid a symlink
+    # bypass where resolve() follows the link out of CWD before comparison.
+    if pathlib.Path(binary).parent.resolve() == pathlib.Path.cwd().resolve():
         logger.error(
             "Refusing to run '%s': the resolved executable ('%s') is located "
             "in the current working directory, which may indicate a planted "
