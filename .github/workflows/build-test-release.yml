@@ -216,7 +216,7 @@ jobs:
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry install --only main
-          poetry run pip install splunk-appinspect
+          poetry run pip install splunk-appinspect==4.3.0
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: ./scripts/include-rum.sh output/Splunk_TA_UCCExample/appserver/templates/base.html scripts/rum-script.html "$RUM_ACCESS_TOKEN"
         env:
