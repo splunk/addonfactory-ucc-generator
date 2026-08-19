@@ -30,7 +30,7 @@ jobs:
           cd ../
       - name: Deploy to GitHub Pages
         if: github.ref_name == 'main'
-        run: ./mkdocs.sh gh-deploy --force --strict
+        run: python mkdocs.py gh-deploy --force --strict
       - name: Build Docs
         if: github.ref_name != 'main'
-        run: ./mkdocs.sh build --strict
+        run: python mkdocs.py build --strict
