@@ -9603,10 +9603,10 @@ mute-stream@^2.0.0:
   resolved "https://registry.npmjs.org/mute-stream/-/mute-stream-2.0.0.tgz#a5446fc0c512b71c83c44d908d5c7b7b4c493b2b"
   integrity sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==
 
-nanoid@^3.3.16:
-  version "3.3.16"
-  resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.16.tgz#a04d8ec4b1f10009d2d533947aefe4293737816c"
-  integrity sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==
+nanoid@3.3.18, nanoid@^3.3.16:
+  version "3.3.18"
+  resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.18.tgz#f66a2de1199ffde0fcf21c8a5f13106b1c081913"
+  integrity sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==
 
 napi-postinstall@^0.3.0:
   version "0.3.4"
@@ -10673,18 +10673,18 @@ react-resize-detector@^12.3.0:
   dependencies:
     es-toolkit "^1.39.6"
 
-react-router-dom@6.30.4:
-  version "6.30.4"
-  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.30.4.tgz#f7167bf3da6c7d9132130ea985dd06def25e84d5"
-  integrity sha512-q4HvNl+mmDdkS0g+MqiBZNteQJCuimWoOyHMy4T/RQLAn9Z29+E91QXRaxOujeMl2HTzRSS0KFPd7lxX3PjV0Q==
+react-router-dom@6.30.5:
+  version "6.30.5"
+  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-6.30.5.tgz#394a991230860f8eba36451f15efc9a38328cb79"
+  integrity sha512-Howo+e5+VnIBTSLNlD/ld92CBekQffjXa2zPQH2mghkghR3JptAeO/m+xXcwACml0+XuKw3ezscmCH4jdkPMoA==
   dependencies:
     "@remix-run/router" "1.23.3"
-    react-router "6.30.4"
+    react-router "6.30.5"
 
-react-router@6.30.4:
-  version "6.30.4"
-  resolved "https://registry.npmjs.org/react-router/-/react-router-6.30.4.tgz#638f35176527bd243d96d81d35d33b757bad46c2"
-  integrity sha512-SVUsDe+DybHM/WmYKIVYhZh1o5Dcuf16yM6WjG02Q9XVFMZIJyHYhwrr6bFBXZkVP6z69kNkMyBCujt8FaFLJA==
+react-router@6.30.5:
+  version "6.30.5"
+  resolved "https://registry.npmjs.org/react-router/-/react-router-6.30.5.tgz#5c55bef1bfbcf011eaa6c7074ddf1b775ef2b088"
+  integrity sha512-MyMPiI3vOGXnQhlPZ/am6V3+9doI1jzcAw/3Ufrzav9/x5DnM2KykOPzKtKLHaLYPG4o+orFIgjxKqM6DBnjcw==
   dependencies:
     "@remix-run/router" "1.23.3"
 
