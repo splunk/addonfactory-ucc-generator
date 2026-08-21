@@ -128,9 +128,11 @@ The `ucc-gen validate` command is available starting from version `v5.68.0` and 
 Splunk apps and add-ons during development. It leverages `Splunk AppInspect` under the hood to ensure your add-on meets Splunk's standards and best practices.
 
 To use this command, you must have AppInspect installed on your system.
-You can install the required dependencies using the following command:
+`ucc-gen validate` invokes the `splunk-appinspect` executable from `PATH`,
+so install it separately, for example:
 
-* pip install splunk-add-on-ucc-framework[validate]
+* `pipx install splunk-appinspect` (recommended)
+* `pip install splunk-appinspect`
 
 It accepts the following parameters:
 

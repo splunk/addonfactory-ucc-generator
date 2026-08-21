@@ -18,9 +18,9 @@ jobs:
       pages: write
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
-          python-version: 3.9
+          python-version: "3.10"
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Build Storybook
@@ -28,12 +28,9 @@ jobs:
           cd ui
           yarn run build-storybook --quiet --output-dir ../docs/storybook/
           cd ../
-      - run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version 2.1.4
-          poetry install
       - name: Deploy to GitHub Pages
         if: github.ref_name == 'main'
-        run: poetry run mkdocs gh-deploy --force --strict
+        run: python mkdocs.py gh-deploy --force --strict
       - name: Build Docs
         if: github.ref_name != 'main'
-        run: poetry run mkdocs build --strict
+        run: python mkdocs.py build --strict

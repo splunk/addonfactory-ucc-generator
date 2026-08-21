@@ -172,8 +172,11 @@ Documentation changes are also welcome!
 To verify changes locally:
 
 ```bash
-poetry run mkdocs serve -a localhost:8001
+python3 mkdocs.py serve -a localhost:8001
 ```
+
+The script creates a `.docs-venv` virtualenv on first run and reuses it on subsequent calls.
+You can control the Python version by invoking a specific interpreter, e.g. `python3.10 mkdocs.py serve -a localhost:8001`.
 
 ## Documentation guidelines
 

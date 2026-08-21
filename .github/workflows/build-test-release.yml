@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - id: matrix
-        uses: splunk/addonfactory-test-matrix-action@v3.1
+        uses: splunk/addonfactory-test-matrix-action@v3.3
 
   fossa-scan:
     continue-on-error: true
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: pre-commit/action@v3.0.1
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: actions/download-artifact@v8
@@ -142,7 +142,7 @@ jobs:
           - "3.14"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
@@ -180,7 +180,7 @@ jobs:
         with:
           name: UCC-UI-build
           path: built-ui/
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
@@ -205,7 +205,7 @@ jobs:
       - build-ui
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - uses: actions/download-artifact@v8
@@ -215,7 +215,8 @@ jobs:
       - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
       - run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
-          poetry install --only main --extras validate
+          poetry install --only main
+          poetry run pip install splunk-appinspect==4.3.0
       - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package
       - run: ./scripts/include-rum.sh output/Splunk_TA_UCCExample/appserver/templates/base.html scripts/rum-script.html "$RUM_ACCESS_TOKEN"
         env:
@@ -260,9 +261,9 @@ jobs:
           - "10"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
-          python-version: "3.9"
+          python-version: "3.10"
       - uses: actions/download-artifact@v8
         with:
           name: Splunk_TA_UCCExample-raw-output
@@ -270,6 +271,7 @@ jobs:
       - run: |
           curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
           poetry install --only dev
+          poetry run pip install -r tests/ui/requirements.txt
       - name: Link chromedriver
         # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
         run: |
@@ -319,7 +321,7 @@ jobs:
           - "splunk_appinspect"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
@@ -328,7 +330,7 @@ jobs:
           poetry install
           mkdir tests/packaged
           poetry run ucc-gen package --path tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample -o tests/packaged
-      - uses: splunk/appinspect-cli-action@v2.13
+      - uses: splunk/appinspect-cli-action@v2.15
         with:
           app_path: tests/packaged
           included_tags: ${{ matrix.tags }}
@@ -382,7 +384,7 @@ jobs:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - uses: actions/download-artifact@v8
@@ -467,7 +469,7 @@ jobs:
           client-id: ${{ secrets.GH_APP_CLIENT_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.9"
       - name: install UI deps
@@ -501,9 +503,15 @@ jobs:
           poetry build
           poetry publish -n -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
       - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        name: Configure npm registry auth
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: 'ui/package.json'
+          registry-url: 'https://registry.npmjs.org'
+      - if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
         name: Publish NPM
         run: |
-          cd ui          
+          cd ui
           npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
