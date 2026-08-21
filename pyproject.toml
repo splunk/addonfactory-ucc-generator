@@ -57,21 +57,13 @@ PyYAML = "^6.0"
 defusedxml = "^0.7.1"
 colorama = "^0.4.6"
 packaging = ">=25.0"
-splunk-appinspect = { version = "^4.0.0", extras = ["validate"], optional = true }
 certifi = "^2026.0.0"
-
-[tool.poetry.extras]
-validate = ["splunk-appinspect"]
 
 
 [tool.poetry.group.dev.dependencies]
-mkdocs = "^1.6.1"
 pytest = "^7.2.1"
 pytest-rerunfailures = "^11.1.1"
 httplib2 = "^0.32.0"
-mkdocs-material = "^9.6.16"
-mkdocstrings = {version=">=0", extras=["python"]}
-mkdocs-print-site-plugin = "^2.3.6"
 pytest-cov = "^6.0.0"
 covdefaults = "^2.3.0"
 xmldiff = "^2.7.0"

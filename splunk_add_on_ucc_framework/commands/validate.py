@@ -14,10 +14,15 @@
 # limitations under the License.
 #
 import logging
+import pathlib
+import shutil
+import subprocess
 import sys
 from typing import Optional
 
 logger = logging.getLogger("ucc_gen")
+
+APPINSPECT_BINARY = "splunk-appinspect"
 
 
 def build_validate_args(
@@ -49,21 +54,38 @@ def validate(
     log_file: Optional[str] = None,
     max_messages: Optional[str] = None,
 ) -> None:
-    try:
-        from splunk_appinspect import main
-    except ModuleNotFoundError:
+    binary = shutil.which(APPINSPECT_BINARY)
+    if binary is None:
         logger.error(
-            "UCC validate dependencies are not installed. Please install them using the command -> "
-            "`pip install splunk-add-on-ucc-framework[validate]`."
+            "'%s' executable was not found on PATH. "
+            "Install it separately, e.g. `pipx install splunk-appinspect` "
+            "or `pip install splunk-appinspect`.",
+            APPINSPECT_BINARY,
         )
         sys.exit(1)
-    else:
-        main.validate(
-            build_validate_args(
-                file_path=file_path,
-                output_file=output_file,
-                log_level=log_level,
-                log_file=log_file,
-                max_messages=max_messages,
-            )
+
+    # On Windows, shutil.which prepends CWD to the search path, so a planted
+    # splunk-appinspect.exe (or a CWD symlink to one) inside an add-on directory
+    # would be picked up. Compare the *unresolved* parent to avoid a symlink
+    # bypass where resolve() follows the link out of CWD before comparison.
+    if pathlib.Path(binary).parent.resolve() == pathlib.Path.cwd().resolve():
+        logger.error(
+            "Refusing to run '%s': the resolved executable ('%s') is located "
+            "in the current working directory, which may indicate a planted "
+            "binary. Install splunk-appinspect to a directory on PATH, "
+            "e.g. via `pipx install splunk-appinspect`.",
+            APPINSPECT_BINARY,
+            binary,
         )
+        sys.exit(1)
+
+    args = build_validate_args(
+        file_path=file_path,
+        output_file=output_file,
+        log_level=log_level,
+        log_file=log_file,
+        max_messages=max_messages,
+    )
+    result = subprocess.run([binary, "inspect", *args])
+    if result.returncode != 0:
+        sys.exit(result.returncode)
