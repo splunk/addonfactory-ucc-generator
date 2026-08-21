@@ -1,0 +1,1 @@
+import{j as t}from"./iframe-BybQmYhs.js";import{g as e}from"./ControlWrapper-DW1ssuup.js";const i=(o,{name:r})=>t.jsx(e,{label:r,labelWidth:260,labelPosition:"left",children:o()});i.__docgenInfo={description:"",methods:[],displayName:"withControlGroup"};export{i as w};
