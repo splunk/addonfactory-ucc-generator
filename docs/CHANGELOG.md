@@ -1,5 +1,20 @@
 # Changelog
 
+# [6.6.0](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.3...v6.6.0) (2026-08-21)
+
+
+### Bug Fixes
+
+* remove lxml transitive dep by upgrading pytest-splunk-addon-ui-smartx to 7.0.0 ([#2090](https://github.com/splunk/addonfactory-ucc-generator/issues/2090)) ([63f52bb](https://github.com/splunk/addonfactory-ucc-generator/commit/63f52bbdaec4530ca426d661be820339285c7b0e))
+* security vulnerabilities + update GitHub Actions ([#2035](https://github.com/splunk/addonfactory-ucc-generator/issues/2035)) ([068007d](https://github.com/splunk/addonfactory-ucc-generator/commit/068007dca4d21edeeb535e225b8806f45b1bab3f))
+* upgrade react-router-dom to v7.18.0 (CVE-2026-53666, CVE-2026-53669) ([#2097](https://github.com/splunk/addonfactory-ucc-generator/issues/2097)) ([5810c34](https://github.com/splunk/addonfactory-ucc-generator/commit/5810c342e20da6d6a7cca8f980a542be48c074de))
+
+
+### Features
+
+* add support for shortdesc, tags and examples in searchbnf.conf ([#1977](https://github.com/splunk/addonfactory-ucc-generator/issues/1977)) ([60d02e8](https://github.com/splunk/addonfactory-ucc-generator/commit/60d02e8068a67f0569550d05ce5cc784e57117a4))
+* **deps:** drop splunk-appinspect and move mkdocs to optional docs group (VULN-87175) ([#2085](https://github.com/splunk/addonfactory-ucc-generator/issues/2085)) ([e1a42fc](https://github.com/splunk/addonfactory-ucc-generator/commit/e1a42fca0db2f2427c89743e45bda6a586684adc))
+
 ## [6.5.3](https://github.com/splunk/addonfactory-ucc-generator/compare/v6.5.2...v6.5.3) (2026-07-24)
 
 
