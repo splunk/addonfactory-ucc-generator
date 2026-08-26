@@ -46,7 +46,7 @@
     "@splunk/themes": "^1.2.0",
     "@splunk/ui-utils": "^1.10.0",
     "@splunk/visualization-context": "^28.4.0",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^15.0.7",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/coverage-istanbul": "^4.1.2",
@@ -85,7 +85,7 @@
     "@storybook/react-vite": "^10.3.3",
     "@storybook/test-runner": "^0.24.3",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^15.0.7",
     "@testing-library/user-event": "^14.6.1",
     "@types/jest-image-snapshot": "^6.4.1",
@@ -120,7 +120,7 @@
     "jest-environment-jsdom": "^30.3.0",
     "jest-fixed-jsdom": "^0.0.11",
     "jest-image-snapshot": "^6.5.2",
-    "jsdom": "^29.0.1",
+    "jsdom": "^30.0.1",
     "msw": "^2.12.14",
     "msw-storybook-addon": "^2.0.6",
     "prettier": "^2.8.8",
@@ -133,7 +133,7 @@
     "typescript": "^5.9.3",
     "undici": "^5.29.0",
     "url": "^0.11.4",
-    "vite-plugin-dts": "4.5.3",
+    "vite-plugin-dts": "5.0.3",
     "vite-plugin-node-polyfills": "^0.26.0"
   },
   "peerDependencies": {
@@ -190,7 +190,7 @@
     "jsonata": "^2.2.2"
   },
   "engines": {
-    "node": "22.22.0",
+    "node": "22.22.2",
     "yarn": "^1.22.22"
   },
   "msw": {
