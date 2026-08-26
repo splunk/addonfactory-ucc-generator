@@ -20,7 +20,7 @@
 
 "@asamuzakjp/css-color@^6.0.5":
   version "6.0.7"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/@asamuzakjp/css-color/-/css-color-6.0.7.tgz#8f9f67452e6636930949abe047dd553b13276939"
+  resolved "https://registry.npmjs.org/@asamuzakjp/css-color/-/css-color-6.0.7.tgz#8f9f67452e6636930949abe047dd553b13276939"
   integrity sha512-vC/bk1Lz7Tn/EfU9/apOTBk80/8dyGyWMowPoV1tJ52muDGsDqt2HPT2klrFUiY60MQmQv9q8yIht15JnBgDGw==
   dependencies:
     "@csstools/css-calc" "^3.3.0"
@@ -31,7 +31,7 @@
 
 "@asamuzakjp/dom-selector@^8.3.0":
   version "8.3.2"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/@asamuzakjp/dom-selector/-/dom-selector-8.3.2.tgz#1e84c1ea1e12a921c1aa94da4b1f657168f09596"
+  resolved "https://registry.npmjs.org/@asamuzakjp/dom-selector/-/dom-selector-8.3.2.tgz#1e84c1ea1e12a921c1aa94da4b1f657168f09596"
   integrity sha512-93Z1N+BQNXysodoicpOIyNh2drHfz/CTf9nnT0FEx72GJcIiwgydD7tGAr78j41LsYn3hlRn+LdGPuBLn1Bl8Q==
   dependencies:
     bidi-js "^1.0.3"
@@ -1106,7 +1106,7 @@
 
 "@csstools/css-color-parser@^4.1.10":
   version "4.2.1"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/@csstools/css-color-parser/-/css-color-parser-4.2.1.tgz#d2795d618e3d497f394277eede34f10d7adfad0e"
+  resolved "https://registry.npmjs.org/@csstools/css-color-parser/-/css-color-parser-4.2.1.tgz#d2795d618e3d497f394277eede34f10d7adfad0e"
   integrity sha512-YpAJZhaHplYQkG8ib+/Fx5Y0eF2lVWi3tIvMJA6i39TLyUNp2439cifzW8VMjhlqrBjHzK5hVGugRRm2zTKI/A==
   dependencies:
     "@csstools/color-helpers" "^6.1.1"
@@ -1124,7 +1124,7 @@
 
 "@csstools/css-syntax-patches-for-csstree@^1.1.7":
   version "1.1.9"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/@csstools/css-syntax-patches-for-csstree/-/css-syntax-patches-for-csstree-1.1.9.tgz#8c144089e7ad7cadc0393a5051345c3e6a8043dc"
+  resolved "https://registry.npmjs.org/@csstools/css-syntax-patches-for-csstree/-/css-syntax-patches-for-csstree-1.1.9.tgz#8c144089e7ad7cadc0393a5051345c3e6a8043dc"
   integrity sha512-iGGw4OsAYsS6pD29MdJ2bX/nJx65a04ZZiw6x+VwWlP2DdXf6f++Zmuv/OzALpdyfVhjbduIIF2cXM7HWBIe9A==
 
 "@csstools/css-tokenizer@^3.0.3":
@@ -3572,7 +3572,7 @@
 
 "@testing-library/jest-dom@^7.0.1":
   version "7.0.1"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/@testing-library/jest-dom/-/jest-dom-7.0.1.tgz#649a9a8b2039f28d29f9f7a46eba9a8b727f811e"
+  resolved "https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-7.0.1.tgz#649a9a8b2039f28d29f9f7a46eba9a8b727f811e"
   integrity sha512-oMDTC3oA+6CXSO2JZnvOI7CA6oVub6kij5ggk9ohwye5slmkwxYDXcPOVxgMw/RQlticjtO0C1RZkR97HgrWMw==
   dependencies:
     "@adobe/css-tools" "^4.4.0"
@@ -4331,7 +4331,7 @@
 
 "@volar/typescript@^2.4.26":
   version "2.4.28"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/@volar/typescript/-/typescript-2.4.28.tgz#83f86356e84eb101b8081a44c104f2f2ced8411f"
+  resolved "https://registry.npmjs.org/@volar/typescript/-/typescript-2.4.28.tgz#83f86356e84eb101b8081a44c104f2f2ced8411f"
   integrity sha512-Ja6yvWrbis2QtN4ClAKreeUZPVYMARDYZl9LMEv1iQ1QdepB6wn0jTRxA9MftYmYa4DQ4k/DaSZpFPUfxl8giw==
   dependencies:
     "@volar/language-core" "2.4.28"
@@ -8642,7 +8642,7 @@ jsdom@^26.1.0:
 
 jsdom@^30.0.1:
   version "30.0.1"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/jsdom/-/jsdom-30.0.1.tgz#1b0751cbd0abce86762c48697583b5e91433f6e4"
+  resolved "https://registry.npmjs.org/jsdom/-/jsdom-30.0.1.tgz#1b0751cbd0abce86762c48697583b5e91433f6e4"
   integrity sha512-52v7mUVUfNQVYYqE1lcdaymWL0njO7lTLUog6ZvW2U5KsbiLk/GnZlVJ+qx0xfNJZ6Gn+KSpPNE52vurbxZwrA==
   dependencies:
     "@asamuzakjp/css-color" "^6.0.5"
@@ -8850,7 +8850,7 @@ loader-utils@^2.0.4:
 
 local-pkg@^1.1.1:
   version "1.2.1"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/local-pkg/-/local-pkg-1.2.1.tgz#9628389399851d78f3b50c9236eddb02f0c31b2b"
+  resolved "https://registry.npmjs.org/local-pkg/-/local-pkg-1.2.1.tgz#9628389399851d78f3b50c9236eddb02f0c31b2b"
   integrity sha512-++gUqRDEvcnN6Zhqrr+y/CkVEHhlrR96vZn3nZZPYzMcBUyBtTKzB9NadClFIsIVSsu+3i9tfk/erqy9kAmt7Q==
   dependencies:
     mlly "^1.7.4"
@@ -12102,7 +12102,7 @@ tough-cookie@^5.1.1:
 
 tough-cookie@^6.0.1, tough-cookie@^6.0.2:
   version "6.0.2"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/tough-cookie/-/tough-cookie-6.0.2.tgz#7b1f22fcf2daf06c4ff9d53ec1845f44c6627062"
+  resolved "https://registry.npmjs.org/tough-cookie/-/tough-cookie-6.0.2.tgz#7b1f22fcf2daf06c4ff9d53ec1845f44c6627062"
   integrity sha512-exgYmnmL/sJpR3upZfXG5PoatXQii55xAiXGXzY+sROLZ/Y+SLcp9PgJNI9Vz37HpQ74WvDcLT8eqm+kV3FzrA==
   dependencies:
     tldts "^7.0.5"
@@ -12344,7 +12344,7 @@ undici@^5.29.0:
 
 undici@^8.9.0:
   version "8.10.0"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/undici/-/undici-8.10.0.tgz#67ed7c4087f0f40fba7bef3a46f2be80572f2473"
+  resolved "https://registry.npmjs.org/undici/-/undici-8.10.0.tgz#67ed7c4087f0f40fba7bef3a46f2be80572f2473"
   integrity sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
@@ -12451,7 +12451,7 @@ universalify@^2.0.0:
 
 unplugin-dts@1.0.3:
   version "1.0.3"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/unplugin-dts/-/unplugin-dts-1.0.3.tgz#66ec67e6c33218a95b4cc6d0180389ea494daecb"
+  resolved "https://registry.npmjs.org/unplugin-dts/-/unplugin-dts-1.0.3.tgz#66ec67e6c33218a95b4cc6d0180389ea494daecb"
   integrity sha512-/GR887wfG4r1cWyt1UZsLRuMIjsmEbGkS9yJrz+0dsToHAYUD5CTyP3JMGVLv25j9K0mJcwAVvZno/aTuSUvNg==
   dependencies:
     "@rollup/pluginutils" "^5.1.4"
@@ -12677,7 +12677,7 @@ vite-plugin-checker@^0.12.0:
 
 vite-plugin-dts@5.0.3:
   version "5.0.3"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/vite-plugin-dts/-/vite-plugin-dts-5.0.3.tgz#c4ca204d3bdd5c8d9d21420b4ff013c64efb9f0b"
+  resolved "https://registry.npmjs.org/vite-plugin-dts/-/vite-plugin-dts-5.0.3.tgz#c4ca204d3bdd5c8d9d21420b4ff013c64efb9f0b"
   integrity sha512-gIth6NdCEHWPiiRMCK3N6C8WjvdsrtEQrmsiG8h6Ov+lFP+b07Y+wcs9H0H7n146l0PDTYK4cQN1vgeG1pMdRQ==
   dependencies:
     unplugin-dts "1.0.3"
@@ -12840,7 +12840,7 @@ whatwg-url@^16.0.0:
 
 whatwg-url@^17.1.0:
   version "17.1.0"
-  resolved "https://repo.splunkdev.net:443/artifactory/api/npm/npm/whatwg-url/-/whatwg-url-17.1.0.tgz#693144cd2060d324e73b15a717d1f38ecfb3f02e"
+  resolved "https://registry.npmjs.org/whatwg-url/-/whatwg-url-17.1.0.tgz#693144cd2060d324e73b15a717d1f38ecfb3f02e"
   integrity sha512-3GeworPmc2ZfEEHP7lEbUfBX/L75wdEsi0rLNhXcXxnoN5jyq0SL5gCy06SGW2cyTIZdTvWIDQNQoza++vKeaw==
   dependencies:
     "@exodus/bytes" "^1.15.1"
