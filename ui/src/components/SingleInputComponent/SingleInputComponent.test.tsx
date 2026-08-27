@@ -197,7 +197,7 @@ it('should fetch options from API when endpointUrl is provided', async () => {
     const { rerender } = render(<SingleInputComponent {...baseProps} />);
 
     await userEvent.click(screen.getByRole('combobox'));
-    await screen.findByRole('menuitem', { name: 'No matches' });
+    await screen.findByRole('option', { name: 'No matches' });
 
     // undefined value must be omitted
     const firstEntry = mockedEntries[0];
