@@ -5,7 +5,9 @@ from pytest_splunk_addon_ui_smartx.components.tabs import Tab
 from pytest_splunk_addon_ui_smartx.components.entity import Entity
 from pytest_splunk_addon_ui_smartx.components.controls.button import Button
 from pytest_splunk_addon_ui_smartx.components.controls.single_select import SingleSelect
-from pytest_splunk_addon_ui_smartx.components.controls.oauth_select import OAuthSelect
+from pytest_splunk_addon_ui_smartx.components.controls.oauth_select import (
+    OAuthSelect as SmartxOAuthSelect,
+)
 from pytest_splunk_addon_ui_smartx.components.controls.multi_select import MultiSelect
 from pytest_splunk_addon_ui_smartx.components.controls.checkbox import Checkbox
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
@@ -18,6 +20,18 @@ from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 
 
 from tests.ui import constants as C
+
+
+class OAuthSelect(SmartxOAuthSelect):
+    """Wait for React UI OAuth selects to settle before clicking them."""
+
+    def select(self, value):
+        self.wait_to_be_clickable("root")
+        return super().select(value)
+
+    def list_of_values(self):
+        self.wait_to_be_clickable("root")
+        return super().list_of_values()
 
 
 class AccountEntity(Entity):
