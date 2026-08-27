@@ -199,14 +199,16 @@ describe('CheckboxTree Component - Collapsed Groups', () => {
 
         // Expand Group 1 and verify rows are displayed
         const toggleGroup1Button = screen.getByRole('button', {
-            name: 'Toggle for Group 1',
+            name: 'Group 1',
+            expanded: false,
         });
         await user.click(toggleGroup1Button);
         expect(screen.getByLabelText('Row under Group 1')).toBeInTheDocument();
 
         // Expand Group 3 and verify rows are displayed
         const toggleGroup3Button = screen.getByRole('button', {
-            name: 'Toggle for Group 3',
+            name: 'Group 3',
+            expanded: false,
         });
         await user.click(toggleGroup3Button);
         expect(screen.getByLabelText('First row under Group 3')).toBeInTheDocument();

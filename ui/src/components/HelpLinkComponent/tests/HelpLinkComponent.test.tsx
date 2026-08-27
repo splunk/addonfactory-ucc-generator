@@ -84,5 +84,5 @@ it('Render one link in many lines', () => {
     const link = screen.getByRole('link');
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', 'https://splunk.github.io/addonfactory-ucc-generator/');
-    expect(link).toHaveTextContent('First Line Second Line Last line(Opens new window)');
+    expect(link).toHaveTextContent('First Line Second Line Last line\u2060(Opens new window)');
 });
