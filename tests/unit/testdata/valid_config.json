@@ -1394,6 +1394,36 @@
                 {
                     "name": "text",
                     "required": true
+                },
+                {
+                    "name": "animals",
+                    "validate": {
+                        "type": "Set",
+                        "values": [
+                            "cat",
+                            "dog",
+                            "wombat"
+                        ]
+                    }
+                },
+                {
+                    "name": "name",
+                    "validate": {
+                        "type": "Match",
+                        "name": "Name pattern",
+                        "pattern": "^[A-Z][a-z]+$"
+                    }
+                },
+                {
+                    "name": "urgency",
+                    "validate": {
+                        "type": "Map",
+                        "map": {
+                            "high": 3,
+                            "medium": 2.2,
+                            "low": "one"
+                        }
+                    }
                 }
             ],
             "examples": [

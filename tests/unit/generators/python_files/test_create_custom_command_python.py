@@ -66,6 +66,63 @@ def transforming_custom_search_command():
     ]
 
 
+@pytest.fixture
+def custom_search_command_validators():
+    return [
+        {
+            "commandName": "testcommand",
+            "commandType": "generating",
+            "fileName": "test.py",
+            "requiredSearchAssistant": True,
+            "description": "This is test command",
+            "syntax": "testcommand count=<event_count> text=<string>",
+            "usage": "public",
+            "arguments": [
+                {
+                    "name": "count",
+                    "required": True,
+                    "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
+                },
+                {
+                    "name": "max_word",
+                    "validate": {"type": "Integer", "maximum": 100},
+                },
+                {
+                    "name": "age",
+                    "validate": {"type": "Integer", "minimum": 18},
+                },
+                {"name": "text", "required": True, "defaultValue": "test_text"},
+                {"name": "contains"},
+                {"name": "fieldname", "validate": {"type": "Fieldname"}},
+                {
+                    "name": "animals",
+                    "validate": {"type": "Set", "values": ["cat", "dog", "wombat"]},
+                },
+                {
+                    "name": "name",
+                    "validate": {
+                        "type": "Match",
+                        "name": "Name pattern",
+                        "pattern": "^[A-Z][a-z]+$",
+                    },
+                },
+                {
+                    "name": "urgency",
+                    "validate": {
+                        "type": "Map",
+                        "map": {"high": 3, "medium": 2.2, "low": "one"},
+                    },
+                },
+                {
+                    "name": "volume",
+                    "validate": {"type": "Float", "minimum": 2.2, "maximum": 197.45},
+                    "required": True,
+                },
+            ],
+        }
+    ]
+
+
 def test_for_transforming_command_with_error(
     transforming_custom_search_command,
     global_config_all_json,
@@ -144,6 +201,37 @@ def test_for_transforming_command_without_map(
             ],
             "import_map": False,
         }
+    ]
+
+
+def test_for_search_command_validators(
+    global_config_all_json,
+    input_dir,
+    output_dir,
+    custom_search_command_validators,
+):
+    global_config_all_json._content["customSearchCommand"] = (
+        custom_search_command_validators
+    )
+    custom_command_py = CustomCommandPy(
+        global_config_all_json,
+        input_dir,
+        output_dir,
+    )
+
+    assert custom_command_py.commands_info[0]["list_arg"] == [
+        "count = Option(name='count', require=True, "
+        "validate=validators.Integer(minimum=5, maximum=10))",
+        "max_word = Option(name='max_word', require=False, validate=validators.Integer(maximum=100))",
+        "age = Option(name='age', require=False, validate=validators.Integer(minimum=18))",
+        "text = Option(name='text', require=True, default='test_text')",
+        "contains = Option(name='contains', require=False)",
+        "fieldname = Option(name='fieldname', require=False, validate=validators.Fieldname())",
+        "animals = Option(name='animals', require=False, validate=validators.Set('cat', 'dog', 'wombat'))",
+        "name = Option(name='name', require=False, validate=validators.Match('Name pattern', '^[A-Z][a-z]+$'))",
+        "urgency = Option(name='urgency', require=False, "
+        "validate=validators.Map(**{'high': 3, 'medium': 2.2, 'low': 'one'}))",
+        "volume = Option(name='volume', require=True, validate=validators.Float(minimum=2.2, maximum=197.45))",
     ]
 
 
@@ -240,6 +328,9 @@ class GeneratetextcommandCommand(GeneratingCommand):
     """
     count = Option(name='count', require=True, validate=validators.Integer(minimum=5, maximum=10))
     text = Option(name='text', require=True)
+    animals = Option(name='animals', require=False, validate=validators.Set('cat', 'dog', 'wombat'))
+    name = Option(name='name', require=False, validate=validators.Match('Name pattern', '^[A-Z][a-z]+$'))
+    urgency = Option(name='urgency', require=False, validate=validators.Map(**{'high': 3, 'medium': 2.2, 'low': 'one'}))
 
     def generate(self):
        return generate(self)
