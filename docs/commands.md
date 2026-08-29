@@ -104,6 +104,60 @@ It accepts the following parameters:
 
 * `--addon-name` - [required] add-on name.
 
+## `ucc-gen reverse`
+
+The `ucc-gen reverse` command is used to reverse-engineer a UCC project from a built add-on package.
+This allows you to extract the source structure from a built add-on, making it possible to modify and rebuild it.
+
+**Use cases:**
+- Recovering source from a built add-on when original sources are lost
+- Understanding the structure of an existing UCC add-on
+- Creating a modifiable project from a distributed add-on package
+
+**What gets extracted:**
+- ✅ `globalConfig.json` / `globalConfig.yaml` - Complete configuration
+- ✅ `app.manifest` - Add-on metadata
+- ✅ Source files (Python helpers, `.conf` files, static assets)
+- ✅ `lib/requirements.txt` - Regenerated with exact package versions
+
+**Limitations:**
+- ❌ Custom UI components (TypeScript/React) cannot be recovered from bundled JavaScript
+- ❌ Build scripts and development tooling are not included
+- ⚠️ Generated files (REST handlers, input wrappers) are excluded to avoid conflicts
+
+It accepts the following parameters:
+
+* `--addon-path` - [required] Path to the built add-on. Can be either:
+    - A directory containing the built add-on (e.g., `output/Splunk_TA_MyAddon`)
+    - A packaged `.tar.gz` / `.tgz` / `.spl` file (e.g., `Splunk_TA_MyAddon-1.0.0.tar.gz`)
+* `-o` / `--output` - [optional] Output path for the extracted project.
+    By default, it will be saved as `<addon_name>_source` in the current directory.
+* `--overwrite` - [optional] Overwrite existing output directory if it already exists.
+
+**Example usage:**
+
+```bash
+# Extract from a built directory
+ucc-gen reverse --addon-path output/Splunk_TA_MyAddon
+
+# Extract from a packaged .tar.gz file
+ucc-gen reverse --addon-path Splunk_TA_MyAddon-1.0.0.tar.gz
+
+# Extract from a .spl file (Splunk package)
+ucc-gen reverse --addon-path Splunk_TA_MyAddon.spl
+
+# Extract to a specific location
+ucc-gen reverse --addon-path output/Splunk_TA_MyAddon --output /path/to/project
+
+# Overwrite existing extraction
+ucc-gen reverse --addon-path output/Splunk_TA_MyAddon --overwrite
+
+# Then modify and rebuild:
+cd Splunk_TA_MyAddon_source
+# Make your changes...
+ucc-gen build
+```
+
 ## `ucc-gen package`
 
 `ucc-gen package` can be used for `v5.30.0` and later. It packages the add-on so it can be installed.
