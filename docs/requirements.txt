@@ -3,7 +3,7 @@
 #   /tmp/docs-pin-venv/bin/pip install mkdocs==... mkdocs-material==... mkdocstrings[python]==... mkdocs-print-site-plugin==...
 #   /tmp/docs-pin-venv/bin/pip freeze > docs/requirements.txt )
 mkdocs==1.6.1
-mkdocs-material==9.6.16
+mkdocs-material==9.7.7
 mkdocstrings[python]==0.29.1
 mkdocs-print-site-plugin==2.3.6
 
