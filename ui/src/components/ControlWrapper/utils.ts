@@ -17,6 +17,7 @@ export const excludeControlWrapperProps = <T extends object>(obj: T) =>
         'defaultValue', // value is provided anyway, so no need to pass defaultValue
         'dependencyValues',
         'encrypted',
+        'fetchStoredClearValue',
         'fileNameToDisplay',
         'handleChange',
         'mode',

@@ -54,6 +54,7 @@ export interface ControlWrapperProps {
         required?: boolean;
     };
     page?: string;
+    fetchStoredClearValue?: (field: string) => Promise<string | null>;
 }
 
 class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
@@ -109,6 +110,7 @@ class ControlWrapper extends React.PureComponent<ControlWrapperProps> {
                           addCustomValidator,
                           fileNameToDisplay: this.props.fileNameToDisplay,
                           mode: this.props.mode,
+                          fetchStoredClearValue: this.props.fetchStoredClearValue,
                           ...this?.props?.entity,
                           ...this.props?.modifiedEntitiesData,
                           page: this.props.page,
