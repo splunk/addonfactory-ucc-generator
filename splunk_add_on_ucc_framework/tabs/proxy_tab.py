@@ -56,8 +56,8 @@ DEFAULT_HOST = {
         },
         {
             "type": "regex",
-            "errorMsg": "Proxy Host should not have special characters",
-            "pattern": "^[a-zA-Z]\\w*$",
+            "errorMsg": "Proxy Host must be a valid hostname or IP address",
+            "pattern": "^[A-Za-z0-9]([A-Za-z0-9._:-]*[A-Za-z0-9])?$",
         },
     ],
     "field": "proxy_url",
