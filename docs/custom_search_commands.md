@@ -46,7 +46,7 @@ This configuration will generate a template Python file named `mycommandname.py`
 [mycommandname]
 filename = mycommandname.py
 chunked = true
-python.version = python3
+python.version = python3.9
 ```
 
  **NOTE:**
@@ -233,7 +233,7 @@ Generated stanza in `commands.conf` file
 [generatetextcommand]
 filename = generatetextcommand.py
 chunked = true
-python.version = python3
+python.version = python3.9
 ```
 
 Generated stanza in `searchbnf.conf` file

@@ -59,7 +59,7 @@ def test_commands_conf_generation(global_config_all_json, input_dir, output_dir)
         [generatetextcommand]
         filename = generatetextcommand.py
         chunked = true
-        python.version = python3
+        python.version = python3.9
         python.required = 3.7, 3.13
         """
     ).lstrip()

@@ -476,6 +476,8 @@ class TestAccount(UccTester):
         account = AccountPage(ucc_smartx_selenium_helper, ucc_smartx_rest_helper)
         account.entity.open()
         account.entity.name.set_value(_ACCOUNT_CONFIG_OAUTH["name"])
+        account.entity.multiple_select.wait_for("input")
+        account.entity.multiple_select.wait_for_values()
         account.entity.multiple_select.select("Option One")
         account.entity.auth_key.select("OAuth 2.0 - Authorization Code Grant Type")
         account.entity.client_id.set_value("demo")
