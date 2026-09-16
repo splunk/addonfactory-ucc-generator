@@ -25,7 +25,7 @@ pairs.
 ## `inputs.conf`
 
 `ucc-gen` generates a stanza for every input defined in the `globalConfig`
-file and sets `python.version` to `python3`.
+file and sets `python.version` to `python3.9`.
 
 ## `server.conf`
 

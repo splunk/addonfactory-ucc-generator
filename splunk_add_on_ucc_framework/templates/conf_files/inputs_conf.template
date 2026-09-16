@@ -1,6 +1,6 @@
 {% for input_name in input_names %}
 {{ "[" ~ input_name ~ "]"}}
-python.version = python3
+python.version = python3.9
 {% if supportedPythonVersion %}
 python.required = {{supportedPythonVersion}}
 {% endif %}

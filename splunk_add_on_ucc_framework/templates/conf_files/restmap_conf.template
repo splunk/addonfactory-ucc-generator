@@ -32,7 +32,7 @@ capability.{{key}} = {{value}}
 {% for endpoint in endpoints %}
 [admin_external:{{ endpoint.name }}]
 handlertype = python
-python.version = python3
+python.version = python3.9
 {% if supportedPythonVersion %}
 python.required = {{supportedPythonVersion}}
 {% endif %}
