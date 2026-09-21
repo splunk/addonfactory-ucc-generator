@@ -87,6 +87,25 @@ def test_global_config_custom_search_commands(global_config_all_json):
                     "validate": {"type": "Integer", "minimum": 5, "maximum": 10},
                 },
                 {"name": "text", "required": True},
+                {
+                    "name": "animals",
+                    "validate": {"type": "Set", "values": ["cat", "dog", "wombat"]},
+                },
+                {
+                    "name": "name",
+                    "validate": {
+                        "type": "Match",
+                        "name": "Name pattern",
+                        "pattern": "^[A-Z][a-z]+$",
+                    },
+                },
+                {
+                    "name": "urgency",
+                    "validate": {
+                        "type": "Map",
+                        "map": {"high": 3, "medium": 2.2, "low": "one"},
+                    },
+                },
             ],
             "examples": [
                 {
