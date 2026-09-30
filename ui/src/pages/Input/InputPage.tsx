@@ -31,6 +31,8 @@ import useQuery from '../../hooks/useQuery';
 import { PageContextProvider } from '../../context/PageContext';
 import { shouldHideForPlatform } from '../../util/pageContext';
 import { usePlatform } from '../../hooks/usePlatform';
+import { useInputsAvailability } from '../../hooks/useInputsAvailability';
+import InputsUnavailable from './InputsUnavailable';
 
 const Row = styled(ColumnLayout.Row)`
     padding: 5px 0px;
@@ -72,6 +74,7 @@ function InputPage(): ReactElement {
     const [entity, setEntity] = useState<EntityState>({ open: false });
     const unifiedConfigs = getUnifiedConfigs();
     const platform = usePlatform(unifiedConfigs, 'inputs');
+    const inputsAvailability = useInputsAvailability(unifiedConfigs);
 
     const inputsPage = unifiedConfigs.pages.inputs;
 
@@ -272,6 +275,14 @@ function InputPage(): ReactElement {
         },
         [activeTabId] // eslint-disable-line react-hooks/exhaustive-deps
     );
+    if (!inputsAvailability.loading && !inputsAvailability.available) {
+        return (
+            <ErrorBoundary>
+                <InputsUnavailable message={inputsAvailability.message} />
+            </ErrorBoundary>
+        );
+    }
+
     return (
         <ErrorBoundary>
             <PageContextProvider platform={platform}>
