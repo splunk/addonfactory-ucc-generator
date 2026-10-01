@@ -4301,10 +4301,10 @@
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.5.31.tgz#83276e1d450fea7d20dd15c3bbafbea5aada122d"
   integrity sha512-nBxuiuS9Lj5bPkPbWogPUnjxxWpkRniX7e5UBQDWl6Fsf4roq9wwV+cR7ezQ4zXswNvPIlsdj1slcLB7XCsRAw==
 
-"@xmldom/xmldom@^0.8.11", "@xmldom/xmldom@^0.8.13":
-  version "0.8.13"
-  resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.13.tgz#00d1dd940b218dff2e49309d410d8bb212159225"
-  integrity sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==
+"@xmldom/xmldom@^0.8.11", "@xmldom/xmldom@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.9.12.tgz#1f84c07cb95ccf28202299f77b5fd7fc257151e8"
+  integrity sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==
 
 ace-builds@^1.42.0:
   version "1.43.6"
