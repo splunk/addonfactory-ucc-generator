@@ -154,7 +154,9 @@ class AlertActionsConf(FileGenerator):
             template_file_path=["conf_files"], file_name="alert_actions_conf.template"
         )
         rendered_content = self._template.render(
-            alerts=self.alerts, supportedPythonVersion=self.supportedPythonVersion
+            alerts=self.alerts,
+            pythonVersion=self._global_config.meta.get("pythonVersion", "python3.9"),
+            supportedPythonVersion=self.supportedPythonVersion,
         )
         return {
             "file_name": self.conf_file,

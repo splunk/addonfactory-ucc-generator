@@ -22,6 +22,27 @@ Metadata contains general information about add-on build.
 | navColor                                                      | string  | Optional hex color for the app icon background in generated `default/data/ui/nav/default.xml`, for example `#65A637`.                           |
 | [os-dependentLibraries](./advanced/os-dependent_libraries.md) | array   | This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process. |
 | supported_themes                                              | array   | This feature is allows you provide the themes supported by your add-on. Supported values: `light`, `dark`. No default.                          |
-| supportedPythonVersion                                              | array   | This feature allows you to specify which python version your app would use (for Splunk v10.1 and above). No default.                          |
+| pythonVersion | string | Runtime written to `python.version` in generated `inputs.conf`, `restmap.conf`, `commands.conf`, and `alert_actions.conf`. Defaults to `python3.9`; set `python3` explicitly if the add-on must retain the legacy runtime setting. |
+| supportedPythonVersion | array | Versions written to `python.required` in generated `.conf` files on Splunk versions that support it. No default; for example, `["3.9", "3.13"]` generates `python.required = 3.9, 3.13`. |
 | isVisible | boolean | This option allows you to create apps which are not visible by default by setting isVisible=false. Default: true if globalConfig file exists in the repository, else false. |
 | showFooter | boolean | This option allows you to display the footer component on every page of add-on. Default: true if globalConfig file exists in the repository, else false. |
+
+To declare Python 3.9 and 3.13 for an add-on while selecting Python 3.9 on
+Splunk versions that use `python.version`, set:
+
+```json
+{
+  "meta": {
+    "pythonVersion": "python3.9",
+    "supportedPythonVersion": ["3.9", "3.13"]
+  }
+}
+```
+
+Add these properties to the existing `meta` object in `globalConfig.json`.
+`pythonVersion` controls the generated `python.version` setting; UCC writes
+`python3.9` when the property is omitted. `supportedPythonVersion` controls
+`python.required`; UCC omits that setting when the property is absent or empty.
+For an add-on that still needs the previous `python.version` setting, set
+`"pythonVersion": "python3"` explicitly and choose its supported versions
+separately.

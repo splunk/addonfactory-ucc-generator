@@ -168,6 +168,19 @@ def test_meta_conf_spl2_converter_version(schema_validate, config):
     schema_validate(config)
 
 
+@pytest.mark.parametrize("value", ["python3", "python3.9", "python3.13"])
+def test_meta_python_version_valid(schema_validate, config, value):
+    config["meta"]["pythonVersion"] = value
+    schema_validate(config)
+
+
+@pytest.mark.parametrize("value", ["python2", "python3.9\ninvalid = value", "3.9", 3.9])
+def test_meta_python_version_invalid(schema_validate, config, value):
+    config["meta"]["pythonVersion"] = value
+    with pytest.raises(ValidationError):
+        schema_validate(config)
+
+
 @pytest.mark.parametrize("value", ["#65A637", "#abc"])
 def test_meta_nav_color_valid(schema_validate, config, value):
     config["meta"]["navColor"] = value

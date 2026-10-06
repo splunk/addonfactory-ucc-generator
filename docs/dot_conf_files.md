@@ -25,7 +25,10 @@ pairs.
 ## `inputs.conf`
 
 `ucc-gen` generates a stanza for every input defined in the `globalConfig`
-file and sets `python.version` to `python3.9`.
+file and sets `python.version` to `python3.9` by default. Set
+[`meta.pythonVersion`](./metadata.md) to override this runtime in generated
+Python `.conf` files. Set `meta.supportedPythonVersion` separately to emit
+`python.required` where supported; older Splunk versions use `python.version`.
 
 ## `server.conf`
 

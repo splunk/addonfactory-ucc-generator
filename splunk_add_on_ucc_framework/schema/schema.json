@@ -2743,6 +2743,11 @@
           "default": true,
           "description": "Ability to show the footer component on every page of add-on"
         },
+        "pythonVersion": {
+          "description": "Python runtime for the generated python.version setting. Defaults to python3.9.",
+          "type": "string",
+          "pattern": "^python3(?:\\.[0-9]+)?$"
+        },
         "supportedPythonVersion":{
           "description": "This feature allows you to specify which python version your app would use.",
           "type": "array",
