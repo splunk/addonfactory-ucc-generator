@@ -1,22 +1,61 @@
 from pytest_splunk_addon_ui_smartx.pages.page import Page
 from pytest_splunk_addon_ui_smartx.components.base_component import Selector
 from pytest_splunk_addon_ui_smartx.components.base_component import BaseComponent
-from pytest_splunk_addon_ui_smartx.components.dropdown import Dropdown
+from pytest_splunk_addon_ui_smartx.components.dropdown import Dropdown as SmartxDropdown
 from pytest_splunk_addon_ui_smartx.components.entity import Entity
 from pytest_splunk_addon_ui_smartx.components.controls.button import Button
 from pytest_splunk_addon_ui_smartx.components.controls.checkbox import Checkbox
 from pytest_splunk_addon_ui_smartx.components.controls.learn_more import LearnMore
 from pytest_splunk_addon_ui_smartx.components.controls.textbox import TextBox
 from pytest_splunk_addon_ui_smartx.components.controls.single_select import SingleSelect
-from pytest_splunk_addon_ui_smartx.components.controls.multi_select import MultiSelect
+from pytest_splunk_addon_ui_smartx.components.controls.multi_select import (
+    MultiSelect as SmartxMultiSelect,
+)
 from pytest_splunk_addon_ui_smartx.components.controls.message import Message
 from pytest_splunk_addon_ui_smartx.components.input_table import InputTable
 from pytest_splunk_addon_ui_smartx.backend_confs import ListBackendConf
 from pytest_splunk_addon_ui_smartx.components.controls.toggle import Toggle
 from pytest_splunk_addon_ui_smartx.components.controls.textarea import TextArea
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    StaleElementReferenceException,
+)
 from selenium.webdriver.common.by import By
 
 from tests.ui import constants as C
+from tests.ui.pages.select_helpers import click_matching_option
+
+
+class Dropdown(SmartxDropdown):
+    def select(self, value):
+        self.wait_to_be_clickable("root")
+        self.root.click()
+        popover_id = "#" + self.root.get_attribute("data-test-popover-id")
+        self.elements["values"] = Selector(
+            select=popover_id
+            + ' [data-test="item"]:not([data-test-selected="true"]) [data-test="label"]'
+        )
+        return click_matching_option(self, "values", value)
+
+
+class MultiSelect(SmartxMultiSelect):
+    def select(self, value):
+        self.wait_to_be_clickable("input")
+        try:
+            self.input.click()
+        except ElementClickInterceptedException:
+            self.label_text.click()
+            self.wait_to_be_clickable("input")
+            self.input.click()
+        except StaleElementReferenceException:
+            self.wait_to_be_clickable("input")
+            self.input.click()
+
+        popover_id = "#" + self.root.get_attribute("data-test-popover-id")
+        self.elements["values"] = Selector(select=popover_id + ' [data-test="option"]')
+        click_matching_option(self, "values", value)
+        self.wait_for("input")
+        return True
 
 
 class InteractAllPrompt(BaseComponent):

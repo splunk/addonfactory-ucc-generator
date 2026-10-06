@@ -11,12 +11,23 @@ from pytest_splunk_addon_ui_smartx.alert_actions.components.single_select import
 )
 from pytest_splunk_addon_ui_smartx.alert_actions.components.toggle import AlertToggle
 from pytest_splunk_addon_ui_smartx.alert_actions.components.account_select import (
-    AlertAccountSelect,
+    AlertAccountSelect as SmartxAlertAccountSelect,
 )
 from pytest_splunk_addon_ui_smartx.alert_actions.components.table import AlertTable
 
-
 from tests.ui import constants as C
+from tests.ui.pages.select_helpers import click_matching_option
+
+
+class AlertAccountSelect(SmartxAlertAccountSelect):
+    def select(self, value, open_dropdown=True):
+        if open_dropdown:
+            self.wait_to_be_clickable("dropdown")
+            self.dropdown.click()
+
+        click_matching_option(self, "values", value)
+        self.wait_for("internal_container")
+        return True
 
 
 class TestAction(ActionEntity):
