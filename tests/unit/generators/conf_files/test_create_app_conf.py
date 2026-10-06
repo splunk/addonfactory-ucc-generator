@@ -3,7 +3,6 @@ from textwrap import dedent
 from tests.unit.helpers import get_testdata_file_path
 import os
 import shutil
-from time import time
 
 INPUT_DIR = os.path.join(get_testdata_file_path("app.manifest"), os.pardir)
 TEST_ADDONS_DIR = os.path.join(
@@ -60,8 +59,7 @@ def test_generate_conf(
 
     app_conf = AppConf(global_config_all_json, INPUT_DIR, output_dir)
     output = app_conf.generate()
-    # Build is calculated dynamically, we can't pass static value.
-    build = str(int(time()))
+    build = global_config_all_json.build_time
     expected_content = dedent(
         f"""
         [launcher]
