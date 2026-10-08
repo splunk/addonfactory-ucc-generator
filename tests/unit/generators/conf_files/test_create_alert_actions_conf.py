@@ -47,7 +47,7 @@ def test_generate_conf(mock_copy, global_config_for_alerts, input_dir, output_di
                     "'search?q=search%20index%3D\"_internal\"&earliest=0&latest='}"
                 ),
                 "param.name = xyz",
-                "python.version = python3",
+                "python.version = python3.9",
                 "is_custom = 1",
                 "payload_format = json",
                 "[test_alert_adaptive]",
@@ -62,7 +62,7 @@ def test_generate_conf(mock_copy, global_config_for_alerts, input_dir, output_di
                     '"drilldown_uri": "search?q=search%20index%3D\\"_internal\\"&earliest=0&latest="}'
                 ),
                 "param.name = xyz",
-                "python.version = python3",
+                "python.version = python3.9",
                 "is_custom = 1",
                 "payload_format = json",
                 "[test_alert_default]",
@@ -76,7 +76,7 @@ def test_generate_conf(mock_copy, global_config_for_alerts, input_dir, output_di
                     '"drilldown_uri": "search?q=search%20index%3D\\"_internal\\"&earliest=0&latest="}'
                 ),
                 "param.name = xyz",
-                "python.version = python3",
+                "python.version = python3.9",
                 "is_custom = 1",
                 "payload_format = json",
                 "[test_alert_no_support]",
@@ -91,7 +91,7 @@ def test_generate_conf(mock_copy, global_config_for_alerts, input_dir, output_di
                     "'search?q=search%20index%3D\"_internal\"&earliest=0&latest='}"
                 ),
                 "param.name = xyz",
-                "python.version = python3",
+                "python.version = python3.9",
                 "is_custom = 1",
                 "payload_format = json",
             ]

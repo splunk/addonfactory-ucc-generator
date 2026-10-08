@@ -99,6 +99,7 @@ class RestMapConf(FileGenerator):
             configuration_capability=self._global_config.capabilities(config=True),
             input_capability=self._global_config.capabilities(inputs=True),
             custom_endpoints=self.custom_endpoints,
+            pythonVersion=self._global_config.python_version,
             supportedPythonVersion=self.supportedPythonVersion,
         )
         return {

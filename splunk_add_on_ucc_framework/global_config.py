@@ -33,6 +33,8 @@ from splunk_add_on_ucc_framework.tabs import resolve_tab, LoggingTab
 Loader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 yaml_load = functools.partial(yaml.load, Loader=Loader)
 
+DEFAULT_PYTHON_VERSION = "python3.9"
+
 
 @dataclass(frozen=True)
 class OSDependentLibraryConfig:
@@ -274,6 +276,10 @@ class GlobalConfig:
     @property
     def schema_version(self) -> Optional[str]:
         return self.meta.get("schemaVersion")
+
+    @property
+    def python_version(self) -> str:
+        return self.meta.get("pythonVersion", DEFAULT_PYTHON_VERSION)
 
     @property
     def os_libraries(self) -> Optional[list[OSDependentLibraryConfig]]:

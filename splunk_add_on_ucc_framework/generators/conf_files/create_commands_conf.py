@@ -46,6 +46,7 @@ class CommandsConf(FileGenerator):
         )
         rendered_content = self._template.render(
             command_names=self.command_names,
+            pythonVersion=self._global_config.python_version,
             supportedPythonVersion=self.supportedPythonVersion,
         )
         return {

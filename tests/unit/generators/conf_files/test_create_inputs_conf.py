@@ -23,7 +23,7 @@ def test_generate_conf(
     expected_content = dedent(
         """
     [example_input_one]
-    python.version = python3
+    python.version = python3.9
     python.required = 3.7, 3.13
     input_one_radio = yes
     index = default
@@ -31,7 +31,7 @@ def test_generate_conf(
     use_existing_checkpoint = yes
     limit = 1000
     [example_input_two]
-    python.version = python3
+    python.version = python3.9
     python.required = 3.7, 3.13
     disabled = true
     index = default
@@ -142,7 +142,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
         == dedent(
             """
             [example_input_one]
-            python.version = python3
+            python.version = python3.9
             python.required = 3.7, 3.13
             disabled = true
             input_one_radio = yes
@@ -151,7 +151,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             use_existing_checkpoint = yes
             limit = 1000
             [example_input_two]
-            python.version = python3
+            python.version = python3.9
             python.required = 3.7, 3.13
             disabled = true
             index = default
@@ -269,7 +269,7 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     conf = inputs_conf.generate_conf()
     assert conf is not None
     assert conf["content"] == (
-        "[example_input_three]\npython.version = python3\npython.required = 3.7, 3.13\n"
+        "[example_input_three]\npython.version = python3.9\npython.required = 3.7, 3.13\n"
     )
 
     specs = inputs_conf.generate_conf_spec()

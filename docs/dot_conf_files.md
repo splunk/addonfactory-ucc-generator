@@ -25,7 +25,12 @@ pairs.
 ## `inputs.conf`
 
 `ucc-gen` generates a stanza for every input defined in the `globalConfig`
-file and sets `python.version` to `python3`.
+file and sets `python.version` to `python3.9` by default.
+[`meta.pythonVersion`](./metadata.md#python-runtime-settings) overrides
+`python.version`, and `meta.supportedPythonVersion` adds `python.required`,
+which Splunk Enterprise 10.2 and later use instead of `python.version`. The
+same settings apply to the generated `restmap.conf`, `commands.conf`, and
+`alert_actions.conf`.
 
 ## `server.conf`
 

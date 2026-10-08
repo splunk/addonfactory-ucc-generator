@@ -48,7 +48,7 @@ def stream_events(inputs: smi.InputDefinition, event_writer: smi.EventWriter):
     #     "host": "$decideOnStartup",
     #     "index": "<index_name>",
     #     "interval": "<interval_value>",
-    #     "python.version": "python3",
+    #     "python.version": "python3.9",
     #   },
     # }
     for input_name, input_item in inputs.inputs.items():
