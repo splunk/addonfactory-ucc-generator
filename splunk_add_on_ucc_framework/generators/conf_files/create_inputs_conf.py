@@ -131,7 +131,7 @@ class InputsConf(FileGenerator):
         rendered_content = self._template.render(
             input_names=self.inputs_conf_names,
             default_values=self.inputs_conf_params,
-            pythonVersion=self._global_config.meta.get("pythonVersion", "python3.9"),
+            pythonVersion=self._global_config.python_version,
             supportedPythonVersion=self.supportedPythonVersion,
         )
         return {

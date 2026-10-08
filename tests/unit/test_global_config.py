@@ -187,6 +187,18 @@ def test_global_config_update_addon_version(global_config_only_configuration):
     assert global_config_only_configuration.version == "1.1.1"
 
 
+def test_global_config_python_version_default(global_config_only_configuration):
+    global_config_only_configuration.meta.pop("pythonVersion", None)
+
+    assert global_config_only_configuration.python_version == "python3.9"
+
+
+def test_global_config_python_version_override(global_config_only_configuration):
+    global_config_only_configuration.meta["pythonVersion"] = "python3"
+
+    assert global_config_only_configuration.python_version == "python3"
+
+
 def test_global_config_expand(tmp_path):
     global_config_path = helpers.get_testdata_file_path("valid_config_expand.json")
 

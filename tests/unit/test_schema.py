@@ -168,15 +168,51 @@ def test_meta_conf_spl2_converter_version(schema_validate, config):
     schema_validate(config)
 
 
-@pytest.mark.parametrize("value", ["python3", "python3.9", "python3.13"])
+@pytest.mark.parametrize("value", ["python3", "python3.9"])
 def test_meta_python_version_valid(schema_validate, config, value):
     config["meta"]["pythonVersion"] = value
     schema_validate(config)
 
 
-@pytest.mark.parametrize("value", ["python2", "python3.9\ninvalid = value", "3.9", 3.9])
+@pytest.mark.parametrize(
+    "value",
+    [
+        "python2",
+        "python3.13",
+        "python3.0",
+        "python3.9\n",
+        "python3.9\ninvalid = value",
+        "3.9",
+        3.9,
+    ],
+)
 def test_meta_python_version_invalid(schema_validate, config, value):
     config["meta"]["pythonVersion"] = value
+    with pytest.raises(ValidationError):
+        schema_validate(config)
+
+
+@pytest.mark.parametrize(
+    "value", [["3.9"], ["3.9", "3.13"], ["3.7, 3.13"], ["3.7,3.13"], ["latest"]]
+)
+def test_meta_supported_python_version_valid(schema_validate, config, value):
+    config["meta"]["supportedPythonVersion"] = value
+    schema_validate(config)
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        ["3.9\n"],
+        ["3.9\n[injected]\nfilename = evil.py"],
+        ["python3.9"],
+        ["3"],
+        [""],
+        ["3.9, latest"],
+    ],
+)
+def test_meta_supported_python_version_invalid(schema_validate, config, value):
+    config["meta"]["supportedPythonVersion"] = value
     with pytest.raises(ValidationError):
         schema_validate(config)
 

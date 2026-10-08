@@ -22,13 +22,25 @@ Metadata contains general information about add-on build.
 | navColor                                                      | string  | Optional hex color for the app icon background in generated `default/data/ui/nav/default.xml`, for example `#65A637`.                           |
 | [os-dependentLibraries](./advanced/os-dependent_libraries.md) | array   | This feature allows you to download and unpack libraries with appropriate binaries for the indicated operating system during the build process. |
 | supported_themes                                              | array   | This feature is allows you provide the themes supported by your add-on. Supported values: `light`, `dark`. No default.                          |
-| pythonVersion | string | Runtime written to `python.version` in generated `inputs.conf`, `restmap.conf`, `commands.conf`, and `alert_actions.conf`. Defaults to `python3.9`; set `python3` explicitly if the add-on must retain the legacy runtime setting. |
-| supportedPythonVersion | array | Versions written to `python.required` in generated `.conf` files on Splunk versions that support it. No default; for example, `["3.9", "3.13"]` generates `python.required = 3.9, 3.13`. |
+| pythonVersion | string | Value written to `python.version` in generated `inputs.conf`, `restmap.conf`, `commands.conf`, and `alert_actions.conf`. Supported values: `python3.9` (default) and `python3`. See [Python runtime settings](#python-runtime-settings). |
+| supportedPythonVersion | array | Versions written to `python.required` in the same generated files, for example `["3.9", "3.13"]`. Each item is a version such as `3.13`, a comma-separated list such as `3.9, 3.13`, or `latest`. No default. See [Python runtime settings](#python-runtime-settings). |
 | isVisible | boolean | This option allows you to create apps which are not visible by default by setting isVisible=false. Default: true if globalConfig file exists in the repository, else false. |
 | showFooter | boolean | This option allows you to display the footer component on every page of add-on. Default: true if globalConfig file exists in the repository, else false. |
 
-To declare Python 3.9 and 3.13 for an add-on while selecting Python 3.9 on
-Splunk versions that use `python.version`, set:
+## Python runtime settings
+
+Splunk selects the Python interpreter for an input, REST handler, custom search
+command, or alert action from two settings in its `.conf` stanza:
+
+- `python.version` is used by Splunk 9.4 and 10.0. Splunk Enterprise 10.2
+  deprecates it.
+- `python.required` is used by Splunk Enterprise 10.2 and later, where it takes
+  precedence over `python.version`. Earlier versions ignore it.
+
+`meta.pythonVersion` sets `python.version` and `meta.supportedPythonVersion`
+sets `python.required`. To run on Python 3.9 on Splunk 9.4 and 10.0, and to
+declare Python 3.9 and 3.13 on Splunk Enterprise 10.2 and later, add both
+properties to the existing `meta` object in `globalConfig.json`:
 
 ```json
 {
@@ -39,10 +51,26 @@ Splunk versions that use `python.version`, set:
 }
 ```
 
-Add these properties to the existing `meta` object in `globalConfig.json`.
-`pythonVersion` controls the generated `python.version` setting; UCC writes
-`python3.9` when the property is omitted. `supportedPythonVersion` controls
-`python.required`; UCC omits that setting when the property is absent or empty.
-For an add-on that still needs the previous `python.version` setting, set
-`"pythonVersion": "python3"` explicitly and choose its supported versions
-separately.
+Each generated stanza then contains:
+
+```ini
+python.version = python3.9
+python.required = 3.9, 3.13
+```
+
+When `pythonVersion` is omitted, UCC writes `python.version = python3.9`. When
+`supportedPythonVersion` is absent or empty, UCC omits `python.required`.
+
+Set `"pythonVersion": "python3"` only if the add-on must keep the setting that
+UCC generated before version 7. On Splunk 9.4, `python3` selects Python 3.7,
+unless the `python.version` setting in `server.conf` is `force_python3` (the
+default), which runs Python 3.9 regardless of the stanza value.
+
+Other UCC settings with similar names control different things:
+
+| Setting | Controls | Example |
+|---------|----------|---------|
+| `meta.pythonVersion` | `python.version` in generated `.conf` files | `"python3.9"` |
+| `meta.supportedPythonVersion` | `python.required` in generated `.conf` files | `["3.9", "3.13"]` |
+| [`os-dependentLibraries[].python_version`](./advanced/os-dependent_libraries.md) | Python version of the wheels that `pip` downloads for an OS-dependent library | `"39"` |
+| [`--python-binary-name`](./commands.md) | Python interpreter that `ucc-gen build` uses to install libraries from `requirements.txt` | `python3` |

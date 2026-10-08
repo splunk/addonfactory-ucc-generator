@@ -1,5 +1,41 @@
 # What's New
 
+## UCC 7
+
+UCC 7 changes the default Python runtime of generated add-ons. Generated
+add-ons target Splunk 9.4 and later and no longer select Python 3.7 by default.
+
+### Generated `python.version` defaults to `python3.9`
+
+`ucc-gen build` now writes `python.version = python3.9` instead of
+`python.version = python3` to the generated `inputs.conf`, `restmap.conf`,
+`commands.conf`, and `alert_actions.conf`. On Splunk 9.4, `python3` selects
+Python 3.7 unless `server.conf` forces Python 3.9.
+
+This affects add-ons that still need the Python 3.7 runtime, for example
+add-ons that bundle [OS-dependent libraries](./advanced/os-dependent_libraries.md)
+only for Python 3.7. To keep the previous setting, add `pythonVersion` to the
+`meta` object in `globalConfig.json`:
+
+```json
+{
+  "meta": {
+    "pythonVersion": "python3"
+  }
+}
+```
+
+On Splunk Enterprise 10.2 and later, `python.required` takes precedence over
+`python.version`. To declare Python 3.9 and 3.13 there, also set
+`"supportedPythonVersion": ["3.9", "3.13"]`. For details, see
+[Python runtime settings](./metadata.md#python-runtime-settings).
+
+### Stricter `supportedPythonVersion` validation
+
+Each `meta.supportedPythonVersion` item must now be a version such as `3.13`,
+a comma-separated list such as `3.9, 3.13`, or `latest`. Other values, including
+values that contain line breaks, fail the build with a schema validation error.
+
 ## UCC 6
 
 This section describes the changes introduced in version 6.0.0 of addonfactory-ucc-generator. The main emphasis of this update is on eliminating outdated, deprecated, and discouraged features. These changes help streamline the codebase, improve maintainability, and ensure that only supported and recommended functionality remains available for developers.

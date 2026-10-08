@@ -155,7 +155,7 @@ class AlertActionsConf(FileGenerator):
         )
         rendered_content = self._template.render(
             alerts=self.alerts,
-            pythonVersion=self._global_config.meta.get("pythonVersion", "python3.9"),
+            pythonVersion=self._global_config.python_version,
             supportedPythonVersion=self.supportedPythonVersion,
         )
         return {
