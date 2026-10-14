@@ -544,7 +544,8 @@ class TestAccount(UccTester):
             "This is an example checkbox for the account entity",
         )
         self.assert_util(
-            account.entity.account_radio.get_help_text,
+            # Splunk UI can insert a word joiner before the external-link label.
+            lambda: account.entity.account_radio.get_help_text().replace("\u2060", ""),
             "This is an example radio button for the account entity. Read more about it here (Opens new window)",
         )
         self.assert_util(
