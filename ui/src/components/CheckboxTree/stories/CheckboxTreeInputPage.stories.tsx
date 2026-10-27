@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import BaseFormView from '../../BaseFormView/BaseFormView';
 import { setUnifiedConfig } from '../../../util/util';
 import { serverHandlers } from '../mocks/CheckboxTreeMocks';
@@ -28,7 +28,8 @@ const meta = {
         await userEvent.click(newInputBtn);
 
         const root = within(canvasElement.ownerDocument.body);
-        await expect(await root.findByRole('dialog')).toBeVisible();
+        const dialog = await root.findByRole('dialog');
+        await waitFor(() => expect(dialog).toBeVisible());
     },
 } satisfies Meta;
 
@@ -48,7 +49,8 @@ export const RequiredView: Story = {
         await userEvent.click(newInputBtn);
 
         const root = within(canvasElement.ownerDocument.body);
-        await expect(await root.findByRole('dialog')).toBeVisible();
+        const dialog = await root.findByRole('dialog');
+        await waitFor(() => expect(dialog).toBeVisible());
 
         await userEvent.click(await root.findByText('Add'));
     },
