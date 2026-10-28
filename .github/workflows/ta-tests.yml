@@ -31,7 +31,7 @@ env:
   POETRY_EXPORT_PLUGIN_VERSION: "1.9.0"
 jobs:
   build-ucc:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout UCC Framework Repository
         uses: actions/checkout@v7
@@ -62,7 +62,7 @@ jobs:
 
   determine-repos:
     # This job determines the repositories to run tests on based on the event type and inputs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       repos: ${{ steps.set-repos.outputs.repos }}
     steps:
@@ -97,7 +97,7 @@ jobs:
       matrix:
         target_repo: ${{ fromJSON(needs.determine-repos.outputs.repos) }}
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Generate GitHub App Token
         id: app-token

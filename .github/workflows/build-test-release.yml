@@ -18,7 +18,7 @@ env:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
@@ -28,7 +28,7 @@ jobs:
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - run: |
@@ -56,7 +56,7 @@ jobs:
       failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -72,7 +72,7 @@ jobs:
       block_mode: "policy"
 
   compliance-copyrights:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: apache/skywalking-eyes@v0.9.0
@@ -100,7 +100,7 @@ jobs:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -129,7 +129,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -163,7 +163,7 @@ jobs:
     name: test-smoke ${{ matrix.python-version }}
     needs:
       - build-ui
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -200,7 +200,7 @@ jobs:
       failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - build-ui
     steps:
@@ -234,7 +234,7 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write
       contents: read
@@ -292,12 +292,15 @@ jobs:
         if: failure()
         run: |
           docker cp splunk:/opt/splunk/var/log/splunk/splunkd.log ./splunkd.log
+          docker cp splunk:/opt/splunk/var/log/splunk/mongod.log ./mongod.log || true
       - name: Upload splunkd.log to GitHub Check
         uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: test-ui-splunkd-splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
-          path: ./splunkd.log
+          path: |
+            ./splunkd.log
+            ./mongod.log
       - uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
@@ -307,7 +310,7 @@ jobs:
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -343,7 +346,7 @@ jobs:
     if: |
       !cancelled() &&
       needs.build-test-addon.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -372,7 +375,7 @@ jobs:
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - meta
       - build-test-addon
@@ -418,7 +421,7 @@ jobs:
       - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
@@ -451,7 +454,7 @@ jobs:
       - semgrep
       - pre-commit
       - all-checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write
       contents: read
