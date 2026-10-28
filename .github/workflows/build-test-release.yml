@@ -292,12 +292,15 @@ jobs:
         if: failure()
         run: |
           docker cp splunk:/opt/splunk/var/log/splunk/splunkd.log ./splunkd.log
+          docker cp splunk:/opt/splunk/var/log/splunk/mongod.log ./mongod.log || true
       - name: Upload splunkd.log to GitHub Check
         uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: test-ui-splunkd-splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
-          path: ./splunkd.log
+          path: |
+            ./splunkd.log
+            ./mongod.log
       - uses: dorny/test-reporter@v3
         if: success() || failure()
         with:
