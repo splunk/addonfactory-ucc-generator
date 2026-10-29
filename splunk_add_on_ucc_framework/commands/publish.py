@@ -26,6 +26,8 @@ import logging
 
 logger = logging.getLogger("ucc_gen")
 
+LOGIN_URL = "https://api.splunk.com/2.0/rest/login/splunk"
+
 
 def encode_multipart_formdata(
     fields: dict[str, str], files: dict[str, str]
@@ -61,14 +63,34 @@ def encode_multipart_formdata(
     return content_type, body
 
 
+def get_auth_token(username: str, password: str) -> str:
+    """Exchanges Splunk account credentials for a JWT accepted by the Splunkbase API."""
+    auth_header = base64.b64encode(f"{username}:{password}".encode()).decode("utf-8")
+    context = ssl.create_default_context(cafile=certifi.where())
+
+    request = urllib.request.Request(LOGIN_URL, method="GET")
+    request.add_header("Authorization", f"Basic {auth_header}")
+    try:
+        with urllib.request.urlopen(request, context=context) as response:
+            response_data = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        error_msg = e.read().decode()
+        logger.error(f"Failed to authenticate with Splunk API. {error_msg}")
+        raise
+
+    token = (response_data.get("data") or {}).get("token")
+    if not token:
+        raise ValueError("Splunk API login response did not contain a token.")
+    return str(token)
+
+
 def upload_package(
     app_id: int,
     package_path: str,
     splunk_versions: str,
     cim_versions: str,
     visibility: bool,
-    username: str,
-    password: str,
+    token: str,
 ) -> str:
     upload_url = f"https://splunkbase.splunk.com/api/v1/app/{app_id}/new_release/"
 
@@ -84,12 +106,11 @@ def upload_package(
     }
 
     content_type, body = encode_multipart_formdata(fields, files)
-    auth_header = base64.b64encode(f"{username}:{password}".encode()).decode("utf-8")
     context = ssl.create_default_context(cafile=certifi.where())
 
     request = urllib.request.Request(upload_url, data=body, method="POST")
     request.add_header("Content-Type", content_type)
-    request.add_header("Authorization", f"Basic {auth_header}")
+    request.add_header("Authorization", f"Bearer {token}")
     try:
         with urllib.request.urlopen(request, context=context) as response:
             response_data = response.read().decode("utf-8")
@@ -108,15 +129,12 @@ def upload_package(
         raise
 
 
-def check_package_validation(
-    package_upload_id: str, username: str, password: str
-) -> None:
+def check_package_validation(package_upload_id: str, token: str) -> None:
     url = f"https://splunkbase.splunk.com/api/v1/package/{package_upload_id}/"
-    auth_header = base64.b64encode(f"{username}:{password}".encode()).decode("utf-8")
     context = ssl.create_default_context(cafile=certifi.where())
 
     request = urllib.request.Request(url, method="GET")
-    request.add_header("Authorization", f"Basic {auth_header}")
+    request.add_header("Authorization", f"Bearer {token}")
 
     try:
         with urllib.request.urlopen(request, context=context) as response:
@@ -137,14 +155,14 @@ def publish_package(
     username: str,
     password: str,
 ) -> None:
+    token = get_auth_token(username, password)
     package_upload_id = upload_package(
         app_id,
         package_path,
         splunk_versions,
         cim_versions,
         visibility,
-        username,
-        password,
+        token,
     )
     if package_upload_id:
-        check_package_validation(package_upload_id, username, password)
+        check_package_validation(package_upload_id, token)
