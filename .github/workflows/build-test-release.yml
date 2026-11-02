@@ -234,7 +234,8 @@ jobs:
 
   test-ui:
     name: test-ui Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
-    runs-on: ubuntu-24.04
+    # Splunk 10.2/10.4 bundled MongoDB 8.0 refuses to start on kernel 6.19+ (SERVER-121912); 22.04 runners use 6.8
+    runs-on: ubuntu-22.04
     permissions:
       id-token: write
       contents: read
@@ -375,7 +376,8 @@ jobs:
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    runs-on: ubuntu-24.04
+    # See test-ui: Splunk 10.2/10.4 KVStore can't start on kernel 6.19+
+    runs-on: ubuntu-22.04
     needs:
       - meta
       - build-test-addon
