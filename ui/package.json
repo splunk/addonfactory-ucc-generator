@@ -145,6 +145,7 @@
   },
   "resolutions": {
     "nanoid": "3.3.18",
+    "jest-runtime": "30.4.2",
     "@npmcli/git": "^2.1.0",
     "@types/react": "^18.3.31",
     "css-what": "^5.1.0",
