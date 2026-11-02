@@ -123,7 +123,7 @@ def test_restmap_conf_spec_generation(global_config_all_json, input_dir, output_
     expected_content = "\n".join(
         [
             "[admin_external:<uniqueName>]",
-            "python.required = {3.9|3.13}",
+            "python.required = 3.9, 3.13",
             "* For Python scripts only, selects which Python version to use.",
             '* Set to "3.9" to use the Python 3.9 version.',
             '* Set to "3.13" to use the Python 3.13 version.',

@@ -74,7 +74,7 @@ def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
                 '"YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
                 "use_existing_checkpoint = Data input already exists. "
                 "Select `No` if you want to reset the data collection. (Default: yes)",
-                "python.required = {3.9|3.13}",
+                "python.required = 3.9, 3.13",
                 "* For Python scripts only, selects which Python version to use.",
                 '* Set to "3.9" to use the Python 3.9 version.',
                 '* Set to "3.13" to use the Python 3.13 version.',
@@ -97,7 +97,7 @@ def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
                 "records.  The default is 90 days before today.",
                 "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the "
                 "data collection. (Default: yes)",
-                "python.required = {3.9|3.13}",
+                "python.required = 3.9, 3.13",
                 "* For Python scripts only, selects which Python version to use.",
                 '* Set to "3.9" to use the Python 3.9 version.',
                 '* Set to "3.13" to use the Python 3.13 version.',
@@ -184,7 +184,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             'format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
             "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
             "collection. (Default: yes)",
-            "python.required = {3.9|3.13}",
+            "python.required = 3.9, 3.13",
             "* For Python scripts only, selects which Python version to use.",
             '* Set to "3.9" to use the Python 3.9 version.',
             '* Set to "3.13" to use the Python 3.13 version.',
@@ -207,7 +207,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             "index records.  The default is 90 days before today.",
             "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
             "collection. (Default: yes)",
-            "python.required = {3.9|3.13}",
+            "python.required = 3.9, 3.13",
             "* For Python scripts only, selects which Python version to use.",
             '* Set to "3.9" to use the Python 3.9 version.',
             '* Set to "3.13" to use the Python 3.13 version.',
