@@ -251,3 +251,16 @@ const CustomDateInput = React.lazy(() => import("./DateInput"));
 ```
 
 This approach imports the final `DateInput` component. The `CustomComponentDatePicker` acts as a wrapper to control rendering and handle data flow.
+
+
+## Shipped dependency evidence
+
+With inventory enabled, UCC's context builder emits `dependency-chunks.json` alongside final chunks,
+replacing the fragment belonging to the previous entry build. It consumes UCC
+library provenance maps so prebundled dependencies can still be attributed after
+tree shaking. Enable the add-on's final inventory with
+`ucc-gen build --build-custom-ui --dependency-manifest`, or pass
+`--dependency-manifest` directly to `ucc-gen-ui`. Ordinary context builds leave
+the collector disabled. Inventory builds default to an 8 GiB Node heap unless
+you set `NODE_OPTIONS`. See
+[the inventory contract and limits](../../commands.md#shipped-dependency-inventory).

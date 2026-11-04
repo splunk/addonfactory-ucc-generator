@@ -123,6 +123,39 @@ jobs:
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry build
+      - uses: actions/download-artifact@v8
+        with:
+          name: UCC-UI-lib-tarball
+          path: packed-ui/
+      - name: Verify frontend evidence in actual distributions
+        run: |
+          poetry run python - <<'PYDIST'
+          import hashlib
+          import json
+          import tarfile
+          import zipfile
+          from pathlib import Path
+
+          with zipfile.ZipFile(next(Path("dist").glob("*.whl"))) as wheel:
+              fragments = [p for p in wheel.namelist() if p.endswith("/dependency-chunks.json")]
+              assert fragments, "Core frontend fragment missing from wheel"
+              for fragment in fragments:
+                  base = fragment.rsplit("/", 1)[0]
+                  for chunk in json.loads(wheel.read(fragment))["chunks"]:
+                      assert hashlib.sha256(wheel.read(base + "/" + chunk["path"])).hexdigest() == chunk["sha256"]
+          with tarfile.open(next(Path("packed-ui").glob("*.tgz"))) as package:
+              names = package.getnames()
+              assert "package/cli/dependency-manifest.cjs" in names
+              assert "package/cli/dependency-manifest.d.cts" in names
+              metadata = json.load(package.extractfile("package/package.json"))
+              assert "./dependency-manifest" in metadata["exports"]
+              maps = [name for name in names if name.endswith(".js.map")]
+              assert maps, "Library identity maps missing from npm package"
+              for name in maps:
+                  source_map = json.load(package.extractfile(name))
+                  assert not source_map.get("sourcesContent")
+                  assert all(s.startswith(("ucc-package:", "ucc-generated:")) for s in source_map["sources"])
+          PYDIST
       - uses: actions/upload-artifact@v7
         with:
           name: UCC-build

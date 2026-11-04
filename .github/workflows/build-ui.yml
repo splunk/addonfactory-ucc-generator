@@ -17,6 +17,12 @@ jobs:
         run: yarn run lint
       - name: Unit test
         run: yarn run test
+      - name: Dependency inventory fixtures
+        run: |
+          yarn test:dependency-manifest
+          rollup2_dir=$(mktemp -d)
+          npm install --prefix "$rollup2_dir" --no-save rollup@2.67.0
+          ROLLUP_MODULE="$rollup2_dir/node_modules/rollup" yarn test:dependency-manifest
       - name: Build lib and publish dry run
         run: npm publish --provenance --access public --dry-run
       - name: Pack tarball

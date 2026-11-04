@@ -470,3 +470,14 @@ def write_manifest(
         if temporary:
             temporary.unlink(missing_ok=True)
     return destination
+
+
+def verify_manifest(root: Path) -> None:
+    """Verify the saved input set without rerunning any build producer."""
+    data = _read_json(root / _MANIFEST)
+    if data.get("schema_version") != 1 or not isinstance(data.get("inputs"), dict):
+        raise InventoryError("Unsupported dependency manifest; rebuild the add-on")
+    if data["inputs"] != snapshot_inputs(root):
+        raise InventoryError(
+            "Dependency inventory inputs changed; rebuild the add-on before packaging"
+        )
