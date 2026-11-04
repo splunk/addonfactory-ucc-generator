@@ -38,6 +38,7 @@ It takes the following parameters:
     Example:  `--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"`
 
 * `--build-custom-ui` - [optional] Additional flag that will trigger build of custom UI repo (execute build script from `./ui` repository).
+* `--dependency-manifest` - [optional] inventory shipped Python distributions, frontend packages, and Go modules in `dependency-manifest.json`. See [Shipped dependency inventory](#shipped-dependency-inventory).
 * `--overwrite` - [optional] overwrites the already existing add-on directory. By default, you can't build an add-on to an already existing directory.
 
 ### Verbose mode
@@ -165,3 +166,105 @@ It accepts the following parameters:
 Caution: Packages uploaded with `--make-visible` flag cannot be deleted or updated later.
 
 > **Note:** For any reason if the user wants to update the build package for particular version which was uploaded earlier, they'll have to delete the previously uploaded build first from the Splunkbase UI (This is only possible if the package was previously uploaded without `--make-visible` flag).
+
+
+## Shipped dependency inventory
+
+Opt in when building, then package the same output directory:
+
+```bash
+ucc-gen build --source package --dependency-manifest
+ucc-gen package --path output/<addon-name>
+```
+
+The add-on root contains `dependency-manifest.json`. Its version 1 schema has
+`schema_version`, `name`, `version`, `components`, and `inputs`, plus optional
+`first_party_frontend` path/hash records for copied TA source scripts. Components are
+sorted by ecosystem/name/version, with sorted occurrences containing relative
+artifact paths, SHA-256 hashes, and target details. Different versions and
+platform locations remain visible. There is no generation timestamp.
+
+| Ecosystem | Identity source | Interpretation |
+| --- | --- | --- |
+| `pypi` | Final `lib/**/*.dist-info/METADATA` | Installed distribution Name/Version, including transitive distributions |
+| `npm` | Mapped source contributions in final frontend chunks | Emitted code from the standard UCC UI and instrumented custom builds |
+| `golang` | `go version -m` on final native binaries with Go build information | Recorded dependency modules and replacements, with binary hashes and recorded build targets |
+
+Python platform occurrences retain their configured OS/platform/Python values
+and WHEEL tags. Python versions are normalized to major/minor; occurrences
+matching several descriptions include `configured_targets`. Common occurrences
+record wheel tags without claiming compatibility with the build interpreter. Compatibility is checked against the configured target, including
+ABI3 and the observed macOS/manylinux tag variants, rather than the build host.
+Common `lib` placement does not assert compatibility with every platform. A tag
+check does not prove that runtime imports will succeed.
+
+Frontend evidence is generated during each bundler build. UCC carries package
+identities through its existing library prebundle and counts surviving mapped
+sources after tree shaking. The final project's own root is excluded; an
+installed UCC library used by another project is a dependency. Development
+packages are not included merely because they appear in a lockfile. Package-owning
+modules with rendered code but no corresponding mapped contribution fail the
+build, including unsupported map-less transforms, JSON-only dependencies, and
+unrecognized source path rewrites. Rendered module membership is a gap check;
+it is not used to add packages whose code may have been removed during minification.
+
+Copied scripts under `appserver/static` are treated as first-party when their
+bytes match the TA source tree. Producer package evidence takes precedence over
+this classification. This supports documented custom hooks; it does not inspect
+separately vendored dependencies inside TA source scripts.
+
+For a custom Rollup build, install a released UCC npm package exporting the
+helper and register it after code-changing plugins:
+
+```js
+import dependencyManifest from '@splunk/add-on-ucc-framework/dependency-manifest';
+
+// In the existing Rollup plugins list:
+dependencyManifest({ producer: 'custom-ui' });
+```
+
+Use the npm package's declared Node engine. The supported producer integrations
+are the UCC Vite configurations and the Rollup 2 build used by AWS. A separate
+shell hook needs this producer; UCC cannot recover its module graph from the
+Python subprocess invocation. `dependency-chunks.json` accompanies the emitted
+chunks. UCC context builds enable evidence when invoked by
+`ucc-gen build --build-custom-ui --dependency-manifest`, or directly with
+`ucc-gen-ui ta_name=<name> --dependency-manifest`. The context collector is off
+by default. Enabled context builds use an 8 GiB Node heap unless `NODE_OPTIONS`
+sets an explicit heap limit; other Node options are preserved. Source-map composition adds build-time memory and processing. They replace their fragment with the entry.
+Optional Dashboard chunks omitted from the final output contribute no packages.
+Final JavaScript without producer records or copied first-party source evidence,
+and chunks with stale hashes, fail an enabled inventory build.
+Maps requested only for evidence are removed from final UI output; explicit
+source maps and library provenance maps remain.
+
+Go must be available on PATH only when an enabled build detects Go binaries.
+The collector invokes `go version -m`, never the packaged binary. Missing tooling,
+unreadable detected build information, or unversioned local replacements fail the
+build. The product does not download a toolchain or fall back to source go.mod.
+
+Collection runs after packaging hooks and custom UI generation. Package creation
+checks the saved dependency input set and hashes, including app.manifest identity,
+before opening an archive. Rebuild if those inputs change. This verification does
+not rerun installers or bundlers. Legacy directories without a manifest remain
+packageable; builds without the flag remove stale inventories and producer fragments.
+The core, library, and context producers are opt-in through
+`UCC_DEPENDENCY_MANIFEST=1`. Release CI enables core and library evidence so the
+published artifacts support downstream inventory builds. The npm library includes
+provenance maps and the helper's codec dependency; ordinary consumer builds do
+not activate collection unless requested.
+
+**Build failure behavior change:** previously swallowed build exceptions and
+failed custom UI builds now return nonzero, with or without the inventory flag.
+CI integrations relying on a successful exit after these failures must be corrected.
+
+### Confidence and limits
+
+This is a reproducible package inventory under the supported build contract,
+not an unconditional proof of 100% completeness. Python identities depend on
+installed metadata being preserved and consistent with the retained code; frontend attribution depends on preserved source
+mappings; Go identities depend on recognizable embedded build information.
+The build rejects detected gaps and stale evidence, but cannot reconstruct
+provenance that upstream never supplied. Arbitrary bundlers, separate vendored
+code discovery, runtime reachability, license text, and copyright resolution
+are outside this feature. Existing licenses.txt generation remains separate.

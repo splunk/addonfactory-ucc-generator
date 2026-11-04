@@ -3,8 +3,15 @@ import { defineConfig, PluginOption } from 'vite';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import license from 'rollup-plugin-license';
+import { createRequire } from 'node:module';
+import { configDefaults } from 'vitest/config';
 import type { ViteUserConfig as VitestUserConfigInterface } from 'vitest/config';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import type dependencyManifestFactory from './cli/dependency-manifest.cjs';
+
+const dependencyManifest: typeof dependencyManifestFactory = createRequire(import.meta.url)(
+    './cli/dependency-manifest.cjs'
+);
 
 const proxyTargetUrl = 'http://localhost:8000';
 const devServerPort = 5173;
@@ -66,6 +73,7 @@ const reactHmrWorkaround = {
 
 const vitestTestConfig: VitestUserConfigInterface = {
     test: {
+        exclude: [...configDefaults.exclude, 'cli/dependency-manifest.test.cjs'],
         watch: false,
         globals: true,
         environment: 'jsdom',
@@ -144,9 +152,17 @@ const splunkPathRewriter = {
 
 export default defineConfig(({ mode }) => {
     const DEBUG = mode !== 'production';
+    const collector =
+        process.env.UCC_DEPENDENCY_MANIFEST === '1'
+            ? dependencyManifest({ producer: 'ucc-ui' })
+            : undefined;
     return {
         base: '',
         plugins: [
+            collector && {
+                ...collector,
+                generateBundle: { order: 'post', handler: collector.generateBundle },
+            },
             reactHmrWorkaround,
             react(),
             checker({

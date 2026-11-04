@@ -61,4 +61,5 @@ jobs:
             npm publish --provenance --access public
           fi
         env:
+          UCC_DEPENDENCY_MANIFEST: "1"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

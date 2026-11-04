@@ -49,6 +49,23 @@ module.exports = {
     },
     overrides: [
         {
+            files: ['cli/dependency-manifest*.cjs'],
+            env: { node: true },
+            rules: {
+                '@typescript-eslint/no-var-requires': 'off',
+                // These build-time Node files do not require browser iterator polyfills.
+                'no-restricted-syntax': 'off',
+                'no-continue': 'off',
+                // Rollup's documented generateBundle API mutates bundle assets.
+                'no-param-reassign': 'off',
+                'jest/expect-expect': 'off',
+            },
+        },
+        {
+            files: ['cli/dependency-manifest.test.cjs'],
+            rules: { 'import/no-dynamic-require': 'off' },
+        },
+        {
             files: ['**/*.test.tsx'], // Apply only to .test.tsx files
             extends: ['plugin:testing-library/react'], // Enables Testing Library rules
             plugins: ['testing-library'],

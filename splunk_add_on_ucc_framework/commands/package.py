@@ -16,6 +16,8 @@
 import logging
 import sys
 import os
+from pathlib import Path
+from splunk_add_on_ucc_framework import dependency_manifest
 import tarfile
 from typing import Optional
 
@@ -39,6 +41,14 @@ def package(path_to_built_addon: str, output_directory: Optional[str] = None) ->
     and version.
     """
     logger.info(f"Packaging app at {path_to_built_addon}")
+    root = Path(path_to_built_addon)
+    if (root / "dependency-manifest.json").exists():
+        try:
+            dependency_manifest.verify_manifest(root)
+        except dependency_manifest.InventoryError as error:
+            logger.error(str(error))
+            sys.exit(1)
+
     app_manifest_path = os.path.join(
         path_to_built_addon, app_manifest_lib.APP_MANIFEST_FILE_NAME
     )

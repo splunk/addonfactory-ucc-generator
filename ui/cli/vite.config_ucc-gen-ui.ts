@@ -6,6 +6,12 @@ import { unlinkSync } from 'fs';
 import react from '@vitejs/plugin-react';
 import checker from 'vite-plugin-checker';
 import { globSync } from 'glob';
+import { createRequire } from 'node:module';
+import type dependencyManifestFactory from './dependency-manifest.cjs';
+
+const dependencyManifest: typeof dependencyManifestFactory = createRequire(import.meta.url)(
+    './dependency-manifest.cjs'
+);
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
@@ -40,6 +46,11 @@ const outputDir =
         ? resolve(paramOutputDir, TA_NAME, 'appserver/static/js/build')
         : resolve(uiDir, '../output', TA_NAME, 'appserver/static/js/build');
 
+const collector =
+    process.env.UCC_DEPENDENCY_MANIFEST === '1'
+        ? dependencyManifest({ producer: 'custom-ui' })
+        : undefined;
+
 export default defineConfig({
     build: {
         outDir: outputDir,
@@ -61,6 +72,10 @@ export default defineConfig({
     },
     logLevel: 'info',
     plugins: [
+        collector && {
+            ...collector,
+            generateBundle: { order: 'post', handler: collector.generateBundle },
+        },
         react(),
         checker({
             typescript: true,
@@ -74,6 +89,7 @@ export default defineConfig({
                     `${outputDir}/**/*.js`,
                     `${outputDir}/**/*.js.map`,
                     `${outputDir}/**/*.txt`,
+                    `${outputDir}/dependency-chunks.json`,
                 ]);
 
                 // Delete each file

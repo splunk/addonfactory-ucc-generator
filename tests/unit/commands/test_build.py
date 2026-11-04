@@ -392,14 +392,16 @@ def test_uncaught_exception(mock_get_build_output_path, mock_os_path, caplog):
     )
     expected_params = f"&ucc_version={__version__}&system_info={platform.system()}"
 
-    generate(
-        source="source/path",
-        addon_version="1.0.0",
-        python_binary_name="python3",
-        verbose_file_summary_report=False,
-        pip_version="latest",
-        pip_legacy_resolver=False,
-    )
+    with pytest.raises(SystemExit) as error:
+        generate(
+            source="source/path",
+            addon_version="1.0.0",
+            python_binary_name="python3",
+            verbose_file_summary_report=False,
+            pip_version="latest",
+            pip_legacy_resolver=False,
+        )
+    assert error.value.code == 1
 
     whitespaces = [el for el in caplog.messages[-1].split("https")[1] if el.isspace()]
 
@@ -445,3 +447,68 @@ def test_get_num_of_args(tmp_path):
     assert _get_num_of_args("some_function", str(file_path)) == 3
     assert _get_num_of_args("another_function", str(file_path)) == 0
     assert _get_num_of_args("nonexistent_function", str(file_path)) is None
+
+
+@pytest.mark.parametrize("enabled", [False, True])
+def test_failed_build_exit_status(monkeypatch, caplog, enabled):
+    from splunk_add_on_ucc_framework.commands import build
+
+    def fail(_binary):
+        raise RuntimeError("failure before inventory collection")
+
+    monkeypatch.setattr(build, "_get_python_version_from_executable", fail)
+    kwargs = {"dependency_manifest": True} if enabled else {}
+    with pytest.raises(SystemExit) as error:
+        build.generate("unused", **kwargs)
+    assert error.value.code == 1
+    assert "failure before inventory collection" in caplog.text
+
+
+def test_custom_ui_failure_returns_nonzero(monkeypatch):
+    import subprocess
+    from splunk_add_on_ucc_framework.commands import build
+
+    monkeypatch.setattr(build.os.path, "isdir", lambda _: True)
+    monkeypatch.setattr(build.os.path, "isfile", lambda _: True)
+    monkeypatch.setattr(build.shutil, "which", lambda _: "/tool")
+
+    def fail(*_args, **_kwargs):
+        raise subprocess.CalledProcessError(1, ["yarn", "build"])
+
+    monkeypatch.setattr(build, "yarn_build_custom_ui_repo", fail)
+    with pytest.raises(SystemExit) as error:
+        build.build_ui("/tmp/package")
+    assert error.value.code == 1
+
+
+@pytest.mark.parametrize("manager", ["yarn", "npm"])
+@pytest.mark.parametrize("enabled", [False, True])
+def test_custom_ui_inventory_environment(monkeypatch, manager, enabled):
+    from splunk_add_on_ucc_framework.commands import build
+
+    run = MagicMock()
+    monkeypatch.setattr(build.subprocess, "run", run)
+    monkeypatch.delenv("UCC_DEPENDENCY_MANIFEST", raising=False)
+    builder = getattr(build, f"{manager}_build_custom_ui_repo")
+    builder("/tmp/ui", False, dependency_manifest=enabled)
+    install, compile_ui = run.call_args_list
+    assert "env" not in install.kwargs
+    if enabled:
+        assert compile_ui.kwargs["env"]["UCC_DEPENDENCY_MANIFEST"] == "1"
+    else:
+        assert compile_ui.kwargs.get("env") is None
+
+
+def test_build_ui_propagates_inventory_flag(monkeypatch):
+    from splunk_add_on_ucc_framework.commands import build
+
+    monkeypatch.setattr(build.os.path, "isdir", lambda _: True)
+    monkeypatch.setattr(build.os.path, "isfile", lambda _: True)
+    monkeypatch.setattr(build.shutil, "which", lambda _: "/tool")
+    builder = MagicMock()
+    monkeypatch.setattr(build, "yarn_build_custom_ui_repo", builder)
+    monkeypatch.setenv("CI", "false")
+    build.build_ui("/tmp/package", dependency_manifest=True)
+    builder.assert_called_once_with(
+        "/tmp/package/../ui", False, dependency_manifest=True
+    )

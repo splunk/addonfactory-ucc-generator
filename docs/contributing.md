@@ -270,3 +270,30 @@ gh pr merge main --auto --merge
 - After release is done, announce it to community on slack channels:
     + [Internal UCC channel](https://splunk.enterprise.slack.com/archives/C03T8QCHBTJ)
     + [Splunk Usergroup UCC channel](https://splunk-usergroups.slack.com/archives/C03SG3ZL4S1)
+
+
+## Dependency inventory validation
+
+From `ui/`, run `yarn test:dependency-manifest`. Its real Rollup and Vite fixtures
+check emitted package identities, tree shaking, prebundle provenance, source map
+handling, public helper resolution and final chunk hashes. CI also runs against
+Rollup 2.67.0 using a temporary install selected by `ROLLUP_MODULE`.
+
+From the repository root, run the collector/lifecycle/package tests:
+
+```bash
+poetry run pytest tests/unit/test_dependency_manifest.py tests/unit/commands/test_build.py
+poetry run pytest tests/smoke/test_ucc_build.py::test_inventory_after_last_build_step
+```
+
+The real Go test cross-builds Linux/macOS/Windows binaries without executing them:
+
+```bash
+UCC_REQUIRE_GO_TEST=1 poetry run pytest tests/smoke/test_dependency_manifest_go.py
+```
+
+Its targeted CI gate installs a pinned Go compiler; without Go, ordinary local
+smoke runs skip it, while `UCC_REQUIRE_GO_TEST=1` fails instead of skipping.
+Distribution verification reads the actual npm archive and wheel and checks that
+helper exports, provenance maps, the core fragment and matching chunk bytes are
+present. It does not use npm pack dry-run output as archive evidence.

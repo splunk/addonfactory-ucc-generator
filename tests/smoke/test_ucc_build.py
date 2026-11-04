@@ -600,7 +600,11 @@ def test_ucc_build_verbose_mode(caplog):
     def generate_expected_log():
         def append_appserver_content(raw_expected_logs):
             path_len = len(app_server_lib_path) + 1
-            excluded_files = ["redirect_page.js", "redirect.html"]
+            excluded_files = [
+                "redirect_page.js",
+                "redirect.html",
+                "dependency-chunks.json",
+            ]
 
             for full_path, dir, files in os.walk(app_server_lib_path):
                 if files:
@@ -806,6 +810,7 @@ def test_check_ucc_ui_files(tmp_path):
     normalized_files = [remove_hash(f) for f in cleaned_files]
 
     expected_js_files_list = [
+        "dependency-chunks.json",
         "ArrowBroadUnderbarDown.js",
         "assets",
         "ConfigurationPage.js",
@@ -1002,3 +1007,119 @@ def test_ucc_generate_os_lib_requires_python_39_ignore(tmp_path, caplog):
     )
 
     build.generate(source=package_folder, config_path=str(tmp_file_gc))
+
+
+@pytest.mark.parametrize("enabled", [False, True])
+def test_inventory_after_last_build_step(tmp_path, monkeypatch, enabled):
+    from types import SimpleNamespace
+    from tests.unit.test_dependency_manifest import frontend_chunk, write_dist_info
+
+    fixture = Path(__file__).parents[1] / "testdata/test_addons/package_conf_only_TA"
+    project = tmp_path / "project"
+    shutil.copytree(fixture, project)
+    source = project / "package"
+    (source / "dependency-manifest.json").write_text("stale source inventory")
+    (project / "additional_packaging.py").touch()
+    output = tmp_path / "output"
+    root = output / "Splunk_TA_UCCExample"
+    events = []
+
+    def install(_source, target, *_args, **_kwargs):
+        events.append("install")
+        write_dist_info(root, "", "kept", "1.0.0", ["py3-none-any"])
+        write_dist_info(root, "", "removed", "1.0.0", ["py3-none-any"])
+
+    def cleanup(_output, _name):
+        assert os.environ.get("UCC_DEPENDENCY_MANIFEST") == ("1" if enabled else "0")
+        events.append("cleanup")
+        assert not (root / "dependency-manifest.json").exists()
+        shutil.rmtree(root / "lib/removed-1.0.0.dist-info")
+
+    def custom_ui(_source, *, dependency_manifest=False):
+        assert dependency_manifest is enabled
+        events.append("custom-ui")
+        frontend_chunk(root, "custom/last.js", producer="custom-ui")
+
+    monkeypatch.setattr(build, "install_python_libraries", install)
+    monkeypatch.setattr(build, "build_ui", custom_ui)
+    monkeypatch.setitem(
+        sys.modules,
+        "additional_packaging",
+        SimpleNamespace(
+            cleanup_output_files=cleanup,
+            additional_packaging=lambda _: None,
+        ),
+    )
+    monkeypatch.setenv("UCC_DEPENDENCY_MANIFEST", "previous-value")
+    build.generate(
+        str(source),
+        addon_version="1.0.0",
+        output_directory=str(output),
+        build_custom_ui=True,
+        dependency_manifest=enabled,
+    )
+    assert os.environ["UCC_DEPENDENCY_MANIFEST"] == "previous-value"
+    if not enabled:
+        assert not (root / "dependency-manifest.json").exists()
+        assert not list(root.rglob("dependency-chunks.json"))
+        return
+    data = json.loads((root / "dependency-manifest.json").read_text())
+    assert events == ["install", "cleanup", "custom-ui"]
+    assert {(c["ecosystem"], c["name"]) for c in data["components"]} == {
+        ("pypi", "kept"),
+        ("npm", "used"),
+    }
+    assert "appserver/static/js/build/custom/last.js" in data["inputs"]
+
+
+def test_inventory_with_pages_and_documented_custom_scripts(tmp_path, monkeypatch):
+    fixture = (
+        Path(__file__).parents[1]
+        / "testdata/test_addons/package_global_config_everything"
+    )
+    project = tmp_path / "project"
+    shutil.copytree(fixture, project)
+    # Isolate frontend generation; foreign-wheel behavior has separate collector tests.
+    config_file = project / "globalConfig.json"
+    config = json.loads(config_file.read_text())
+    config["meta"].pop("os-dependentLibraries", None)
+    config_file.write_text(json.dumps(config))
+    monkeypatch.setattr(
+        build, "install_python_libraries", lambda *_args, **_kwargs: None
+    )
+    build.generate(
+        str(project / "package"),
+        config_path=str(project / "globalConfig.json"),
+        addon_version="1.0.0",
+        output_directory=str(tmp_path / "out"),
+        dependency_manifest=True,
+    )
+    root = tmp_path / "out/Splunk_TA_UCCExample"
+    data = json.loads((root / "dependency-manifest.json").read_text())
+    assert any(row["ecosystem"] == "npm" for row in data["components"])
+    assert any("/custom/" in row["path"] for row in data["first_party_frontend"])
+
+
+def test_inventory_failure_exits_nonzero(tmp_path, monkeypatch, caplog):
+    from splunk_add_on_ucc_framework.dependency_manifest import InventoryError
+
+    fixture = Path(__file__).parents[1] / "testdata/test_addons/package_conf_only_TA"
+    project = tmp_path / "project"
+    shutil.copytree(fixture, project)
+    monkeypatch.setattr(
+        build, "install_python_libraries", lambda *_args, **_kwargs: None
+    )
+
+    def fail(*_args, **_kwargs):
+        raise InventoryError("missing producer evidence")
+
+    monkeypatch.setattr(build.dependency_inventory, "write_manifest", fail)
+    with pytest.raises(SystemExit) as error:
+        build.generate(
+            str(project / "package"),
+            addon_version="1.0.0",
+            output_directory=str(tmp_path / "out"),
+            dependency_manifest=True,
+        )
+    assert error.value.code == 1
+    assert "missing producer evidence" in caplog.text

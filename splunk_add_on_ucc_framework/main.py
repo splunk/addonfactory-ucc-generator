@@ -154,6 +154,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="overwrite already present output/add-on dir",
     )
 
+    build_parser.add_argument(
+        "--dependency-manifest",
+        action="store_true",
+        default=False,
+        help="inventory final shipped dependencies; fail if required evidence cannot be verified",
+    )
+
     package_parser = subparsers.add_parser("package", description="Package an add-on")
     package_parser.add_argument(
         "--path",
@@ -339,6 +346,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             pip_custom_flag=args.pip_custom_flag,
             build_custom_ui=args.build_custom_ui,
             overwrite=args.overwrite,
+            dependency_manifest=args.dependency_manifest,
         )
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)

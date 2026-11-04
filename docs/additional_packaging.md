@@ -21,3 +21,13 @@ Below is an example of additional_packaging.py containing both the implementatio
 ```python
 --8<-- "tests/testdata/test_addons/package_global_config_everything/additional_packaging.py"
 ```
+
+
+## Dependency inventory after hooks
+
+With `ucc-gen build --dependency-manifest`, UCC inventories the final tree after
+`cleanup_output_files`, `additional_packaging`, and the optional custom UI build.
+Hook removals therefore affect inventory membership. A custom frontend shell
+hook must emit dependency evidence through the shared Rollup producer; existing
+licenses.txt or a lockfile is not a package membership source. See
+[shipped dependency inventory](commands.md#shipped-dependency-inventory).

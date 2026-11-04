@@ -123,6 +123,39 @@ jobs:
         run: |
           cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
           poetry build
+      - uses: actions/download-artifact@v8
+        with:
+          name: UCC-UI-lib-tarball
+          path: packed-ui/
+      - name: Verify frontend evidence in actual distributions
+        run: |
+          poetry run python - <<'PYDIST'
+          import hashlib
+          import json
+          import tarfile
+          import zipfile
+          from pathlib import Path
+
+          with zipfile.ZipFile(next(Path("dist").glob("*.whl"))) as wheel:
+              fragments = [p for p in wheel.namelist() if p.endswith("/dependency-chunks.json")]
+              assert fragments, "Core frontend fragment missing from wheel"
+              for fragment in fragments:
+                  base = fragment.rsplit("/", 1)[0]
+                  for chunk in json.loads(wheel.read(fragment))["chunks"]:
+                      assert hashlib.sha256(wheel.read(base + "/" + chunk["path"])).hexdigest() == chunk["sha256"]
+          with tarfile.open(next(Path("packed-ui").glob("*.tgz"))) as package:
+              names = package.getnames()
+              assert "package/cli/dependency-manifest.cjs" in names
+              assert "package/cli/dependency-manifest.d.cts" in names
+              metadata = json.load(package.extractfile("package/package.json"))
+              assert "./dependency-manifest" in metadata["exports"]
+              maps = [name for name in names if name.endswith(".js.map")]
+              assert maps, "Library identity maps missing from npm package"
+              for name in maps:
+                  source_map = json.load(package.extractfile(name))
+                  assert not source_map.get("sourcesContent")
+                  assert all(s.startswith(("ucc-package:", "ucc-generated:")) for s in source_map["sources"])
+          PYDIST
       - uses: actions/upload-artifact@v7
         with:
           name: UCC-build
@@ -149,6 +182,16 @@ jobs:
       - run: |
           poetry install
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - uses: actions/setup-go@v7
+        if: matrix.python-version == '3.9'
+        with:
+          go-version: "1.27.3"
+          cache: false
+      - name: Inspect cross-platform Go dependency fixtures
+        if: matrix.python-version == '3.9'
+        env:
+          UCC_REQUIRE_GO_TEST: "1"
+        run: poetry run pytest tests/smoke/test_dependency_manifest_go.py -q
       - name: Check for failed steps for jobs with continue-on-error
         if: ${{ failure() }}
         run: echo "failed=true" >> $GITHUB_ENV
@@ -514,4 +557,5 @@ jobs:
           cd ui
           npm publish --provenance --access public
         env:
+          UCC_DEPENDENCY_MANIFEST: "1"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

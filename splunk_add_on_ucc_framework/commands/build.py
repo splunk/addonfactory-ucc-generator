@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 import ast
+from contextlib import contextmanager
+from collections.abc import Iterator
 import json
 import logging
 import os
@@ -35,6 +37,7 @@ from urllib.parse import quote
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
+    dependency_manifest as dependency_inventory,
     global_config_update,
     global_config_validator,
     utils,
@@ -451,7 +454,9 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
-def yarn_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+def yarn_build_custom_ui_repo(
+    ui_dir: str, ci: bool, dependency_manifest: bool = False
+) -> None:
     # installing dependencies
     if ci:
         subprocess.run(
@@ -460,20 +465,51 @@ def yarn_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
     else:
         subprocess.run(["yarn", "--cwd", str(ui_dir), "install"], check=True)
     # building the code
-    subprocess.run(["yarn", "--cwd", str(ui_dir), "run", "build"], check=True)
+    subprocess.run(
+        ["yarn", "--cwd", str(ui_dir), "run", "build"],
+        check=True,
+        env=(
+            {**os.environ, "UCC_DEPENDENCY_MANIFEST": "1"}
+            if dependency_manifest
+            else None
+        ),
+    )
 
 
-def npm_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+def npm_build_custom_ui_repo(
+    ui_dir: str, ci: bool, dependency_manifest: bool = False
+) -> None:
     # installing dependencies
     if ci:
         subprocess.run(["npm", "--prefix", str(ui_dir), "ci"], check=True)
     else:
         subprocess.run(["npm", "--prefix", str(ui_dir), "install"], check=True)
     # building the code
-    subprocess.run(["npm", "--prefix", str(ui_dir), "run", "build"], check=True)
+    subprocess.run(
+        ["npm", "--prefix", str(ui_dir), "run", "build"],
+        check=True,
+        env=(
+            {**os.environ, "UCC_DEPENDENCY_MANIFEST": "1"}
+            if dependency_manifest
+            else None
+        ),
+    )
 
 
-def build_ui(source: str) -> None:
+@contextmanager
+def _inventory_environment(enabled: bool) -> Iterator[None]:
+    previous = os.environ.get("UCC_DEPENDENCY_MANIFEST")
+    os.environ["UCC_DEPENDENCY_MANIFEST"] = "1" if enabled else "0"
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop("UCC_DEPENDENCY_MANIFEST", None)
+        else:
+            os.environ["UCC_DEPENDENCY_MANIFEST"] = previous
+
+
+def build_ui(source: str, dependency_manifest: bool = False) -> None:
     ui_dir = os.path.join(source, "..", "ui")
 
     if not os.path.isdir(ui_dir):
@@ -490,9 +526,13 @@ def build_ui(source: str) -> None:
 
         # Check if yarn or npm is installed
         if shutil.which("yarn") and os.path.isfile(ui_dir + "/yarn.lock"):
-            yarn_build_custom_ui_repo(ui_dir, ci)
+            yarn_build_custom_ui_repo(
+                ui_dir, ci, dependency_manifest=dependency_manifest
+            )
         elif shutil.which("npm") and os.path.isfile(ui_dir + "/package-lock.json"):
-            npm_build_custom_ui_repo(ui_dir, ci)
+            npm_build_custom_ui_repo(
+                ui_dir, ci, dependency_manifest=dependency_manifest
+            )
         else:
             logger.error(
                 "Neither yarn nor npm is present with lock file. Not building custom code"
@@ -501,6 +541,7 @@ def build_ui(source: str) -> None:
 
     except subprocess.CalledProcessError as e:
         logger.error(f"Custom UI Build failed: {e}")
+        sys.exit(1)
 
 
 def exception_handler(func: Any) -> Any:
@@ -523,6 +564,8 @@ def exception_handler(func: Any) -> Any:
                 f"You can report this issue using: {url}"
             )
 
+            sys.exit(1)
+
     return inner_function
 
 
@@ -539,6 +582,7 @@ def generate(
     pip_custom_flag: Optional[str] = None,
     build_custom_ui: bool = False,
     overwrite: bool = False,
+    dependency_manifest: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -571,6 +615,7 @@ def generate(
         shutil.rmtree(os.path.join(output_directory, ta_name), ignore_errors=True)
         os.makedirs(os.path.join(output_directory, ta_name))
         logger.info(f"Cleaned out directory {os.path.join(output_directory,ta_name)}")
+    output_root = Path(output_directory) / ta_name
     generated_files = []
 
     gc_path = _get_and_check_global_config_path(source, config_path)
@@ -688,6 +733,8 @@ def generate(
     )
     comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    # Never reuse a source inventory, including when inventory generation is off.
+    (output_root / "dependency-manifest.json").unlink(missing_ok=True)
     logger.info("Copied package directory")
 
     # Apply template placeholder replacement on the final copied output.
@@ -749,27 +796,28 @@ def generate(
     if os.path.exists(
         os.path.abspath(os.path.join(source, os.pardir, "additional_packaging.py"))
     ):
-        sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
-        try:
-            from additional_packaging import cleanup_output_files
+        with _inventory_environment(dependency_manifest):
+            sys.path.insert(0, os.path.abspath(os.path.join(source, os.pardir)))
+            try:
+                from additional_packaging import cleanup_output_files
 
-            cleanup_output_files(output_directory, ta_name)
-        except ImportError:
-            logger.info(
-                "additional_packaging.py is present but does not have `cleanup_output_files`. Skipping clean-up."
-            )
+                cleanup_output_files(output_directory, ta_name)
+            except ImportError:
+                logger.info(
+                    "additional_packaging.py is present but does not have `cleanup_output_files`. Skipping clean-up."
+                )
 
-        try:
-            from additional_packaging import additional_packaging
+            try:
+                from additional_packaging import additional_packaging
 
-            additional_packaging(ta_name)
-        except ImportError:
-            logger.info(
-                "additional_packaging.py is present but does not have `additional_packaging`. "
-                "Skipping additional packaging."
-            )
-        # clean-up sys.path manipulation
-        sys.path.pop(0)
+                additional_packaging(ta_name)
+            except ImportError:
+                logger.info(
+                    "additional_packaging.py is present but does not have `additional_packaging`. "
+                    "Skipping additional packaging."
+                )
+            # clean-up sys.path manipulation
+            sys.path.pop(0)
 
     if global_config.has_configuration() or global_config.has_inputs():
         logger.info("Generating OpenAPI file")
@@ -789,7 +837,27 @@ def generate(
         logger.info("Building custom UI code")
         # should we share output dir (requires build Ui changes)
         # or should be rely on UI repo to specify it?
-        build_ui(source)
+        build_ui(source, dependency_manifest=dependency_manifest)
+
+    if dependency_manifest:
+        try:
+            path = dependency_inventory.write_manifest(
+                output_root,
+                ta_name,
+                addon_version,
+                global_config.os_libraries or [],
+                source=Path(source),
+            )
+            logger.info(f"Wrote shipped dependency inventory: {path}")
+        except dependency_inventory.InventoryError as error:
+            logger.error(str(error))
+            sys.exit(1)
+
+    if not dependency_manifest:
+        for fragment in (output_root / "appserver" / "static").rglob(
+            "dependency-chunks.json"
+        ):
+            fragment.unlink()
 
     summary_report(
         source,

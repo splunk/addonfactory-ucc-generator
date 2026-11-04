@@ -27,9 +27,11 @@
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
     "test-storybook:update-snapshots": "yarn run test-storybook -u",
-    "prepublishOnly": "yarn run build:lib"
+    "prepublishOnly": "yarn run build:lib",
+    "test:dependency-manifest": "node --test cli/dependency-manifest.test.cjs"
   },
   "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.5.5",
     "@splunk/dashboard-action-buttons": "29.8.0",
     "@splunk/dashboard-context": "29.8.0",
     "@splunk/dashboard-core": "29.8.0",
@@ -126,6 +128,7 @@
     "prettier": "^2.8.8",
     "querystring-es3": "^0.2.1",
     "rollup-plugin-license": "^3.7.1",
+    "rollup2": "npm:rollup@2.67.0",
     "storybook": "^10.5.10",
     "style-loader": "^4.0.0",
     "stylelint": "^14.16.1",
@@ -202,7 +205,9 @@
     "dist/lib",
     "cli/vite.config_ucc-gen-ui.ts",
     "cli/vite.config_ucc-test-gen-ui.ts",
-    "cli/ucc-vite-test-setup.ts"
+    "cli/ucc-vite-test-setup.ts",
+    "cli/dependency-manifest.cjs",
+    "cli/dependency-manifest.d.cts"
   ],
   "type": "module",
   "bin": {
@@ -213,6 +218,10 @@
   "module": "./dist/lib/index.js",
   "exports": {
     ".": "./dist/lib/index.js",
-    "./style.css": "./dist/lib/index.css"
+    "./style.css": "./dist/lib/index.css",
+    "./dependency-manifest": {
+      "types": "./cli/dependency-manifest.d.cts",
+      "default": "./cli/dependency-manifest.cjs"
+    }
   }
 }
