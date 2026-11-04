@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { FunctionPluginHooks, Plugin } from 'rollup';
+import type { NormalizedOutputOptions, OutputBundle, Plugin, PluginContext } from 'rollup';
 
 declare function dependencyManifest(options: {
     producer: 'ucc-ui' | 'custom-ui';
     library?: boolean;
-}): Plugin & { generateBundle: FunctionPluginHooks['generateBundle'] };
+}): Plugin & {
+    generateBundle(
+        this: PluginContext,
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+        isWrite: boolean
+    ): void;
+};
 
 export = dependencyManifest;

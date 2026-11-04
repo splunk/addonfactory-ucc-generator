@@ -20,8 +20,10 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const { createHash } = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 
 const { rollup } = require(process.env.ROLLUP_MODULE || 'rollup');
+const publicDependencyManifest = require('@splunk/add-on-ucc-framework/dependency-manifest');
 const dependencyManifest = require('./dependency-manifest.cjs');
 
 const hash = (code) => createHash('sha256').update(code).digest('hex');
@@ -210,4 +212,51 @@ test('Vite dynamic-import final hashes and mapped packages after minification', 
         assert.equal(chunk.sha256, hash(fs.readFileSync(path.join(root, 'dist', chunk.path))));
         assert(!fs.existsSync(path.join(root, 'dist', `${chunk.path}.map`)));
     }
+});
+
+test('public helper export resolves through the package entry point', () => {
+    assert.equal(publicDependencyManifest, dependencyManifest);
+});
+
+test('public helper types compile with the selected Rollup version', (t) => {
+    const root = project(t);
+    let rollupRoot = path.dirname(require.resolve(process.env.ROLLUP_MODULE || 'rollup'));
+    while (!fs.existsSync(path.join(rollupRoot, 'package.json'))) {
+        rollupRoot = path.dirname(rollupRoot);
+    }
+    const modules = path.join(root, 'node_modules');
+    fs.mkdirSync(modules);
+    fs.symlinkSync(rollupRoot, path.join(modules, 'rollup'), 'dir');
+    fs.symlinkSync(
+        path.dirname(path.dirname(require.resolve('@types/node/package.json'))),
+        path.join(modules, '@types'),
+        'dir'
+    );
+    fs.copyFileSync(
+        path.join(__dirname, 'dependency-manifest.d.cts'),
+        path.join(root, 'dependency-manifest.d.cts')
+    );
+    write(
+        root,
+        'consumer.cts',
+        "import factory = require('./dependency-manifest.cjs'); import type {Plugin} from 'rollup'; const p: Plugin = factory({producer:'custom-ui'}); void p;"
+    );
+    execFileSync(
+        process.execPath,
+        [
+            require.resolve('typescript/bin/tsc'),
+            '--noEmit',
+            '--target',
+            'es2022',
+            '--module',
+            'NodeNext',
+            '--moduleResolution',
+            'NodeNext',
+            '--strict',
+            '--types',
+            'node',
+            'consumer.cts',
+        ],
+        { cwd: root }
+    );
 });

@@ -204,7 +204,9 @@
     "dist/lib",
     "cli/vite.config_ucc-gen-ui.ts",
     "cli/vite.config_ucc-test-gen-ui.ts",
-    "cli/ucc-vite-test-setup.ts"
+    "cli/ucc-vite-test-setup.ts",
+    "cli/dependency-manifest.cjs",
+    "cli/dependency-manifest.d.cts"
   ],
   "type": "module",
   "bin": {
@@ -215,6 +217,10 @@
   "module": "./dist/lib/index.js",
   "exports": {
     ".": "./dist/lib/index.js",
-    "./style.css": "./dist/lib/index.css"
+    "./style.css": "./dist/lib/index.css",
+    "./dependency-manifest": {
+      "types": "./cli/dependency-manifest.d.cts",
+      "default": "./cli/dependency-manifest.cjs"
+    }
   }
 }
