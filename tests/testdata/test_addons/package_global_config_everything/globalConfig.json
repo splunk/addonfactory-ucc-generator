@@ -2392,7 +2392,7 @@
         ],
         "navColor": "#65A637",
         "supportedPythonVersion": [
-            "3.13"
+            "3.9, 3.13"
         ],
         "isVisible": true,
         "os-dependentLibraries": [
