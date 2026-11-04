@@ -1,22 +1,20 @@
 #!/usr/bin/env node
 import { execSync } from 'child_process';
+import process from 'node:process';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const fileName = fileURLToPath(import.meta.url);
 const dirName = dirname(fileName);
 
-// eslint-disable-next-line no-undef
 const paramOutputDir = process.argv.find((arg) => arg.startsWith('output='))?.slice(7);
 
-// eslint-disable-next-line no-undef
 const TA_NAME = process.argv.find((arg) => arg.startsWith('ta_name='))?.slice(8);
 
 if (!TA_NAME || TA_NAME === 'undefined') {
     throw new Error('ta_name is not defined. Please provide a valid ta_name parameter.');
 }
 
-// eslint-disable-next-line no-undef
 const paramInitFileDir = process.argv.find((arg) => arg.startsWith('init_file_dir='))?.slice(14);
 
 const initFileDir =
@@ -24,11 +22,23 @@ const initFileDir =
         ? paramInitFileDir
         : 'src/ucc-ui.ts';
 
+const inventory =
+    process.argv.includes('--dependency-manifest') || process.env.UCC_DEPENDENCY_MANIFEST === '1';
+// Source-map composition for the full UCC graph needs the same heap as the standard UI build.
+const inventoryEnv = inventory
+    ? {
+          ...process.env,
+          UCC_DEPENDENCY_MANIFEST: '1',
+          NODE_OPTIONS: process.env.NODE_OPTIONS || '--max-old-space-size=8192',
+      }
+    : undefined;
+
 const viteUccGenConfigPath = `${dirName}/vite.config_ucc-gen-ui.ts`;
 
 execSync(
     `vite build --config ${viteUccGenConfigPath} output=${paramOutputDir} ta_name=${TA_NAME} init_file_dir=${initFileDir}`,
     {
         stdio: 'inherit',
+        env: inventoryEnv,
     }
 );

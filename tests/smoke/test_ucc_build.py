@@ -1028,7 +1028,8 @@ def test_inventory_after_last_build_step(tmp_path, monkeypatch):
         assert not (root / "dependency-manifest.json").exists()
         shutil.rmtree(root / "lib/removed-1.0.0.dist-info")
 
-    def custom_ui(_source):
+    def custom_ui(_source, *, dependency_manifest):
+        assert dependency_manifest is True
         events.append("custom-ui")
         frontend_chunk(root, "custom/last.js", producer="custom-ui")
 

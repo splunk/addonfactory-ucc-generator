@@ -479,3 +479,36 @@ def test_custom_ui_failure_returns_nonzero(monkeypatch):
     with pytest.raises(SystemExit) as error:
         build.build_ui("/tmp/package")
     assert error.value.code == 1
+
+
+@pytest.mark.parametrize("manager", ["yarn", "npm"])
+@pytest.mark.parametrize("enabled", [False, True])
+def test_custom_ui_inventory_environment(monkeypatch, manager, enabled):
+    from splunk_add_on_ucc_framework.commands import build
+
+    run = MagicMock()
+    monkeypatch.setattr(build.subprocess, "run", run)
+    monkeypatch.delenv("UCC_DEPENDENCY_MANIFEST", raising=False)
+    builder = getattr(build, f"{manager}_build_custom_ui_repo")
+    builder("/tmp/ui", False, dependency_manifest=enabled)
+    install, compile_ui = run.call_args_list
+    assert "env" not in install.kwargs
+    if enabled:
+        assert compile_ui.kwargs["env"]["UCC_DEPENDENCY_MANIFEST"] == "1"
+    else:
+        assert compile_ui.kwargs.get("env") is None
+
+
+def test_build_ui_propagates_inventory_flag(monkeypatch):
+    from splunk_add_on_ucc_framework.commands import build
+
+    monkeypatch.setattr(build.os.path, "isdir", lambda _: True)
+    monkeypatch.setattr(build.os.path, "isfile", lambda _: True)
+    monkeypatch.setattr(build.shutil, "which", lambda _: "/tool")
+    builder = MagicMock()
+    monkeypatch.setattr(build, "yarn_build_custom_ui_repo", builder)
+    monkeypatch.setenv("CI", "false")
+    build.build_ui("/tmp/package", dependency_manifest=True)
+    builder.assert_called_once_with(
+        "/tmp/package/../ui", False, dependency_manifest=True
+    )

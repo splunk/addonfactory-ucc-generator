@@ -260,3 +260,72 @@ test('public helper types compile with the selected Rollup version', (t) => {
         { cwd: root }
     );
 });
+
+test('context collector is enabled only by inventory intent', async (t) => {
+    const root = project(t);
+    const { loadConfigFromFile } = await import('vite');
+    const previous = process.env.UCC_DEPENDENCY_MANIFEST;
+    process.argv.push('ta_name=Splunk_TA_Test');
+    t.after(() => {
+        process.argv.pop();
+        if (previous === undefined) {
+            delete process.env.UCC_DEPENDENCY_MANIFEST;
+        } else {
+            process.env.UCC_DEPENDENCY_MANIFEST = previous;
+        }
+    });
+    for (const enabled of [false, true]) {
+        if (enabled) {
+            process.env.UCC_DEPENDENCY_MANIFEST = '1';
+        } else {
+            delete process.env.UCC_DEPENDENCY_MANIFEST;
+        }
+        // Config reads the environment; each variant must load sequentially.
+        // eslint-disable-next-line no-await-in-loop
+        const result = await loadConfigFromFile(
+            { command: 'build', mode: 'production' },
+            path.join(__dirname, 'vite.config_ucc-gen-ui.ts'),
+            root
+        );
+        const plugins = result.config.plugins.filter(Boolean);
+        assert.equal(
+            plugins.some((p) => p.name === 'ucc-dependency-manifest'),
+            enabled
+        );
+    }
+});
+
+test('direct context CLI opts into evidence and keeps explicit Node options', (t) => {
+    const root = project(t);
+    const bin = path.join(root, 'bin');
+    const capture = path.join(root, 'capture.json');
+    const vite = write(
+        root,
+        'bin/vite',
+        `#!${process.execPath}\nrequire('node:fs').writeFileSync(${JSON.stringify(
+            capture
+        )}, JSON.stringify({argv:process.argv, inventory:process.env.UCC_DEPENDENCY_MANIFEST, options:process.env.NODE_OPTIONS}));`
+    );
+    fs.chmodSync(vite, 0o755);
+    for (const explicitOptions of [undefined, '--max-old-space-size=9216']) {
+        const env = { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` };
+        delete env.NODE_OPTIONS;
+        delete env.UCC_DEPENDENCY_MANIFEST;
+        if (explicitOptions) {
+            env.NODE_OPTIONS = explicitOptions;
+        }
+        execFileSync(
+            process.execPath,
+            [
+                path.join(__dirname, 'ucc-gen-build-ui.js'),
+                'ta_name=Splunk_TA_Test',
+                '--dependency-manifest',
+            ],
+            { cwd: root, env }
+        );
+        const result = JSON.parse(fs.readFileSync(capture));
+        assert.equal(result.inventory, '1');
+        assert.equal(result.options, explicitOptions || '--max-old-space-size=8192');
+        assert(!result.argv.includes('--dependency-manifest'));
+    }
+});

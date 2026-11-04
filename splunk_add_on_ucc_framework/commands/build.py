@@ -452,7 +452,9 @@ def summary_report(
     logger.info(f"File creation summary: {summary_combined}")
 
 
-def yarn_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+def yarn_build_custom_ui_repo(
+    ui_dir: str, ci: bool, dependency_manifest: bool = False
+) -> None:
     # installing dependencies
     if ci:
         subprocess.run(
@@ -461,20 +463,38 @@ def yarn_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
     else:
         subprocess.run(["yarn", "--cwd", str(ui_dir), "install"], check=True)
     # building the code
-    subprocess.run(["yarn", "--cwd", str(ui_dir), "run", "build"], check=True)
+    subprocess.run(
+        ["yarn", "--cwd", str(ui_dir), "run", "build"],
+        check=True,
+        env=(
+            {**os.environ, "UCC_DEPENDENCY_MANIFEST": "1"}
+            if dependency_manifest
+            else None
+        ),
+    )
 
 
-def npm_build_custom_ui_repo(ui_dir: str, ci: bool) -> None:
+def npm_build_custom_ui_repo(
+    ui_dir: str, ci: bool, dependency_manifest: bool = False
+) -> None:
     # installing dependencies
     if ci:
         subprocess.run(["npm", "--prefix", str(ui_dir), "ci"], check=True)
     else:
         subprocess.run(["npm", "--prefix", str(ui_dir), "install"], check=True)
     # building the code
-    subprocess.run(["npm", "--prefix", str(ui_dir), "run", "build"], check=True)
+    subprocess.run(
+        ["npm", "--prefix", str(ui_dir), "run", "build"],
+        check=True,
+        env=(
+            {**os.environ, "UCC_DEPENDENCY_MANIFEST": "1"}
+            if dependency_manifest
+            else None
+        ),
+    )
 
 
-def build_ui(source: str) -> None:
+def build_ui(source: str, dependency_manifest: bool = False) -> None:
     ui_dir = os.path.join(source, "..", "ui")
 
     if not os.path.isdir(ui_dir):
@@ -489,11 +509,13 @@ def build_ui(source: str) -> None:
     try:
         ci = os.environ.get("CI", "false") == "true"
 
+        inventory_options = {"dependency_manifest": True} if dependency_manifest else {}
+
         # Check if yarn or npm is installed
         if shutil.which("yarn") and os.path.isfile(ui_dir + "/yarn.lock"):
-            yarn_build_custom_ui_repo(ui_dir, ci)
+            yarn_build_custom_ui_repo(ui_dir, ci, **inventory_options)
         elif shutil.which("npm") and os.path.isfile(ui_dir + "/package-lock.json"):
-            npm_build_custom_ui_repo(ui_dir, ci)
+            npm_build_custom_ui_repo(ui_dir, ci, **inventory_options)
         else:
             logger.error(
                 "Neither yarn nor npm is present with lock file. Not building custom code"
@@ -800,7 +822,10 @@ def generate(
         logger.info("Building custom UI code")
         # should we share output dir (requires build Ui changes)
         # or should be rely on UI repo to specify it?
-        build_ui(source)
+        if dependency_manifest:
+            build_ui(source, dependency_manifest=True)
+        else:
+            build_ui(source)
 
     if dependency_manifest:
         try:
