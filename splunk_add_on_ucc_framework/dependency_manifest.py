@@ -17,6 +17,8 @@
 
 import hashlib
 import re
+import shutil
+import subprocess
 from collections.abc import Sequence
 from dataclasses import dataclass
 from email.parser import BytesParser
@@ -182,4 +184,110 @@ def collect_python(
             raise InventoryError(
                 f"Missing configured distribution: {config.name}=={config.version} in {config.target}"
             )
+    return rows
+
+
+_NATIVE_HEADERS = (
+    b"\x7fELF",
+    b"MZ",
+    b"\xcf\xfa\xed\xfe",
+    b"\xce\xfa\xed\xfe",
+    b"\xfe\xed\xfa\xcf",
+    b"\xfe\xed\xfa\xce",
+    b"\xca\xfe\xba\xbe",
+    b"\xbe\xba\xfe\xca",
+    b"\xca\xfe\xba\xbf",
+    b"\xbf\xba\xfe\xca",
+)
+_GO_MAGIC = b"\xff Go buildinf:"
+
+
+def _go_binaries(root: Path) -> list[Path]:
+    result = []
+    for path in sorted(root.rglob("*")):
+        if not path.is_file():
+            continue
+        with path.open("rb") as stream:
+            header = stream.read(4)
+            if any(header.startswith(prefix) for prefix in _NATIVE_HEADERS):
+                if _GO_MAGIC in header + stream.read():
+                    result.append(path)
+    return result
+
+
+def parse_go_info(text: str, path: str, sha256: str) -> list[DependencyRow]:
+    """Parse go version -m output; dependencies come from this binary only."""
+    lines = text.splitlines()
+    toolchain = re.search(r"\b(go\d+\.\d+[^\s]*)$", lines[0]) if lines else None
+    if not toolchain:
+        raise InventoryError(f"Unreadable Go build information: {path}")
+    details = {"toolchain": toolchain[1]}
+    dependencies: list[dict[str, Any]] = []
+    has_path = False
+    current: Optional[dict[str, Any]] = None
+    for line in lines[1:]:
+        fields = line.strip().split("\t")
+        if fields[0] == "path" and len(fields) >= 2:
+            has_path = bool(fields[1])
+        elif fields[0] == "dep" and len(fields) >= 3:
+            current = {"name": fields[1], "version": fields[2]}
+            dependencies.append(current)
+        elif fields[0] == "mod":
+            current = None  # The main program is not its own dependency.
+        elif fields[0] == "=>" and current is not None:
+            if len(fields) < 3:
+                raise InventoryError(f"Unversioned Go replacement: {path}")
+            current["replaces"] = {
+                "name": current["name"],
+                "version": current["version"],
+            }
+            current.update(name=fields[1], version=fields[2])
+        elif fields[0] == "build" and len(fields) >= 2:
+            key, _, value = fields[1].partition("=")
+            if key in ("GOOS", "GOARCH"):
+                details[key] = value
+    if not has_path:
+        raise InventoryError(f"Unreadable Go module information: {path}")
+    rows = []
+    for dependency in dependencies:
+        if not dependency["version"] or dependency["version"] == "(devel)":
+            raise InventoryError(f"Unversioned Go dependency or replacement: {path}")
+        target: dict[str, Any] = dict(details)
+        if "replaces" in dependency:
+            target["replaces"] = dependency["replaces"]
+        rows.append(
+            DependencyRow(
+                "golang",
+                dependency["name"],
+                dependency["version"],
+                path,
+                sha256,
+                target,
+            )
+        )
+    return rows
+
+
+def collect_go(root: Path) -> list[DependencyRow]:
+    binaries = _go_binaries(root)
+    if not binaries:
+        return []
+    go = shutil.which("go")
+    if not go:
+        raise InventoryError(
+            "Go CLI is required to inspect packaged Go binaries (go version -m)"
+        )
+    rows = []
+    for binary in binaries:
+        relative = binary.relative_to(root).as_posix()
+        try:
+            result = subprocess.run(
+                [go, "version", "-m", str(binary)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except (OSError, subprocess.CalledProcessError) as error:
+            raise InventoryError(f"Could not inspect Go binary: {relative}") from error
+        rows.extend(parse_go_info(result.stdout, relative, _sha256(binary)))
     return rows

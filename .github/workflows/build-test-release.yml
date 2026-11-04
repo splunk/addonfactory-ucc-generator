@@ -149,6 +149,16 @@ jobs:
       - run: |
           poetry install
           poetry run pytest --cov=splunk_add_on_ucc_framework --cov-report=xml tests/unit
+      - uses: actions/setup-go@v7
+        if: matrix.python-version == '3.9'
+        with:
+          go-version: "1.27.3"
+          cache: false
+      - name: Inspect cross-platform Go dependency fixtures
+        if: matrix.python-version == '3.9'
+        env:
+          UCC_REQUIRE_GO_TEST: "1"
+        run: poetry run pytest tests/smoke/test_dependency_manifest_go.py -q
       - name: Check for failed steps for jobs with continue-on-error
         if: ${{ failure() }}
         run: echo "failed=true" >> $GITHUB_ENV

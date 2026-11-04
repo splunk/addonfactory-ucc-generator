@@ -5,6 +5,8 @@ import pytest
 from splunk_add_on_ucc_framework.dependency_manifest import (
     InventoryError,
     collect_python,
+    collect_go,
+    parse_go_info,
 )
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
@@ -146,3 +148,93 @@ def test_deepest_configured_target(tmp_path):
     rows = collect_python(tmp_path, [outer, inner], "3.9.20")
     assert len(rows) == 2
     assert all(row.target and row.target["placement"] == "platform" for row in rows)
+
+
+GO_INFO = """/tmp/program: go1.24.3
+    path\tcompany.example/program
+    mod\tcompany.example/program\t(devel)
+    dep\tgithub.com/zeebo/xxh3\tv1.0.2\th1:checksum
+    dep\texample.com/original\tv1.0.0\th1:original
+    =>\texample.com/replacement\tv1.1.0\th1:replacement
+    build\tGOOS=linux
+    build\tGOARCH=amd64
+"""
+
+
+def test_go_records_and_replacements():
+    rows = parse_go_info(GO_INFO, "bin/program", "a" * 64)
+    assert [(r.name, r.version) for r in rows] == [
+        ("github.com/zeebo/xxh3", "v1.0.2"),
+        ("example.com/replacement", "v1.1.0"),
+    ]
+    assert all(r.path == "bin/program" and r.sha256 == "a" * 64 for r in rows)
+    assert rows[1].target == {
+        "toolchain": "go1.24.3",
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "replaces": {"name": "example.com/original", "version": "v1.0.0"},
+    }
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "/tmp/program: go1.24.3\n",
+        "not Go module data",
+        GO_INFO.replace("example.com/replacement\tv1.1.0", "../local\t(devel)"),
+    ],
+)
+def test_unreadable_or_unversioned_go_info(text):
+    with pytest.raises(InventoryError):
+        parse_go_info(text, "bin/program", "a" * 64)
+
+
+def write_go_binary(root, name, header=b"\x7fELF"):
+    binary = root / "bin" / name
+    binary.parent.mkdir(parents=True, exist_ok=True)
+    binary.write_bytes(header + b"\0" * 32 + b"\xff Go buildinf:" + b"fixture")
+    return binary
+
+
+@pytest.mark.parametrize("header", [b"\x7fELF", b"MZ", b"\xcf\xfa\xed\xfe"])
+def test_go_detection(tmp_path, monkeypatch, header):
+    import subprocess
+    from splunk_add_on_ucc_framework import dependency_manifest as inventory
+
+    binaries = [
+        write_go_binary(tmp_path, "first", header),
+        write_go_binary(tmp_path, "second", header),
+    ]
+    (tmp_path / "go.mod").write_text("require github.com/zeebo/xxh3 v9.0.0")
+    monkeypatch.setattr(inventory.shutil, "which", lambda name: "/tool/go")
+    calls = []
+
+    def run(argv, **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(argv, 0, GO_INFO, "")
+
+    monkeypatch.setattr(inventory.subprocess, "run", run)
+    rows = collect_go(tmp_path)
+    assert len(rows) == 4
+    assert {r.path for r in rows} == {"bin/first", "bin/second"}
+    assert all(r.version != "v9.0.0" for r in rows)
+    assert calls == [["/tool/go", "version", "-m", str(binary)] for binary in binaries]
+
+
+def test_no_go_does_not_require_tooling(tmp_path, monkeypatch):
+    from splunk_add_on_ucc_framework import dependency_manifest as inventory
+
+    (tmp_path / "readme").write_text("Go buildinf: is not a binary")
+    monkeypatch.setattr(
+        inventory.shutil, "which", lambda name: pytest.fail("Go lookup unnecessary")
+    )
+    assert collect_go(tmp_path) == []
+
+
+def test_missing_go_tool(tmp_path, monkeypatch):
+    from splunk_add_on_ucc_framework import dependency_manifest as inventory
+
+    write_go_binary(tmp_path, "program")
+    monkeypatch.setattr(inventory.shutil, "which", lambda name: None)
+    with pytest.raises(InventoryError, match="Go"):
+        collect_go(tmp_path)
