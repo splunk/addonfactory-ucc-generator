@@ -472,7 +472,7 @@ def test_custom_ui_failure_returns_nonzero(monkeypatch):
     monkeypatch.setattr(build.os.path, "isfile", lambda _: True)
     monkeypatch.setattr(build.shutil, "which", lambda _: "/tool")
 
-    def fail(*_args):
+    def fail(*_args, **_kwargs):
         raise subprocess.CalledProcessError(1, ["yarn", "build"])
 
     monkeypatch.setattr(build, "yarn_build_custom_ui_repo", fail)

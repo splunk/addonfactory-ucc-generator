@@ -30,18 +30,31 @@ function compare(a, b) {
 }
 
 function packageOwner(file) {
-    let directory = path.dirname(file);
+    const parts = path.resolve(file).split(path.sep);
+    const modules = parts.lastIndexOf('node_modules');
+    // Published packages may contain nested syntax/compatibility package.json files.
+    const installedRoot =
+        modules >= 0
+            ? parts.slice(0, modules + (parts[modules + 1].startsWith('@') ? 3 : 2)).join(path.sep)
+            : null;
+    let directory = installedRoot || path.dirname(file);
     while (directory) {
         const manifest = path.join(directory, 'package.json');
         if (fs.existsSync(manifest)) {
             const metadata = JSON.parse(fs.readFileSync(manifest, 'utf8'));
-            if (metadata.name && metadata.version) {
+            if (installedRoot || metadata.name || metadata.version) {
+                if (!metadata.name || !metadata.version) {
+                    throw new Error(`Missing package name/version: ${manifest}`);
+                }
                 return {
                     name: metadata.name,
                     version: metadata.version,
                     directory: fs.realpathSync(directory),
                 };
             }
+        }
+        if (installedRoot) {
+            throw new Error(`Missing package identity: ${installedRoot}`);
         }
         const parent = path.dirname(directory);
         if (parent === directory) {
@@ -122,6 +135,36 @@ module.exports = function dependencyManifest({ producer, library = false }) {
                 }
                 const outputFile = options.file || path.resolve(options.dir || '.', chunk.fileName);
                 const map = JSON.parse(chunk.map.toString());
+                const usedSources = new Set();
+                for (const line of decode(map.mappings)) {
+                    for (const segment of line) {
+                        if (segment.length >= 4) {
+                            usedSources.add(segment[1]);
+                        }
+                    }
+                }
+                const mappedPackages = new Set();
+                for (const index of usedSources) {
+                    const owner = sourceOwner(map.sources[index], outputFile, map.sourceRoot);
+                    if (owner) {
+                        mappedPackages.add(JSON.stringify([owner.name, owner.version]));
+                    }
+                }
+                for (const [id, module] of Object.entries(chunk.modules)) {
+                    if (!module.renderedLength || id.includes('\0')) {
+                        continue;
+                    }
+                    const owner = packageOwner(id.split('?')[0]);
+                    if (!owner || (!library && owner.directory === project.directory)) {
+                        continue;
+                    }
+                    if (!mappedPackages.has(JSON.stringify([owner.name, owner.version]))) {
+                        this.error(
+                            `Unmapped dependency ${owner.name}@${owner.version} in ${chunk.fileName}; preserve source maps in transforming plugins`
+                        );
+                    }
+                }
+                const mapFile = chunk.sourcemapFileName || `${chunk.fileName}.map`;
                 if (library) {
                     map.sources = map.sources.map((source) => {
                         const owner = sourceOwner(source, outputFile, map.sourceRoot);
@@ -140,20 +183,12 @@ module.exports = function dependencyManifest({ producer, library = false }) {
                     delete map.sourceRoot;
                     Object.assign(chunk.map, map);
                     delete chunk.map.sourcesContent;
-                    const asset = bundle[`${chunk.fileName}.map`];
+                    const asset = bundle[mapFile];
                     // Rollup 2 writes maps later from chunk.map; Rollup 4 has map assets now.
                     if (asset) {
                         asset.source = JSON.stringify(map);
                     }
                     continue;
-                }
-                const usedSources = new Set();
-                for (const line of decode(map.mappings)) {
-                    for (const segment of line) {
-                        if (segment.length >= 4) {
-                            usedSources.add(segment[1]);
-                        }
-                    }
                 }
                 const packages = new Map();
                 for (const index of usedSources) {
@@ -185,7 +220,7 @@ module.exports = function dependencyManifest({ producer, library = false }) {
                     ),
                 });
                 if (removeMaps) {
-                    delete bundle[`${chunk.fileName}.map`];
+                    delete bundle[mapFile];
                     chunk.map = null;
                 }
             }

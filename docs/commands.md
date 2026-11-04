@@ -38,6 +38,7 @@ It takes the following parameters:
     Example:  `--pip-custom-flag="--no-compile --prefer-binary --ignore-installed --report path/to/report.json --progress-bar on"`
 
 * `--build-custom-ui` - [optional] Additional flag that will trigger build of custom UI repo (execute build script from `./ui` repository).
+* `--dependency-manifest` - [optional] inventory shipped Python distributions, frontend packages, and Go modules in `dependency-manifest.json`. See [Shipped dependency inventory](#shipped-dependency-inventory).
 * `--overwrite` - [optional] overwrites the already existing add-on directory. By default, you can't build an add-on to an already existing directory.
 
 ### Verbose mode
@@ -177,7 +178,8 @@ ucc-gen package --path output/<addon-name>
 ```
 
 The add-on root contains `dependency-manifest.json`. Its version 1 schema has
-`schema_version`, `name`, `version`, `components`, and `inputs`. Components are
+`schema_version`, `name`, `version`, `components`, and `inputs`, plus optional
+`first_party_frontend` path/hash records for copied TA source scripts. Components are
 sorted by ecosystem/name/version, with sorted occurrences containing relative
 artifact paths, SHA-256 hashes, and target details. Different versions and
 platform locations remain visible. There is no generation timestamp.
@@ -189,7 +191,9 @@ platform locations remain visible. There is no generation timestamp.
 | `golang` | `go version -m` on final native binaries with Go build information | Recorded dependency modules and replacements, with binary hashes and recorded build targets |
 
 Python platform occurrences retain their configured OS/platform/Python values
-and WHEEL tags. Compatibility is checked against the configured target, including
+and WHEEL tags. Python versions are normalized to major/minor; occurrences
+matching several descriptions include `configured_targets`. Common occurrences
+record wheel tags without claiming compatibility with the build interpreter. Compatibility is checked against the configured target, including
 ABI3 and the observed macOS/manylinux tag variants, rather than the build host.
 Common `lib` placement does not assert compatibility with every platform. A tag
 check does not prove that runtime imports will succeed.
@@ -198,7 +202,16 @@ Frontend evidence is generated during each bundler build. UCC carries package
 identities through its existing library prebundle and counts surviving mapped
 sources after tree shaking. The final project's own root is excluded; an
 installed UCC library used by another project is a dependency. Development
-packages are not included merely because they appear in a lockfile.
+packages are not included merely because they appear in a lockfile. Package-owning
+modules with rendered code but no corresponding mapped contribution fail the
+build, including unsupported map-less transforms, JSON-only dependencies, and
+unrecognized source path rewrites. Rendered module membership is a gap check;
+it is not used to add packages whose code may have been removed during minification.
+
+Copied scripts under `appserver/static` are treated as first-party when their
+bytes match the TA source tree. Producer package evidence takes precedence over
+this classification. This supports documented custom hooks; it does not inspect
+separately vendored dependencies inside TA source scripts.
 
 For a custom Rollup build, install a released UCC npm package exporting the
 helper and register it after code-changing plugins:
@@ -218,10 +231,10 @@ chunks. UCC context builds enable evidence when invoked by
 `ucc-gen build --build-custom-ui --dependency-manifest`, or directly with
 `ucc-gen-ui ta_name=<name> --dependency-manifest`. The context collector is off
 by default. Enabled context builds use an 8 GiB Node heap unless `NODE_OPTIONS`
-is already set, matching the standard UCC build; source-map composition adds
-build-time memory and processing. They replace their fragment with the entry.
+sets an explicit heap limit; other Node options are preserved. Source-map composition adds build-time memory and processing. They replace their fragment with the entry.
 Optional Dashboard chunks omitted from the final output contribute no packages.
-Final files without records or with stale hashes fail an enabled inventory build.
+Final JavaScript without producer records or copied first-party source evidence,
+and chunks with stale hashes, fail an enabled inventory build.
 Maps requested only for evidence are removed from final UI output; explicit
 source maps and library provenance maps remain.
 
@@ -234,8 +247,16 @@ Collection runs after packaging hooks and custom UI generation. Package creation
 checks the saved dependency input set and hashes, including app.manifest identity,
 before opening an archive. Rebuild if those inputs change. This verification does
 not rerun installers or bundlers. Legacy directories without a manifest remain
-packageable; successful builds without the flag retain their behavior. Previously
-swallowed build exceptions and failed custom UI builds now return nonzero.
+packageable; builds without the flag remove stale inventories and producer fragments.
+The core, library, and context producers are opt-in through
+`UCC_DEPENDENCY_MANIFEST=1`. Release CI enables core and library evidence so the
+published artifacts support downstream inventory builds. The npm library includes
+provenance maps and the helper's codec dependency; ordinary consumer builds do
+not activate collection unless requested.
+
+**Build failure behavior change:** previously swallowed build exceptions and
+failed custom UI builds now return nonzero, with or without the inventory flag.
+CI integrations relying on a successful exit after these failures must be corrected.
 
 ### Confidence and limits
 

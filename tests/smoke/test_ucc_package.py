@@ -57,7 +57,7 @@ def test_package_verifies_inventory_inputs(tmp_path, mutation):
     identity(root)
     chunk = frontend_chunk(root)
     metadata = write_dist_info(root, "", "kept", "1.0.0", ["py3-none-any"])
-    write_manifest(root, "Splunk_TA_Test", "1.0.0", [], "3.9.20")
+    write_manifest(root, "Splunk_TA_Test", "1.0.0", [])
     if mutation == "chunk":
         chunk.write_text("changed")
     elif mutation == "add_metadata":
@@ -90,7 +90,7 @@ def test_package_legacy_directory_and_matching_inventory(tmp_path, legacy):
     identity(root)
     if not legacy:
         frontend_chunk(root)
-        write_manifest(root, "Splunk_TA_Test", "1.0.0", [], "3.9.20")
+        write_manifest(root, "Splunk_TA_Test", "1.0.0", [])
     package.package(str(root), str(tmp_path))
     with tarfile.open(tmp_path / "Splunk_TA_Test-1.0.0.tar.gz") as archive:
         name = "Splunk_TA_Test/dependency-manifest.json"
@@ -108,7 +108,7 @@ def test_package_ignores_documentation_changes(tmp_path):
     from splunk_add_on_ucc_framework.dependency_manifest import write_manifest
 
     identity(tmp_path)
-    write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [], "3.9.20")
+    write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [])
     (tmp_path / "README.txt").write_text("Documentation changed after build")
     archive_directory = tmp_path / "archives"
     archive_directory.mkdir()

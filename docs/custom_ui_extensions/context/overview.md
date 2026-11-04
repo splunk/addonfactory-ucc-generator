@@ -262,5 +262,5 @@ tree shaking. Enable the add-on's final inventory with
 `ucc-gen build --build-custom-ui --dependency-manifest`, or pass
 `--dependency-manifest` directly to `ucc-gen-ui`. Ordinary context builds leave
 the collector disabled. Inventory builds default to an 8 GiB Node heap unless
-you set `NODE_OPTIONS`. See
+you set an explicit heap limit in `NODE_OPTIONS`; other Node options are preserved. See
 [the inventory contract and limits](../../commands.md#shipped-dependency-inventory).

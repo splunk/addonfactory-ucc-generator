@@ -22,7 +22,7 @@ const path = require('node:path');
 const { createHash } = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 
-const { rollup } = require(process.env.ROLLUP_MODULE || 'rollup');
+const { rollup, VERSION: rollupVersion } = require(process.env.ROLLUP_MODULE || 'rollup');
 const publicDependencyManifest = require('@splunk/add-on-ucc-framework/dependency-manifest');
 const dependencyManifest = require('./dependency-manifest.cjs');
 
@@ -307,7 +307,12 @@ test('direct context CLI opts into evidence and keeps explicit Node options', (t
         )}, JSON.stringify({argv:process.argv, inventory:process.env.UCC_DEPENDENCY_MANIFEST, options:process.env.NODE_OPTIONS}));`
     );
     fs.chmodSync(vite, 0o755);
-    for (const explicitOptions of [undefined, '--max-old-space-size=9216']) {
+    for (const explicitOptions of [
+        undefined,
+        '--trace-warnings',
+        '--max-old-space-size=9216',
+        '--max_old_space_size=9216',
+    ]) {
         const env = { ...process.env, PATH: `${bin}${path.delimiter}${process.env.PATH}` };
         delete env.NODE_OPTIONS;
         delete env.UCC_DEPENDENCY_MANIFEST;
@@ -325,12 +330,26 @@ test('direct context CLI opts into evidence and keeps explicit Node options', (t
         );
         const result = JSON.parse(fs.readFileSync(capture));
         assert.equal(result.inventory, '1');
-        assert.equal(result.options, explicitOptions || '--max-old-space-size=8192');
+        assert.equal(
+            result.options,
+            explicitOptions?.includes('9216')
+                ? explicitOptions
+                : [explicitOptions, '--max-old-space-size=8192'].filter(Boolean).join(' ')
+        );
         assert(!result.argv.includes('--dependency-manifest'));
     }
 });
 
 test('Storybook omits the TA producer while the core build retains it', async (t) => {
+    const previous = process.env.UCC_DEPENDENCY_MANIFEST;
+    process.env.UCC_DEPENDENCY_MANIFEST = '1';
+    t.after(() => {
+        if (previous === undefined) {
+            delete process.env.UCC_DEPENDENCY_MANIFEST;
+        } else {
+            process.env.UCC_DEPENDENCY_MANIFEST = previous;
+        }
+    });
     const root = project(t);
     const { loadConfigFromFile } = await import('vite');
     const environment = { command: 'build', mode: 'production' };
@@ -355,4 +374,198 @@ test('Storybook omits the TA producer while the core build retains it', async (t
         config.plugins.map((plugin) => plugin.name),
         ['retained-plugin']
     );
+});
+
+test('a package boundary without a version cannot inherit its parent identity', async (t) => {
+    const root = project(t);
+    write(root, 'node_modules/incomplete/package.json', JSON.stringify({ name: 'incomplete' }));
+    write(root, 'node_modules/incomplete/index.js', 'export const value = 7;');
+    write(
+        root,
+        'entry.js',
+        "import {value} from './node_modules/incomplete/index.js'; console.log(value);"
+    );
+    await assert.rejects(
+        () => bundle(root, 'entry.js', 'dist', dependencyManifest({ producer: 'custom-ui' })),
+        /package.*version|identity/i
+    );
+});
+
+test('a map-less dependency transform cannot silently remove package attribution', async (t) => {
+    const root = project(t);
+    pkg(root, 'node_modules/used', 'used', '1.0.0', 'export const value = "original";');
+    write(
+        root,
+        'entry.js',
+        "import {value} from './node_modules/used/index.js'; console.log(value);"
+    );
+    const build = await rollup({
+        input: path.join(root, 'entry.js'),
+        plugins: [
+            {
+                name: 'mapless-transform',
+                transform(code, id) {
+                    return id.endsWith('/used/index.js')
+                        ? code.replace('original', 'changed')
+                        : null;
+                },
+            },
+            dependencyManifest({ producer: 'custom-ui' }),
+        ],
+    });
+    try {
+        await assert.rejects(
+            () => build.write({ dir: path.join(root, 'dist'), format: 'es' }),
+            /Unmapped dependency/
+        );
+    } finally {
+        await build.close();
+    }
+});
+
+test('a JSON-only dependency cannot silently disappear from Vite evidence', async (t) => {
+    const root = project(t);
+    write(
+        root,
+        'node_modules/json-only/package.json',
+        JSON.stringify({ name: 'json-only', version: '1.0.0' })
+    );
+    write(root, 'node_modules/json-only/value.json', JSON.stringify({ value: 17 }));
+    write(
+        root,
+        'entry.js',
+        "import data from './node_modules/json-only/value.json'; console.log(data);"
+    );
+    const { build } = await import('vite');
+    const collector = dependencyManifest({ producer: 'custom-ui' });
+    await assert.rejects(
+        () =>
+            build({
+                configFile: false,
+                root,
+                logLevel: 'silent',
+                plugins: [
+                    {
+                        ...collector,
+                        generateBundle: { order: 'post', handler: collector.generateBundle },
+                    },
+                ],
+                build: { outDir: 'dist', rollupOptions: { input: path.join(root, 'entry.js') } },
+            }),
+        /Unmapped dependency/
+    );
+});
+
+test('custom source path transforms cannot silently remove package attribution', async (t) => {
+    const root = project(t);
+    pkg(root, 'node_modules/used', 'used', '1.0.0', 'export const value=7;');
+    write(
+        root,
+        'entry.js',
+        "import {value} from './node_modules/used/index.js'; console.log(value);"
+    );
+    const build = await rollup({
+        input: path.join(root, 'entry.js'),
+        plugins: [dependencyManifest({ producer: 'custom-ui' })],
+    });
+    try {
+        await assert.rejects(
+            () =>
+                build.write({
+                    dir: path.join(root, 'dist'),
+                    format: 'es',
+                    sourcemapPathTransform: () => 'unrelated.js',
+                }),
+            /Unmapped dependency/
+        );
+    } finally {
+        await build.close();
+    }
+});
+
+test('evidence-only maps respect custom map filenames without leaking sources', async (t) => {
+    if (Number(rollupVersion.split('.')[0]) < 3) {
+        t.skip('sourcemapFileNames needs Rollup 3.29+');
+        return;
+    }
+    const root = project(t);
+    pkg(root, 'node_modules/used', 'used', '1.0.0', 'export const value=7;');
+    write(
+        root,
+        'entry.js',
+        "import {value} from './node_modules/used/index.js'; console.log(value);"
+    );
+    const build = await rollup({
+        input: path.join(root, 'entry.js'),
+        plugins: [dependencyManifest({ producer: 'custom-ui' })],
+    });
+    try {
+        await build.write({
+            dir: path.join(root, 'dist'),
+            format: 'es',
+            sourcemapFileNames: 'private/[name].evidence.map',
+        });
+    } finally {
+        await build.close();
+    }
+    assert(!fs.existsSync(path.join(root, 'dist/private/index.evidence.map')));
+    assert(
+        !fs
+            .readdirSync(path.join(root, 'dist'), { recursive: true })
+            .some((file) => String(file).endsWith('.map'))
+    );
+});
+
+test('nested compatibility manifests do not invent another installed package', async (t) => {
+    const root = project(t);
+    pkg(root, 'node_modules/real', 'real', '1.0.0', 'export const value=9;');
+    write(
+        root,
+        'node_modules/real/dist/package.json',
+        JSON.stringify({ name: 'compat-alias', type: 'module' })
+    );
+    write(root, 'node_modules/real/dist/index.js', 'export const value=9;');
+    write(
+        root,
+        'entry.js',
+        "import {value} from './node_modules/real/dist/index.js'; console.log(value);"
+    );
+    const data = await bundle(
+        root,
+        'entry.js',
+        'dist',
+        dependencyManifest({ producer: 'custom-ui' })
+    );
+    assert.deepEqual(data.chunks[0].packages, [{ name: 'real', version: '1.0.0' }]);
+});
+
+test('core and library development builds collect evidence only when requested', async (t) => {
+    const root = project(t);
+    const { loadConfigFromFile } = await import('vite');
+    const previous = process.env.UCC_DEPENDENCY_MANIFEST;
+    t.after(() => {
+        if (previous === undefined) {
+            delete process.env.UCC_DEPENDENCY_MANIFEST;
+        } else {
+            process.env.UCC_DEPENDENCY_MANIFEST = previous;
+        }
+    });
+    for (const file of ['vite.config.ts', 'vite.lib.config.ts']) {
+        for (const enabled of [false, true]) {
+            process.env.UCC_DEPENDENCY_MANIFEST = enabled ? '1' : '0';
+            // Configuration loading observes the process environment set for this case.
+            // eslint-disable-next-line no-await-in-loop
+            const loaded = await loadConfigFromFile(
+                { command: 'build', mode: 'production' },
+                path.join(__dirname, '..', file),
+                root
+            );
+            assert.equal(
+                loaded.config.plugins
+                    .filter(Boolean)
+                    .some((plugin) => plugin.name === 'ucc-dependency-manifest'),
+                enabled
+            );
+        }
+    }
 });

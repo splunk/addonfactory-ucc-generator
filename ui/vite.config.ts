@@ -152,11 +152,17 @@ const splunkPathRewriter = {
 
 export default defineConfig(({ mode }) => {
     const DEBUG = mode !== 'production';
-    const collector = dependencyManifest({ producer: 'ucc-ui' });
+    const collector =
+        process.env.UCC_DEPENDENCY_MANIFEST === '1'
+            ? dependencyManifest({ producer: 'ucc-ui' })
+            : undefined;
     return {
         base: '',
         plugins: [
-            { ...collector, generateBundle: { order: 'post', handler: collector.generateBundle } },
+            collector && {
+                ...collector,
+                generateBundle: { order: 'post', handler: collector.generateBundle },
+            },
             reactHmrWorkaround,
             react(),
             checker({

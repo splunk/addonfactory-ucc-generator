@@ -25,11 +25,15 @@ const initFileDir =
 const inventory =
     process.argv.includes('--dependency-manifest') || process.env.UCC_DEPENDENCY_MANIFEST === '1';
 // Source-map composition for the full UCC graph needs the same heap as the standard UI build.
+const nodeOptions = process.env.NODE_OPTIONS || '';
+const hasHeapLimit = /(?:^|\s)--max[-_]old[-_]space[-_]size(?:=|\s)/.test(nodeOptions);
 const inventoryEnv = inventory
     ? {
           ...process.env,
           UCC_DEPENDENCY_MANIFEST: '1',
-          NODE_OPTIONS: process.env.NODE_OPTIONS || '--max-old-space-size=8192',
+          NODE_OPTIONS: hasHeapLimit
+              ? nodeOptions
+              : [nodeOptions, '--max-old-space-size=8192'].filter(Boolean).join(' '),
       }
     : undefined;
 

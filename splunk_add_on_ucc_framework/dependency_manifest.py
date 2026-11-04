@@ -17,7 +17,7 @@
 
 import hashlib
 import json
-import tempfile
+import os
 import re
 import shutil
 import subprocess
@@ -28,7 +28,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from packaging.tags import Tag, compatible_tags, cpython_tags, mac_platforms, parse_tag
-from packaging.utils import canonicalize_name
+from packaging.utils import canonicalize_name, canonicalize_version
 
 from splunk_add_on_ucc_framework.app_manifest import AppManifest
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
@@ -56,7 +56,9 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _python_version(value: str) -> tuple[int, int]:
+def _python_version(value: str) -> tuple[int, ...]:
+    if re.fullmatch(r"\d", value):
+        return (int(value),)
     if re.fullmatch(r"\d{2,3}", value):
         return int(value[0]), int(value[1:])
     match = re.fullmatch(r"(\d+)\.(\d+)(?:\.\d+)?", value)
@@ -72,16 +74,37 @@ def _target_tags(config: OSDependentLibraryConfig) -> set[Tag]:
     if mac:
         platforms = list(mac_platforms((int(mac[1]), int(mac[2])), mac[3]))
     else:
-        platforms = [platform]
-        for old, new in (("manylinux2014_", "manylinux_2_17_"),):
-            if platform.startswith(old):
-                platforms.append(new + platform.removeprefix(old))
-            elif platform.startswith(new):
-                platforms.append(old + platform.removeprefix(new))
-    interpreter = f"cp{version[0]}{version[1]}"
-    abi = interpreter + ("m" if version < (3, 8) else "")
+        # Match pip's explicit legacy manylinux target expansion, plus tag aliases.
+        aliases = {
+            "manylinux2014": "manylinux_2_17",
+            "manylinux2010": "manylinux_2_12",
+            "manylinux1": "manylinux_2_5",
+        }
+        legacy = platform
+        for old, new in aliases.items():
+            if platform.startswith(new + "_"):
+                prefix_length = len(new)
+                legacy = old + platform[prefix_length:]
+                break
+        platforms = [platform, legacy]
+        prefix, _, architecture = legacy.partition("_")
+        if prefix == "manylinux2014" and architecture in ("x86_64", "i686"):
+            platforms += ["manylinux2010_" + architecture, "manylinux1_" + architecture]
+        elif prefix == "manylinux2010":
+            platforms += ["manylinux1_" + architecture]
+        for candidate in list(platforms):
+            for old, new in aliases.items():
+                if candidate.startswith(old + "_"):
+                    prefix_length = len(old)
+                    platforms.append(new + candidate[prefix_length:])
+    interpreter = "cp" + "".join(str(part) for part in version)
+    abi = interpreter + ("m" if len(version) == 2 and version < (3, 8) else "")
     return set(
-        cpython_tags(version, abis=[abi, "abi3", "none"], platforms=platforms)
+        cpython_tags(
+            version,
+            abis=[abi, "abi3", "none"] if len(version) == 2 else ["none"],
+            platforms=platforms,
+        )
     ) | set(compatible_tags(version, interpreter=interpreter, platforms=platforms))
 
 
@@ -95,27 +118,18 @@ def _under(root: Path, relative: str) -> Path:
 def collect_python(
     root: Path,
     targets: Sequence[OSDependentLibraryConfig],
-    installer_version: str,
 ) -> list[DependencyRow]:
     """Read final distribution identities and check foreign wheel target tags."""
     lib = root / "lib"
-    configurations: dict[Path, OSDependentLibraryConfig] = {}
+    configurations: dict[Path, list[OSDependentLibraryConfig]] = {}
     for config in targets:
         path = _under(lib, config.target)
         if not path.is_dir():
             raise InventoryError(
                 f"Missing configured Python target: lib/{config.target}"
             )
-        previous = configurations.get(path)
-        if previous and (
-            previous.platform,
-            _python_version(previous.python_version),
-            previous.os,
-        ) != (config.platform, _python_version(config.python_version), config.os):
-            raise InventoryError(
-                f"Conflicting Python target descriptions: {config.target}"
-            )
-        configurations[path] = config
+        configurations.setdefault(path, []).append(config)
+    target_tags = {id(config): _target_tags(config) for config in targets}
 
     rows = []
     found: dict[Path, set[tuple[str, str]]] = {path: set() for path in configurations}
@@ -148,28 +162,51 @@ def collect_python(
         details: dict[str, Any] = {
             "placement": "platform" if owner else "common",
             "wheel_tags": sorted(tags),
-            "python_version": installer_version,
         }
         if owner:
-            config = configurations[owner]
-            details.update(
-                os=config.os,
-                platform=config.platform,
-                python_version=config.python_version,
-            )
             try:
                 installed_tags = set().union(*(parse_tag(tag) for tag in tags))
             except ValueError as error:
                 raise InventoryError(
                     f"Invalid WHEEL tags: {wheel.relative_to(root)}"
                 ) from error
-            if not installed_tags or not installed_tags.intersection(
-                _target_tags(config)
-            ):
+            matching = [
+                config
+                for config in configurations[owner]
+                if canonicalize_name(config.name) == name
+                and canonicalize_version(config.version)
+                == canonicalize_version(version)
+            ]
+            candidates = matching or configurations[owner]
+            compatible = [
+                config
+                for config in candidates
+                if installed_tags.intersection(target_tags[id(config)])
+            ]
+            if not compatible or (matching and len(compatible) != len(matching)):
                 raise InventoryError(
                     f"Missing or incompatible WHEEL tags: {wheel.relative_to(root)}"
                 )
-            found[owner].add((name, version))
+            descriptions = []
+            for config in compatible:
+                description = {
+                    "os": config.os,
+                    "platform": config.platform,
+                    "python_version": ".".join(
+                        str(part) for part in _python_version(config.python_version)
+                    ),
+                }
+                if description not in descriptions:
+                    descriptions.append(description)
+            descriptions.sort(key=lambda value: json.dumps(value, sort_keys=True))
+            if len(descriptions) > 1:
+                details["configured_targets"] = descriptions
+            for key in ("os", "platform", "python_version"):
+                values = {description[key] for description in descriptions}
+                if len(values) == 1:
+                    details[key] = values.pop()
+            found[owner].add((name, canonicalize_version(version)))
+
         rows.append(
             DependencyRow(
                 "pypi",
@@ -181,9 +218,10 @@ def collect_python(
             )
         )
     for config in targets:
-        if (canonicalize_name(config.name), config.version) not in found[
-            _under(lib, config.target)
-        ]:
+        if (
+            canonicalize_name(config.name),
+            canonicalize_version(config.version),
+        ) not in found[_under(lib, config.target)]:
             raise InventoryError(
                 f"Missing configured distribution: {config.name}=={config.version} in {config.target}"
             )
@@ -213,15 +251,26 @@ def _go_binaries(root: Path) -> list[Path]:
         with path.open("rb") as stream:
             header = stream.read(4)
             if any(header.startswith(prefix) for prefix in _NATIVE_HEADERS):
-                if _GO_MAGIC in header + stream.read():
-                    result.append(path)
+                tail = header
+                while True:
+                    block = stream.read(1024 * 1024)
+                    if not block:
+                        break
+                    data = tail + block
+                    if _GO_MAGIC in data:
+                        result.append(path)
+                        break
+                    overlap = len(_GO_MAGIC) - 1
+                    tail = data[-overlap:]
     return result
 
 
 def parse_go_info(text: str, path: str, sha256: str) -> list[DependencyRow]:
     """Parse go version -m output; dependencies come from this binary only."""
     lines = text.splitlines()
-    toolchain = re.search(r"\b(go\d+\.\d+[^\s]*)$", lines[0]) if lines else None
+    toolchain = (
+        re.search(r":\s+((?:devel\s+)?go\d+\.\d+.*)$", lines[0]) if lines else None
+    )
     if not toolchain:
         raise InventoryError(f"Unreadable Go build information: {path}")
     details = {"toolchain": toolchain[1]}
@@ -289,6 +338,7 @@ def collect_go(root: Path) -> list[DependencyRow]:
                 check=True,
                 capture_output=True,
                 text=True,
+                env={**os.environ, "GOTOOLCHAIN": "local"},
             )
         except (OSError, subprocess.CalledProcessError) as error:
             raise InventoryError(f"Could not inspect Go binary: {relative}") from error
@@ -298,6 +348,7 @@ def collect_go(root: Path) -> list[DependencyRow]:
 
 _MANIFEST = "dependency-manifest.json"
 _BUILD_JS = "appserver/static/js/build"
+_STATIC = "appserver/static"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -312,9 +363,28 @@ def _read_json(path: Path) -> dict[str, Any]:
         ) from error
 
 
-def collect_frontend(root: Path, name: str, version: str) -> list[DependencyRow]:
+def _first_party_frontend(
+    root: Path, source: Optional[Path], name: str, version: str
+) -> dict[Path, str]:
+    files = {}
+    if source is not None:
+        source = source.resolve()
+        for original in (source / _STATIC).rglob("*.js"):
+            copied = _under(root, original.relative_to(source).as_posix())
+            if copied.is_file() and _sha256(original) == _sha256(copied):
+                files[copied] = _sha256(copied)
+    redirect = root / _BUILD_JS / f"{name.lower()}_redirect_page.{version}.js"
+    if redirect.is_file():
+        files[redirect] = _sha256(redirect)
+    return files
+
+
+def collect_frontend(
+    root: Path, name: str, version: str, source: Optional[Path] = None
+) -> list[DependencyRow]:
     root = root.resolve()
-    directory = root / _BUILD_JS
+    directory = root / _STATIC
+    first_party = _first_party_frontend(root, source, name, version)
     rows = []
     recorded: set[Path] = set()
     for fragment in sorted(directory.rglob("dependency-chunks.json")):
@@ -373,9 +443,8 @@ def collect_frontend(root: Path, name: str, version: str) -> list[DependencyRow]
                         {"producer": data["producer"]},
                     )
                 )
-    own_redirect = directory / f"{name.lower()}_redirect_page.{version}.js"
     for path in sorted(directory.rglob("*.js")):
-        if path.resolve() not in recorded and path != own_redirect:
+        if path.resolve() not in recorded and path.resolve() not in first_party:
             raise InventoryError(
                 f"Missing frontend dependency record: {path.relative_to(root)}"
             )
@@ -391,7 +460,7 @@ def snapshot_inputs(root: Path) -> dict[str, str]:
         paths.update(
             path for path in (folder / "METADATA", folder / "WHEEL") if path.is_file()
         )
-    directory = root / _BUILD_JS
+    directory = root / _STATIC
     paths.update(directory.rglob("*.js"))
     paths.update(directory.rglob("dependency-chunks.json"))
     paths.update(_go_binaries(root))
@@ -403,7 +472,7 @@ def write_manifest(
     name: str,
     version: str,
     targets: Sequence[OSDependentLibraryConfig],
-    installer_version: str,
+    source: Optional[Path] = None,
 ) -> Path:
     root = root.resolve()
     try:
@@ -415,8 +484,8 @@ def write_manifest(
     except (OSError, ValueError, KeyError) as error:
         raise InventoryError("Cannot read the final app.manifest identity") from error
     rows = (
-        collect_python(root, targets, installer_version)
-        + collect_frontend(root, name, version)
+        collect_python(root, targets)
+        + collect_frontend(root, name, version, source=source)
         + collect_go(root)
     )
     components: dict[tuple[str, str, str], dict[str, Any]] = {}
@@ -452,23 +521,20 @@ def write_manifest(
         "components": [components[key] for key in sorted(components)],
         "inputs": snapshot_inputs(root),
     }
+    dependency_paths = {row.path for row in rows if row.ecosystem == "npm"}
+    first_party = _first_party_frontend(root, source, name, version)
+    if first_party:
+        result["first_party_frontend"] = [
+            {"path": path.relative_to(root).as_posix(), "sha256": digest}
+            for path, digest in sorted(first_party.items())
+            if path.relative_to(root).as_posix() not in dependency_paths
+        ]
     destination = root / _MANIFEST
-    temporary: Optional[Path] = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=root,
-            prefix=".dependency-manifest-",
-            delete=False,
-        ) as stream:
-            temporary = Path(stream.name)
-            json.dump(result, stream, indent=2, sort_keys=True, ensure_ascii=False)
-            stream.write("\n")
-        temporary.replace(destination)
-    finally:
-        if temporary:
-            temporary.unlink(missing_ok=True)
+    destination.write_text(
+        json.dumps(result, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    destination.chmod(0o644)
     return destination
 
 

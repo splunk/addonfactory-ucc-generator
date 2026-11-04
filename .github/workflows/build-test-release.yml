@@ -557,4 +557,5 @@ jobs:
           cd ui
           npm publish --provenance --access public
         env:
+          UCC_DEPENDENCY_MANIFEST: "1"
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

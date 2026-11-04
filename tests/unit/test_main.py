@@ -22,6 +22,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -38,6 +39,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -54,6 +56,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -70,6 +73,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -86,6 +90,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": True,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -109,6 +114,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -134,6 +140,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -161,6 +168,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -189,6 +197,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -218,6 +227,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -249,6 +259,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -281,6 +292,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -304,6 +316,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": False,
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
         (
@@ -329,6 +342,7 @@ from splunk_add_on_ucc_framework import main
                 "pip_custom_flag": "--progress-bar on",
                 "build_custom_ui": False,
                 "overwrite": False,
+                "dependency_manifest": False,
             },
         ),
     ],

@@ -62,7 +62,7 @@ def test_final_python_variants(tmp_path):
         write_dist_info(tmp_path, config.target, "pycparser", "2.23", ["py3-none-any"])
     write_dist_info(tmp_path, "", "Python_Dateutil", "2.9.0.post0", None)
 
-    rows = collect_python(tmp_path, configs, "3.9.20")
+    rows = collect_python(tmp_path, configs)
 
     assert {
         (r.name, r.version, r.target["os"])
@@ -98,7 +98,7 @@ def test_missing_configured_distribution(tmp_path, missing):
         if missing == "metadata":
             (folder / "METADATA").unlink()
     with pytest.raises(InventoryError):
-        collect_python(tmp_path, [config], "3.9.20")
+        collect_python(tmp_path, [config])
 
 
 @pytest.mark.parametrize(
@@ -118,10 +118,10 @@ def test_foreign_wheel_compatibility(tmp_path, platform, tag, accepted):
     config = target(platform=platform)
     write_dist_info(tmp_path, config.target, "cffi", "2.0.0", [tag])
     if accepted:
-        assert len(collect_python(tmp_path, [config], "3.13.5")) == 1
+        assert len(collect_python(tmp_path, [config])) == 1
     else:
         with pytest.raises(InventoryError, match="incompatible"):
-            collect_python(tmp_path, [config], "3.13.5")
+            collect_python(tmp_path, [config])
 
 
 @pytest.mark.parametrize(
@@ -130,7 +130,7 @@ def test_foreign_wheel_compatibility(tmp_path, platform, tag, accepted):
 def test_python_version_forms(tmp_path, version, tag):
     config = target(python=version)
     write_dist_info(tmp_path, config.target, "cffi", "2.0.0", [tag])
-    assert len(collect_python(tmp_path, [config], "3.13.5")) == 1
+    assert len(collect_python(tmp_path, [config])) == 1
 
 
 def test_shared_target_roots(tmp_path):
@@ -138,9 +138,9 @@ def test_shared_target_roots(tmp_path):
     other = target(name="pycparser", version="2.23")
     write_dist_info(tmp_path, config.target, "cffi", "2.0.0", ["cp39-cp39-win_amd64"])
     write_dist_info(tmp_path, other.target, "pycparser", "2.23", ["py3-none-any"])
-    assert len(collect_python(tmp_path, [config, other], "3.9.20")) == 2
-    with pytest.raises(InventoryError, match="Conflicting"):
-        collect_python(tmp_path, [config, target(python="3.13")], "3.9.20")
+    assert len(collect_python(tmp_path, [config, other])) == 2
+    with pytest.raises(InventoryError, match="incompatible"):
+        collect_python(tmp_path, [config, target(python="3.13")])
 
 
 def test_deepest_configured_target(tmp_path):
@@ -148,7 +148,7 @@ def test_deepest_configured_target(tmp_path):
     inner = target(path="3rdparty/nested", name="pycparser", version="2.23")
     write_dist_info(tmp_path, outer.target, "cffi", "2.0.0", ["py3-none-any"])
     write_dist_info(tmp_path, inner.target, "pycparser", "2.23", ["py3-none-any"])
-    rows = collect_python(tmp_path, [outer, inner], "3.9.20")
+    rows = collect_python(tmp_path, [outer, inner])
     assert len(rows) == 2
     assert all(row.target and row.target["placement"] == "platform" for row in rows)
 
@@ -213,6 +213,7 @@ def test_go_detection(tmp_path, monkeypatch, header):
     calls = []
 
     def run(argv, **kwargs):
+        assert kwargs["env"]["GOTOOLCHAIN"] == "local"
         calls.append(argv)
         return subprocess.CompletedProcess(argv, 0, GO_INFO, "")
 
@@ -324,7 +325,7 @@ def test_manifest_merges_occurrences_and_preserves_versions(tmp_path):
     )
     write_dist_info(tmp_path, "", "Python_Dateutil", "2.9.0.post0", ["py3-none-any"])
     result = json.loads(
-        write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [], "3.9.20").read_text()
+        write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", []).read_text()
     )
     assert [
         (c["ecosystem"], c["name"], c["version"]) for c in result["components"]
@@ -346,8 +347,8 @@ def test_manifest_is_deterministic(tmp_path):
     identity(first)
     frontend_chunk(first)
     shutil.copytree(first, second)
-    one = write_manifest(first, "Splunk_TA_Test", "1.0.0", [], "3.9.20").read_bytes()
-    two = write_manifest(second, "Splunk_TA_Test", "1.0.0", [], "3.9.20").read_bytes()
+    one = write_manifest(first, "Splunk_TA_Test", "1.0.0", []).read_bytes()
+    two = write_manifest(second, "Splunk_TA_Test", "1.0.0", []).read_bytes()
     assert one == two
     assert str(tmp_path).encode() not in one
     assert one.endswith(b"\n")
@@ -356,4 +357,166 @@ def test_manifest_is_deterministic(tmp_path):
 def test_manifest_rejects_different_archive_identity(tmp_path):
     identity(tmp_path, version="2.0.0")
     with pytest.raises(InventoryError, match="identity"):
-        write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [], "3.9.20")
+        write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [])
+
+
+@pytest.mark.parametrize(
+    "platform,tag",
+    [
+        ("manylinux2014_x86_64", "cp39-cp39-manylinux2010_x86_64"),
+        ("manylinux2014_x86_64", "cp39-cp39-manylinux1_x86_64"),
+        ("manylinux2010_x86_64", "cp39-cp39-manylinux1_x86_64"),
+        ("manylinux_2_17_x86_64", "cp39-cp39-manylinux2010_x86_64"),
+    ],
+)
+def test_installer_compatible_legacy_linux_wheels(tmp_path, platform, tag):
+    config = target(os="linux", platform=platform)
+    write_dist_info(tmp_path, config.target, "cffi", "2.0.0", [tag])
+    assert len(collect_python(tmp_path, [config])) == 1
+
+
+def test_major_only_target_python(tmp_path):
+    config = target(python="3")
+    write_dist_info(tmp_path, config.target, "cffi", "2.0.0", ["py3-none-any"])
+    assert len(collect_python(tmp_path, [config])) == 1
+
+
+def test_configured_version_normalization(tmp_path):
+    config = target(version="1.15")
+    write_dist_info(tmp_path, config.target, "cffi", "1.15.0", ["py3-none-any"])
+    rows = collect_python(tmp_path, [config])
+    assert rows[0].version == "1.15.0"
+
+
+def test_shared_target_allows_aliases_and_per_distribution_platforms(tmp_path):
+    root = "3rdparty/shared"
+    configs = [
+        target(os="linux", platform="manylinux2014_x86_64", path=root),
+        target(os="linux", platform="manylinux_2_17_x86_64", path=root),
+        target(
+            os="darwin",
+            platform="macosx_10_12_x86_64",
+            name="other",
+            version="1.0",
+            path=root,
+        ),
+    ]
+    write_dist_info(tmp_path, root, "cffi", "2.0.0", ["cp39-cp39-manylinux2014_x86_64"])
+    write_dist_info(tmp_path, root, "other", "1.0.0", ["cp39-cp39-macosx_10_9_x86_64"])
+    rows = collect_python(tmp_path, configs)
+    assert len(rows) == 2
+    cffi = next(row for row in rows if row.name == "cffi")
+    other = next(row for row in rows if row.name == "other")
+    assert cffi.target is not None
+    assert other.target is not None
+    assert cffi.target["os"] == "linux"
+    assert other.target["os"] == "darwin"
+
+
+@pytest.mark.parametrize(
+    "toolchain", ["go1.19.2 X:boringcrypto", "devel go1.25-abcdef 2025-01-02"]
+)
+def test_go_toolchain_variants(toolchain):
+    rows = parse_go_info(
+        GO_INFO.replace("go1.24.3", toolchain), "bin/program", "a" * 64
+    )
+    assert rows[0].target is not None
+    assert rows[0].target["toolchain"] == toolchain
+
+
+@pytest.mark.parametrize(
+    "relative", ["appserver/static/js/build/custom/own.js", "appserver/static/other.js"]
+)
+def test_copied_first_party_frontend_is_not_a_dependency(tmp_path, relative):
+    source, root = tmp_path / "source", tmp_path / "output"
+    file = source / relative
+    file.parent.mkdir(parents=True)
+    file.write_text("console.log('TA-owned hook');")
+    copied = root / relative
+    copied.parent.mkdir(parents=True)
+    copied.write_bytes(file.read_bytes())
+    assert collect_frontend(root, "Splunk_TA_Test", "1.0.0", source=source) == []
+    copied.write_text("code added after source copy")
+    with pytest.raises(InventoryError, match="record"):
+        collect_frontend(root, "Splunk_TA_Test", "1.0.0", source=source)
+
+
+def test_unrecorded_javascript_outside_build_is_rejected(tmp_path):
+    file = tmp_path / "appserver/static/other.js"
+    file.parent.mkdir(parents=True)
+    file.write_text('console.log("unknown provenance");')
+    with pytest.raises(InventoryError, match="record"):
+        collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0")
+
+
+def test_manifest_lists_explicit_first_party_files(tmp_path):
+    source, root = tmp_path / "source", tmp_path / "output"
+    source.mkdir()
+    root.mkdir()
+    identity(root)
+    relative = "appserver/static/js/build/custom/own.js"
+    for base in (source, root):
+        file = base / relative
+        file.parent.mkdir(parents=True)
+        file.write_text('console.log("own hook");')
+    import json
+
+    data = json.loads(
+        write_manifest(root, "Splunk_TA_Test", "1.0.0", [], source=source).read_text()
+    )
+    assert data["first_party_frontend"][0]["path"] == relative
+    assert data["components"] == []
+
+
+def test_common_python_rows_do_not_claim_build_interpreter_compatibility(tmp_path):
+    write_dist_info(tmp_path, "", "used", "1.0.0", ["py3-none-any"])
+    rows = collect_python(tmp_path, [])
+    assert rows[0].target == {"placement": "common", "wheel_tags": ["py3-none-any"]}
+
+
+def test_generated_manifest_is_readable_like_other_addon_files(tmp_path):
+    import stat
+
+    identity(tmp_path)
+    result = write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [])
+    assert stat.S_IMODE(result.stat().st_mode) == 0o644
+
+
+def test_verify_manifest_directly_rejects_changed_inputs_and_schema(tmp_path):
+    import json
+    from splunk_add_on_ucc_framework.dependency_manifest import verify_manifest
+
+    identity(tmp_path)
+    result = write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [])
+    verify_manifest(tmp_path)
+    identity(tmp_path, version="2.0.0")
+    with pytest.raises(InventoryError, match="changed"):
+        verify_manifest(tmp_path)
+    result.write_text(json.dumps({"schema_version": 2, "inputs": {}}))
+    with pytest.raises(InventoryError, match="Unsupported"):
+        verify_manifest(tmp_path)
+
+
+def test_go_magic_across_streaming_block_boundary(tmp_path):
+    from splunk_add_on_ucc_framework.dependency_manifest import _go_binaries, _GO_MAGIC
+
+    binary = tmp_path / "native"
+    binary.write_bytes(b"\x7fELF" + b"x" * (1024 * 1024 - 5) + _GO_MAGIC + b"tail")
+    assert _go_binaries(tmp_path) == [binary]
+
+
+def test_producer_evidence_precedes_copied_source_classification(tmp_path):
+    import json
+
+    root, source = tmp_path / "output", tmp_path / "source"
+    root.mkdir()
+    identity(root)
+    chunk = frontend_chunk(root)
+    copied = source / chunk.relative_to(root)
+    copied.parent.mkdir(parents=True)
+    copied.write_bytes(chunk.read_bytes())
+    data = json.loads(
+        write_manifest(root, "Splunk_TA_Test", "1.0.0", [], source=source).read_text()
+    )
+    assert any(row["ecosystem"] == "npm" for row in data["components"])
+    assert not data.get("first_party_frontend")

@@ -334,7 +334,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     args = parser.parse_args(argv)
     if args.command == "build":
-        build_options = dict(
+        build.generate(
             source=args.source,
             config_path=args.config,
             addon_version=args.ta_version,
@@ -346,10 +346,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             pip_custom_flag=args.pip_custom_flag,
             build_custom_ui=args.build_custom_ui,
             overwrite=args.overwrite,
+            dependency_manifest=args.dependency_manifest,
         )
-        if args.dependency_manifest:
-            build_options["dependency_manifest"] = True
-        build.generate(**build_options)
     if args.command == "package":
         package.package(path_to_built_addon=args.path, output_directory=args.output)
     if args.command == "validate":

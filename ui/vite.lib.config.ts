@@ -16,11 +16,17 @@ const modulesNotToBundle = Object.keys(peerDependencies).filter(
     (dep) => dep !== 'styled-components'
 );
 
-const collector = dependencyManifest({ producer: 'ucc-ui', library: true });
+const collector =
+    process.env.UCC_DEPENDENCY_MANIFEST === '1'
+        ? dependencyManifest({ producer: 'ucc-ui', library: true })
+        : undefined;
 
 export default defineConfig({
     plugins: [
-        { ...collector, generateBundle: { order: 'post', handler: collector.generateBundle } },
+        collector && {
+            ...collector,
+            generateBundle: { order: 'post', handler: collector.generateBundle },
+        },
         react(),
         dts({
             tsconfigPath: 'tsconfig.app.json',

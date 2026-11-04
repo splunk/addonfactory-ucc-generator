@@ -20,10 +20,10 @@ jobs:
       - name: Dependency inventory fixtures
         run: |
           yarn test:dependency-manifest
-          rollup2_dir=$(mktemp -d)
-          npm install --prefix "$rollup2_dir" --no-save rollup@2.67.0
-          ROLLUP_MODULE="$rollup2_dir/node_modules/rollup" yarn test:dependency-manifest
+          ROLLUP_MODULE=rollup2 yarn test:dependency-manifest
       - name: Build lib and publish dry run
+        env:
+          UCC_DEPENDENCY_MANIFEST: "1"
         run: npm publish --provenance --access public --dry-run
       - name: Pack tarball
         run: npm pack
@@ -44,8 +44,12 @@ jobs:
       - name: install deps
         uses: ./.github/actions/cached-ui-deps
       - name: Build UCC library
+        env:
+          UCC_DEPENDENCY_MANIFEST: "1"
         run: yarn run build:lib
       - name: Build UCC UI
+        env:
+          UCC_DEPENDENCY_MANIFEST: "1"
         run: yarn run build
       - name: List deps into dependencies.txt
         run: yarn list --prod --depth 0 | python ../.github/scripts/format_yarn_deps.py --output-file=dist/dependencies.txt
