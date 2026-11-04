@@ -27,9 +27,11 @@
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
     "test-storybook:update-snapshots": "yarn run test-storybook -u",
-    "prepublishOnly": "yarn run build:lib"
+    "prepublishOnly": "yarn run build:lib",
+    "test:dependency-manifest": "node --test cli/dependency-manifest.test.cjs"
   },
   "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.5.5",
     "@splunk/dashboard-action-buttons": "29.8.0",
     "@splunk/dashboard-context": "29.8.0",
     "@splunk/dashboard-core": "29.8.0",
