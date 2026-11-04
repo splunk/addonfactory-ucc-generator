@@ -91,6 +91,7 @@ module.exports = function dependencyManifest({ producer, library = false }) {
     if (!project) {
         throw new Error('The frontend project needs a package.json name and version');
     }
+    const provenance = new Map();
     let viteInternalMaps = false;
     let removeMaps = false;
 
@@ -122,6 +123,14 @@ module.exports = function dependencyManifest({ producer, library = false }) {
             if (!map.sources?.some((source) => source.includes(marker))) {
                 return null;
             }
+            provenance.set(
+                id,
+                new Set(
+                    map.sources
+                        .filter((source) => source.includes(marker))
+                        .map((source) => source.slice(source.indexOf(marker)))
+                )
+            );
             return { code: fs.readFileSync(id, 'utf8'), map };
         },
         generateBundle(options, bundle) {
@@ -158,7 +167,17 @@ module.exports = function dependencyManifest({ producer, library = false }) {
                     if (!owner || (!library && owner.directory === project.directory)) {
                         continue;
                     }
-                    if (!mappedPackages.has(JSON.stringify([owner.name, owner.version]))) {
+                    // The installed wrapper may contribute no code; its prebundle's
+                    // surviving original sources establish attribution instead.
+                    const origins = provenance.get(id);
+                    const mapped = origins
+                        ? [...usedSources].some((index) =>
+                              origins.has(
+                                  map.sources[index].slice(map.sources[index].indexOf(marker))
+                              )
+                          )
+                        : mappedPackages.has(JSON.stringify([owner.name, owner.version]));
+                    if (!mapped) {
                         this.error(
                             `Unmapped dependency ${owner.name}@${owner.version} in ${chunk.fileName}; preserve source maps in transforming plugins`
                         );

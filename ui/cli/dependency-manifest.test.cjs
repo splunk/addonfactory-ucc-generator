@@ -178,6 +178,37 @@ test('prebundle tree shaking preserves used dependency and consumed library root
         { name: '@splunk/test-ucc', version: '6.6.0' },
         { name: 'used', version: '1.0.0' },
     ]);
+
+    // A prebundle can retain dependency code while all code owned by its wrapper disappears.
+    write(root, 'entry.js', "import {used} from './library/dist/index.js'; console.log(used());");
+    const dependencyOnly = await bundle(
+        root,
+        'entry.js',
+        'dist',
+        dependencyManifest({ producer: 'custom-ui' })
+    );
+    assert.deepEqual(dependencyOnly.chunks[0].packages, [{ name: 'used', version: '1.0.0' }]);
+
+    const broken = await rollup({
+        input: path.join(root, 'entry.js'),
+        plugins: [
+            {
+                name: 'mapless-prebundle',
+                transform(code, id) {
+                    return id === path.join(lib, 'dist/index.js') ? `${code}\n/* changed */` : null;
+                },
+            },
+            dependencyManifest({ producer: 'custom-ui' }),
+        ],
+    });
+    try {
+        await assert.rejects(
+            () => broken.write({ dir: path.join(root, 'dist'), format: 'es' }),
+            /Unmapped dependency/
+        );
+    } finally {
+        await broken.close();
+    }
 });
 
 test('Vite dynamic-import final hashes and mapped packages after minification', async (t) => {

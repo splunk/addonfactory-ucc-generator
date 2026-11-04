@@ -600,7 +600,11 @@ def test_ucc_build_verbose_mode(caplog):
     def generate_expected_log():
         def append_appserver_content(raw_expected_logs):
             path_len = len(app_server_lib_path) + 1
-            excluded_files = ["redirect_page.js", "redirect.html"]
+            excluded_files = [
+                "redirect_page.js",
+                "redirect.html",
+                "dependency-chunks.json",
+            ]
 
             for full_path, dir, files in os.walk(app_server_lib_path):
                 if files:
