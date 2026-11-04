@@ -656,3 +656,13 @@ def test_correct_config_argument(
 
         expected_msg = f" Global config file should be a JSON or YAML file. Provided: {config_path}"
         assert expected_msg in caplog.text
+
+
+def test_dependency_manifest_flag(monkeypatch):
+    from unittest.mock import Mock
+    from splunk_add_on_ucc_framework import main as command
+
+    handler = Mock()
+    monkeypatch.setattr(command.build, "generate", handler)
+    command.main(["build", "--dependency-manifest"])
+    assert handler.call_args.kwargs["dependency_manifest"] is True

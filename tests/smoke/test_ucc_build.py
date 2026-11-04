@@ -1002,3 +1002,57 @@ def test_ucc_generate_os_lib_requires_python_39_ignore(tmp_path, caplog):
     )
 
     build.generate(source=package_folder, config_path=str(tmp_file_gc))
+
+
+def test_inventory_after_last_build_step(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from tests.unit.test_dependency_manifest import frontend_chunk, write_dist_info
+
+    fixture = Path(__file__).parents[1] / "testdata/test_addons/package_conf_only_TA"
+    project = tmp_path / "project"
+    shutil.copytree(fixture, project)
+    source = project / "package"
+    (source / "dependency-manifest.json").write_text("stale source inventory")
+    (project / "additional_packaging.py").touch()
+    output = tmp_path / "output"
+    root = output / "Splunk_TA_UCCExample"
+    events = []
+
+    def install(_source, target, *_args, **_kwargs):
+        events.append("install")
+        write_dist_info(root, "", "kept", "1.0.0", ["py3-none-any"])
+        write_dist_info(root, "", "removed", "1.0.0", ["py3-none-any"])
+
+    def cleanup(_output, _name):
+        events.append("cleanup")
+        assert not (root / "dependency-manifest.json").exists()
+        shutil.rmtree(root / "lib/removed-1.0.0.dist-info")
+
+    def custom_ui(_source):
+        events.append("custom-ui")
+        frontend_chunk(root, "custom/last.js", producer="custom-ui")
+
+    monkeypatch.setattr(build, "install_python_libraries", install)
+    monkeypatch.setattr(build, "build_ui", custom_ui)
+    monkeypatch.setitem(
+        sys.modules,
+        "additional_packaging",
+        SimpleNamespace(
+            cleanup_output_files=cleanup,
+            additional_packaging=lambda _: None,
+        ),
+    )
+    build.generate(
+        str(source),
+        addon_version="1.0.0",
+        output_directory=str(output),
+        build_custom_ui=True,
+        dependency_manifest=True,
+    )
+    data = json.loads((root / "dependency-manifest.json").read_text())
+    assert events == ["install", "cleanup", "custom-ui"]
+    assert {(c["ecosystem"], c["name"]) for c in data["components"]} == {
+        ("pypi", "kept"),
+        ("npm", "used"),
+    }
+    assert "appserver/static/js/build/custom/last.js" in data["inputs"]

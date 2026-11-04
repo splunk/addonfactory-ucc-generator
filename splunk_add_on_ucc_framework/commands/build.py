@@ -35,6 +35,7 @@ from urllib.parse import quote
 from splunk_add_on_ucc_framework import (
     __version__,
     exceptions,
+    dependency_manifest as dependency_inventory,
     global_config_update,
     global_config_validator,
     utils,
@@ -501,6 +502,7 @@ def build_ui(source: str) -> None:
 
     except subprocess.CalledProcessError as e:
         logger.error(f"Custom UI Build failed: {e}")
+        sys.exit(1)
 
 
 def exception_handler(func: Any) -> Any:
@@ -523,6 +525,8 @@ def exception_handler(func: Any) -> Any:
                 f"You can report this issue using: {url}"
             )
 
+            sys.exit(1)
+
     return inner_function
 
 
@@ -539,6 +543,7 @@ def generate(
     pip_custom_flag: Optional[str] = None,
     build_custom_ui: bool = False,
     overwrite: bool = False,
+    dependency_manifest: bool = False,
 ) -> None:
     logger.info(f"ucc-gen version {__version__} is used")
     logger.info(f"Python binary name to use: {python_binary_name}")
@@ -571,6 +576,9 @@ def generate(
         shutil.rmtree(os.path.join(output_directory, ta_name), ignore_errors=True)
         os.makedirs(os.path.join(output_directory, ta_name))
         logger.info(f"Cleaned out directory {os.path.join(output_directory,ta_name)}")
+    output_root = Path(output_directory) / ta_name
+    if dependency_manifest:
+        (output_root / "dependency-manifest.json").unlink(missing_ok=True)
     generated_files = []
 
     gc_path = _get_and_check_global_config_path(source, config_path)
@@ -688,6 +696,9 @@ def generate(
     )
     comparator.deduce_gen_and_custom_content(logger)
     utils.recursive_overwrite(source, os.path.join(output_directory, ta_name))
+    if dependency_manifest:
+        # A source package may itself contain an old generated inventory.
+        (output_root / "dependency-manifest.json").unlink(missing_ok=True)
     logger.info("Copied package directory")
 
     # Apply template placeholder replacement on the final copied output.
@@ -790,6 +801,20 @@ def generate(
         # should we share output dir (requires build Ui changes)
         # or should be rely on UI repo to specify it?
         build_ui(source)
+
+    if dependency_manifest:
+        try:
+            path = dependency_inventory.write_manifest(
+                output_root,
+                ta_name,
+                addon_version,
+                global_config.os_libraries or [],
+                python_binary_version.removeprefix("Python "),
+            )
+            logger.info(f"Wrote shipped dependency inventory: {path}")
+        except dependency_inventory.InventoryError as error:
+            logger.error(str(error))
+            sys.exit(1)
 
     summary_report(
         source,

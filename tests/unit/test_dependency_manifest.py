@@ -7,6 +7,9 @@ from splunk_add_on_ucc_framework.dependency_manifest import (
     collect_python,
     collect_go,
     parse_go_info,
+    collect_frontend,
+    write_manifest,
+    snapshot_inputs,
 )
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
@@ -238,3 +241,119 @@ def test_missing_go_tool(tmp_path, monkeypatch):
     monkeypatch.setattr(inventory.shutil, "which", lambda name: None)
     with pytest.raises(InventoryError, match="Go"):
         collect_go(tmp_path)
+
+
+def frontend_chunk(root, file="entry_page.js", packages=None, producer="ucc-ui"):
+    import hashlib
+    import json
+
+    directory = root / "appserver/static/js/build"
+    path = directory / file
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("console.log('shipped');\n")
+    fragment = path.parent / "dependency-chunks.json"
+    record = {
+        "path": path.name,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        "packages": (
+            packages if packages is not None else [{"name": "used", "version": "1.0.0"}]
+        ),
+    }
+    if fragment.exists():
+        data = json.loads(fragment.read_text())
+        data["chunks"].append(record)
+    else:
+        data = {"schema_version": 1, "producer": producer, "chunks": [record]}
+    fragment.write_text(json.dumps(data))
+    return path
+
+
+def identity(root, name="Splunk_TA_Test", version="1.0.0"):
+    import json
+
+    (root / "app.manifest").write_text(
+        json.dumps({"info": {"id": {"name": name, "version": version}}})
+    )
+
+
+def test_final_frontend_reconciliation(tmp_path):
+    retained = frontend_chunk(tmp_path)
+    removed = frontend_chunk(
+        tmp_path,
+        "Dashboard.omitted.js",
+        [{"name": "dashboard-only", "version": "1.0.0"}],
+    )
+    removed.unlink()
+    rows = collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0")
+    assert [(row.name, row.version) for row in rows] == [("used", "1.0.0")]
+    retained.write_text("overwritten custom context entry")
+    with pytest.raises(InventoryError, match="hash"):
+        collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0")
+
+
+@pytest.mark.parametrize("oauth", [True, False])
+def test_oauth_redirect_evidence(tmp_path, oauth):
+    directory = tmp_path / "appserver/static/js/build"
+    directory.mkdir(parents=True)
+    if oauth:
+        (directory / "splunk_ta_test_redirect_page.1.0.0.js").write_text(
+            "own generated code"
+        )
+    assert collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0") == []
+    (directory / "redirect_page.js").write_text("unrecognized leftover")
+    with pytest.raises(InventoryError, match="record"):
+        collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0")
+
+
+def test_custom_code_still_needs_a_record(tmp_path):
+    path = frontend_chunk(tmp_path, "custom/own.js", [])
+    assert collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0") == []
+    path.with_name("dependency-chunks.json").unlink()
+    with pytest.raises(InventoryError, match="record"):
+        collect_frontend(tmp_path, "Splunk_TA_Test", "1.0.0")
+
+
+def test_manifest_merges_occurrences_and_preserves_versions(tmp_path):
+    import json
+
+    identity(tmp_path)
+    frontend_chunk(tmp_path)
+    frontend_chunk(tmp_path, "custom/second.js", producer="custom-ui")
+    frontend_chunk(
+        tmp_path, "custom/third.js", [{"name": "used", "version": "2.0.0"}], "custom-ui"
+    )
+    write_dist_info(tmp_path, "", "Python_Dateutil", "2.9.0.post0", ["py3-none-any"])
+    result = json.loads(
+        write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [], "3.9.20").read_text()
+    )
+    assert [
+        (c["ecosystem"], c["name"], c["version"]) for c in result["components"]
+    ] == [
+        ("npm", "used", "1.0.0"),
+        ("npm", "used", "2.0.0"),
+        ("pypi", "python-dateutil", "2.9.0.post0"),
+    ]
+    assert len(result["components"][0]["occurrences"]) == 2
+    assert result["inputs"] == snapshot_inputs(tmp_path)
+    assert "app.manifest" in result["inputs"]
+
+
+def test_manifest_is_deterministic(tmp_path):
+    import shutil
+
+    first, second = tmp_path / "first", tmp_path / "second"
+    first.mkdir()
+    identity(first)
+    frontend_chunk(first)
+    shutil.copytree(first, second)
+    one = write_manifest(first, "Splunk_TA_Test", "1.0.0", [], "3.9.20").read_bytes()
+    two = write_manifest(second, "Splunk_TA_Test", "1.0.0", [], "3.9.20").read_bytes()
+    assert one == two
+    assert str(tmp_path).encode() not in one
+    assert one.endswith(b"\n")
+
+
+def test_manifest_rejects_different_archive_identity(tmp_path):
+    identity(tmp_path, version="2.0.0")
+    with pytest.raises(InventoryError, match="identity"):
+        write_manifest(tmp_path, "Splunk_TA_Test", "1.0.0", [], "3.9.20")

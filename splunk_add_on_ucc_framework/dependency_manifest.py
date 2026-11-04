@@ -16,6 +16,8 @@
 """Inventory evidence from the final add-on tree; never resolve dependencies."""
 
 import hashlib
+import json
+import tempfile
 import re
 import shutil
 import subprocess
@@ -28,6 +30,7 @@ from typing import Any, Optional
 from packaging.tags import Tag, compatible_tags, cpython_tags, mac_platforms, parse_tag
 from packaging.utils import canonicalize_name
 
+from splunk_add_on_ucc_framework.app_manifest import AppManifest
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 
@@ -291,3 +294,179 @@ def collect_go(root: Path) -> list[DependencyRow]:
             raise InventoryError(f"Could not inspect Go binary: {relative}") from error
         rows.extend(parse_go_info(result.stdout, relative, _sha256(binary)))
     return rows
+
+
+_MANIFEST = "dependency-manifest.json"
+_BUILD_JS = "appserver/static/js/build"
+
+
+def _read_json(path: Path) -> dict[str, Any]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError("Expected a JSON object")
+        return data
+    except (OSError, ValueError) as error:
+        raise InventoryError(
+            f"Invalid dependency evidence: {path.name}: {error}"
+        ) from error
+
+
+def collect_frontend(root: Path, name: str, version: str) -> list[DependencyRow]:
+    root = root.resolve()
+    directory = root / _BUILD_JS
+    rows = []
+    recorded: set[Path] = set()
+    for fragment in sorted(directory.rglob("dependency-chunks.json")):
+        data = _read_json(fragment)
+        if data.get("schema_version") != 1 or data.get("producer") not in (
+            "ucc-ui",
+            "custom-ui",
+        ):
+            raise InventoryError(
+                f"Unsupported dependency fragment: {fragment.relative_to(root)}"
+            )
+        chunks = data.get("chunks")
+        if not isinstance(chunks, list):
+            raise InventoryError(f"Missing chunk records: {fragment.relative_to(root)}")
+        for chunk in chunks:
+            if not isinstance(chunk, dict):
+                raise InventoryError(
+                    f"Invalid chunk record: {fragment.relative_to(root)}"
+                )
+            relative, expected = chunk.get("path"), chunk.get("sha256")
+            packages = chunk.get("packages")
+            if (
+                not isinstance(relative, str)
+                or not relative
+                or Path(relative).is_absolute()
+                or not isinstance(expected, str)
+                or not re.fullmatch(r"[0-9a-f]{64}", expected)
+                or not isinstance(packages, list)
+            ):
+                raise InventoryError(
+                    f"Invalid chunk record: {fragment.relative_to(root)}"
+                )
+            path = _under(fragment.parent, relative)
+            if not path.exists():
+                continue  # Optional Dashboard chunks are filtered during the final copy.
+            if not path.is_file() or _sha256(path) != expected:
+                raise InventoryError(
+                    f"Frontend hash mismatch; rebuild its evidence: {path.relative_to(root)}"
+                )
+            recorded.add(path)
+            for package in packages:
+                if not isinstance(package, dict) or not all(
+                    isinstance(package.get(key), str) and package[key]
+                    for key in ("name", "version")
+                ):
+                    raise InventoryError(
+                        f"Invalid frontend package record: {fragment.relative_to(root)}"
+                    )
+                rows.append(
+                    DependencyRow(
+                        "npm",
+                        package["name"],
+                        package["version"],
+                        path.relative_to(root).as_posix(),
+                        expected,
+                        {"producer": data["producer"]},
+                    )
+                )
+    own_redirect = directory / f"{name.lower()}_redirect_page.{version}.js"
+    for path in sorted(directory.rglob("*.js")):
+        if path.resolve() not in recorded and path != own_redirect:
+            raise InventoryError(
+                f"Missing frontend dependency record: {path.relative_to(root)}"
+            )
+    return rows
+
+
+def snapshot_inputs(root: Path) -> dict[str, str]:
+    root = root.resolve()
+    paths: set[Path] = set()
+    if (root / "app.manifest").is_file():
+        paths.add(root / "app.manifest")
+    for folder in (root / "lib").rglob("*.dist-info"):
+        paths.update(
+            path for path in (folder / "METADATA", folder / "WHEEL") if path.is_file()
+        )
+    directory = root / _BUILD_JS
+    paths.update(directory.rglob("*.js"))
+    paths.update(directory.rglob("dependency-chunks.json"))
+    paths.update(_go_binaries(root))
+    return {path.relative_to(root).as_posix(): _sha256(path) for path in sorted(paths)}
+
+
+def write_manifest(
+    root: Path,
+    name: str,
+    version: str,
+    targets: Sequence[OSDependentLibraryConfig],
+    installer_version: str,
+) -> Path:
+    root = root.resolve()
+    try:
+        app = AppManifest((root / "app.manifest").read_text(encoding="utf-8"))
+        if (app.get_addon_name(), app.get_addon_version()) != (name, version):
+            raise InventoryError(
+                "Final app.manifest identity differs from the build name/version"
+            )
+    except (OSError, ValueError, KeyError) as error:
+        raise InventoryError("Cannot read the final app.manifest identity") from error
+    rows = (
+        collect_python(root, targets, installer_version)
+        + collect_frontend(root, name, version)
+        + collect_go(root)
+    )
+    components: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for row in rows:
+        key = row.ecosystem, row.name, row.version
+        component = components.setdefault(
+            key,
+            {
+                "ecosystem": row.ecosystem,
+                "name": row.name,
+                "version": row.version,
+                "occurrences": [],
+            },
+        )
+        occurrence = {
+            "path": row.path,
+            "sha256": row.sha256,
+            "target": row.target or {},
+        }
+        if occurrence not in component["occurrences"]:
+            component["occurrences"].append(occurrence)
+    for component in components.values():
+        component["occurrences"].sort(
+            key=lambda value: (
+                value["path"],
+                json.dumps(value["target"], sort_keys=True),
+            )
+        )
+    result = {
+        "schema_version": 1,
+        "name": name,
+        "version": version,
+        "components": [components[key] for key in sorted(components)],
+        "inputs": snapshot_inputs(root),
+    }
+    destination = root / _MANIFEST
+    temporary: Optional[Path] = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=root,
+            prefix=".dependency-manifest-",
+            delete=False,
+        ) as stream:
+            temporary = Path(stream.name)
+            json.dump(result, stream, indent=2, sort_keys=True, ensure_ascii=False)
+            stream.write("\n")
+        temporary.replace(destination)
+    finally:
+        if temporary:
+            temporary.unlink(missing_ok=True)
+    return destination
