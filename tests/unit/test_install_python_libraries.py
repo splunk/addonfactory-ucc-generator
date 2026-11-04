@@ -581,7 +581,6 @@ def test_install_libraries_version_mismatch(
         "-m",
         "pip",
         "show",
-        "--version",
         "cryptography",
     ]
     mock_subprocess_run.side_effect = lambda command, env=None, capture_output=True: (
@@ -750,7 +749,7 @@ def test_is_pip_lib_installed_do_not_write_bytecode(monkeypatch):
     Result = namedtuple("Result", ["returncode", "stdout", "stderr"])
 
     def run(command, env):
-        assert command == ["python3", "-m", "pip", "show", "--version", "libname"]
+        assert command == ["python3", "-m", "pip", "show", "libname"]
         assert env["PYTHONPATH"] == "target"
         assert env["PYTHONDONTWRITEBYTECODE"] == "1"
         return Result(0, b"Version: 1.0.0", b"")
