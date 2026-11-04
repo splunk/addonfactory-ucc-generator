@@ -329,3 +329,30 @@ test('direct context CLI opts into evidence and keeps explicit Node options', (t
         assert(!result.argv.includes('--dependency-manifest'));
     }
 });
+
+test('Storybook omits the TA producer while the core build retains it', async (t) => {
+    const root = project(t);
+    const { loadConfigFromFile } = await import('vite');
+    const environment = { command: 'build', mode: 'production' };
+    const ui = await loadConfigFromFile(
+        environment,
+        path.join(__dirname, '../vite.config.ts'),
+        root
+    );
+    const collector = ui.config.plugins.find(
+        (plugin) => plugin?.name === 'ucc-dependency-manifest'
+    );
+    assert(collector, 'Core TA builds need evidence');
+    const storybook = await loadConfigFromFile(
+        environment,
+        path.join(__dirname, '../.storybook/main.ts'),
+        root
+    );
+    const config = await storybook.config.viteFinal({
+        plugins: [collector, { name: 'retained-plugin' }],
+    });
+    assert.deepEqual(
+        config.plugins.map((plugin) => plugin.name),
+        ['retained-plugin']
+    );
+});

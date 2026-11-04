@@ -32,6 +32,11 @@ const config: StorybookConfig = {
     viteFinal: async (config) => {
         const { mergeConfig } = await import('vite');
 
+        // Storybook is documentation, not a shipped add-on frontend.
+        config.plugins = config.plugins?.filter(
+            (plugin) => !plugin || !('name' in plugin) || plugin.name !== 'ucc-dependency-manifest'
+        );
+
         const alias = config.resolve?.alias || {};
         return mergeConfig(config, {
             resolve: {
@@ -39,7 +44,10 @@ const config: StorybookConfig = {
                 alias: {
                     ...alias,
                     'msw/native': require.resolve(
-                        path.resolve(import.meta.dirname, '../node_modules/msw/lib/native/index.mjs')
+                        path.resolve(
+                            import.meta.dirname,
+                            '../node_modules/msw/lib/native/index.mjs'
+                        )
                     ),
                     'msw/node': require.resolve(
                         path.resolve(import.meta.dirname, '../node_modules/msw/lib/node/index.mjs')
