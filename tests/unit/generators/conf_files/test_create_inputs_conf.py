@@ -24,7 +24,7 @@ def test_generate_conf(
         """
     [example_input_one]
     python.version = python3
-    python.required = 3.7, 3.13
+    python.required = 3.9, 3.13
     input_one_radio = yes
     index = default
     order_by = LastModifiedDate
@@ -32,7 +32,7 @@ def test_generate_conf(
     limit = 1000
     [example_input_two]
     python.version = python3
-    python.required = 3.7, 3.13
+    python.required = 3.9, 3.13
     disabled = true
     index = default
     input_two_checkbox_bool = true
@@ -74,7 +74,7 @@ def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
                 '"YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
                 "use_existing_checkpoint = Data input already exists. "
                 "Select `No` if you want to reset the data collection. (Default: yes)",
-                "python.required = {3.7|3.9|3.13}",
+                "python.required = 3.9, 3.13",
                 "* For Python scripts only, selects which Python version to use.",
                 '* Set to "3.9" to use the Python 3.9 version.',
                 '* Set to "3.13" to use the Python 3.13 version.',
@@ -97,7 +97,7 @@ def test_generate_conf_spec(global_config_all_json, input_dir, output_dir):
                 "records.  The default is 90 days before today.",
                 "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the "
                 "data collection. (Default: yes)",
-                "python.required = {3.7|3.9|3.13}",
+                "python.required = 3.9, 3.13",
                 "* For Python scripts only, selects which Python version to use.",
                 '* Set to "3.9" to use the Python 3.9 version.',
                 '* Set to "3.13" to use the Python 3.13 version.',
@@ -143,7 +143,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             """
             [example_input_one]
             python.version = python3
-            python.required = 3.7, 3.13
+            python.required = 3.9, 3.13
             disabled = true
             input_one_radio = yes
             index = default
@@ -152,7 +152,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             limit = 1000
             [example_input_two]
             python.version = python3
-            python.required = 3.7, 3.13
+            python.required = 3.9, 3.13
             disabled = true
             index = default
             input_two_checkbox_bool = true
@@ -184,7 +184,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             'format: "YYYY-MM-DDThh:mm:ss.000z". Defaults to 90 days earlier from now.',
             "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
             "collection. (Default: yes)",
-            "python.required = {3.7|3.9|3.13}",
+            "python.required = 3.9, 3.13",
             "* For Python scripts only, selects which Python version to use.",
             '* Set to "3.9" to use the Python 3.9 version.',
             '* Set to "3.13" to use the Python 3.13 version.',
@@ -207,7 +207,7 @@ def test_inputs_disable_two_inputs(tmp_path, input_dir, output_dir):
             "index records.  The default is 90 days before today.",
             "use_existing_checkpoint = Data input already exists. Select `No` if you want to reset the data "
             "collection. (Default: yes)",
-            "python.required = {3.7|3.9|3.13}",
+            "python.required = 3.9, 3.13",
             "* For Python scripts only, selects which Python version to use.",
             '* Set to "3.9" to use the Python 3.9 version.',
             '* Set to "3.13" to use the Python 3.13 version.',
@@ -269,7 +269,7 @@ def test_inputs_conf_content_input_with_conf(input_dir, output_dir, ta_name, tmp
     conf = inputs_conf.generate_conf()
     assert conf is not None
     assert conf["content"] == (
-        "[example_input_three]\npython.version = python3\npython.required = 3.7, 3.13\n"
+        "[example_input_three]\npython.version = python3\npython.required = 3.9, 3.13\n"
     )
 
     specs = inputs_conf.generate_conf_spec()
