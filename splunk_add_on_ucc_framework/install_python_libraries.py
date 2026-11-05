@@ -105,7 +105,7 @@ def _pip_is_lib_installed(
             "Parameter 'allow_higher_version' can not be set to True if 'version' parameter is not provided"
         )
 
-    lib_installed_cmd = [installer, "-m", "pip", "show", "--version", libname]
+    lib_installed_cmd = [installer, "-m", "pip", "show", libname]
 
     try:
         my_env = os.environ.copy()
