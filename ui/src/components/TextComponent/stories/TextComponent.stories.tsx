@@ -51,3 +51,19 @@ export const AllPropsTrue: Story = {
         disabled: true,
     },
 };
+
+export const EncryptedWithReveal: Story = {
+    args: {
+        handleChange: fn(),
+        value: '******',
+        field: 'api_key',
+        error: false,
+        encrypted: true,
+        disabled: false,
+        mode: 'edit',
+        controlOptions: {
+            enablePasswordReveal: true,
+        },
+        fetchStoredClearValue: () => Promise.resolve('stored-secret-value'),
+    },
+};

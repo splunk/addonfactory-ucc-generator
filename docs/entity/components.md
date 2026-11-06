@@ -37,6 +37,27 @@ This is how it looks in the UI:
 
 ![image](../images/components/text_component_example.png)
 
+### Options
+
+| Property             | Type    | Description                                                                                                                                                                                                                                             | Default Value |
+| -------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| enablePasswordReveal | boolean | Only for fields with `encrypted: true`. Adds a show/hide (eye) button to the field. While creating an entity it toggles the visibility of the typed value. While editing an entity it fetches and shows the stored value in place, using the `--cred--=1` parameter of the generated endpoint, so splunkd enforces the caller's own permissions. Users whose role cannot read the stored credential get an error instead of the value. | false         |
+
+See the following example usage:
+
+```json
+{
+    "type": "text",
+    "label": "API key",
+    "field": "api_key",
+    "encrypted": true,
+    "required": true,
+    "options": {
+        "enablePasswordReveal": true
+    }
+}
+```
+
 ## `Text Area`
 
 See the underlying `@splunk/react-ui` component: [`TextArea`](https://splunkui.splunk.com/Packages/react-ui/TextArea).

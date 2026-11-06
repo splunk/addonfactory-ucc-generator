@@ -8,7 +8,8 @@ import Validator, { SaveValidator } from '../../util/Validator';
 import { getUnifiedConfigs, generateToast } from '../../util/util';
 import { MODE_CLONE, MODE_CREATE, MODE_EDIT, MODE_CONFIG } from '../../constants/modes';
 import { PAGE_INPUT, PAGE_CONF } from '../../constants/pages';
-import { generateEndPointUrl, postRequest } from '../../util/api';
+import { generateEndPointUrl, getRequest, postRequest } from '../../util/api';
+import { ENCRYPTED_FIELD_PLACEHOLDER } from '../../constants/encryptedField';
 import { parseErrorMsg, getFormattedMessage } from '../../util/messageUtil';
 import { getBuildDirPath } from '../../util/script';
 
@@ -755,7 +756,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                     entity &&
                     'encrypted' in entity &&
                     entity.encrypted &&
-                    this.datadict[key] === '******'
+                    this.datadict[key] === ENCRYPTED_FIELD_PLACEHOLDER
                 ) {
                     return;
                 }
@@ -1159,6 +1160,29 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
     // eslint-disable-next-line class-methods-use-this
     timeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)); // eslint-disable-line no-promise-executor-return
 
+    /**
+     * Fetches the decrypted value of an encrypted field for the entity being
+     * edited. Backed by the `--cred--=1` parameter of the generated endpoint,
+     * so splunkd enforces the caller's own permissions (a role without access
+     * to the stored credential gets an error, not the value).
+     * Returns null when there is no stored value to reveal.
+     */
+    fetchStoredClearValue = async (field: string): Promise<string | null> => {
+        if (this.props.mode !== MODE_EDIT && this.props.mode !== MODE_CONFIG) {
+            return null;
+        }
+        const data = await getRequest<{ entry: [{ content: Record<string, unknown> }] }>({
+            endpointUrl: generateEndPointUrl(this.endpoint),
+            params: { '--cred--': '1' },
+            handleError: false,
+        });
+        const value = data?.entry?.[0]?.content?.[field];
+        if (typeof value !== 'string' || value === '' || value === ENCRYPTED_FIELD_PLACEHOLDER) {
+            return null;
+        }
+        return value;
+    };
+
     renderGroupElements = () => {
         let el = null;
         if (this.groups && this.groups.length) {
@@ -1190,6 +1214,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                         page={this.props.page}
                                         fileNameToDisplay={temState.fileNameToDisplay}
                                         modifiedEntitiesData={temState.modifiedEntitiesData}
+                                        fetchStoredClearValue={this.fetchStoredClearValue}
                                     />
                                 );
                             }
@@ -1286,6 +1311,7 @@ class BaseFormView extends PureComponent<BaseFormProps, BaseFormState> {
                                 fileNameToDisplay={temState.fileNameToDisplay}
                                 modifiedEntitiesData={temState.modifiedEntitiesData}
                                 page={this.props.page}
+                                fetchStoredClearValue={this.fetchStoredClearValue}
                             />
                         );
                     })}

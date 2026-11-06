@@ -1079,6 +1079,9 @@
             },
             "hideForPlatform": {
               "$ref": "#/definitions/HideForPlatform"
+            },
+            "enablePasswordReveal": {
+              "$ref": "#/definitions/enablePasswordReveal"
             }
           },
           "additionalProperties": false
@@ -4395,6 +4398,11 @@
     "disableonEdit": {
       "type": "boolean",
       "description": "When the form is in edit mode, the field becomes unable to be edited.",
+      "default": false
+    },
+    "enablePasswordReveal": {
+      "type": "boolean",
+      "description": "For encrypted fields only. Adds a show/hide (eye) button to the field. In edit mode the stored value can be revealed in place; the decrypted value is fetched from the endpoint using the caller's own permissions.",
       "default": false
     },
     "enable": {

@@ -61,7 +61,11 @@ export const TextEntitySchema = CommonEditableEntityFields.extend({
     type: z.literal('text'),
     validators: AllValidators.optional(),
     defaultValue: DefaultValueUnion.optional(),
-    options: CommonEditableEntityOptions.optional(),
+    options: CommonEditableEntityOptions.extend({
+        enablePasswordReveal: z.boolean().default(false).optional(),
+    })
+        .strict()
+        .optional(),
     modifyFieldsOnValue: ModifyFieldsOnValue,
 }).strict();
 
