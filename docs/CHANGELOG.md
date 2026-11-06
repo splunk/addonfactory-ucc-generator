@@ -6,14 +6,12 @@
 ### Bug Fixes
 
 * Added one more ignore url for fixing the test cases ([c0a0b8c](https://github.com/splunk/addonfactory-ucc-generator/commit/c0a0b8c3f8d62e91650637770cb8062683fd106a))
-* Added the python 3.9 support ([4a789df](https://github.com/splunk/addonfactory-ucc-generator/commit/4a789dfabaf4fcd49422438bbf3b15ee23e7693f))
 * **deps:** pin jest-runtime to 30.4.2 to fix storybook test-runner ([ccedd68](https://github.com/splunk/addonfactory-ucc-generator/commit/ccedd683a734984525d86c4ed67cb6997b769422))
 * **deps:** security vulnerabilities fixes ([#2112](https://github.com/splunk/addonfactory-ucc-generator/issues/2112)) ([96c51a4](https://github.com/splunk/addonfactory-ucc-generator/commit/96c51a40f2a5ef666c795e1e35a976ff1094644b))
 * **deps:** upgrade glob to 14.0.2 and minimatch to 11.0.1 ([1a71c15](https://github.com/splunk/addonfactory-ucc-generator/commit/1a71c15ec878d43a61a7fda5285aa06b0c728773))
 * drop --version from pip show when checking installed libraries ([6e669c2](https://github.com/splunk/addonfactory-ucc-generator/commit/6e669c21edbde537f0feaac5547831f51b5905e2))
 * fixed the docs generation and zod dependency ([89332a1](https://github.com/splunk/addonfactory-ucc-generator/commit/89332a13375ca1336264811b4019f55972b0e94f))
 * **publish:** use JWT auth for Splunkbase release API (ADDON-91495) ([0860f99](https://github.com/splunk/addonfactory-ucc-generator/commit/0860f99af144f800ea5a6e164bdf079cf0686114))
-* **publish:** use JWT auth for Splunkbase release API (ADDON-91495) ([#2117](https://github.com/splunk/addonfactory-ucc-generator/issues/2117)) ([ff833b9](https://github.com/splunk/addonfactory-ucc-generator/commit/ff833b9b5a01ad3c12af0fdcb17fe22a6124d5ef)), closes [signalfx/splunk-otel-collector#8183](https://github.com/signalfx/splunk-otel-collector/issues/8183)
 * replace Python 3.7 with 3.9 in python.required spec and tests ([8e45835](https://github.com/splunk/addonfactory-ucc-generator/commit/8e45835ec88409113e41aaf0cff746fea5f9f36c))
 * security vulnerabilities fixed for - maplibre-gl(VULN-119082), moment(VULN-123527), fast-uri(VULN-123521), brace-expansion(VULN-123403) ([2753535](https://github.com/splunk/addonfactory-ucc-generator/commit/27535354cd6f9b5b45ed75efce6fffde223f618b))
 * Updated the yarn.lock file for security update ([83c1071](https://github.com/splunk/addonfactory-ucc-generator/commit/83c1071385237e08f59b19af7f52ad934a77b05a))
