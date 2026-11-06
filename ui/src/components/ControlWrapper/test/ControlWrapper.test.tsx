@@ -115,12 +115,12 @@ it('check if label and help updated due to modifiedEntitiesData', () => {
 describe('Help message', () => {
     const verifyLink = ({ link, linkText }: { link: string; linkText: string }) => {
         const linkElem = screen.getByRole('link', {
-            name: `${linkText} (Opens new window)`,
+            name: `${linkText}(Opens new window)`,
         });
 
         expect(linkElem).toBeInTheDocument();
         expect(linkElem).toHaveAttribute('href', link);
-        expect(linkElem).toHaveTextContent(`${linkText}(Opens new window)`);
+        expect(linkElem).toHaveTextContent(`${linkText}\u2060(Opens new window)`);
     };
 
     it('check if help added due to modifiedEntitiesData', () => {
@@ -194,7 +194,7 @@ describe('Help message', () => {
         verifyLink(helpDef.links[0]);
 
         expect(help).toHaveTextContent(
-            'Some line that contains link reference(Opens new window) to documentation'
+            'Some line that contains link reference\u2060(Opens new window) to documentation'
         );
         // include rest of text
         expect(help).toHaveTextContent('Some line that contains link');
@@ -227,7 +227,7 @@ describe('Help message', () => {
         // visual correctnes of display is checked via storybook images
 
         const linkElems = screen.getAllByRole('link', {
-            name: `${helpDef.links[0].linkText} (Opens new window)`,
+            name: `${helpDef.links[0].linkText}(Opens new window)`,
         });
         expect(linkElems).toHaveLength(2);
     });
@@ -270,7 +270,7 @@ describe('Help message', () => {
         // include rest of text
         expect(help).toHaveTextContent('Some line that contains link');
         expect(help).toHaveTextContent(
-            'to documentation or you can use UCC Reference(Opens new window)'
+            'to documentation or you can use UCC Reference\u2060(Opens new window)'
         );
     });
 
@@ -325,7 +325,7 @@ describe('Help message', () => {
         // include rest of text
         expect(help).toHaveTextContent('Some line that contains link');
         expect(help).toHaveTextContent(
-            'to documentation or you can use UCC Reference(Opens new window)'
+            'to documentation or you can use UCC Reference\u2060(Opens new window)'
         );
     });
 

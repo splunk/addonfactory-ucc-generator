@@ -32,7 +32,7 @@ describe('mapTextToElements', () => {
 
     it('should render text with links correctly', () => {
         setup();
-        const linkElement = screen.getByRole('link', { name: 'Example Link (Opens new window)' });
+        const linkElement = screen.getByRole('link', { name: 'Example Link(Opens new window)' });
         expect(linkElement).toHaveAttribute(
             'href',
             'https://splunk.github.io/addonfactory-ucc-generator/'
@@ -71,7 +71,7 @@ describe('mapTextToElements', () => {
             setup(propsWithLinkAtBeginning);
 
             const linkElement = screen.getAllByRole('link', {
-                name: 'Example Link (Opens new window)',
+                name: 'Example Link(Opens new window)',
             });
 
             linkElement.forEach((l) => {
@@ -97,7 +97,7 @@ describe('mapTextToElements', () => {
         };
         setup(singleLinkProps);
         const linkElement = screen.getByRole('link', {
-            name: `${singleLinkProps.text} (Opens new window)`,
+            name: `${singleLinkProps.text}(Opens new window)`,
         });
         expect(linkElement).toHaveAttribute(
             'href',
@@ -124,10 +124,10 @@ describe('mapTextToElements', () => {
         setup(multipleLinksProps);
 
         const linkElement1 = screen.getByRole('link', {
-            name: 'Example Link 1 (Opens new window)',
+            name: 'Example Link 1(Opens new window)',
         });
         const linkElement2 = screen.getByRole('link', {
-            name: 'Example Link 2 (Opens new window)',
+            name: 'Example Link 2(Opens new window)',
         });
 
         expect(linkElement1).toHaveAttribute(

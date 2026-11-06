@@ -162,6 +162,8 @@ It accepts the following parameters:
 * `--password` - [required] Password of the splunkbase account.
 * `--make-visible` - [optional] flag to make the uploaded release publicly visible immediately upon successful validation.
 
+The credentials are exchanged for a JWT via the Splunk API login endpoint (`https://api.splunk.com/2.0/rest/login/splunk`), which is then used to authenticate the upload and the package validation status requests.
+
 Caution: Packages uploaded with `--make-visible` flag cannot be deleted or updated later.
 
 > **Note:** For any reason if the user wants to update the build package for particular version which was uploaded earlier, they'll have to delete the previously uploaded build first from the Splunkbase UI (This is only possible if the package was previously uploaded without `--make-visible` flag).

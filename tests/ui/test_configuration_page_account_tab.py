@@ -545,7 +545,8 @@ class TestAccount(UccTester):
         )
         self.assert_util(
             account.entity.account_radio.get_help_text,
-            "This is an example radio button for the account entity. Read more about it here (Opens new window)",
+            "This is an example radio button for the account entity. "
+            "Read more about it here\u2060 (Opens new window)",
         )
         self.assert_util(
             account.entity.multiple_select.get_help_text,

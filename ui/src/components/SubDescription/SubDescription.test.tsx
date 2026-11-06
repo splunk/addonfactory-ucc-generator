@@ -41,7 +41,7 @@ it('Sub Description component - links', async () => {
     );
 
     const linkInsideDescription = screen.getByRole('link', {
-        name: 'blog post (Opens new window)',
+        name: 'blog post(Opens new window)',
     });
 
     expect(linkInsideDescription).toHaveAttribute('href', 'https://splk.it/31oy2b2');
