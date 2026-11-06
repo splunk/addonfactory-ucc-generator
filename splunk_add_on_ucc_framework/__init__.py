@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-__version__ = "6.6.0"
+__version__ = "6.6.1"
 
 import logging
 
