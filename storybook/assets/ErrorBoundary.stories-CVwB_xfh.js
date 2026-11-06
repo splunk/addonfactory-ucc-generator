@@ -1,0 +1,5 @@
+import{j as o}from"./iframe-BLQN0JqS.js";import{E as t}from"./ErrorBoundary-B8O5x5Pc.js";import{g as e}from"./globalConfigMock-CVC6KYUe.js";import{s}from"./util-D1kXELUL.js";import"./preload-helper-BWMXw09x.js";import"./messageUtil-CQQ8zf_h.js";import"./SVGInternal-sFyMgQuT.js";import"./Box-YFEb_QRy.js";import"./DotsThreeVertical-C6F01x5N.js";import"./Heading-XPGzsxsQ.js";import"./searchUtil-CjrA_Svz.js";import"./url-BdB9R0LC.js";import"./_baseDifference-DZ-TZE0x.js";import"./Heading-3ktI0oY0.js";import"./Link-BZqR4iUZ.js";import"./CollapsiblePanel-C1Njf11K.js";import"./ChevronRight-Dq0W4qWj.js";const a=()=>{throw new Error("Some internal error message. It should not be shown to the user")},y={component:t,title:"ErrorBoundary",render:()=>(s(e()),o.jsx(t,{children:o.jsx(a,{})})),parameters:{snapshots:{width:1200,height:1e3}}},r={args:{children:o.jsx("span",{})}};r.parameters={...r.parameters,docs:{...r.parameters?.docs,source:{originalSource:`{
+  args: {
+    children: <span />
+  }
+}`,...r.parameters?.docs?.source}}};const C=["Base"];export{r as Base,C as __namedExportsOrder,y as default};
