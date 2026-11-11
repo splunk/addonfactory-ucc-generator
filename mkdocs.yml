@@ -122,7 +122,6 @@ nav:
       - Save validator: "advanced/save_validator.md"
       - Requirements: "advanced/requirements.md"
       - OS-dependent libraries: "advanced/os-dependent_libraries.md"
-      - Locked runtime dependencies: "advanced/runtime_dependencies.md"
       - Sub description: "advanced/sub_description.md"
       - Custom warning: "advanced/custom_warning.md"
   - Troubleshooting: "troubleshooting.md"
