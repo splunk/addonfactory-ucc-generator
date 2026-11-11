@@ -51,7 +51,11 @@ from splunk_add_on_ucc_framework.commands.rest_builder import (
     global_config_builder_schema,
 )
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
+from splunk_add_on_ucc_framework import runtime_dependencies
 from splunk_add_on_ucc_framework.install_python_libraries import (
+    _check_libraries_required_for_ui,
+    _check_libraries_required_for_oauth,
+    remove_execute_bit,
     SplunktaucclibNotFound,
     WrongSplunktaucclibVersion,
     WrongSolnlibVersion,
@@ -628,22 +632,49 @@ def generate(
     global_config.dump(os.path.join(output_build_path, global_config_file))
     logger.info("Copied globalConfig to output")
     ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
+    profile_manifest = None
     try:
-        install_python_libraries(
-            source,
-            ucc_lib_target,
-            python_binary_name,
-            includes_ui=True,
-            os_libraries=global_config.os_libraries,
-            pip_version=pip_version,
-            pip_legacy_resolver=pip_legacy_resolver,
-            pip_custom_flag=pip_custom_flag,
-            includes_oauth=global_config.has_oauth(),
-        )
+        profiles = runtime_dependencies.profiles_from_config(global_config)
+        if profiles:
+            if pip_legacy_resolver or pip_custom_flag:
+                raise runtime_dependencies.DependencyProfileError(
+                    "Dependency profiles cannot use legacy resolver or custom pip flags"
+                )
+            profile_manifest = runtime_dependencies.install_profiles(
+                source, ucc_lib_target, global_config, python_binary_name
+            )
+            for profile_record in profile_manifest["profiles"]:
+                profile_target = os.path.join(ucc_lib_target, profile_record["path"])
+                if global_config.has_pages():
+                    _check_libraries_required_for_ui(
+                        python_binary_name,
+                        profile_target,
+                        "Poetry runtime dependency profiles",
+                    )
+                if global_config.has_oauth():
+                    _check_libraries_required_for_oauth(
+                        python_binary_name,
+                        profile_target,
+                        "Poetry runtime dependency profiles",
+                    )
+                remove_execute_bit(profile_target)
+        else:
+            install_python_libraries(
+                source,
+                ucc_lib_target,
+                python_binary_name,
+                includes_ui=True,
+                os_libraries=global_config.os_libraries,
+                pip_version=pip_version,
+                pip_legacy_resolver=pip_legacy_resolver,
+                pip_custom_flag=pip_custom_flag,
+                includes_oauth=global_config.has_oauth(),
+            )
     except (
         SplunktaucclibNotFound,
         WrongSplunktaucclibVersion,
         WrongSolnlibVersion,
+        runtime_dependencies.DependencyProfileError,
     ) as e:
         logger.error(str(e))
         sys.exit(1)
@@ -790,6 +821,11 @@ def generate(
         # should we share output dir (requires build Ui changes)
         # or should be rely on UI repo to specify it?
         build_ui(source)
+
+    if profile_manifest is not None:
+        runtime_dependencies.generate_bootstrap(
+            os.path.join(output_directory, ta_name), profile_manifest
+        )
 
     summary_report(
         source,
