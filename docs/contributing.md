@@ -74,6 +74,13 @@ cd ..
 If you need to run UI tests for the PR, add a "run-ui-tests" label before the PR is created.
 UI tests will run automatically for any PR towards the `main` / `develop` branches, and on the `main` / `develop` branch as well.
 
+In CI, these tests run through the UCC Argo workflow in the TA Automation Kubernetes cluster. The workflow builds
+and uploads the UCC example add-on, installs `tests/ui/requirements.txt` in its test pod, then connects the UI tests
+to the Splunk and Selenium services in that cluster. `tests/ui/pytest-ci.ini` contains CI-safe pytest settings;
+`tests/ui/pytest.ini` remains for local runs. Fork and draft pull requests use the Ubuntu runner: GitHub does not
+expose the AWS and Argo credentials to fork workflows, and the UCC Argo template must be deployed before the first
+ready-for-review pull request uses it.
+
 1. With local version of ucc-gen, create a UCCExample add-on for the output directory:
 
     ```bash
