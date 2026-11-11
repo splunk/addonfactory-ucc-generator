@@ -18,7 +18,7 @@ env:
 
 jobs:
   meta:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
@@ -28,7 +28,7 @@ jobs:
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - run: |
@@ -56,7 +56,7 @@ jobs:
       failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -72,7 +72,7 @@ jobs:
       block_mode: "policy"
 
   compliance-copyrights:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: apache/skywalking-eyes@v0.9.0
@@ -100,7 +100,7 @@ jobs:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -129,7 +129,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -163,7 +163,7 @@ jobs:
     name: test-smoke ${{ matrix.python-version }}
     needs:
       - build-ui
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -200,7 +200,7 @@ jobs:
       failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
       - build-ui
     steps:
@@ -234,7 +234,7 @@ jobs:
 
   setup-k8s-tests:
     name: Upload UCC test add-on to K8s test storage
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: ${{ github.event.pull_request.head.repo.fork != true && github.event.pull_request.draft != true }}
     needs:
       - build-test-addon
@@ -271,7 +271,7 @@ jobs:
       - setup-k8s-tests
       - test-unit
       - build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: ghcr.io/splunk/workflow-engine-base:4.1.0
     permissions:
@@ -328,7 +328,7 @@ jobs:
   test-ui-hosted-fallback:
     name: test-ui hosted fallback Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
     if: ${{ github.event.pull_request.head.repo.fork == true || github.event.pull_request.draft == true }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       checks: write
@@ -402,7 +402,7 @@ jobs:
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -438,7 +438,7 @@ jobs:
     if: |
       !cancelled() &&
       needs.build-test-addon.result == 'success'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -467,8 +467,8 @@ jobs:
 
   build-test-addon-openapi-client:
     name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    # This job still needs Ubuntu 22.04 because Splunk 10.2/10.4 MongoDB can't start on kernel 6.19+.
-    runs-on: ubuntu-22.04
+    # This job starts Splunk locally, so its MongoDB version must support the runner host kernel.
+    runs-on: ubuntu-24.04
     needs:
       - meta
       - build-test-addon
@@ -515,7 +515,7 @@ jobs:
       - build-test-addon-openapi-client
       - storybook-screenshots
       - bot-updates
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
@@ -548,7 +548,7 @@ jobs:
       - semgrep
       - pre-commit
       - all-checks
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write
       contents: read
