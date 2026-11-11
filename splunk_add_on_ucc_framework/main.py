@@ -26,6 +26,7 @@ from splunk_add_on_ucc_framework.commands import import_from_aob
 from splunk_add_on_ucc_framework.commands import package
 from splunk_add_on_ucc_framework.commands import validate
 from splunk_add_on_ucc_framework.commands import publish
+from splunk_add_on_ucc_framework import runtime_dependencies
 
 logger = logging.getLogger("ucc_gen")
 
@@ -152,6 +153,29 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         action="store_true",
         default=False,
         help="overwrite already present output/add-on dir",
+    )
+
+    lock_parser = subparsers.add_parser(
+        "lock", description="Export locked runtime dependency profiles from Poetry"
+    )
+    lock_parser.add_argument(
+        "--source", default="package", help="add-on package source directory"
+    )
+    lock_parser.add_argument(
+        "--config",
+        type=config_file_type,
+        default=None,
+        help="globalConfig JSON or YAML path",
+    )
+    lock_parser.add_argument(
+        "--poetry-binary-name",
+        default="poetry",
+        help="Poetry executable with the export plugin",
+    )
+    lock_parser.add_argument(
+        "--update",
+        action="store_true",
+        help="explicitly run poetry lock before exporting",
     )
 
     package_parser = subparsers.add_parser("package", description="Package an add-on")
@@ -326,6 +350,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
 
     args = parser.parse_args(argv)
+    if args.command == "lock":
+        try:
+            runtime_dependencies.lock_dependencies(
+                args.source, args.config, args.poetry_binary_name, args.update
+            )
+        except (
+            runtime_dependencies.DependencyProfileError,
+            OSError,
+            ValueError,
+        ) as error:
+            parser.exit(1, f"Dependency locking failed: {error}\n")
     if args.command == "build":
         build.generate(
             source=args.source,
