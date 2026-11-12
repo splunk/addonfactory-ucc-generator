@@ -241,7 +241,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.9"
+          python-version: "3.13"
       - uses: actions/download-artifact@v8
         with:
           name: Splunk_TA_UCCExample-raw-output
@@ -360,7 +360,7 @@ jobs:
           addon-name: Splunk_TA_UCCExample
           k8s-manifests-branch: main
           test-browser: chrome
-          python-version: "3.9"
+          python-version: "3.13"
 
   test-openapi-client:
     name: test-openapi-client K8s Splunk ${{ matrix.splunk.version }}
@@ -422,7 +422,7 @@ jobs:
           addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
           addon-name: Splunk_TA_UCCExample
           k8s-manifests-branch: main
-          python-version: "3.9"
+          python-version: "3.13"
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
