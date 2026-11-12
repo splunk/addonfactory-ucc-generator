@@ -248,7 +248,7 @@ jobs:
           path: output/
       - name: Generate and install the OpenAPI client
         run: |
-          docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli:v7.13.0 generate \
+          docker run --rm --user "$(id -u):$(id -g)" -v "${PWD}:/local" openapitools/openapi-generator-cli:v7.13.0 generate \
             -i /local/output/Splunk_TA_UCCExample/appserver/static/openapi.json \
             -g python \
             -o /local/restapi_client
