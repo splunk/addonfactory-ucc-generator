@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { http, HttpResponse } from 'msw';
 import { vi } from 'vitest';
 
 import userEvent from '@testing-library/user-event';
@@ -8,6 +9,8 @@ import InputPage from '../InputPage';
 
 import { setUnifiedConfig } from '../../../util/util';
 import { getBuildDirPath } from '../../../util/script';
+import { server } from '../../../mocks/server';
+import { INPUTS_UNAVAILABLE_MARKER } from '../../../constants/inputsAvailability';
 
 // it is just configuration not a mock to be changed
 // eslint-disable-next-line jest/no-mocks-import
@@ -62,4 +65,21 @@ it('click on root menu item should add input query to URL', async () => {
     expect(mockNavigateFn).toHaveBeenCalledWith({
         search: `service=aws_cloudwatch&action=create&input=aws_cloudwatch`,
     });
+});
+
+it('renders the Inputs Unavailable page when the library gate fires', async () => {
+    setUnifiedConfig(mockUnifiedConfig);
+    const warnText = `${INPUTS_UNAVAILABLE_MARKER}. Configure inputs on the IDM instead.`;
+    server.use(
+        http.get('/servicesNS/nobody/-/:endpointUrl', () =>
+            HttpResponse.json({ entry: [], messages: [{ type: 'WARN', text: warnText }] })
+        )
+    );
+
+    render(<InputPage />, { wrapper: BrowserRouter });
+
+    const placeholder = await screen.findByTestId('inputs-unavailable');
+    expect(placeholder).toBeInTheDocument();
+    expect(screen.getByText(warnText)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Create New Input' })).not.toBeInTheDocument();
 });
