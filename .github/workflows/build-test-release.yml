@@ -18,7 +18,7 @@ env:
 
 jobs:
   meta:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
     steps:
@@ -28,7 +28,7 @@ jobs:
 
   fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - run: |
@@ -56,7 +56,7 @@ jobs:
       failed: ${{ env.failed }}
 
   pre-commit:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -72,7 +72,7 @@ jobs:
       block_mode: "policy"
 
   compliance-copyrights:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: apache/skywalking-eyes@v0.9.0
@@ -100,7 +100,7 @@ jobs:
     needs:
       - fossa-scan
       - build-ui
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -129,7 +129,7 @@ jobs:
           path: dist/
 
   test-unit:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -163,7 +163,7 @@ jobs:
     name: test-smoke ${{ matrix.python-version }}
     needs:
       - build-ui
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -200,7 +200,7 @@ jobs:
       failed: ${{ env.failed }}
 
   build-test-addon:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
       - build-ui
     steps:
@@ -232,86 +232,204 @@ jobs:
           name: Splunk_TA_UCCExample-packaged
           path: Splunk_TA_UCCExample*.tar.gz
 
-  test-ui:
-    name: test-ui Splunk ${{ matrix.splunk.version }} -group ${{ matrix.test-group }}
-    # Splunk 10.2/10.4 bundled MongoDB 8.0 refuses to start on kernel 6.19+ (SERVER-121912); 22.04 runners use 6.8
-    runs-on: ubuntu-22.04
+  build-openapi-client:
+    name: Build UCC OpenAPI client for Kubernetes tests
+    runs-on: ubuntu-24.04
+    needs:
+      - build-test-addon
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/download-artifact@v8
+        with:
+          name: Splunk_TA_UCCExample-raw-output
+          path: output/
+      - name: Generate and install the OpenAPI client
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" -v "${PWD}:/local" openapitools/openapi-generator-cli:v7.13.0 generate \
+            -i /local/output/Splunk_TA_UCCExample/appserver/static/openapi.json \
+            -g python \
+            -o /local/restapi_client
+          mkdir openapi-client-libs
+          python -m pip install --target openapi-client-libs ./restapi_client -r tests/ui/requirements.txt
+          tar -czf openapi-client-libs.tar.gz openapi-client-libs
+      - uses: actions/upload-artifact@v7
+        with:
+          name: UCC-openapi-client-libs
+          path: openapi-client-libs.tar.gz
+
+  setup-k8s-tests:
+    name: Upload UCC test add-on to K8s test storage
+    runs-on: ubuntu-24.04
+    if: ${{ github.event.pull_request.head.repo.fork != true }}
+    needs:
+      - build-test-addon
+      - build-openapi-client
     permissions:
-      id-token: write
+      contents: read
+    outputs:
+      addon-url: ${{ steps.upload.outputs.addon-url }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: Splunk_TA_UCCExample-packaged
+          path: package/
+      - uses: actions/download-artifact@v8
+        with:
+          name: UCC-openapi-client-libs
+          path: package/openapi-client-libs/
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION || 'us-west-2' }}
+      - name: Upload packaged add-on
+        id: upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_file=$(find package -maxdepth 1 -type f -name 'Splunk_TA_UCCExample*.tar.gz' -print -quit)
+          client_libs_file=$(find package/openapi-client-libs -maxdepth 1 -type f -name 'openapi-client-libs.tar.gz' -print -quit)
+          test -n "$package_file"
+          test -n "$client_libs_file"
+          destination="s3://ta-production-artifacts/ta-apps/ucc/${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}/${package_file##*/}"
+          aws s3 cp "$package_file" "$destination" --only-show-errors
+          client_libs_destination="${destination%/*}/libs_${package_file##*/}.tgz"
+          aws s3 cp "$client_libs_file" "$client_libs_destination" --only-show-errors
+          echo "addon-url=$destination" >> "$GITHUB_OUTPUT"
+
+  test-ui:
+    name: test-ui K8s Splunk ${{ matrix.splunk.version }}
+    if: ${{ github.event.pull_request.head.repo.fork != true }}
+    needs:
+      - meta
+      - setup-k8s-tests
+      - test-unit
+      - build
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/splunk/workflow-engine-base:4.1.0
+    permissions:
+      contents: read
+      checks: write
+    strategy:
+      fail-fast: false
+      matrix:
+        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION || 'us-west-2' }}
+      - name: Read Argo token from AWS Secrets Manager
+        id: get-argo-token
+        run: |
+          token=$(aws secretsmanager get-secret-value --secret-id ta-github-workflow-automation-token | jq -r '.SecretString')
+          echo "argo-token=$token" >> "$GITHUB_OUTPUT"
+      - name: Create unique Argo job name
+        id: create-job-name
+        shell: bash
+        run: |
+          job_name="ucc-ui-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${{ matrix.splunk.version }}"
+          job_name=${job_name//./-}
+          echo "job-name=$job_name" >> "$GITHUB_OUTPUT"
+      - name: Run UCC UI tests in Kubernetes
+        timeout-minutes: 340
+        env:
+          ARGO_SERVER: argo.wfe.splgdi.com:443
+          ARGO_HTTP1: "true"
+          ARGO_SECURE: "true"
+          ARGO_BASE_HREF: ""
+          ARGO_NAMESPACE: workflows
+          ARGO_TOKEN: ${{ steps.get-argo-token.outputs.argo-token }}
+        uses: splunk/wfe-test-runner-action@v5.3
+        with:
+          splunk: ${{ matrix.splunk.version }}${{ secrets.OTHER_TA_REQUIRED_CONFIGS }}
+          test-type: ui
+          test-args: ""
+          job-name: ${{ steps.create-job-name.outputs.job-name }}
+          labels: addon-name=ucc-generator
+          workflow-tmpl-name: ucc-workflow
+          workflow-template-ns: workflows
+          addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
+          addon-name: Splunk_TA_UCCExample
+          k8s-manifests-branch: main
+          test-browser: chrome
+          python-version: "3.13"
+
+  test-openapi-client:
+    name: test-openapi-client K8s Splunk ${{ matrix.splunk.version }}
+    if: ${{ github.event.pull_request.head.repo.fork != true }}
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/splunk/workflow-engine-base:4.1.0
+    permissions:
       contents: read
       checks: write
     needs:
       - meta
-      - build-test-addon
+      - setup-k8s-tests
+      - build-openapi-client
       - build
       - test-unit
     strategy:
       fail-fast: false
       matrix:
         splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-        test-group:
-          - "1"
-          - "2"
-          - "3"
-          - "4"
-          - "5"
-          - "6"
-          - "7"
-          - "8"
-          - "9"
-          - "10"
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
         with:
-          python-version: "3.10"
-      - uses: actions/download-artifact@v8
-        with:
-          name: Splunk_TA_UCCExample-raw-output
-          path: output/
-      - run: |
-          curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
-          poetry install --only dev
-          poetry run pip install -r tests/ui/requirements.txt
-      - name: Link chromedriver
-        # Use installed chromedriver https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION || 'us-west-2' }}
+      - name: Read Argo token from AWS Secrets Manager
+        id: get-argo-token
         run: |
-          export PATH=$PATH:$CHROMEWEBDRIVER
-          chromedriver --version
-      - run: |
-          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
-          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
-          until curl -k -s -u admin:Chang3d! https://localhost:8089/services/server/info\?output_mode\=json | jq '.entry[0].content.kvStoreStatus' | grep -o "ready" ; do echo -n "Waiting for KVStore to become ready-" && sleep 5 ; done
-        timeout-minutes: 5
-      - run: poetry run pytest tests/ui --test-group-count 10 --test-group ${{ matrix.test-group }} --test-group-random-seed 123456 --headless --junitxml=test-results/junit.xml
-      - uses: actions/upload-artifact@v7
-        if: success() || failure()
-        with:
-          name: test-results-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
-          path: test-results/*
-      - name: Copy splunkd.log
-        if: failure()
+          token=$(aws secretsmanager get-secret-value --secret-id ta-github-workflow-automation-token | jq -r '.SecretString')
+          echo "argo-token=$token" >> "$GITHUB_OUTPUT"
+      - name: Create unique Argo job name
+        id: create-job-name
+        shell: bash
         run: |
-          docker cp splunk:/opt/splunk/var/log/splunk/splunkd.log ./splunkd.log
-          docker cp splunk:/opt/splunk/var/log/splunk/mongod.log ./mongod.log || true
-      - name: Upload splunkd.log to GitHub Check
-        uses: actions/upload-artifact@v7
-        if: failure()
+          job_name="ucc-openapi-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${{ matrix.splunk.version }}"
+          job_name=${job_name//./-}
+          echo "job-name=$job_name" >> "$GITHUB_OUTPUT"
+      - name: Run UCC OpenAPI client tests in Kubernetes
+        timeout-minutes: 340
+        env:
+          ARGO_SERVER: argo.wfe.splgdi.com:443
+          ARGO_HTTP1: "true"
+          ARGO_SECURE: "true"
+          ARGO_BASE_HREF: ""
+          ARGO_NAMESPACE: workflows
+          ARGO_TOKEN: ${{ steps.get-argo-token.outputs.argo-token }}
+        uses: splunk/wfe-test-runner-action@v5.3
         with:
-          name: test-ui-splunkd-splunkd-${{ matrix.splunk.version }}-${{ matrix.test-group }}.log
-          path: |
-            ./splunkd.log
-            ./mongod.log
-      - uses: dorny/test-reporter@v3
-        if: success() || failure()
-        with:
-          name: test-report-ui-${{ matrix.splunk.version }}-${{ matrix.test-group }}
-          path: "test-results/*.xml"
-          reporter: java-junit
+          splunk: ${{ matrix.splunk.version }}${{ secrets.OTHER_TA_REQUIRED_CONFIGS }}
+          test-type: ucc_openapi_client
+          test-args: ""
+          job-name: ${{ steps.create-job-name.outputs.job-name }}
+          labels: addon-name=ucc-generator
+          workflow-tmpl-name: ucc-workflow
+          workflow-template-ns: workflows
+          addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
+          addon-name: Splunk_TA_UCCExample
+          k8s-manifests-branch: main
+          python-version: "3.13"
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     continue-on-error: true
     strategy:
       matrix:
@@ -347,7 +465,7 @@ jobs:
     if: |
       !cancelled() &&
       needs.build-test-addon.result == 'success'
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -374,56 +492,17 @@ jobs:
           name: appinspect-api-html-report-${{ matrix.tags }}
           path: AppInspect_response.html
 
-  build-test-addon-openapi-client:
-    name: build-test-addon-openapi-client Splunk ${{ matrix.splunk.version }}
-    # See test-ui: Splunk 10.2/10.4 KVStore can't start on kernel 6.19+
-    runs-on: ubuntu-22.04
-    needs:
-      - meta
-      - build-test-addon
-      - build
-      - test-unit
-      - test-smoke
-    strategy:
-      matrix:
-        splunk: ${{ fromJson(needs.meta.outputs.matrix_supportedSplunk) }}
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.11"
-      - uses: actions/download-artifact@v8
-        with:
-          name: UCC-UI-build
-          path: built-ui/
-      - run: curl -sSL https://install.python-poetry.org | python3 - --version ${{env.POETRY_VERSION}}
-      - run: |
-          cp -R built-ui/. splunk_add_on_ucc_framework/package/appserver/static/js/build
-          poetry install --only main
-      - run: poetry run ucc-gen build --source tests/testdata/test_addons/package_global_config_everything/package -o out_${{ matrix.splunk.version }}
-      - run: |
-          cp out_${{ matrix.splunk.version }}/Splunk_TA_UCCExample/appserver/static/openapi.json ./oa_${{ matrix.splunk.version }}.json
-          docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli:v7.13.0 generate -i /local/oa_${{ matrix.splunk.version }}.json -g python -o /local/restapi_client_${{ matrix.splunk.version }}
-      - run: |
-          sudo chmod -R 777 ./restapi_client_${{ matrix.splunk.version }}
-          python3 -m pip install ./restapi_client_${{ matrix.splunk.version }}
-      - run: mv out_${{ matrix.splunk.version }} output
-      - run: |
-          ./scripts/run_splunk.sh ${{ matrix.splunk.version }}
-          until curl -Lsk "https://localhost:8088/services/collector/health" &>/dev/null ; do echo -n "Waiting for HEC-" && sleep 5 ; done
-        timeout-minutes: 5
-      - run: python3 tests/testdata/expected_addons/expected_output_global_config_everything/client-test.py
-
   all-checks:
     if: ${{ !cancelled() }}
     needs:
       - test-unit
       - test-smoke
+      - build-openapi-client
       - test-ui
-      - build-test-addon-openapi-client
+      - test-openapi-client
       - storybook-screenshots
       - bot-updates
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       NEEDS: ${{ toJson(needs) }}
     steps:
@@ -431,7 +510,8 @@ jobs:
         id: check
         shell: bash
         run: |
-          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq 'all(.[]; .result == "success" and (.outputs.failed // "false") != "true")')
+          IS_FORK="${{ github.event.pull_request.head.repo.fork == true }}"
+          ALL_JOBS_PASSED=$(echo "$NEEDS" | jq --arg is_fork "$IS_FORK" '((."test-ui".result == "success" and ."test-openapi-client".result == "success") or ($is_fork == "true" and ."test-ui".result == "skipped" and ."test-openapi-client".result == "skipped")) and (del(."test-ui", ."test-openapi-client") | all(.[]; .result == "success" and (.outputs.failed // "false") != "true"))')
           if [[ "$ALL_JOBS_PASSED" == "true" ]]
           then
               echo "all-checks=true" >> "$GITHUB_OUTPUT"
@@ -452,11 +532,12 @@ jobs:
       - test-unit
       - test-smoke
       - test-ui
+      - test-openapi-client
       - appinspect-for-expected-outputs
       - semgrep
       - pre-commit
       - all-checks
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write
       contents: read
