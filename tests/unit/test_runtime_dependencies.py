@@ -395,6 +395,42 @@ def test_runtime_validates_splunk_provided_contract(runtime):
     assert result.returncode != 0 and "Splunk-provided six" in result.stderr
 
 
+@pytest.mark.parametrize("preloaded", [False, True])
+def test_runtime_combines_bundled_and_provided_namespace_packages(runtime, preloaded):
+    app, selected, manifest = runtime
+    host = app.parent / "host"
+    for root, distribution, child in [
+        (host, "azure_core", "core"),
+        (selected, "azure_identity", "identity"),
+    ]:
+        make_distribution(root, distribution, "1.0")
+        package = root / "azure" / child
+        package.mkdir(parents=True)
+        (package / "__init__.py").write_text(f"VALUE = {child!r}\n")
+        (root / f"{distribution}-1.0.dist-info" / "RECORD").write_text(
+            f"azure/{child}/__init__.py,,\n"
+        )
+    profile = manifest["profiles"][0]
+    profile["modules"].append("azure")
+    profile["distributions"]["azure-identity"] = "1.0"
+    profile["provided"] = {"azure-core": "1.0"}
+    (app / "lib" / deps.MANIFEST_NAME).write_text(json.dumps(manifest))
+    # A source-owned copy must not mask the shared namespace either.
+    (app / "lib" / "azure.py").write_text("raise AssertionError('stale Azure')\n")
+    before = f"sys.path.append({str(host)!r})\n"
+    if preloaded:
+        before += "import azure.core\n"
+    result = run_runtime(
+        app,
+        "from azure import core, identity\n"
+        "assert core.VALUE == 'core'\nassert identity.VALUE == 'identity'\n"
+        f"assert core.__file__.startswith({str(host)!r})\n"
+        f"assert identity.__file__.startswith({str(selected)!r})\n",
+        before=before,
+    )
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize("profiles", [{}, [None], [{"name": "incomplete"}]])
 def test_lock_reports_malformed_profile_declarations(profiles):
     with pytest.raises(deps.DependencyProfileError):

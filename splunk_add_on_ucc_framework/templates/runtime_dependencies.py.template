@@ -33,6 +33,13 @@ def _inside(path, parent):
     return _real(path).startswith(_real(parent) + os.sep)
 
 
+def _namespace_paths(name, paths):
+    spec = importlib.machinery.PathFinder.find_spec(name, paths)
+    if spec is not None and spec.origin is None and spec.submodule_search_locations is not None:
+        return list(spec.submodule_search_locations)
+    return []
+
+
 def _configure_runtime():
     app = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     lib = os.path.join(app, "lib")
@@ -64,20 +71,13 @@ def _configure_runtime():
         actual = installed.get(name)
         if actual is None or actual.version != expected:
             raise RuntimeError("UCC dependency %s must be %s in %s" % (name, expected, selected))
-    for name in profile["modules"]:
-        cached = sys.modules.get(name)
-        if cached is not None:
-            origins = [getattr(cached, "__file__", None)] or []
-            origins = [origin for origin in origins if origin]
-            origins.extend(list(getattr(cached, "__path__", [])))
-            if not origins or any(not _inside(origin, selected) for origin in origins):
-                raise RuntimeError("Dependency %s was imported before the UCC profile; start a fresh process" % name)
-
     core_paths = [path for path in sys.path if not _inside(path, app)
                   and _real(path) != _real(app) and not re.search(r"[\\/]etc[\\/]apps[\\/]", path)]
     core = {_canonical(dist.metadata["Name"]): dist
             for dist in importlib.metadata.distributions(path=core_paths)}
     provided_modules = set()
+    provided_roots = {}
+    provided_namespaces = {}
     for name, expected in profile["provided"].items():
         distribution = core.get(name)
         if distribution is None or distribution.version != expected:
@@ -90,9 +90,38 @@ def _configure_runtime():
             and ".dist-info" not in str(path) and ".data/" not in str(path)}
         provided_modules.update(names)
         for module_name in names:
-            cached = sys.modules.get(module_name)
-            if cached is not None and not _inside(getattr(cached, "__file__", ""), str(distribution.locate_file(""))):
-                raise RuntimeError("Splunk-provided %s was imported from an unexpected location" % module_name)
+            root = str(distribution.locate_file(""))
+            provided_roots.setdefault(module_name, set()).add(root)
+            namespace_paths = _namespace_paths(module_name, [root])
+            if namespace_paths:
+                provided_namespaces.setdefault(module_name, set()).update(namespace_paths)
+
+    # Implicit namespaces can contain distributions from both the locked graph
+    # and Splunk. Concrete modules/packages still belong to their provided root.
+    shared_namespaces = {}
+    for name in set(profile["modules"]) & set(provided_namespaces):
+        bundled_paths = _namespace_paths(name, [selected])
+        if bundled_paths:
+            shared_namespaces[name] = bundled_paths + sorted(provided_namespaces[name])
+
+    for name in set(profile["modules"]) | provided_modules:
+        cached = sys.modules.get(name)
+        if cached is None:
+            continue
+        roots = list(provided_roots[name]) if name in provided_modules else [selected]
+        if name in shared_namespaces:
+            roots.append(selected)
+        origin = getattr(cached, "__file__", None)
+        origins = ([origin] if origin else []) + list(getattr(cached, "__path__", []))
+        if (not origins or any(not any(_inside(path, root) for root in roots) for path in origins)
+                or (name in provided_namespaces and origin)):
+            raise RuntimeError("Dependency %s was imported before the UCC profile from an unexpected location; start a fresh process" % name)
+        if name in shared_namespaces:
+            # Refresh an already imported namespace without searching stale
+            # source directories that might contain an old concrete package.
+            cached.__path__ = shared_namespaces[name]
+            if cached.__spec__ is not None:
+                cached.__spec__.submodule_search_locations = cached.__path__
 
     bindir = os.path.join(app, "bin")
     namespace = os.path.join(bindir, os.path.basename(app))
@@ -102,6 +131,7 @@ def _configure_runtime():
                _real(selected): set(profile["modules"])}
     for names in allowed.values():
         names.difference_update(provided_modules)
+    allowed[_real(selected)].update(shared_namespaces)
 
     class DeclaredDependencies:
         def find_spec(self, fullname, path=None, target=None):
