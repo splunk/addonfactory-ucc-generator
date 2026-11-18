@@ -2722,6 +2722,28 @@
             ]
           }
         },
+        "dependencyProfiles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "description": "Opt-in complete Poetry-locked dependency sets selected by OS, architecture and Python runtime.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "python_version", "os", "platform"],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$", "maxLength": 64},
+              "python_version": {"type": "string", "pattern": "^3\\.\\d+\\.\\d+$"},
+              "os": {"type": "string", "enum": ["linux", "windows", "darwin"]},
+              "platform": {"type": "string", "minLength": 1},
+              "provided": {
+                "type": "array", "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"}
+              },
+              "minimum_openssl": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"}
+            }
+          }
+        },
         "supportedThemes": {
           "description": "This feature allows you to choose theme based on the given option i.e. light and dark",
           "type": "array",
