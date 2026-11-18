@@ -53,9 +53,7 @@ from splunk_add_on_ucc_framework.commands.rest_builder import (
 from splunk_add_on_ucc_framework.commands.rest_builder.builder import RestBuilder
 from splunk_add_on_ucc_framework import runtime_dependencies
 from splunk_add_on_ucc_framework.install_python_libraries import (
-    _check_libraries_required_for_ui,
-    _check_libraries_required_for_oauth,
-    remove_execute_bit,
+    finalize_python_libraries,
     SplunktaucclibNotFound,
     WrongSplunktaucclibVersion,
     WrongSolnlibVersion,
@@ -629,7 +627,7 @@ def generate(
     if not os.path.isdir(output_build_path):
         # this path may not exist for the .conf-only add-ons
         os.makedirs(output_build_path)
-    global_config.dump(os.path.join(output_build_path, global_config_file))
+    global_config.dump(os.path.join(output_build_path, global_config_file), for_ui=True)
     logger.info("Copied globalConfig to output")
     ucc_lib_target = os.path.join(output_directory, ta_name, "lib")
     profile_manifest = None
@@ -645,19 +643,14 @@ def generate(
             )
             for profile_record in profile_manifest["profiles"]:
                 profile_target = os.path.join(ucc_lib_target, profile_record["path"])
-                if global_config.has_pages():
-                    _check_libraries_required_for_ui(
-                        python_binary_name,
-                        profile_target,
-                        "Poetry runtime dependency profiles",
-                    )
-                if global_config.has_oauth():
-                    _check_libraries_required_for_oauth(
-                        python_binary_name,
-                        profile_target,
-                        "Poetry runtime dependency profiles",
-                    )
-                remove_execute_bit(profile_target)
+                finalize_python_libraries(
+                    python_binary_name,
+                    profile_target,
+                    os.path.join(source, "lib", runtime_dependencies.LOCK_NAME)
+                    + f" (profile {profile_record['name']})",
+                    includes_ui=global_config.has_pages(),
+                    includes_oauth=global_config.has_oauth(),
+                )
         else:
             install_python_libraries(
                 source,

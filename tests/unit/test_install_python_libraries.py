@@ -45,6 +45,63 @@ class MockSubprocessResult:
         self.stderr = stderr
 
 
+@pytest.mark.parametrize(
+    "options,installed,error,message",
+    [
+        ({"includes_ui": True}, [False], SplunktaucclibNotFound, "was not found"),
+        ({"includes_ui": True}, [True, False], WrongSplunktaucclibVersion, "8.2.0"),
+        ({"includes_oauth": True}, [False], WrongSolnlibVersion, "5.5.0"),
+    ],
+)
+def test_finalize_reports_dependency_source(options, installed, error, message):
+    source = "package/lib/ucc-dependencies.lock.json (profile linux313)"
+    with mock.patch.object(
+        install_python_libraries_module, "_pip_is_lib_installed", side_effect=installed
+    ), pytest.raises(error) as exc:
+        install_python_libraries_module.finalize_python_libraries(
+            "python3", "/profile/lib", source, **options
+        )
+    assert source in str(exc.value)
+    assert message in str(exc.value)
+
+
+@pytest.mark.parametrize("legacy", [False, True])
+def test_finalize_preserves_frozen_graph_and_cleans_legacy_builds(tmp_path, legacy):
+    library = tmp_path / "module.py"
+    library.write_text("VALUE = 1\n")
+    library.chmod(0o755)
+    with mock.patch.object(
+        install_python_libraries_module,
+        "install_os_dependent_libraries",
+        return_value={"native_overlay"},
+    ) as overlays, mock.patch.object(
+        install_python_libraries_module, "remove_packages"
+    ) as remove:
+        install_python_libraries_module.finalize_python_libraries(
+            "python3", str(tmp_path), "dependency source", remove_build_tools=legacy
+        )
+    assert library.stat().st_mode & 0o111 == 0
+    assert library.read_text() == "VALUE = 1\n"
+    if legacy:
+        overlays.assert_called_once_with(
+            ucc_lib_target=str(tmp_path), installer="python3", os_libraries=None
+        )
+        remove.assert_called_once_with(
+            installation_path=str(tmp_path),
+            package_names={
+                "setuptools",
+                "bin",
+                "pip",
+                "distribute",
+                "wheel",
+                "native_overlay",
+            },
+        )
+    else:
+        overlays.assert_not_called()
+        remove.assert_not_called()
+
+
 @pytest.fixture
 def packages(tmp_path):
     VERSION = "1.0.0"
@@ -266,8 +323,8 @@ def test_install_libraries_when_no_splunktaucclib_is_present_but_has_ui(
     tmp_lib_reqs_file.write_text("solnlib\nsplunk-sdk\n")
 
     expected_msg = (
-        f"This add-on has an UI, so the splunktaucclib is required but not found in {tmp_lib_reqs_file}. "
-        f"Please add it there and make sure it is at least version 8.2.0."
+        "splunktaucclib>=8.2.0 is required for the UI but was not found. "
+        f"Dependency source: {tmp_lib_reqs_file}."
     )
 
     expected_caplog = "Command result:  WARNING: Package(s) not found: splunktaucclib"
@@ -292,7 +349,10 @@ def test_install_libraries_when_wrong_splunktaucclib_is_present_but_has_ui(
     tmp_lib_reqs_file = tmp_lib_path / "requirements.txt"
     tmp_lib_reqs_file.write_text("splunktaucclib==6.3\n")
 
-    expected_msg = "splunktaucclib found but has the wrong version. Please make sure it is at least version 8.2.0."
+    expected_msg = (
+        "splunktaucclib must be at least version 8.2.0. "
+        f"Dependency source: {tmp_lib_reqs_file}."
+    )
     expected_caplog = "Command result: Name: splunktaucclib\nVersion: 6.3.0"
 
     with pytest.raises(WrongSplunktaucclibVersion) as exc:
@@ -314,8 +374,8 @@ def test_install_libraries_when_wrong_solnlib_is_present_but_has_oauth(tmp_path)
     tmp_lib_reqs_file.write_text("solnlib==5.4.0\n")
 
     expected_msg = (
-        f"solnlib found at {tmp_lib_reqs_file}, but is not of latest version. "
-        "Please make sure solnlib is of version greater than or equal to 5.5.0"
+        "solnlib must be at least version 5.5.0 for OAuth. "
+        f"Dependency source: {tmp_lib_reqs_file}."
     )
 
     with pytest.raises(WrongSolnlibVersion) as exc:

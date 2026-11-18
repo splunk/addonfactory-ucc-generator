@@ -586,7 +586,9 @@ def test_build_integrates_profiles_and_keeps_generated_handlers(
 
     monkeypatch.setattr(deps, "_run", install)
     monkeypatch.setattr(
-        build, "_check_libraries_required_for_ui", lambda *args: checks.append(args)
+        build,
+        "finalize_python_libraries",
+        lambda *args, **kwargs: checks.append((args, kwargs)),
     )
     build.generate(
         source=str(source),
@@ -597,7 +599,21 @@ def test_build_integrates_profiles_and_keeps_generated_handlers(
     manifest = json.loads((app / "lib" / deps.MANIFEST_NAME).read_text())
     assert (app / "bin/import_declare_test.py").is_file()
     assert manifest["profiles"][0]["distributions"] == {"probe": "1.0"}
-    assert bool(checks) == pages
+    assert len(checks) == 1
+    arguments, options = checks[0]
+    assert arguments[1] == str(app / "lib" / manifest["profiles"][0]["path"])
+    assert arguments[2] == str(source / "lib" / deps.LOCK_NAME) + " (profile linux39)"
+    assert options == {"includes_ui": pages, "includes_oauth": False}
+    browser_config = GlobalConfig.from_file(
+        str(app / "appserver/static/js/build/globalConfig.json")
+    )
+    assert "dependencyProfiles" not in browser_config.meta
+    assert (
+        GlobalConfig.from_file(str(source.parent / "globalConfig.json")).meta[
+            "dependencyProfiles"
+        ]
+        == configuration.meta["dependencyProfiles"]
+    )
     for path in (app / "bin").glob("*.py"):
         if path.stem != "import_declare_test":
             assert path.stem in manifest["source_modules"]["bin"]

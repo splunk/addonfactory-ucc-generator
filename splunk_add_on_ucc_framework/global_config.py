@@ -117,11 +117,22 @@ class GlobalConfig:
             ]
         )
 
-    def dump(self, path: str) -> None:
+    def dump(self, path: str, *, for_ui: bool = False) -> None:
+        content = self.content
+        if for_ui and "dependencyProfiles" in self.meta:
+            # Runtime profiles are build inputs, not browser configuration.
+            content = {
+                **content,
+                "meta": {
+                    key: value
+                    for key, value in self.meta.items()
+                    if key != "dependencyProfiles"
+                },
+            }
         if self.is_yaml:
-            utils.dump_yaml_config(self.content, path)
+            utils.dump_yaml_config(content, path)
         else:
-            utils.dump_json_config(self.content, path)
+            utils.dump_json_config(content, path)
 
     def expand(self) -> None:
         self.expand_tabs()
