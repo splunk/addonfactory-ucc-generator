@@ -361,6 +361,7 @@ jobs:
           addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
           addon-name: Splunk_TA_UCCExample
           k8s-manifests-branch: main
+          k8s-environment: staging
           test-browser: chrome
           python-version: "3.13"
 
@@ -425,6 +426,7 @@ jobs:
           addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
           addon-name: Splunk_TA_UCCExample
           k8s-manifests-branch: main
+          k8s-environment: staging
           python-version: "3.13"
 
   appinspect-for-expected-outputs:
