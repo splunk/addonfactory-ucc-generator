@@ -143,9 +143,12 @@ def _configure_runtime():
             if search == sys.path:
                 return None
             spec = importlib.machinery.PathFinder.find_spec(fullname, search, target)
-            if spec is None:
+            if spec is not None:
+                return spec
+            if importlib.machinery.PathFinder.find_spec(fullname, sys.path, target) is not None:
                 raise ModuleNotFoundError("No declared runtime dependency named " + fullname)
-            return spec
+            # Let other finders try a name absent from all filesystem paths.
+            return None
 
     # Keep built-in and frozen importers ahead of this path-filtering finder.
     position = next((i for i, finder in enumerate(sys.meta_path)

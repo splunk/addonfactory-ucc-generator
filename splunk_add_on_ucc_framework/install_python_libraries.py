@@ -27,7 +27,7 @@ from pathlib import Path
 from packaging.requirements import Requirement, InvalidRequirement
 from packaging.version import Version
 from typing import Optional
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
@@ -140,16 +140,10 @@ def _pip_is_lib_installed(
 
 
 def _check_libraries_required_for_oauth(
-    python_binary_name: str, ucc_lib_target: str, dependency_source: str
+    has_library: Callable[[str, Optional[str]], bool], dependency_source: str
 ) -> None:
     for lib, version in LIBS_REQUIRED_FOR_OAUTH.items():
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
-            target=ucc_lib_target,
-            libname=lib,
-            version=version,
-            allow_higher_version=True,
-        ):
+        if not has_library(lib, version):
             raise WrongSolnlibVersion(
                 f"{lib} must be at least version {version} for OAuth. "
                 f"Dependency source: {dependency_source}."
@@ -157,25 +151,15 @@ def _check_libraries_required_for_oauth(
 
 
 def _check_libraries_required_for_ui(
-    python_binary_name: str, ucc_lib_target: str, dependency_source: str
+    has_library: Callable[[str, Optional[str]], bool], dependency_source: str
 ) -> None:
     for lib, version in LIBS_REQUIRED_FOR_UI.items():
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
-            target=ucc_lib_target,
-            libname=lib,
-        ):
+        if not has_library(lib, None):
             raise SplunktaucclibNotFound(
                 f"{lib}>={version} is required for the UI but was not found. "
                 f"Dependency source: {dependency_source}."
             )
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
-            target=ucc_lib_target,
-            libname=lib,
-            version=version,
-            allow_higher_version=True,
-        ):
+        if not has_library(lib, version):
             raise WrongSplunktaucclibVersion(
                 f"{lib} must be at least version {version}. "
                 f"Dependency source: {dependency_source}."
@@ -189,22 +173,34 @@ def finalize_python_libraries(
     *,
     includes_ui: bool = False,
     includes_oauth: bool = False,
+    profile_versions: Optional[dict[str, str]] = None,
     os_libraries: Optional[list[OSDependentLibraryConfig]] = None,
     remove_build_tools: bool = False,
 ) -> None:
     """Verify required libraries and finalize an installed dependency directory.
 
     Legacy builds also install OS-specific overlays and remove build tools.
-    Frozen profiles use the defaults to preserve every locked distribution.
+    Frozen profiles supply the versions of bundled and host-provided libraries.
     """
+
+    def has_library(library: str, minimum: Optional[str]) -> bool:
+        if profile_versions is not None:
+            version = profile_versions.get(library)
+            return version is not None and (
+                minimum is None or Version(version) >= Version(minimum)
+            )
+        return _pip_is_lib_installed(
+            installer=python_binary_name,
+            target=ucc_lib_target,
+            libname=library,
+            version=minimum,
+            allow_higher_version=minimum is not None,
+        )
+
     if includes_ui:
-        _check_libraries_required_for_ui(
-            python_binary_name, ucc_lib_target, dependency_source
-        )
+        _check_libraries_required_for_ui(has_library, dependency_source)
     if includes_oauth:
-        _check_libraries_required_for_oauth(
-            python_binary_name, ucc_lib_target, dependency_source
-        )
+        _check_libraries_required_for_oauth(has_library, dependency_source)
 
     packages_to_remove: set[str] = set()
     if os_libraries is not None or remove_build_tools:

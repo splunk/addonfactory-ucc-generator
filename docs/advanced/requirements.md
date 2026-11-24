@@ -96,8 +96,8 @@ During the build process, UCC will:
 Use `meta.dependencyProfiles` when an add-on needs different dependency sets for different operating
 systems, architectures, or Python versions. Poetry exports the main dependency group, and UCC evaluates
 its environment markers for each target. Declare the complete runtime dependency graph in Poetry,
-including `splunktaucclib` for add-ons with pages and `solnlib` for OAuth. Profiles replace the
-`requirements.txt` installation path; UCC does not merge those two dependency sources.
+including `splunktaucclib>=8.2.0` for add-ons with pages or alert actions and `solnlib` for OAuth.
+Profiles replace the `requirements.txt` installation path; UCC does not merge those two dependency sources.
 
 ### Project layout and locking
 

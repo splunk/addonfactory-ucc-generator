@@ -643,13 +643,17 @@ def generate(
             )
             for profile_record in profile_manifest["profiles"]:
                 profile_target = os.path.join(ucc_lib_target, profile_record["path"])
+                profile_versions = (
+                    profile_record["distributions"] | profile_record["provided"]
+                )
                 finalize_python_libraries(
                     python_binary_name,
                     profile_target,
                     os.path.join(source, "lib", runtime_dependencies.LOCK_NAME)
                     + f" (profile {profile_record['name']})",
-                    includes_ui=global_config.has_pages(),
+                    includes_ui=global_config.has_pages() or global_config.has_alerts(),
                     includes_oauth=global_config.has_oauth(),
+                    profile_versions=profile_versions,
                 )
         else:
             install_python_libraries(

@@ -336,6 +336,32 @@ def test_runtime_rejects_cached_conflicting_dependency(runtime):
     assert result.returncode != 0 and "imported before" in result.stderr
 
 
+def test_runtime_can_probe_for_missing_optional_modules(runtime):
+    app, _, _ = runtime
+    result = run_runtime(
+        app,
+        "import importlib.util\n"
+        "assert importlib.util.find_spec('ucc_missing_optional_module') is None\n"
+        "class OptionalFinder:\n"
+        "    def find_spec(self, fullname, path=None, target=None):\n"
+        "        if fullname == 'ucc_optional_plugin':\n"
+        "            return importlib.machinery.ModuleSpec(fullname, loader=None)\n"
+        "sys.meta_path.append(OptionalFinder())\n"
+        "assert importlib.util.find_spec('ucc_optional_plugin') is not None",
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_runtime_rejects_probe_for_undeclared_module_in_addon_path(runtime):
+    app, _, _ = runtime
+    (app / "lib" / "ucc_undeclared_module.py").write_text("VALUE = 'undeclared'\n")
+    result = run_runtime(
+        app, "import importlib.util\nimportlib.util.find_spec('ucc_undeclared_module')"
+    )
+    assert result.returncode != 0
+    assert "ModuleNotFoundError: No declared runtime dependency named" in result.stderr
+
+
 def test_runtime_ignores_other_addon_libraries_and_old_profile_paths(runtime):
     app, selected, _ = runtime
     foreign = app.parent / "etc/apps/OtherTA/lib"
@@ -603,7 +629,11 @@ def test_build_integrates_profiles_and_keeps_generated_handlers(
     arguments, options = checks[0]
     assert arguments[1] == str(app / "lib" / manifest["profiles"][0]["path"])
     assert arguments[2] == str(source / "lib" / deps.LOCK_NAME) + " (profile linux39)"
-    assert options == {"includes_ui": pages, "includes_oauth": False}
+    assert options == {
+        "includes_ui": pages,
+        "includes_oauth": False,
+        "profile_versions": {"probe": "1.0"},
+    }
     browser_config = GlobalConfig.from_file(
         str(app / "appserver/static/js/build/globalConfig.json")
     )
@@ -617,3 +647,56 @@ def test_build_integrates_profiles_and_keeps_generated_handlers(
     for path in (app / "bin").glob("*.py"):
         if path.stem != "import_declare_test":
             assert path.stem in manifest["source_modules"]["bin"]
+
+
+@pytest.mark.parametrize(
+    "version,provided,error",
+    [
+        (None, False, "was not found"),
+        ("8.1.0", False, "must be at least version 8.2.0"),
+        ("8.2.0", False, None),
+        ("8.2.0", True, None),
+    ],
+)
+def test_alert_only_profile_checks_required_library(
+    source, monkeypatch, caplog, version, provided, error
+):
+    from splunk_add_on_ucc_framework.commands import build
+
+    fixtures = Path(__file__).parent / "testdata"
+    (source / "app.manifest").write_bytes((fixtures / "app.manifest").read_bytes())
+    content = json.loads((fixtures / "valid_config_all_alerts.json").read_text())
+    content.pop("pages")
+    profile = config().meta["dependencyProfiles"][0]
+    if provided:
+        profile["provided"] = ["splunktaucclib"]
+    content["meta"]["dependencyProfiles"] = [profile]
+    (source.parent / "globalConfig.json").write_text(json.dumps(content))
+    exported = f"probe==1.0 --hash=sha256:{HASH}"
+    if version:
+        exported += f"\nsplunktaucclib=={version} --hash=sha256:{HASH}"
+    write_lock(source, GlobalConfig(content, False), exported)
+
+    def install(command):
+        destination = Path(command[command.index("--target") + 1])
+        make_distribution(destination, "probe", "1.0", "probe")
+        if version and not provided:
+            make_distribution(destination, "splunktaucclib", version, "splunktaucclib")
+
+    monkeypatch.setattr(deps, "_run", install)
+    output = source.parent / "output"
+    build_options = {
+        "source": str(source),
+        "addon_version": "1.0.0",
+        "output_directory": str(output),
+    }
+    if error:
+        with pytest.raises(SystemExit) as exc:
+            build.generate(**build_options)
+        assert exc.value.code == 1
+        assert "splunktaucclib" in caplog.text and error in caplog.text
+        assert f"{deps.LOCK_NAME} (profile linux39)" in caplog.text
+    else:
+        build.generate(**build_options)
+        alert_module = output / content["meta"]["name"] / "bin/test_alert_default.py"
+        assert "from splunktaucclib.alert_actions_base" in alert_module.read_text()
