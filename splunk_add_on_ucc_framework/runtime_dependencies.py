@@ -30,6 +30,10 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 logger = logging.getLogger("ucc_gen")
 LOCK_NAME = "ucc-dependencies.lock.json"
 MANIFEST_NAME = "ucc-runtime-dependencies.json"
+# A build can target a different OS or Python ABI from the generator.
+SOURCE_EXTENSION_NAME = re.compile(
+    r"([^.]+)(?:\.(?:cpython-[\w-]+|cp\d+t?(?:-[\w-]+)?|abi3t?))?\.(?:so|pyd)"
+)
 
 
 class DependencyProfileError(ValueError):
@@ -497,6 +501,21 @@ def install_profiles(
     return manifest
 
 
+def _source_module(path: Path) -> Optional[str]:
+    if path.is_dir():
+        name = path.name
+    elif not path.is_file():
+        return None
+    elif path.suffix == ".py":
+        name = path.stem
+    else:
+        extension = SOURCE_EXTENSION_NAME.fullmatch(path.name)
+        if extension is None:
+            return None
+        name = extension.group(1)
+    return name if name.isidentifier() and name != "__pycache__" else None
+
+
 def generate_bootstrap(addon_path: str, manifest: dict[str, Any]) -> None:
     output = Path(addon_path)
     directories = {
@@ -508,16 +527,7 @@ def generate_bootstrap(addon_path: str, manifest: dict[str, Any]) -> None:
     for key, directory in directories.items():
         manifest["source_modules"][key] = (
             sorted(
-                {
-                    path.stem if path.is_file() else path.name
-                    for path in directory.iterdir()
-                    if (
-                        path.is_dir()
-                        and path.name.isidentifier()
-                        and path.name != "__pycache__"
-                    )
-                    or (path.suffix == ".py" and path.stem.isidentifier())
-                }
+                {name for path in directory.iterdir() if (name := _source_module(path))}
             )
             if directory.exists()
             else []

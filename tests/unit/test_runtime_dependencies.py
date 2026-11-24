@@ -6,6 +6,7 @@
 # under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 # CONDITIONS OF ANY KIND, either express or implied. See the License for the
 # specific language governing permissions and limitations under the License.
+import importlib.machinery
 import importlib.metadata
 import json
 import platform
@@ -421,8 +422,32 @@ def test_runtime_validates_splunk_provided_contract(runtime):
     assert result.returncode != 0 and "Splunk-provided six" in result.stderr
 
 
-@pytest.mark.parametrize("preloaded", [False, True])
-def test_runtime_combines_bundled_and_provided_namespace_packages(runtime, preloaded):
+@pytest.mark.parametrize("expected", ["1.0", "2.0"])
+def test_runtime_checks_first_host_distribution_on_import_path(runtime, expected):
+    app, _, manifest = runtime
+    first = app.parent / "host-first"
+    second = app.parent / "host-second"
+    make_distribution(first, "ucc_host_probe", "1.0", "ucc_host_probe")
+    make_distribution(second, "ucc_host_probe", "2.0", "ucc_host_probe")
+    manifest["profiles"][0]["provided"] = {"ucc-host-probe": expected}
+    deps.generate_bootstrap(str(app), manifest)
+    result = run_runtime(
+        app,
+        f"import ucc_host_probe\nassert ucc_host_probe.__file__.startswith({str(first)!r})",
+        before=f"sys.path.extend([{str(first)!r}, {str(second)!r}])",
+    )
+    if expected == "1.0":
+        assert result.returncode == 0, result.stderr
+    else:
+        assert result.returncode != 0
+        assert (
+            "Splunk-provided ucc-host-probe must match locked version 2.0"
+            in result.stderr
+        )
+
+
+@pytest.fixture
+def shared_runtime(runtime):
     app, selected, manifest = runtime
     host = app.parent / "host"
     for root, distribution, child in [
@@ -433,8 +458,11 @@ def test_runtime_combines_bundled_and_provided_namespace_packages(runtime, prelo
         package = root / "azure" / child
         package.mkdir(parents=True)
         (package / "__init__.py").write_text(f"VALUE = {child!r}\n")
+        nested = root / "azure" / "shared" / child
+        nested.mkdir(parents=True)
+        (nested / "__init__.py").write_text(f"VALUE = {child!r}\n")
         (root / f"{distribution}-1.0.dist-info" / "RECORD").write_text(
-            f"azure/{child}/__init__.py,,\n"
+            f"azure/{child}/__init__.py,,\nazure/shared/{child}/__init__.py,,\n"
         )
     profile = manifest["profiles"][0]
     profile["modules"].append("azure")
@@ -443,16 +471,68 @@ def test_runtime_combines_bundled_and_provided_namespace_packages(runtime, prelo
     (app / "lib" / deps.MANIFEST_NAME).write_text(json.dumps(manifest))
     # A source-owned copy must not mask the shared namespace either.
     (app / "lib" / "azure.py").write_text("raise AssertionError('stale Azure')\n")
+    return app, selected, host
+
+
+@pytest.mark.parametrize("preloaded", [False, True])
+def test_runtime_combines_bundled_and_provided_namespace_packages(
+    shared_runtime, preloaded
+):
+    app, selected, host = shared_runtime
     before = f"sys.path.append({str(host)!r})\n"
     if preloaded:
-        before += "import azure.core\n"
+        before += "import azure.core, azure.shared.core\n"
     result = run_runtime(
         app,
         "from azure import core, identity\n"
         "assert core.VALUE == 'core'\nassert identity.VALUE == 'identity'\n"
         f"assert core.__file__.startswith({str(host)!r})\n"
-        f"assert identity.__file__.startswith({str(selected)!r})\n",
+        f"assert identity.__file__.startswith({str(selected)!r})\n"
+        "from azure.shared import core as shared_core, identity as shared_identity\n"
+        f"assert shared_core.__file__.startswith({str(host)!r})\n"
+        f"assert shared_identity.__file__.startswith({str(selected)!r})\n",
         before=before,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("module_name", ["azure.identity", "azure.shared.identity"])
+def test_runtime_rejects_conflicting_cached_namespace_children(
+    shared_runtime, module_name
+):
+    app, _, host = shared_runtime
+    package = host.joinpath(*module_name.split("."))
+    package.mkdir(parents=True)
+    (package / "__init__.py").write_text("VALUE = 'older copy'\n")
+    result = run_runtime(
+        app,
+        before=f"sys.path.append({str(host)!r})\nimport {module_name}\n",
+    )
+    assert result.returncode != 0
+    assert f"Dependency {module_name} was imported" in result.stderr
+
+
+def test_bootstrap_includes_native_source_modules_for_target_platforms(runtime):
+    app, _, manifest = runtime
+    lib, bindir = app / "lib", app / "bin"
+    namespace = bindir / app.name
+    namespace.mkdir()
+    extension = "_ucc_native" + importlib.machinery.EXTENSION_SUFFIXES[0]
+    (lib / extension).touch()
+    (bindir / "_linux.cpython-313-x86_64-linux-gnu.so").touch()
+    (namespace / "_windows.cp313-win_amd64.pyd").touch()
+    (namespace / "_portable.abi3.so").touch()
+    (lib / "native.resource.so").touch()
+    deps.generate_bootstrap(str(app), manifest)
+    assert "_ucc_native" in manifest["source_modules"]["lib"]
+    assert "_linux" in manifest["source_modules"]["bin"]
+    assert manifest["source_modules"]["namespace"] == ["_portable", "_windows"]
+    assert "native" not in manifest["source_modules"]["lib"]
+    result = run_runtime(
+        app,
+        "import importlib.util\n"
+        "spec = importlib.util.find_spec('_ucc_native')\n"
+        f"assert spec.origin == {str(lib / extension)!r}",
     )
     assert result.returncode == 0, result.stderr
 
