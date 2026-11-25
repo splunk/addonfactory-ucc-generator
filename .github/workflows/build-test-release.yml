@@ -365,6 +365,7 @@ jobs:
           test-browser: chrome
           python-version: "3.13"
       - name: Verify Argo workflow succeeded
+        timeout-minutes: 340
         env:
           ARGO_SERVER: argo.staging.wfe.splgdi.com:443
           ARGO_HTTP1: "true"
@@ -378,14 +379,27 @@ jobs:
             echo "::error::The WFE action did not return an Argo workflow name."
             exit 1
           fi
-          workflow=$(argo get "$WORKFLOW_NAME" -n "$ARGO_NAMESPACE" -o json)
-          phase=$(jq -r '.status.phase // empty' <<< "$workflow")
-          if [[ "$phase" != "Succeeded" ]]; then
-            echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase:-unknown}."
-            jq -r '.status.message // empty' <<< "$workflow"
-            exit 1
-          fi
-          echo "Argo workflow ${WORKFLOW_NAME} succeeded."
+          for attempt in $(seq 1 2040); do
+            if workflow=$(argo get "$WORKFLOW_NAME" -n "$ARGO_NAMESPACE" -o json 2>/dev/null); then
+              phase=$(jq -r '.status.phase // empty' <<< "$workflow")
+              case "$phase" in
+                Succeeded)
+                  echo "Argo workflow ${WORKFLOW_NAME} succeeded."
+                  exit 0
+                  ;;
+                Failed|Error)
+                  echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase}."
+                  jq -r '.status.message // empty' <<< "$workflow"
+                  exit 1
+                  ;;
+              esac
+            elif (( attempt % 6 == 0 )); then
+              echo "Argo workflow status is temporarily unavailable; retrying."
+            fi
+            sleep 10
+          done
+          echo "::error::Timed out waiting for Argo workflow ${WORKFLOW_NAME}."
+          exit 1
 
   test-openapi-client:
     name: test-openapi-client K8s Splunk ${{ matrix.splunk.version }}
@@ -451,6 +465,7 @@ jobs:
           k8s-manifests-branch: main
           python-version: "3.13"
       - name: Verify Argo workflow succeeded
+        timeout-minutes: 340
         env:
           ARGO_SERVER: argo.staging.wfe.splgdi.com:443
           ARGO_HTTP1: "true"
@@ -464,14 +479,27 @@ jobs:
             echo "::error::The WFE action did not return an Argo workflow name."
             exit 1
           fi
-          workflow=$(argo get "$WORKFLOW_NAME" -n "$ARGO_NAMESPACE" -o json)
-          phase=$(jq -r '.status.phase // empty' <<< "$workflow")
-          if [[ "$phase" != "Succeeded" ]]; then
-            echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase:-unknown}."
-            jq -r '.status.message // empty' <<< "$workflow"
-            exit 1
-          fi
-          echo "Argo workflow ${WORKFLOW_NAME} succeeded."
+          for attempt in $(seq 1 2040); do
+            if workflow=$(argo get "$WORKFLOW_NAME" -n "$ARGO_NAMESPACE" -o json 2>/dev/null); then
+              phase=$(jq -r '.status.phase // empty' <<< "$workflow")
+              case "$phase" in
+                Succeeded)
+                  echo "Argo workflow ${WORKFLOW_NAME} succeeded."
+                  exit 0
+                  ;;
+                Failed|Error)
+                  echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase}."
+                  jq -r '.status.message // empty' <<< "$workflow"
+                  exit 1
+                  ;;
+              esac
+            elif (( attempt % 6 == 0 )); then
+              echo "Argo workflow status is temporarily unavailable; retrying."
+            fi
+            sleep 10
+          done
+          echo "::error::Timed out waiting for Argo workflow ${WORKFLOW_NAME}."
+          exit 1
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
