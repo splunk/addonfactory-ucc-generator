@@ -295,7 +295,7 @@ jobs:
           client_libs_file=$(find package/openapi-client-libs -maxdepth 1 -type f -name 'openapi-client-libs.tar.gz' -print -quit)
           test -n "$package_file"
           test -n "$client_libs_file"
-          destination="s3://ta-production-artifacts/ta-apps/ucc/${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}/${package_file##*/}"
+          destination="s3://ta-staging-artifacts/ta-apps/ucc/${GITHUB_RUN_ID}/${GITHUB_RUN_ATTEMPT}/${package_file##*/}"
           aws s3 cp "$package_file" "$destination" --only-show-errors
           client_libs_destination="${destination%/*}/libs_${package_file##*/}.tgz"
           aws s3 cp "$client_libs_file" "$client_libs_destination" --only-show-errors
@@ -331,7 +331,7 @@ jobs:
       - name: Read Argo token from AWS Secrets Manager
         id: get-argo-token
         run: |
-          token=$(aws secretsmanager get-secret-value --secret-id ta-github-workflow-automation-token | jq -r '.SecretString')
+          token=$(aws secretsmanager get-secret-value --secret-id ta-staging-github-workflow-automation-token | jq -r '.SecretString')
           echo "argo-token=$token" >> "$GITHUB_OUTPUT"
       - name: Create unique Argo job name
         id: create-job-name
@@ -343,7 +343,7 @@ jobs:
       - name: Run UCC UI tests in Kubernetes
         timeout-minutes: 340
         env:
-          ARGO_SERVER: argo.wfe.splgdi.com:443
+          ARGO_SERVER: argo.staging.wfe.splgdi.com:443
           ARGO_HTTP1: "true"
           ARGO_SECURE: "true"
           ARGO_BASE_HREF: ""
@@ -361,7 +361,6 @@ jobs:
           addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
           addon-name: Splunk_TA_UCCExample
           k8s-manifests-branch: main
-          k8s-environment: staging
           test-browser: chrome
           python-version: "3.13"
 
@@ -396,7 +395,7 @@ jobs:
       - name: Read Argo token from AWS Secrets Manager
         id: get-argo-token
         run: |
-          token=$(aws secretsmanager get-secret-value --secret-id ta-github-workflow-automation-token | jq -r '.SecretString')
+          token=$(aws secretsmanager get-secret-value --secret-id ta-staging-github-workflow-automation-token | jq -r '.SecretString')
           echo "argo-token=$token" >> "$GITHUB_OUTPUT"
       - name: Create unique Argo job name
         id: create-job-name
@@ -408,7 +407,7 @@ jobs:
       - name: Run UCC OpenAPI client tests in Kubernetes
         timeout-minutes: 340
         env:
-          ARGO_SERVER: argo.wfe.splgdi.com:443
+          ARGO_SERVER: argo.staging.wfe.splgdi.com:443
           ARGO_HTTP1: "true"
           ARGO_SECURE: "true"
           ARGO_BASE_HREF: ""
@@ -426,7 +425,6 @@ jobs:
           addon-url: ${{ needs.setup-k8s-tests.outputs.addon-url }}
           addon-name: Splunk_TA_UCCExample
           k8s-manifests-branch: main
-          k8s-environment: staging
           python-version: "3.13"
 
   appinspect-for-expected-outputs:
