@@ -367,6 +367,7 @@ jobs:
       - name: Verify Argo workflow succeeded
         env:
           ARGO_SERVER: argo.staging.wfe.splgdi.com:443
+          ARGO_HTTP1: "true"
           ARGO_NAMESPACE: workflows
           ARGO_TOKEN: ${{ steps.get-argo-token.outputs.argo-token }}
           WORKFLOW_NAME: ${{ steps.run-argo-tests.outputs.workflow-name }}
@@ -452,6 +453,7 @@ jobs:
       - name: Verify Argo workflow succeeded
         env:
           ARGO_SERVER: argo.staging.wfe.splgdi.com:443
+          ARGO_HTTP1: "true"
           ARGO_NAMESPACE: workflows
           ARGO_TOKEN: ${{ steps.get-argo-token.outputs.argo-token }}
           WORKFLOW_NAME: ${{ steps.run-argo-tests.outputs.workflow-name }}
