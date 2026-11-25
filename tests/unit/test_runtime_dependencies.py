@@ -15,6 +15,7 @@ import sys
 from types import SimpleNamespace
 from dataclasses import asdict
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -123,6 +124,93 @@ def test_rejects_invalid_profiles(change):
     profile = {**config().meta["dependencyProfiles"][0], **change}
     with pytest.raises(deps.DependencyProfileError):
         deps.profiles_from_config(config([profile]))
+
+
+def test_grouped_profiles_expand_to_the_same_lock_as_flat_profiles(source):
+    targets = [
+        {"os": "linux", "platform": "manylinux2014_x86_64"},
+        {"os": "windows", "platform": "win_amd64"},
+        {"os": "darwin", "platform": "macosx_11_0_arm64"},
+    ]
+    groups = [
+        {"name": "py39", "python_version": "3.9.20", "targets": targets},
+        {
+            "name": "py313",
+            "python_version": "3.13.4",
+            "targets": targets,
+            "provided": ["requests"],
+            "minimum_openssl": "3.0.0",
+        },
+    ]
+    flat = [
+        {"name": "py39-linux-x86_64", "python_version": "3.9.20", **targets[0]},
+        {"name": "py39-windows-x86_64", "python_version": "3.9.20", **targets[1]},
+        {"name": "py39-darwin-arm64", "python_version": "3.9.20", **targets[2]},
+        *[
+            {
+                "name": name,
+                "python_version": "3.13.4",
+                "provided": ["requests"],
+                "minimum_openssl": "3.0.0",
+                **target,
+            }
+            for name, target in zip(
+                ["py313-linux-x86_64", "py313-windows-x86_64", "py313-darwin-arm64"],
+                targets,
+            )
+        ],
+    ]
+    exported = f"probe==1.0 --hash=sha256:{HASH}\nrequests==2.32.5 --hash=sha256:{HASH}"
+    assert write_lock(source, config(groups), exported) == write_lock(
+        source, config(flat), exported
+    )
+
+
+@pytest.mark.parametrize(
+    "change, message",
+    [
+        ({"targets": []}, "non-empty targets"),
+        ({"os": "windows"}, "only inside targets"),
+        ({"targets": [{"os": "windows"}]}, "must specify os and platform"),
+        (
+            {"targets": [{"os": "windows", "platform": "manylinux2014_x86_64"}]},
+            "must agree",
+        ),
+        ({"name": "a" * 64}, "too long"),
+        (
+            {"targets": [{"os": "windows", "platform": "win_amd64"}] * 33},
+            "at most 32",
+        ),
+    ],
+)
+def test_rejects_invalid_grouped_profiles(change, message):
+    group = {
+        "name": "py39",
+        "python_version": "3.9.20",
+        "targets": [{"os": "linux", "platform": "manylinux2014_x86_64"}],
+        **change,
+    }
+    with pytest.raises(deps.DependencyProfileError, match=message):
+        deps.profiles_from_config(config([group]))
+
+
+@pytest.mark.parametrize(
+    "flat_changes",
+    [
+        {"name": "py39"},
+        {"name": "py39-linux-x86_64", "python_version": "3.13.4"},
+        {"python_version": "3.9.25"},
+    ],
+)
+def test_grouped_profiles_reject_conflicting_flat_profiles(flat_changes):
+    group = {
+        "name": "py39",
+        "python_version": "3.9.20",
+        "targets": [{"os": "linux", "platform": "manylinux2014_x86_64"}],
+    }
+    flat = {**config().meta["dependencyProfiles"][0], **flat_changes}
+    with pytest.raises(deps.DependencyProfileError, match="unique"):
+        deps.profiles_from_config(config([group, flat]))
 
 
 def test_rejects_ambiguous_runtimes_and_legacy_mixing():
@@ -249,6 +337,71 @@ def test_installs_complete_frozen_graph_and_omits_provided(source, monkeypatch):
     assert profile["path"].startswith("3rdparty/ucc/linux39-")
 
 
+def make_recorded_wheel(path, name, version, files, tag="py3-none-any"):
+    make_distribution(path, name, version)
+    metadata = path / f"{name}-{version}.dist-info"
+    (metadata / "WHEEL").write_text(
+        f"Wheel-Version: 1.0\nRoot-Is-Purelib: true\nTag: {tag}\n"
+    )
+    for filename, contents in files.items():
+        dest = path / filename
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(contents)
+    records = [
+        *files,
+        *(f"{metadata.name}/{name}" for name in ("METADATA", "WHEEL", "RECORD")),
+    ]
+    (metadata / "RECORD").write_text("\n".join(f"{record},," for record in records))
+
+
+def test_shares_only_identical_universal_wheels_with_complete_package_roots(tmp_path):
+    profiles: list[dict[str, Any]] = [
+        {"path": f"3rdparty/ucc/{name}"}
+        for name in ("linux39", "windows39", "linux313", "darwin39")
+    ]
+    for index, profile in enumerate(profiles):
+        dest = tmp_path / profile["path"]
+        dest.mkdir(parents=True)
+        # The same release with different installed contents cannot be shared.
+        version = "2.0" if index == 2 else "1.0"
+        payload = "different" if index == 3 else "same"
+        make_recorded_wheel(
+            dest, "universal", version, {"universal/__init__.py": payload}
+        )
+        make_recorded_wheel(
+            dest,
+            "native",
+            "1.0",
+            {"native.py": "same"},
+            "cp39-cp39-manylinux2014_x86_64",
+        )
+        make_recorded_wheel(dest, "namespace-a", "1.0", {"namespace/a.py": "same"})
+        make_recorded_wheel(dest, "namespace-b", "1.0", {"namespace/b.py": "same"})
+        make_recorded_wheel(
+            dest, "mislabelled", "1.0", {"mislabelled/native.so": "same"}
+        )
+        make_recorded_wheel(
+            dest, "incomplete", "1.0", {"incomplete/__init__.py": "same"}
+        )
+        (dest / "incomplete/extra.py").write_text("not in RECORD")
+
+    deps.share_profile_wheels(str(tmp_path), {"profiles": profiles})
+
+    (shared,) = profiles[0]["shared_paths"]
+    assert profiles[1]["shared_paths"] == [shared]
+    assert "shared_paths" not in profiles[2] and "shared_paths" not in profiles[3]
+    assert (tmp_path / shared / "universal/__init__.py").read_text() == "same"
+    assert (tmp_path / shared / "universal-1.0.dist-info/RECORD").is_file()
+    for index, profile in enumerate(profiles):
+        dest = tmp_path / profile["path"]
+        assert (dest / "universal").exists() == (index >= 2)
+        assert (dest / "native.py").is_file()
+        assert (dest / "namespace/a.py").is_file()
+        assert (dest / "namespace/b.py").is_file()
+        assert (dest / "mislabelled/native.so").is_file()
+        assert (dest / "incomplete/extra.py").is_file()
+
+
 def test_rejects_exclusions_not_declared_as_provided(source):
     write_lock(source)
     (source / "lib" / "exclude.txt").write_text("requests\n")
@@ -308,6 +461,31 @@ def run_runtime(app, code="", before=""):
     return subprocess.run(
         [sys.executable, "-B", "-c", script], text=True, capture_output=True
     )
+
+
+def test_runtime_loads_only_its_shared_wheels(runtime):
+    app, library, manifest = runtime
+    profile = manifest["profiles"][0]
+    shared = "3rdparty/ucc/shared/active"
+    inactive = "3rdparty/ucc/shared/inactive"
+    make_distribution(app / "lib" / shared, "shared_probe", "1.0", "shared_probe")
+    make_distribution(app / "lib" / inactive, "shared_probe", "2.0", "shared_probe")
+    profile["shared_paths"] = [shared]
+    profile["modules"].append("shared_probe")
+    profile["distributions"]["shared-probe"] = "1.0"
+    manifest["profiles"].append(
+        {**profile, "name": "inactive", "python": [3, 99], "shared_paths": [inactive]}
+    )
+    deps.generate_bootstrap(str(app), manifest)
+
+    result = run_runtime(
+        app,
+        f"import shared_probe, ucc_probe\n"
+        f"assert shared_probe.__file__ == {str(app / 'lib' / shared / 'shared_probe.py')!r}\n"
+        f"assert ucc_probe.__file__ == {str(library / 'ucc_probe.py')!r}\n"
+        f"assert {str(app / 'lib' / inactive)!r} not in sys.path",
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_runtime_selects_dependencies_preserves_helpers_and_ignores_upgrade_leftovers(
@@ -667,8 +845,9 @@ def test_provided_only_graph_skips_pip_and_generated_source_is_rejected(
 
 
 @pytest.mark.parametrize("pages", [False, True])
+@pytest.mark.parametrize("grouped", [False, True])
 def test_build_integrates_profiles_and_keeps_generated_handlers(
-    source, monkeypatch, pages
+    source, monkeypatch, pages, grouped
 ):
     from splunk_add_on_ucc_framework.commands import build
 
@@ -680,7 +859,18 @@ def test_build_integrates_profiles_and_keeps_generated_handlers(
     if not pages:
         content.pop("pages")
         content["meta"].pop("defaultView", None)
-    content["meta"]["dependencyProfiles"] = config().meta["dependencyProfiles"]
+    if grouped:
+        content["meta"]["dependencyProfiles"] = [
+            {
+                "name": "py39",
+                "python_version": "3.9.20",
+                "targets": [{"os": "linux", "platform": "manylinux2014_x86_64"}],
+            }
+        ]
+        profile_name = "py39-linux-x86_64"
+    else:
+        content["meta"]["dependencyProfiles"] = config().meta["dependencyProfiles"]
+        profile_name = "linux39"
     configuration = GlobalConfig(content, False)
     (source.parent / "globalConfig.json").write_text(json.dumps(content))
     write_lock(source, configuration)
@@ -708,7 +898,7 @@ def test_build_integrates_profiles_and_keeps_generated_handlers(
     assert len(checks) == 1
     arguments, options = checks[0]
     assert arguments[1] == str(app / "lib" / manifest["profiles"][0]["path"])
-    assert arguments[2] == str(source / "lib" / deps.LOCK_NAME) + " (profile linux39)"
+    assert arguments[2] == f"{source / 'lib' / deps.LOCK_NAME} (profile {profile_name})"
     assert options == {
         "includes_ui": pages,
         "includes_oauth": False,

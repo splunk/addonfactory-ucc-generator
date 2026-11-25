@@ -655,6 +655,7 @@ def generate(
                     includes_oauth=global_config.has_oauth(),
                     profile_versions=profile_versions,
                 )
+            runtime_dependencies.share_profile_wheels(ucc_lib_target, profile_manifest)
         else:
             install_python_libraries(
                 source,

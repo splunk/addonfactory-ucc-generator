@@ -99,16 +99,23 @@ def _configure_runtime():
         raise RuntimeError("UCC dependency profile targets Python %s; regenerate the lock for Python %s" %
                            (profile["python_full_version"], platform.python_version()))
     minimum = profile["minimum_openssl"]
-    selected = os.path.realpath(os.path.join(lib, profile["path"]))
-    if not _inside(selected, lib) or not os.path.isdir(selected):
-        raise RuntimeError("Missing or invalid UCC dependency directory: " + selected)
+    bundled = []
+    for relative in [profile["path"], *profile.get("shared_paths", [])]:
+        directory = os.path.realpath(os.path.join(lib, relative))
+        if not _inside(directory, lib) or not os.path.isdir(directory) or directory in bundled:
+            raise RuntimeError("Missing or invalid UCC dependency directory: " + directory)
+        bundled.append(directory)
 
-    installed = {_canonical(dist.metadata["Name"]): dist
-                 for dist in importlib.metadata.distributions(path=[selected])}
+    installed = {}
+    for dist in importlib.metadata.distributions(path=bundled):
+        name = _canonical(dist.metadata["Name"])
+        if name in installed:
+            raise RuntimeError("Duplicate UCC dependency " + name)
+        installed[name] = dist
     for name, expected in profile["distributions"].items():
         actual = installed.get(name)
         if actual is None or actual.version != expected:
-            raise RuntimeError("UCC dependency %s must be %s in %s" % (name, expected, selected))
+            raise RuntimeError("UCC dependency %s must be %s in %s" % (name, expected, bundled))
     core_paths = [path for path in sys.path if not _inside(path, app)
                   and _real(path) != _real(app) and not re.search(r"[\\/]etc[\\/]apps[\\/]", path)]
     core = {}
@@ -142,7 +149,7 @@ def _configure_runtime():
     shared_namespaces = {}
     core_path_order = {path: i for i, path in enumerate(dict.fromkeys(map(_real, core_paths)))}
     for name in set(profile["modules"]) & set(provided_namespaces):
-        bundled_paths = _namespace_paths(name, [selected])
+        bundled_paths = _namespace_paths(name, bundled)
         if bundled_paths:
             host_paths = sorted(
                 provided_namespaces[name],
@@ -155,9 +162,9 @@ def _configure_runtime():
         cached = sys.modules.get(name)
         if cached is None:
             continue
-        roots = list(provided_roots[name]) if name in provided_modules else [selected]
-        if name in shared_namespaces:
-            roots.append(selected)
+        roots = list(provided_roots.get(name, []))
+        if name not in provided_modules or name in shared_namespaces:
+            roots.extend(bundled)
         origin = getattr(cached, "__file__", None)
         origins = ([origin] if origin else []) + list(getattr(cached, "__path__", []))
         if (not origins or any(not any(_inside(path, root) for root in roots) for path in origins)
@@ -176,11 +183,13 @@ def _configure_runtime():
     namespace = os.path.join(bindir, os.path.basename(app))
     allowed = {_real(lib): set(manifest["source_modules"]["lib"]),
                _real(bindir): set(manifest["source_modules"]["bin"]),
-               _real(namespace): set(manifest["source_modules"]["namespace"]),
-               _real(selected): set(profile["modules"])}
+               _real(namespace): set(manifest["source_modules"]["namespace"])}
+    for directory in bundled:
+        allowed[_real(directory)] = set(profile["modules"])
     for names in allowed.values():
         names.difference_update(provided_modules)
-    allowed[_real(selected)].update(shared_namespaces)
+    for directory in bundled:
+        allowed[_real(directory)].update(shared_namespaces)
 
     class DeclaredDependencies:
         def find_spec(self, fullname, path=None, target=None):
@@ -205,7 +214,7 @@ def _configure_runtime():
     sys.meta_path.insert(position, DeclaredDependencies())
     paths = [entry for entry in sys.path if not _inside(entry, app)
              and _real(entry) != _real(app) and not re.search(r"[\\/]etc[\\/]apps[\\/]", entry)]
-    sys.path[:] = [selected, namespace, lib] + paths
+    sys.path[:] = bundled + [namespace, lib] + paths
     # Keep this add-on's bin available for its declared helpers.
     sys.path.append(bindir)
     # Splunk's ssl module can import certifi. Select dependencies before loading it.

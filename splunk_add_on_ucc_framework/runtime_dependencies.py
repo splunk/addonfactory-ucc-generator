@@ -14,8 +14,11 @@ import json
 import logging
 import os
 import re
+import shutil
+import stat
 import subprocess
 import tempfile
+from collections import defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -30,14 +33,30 @@ from splunk_add_on_ucc_framework.global_config import GlobalConfig
 logger = logging.getLogger("ucc_gen")
 LOCK_NAME = "ucc-dependencies.lock.json"
 MANIFEST_NAME = "ucc-runtime-dependencies.json"
+MAX_PROFILES = 32
+PROFILE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
+PLATFORM_PREFIXES = {
+    "linux": ("manylinux", "musllinux"),
+    "windows": ("win_",),
+    "darwin": ("macosx_",),
+}
 # A build can target a different OS or Python ABI from the generator.
 SOURCE_EXTENSION_NAME = re.compile(
     r"([^.]+)(?:\.(?:cpython-[\w-]+|cp\d+t?(?:-[\w-]+)?|abi3t?))?\.(?:so|pyd)"
 )
+NATIVE_WHEEL_FILE = re.compile(r"\.(?:so(?:\.\d+)*|pyd|dll|dylib)$", re.IGNORECASE)
 
 
 class DependencyProfileError(ValueError):
     """An explicitly configured runtime cannot be built reproducibly."""
+
+
+def _architecture(platform: str) -> str:
+    if platform.endswith(("_x86_64", "_amd64")):
+        return "x86_64"
+    if platform.endswith(("_aarch64", "_arm64")):
+        return "arm64"
+    raise DependencyProfileError(f"Unsupported wheel platform: {platform}")
 
 
 @dataclass(frozen=True)
@@ -51,11 +70,7 @@ class DependencyProfile:
 
     @property
     def architecture(self) -> str:
-        if self.platform.endswith(("_x86_64", "_amd64")):
-            return "x86_64"
-        if self.platform.endswith(("_aarch64", "_arm64")):
-            return "arm64"
-        raise DependencyProfileError(f"Unsupported wheel platform: {self.platform}")
+        return _architecture(self.platform)
 
     @property
     def python_family(self) -> tuple[int, int]:
@@ -91,6 +106,66 @@ class DependencyProfile:
         return environment
 
 
+def _expand_profiles(raw_profiles: list[Any]) -> list[dict[str, Any]]:
+    """Convert grouped declarations to the flat profiles used by locks and builds."""
+    profiles = []
+    seen_names = set()
+    group_fields = {"name", "python_version", "targets", "provided", "minimum_openssl"}
+    for raw in raw_profiles:
+        if not isinstance(raw, dict):
+            raise DependencyProfileError("Each dependency profile must be an object")
+        name = raw.get("name")
+        if (
+            not isinstance(name, str)
+            or len(name) > 64
+            or not PROFILE_NAME.fullmatch(name)
+        ):
+            raise DependencyProfileError(
+                "Profile names must be safe, unique directory names"
+            )
+        if name in seen_names:
+            raise DependencyProfileError("Profile names must be unique")
+        seen_names.add(name)
+        if "targets" not in raw:
+            profiles.append(raw)
+            continue
+        if raw.keys() - group_fields:
+            raise DependencyProfileError(
+                f"Grouped profile {name} sets os and platform only inside targets"
+            )
+        targets = raw["targets"]
+        if not isinstance(targets, list) or not targets:
+            raise DependencyProfileError(
+                f"Profile {name} requires a non-empty targets list"
+            )
+        shared = {key: value for key, value in raw.items() if key != "targets"}
+        for target in targets:
+            if not isinstance(target, dict) or set(target) != {"os", "platform"}:
+                raise DependencyProfileError(
+                    f"Each target in profile {name} must specify os and platform"
+                )
+            system, wheel_platform = target["os"], target["platform"]
+            if (
+                not isinstance(system, str)
+                or system not in PLATFORM_PREFIXES
+                or not isinstance(wheel_platform, str)
+            ):
+                raise DependencyProfileError(
+                    f"Invalid os or platform in profile {name}"
+                )
+            target_name = f"{name}-{system}-{_architecture(wheel_platform)}"
+            if len(target_name) > 64:
+                raise DependencyProfileError(
+                    f"Grouped profile name {name} is too long with its OS and architecture suffix"
+                )
+            profiles.append({**shared, **target, "name": target_name})
+    if len(profiles) > MAX_PROFILES:
+        raise DependencyProfileError(
+            f"Configure at most {MAX_PROFILES} dependency targets"
+        )
+    return profiles
+
+
 def profiles_from_config(config: GlobalConfig) -> list[DependencyProfile]:
     profiles = []
     seen_names: set[str] = set()
@@ -102,9 +177,7 @@ def profiles_from_config(config: GlobalConfig) -> list[DependencyProfile]:
         raise DependencyProfileError(
             "dependencyProfiles cannot be combined with os-dependentLibraries"
         )
-    for raw in raw_profiles:
-        if not isinstance(raw, dict):
-            raise DependencyProfileError("Each dependency profile must be an object")
+    for raw in _expand_profiles(raw_profiles):
         if not isinstance(raw.get("provided", []), list):
             raise DependencyProfileError(
                 "provided must be a list of distribution names"
@@ -117,30 +190,17 @@ def profiles_from_config(config: GlobalConfig) -> list[DependencyProfile]:
             raise DependencyProfileError(
                 f"Invalid dependency profile: {error}"
             ) from error
-        if (
-            not isinstance(profile.name, str)
-            or len(profile.name) > 64
-            or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*", profile.name)
-        ):
-            raise DependencyProfileError(
-                "Profile names must be safe, unique directory names"
-            )
         if not isinstance(profile.python_version, str) or not re.fullmatch(
             r"3\.\d+\.\d+", profile.python_version
         ):
             raise DependencyProfileError(
                 "python_version must include major, minor and patch, for example 3.13.4"
             )
-        prefixes = {
-            "linux": ("manylinux", "musllinux"),
-            "windows": ("win_",),
-            "darwin": ("macosx_",),
-        }
         if (
             not isinstance(profile.os, str)
-            or profile.os not in prefixes
+            or profile.os not in PLATFORM_PREFIXES
             or not isinstance(profile.platform, str)
-            or not profile.platform.startswith(prefixes[profile.os])
+            or not profile.platform.startswith(PLATFORM_PREFIXES[profile.os])
         ):
             raise DependencyProfileError("Profile os and wheel platform must agree")
         if profile.minimum_openssl is not None and (
@@ -381,6 +441,126 @@ def _modules(distribution: importlib.metadata.Distribution) -> set[str]:
         and ".dist-info" not in str(path)
         and ".data/" not in str(path)
     }
+
+
+def _wheel_fingerprint(
+    destination: Path, roots: set[Path], recorded: set[Path]
+) -> Optional[str]:
+    actual = set()
+    for root in roots:
+        entry = destination / root
+        if entry.is_symlink():
+            return None
+        entries = [entry, *entry.rglob("*")] if entry.is_dir() else [entry]
+        for path in entries:
+            if path.is_symlink() or NATIVE_WHEEL_FILE.search(path.name):
+                return None
+            if path.is_file():
+                actual.add(path.relative_to(destination))
+            elif not path.is_dir():
+                return None
+    if actual != recorded:
+        return None
+
+    digest = hashlib.sha256()
+    for path in sorted(recorded):
+        installed = destination / path
+        digest.update(os.fsencode(path.as_posix()) + b"\0")
+        digest.update(stat.S_IMODE(installed.stat().st_mode).to_bytes(2, "big"))
+        file_digest = hashlib.sha256()
+        with installed.open("rb") as reader:
+            for block in iter(lambda: reader.read(65536), b""):
+                file_digest.update(block)
+        digest.update(file_digest.digest())
+    return digest.hexdigest()
+
+
+def _wheel_roots(
+    destination: Path, distributions: list[importlib.metadata.Distribution]
+) -> dict[str, tuple[Path, ...]]:
+    """Find complete, independently importable universal wheels in one profile."""
+    records: list[set[Path]] = []
+    owners: dict[str, set[int]] = defaultdict(set)
+    module_paths: dict[str, set[Path]] = defaultdict(set)
+    for path in destination.iterdir():
+        module = _source_module(path)
+        if module is not None:
+            module_paths[module.casefold()].add(Path(path.name))
+
+    for index, distribution in enumerate(distributions):
+        files = distribution.files
+        if not files:
+            return {}
+        paths = {Path(str(path)) for path in files}
+        records.append(paths)
+        for path in paths:
+            if path.parts:
+                owners[path.parts[0].casefold()].add(index)
+
+    candidates = {}
+    for distribution, paths in zip(distributions, records):
+        wheel = (distribution.read_text("WHEEL") or "").splitlines()
+        tags = [
+            line.partition(":")[2].strip() for line in wheel if line.startswith("Tag:")
+        ]
+        if (
+            "Root-Is-Purelib: true" not in wheel
+            or not tags
+            or any(not tag.endswith("-none-any") for tag in tags)
+        ):
+            continue
+        if any(
+            not path.parts or path.is_absolute() or ".." in path.parts for path in paths
+        ):
+            continue
+        roots = {Path(path.parts[0]) for path in paths}
+        if any(
+            len(owners[root.name.casefold()]) > 1
+            or (
+                root.suffix != ".dist-info"
+                and _source_module(destination / root) is None
+            )
+            for root in roots
+        ):
+            continue
+        # Moving part of an import directory would change Python import resolution.
+        if any(
+            module_paths[name.casefold()] - roots for name in _modules(distribution)
+        ):
+            continue
+        digest = _wheel_fingerprint(destination, roots, paths)
+        if digest is not None:
+            candidates[digest] = tuple(sorted(roots))
+    return candidates
+
+
+def share_profile_wheels(output: str, manifest: dict[str, Any]) -> None:
+    """Store byte-identical universal wheels once and reference them from each profile."""
+    if len(manifest["profiles"]) < 2:
+        return
+    root = Path(output)
+    copies: dict[str, list[tuple[dict[str, Any], tuple[Path, ...]]]] = defaultdict(list)
+    for profile in manifest["profiles"]:
+        destination = root / profile["path"]
+        distributions = list(importlib.metadata.distributions(path=[str(destination)]))
+        for digest, paths in _wheel_roots(destination, distributions).items():
+            copies[digest].append((profile, paths))
+    for digest, matches in sorted(copies.items()):
+        if len(matches) < 2:
+            continue
+        relative = Path("3rdparty") / "ucc" / "shared" / digest
+        shared = root / relative
+        shared.mkdir(parents=True)
+        for index, (profile, paths) in enumerate(matches):
+            for path in paths:
+                entry = root / profile["path"] / path
+                if index == 0:
+                    entry.rename(shared / path)
+                elif entry.is_dir():
+                    shutil.rmtree(entry)
+                else:
+                    entry.unlink()
+            profile.setdefault("shared_paths", []).append(relative.as_posix())
 
 
 def install_profiles(

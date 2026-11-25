@@ -153,6 +153,10 @@ UCC omits this build-only setting from the globalConfig copy consumed by the bro
    wheels with exact versions and SHA-256 hashes, and generates the runtime selector and manifest.
 1. Validate the built add-on on each target Splunk host, then package it normally.
 
+The build stores identical universal wheels once when they are used by multiple profiles. Different
+wheel versions, platform wheels, and distributions that share an import directory stay separate.
+A runtime only loads the shared wheels listed for its selected profile.
+
 See [`ucc-gen lock`](../commands.md#ucc-gen-lock) for all command options. The package command does
 not repeat lock verification. Changes to either Poetry file or the profile declarations require a new
 UCC lock before the next build.
@@ -168,8 +172,29 @@ UCC lock before the next build.
 | `provided` | No | Distribution names supplied by the host instead of bundled in this profile. Defaults to an empty list. |
 | `minimum_openssl` | No | Minimum host OpenSSL version in three numeric components, such as `3.0.0`. |
 
+When several targets use the same Python version and host requirements, group them in one profile.
+For example, an item in `dependencyProfiles` can be written as:
+
+```json
+{
+  "name": "py39",
+  "python_version": "3.9.20",
+  "targets": [
+    {"os": "linux", "platform": "manylinux2014_x86_64"},
+    {"os": "windows", "platform": "win_amd64"},
+    {"os": "darwin", "platform": "macosx_11_0_arm64"}
+  ]
+}
+```
+
+For a grouped profile, put `os` and `platform` in each target. Every target inherits the group's
+`python_version`, `provided`, and `minimum_openssl`. UCC generates profile names such as
+`py39-linux-x86_64`, which must fit the 64-character limit and be unique alongside flat names.
+You can use both formats in the same config. Regenerate the UCC lock when converting flat profiles
+to groups with new generated names.
+
 Each OS/architecture/Python major-minor combination must have only one profile, even if patch versions
-differ. The configuration supports up to 32 profiles.
+differ. The configuration supports up to 32 profiles after expanding groups to individual targets.
 
 ### Host-provided dependencies
 
