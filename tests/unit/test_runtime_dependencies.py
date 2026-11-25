@@ -463,6 +463,47 @@ def test_places_common_profile_and_native_dependencies(tmp_path):
         assert (dest / "incomplete/extra.py").is_file()
 
 
+@pytest.mark.parametrize("outside_script_exists", [False, True])
+def test_profile_layout_ignores_only_missing_console_script_records(
+    tmp_path, monkeypatch, outside_script_exists
+):
+    profiles = [
+        {"path": f"3rdparty/ucc/py39/{system}-x86_64"}
+        for system in ("linux", "windows")
+    ]
+    for profile in profiles:
+        target = tmp_path / profile["path"]
+        make_recorded_wheel(target, "probe", "1.0", {"probe.py": "wheel"})
+        record = target / "probe-1.0.dist-info/RECORD"
+        record.write_text(record.read_text() + "\n../../bin/probe,,")
+        (target / "bin").mkdir()
+        (target / "bin/probe").write_text("relocated script")
+
+    if outside_script_exists:
+        outside_script = tmp_path / "3rdparty/ucc/bin/probe"
+        outside_script.parent.mkdir()
+        outside_script.write_text("external script")
+
+    # Expose all recorded paths as importlib.metadata does on Python 3.9.
+    def recorded_files(distribution):
+        return [
+            Path(line.split(",", 1)[0])
+            for line in distribution.read_text("RECORD").splitlines()
+        ]
+
+    monkeypatch.setattr(
+        importlib.metadata.PathDistribution, "files", property(recorded_files)
+    )
+    manifest = {"profiles": profiles}
+    deps.share_profile_wheels(str(tmp_path), manifest)
+
+    assert (tmp_path / "probe.py").exists() == (not outside_script_exists)
+    for profile in profiles:
+        target = tmp_path / profile["path"]
+        assert (target / "probe.py").exists() == outside_script_exists
+        assert (target / "bin/probe").read_text() == "relocated script"
+
+
 def test_omits_empty_target_directories(tmp_path):
     profiles = [
         {"path": f"3rdparty/ucc/{python}/{system}-x86_64"}

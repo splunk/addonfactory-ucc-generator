@@ -505,6 +505,9 @@ def _wheel_groups(destination: Path) -> dict[str, _WheelGroup]:
     keys_by_wheel = []
     for index, distribution in enumerate(distributions):
         paths = {Path(str(path)) for path in distribution.files or []}
+        # Python 3.9 still reports missing RECORD entries. In particular,
+        # pip --target relocates scripts but can leave their old paths in RECORD.
+        paths = {path for path in paths if (destination / path).exists()}
         if not paths or any(
             not path.parts or path.is_absolute() or ".." in path.parts for path in paths
         ):
