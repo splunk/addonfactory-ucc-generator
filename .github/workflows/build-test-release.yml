@@ -370,6 +370,7 @@ jobs:
           ARGO_NAMESPACE: workflows
           ARGO_TOKEN: ${{ steps.get-argo-token.outputs.argo-token }}
           WORKFLOW_NAME: ${{ steps.run-argo-tests.outputs.workflow-name }}
+        shell: bash
         run: |
           set -euo pipefail
           if [[ -z "$WORKFLOW_NAME" ]]; then
@@ -469,6 +470,7 @@ jobs:
           ARGO_NAMESPACE: workflows
           ARGO_TOKEN: ${{ steps.get-argo-token.outputs.argo-token }}
           WORKFLOW_NAME: ${{ steps.run-argo-tests.outputs.workflow-name }}
+        shell: bash
         run: |
           set -euo pipefail
           if [[ -z "$WORKFLOW_NAME" ]]; then

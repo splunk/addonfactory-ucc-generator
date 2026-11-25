@@ -3,8 +3,10 @@ import os
 import openapi_client
 
 
-def test_generated_client_can_manage_an_account():
-    splunk_host = os.environ.get("SPL_HOST", "localhost")
+def test_generated_client_can_manage_an_account(pytestconfig):
+    splunk_host = pytestconfig.getoption("--splunk-host") or os.environ.get(
+        "SPL_HOST", "localhost"
+    )
     configuration = openapi_client.Configuration(
         host=f"https://{splunk_host}:8089/servicesNS/-/Splunk_TA_UCCExample",
         username="admin",
