@@ -377,29 +377,14 @@ jobs:
             echo "::error::The WFE action did not return an Argo workflow name."
             exit 1
           fi
-          for attempt in $(seq 1 30); do
-            if ! response=$(curl --fail --silent --show-error \
-                -H "Authorization: Bearer ${ARGO_TOKEN}" \
-                "https://${ARGO_SERVER}/api/v1/workflows/${ARGO_NAMESPACE}/${WORKFLOW_NAME}"); then
-              sleep 10
-              continue
-            fi
-            phase=$(jq -r '.status.phase // empty' <<< "$response")
-            case "$phase" in
-              Succeeded)
-                echo "Argo workflow ${WORKFLOW_NAME} succeeded."
-                exit 0
-                ;;
-              Failed|Error)
-                echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase}."
-                jq -r '.status.message // empty' <<< "$response"
-                exit 1
-                ;;
-            esac
-            sleep 10
-          done
-          echo "::error::Argo workflow ${WORKFLOW_NAME} did not reach a terminal state."
-          exit 1
+          workflow=$(argo get "$WORKFLOW_NAME" -n "$ARGO_NAMESPACE" -o json)
+          phase=$(jq -r '.status.phase // empty' <<< "$workflow")
+          if [[ "$phase" != "Succeeded" ]]; then
+            echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase:-unknown}."
+            jq -r '.status.message // empty' <<< "$workflow"
+            exit 1
+          fi
+          echo "Argo workflow ${WORKFLOW_NAME} succeeded."
 
   test-openapi-client:
     name: test-openapi-client K8s Splunk ${{ matrix.splunk.version }}
@@ -477,29 +462,14 @@ jobs:
             echo "::error::The WFE action did not return an Argo workflow name."
             exit 1
           fi
-          for attempt in $(seq 1 30); do
-            if ! response=$(curl --fail --silent --show-error \
-                -H "Authorization: Bearer ${ARGO_TOKEN}" \
-                "https://${ARGO_SERVER}/api/v1/workflows/${ARGO_NAMESPACE}/${WORKFLOW_NAME}"); then
-              sleep 10
-              continue
-            fi
-            phase=$(jq -r '.status.phase // empty' <<< "$response")
-            case "$phase" in
-              Succeeded)
-                echo "Argo workflow ${WORKFLOW_NAME} succeeded."
-                exit 0
-                ;;
-              Failed|Error)
-                echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase}."
-                jq -r '.status.message // empty' <<< "$response"
-                exit 1
-                ;;
-            esac
-            sleep 10
-          done
-          echo "::error::Argo workflow ${WORKFLOW_NAME} did not reach a terminal state."
-          exit 1
+          workflow=$(argo get "$WORKFLOW_NAME" -n "$ARGO_NAMESPACE" -o json)
+          phase=$(jq -r '.status.phase // empty' <<< "$workflow")
+          if [[ "$phase" != "Succeeded" ]]; then
+            echo "::error::Argo workflow ${WORKFLOW_NAME} ended with phase ${phase:-unknown}."
+            jq -r '.status.message // empty' <<< "$workflow"
+            exit 1
+          fi
+          echo "Argo workflow ${WORKFLOW_NAME} succeeded."
 
   appinspect-for-expected-outputs:
     name: splunk-appinspect ${{ matrix.tags }} tests/testdata/expected_addons/expected_output_global_config_everything/Splunk_TA_UCCExample
