@@ -100,18 +100,27 @@ def _configure_runtime():
                            (profile["python_full_version"], platform.python_version()))
     minimum = profile["minimum_openssl"]
     bundled = []
-    for relative in [profile["path"], *profile.get("shared_paths", [])]:
+    for relative in [profile.get("path"), *profile.get("shared_paths", [])]:
+        if relative is None:
+            continue
         directory = os.path.realpath(os.path.join(lib, relative))
         if not _inside(directory, lib) or not os.path.isdir(directory) or directory in bundled:
             raise RuntimeError("Missing or invalid UCC dependency directory: " + directory)
         bundled.append(directory)
 
+    common_distributions = set(manifest.get("common_distributions", []))
+    common_modules = set(manifest.get("common_modules", []))
     installed = {}
-    for dist in importlib.metadata.distributions(path=bundled):
-        name = _canonical(dist.metadata["Name"])
-        if name in installed:
-            raise RuntimeError("Duplicate UCC dependency " + name)
-        installed[name] = dist
+    distribution_paths = bundled + ([lib] if common_distributions else [])
+    for directory in distribution_paths:
+        for dist in importlib.metadata.distributions(path=[directory]):
+            name = dist.metadata["Name"]
+            if directory == lib and (not name or _canonical(name) not in common_distributions):
+                continue
+            name = _canonical(name)
+            if name in installed:
+                raise RuntimeError("Duplicate UCC dependency " + name)
+            installed[name] = dist
     for name, expected in profile["distributions"].items():
         actual = installed.get(name)
         if actual is None or actual.version != expected:
@@ -149,7 +158,8 @@ def _configure_runtime():
     shared_namespaces = {}
     core_path_order = {path: i for i, path in enumerate(dict.fromkeys(map(_real, core_paths)))}
     for name in set(profile["modules"]) & set(provided_namespaces):
-        bundled_paths = _namespace_paths(name, bundled)
+        bundled_roots = bundled + ([lib] if name in common_modules else [])
+        bundled_paths = _namespace_paths(name, bundled_roots)
         if bundled_paths:
             host_paths = sorted(
                 provided_namespaces[name],
@@ -165,6 +175,8 @@ def _configure_runtime():
         roots = list(provided_roots.get(name, []))
         if name not in provided_modules or name in shared_namespaces:
             roots.extend(bundled)
+            if name in common_modules:
+                roots.append(lib)
         origin = getattr(cached, "__file__", None)
         origins = ([origin] if origin else []) + list(getattr(cached, "__path__", []))
         if (not origins or any(not any(_inside(path, root) for root in roots) for path in origins)
@@ -190,6 +202,7 @@ def _configure_runtime():
         names.difference_update(provided_modules)
     for directory in bundled:
         allowed[_real(directory)].update(shared_namespaces)
+    allowed[_real(lib)].update(common_modules & shared_namespaces.keys())
 
     class DeclaredDependencies:
         def find_spec(self, fullname, path=None, target=None):

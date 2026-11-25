@@ -196,6 +196,21 @@ to groups with new generated names.
 Each OS/architecture/Python major-minor combination must have only one profile, even if patch versions
 differ. The configuration supports up to 32 profiles after expanding groups to individual targets.
 
+### Bundled directory layout
+
+UCC stores identical universal wheels needed by every target directly in `lib`.
+Wheels that match across only one configured profile go in `lib/3rdparty/ucc/<profile>`.
+Other wheels stay in the target directory, such as
+`lib/3rdparty/ucc/py313/linux-x86_64`. UCC omits empty target directories.
+The directory names use the configured profile label. UCC adds a short numeric
+suffix when names differ only by case or use a Windows device name.
+
+When several wheels own the same import directory, UCC moves them together only
+if the complete group is universal and its installed files match. A group that
+contains a native module or collides with add-on source stays in a more specific
+directory. The generated runtime manifest selects and validates the active paths.
+Existing UCC locks still work with the new layout.
+
 ### Host-provided dependencies
 
 Every `provided` distribution must also occur in that profile's Poetry dependency graph. UCC leaves

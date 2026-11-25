@@ -334,7 +334,50 @@ def test_installs_complete_frozen_graph_and_omits_provided(source, monkeypatch):
     profile = manifest["profiles"][0]
     assert profile["provided"] == {"requests": "2.32.5"}
     assert profile["modules"] == ["probe"]
-    assert profile["path"].startswith("3rdparty/ucc/linux39-")
+    assert profile["path"] == "3rdparty/ucc/linux39/linux-x86_64"
+
+
+def test_directory_names_preserve_profile_labels_and_are_portable(source, monkeypatch):
+    configuration = config(
+        [
+            {
+                "name": "Py39",
+                "python_version": "3.9.20",
+                "targets": [
+                    {"os": "linux", "platform": "manylinux2014_x86_64"},
+                    {"os": "windows", "platform": "win_amd64"},
+                ],
+            },
+            {
+                "name": "py39",
+                "python_version": "3.13.4",
+                "os": "linux",
+                "platform": "manylinux2014_x86_64",
+            },
+            {
+                "name": "NUL",
+                "python_version": "3.13.4",
+                "os": "windows",
+                "platform": "win_amd64",
+            },
+        ]
+    )
+    write_lock(source, configuration)
+
+    def install(command):
+        destination = Path(command[command.index("--target") + 1])
+        make_distribution(destination, "probe", "1.0", "probe")
+
+    monkeypatch.setattr(deps, "_run", install)
+    manifest = deps.install_profiles(
+        str(source), str(source.parent / "output"), configuration, sys.executable
+    )
+    assert {profile["name"]: profile["path"] for profile in manifest["profiles"]} == {
+        "Py39-linux-x86_64": "3rdparty/ucc/Py39/linux-x86_64",
+        "Py39-windows-x86_64": "3rdparty/ucc/Py39/windows-x86_64",
+        "py39": "3rdparty/ucc/py39~2/linux-x86_64",
+        "NUL": "3rdparty/ucc/NUL~1/windows-x86_64",
+    }
 
 
 def make_recorded_wheel(path, name, version, files, tag="py3-none-any"):
@@ -354,29 +397,33 @@ def make_recorded_wheel(path, name, version, files, tag="py3-none-any"):
     (metadata / "RECORD").write_text("\n".join(f"{record},," for record in records))
 
 
-def test_shares_only_identical_universal_wheels_with_complete_package_roots(tmp_path):
+def test_places_common_profile_and_native_dependencies(tmp_path):
+    root = tmp_path / "lib"
     profiles: list[dict[str, Any]] = [
-        {"path": f"3rdparty/ucc/{name}"}
-        for name in ("linux39", "windows39", "linux313", "darwin39")
+        {"path": f"3rdparty/ucc/{python}/{system}-x86_64"}
+        for python in ("py39", "py313")
+        for system in ("linux", "windows", "darwin")
     ]
     for index, profile in enumerate(profiles):
-        dest = tmp_path / profile["path"]
+        dest = root / profile["path"]
         dest.mkdir(parents=True)
-        # The same release with different installed contents cannot be shared.
-        version = "2.0" if index == 2 else "1.0"
-        payload = "different" if index == 3 else "same"
+        version = "1.0" if index < 3 else "2.0"
         make_recorded_wheel(
-            dest, "universal", version, {"universal/__init__.py": payload}
-        )
-        make_recorded_wheel(
-            dest,
-            "native",
-            "1.0",
-            {"native.py": "same"},
-            "cp39-cp39-manylinux2014_x86_64",
+            dest, "requests", version, {"requests/__init__.py": version}
         )
         make_recorded_wheel(dest, "namespace-a", "1.0", {"namespace/a.py": "same"})
         make_recorded_wheel(dest, "namespace-b", "1.0", {"namespace/b.py": "same"})
+        make_recorded_wheel(
+            dest, "target_wheel", "1.0", {"target_wheel/__init__.py": str(index)}
+        )
+        make_recorded_wheel(dest, "google-common", "1.0", {"google/common.py": "same"})
+        make_recorded_wheel(
+            dest,
+            "google-native",
+            "1.0",
+            {"google/native.so": "same"},
+            "cp39-cp39-manylinux2014_x86_64",
+        )
         make_recorded_wheel(
             dest, "mislabelled", "1.0", {"mislabelled/native.so": "same"}
         )
@@ -384,22 +431,59 @@ def test_shares_only_identical_universal_wheels_with_complete_package_roots(tmp_
             dest, "incomplete", "1.0", {"incomplete/__init__.py": "same"}
         )
         (dest / "incomplete/extra.py").write_text("not in RECORD")
+        make_recorded_wheel(
+            dest, "source_lib", "1.0", {"source_lib/__init__.py": "wheel"}
+        )
+    (root / "source_lib.py").write_text("source")
+
+    manifest = {"profiles": profiles}
+    deps.share_profile_wheels(str(root), manifest)
+
+    assert manifest["common_distributions"] == ["namespace-a", "namespace-b"]
+    assert manifest["common_modules"] == ["namespace"]
+    assert (root / "namespace/a.py").read_text() == "same"
+    assert (root / "namespace/b.py").read_text() == "same"
+    assert (root / "namespace-a-1.0.dist-info/RECORD").is_file()
+    assert (root / "source_lib.py").read_text() == "source"
+
+    for index, profile in enumerate(profiles):
+        dest = root / profile["path"]
+        shared = f"3rdparty/ucc/{'py39' if index < 3 else 'py313'}"
+        assert profile["shared_paths"] == [shared]
+        assert (root / shared / "requests/__init__.py").read_text() == (
+            "1.0" if index < 3 else "2.0"
+        )
+        assert (root / shared / "source_lib/__init__.py").read_text() == "wheel"
+        assert not (dest / "namespace").exists()
+        assert not (dest / "requests").exists()
+        assert (dest / "target_wheel/__init__.py").is_file()
+        assert (dest / "google/common.py").is_file()
+        assert (dest / "google/native.so").is_file()
+        assert (dest / "mislabelled/native.so").is_file()
+        assert (dest / "incomplete/extra.py").is_file()
+
+
+def test_omits_empty_target_directories(tmp_path):
+    profiles = [
+        {"path": f"3rdparty/ucc/{python}/{system}-x86_64"}
+        for python in ("py39", "py313")
+        for system in ("linux", "windows")
+    ]
+    for target in profiles:
+        dest = tmp_path / target["path"]
+        version = "1.0" if "/py39/" in target["path"] else "2.0"
+        make_recorded_wheel(dest, "requests", version, {"requests.py": version})
+        make_recorded_wheel(dest, "common", "1.0", {"common.py": "common"})
 
     deps.share_profile_wheels(str(tmp_path), {"profiles": profiles})
 
-    (shared,) = profiles[0]["shared_paths"]
-    assert profiles[1]["shared_paths"] == [shared]
-    assert "shared_paths" not in profiles[2] and "shared_paths" not in profiles[3]
-    assert (tmp_path / shared / "universal/__init__.py").read_text() == "same"
-    assert (tmp_path / shared / "universal-1.0.dist-info/RECORD").is_file()
-    for index, profile in enumerate(profiles):
-        dest = tmp_path / profile["path"]
-        assert (dest / "universal").exists() == (index >= 2)
-        assert (dest / "native.py").is_file()
-        assert (dest / "namespace/a.py").is_file()
-        assert (dest / "namespace/b.py").is_file()
-        assert (dest / "mislabelled/native.so").is_file()
-        assert (dest / "incomplete/extra.py").is_file()
+    groups = tmp_path / "3rdparty/ucc"
+    assert {path.name for path in groups.iterdir()} == {"py39", "py313"}
+    for target in profiles:
+        assert "path" not in target
+    for group in groups.iterdir():
+        assert all(child.name.startswith("requests") for child in group.iterdir())
+    assert (tmp_path / "common.py").is_file()
 
 
 def test_rejects_exclusions_not_declared_as_provided(source):
@@ -470,7 +554,7 @@ def test_runtime_loads_only_its_shared_wheels(runtime):
     inactive = "3rdparty/ucc/shared/inactive"
     make_distribution(app / "lib" / shared, "shared_probe", "1.0", "shared_probe")
     make_distribution(app / "lib" / inactive, "shared_probe", "2.0", "shared_probe")
-    profile["shared_paths"] = [shared]
+    profile["shared_paths"] = [shared, profile.pop("path")]
     profile["modules"].append("shared_probe")
     profile["distributions"]["shared-probe"] = "1.0"
     manifest["profiles"].append(
@@ -486,6 +570,28 @@ def test_runtime_loads_only_its_shared_wheels(runtime):
         f"assert {str(app / 'lib' / inactive)!r} not in sys.path",
     )
     assert result.returncode == 0, result.stderr
+
+
+def test_runtime_validates_common_distributions_in_lib(runtime):
+    app, library, manifest = runtime
+    profile = manifest["profiles"][0]
+    lib = app / "lib"
+    make_distribution(lib, "common_probe", "1.0", "common_probe")
+    make_distribution(lib, "source_dist", "1.0", "source_dist")
+    manifest["common_distributions"] = ["common-probe"]
+    manifest["common_modules"] = ["common_probe"]
+    profile["distributions"]["common-probe"] = "1.0"
+    profile["modules"].append("common_probe")
+    deps.generate_bootstrap(str(app), manifest)
+
+    result = run_runtime(app, "import common_probe, ucc_probe, source_dist")
+    assert result.returncode == 0, result.stderr
+
+    profile["distributions"]["common-probe"] = "2.0"
+    deps.generate_bootstrap(str(app), manifest)
+    result = run_runtime(app)
+    assert result.returncode != 0
+    assert "UCC dependency common-probe must be 2.0" in result.stderr
 
 
 def test_runtime_selects_dependencies_preserves_helpers_and_ignores_upgrade_leftovers(

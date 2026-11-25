@@ -18,7 +18,7 @@ import shutil
 import stat
 import subprocess
 import tempfile
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Optional
@@ -35,6 +35,9 @@ LOCK_NAME = "ucc-dependencies.lock.json"
 MANIFEST_NAME = "ucc-runtime-dependencies.json"
 MAX_PROFILES = 32
 PROFILE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
+WINDOWS_DEVICE_NAME = re.compile(
+    r"(?:con|prn|aux|nul|com[1-9]|lpt[1-9])", re.IGNORECASE
+)
 PLATFORM_PREFIXES = {
     "linux": ("manylinux", "musllinux"),
     "windows": ("win_",),
@@ -475,92 +478,184 @@ def _wheel_fingerprint(
     return digest.hexdigest()
 
 
-def _wheel_roots(
-    destination: Path, distributions: list[importlib.metadata.Distribution]
-) -> dict[str, tuple[Path, ...]]:
-    """Find complete, independently importable universal wheels in one profile."""
-    records: list[set[Path]] = []
+@dataclass(frozen=True)
+class _WheelGroup:
+    roots: set[Path]
+    distributions: set[str]
+    modules: set[str]
+
+
+def _component_keys(destination: Path, roots: set[Path]) -> set[str]:
+    names = {root.name.casefold() for root in roots}
+    names.update(
+        module.casefold()
+        for root in roots
+        if (module := _source_module(destination / root)) is not None
+    )
+    return names
+
+
+def _wheel_groups(destination: Path) -> dict[str, _WheelGroup]:
+    """Find complete groups of universal wheels that can move together."""
+    distributions = list(importlib.metadata.distributions(path=[str(destination)]))
+    records = []
+    roots_by_wheel = []
+    modules_by_wheel = []
     owners: dict[str, set[int]] = defaultdict(set)
-    module_paths: dict[str, set[Path]] = defaultdict(set)
-    for path in destination.iterdir():
-        module = _source_module(path)
-        if module is not None:
-            module_paths[module.casefold()].add(Path(path.name))
-
+    keys_by_wheel = []
     for index, distribution in enumerate(distributions):
-        files = distribution.files
-        if not files:
-            return {}
-        paths = {Path(str(path)) for path in files}
-        records.append(paths)
-        for path in paths:
-            if path.parts:
-                owners[path.parts[0].casefold()].add(index)
-
-    candidates = {}
-    for distribution, paths in zip(distributions, records):
-        wheel = (distribution.read_text("WHEEL") or "").splitlines()
-        tags = [
-            line.partition(":")[2].strip() for line in wheel if line.startswith("Tag:")
-        ]
-        if (
-            "Root-Is-Purelib: true" not in wheel
-            or not tags
-            or any(not tag.endswith("-none-any") for tag in tags)
-        ):
-            continue
-        if any(
+        paths = {Path(str(path)) for path in distribution.files or []}
+        if not paths or any(
             not path.parts or path.is_absolute() or ".." in path.parts for path in paths
         ):
-            continue
+            # With incomplete ownership information, leave the original layout intact.
+            return {}
         roots = {Path(path.parts[0]) for path in paths}
+        modules = _modules(distribution)
+        keys = _component_keys(destination, roots) | {
+            name.casefold() for name in modules
+        }
+        records.append(paths)
+        roots_by_wheel.append(roots)
+        modules_by_wheel.append(modules)
+        keys_by_wheel.append(keys)
+        for key in keys:
+            owners[key].add(index)
+
+    candidates = {}
+    remaining = set(range(len(distributions)))
+    while remaining:
+        pending = [remaining.pop()]
+        group = []
+        while pending:
+            index = pending.pop()
+            group.append(index)
+            for key in keys_by_wheel[index]:
+                neighbors = owners[key] & remaining
+                remaining.difference_update(neighbors)
+                pending.extend(neighbors)
+
+        wheels = [distributions[index] for index in group]
+        if not all(_is_universal_wheel(wheel) for wheel in wheels):
+            continue
+        roots = set().union(*(roots_by_wheel[index] for index in group))
         if any(
-            len(owners[root.name.casefold()]) > 1
-            or (
-                root.suffix != ".dist-info"
-                and _source_module(destination / root) is None
-            )
+            root.suffix != ".dist-info" and _source_module(destination / root) is None
             for root in roots
         ):
             continue
-        # Moving part of an import directory would change Python import resolution.
+        modules = set().union(*(modules_by_wheel[index] for index in group))
+        root_keys = set().union(*(keys_by_wheel[index] for index in group))
+        # An unrecorded import path could make even a complete RECORD unsafe to move.
         if any(
-            module_paths[name.casefold()] - roots for name in _modules(distribution)
+            (module := _source_module(path)) is not None
+            and module.casefold() in root_keys
+            and Path(path.name) not in roots
+            for path in destination.iterdir()
         ):
             continue
+        paths = set().union(*(records[index] for index in group))
         digest = _wheel_fingerprint(destination, roots, paths)
         if digest is not None:
-            candidates[digest] = tuple(sorted(roots))
+            candidates[digest] = _WheelGroup(
+                roots,
+                {canonicalize_name(wheel.metadata["Name"]) for wheel in wheels},
+                modules,
+            )
     return candidates
 
 
+def _is_universal_wheel(distribution: importlib.metadata.Distribution) -> bool:
+    wheel = (distribution.read_text("WHEEL") or "").splitlines()
+    tags = [line.partition(":")[2].strip() for line in wheel if line.startswith("Tag:")]
+    return (
+        "Root-Is-Purelib: true" in wheel
+        and bool(tags)
+        and all(tag.endswith("-none-any") for tag in tags)
+    )
+
+
 def share_profile_wheels(output: str, manifest: dict[str, Any]) -> None:
-    """Store byte-identical universal wheels once and reference them from each profile."""
-    if len(manifest["profiles"]) < 2:
-        return
+    """Place identical wheels at the most general level safe for their import roots."""
     root = Path(output)
-    copies: dict[str, list[tuple[dict[str, Any], tuple[Path, ...]]]] = defaultdict(list)
-    for profile in manifest["profiles"]:
-        destination = root / profile["path"]
-        distributions = list(importlib.metadata.distributions(path=[str(destination)]))
-        for digest, paths in _wheel_roots(destination, distributions).items():
-            copies[digest].append((profile, paths))
-    for digest, matches in sorted(copies.items()):
-        if len(matches) < 2:
+    profiles = manifest["profiles"]
+    copies: dict[str, list[tuple[dict[str, Any], _WheelGroup]]] = defaultdict(list)
+    targets_per_group: Counter[Path] = Counter()
+    for profile in profiles:
+        target = root / profile["path"]
+        targets_per_group[target.parent] += 1
+        for digest, wheel in _wheel_groups(target).items():
+            copies[digest].append((profile, wheel))
+
+    app = root.parent
+    source_directories = (root, app / "bin", app / "bin" / app.name)
+    common_keys: set[str] = set()
+    for directory in source_directories:
+        if directory.is_dir():
+            common_keys.update(
+                _component_keys(directory, {Path(p.name) for p in directory.iterdir()})
+            )
+    common_distributions = {
+        canonicalize_name(name)
+        for dist in importlib.metadata.distributions(path=[str(root)])
+        if (name := dist.metadata["Name"])
+    }
+    common_modules: set[str] = set()
+    moved_distributions: set[str] = set()
+
+    for matches in copies.values():
+        profile, wheel = matches[0]
+        target = root / profile["path"]
+        keys = _component_keys(target, wheel.roots) | {
+            name.casefold() for name in wheel.modules
+        }
+        if len(matches) == len(profiles) and not (
+            keys & common_keys or wheel.distributions & common_distributions
+        ):
+            _move_wheels(root, root, matches)
+            common_keys.update(keys)
+            common_distributions.update(wheel.distributions)
+            moved_distributions.update(wheel.distributions)
+            common_modules.update(wheel.modules)
             continue
-        relative = Path("3rdparty") / "ucc" / "shared" / digest
-        shared = root / relative
-        shared.mkdir(parents=True)
-        for index, (profile, paths) in enumerate(matches):
-            for path in paths:
-                entry = root / profile["path"] / path
-                if index == 0:
-                    entry.rename(shared / path)
-                elif entry.is_dir():
-                    shutil.rmtree(entry)
-                else:
-                    entry.unlink()
-            profile.setdefault("shared_paths", []).append(relative.as_posix())
+
+        by_group = defaultdict(list)
+        for match in matches:
+            by_group[(root / match[0]["path"]).parent].append(match)
+        for group, group_matches in by_group.items():
+            if len(group_matches) != targets_per_group[group]:
+                continue
+            _move_wheels(root, group, group_matches)
+            relative = group.relative_to(root).as_posix()
+            for profile, _ in group_matches:
+                shared_paths = profile.setdefault("shared_paths", [])
+                if relative not in shared_paths:
+                    shared_paths.append(relative)
+
+    if moved_distributions:
+        manifest["common_distributions"] = sorted(moved_distributions)
+        manifest["common_modules"] = sorted(common_modules)
+    for profile in profiles:
+        target = root / profile["path"]
+        if not any(target.iterdir()):
+            target.rmdir()
+            del profile["path"]
+            if not any(target.parent.iterdir()):
+                target.parent.rmdir()
+
+
+def _move_wheels(
+    root: Path, destination: Path, matches: list[tuple[dict[str, Any], _WheelGroup]]
+) -> None:
+    for index, (profile, wheel) in enumerate(matches):
+        for path in sorted(wheel.roots):
+            entry = root / profile["path"] / path
+            if index == 0:
+                entry.rename(destination / path)
+            elif entry.is_dir():
+                shutil.rmtree(entry)
+            else:
+                entry.unlink()
 
 
 def install_profiles(
@@ -579,6 +674,20 @@ def install_profiles(
             "lib/3rdparty/ucc is generated; remove it from package source"
         )
     lock = _load_lock(package, profiles)
+    groups = {}
+    directory_names: Counter[str] = Counter()
+    for row in config.meta["dependencyProfiles"]:
+        name = row["name"]
+        directory_names[name.casefold()] += 1
+        number = directory_names[name.casefold()]
+        # Use portable, readable names on case-insensitive filesystems.
+        directory = (
+            f"{name}~{number}"
+            if number > 1 or WINDOWS_DEVICE_NAME.fullmatch(name)
+            else name
+        )
+        for expanded_target in _expand_profiles([row]):
+            groups[expanded_target["name"]] = directory
     excludes = {
         canonicalize_name(name)
         for name in (parse_excludes(str(package / "lib" / "exclude.txt")) or [])
@@ -590,10 +699,12 @@ def install_profiles(
             raise DependencyProfileError(
                 f"Declare excluded distributions in every profile's provided list: {sorted(excludes - provided)}"
             )
-        graph_hash = hashlib.sha256(
-            json.dumps(record, sort_keys=True).encode()
-        ).hexdigest()[:16]
-        relative = Path("3rdparty") / "ucc" / (profile.name + "-" + graph_hash)
+        relative = Path(
+            "3rdparty",
+            "ucc",
+            groups[profile.name],
+            f"{profile.os}-{profile.architecture}",
+        )
         destination = output / relative
         destination.mkdir(parents=True, exist_ok=True)
         rows = [row for row in record["requirements"] if row["name"] not in provided]
