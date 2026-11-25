@@ -1,1 +1,2 @@
 pytest-splunk-addon-ui-smartx==7.0.0
+pytest-rerunfailures==16.7
