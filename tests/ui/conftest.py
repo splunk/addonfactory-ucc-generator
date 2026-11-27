@@ -8,7 +8,6 @@ import pytest
 from tests.ui.oauth2_server.oauth_server import OAuth2TestServer
 from tests.ui.pages.account_page import AccountPage
 from tests.ui.test_configuration_page_account_tab import _ACCOUNT_CONFIG
-from pytest_splunk_addon_ui_smartx import utils as s_utils
 
 from _pytest.assertion import truncate
 
@@ -36,6 +35,10 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
 
     yield
 
+    browser = item.selenium_helper.browser
+    if browser.name.lower() != "chrome":
+        return
+
     # sometimes RUM is down and we get a lot of severe logs
     IGNORED: list[str] = [
         "https://rum-ingest.us1.signalfx.com",
@@ -47,16 +50,19 @@ def pytest_runtest_call(item: pytest.Item) -> Iterator[Any]:
         "http://localhost:8000/en-US/splunkd/__raw/services/configs/conf-limits/federated_analytics",
     ]
 
-    browser_logs = s_utils.get_browser_logs(item.selenium_helper.browser)
+    # Chrome can emit new source names before SmartX's LogSource enum knows them.
+    browser_logs = browser.get_log("browser")
     severe_logs = [
         log
         for log in browser_logs
-        if log.level == s_utils.LogLevel.SEVERE
-        and not any(ignored in log.message for ignored in IGNORED)
+        if log["level"] == "SEVERE"
+        and not any(ignored in log["message"] for ignored in IGNORED)
     ]
 
     if severe_logs:
-        log_msg = [f"{log.level}: {log.source} - {log.message}" for log in severe_logs]
+        log_msg = [
+            f"{log['level']}: {log['source']} - {log['message']}" for log in severe_logs
+        ]
         msg = "Severe logs found in browser console logs: \n" + "\n".join(log_msg)
         pytest.fail(msg, pytrace=True)
 
