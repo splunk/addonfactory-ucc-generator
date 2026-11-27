@@ -130,8 +130,10 @@ def _configure_runtime():
     core = {}
     for path in core_paths:
         for dist in importlib.metadata.distributions(path=[path]):
-            # Python imports from the first matching path.
-            core.setdefault(_canonical(dist.metadata["Name"]), dist)
+            name = dist.metadata["Name"]
+            if name:
+                # Python imports from the first matching path.
+                core.setdefault(_canonical(name), dist)
     provided_modules = set()
     provided_roots = {}
     provided_namespaces = {}

@@ -747,6 +747,23 @@ def test_runtime_validates_splunk_provided_contract(runtime):
     assert result.returncode != 0 and "Splunk-provided six" in result.stderr
 
 
+def test_runtime_skips_host_distribution_without_name(runtime):
+    app, _, manifest = runtime
+    host = app.parent / "host"
+    unnamed = host / "incomplete-1.0.dist-info"
+    unnamed.mkdir(parents=True)
+    (unnamed / "METADATA").write_text("Version: 1.0\n")
+    make_distribution(host, "ucc_host_probe", "1.0", "ucc_host_probe")
+    manifest["profiles"][0]["provided"] = {"ucc-host-probe": "1.0"}
+    deps.generate_bootstrap(str(app), manifest)
+
+    result = run_runtime(
+        app, "import ucc_host_probe", before=f"sys.path.append({str(host)!r})"
+    )
+
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize("expected", ["1.0", "2.0"])
 def test_runtime_checks_first_host_distribution_on_import_path(runtime, expected):
     app, _, manifest = runtime
@@ -949,18 +966,28 @@ def test_subprocess_failures_include_cause(monkeypatch, result):
         deps._run(["poetry", "check"])
 
 
-def test_module_discovery_handles_wheels_without_top_level_file(tmp_path):
+@pytest.mark.parametrize("has_top_level", [False, True])
+def test_module_discovery_keeps_digit_prefixed_native_modules(tmp_path, has_top_level):
     make_distribution(tmp_path, "probe", "1.0", "probe")
     info = tmp_path / "probe-1.0.dist-info"
-    (info / "top_level.txt").unlink()
+    if has_top_level:
+        (info / "top_level.txt").write_text(
+            "probe\n_native\n81d243bd__mypyc\nignored-name\n"
+        )
+    else:
+        (info / "top_level.txt").unlink()
     (info / "RECORD").write_text(
-        "probe/__init__.py,,\n_native.cpython-39.so,,\nprobe-1.0.dist-info/METADATA,,\n"
+        "probe/__init__.py,,\n_native.cpython-39.so,,\n"
+        "81d243bd__mypyc.cpython-39-x86_64-linux-gnu.so,,\n"
+        "ignored-name.py,,\nprobe-1.0.dist-info/METADATA,,\n"
     )
     (tmp_path / "probe").mkdir()
     (tmp_path / "probe/__init__.py").touch()
     (tmp_path / "_native.cpython-39.so").touch()
+    (tmp_path / "81d243bd__mypyc.cpython-39-x86_64-linux-gnu.so").touch()
+    (tmp_path / "ignored-name.py").touch()
     distribution = next(iter(importlib.metadata.distributions(path=[str(tmp_path)])))
-    assert deps._modules(distribution) == {"probe", "_native"}
+    assert deps._modules(distribution) == {"probe", "_native", "81d243bd__mypyc"}
 
 
 def test_build_rejects_unexpected_installed_versions(source, monkeypatch):
