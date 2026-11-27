@@ -27,7 +27,7 @@ from pathlib import Path
 from packaging.requirements import Requirement, InvalidRequirement
 from packaging.version import Version
 from typing import Optional
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from splunk_add_on_ucc_framework.global_config import OSDependentLibraryConfig
 
 logger = logging.getLogger("ucc_gen")
@@ -140,45 +140,84 @@ def _pip_is_lib_installed(
 
 
 def _check_libraries_required_for_oauth(
-    python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
+    has_library: Callable[[str, Optional[str]], bool], dependency_source: str
 ) -> None:
     for lib, version in LIBS_REQUIRED_FOR_OAUTH.items():
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
-            target=ucc_lib_target,
-            libname=lib,
-            version=version,
-            allow_higher_version=True,
-        ):
+        if not has_library(lib, version):
             raise WrongSolnlibVersion(
-                f"{lib} found at {path_to_requirements_file}, but is not of latest version."
-                f" Please make sure {lib} is of version greater than or equal to {version}."
+                f"{lib} must be at least version {version} for OAuth. "
+                f"Dependency source: {dependency_source}."
             )
 
 
 def _check_libraries_required_for_ui(
-    python_binary_name: str, ucc_lib_target: str, path_to_requirements_file: str
+    has_library: Callable[[str, Optional[str]], bool], dependency_source: str
 ) -> None:
     for lib, version in LIBS_REQUIRED_FOR_UI.items():
-        if not _pip_is_lib_installed(
-            installer=python_binary_name,
-            target=ucc_lib_target,
-            libname=lib,
-        ):
+        if not has_library(lib, None):
             raise SplunktaucclibNotFound(
-                f"This add-on has an UI, so the {lib} is required but not found in "
-                f"{path_to_requirements_file}. Please add it there and make sure it is at least version {version}."
+                f"{lib}>={version} is required for the UI but was not found. "
+                f"Dependency source: {dependency_source}."
             )
-        if not _pip_is_lib_installed(
+        if not has_library(lib, version):
+            raise WrongSplunktaucclibVersion(
+                f"{lib} must be at least version {version}. "
+                f"Dependency source: {dependency_source}."
+            )
+
+
+def finalize_python_libraries(
+    python_binary_name: str,
+    ucc_lib_target: str,
+    dependency_source: str,
+    *,
+    includes_ui: bool = False,
+    includes_oauth: bool = False,
+    profile_versions: Optional[dict[str, str]] = None,
+    os_libraries: Optional[list[OSDependentLibraryConfig]] = None,
+    remove_build_tools: bool = False,
+) -> None:
+    """Verify required libraries and finalize an installed dependency directory.
+
+    Legacy builds also install OS-specific overlays and remove build tools.
+    Frozen profiles supply the versions of bundled and host-provided libraries.
+    """
+
+    def has_library(library: str, minimum: Optional[str]) -> bool:
+        if profile_versions is not None:
+            version = profile_versions.get(library)
+            return version is not None and (
+                minimum is None or Version(version) >= Version(minimum)
+            )
+        return _pip_is_lib_installed(
             installer=python_binary_name,
             target=ucc_lib_target,
-            libname=lib,
-            version=version,
-            allow_higher_version=True,
-        ):
-            raise WrongSplunktaucclibVersion(
-                f"{lib} found but has the wrong version. Please make sure it is at least version {version}."
+            libname=library,
+            version=minimum,
+            allow_higher_version=minimum is not None,
+        )
+
+    if includes_ui:
+        _check_libraries_required_for_ui(has_library, dependency_source)
+    if includes_oauth:
+        _check_libraries_required_for_oauth(has_library, dependency_source)
+
+    packages_to_remove: set[str] = set()
+    if os_libraries is not None or remove_build_tools:
+        packages_to_remove.update(
+            install_os_dependent_libraries(
+                ucc_lib_target=ucc_lib_target,
+                installer=python_binary_name,
+                os_libraries=os_libraries,
             )
+        )
+    if remove_build_tools:
+        packages_to_remove.update({"setuptools", "bin", "pip", "distribute", "wheel"})
+    if packages_to_remove:
+        remove_packages(
+            installation_path=ucc_lib_target, package_names=packages_to_remove
+        )
+    remove_execute_bit(ucc_lib_target)
 
 
 def parse_excludes(excludes_path: str) -> Optional[list[str]]:
@@ -249,36 +288,15 @@ def install_python_libraries(
         if excludes:
             logger.info(f"Excluding libraries: {', '.join(excludes)}")
             remove_packages(installation_path=ucc_lib_target, package_names=excludes)
-        if includes_ui:
-            _check_libraries_required_for_ui(
-                python_binary_name, ucc_lib_target, path_to_requirements_file
-            )
-        if includes_oauth:
-            _check_libraries_required_for_oauth(
-                python_binary_name, ucc_lib_target, path_to_requirements_file
-            )
-
-        cleanup_libraries = install_os_dependent_libraries(
-            ucc_lib_target=ucc_lib_target,
-            installer=python_binary_name,
+        finalize_python_libraries(
+            python_binary_name,
+            ucc_lib_target,
+            path_to_requirements_file,
+            includes_ui=includes_ui,
+            includes_oauth=includes_oauth,
             os_libraries=os_libraries,
+            remove_build_tools=True,
         )
-
-        packages_to_remove = {
-            "setuptools",
-            "bin",
-            "pip",
-            "distribute",
-            "wheel",
-        }
-        # we can remove os-dependent libraries from the installation_path to save some space.
-        packages_to_remove.update(cleanup_libraries)
-        remove_packages(
-            installation_path=ucc_lib_target,
-            package_names=packages_to_remove,
-        )
-
-        remove_execute_bit(ucc_lib_target)
     else:
         logger.warning(
             f"Could not find requirements file @ {path_to_requirements_file}, nothing to install"

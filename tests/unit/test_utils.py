@@ -16,6 +16,7 @@ def test_get_j2_env():
 
     expected_list_of_templates = [
         "input.template",
+        "runtime_dependencies.py.template",
         "input_with_helper.template",
         "oauth.template",
         "html_templates/alert_html_skeleton.template",

@@ -1,6 +1,8 @@
 # Requirements
 
-UCC allows you to specify Python package dependencies for your add-on using standard pip requirements files. This feature provides control over which packages are installed and which should be excluded from the final build.
+UCC allows you to specify Python package dependencies for your add-on using standard pip requirements files.
+Alternatively, opt in to [Poetry runtime dependency profiles](#poetry-runtime-dependency-profiles) to lock
+complete dependency sets for different Splunk Python runtimes.
 
 ## Requirements File
 
@@ -88,4 +90,151 @@ During the build process, UCC will:
 - If `exclude.txt` doesn't exist, no packages will be excluded
 - Package exclusion happens **after** installation, so dependencies of excluded packages may still be present unless explicitly excluded
 - The exclude file only accepts package names without version specifiers, markers, URLs, or extras
+
+## Poetry runtime dependency profiles
+
+Use `meta.dependencyProfiles` when an add-on needs different dependency sets for different operating
+systems, architectures, or Python versions. Poetry exports the main dependency group, and UCC evaluates
+its environment markers for each target. Declare the complete runtime dependency graph in Poetry,
+including `splunktaucclib>=8.2.0` for add-ons with pages or alert actions and `solnlib` for OAuth.
+Profiles replace the `requirements.txt` installation path; UCC does not merge those two dependency sources.
+
+### Project layout and locking
+
+```text
+your_project/
+├── globalConfig.json
+├── pyproject.toml
+├── poetry.lock
+└── package/
+    ├── app.manifest
+    └── lib/
+        └── ucc-dependencies.lock.json
+```
+
+Keep `pyproject.toml` and `poetry.lock` in the parent of the package source directory, including when
+using an explicit `--config` path. Install Poetry with its export plugin in the locking environment.
+For an existing Poetry installation, the plugin can be installed with `poetry self add poetry-plugin-export`.
+Poetry is required for locking, but not for builds that consume a committed UCC lock.
+
+Add profiles to the source globalConfig. For example:
+
+```json
+{
+  "meta": {
+    "dependencyProfiles": [
+      {
+        "name": "linux39",
+        "python_version": "3.9.20",
+        "os": "linux",
+        "platform": "manylinux2014_x86_64"
+      },
+      {
+        "name": "windows313",
+        "python_version": "3.13.4",
+        "os": "windows",
+        "platform": "win_amd64",
+        "minimum_openssl": "3.0.0"
+      }
+    ]
+  }
+}
+```
+
+This fragment belongs in your existing globalConfig; retain its other required fields. Replace the
+example Python versions and wheel platforms with the exact targets you have validated for your add-on.
+The setting chooses dependencies for Splunk's Python; it does not install or upgrade Python in Splunk.
+UCC omits this build-only setting from the globalConfig copy consumed by the browser.
+
+1. Run `ucc-gen lock --source package --update` to run Poetry locking, check the Poetry lock, and
+   export the main dependency group into `package/lib/ucc-dependencies.lock.json`.
+1. Commit the source globalConfig, `pyproject.toml`, `poetry.lock`, and the UCC lock together.
+1. Run `ucc-gen build --source package`. The build verifies the lock fingerprint, installs matching
+   wheels with exact versions and SHA-256 hashes, and generates the runtime selector and manifest.
+1. Validate the built add-on on each target Splunk host, then package it normally.
+
+The build stores identical universal wheels once when they are used by multiple profiles. Different
+wheel versions, platform wheels, and distributions that share an import directory stay separate.
+A runtime only loads the shared wheels listed for its selected profile.
+
+See [`ucc-gen lock`](../commands.md#ucc-gen-lock) for all command options. The package command does
+not repeat lock verification. Changes to either Poetry file or the profile declarations require a new
+UCC lock before the next build.
+
+### Profile fields
+
+| Field | Required | Meaning |
+| --- | --- | --- |
+| `name` | Yes | Unique directory-safe identifier, up to 64 characters: letters, digits, underscores, and hyphens, starting with a letter or digit. |
+| `python_version` | Yes | Exact Python version, including the patch, such as `3.13.4`. |
+| `os` | Yes | `linux`, `windows`, or `darwin`. |
+| `platform` | Yes | Matching wheel platform, using a `manylinux`/`musllinux`, `win_`, or `macosx_` prefix and a supported x86-64 or ARM64 architecture suffix. |
+| `provided` | No | Distribution names supplied by the host instead of bundled in this profile. Defaults to an empty list. |
+| `minimum_openssl` | No | Minimum host OpenSSL version in three numeric components, such as `3.0.0`. |
+
+When several targets use the same Python version and host requirements, group them in one profile.
+For example, an item in `dependencyProfiles` can be written as:
+
+```json
+{
+  "name": "py39",
+  "python_version": "3.9.20",
+  "targets": [
+    {"os": "linux", "platform": "manylinux2014_x86_64"},
+    {"os": "windows", "platform": "win_amd64"},
+    {"os": "darwin", "platform": "macosx_11_0_arm64"}
+  ]
+}
+```
+
+For a grouped profile, put `os` and `platform` in each target. Every target inherits the group's
+`python_version`, `provided`, and `minimum_openssl`. UCC generates profile names such as
+`py39-linux-x86_64`, which must fit the 64-character limit and be unique alongside flat names.
+You can use both formats in the same config. Regenerate the UCC lock when converting flat profiles
+to groups with new generated names.
+
+Each OS/architecture/Python major-minor combination must have only one profile, even if patch versions
+differ. The configuration supports up to 32 profiles after expanding groups to individual targets.
+
+### Bundled directory layout
+
+UCC stores identical universal wheels needed by every target directly in `lib`.
+Wheels that match across only one configured profile go in `lib/3rdparty/ucc/<profile>`.
+Other wheels stay in the target directory, such as
+`lib/3rdparty/ucc/py313/linux-x86_64`. UCC omits empty target directories.
+The directory names use the configured profile label. UCC adds a short numeric
+suffix when names differ only by case or use a Windows device name.
+
+When several wheels own the same import directory, UCC moves them together only
+if the complete group is universal and its installed files match. A group that
+contains a native module or collides with add-on source stays in a more specific
+directory. The generated runtime manifest selects and validates the active paths.
+Existing UCC locks still work with the new layout.
+
+### Host-provided dependencies
+
+Every `provided` distribution must also occur in that profile's Poetry dependency graph. UCC leaves
+it out of the bundled directory and checks at startup that the host supplies the exact locked version.
+Validate that contract on the intended Splunk hosts; a host library with a different version causes
+startup to fail. This check does not guarantee that application code is compatible with the library API.
+
+If you retain `package/lib/exclude.txt`, every excluded distribution must be declared in every profile's
+`provided` list. Profiles do not remove arbitrary packages after installing the frozen graph.
+
+### Restrictions and upgrades
+
+- Only published wheels are supported. VCS, direct-URL, local, and source-only dependencies are rejected.
+- Profiles cannot be combined with `meta.os-dependentLibraries`, `--pip-legacy-resolver`, or custom pip flags.
+  Profile builds use pip from `--python-binary-name`; they do not upgrade it using `--pip-version`.
+- A source-owned `package/bin/import_declare_test.py` must be migrated before enabling profiles.
+  UCC generates this bootstrap and `lib/3rdparty/ucc`; do not copy generated profile directories into source.
+- OS release/version environment markers are unsupported. Other supported environment markers are
+  evaluated for the declared target, rather than the build host.
+- Python patch matching is strict: a `3.13.4` profile rejects a `3.13.5` host. After a Splunk Python
+  patch upgrade, update the profile, regenerate and commit the lock, rebuild, and validate the add-on.
+- Dependency versions already imported from conflicting locations cause startup to fail. Start a fresh
+  process with the rebuilt add-on after an upgrade.
+
+Wheel availability, version checks, and the optional OpenSSL check do not replace testing collection,
+authentication, and configuration flows on each target operating system and Splunk runtime.
 

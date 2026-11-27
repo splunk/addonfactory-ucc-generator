@@ -12,6 +12,36 @@ import tests.unit.helpers as helpers
 from splunk_add_on_ucc_framework import global_config as global_config_lib
 
 
+@pytest.mark.parametrize("is_yaml", [False, True])
+@pytest.mark.parametrize("with_profiles", [False, True])
+def test_browser_dump_omits_build_only_profiles_without_changing_source(
+    tmp_path, global_config_all_json, is_yaml, with_profiles
+):
+    content = global_config_all_json.content
+    if with_profiles:
+        content["meta"]["dependencyProfiles"] = [
+            {
+                "name": "linux313",
+                "python_version": "3.13.4",
+                "os": "linux",
+                "platform": "manylinux2014_x86_64",
+            }
+        ]
+    config = global_config_lib.GlobalConfig(content, is_yaml)
+    suffix = "yaml" if is_yaml else "json"
+    browser_path = tmp_path / f"browser.{suffix}"
+    source_path = tmp_path / f"source.{suffix}"
+    config.dump(str(browser_path), for_ui=True)
+    config.dump(str(source_path))
+    browser = global_config_lib.GlobalConfig.from_file(str(browser_path)).content
+    source = global_config_lib.GlobalConfig.from_file(str(source_path)).content
+    assert "dependencyProfiles" not in browser["meta"]
+    assert source == content
+    if with_profiles:
+        browser["meta"]["dependencyProfiles"] = content["meta"]["dependencyProfiles"]
+    assert browser == source
+
+
 @pytest.mark.parametrize(
     "filename",
     [
